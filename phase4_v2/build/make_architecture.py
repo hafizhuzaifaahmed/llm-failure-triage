@@ -18,19 +18,21 @@ import subprocess
 OUT = os.path.join(os.getcwd(), "phase4_v2", "figures")
 NAME = "fig_final_architecture"
 
-C = {  # name: (fill, border, text)
-    "ink": ("1F2A44", "1F2A44", "FFFFFF"),
-    "stage": ("FFFFFF", "2A78D6", "1B1B1B"),
-    "data": ("EAF2FC", "2A78D6", "1B1B1B"),
-    "gt": ("E6F6EF", "1BAF7A", "1B1B1B"),
-    "notrun": ("FFFFFF", "9A9994", "6B6A66"),
-    "rule": ("F0EEFC", "6250D6", "1B1B1B"),
-    "expl": ("FDEEE7", "EB6834", "1B1B1B"),
-    "reg": ("E6F6EF", "1BAF7A", "1B1B1B"),
-    "panelA": ("F5F8FC", "C8D4E3", "33415C"),
-    "panelB": ("FAF9FD", "D7D2EE", "4B3F8F"),
-    "arrow": ("555555", "555555", "555555"),
+C = {  # name: (fill, border, text) -- gray-and-white theme; status is carried by fill shade and line style
+    "ink": ("3A3A3A", "3A3A3A", "FFFFFF"),
+    "stage": ("FFFFFF", "3A3A3A", "1B1B1B"),
+    "data": ("EFEFEF", "3A3A3A", "1B1B1B"),
+    "gt": ("E2E2E2", "3A3A3A", "1B1B1B"),
+    "notrun": ("FFFFFF", "9A9A9A", "6E6E6E"),
+    "rule": ("EDEDED", "5A5A5A", "1B1B1B"),
+    "expl": ("FFFFFF", "5A5A5A", "1B1B1B"),
+    "reg": ("D4D4D4", "3A3A3A", "1B1B1B"),
+    "panelA": ("F7F7F7", "CFCFCF", "333333"),
+    "panelB": ("FBFBFB", "D9D9D9", "333333"),
+    "arrow": ("4A4A4A", "4A4A4A", "4A4A4A"),
 }
+DASH = {"notrun": "dash pattern=on 1pt off 1.6pt", "expl": "dash pattern=on 4pt off 2pt"}
+DRAWIO_DASH = {"notrun": "dashed=1;dashPattern=1 2;", "expl": "dashed=1;dashPattern=4 2;"}
 
 # panels: (x0, y0, x1, y1, colour, title)
 PANELS = [(-0.25, 1.8, 19.25, -3.15, "panelA", "Original study \\textendash{} the approved Phase 2 design, as executed"),
@@ -78,8 +80,8 @@ def tikz():
         L.append(rf"\node[anchor=north west,font=\footnotesize\bfseries,text=t{col}] at ({x0 + 0.2},{y0 - 0.12}) {{{title}}};")
     for nid, (shape, x, y, w, h, col, name, detail, badge) in N.items():
         body = rf"{{\footnotesize\bfseries {name}}}\\[1pt]{{\scriptsize\color{{black!65}} {detail}}}"
-        dash = "dash pattern=on 1.5pt off 1.5pt," if col == "notrun" else ""
-        common = rf"draw=b{col},fill=f{col},text=t{col},line width=0.9pt,{dash}lbl,text width={w - 0.12}cm"
+        dash = DASH[col] + "," if col in DASH else ""
+        common =rf"draw=b{col},fill=f{col},text=t{col},line width=0.9pt,{dash}lbl,text width={w - 0.12}cm"
         if shape == "cyl":
             L.append(rf"\node[{common},cylinder,shape border rotate=90,aspect=0.16,minimum width={w}cm,"
                      rf"minimum height={h}cm,inner sep=2pt] ({nid}) at ({x},{y}) {{{body}}};")
@@ -106,13 +108,14 @@ def tikz():
             sty = r"->,draw=bnotrun,line width=0.9pt,dash pattern=on 1.5pt off 1.5pt"
         L.append(rf"\draw[{sty}] ({a}) {route} ({b});")
     L.append(rf"\node[font=\scriptsize\itshape,text=bgt!80!black,fill=fpanelA,inner sep=1pt] at ({GT_NOTE[0]},{GT_NOTE[1]}) {{{GT_NOTE[2]}}};")
-    x = 0.0
-    for col, lab in LEGEND:
-        dash = ",dash pattern=on 1.5pt off 1.5pt" if col == "notrun" else ""
-        L.append(rf"\draw[fill=f{col},draw=b{col},line width=0.8pt{dash},rounded corners=1.5pt] ({x},{LEGEND_Y - 0.13}) "
-                 rf"rectangle ({x + 0.45},{LEGEND_Y + 0.13});")
-        L.append(rf"\node[anchor=west,font=\scriptsize,text=black!75] at ({x + 0.55},{LEGEND_Y}) {{{lab}}};")
-        x += 1.0 + 0.16 * len(lab)
+    # legend: each item starts a fixed gap after the measured end of the previous label (even spacing)
+    L.append(rf"\coordinate (lg0) at (-0.6,{LEGEND_Y});")
+    for i, (col, lab) in enumerate(LEGEND, start=1):
+        dash = "," + DASH[col] if col in DASH else ""
+        L.append(rf"\draw[fill=f{col},draw=b{col},line width=0.8pt{dash},rounded corners=1.5pt] "
+                 rf"($(lg{i - 1}.east)+(0.6,-0.13)$) rectangle ++(0.45,0.26);")
+        L.append(rf"\node[anchor=west,font=\scriptsize,text=black!75,inner sep=0pt] (lg{i}) at "
+                 rf"($(lg{i - 1}.east)+(1.15,0)$) {{{lab}}};")
     L += [r"\end{tikzpicture}", r"\end{document}"]
     return "\n".join(L) + "\n"
 
@@ -146,13 +149,13 @@ def drawio():
         cx, cy = px(x, y)
         label = html.escape(f"<b>{html.escape(name)}</b><br><font color=\"#555555\" style=\"font-size:9px\">"
                             f"{html.escape(plain(detail))}</font>")
-        dash = "dashed=1;dashPattern=2 2;" if col == "notrun" else ""
+        dash = DRAWIO_DASH.get(col, "")
         cells.append(f'<mxCell id="{nid}" value="{label}" style="{shape_style[shape]}whiteSpace=wrap;html=1;'
                      f'fillColor=#{f};strokeColor=#{b};fontColor=#{t};fontSize=11;strokeWidth=1.5;{dash}" vertex="1" '
                      f'parent="1"><mxGeometry x="{cx - w * s / 2:.0f}" y="{cy - h * s / 2:.0f}" width="{w * s:.0f}" '
                      f'height="{h * s:.0f}" as="geometry"/></mxCell>')
         if badge:
-            cells.append(f'<mxCell id="b{nid}" value="{badge}" style="ellipse;whiteSpace=wrap;html=1;fillColor=#1F2A44;'
+            cells.append(f'<mxCell id="b{nid}" value="{badge}" style="ellipse;whiteSpace=wrap;html=1;fillColor=#3A3A3A;'
                          f'strokeColor=none;fontColor=#FFFFFF;fontStyle=1;fontSize=9;" vertex="1" parent="1">'
                          f'<mxGeometry x="{cx - w * s / 2 - 8:.0f}" y="{cy - h * s / 2 - 8:.0f}" width="17" height="17" '
                          f'as="geometry"/></mxCell>')
@@ -160,7 +163,7 @@ def drawio():
     for i, (a, b, route, st) in enumerate(E):
         sa, aa = a.split("]")[-1].split(".")
         sb, ab = b.split(".")
-        col = {"main": "555555", "gt": "1BAF7A", "notrun": "9A9994"}[st]
+        col = {"main": "4A4A4A", "gt": "3A3A3A", "notrun": "9A9A9A"}[st]
         dash = "dashed=1;" if st == "notrun" else ""
         (ex, ey), (nx, ny) = side[aa], side[ab]
         cells.append(f'<mxCell id="e{i}" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#{col};'
@@ -168,14 +171,14 @@ def drawio():
                      f'edge="1" parent="1" source="{sa}" target="{sb}"><mxGeometry relative="1" as="geometry"/></mxCell>')
     gx, gy = px(GT_NOTE[0], GT_NOTE[1])
     cells.append(f'<mxCell id="gtn" value="{html.escape(plain(GT_NOTE[2]))}" style="text;html=1;fontStyle=2;fontSize=9;'
-                 f'fontColor=#138A60;align=center;" vertex="1" parent="1"><mxGeometry x="{gx - 110:.0f}" y="{gy - 9:.0f}" '
+                 f'fontColor=#555555;align=center;" vertex="1" parent="1"><mxGeometry x="{gx - 110:.0f}" y="{gy - 9:.0f}" '
                  f'width="220" height="18" as="geometry"/></mxCell>')
     x = 0.0
     for i, (col, lab) in enumerate(LEGEND):
         f, b, _t = C[col]
         lx, ly = px(x, LEGEND_Y)
         cells.append(f'<mxCell id="l{i}" value="{html.escape(lab)}" style="rounded=1;html=1;fillColor=#{f};'
-                     f'strokeColor=#{b};{"dashed=1;" if col == "notrun" else ""}align=left;spacingLeft=6;fontSize=9;" '
+                     f'strokeColor=#{b};{DRAWIO_DASH.get(col, "")}align=left;spacingLeft=6;fontSize=9;" '
                      f'vertex="1" parent="1"><mxGeometry x="{lx:.0f}" y="{ly - 7:.0f}" width="130" height="14" '
                      f'as="geometry"/></mxCell>')
         x += 1.0 + 0.16 * len(lab)
