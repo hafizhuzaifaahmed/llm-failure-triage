@@ -122,12 +122,12 @@ Let $P_B$ and $P_F$ be the buggy and fixed versions of a program and $t$ a gener
 where TP, FP, FN and TN count \PF{} predicted \PF, \TF{} predicted \PF, \PF{} predicted \TF{} and \TF{} predicted \TF, and $\Pi$ is the product of the four row and column totals. Every FN is a bug-revealing test that a repair or discard step would remove. MCC is needed because keeping every test scores $\mathrm{F1}=2p/(1+p)$ at \PF{} prevalence $p$ with $\mathrm{MCC}=0$. The \PF-retention rate TPR $=\mathrm{TP}/(\mathrm{TP}+\mathrm{FN})$, the \TF-removal rate TNR $=\mathrm{TN}/(\mathrm{TN}+\mathrm{FP})$ and balanced accuracy $(\mathrm{TPR}+\mathrm{TNR})/2$ do not depend on the \PF{}:\TF{} mix and are used to compare datasets and rules.
 
 \subsection{Architecture}
-Figure~\ref{fig:arch} shows the pipeline as it was executed. The upper part is the approved Phase~2 design: generated tests run on $P_B$ and $P_F$; the resulting labels leave on a separate channel that never passes through an LLM and joins only at evaluation; a deterministic context builder assembles the evidence package, of which only the specification section changes across levels. The lower row shows the investigations added later, in the order in which they were run. The dotted grey box marks D3, which was planned but not run; the other planned items that did not run are listed in Table~\ref{tab:changes}.
+Figure~\ref{fig:arch} shows the pipeline as it was executed. The upper panel is the approved Phase~2 design: generated tests run on $P_B$ and $P_F$; the resulting labels leave on a separate channel that never passes through an LLM and joins only at evaluation; a deterministic context builder assembles the evidence package, of which only the specification section changes across levels. The lower panel shows the studies added later, in the order in which they were run. The dotted benchmark, D3, was planned but not run; the other planned items that did not run are listed in Table~\ref{tab:changes}.
 
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{figures/fig_final_architecture.pdf}
-\caption{Research architecture as implemented. Solid blue: the approved Phase~2 design, executed. Green: the ground-truth channel, which bypasses every LLM. Dashed violet: investigations added after the Phase~2 design. Dotted grey: planned in Phase~2 and not run. The editable source is \texttt{figures/fig\_final\_architecture.drawio}.}\label{fig:arch}
+\caption{Research architecture as implemented. Upper panel: the approved Phase~2 design, executed in five numbered stages; the ground-truth channel (green) leaves at execution and joins only at evaluation, so no LLM sees a label; the dotted benchmark was planned and not run. Lower panel: the studies added after Phase~2, in the order they were run, coloured by evidence status. The editable source is \texttt{figures/fig\_final\_architecture.drawio}.}\label{fig:arch}
 \end{figure*}
 
 \subsection{Ground truth}
@@ -183,8 +183,6 @@ The following components were not part of the approved Phase~2 design; they were
 
 \paragraph{Whole-method dependence probes (WDP).} The method body is replaced by one that records entry and throws, and by fixed-return bodies as in pseudo-tested-method detection~\cite{niedermayr2016will,vera2018pseudo}. Level U, ``no entry observed and throw-invariant'', is an operational entry check, not proof that a test cannot reach the method and not evidence of a mutation effect. The rule KUU + CD-U discards level-U failures beside KUU.
 
-\subsection{Changes from the Phase 2 design}\label{sec:changes}
-Table~\ref{tab:changes} lists every change between the approved design and the executed study, with its reason and decision record (\texttt{docs/tracking/DECISIONS.md}). No research question, hypothesis, confirmatory endpoint or decision rule of the approved design was changed. The instructor gave no comments on the Phase~2 presentation, so no change was made in response to feedback; every change in Table~\ref{tab:changes} has a technical or design reason.
 
 \begin{table*}[t]
 \caption{Changes between the approved Phase~2 design and the executed study. [T] technical or resource constraint; [A] authors' decision before the affected data existed; [S] later scientific extension.}\label{tab:changes}
@@ -465,9 +463,6 @@ Against buggy/fixed execution labels, small LLM judges with thinking disabled re
 %% =====================================================================================
 \section*{Data and Code Availability}
 Defects4J~3.0.1 is public at \url{https://github.com/rjust/defects4j} (tag v3.0.1)~\cite{defects4j301}, and the frame follows the replication package of Zhao et al.~\cite{zhao2026replication}. The implementation, frozen configurations, prompts, analysis scripts, the generated tests, execution labels, evidence packages, parsed judge decisions, probe ledgers, analysis outputs, and the scripts that build every number and figure of this paper are at \url{https://github.com/hafizhuzaifaahmed/llm-failure-triage}. Raw model-call and inference-server logs are not in the public repository because single files exceed its size limit. The confirmation is registered on OSF (\V{osf:osf_id}, \V{osf:registered_utc}); no other part of the study was externally registered.
-
-\section*{Use of AI-Assisted Tools}
-Claude Opus~5.5 (Anthropic) was used under the authors' direction to implement the experimental pipeline and its tests, run the experiments and analysis scripts, verify references, build figures and the slide deck, and draft and revise this manuscript; every number in the text is generated from committed analysis outputs. Claude Fable~5.2 (Anthropic) was used read-only to audit the registered confirmation and to write the design and execution brief for the whole-method dependence probes; a Fable~5.2 review of the interpretation of the WDP result was started but stopped at the account's usage limit before producing any output, and the authors waived that review. A separate Claude Opus~5.5 session acted as a sealed third rater in the label audit, reported only as secondary agreement. The open-weight models studied (Qwen3.5, Gemma~4, Ministral~3, Llama~3.1) and Claude Sonnet~5.5 are experimental subjects, not authoring tools. The authors reviewed the code, outcomes, claims and text and take full responsibility for them.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references_v2}

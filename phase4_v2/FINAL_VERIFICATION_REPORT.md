@@ -27,19 +27,19 @@ configuration and earlier decision record.
 | Check | Result | Verdict |
 |---|---|---|
 | Template | IEEE journal (`IEEEtran`), IEEE reference style | Complete |
-| Sections 1–15 in order | Title/authors, Abstract, Index Terms, I Introduction, II Related Work, III Proposed Methodology, IV Experimental Setup, V Results and Analysis, VI Comparison with Base Papers, VII Ablation Study, VIII Discussion, IX Conclusion and Future Work, Data and Code Availability, Use of AI-Assisted Tools, References; appendices in the supplement | Complete |
+| Sections 1–15 in order | Title/authors, Abstract, Index Terms, I Introduction, II Related Work, III Proposed Methodology, IV Experimental Setup, V Results and Analysis, VI Comparison with Base Papers, VII Ablation Study, VIII Discussion, IX Conclusion and Future Work, Data and Code Availability, References; appendices in the supplement | Complete |
 | Page limit (8–12 pp.) | 10 pages including references; text ends on p. 9 | Complete |
 | Abstract 150–250 words, five components, numbers | 249 words | Complete |
 | Keywords 4–6 | 6 | Complete |
 | Authors and affiliation | names only, no e-mails; "Department of Artificial Intelligence & Data Science, School of Computing, FAST-NUCES" | Complete |
 | Related-work comparison table | Table I | Complete |
-| Methodology incl. architecture, maths, pseudocode, changes after Phase 2 | §III, Fig. 1, Eqs. (1)–(2), Algorithm 1, Table III; instructor gave no comments (authors' statement) | Complete |
+| Methodology incl. architecture, maths, pseudocode, changes after Phase 2 | §III, Fig. 1, Eqs. (1)–(2), Algorithm 1, Table III (changes, cited from §III-B and §V-C); the separate changes subsection was removed at the authors' instruction (D-156) | Complete |
 | Setup incl. dataset link, splits, hyperparameters, hardware, seeds | §IV with the Defects4J link, Table IV | Complete |
 | Results with statistics; negative and inconclusive results visible | §V | Complete |
 | Base-paper comparison (summary, quantitative with *, methodological, improvement, fairness) | §VI, Tables X–XI | Complete |
 | Ablation | §VII, Table XII | Complete |
 | Registered vs exploratory distinguished | Table V and a status statement at every exploratory or registered result | Complete |
-| Declarations | Data and Code Availability (repository, dataset, registration) and Use of AI-Assisted Tools; funding, conflicts, acknowledgements and author contributions removed at the authors' instruction | Complete as instructed (the Phase 4 brief lists conflict-of-interest and funding statements; the authors chose to omit them) |
+| Declarations | Data and Code Availability (repository, dataset, registration); funding, conflicts, acknowledgements, author contributions and the AI-tool declaration removed at the authors' instruction (D-155) | Complete as instructed (the Phase 4 brief lists conflict-of-interest, funding and AI-tool statements; the authors chose to omit them) |
 | Third person, no placeholders | no `[TODO]` or `[AUTHOR INPUT]` remains | Complete |
 
 ## 3. Numerical checks
@@ -86,7 +86,7 @@ backup B7 carry the repository and dataset links. Verdict: Complete.
 | Area | Verdict |
 |---|---|
 | Phase 3 compliance (7 requirements) | Complete; requirement 1's feedback part is answered by the authors' statement that no comments were given |
-| Phase 4 compliance | Complete, with the authors' choice to omit funding and conflict-of-interest statements |
+| Phase 4 compliance | Complete, with the authors' choice to omit funding, conflict-of-interest and AI-tool statements |
 | Phase 2 → implementation alignment | Complete (`PHASE2_TO_PHASE3_TRACEABILITY.md`); D3, E5-R4 and the S2 audit not run and disclosed |
 | Scientific corrections | Complete (`MANUSCRIPT_REVISION_LOG.md`) |
 

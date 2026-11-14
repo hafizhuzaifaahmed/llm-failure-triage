@@ -1,16 +1,15 @@
-"""As-implemented research architecture, from ONE node/edge specification, written two ways:
+"""As-implemented research architecture, drawn from ONE specification and written two ways:
 
   phase4_v2/figures/fig_final_architecture.drawio  editable in diagrams.net (draw.io)
-  phase4_v2/figures/fig_final_architecture.tex     TikZ source; compiled to .pdf (vector) for the paper,
-                                                    and to .png (pdftoppm) for the deck
+  phase4_v2/figures/fig_final_architecture.tex     TikZ source; compiled to .pdf (vector) for the paper and to
+                                                    .png (pdftoppm) for the deck
 Run from the repository root:  python phase4_v2/build/make_architecture.py
-Neither diagrams.net nor Graphviz is installed on the build machine, so the rendered figure comes from the
-TikZ output of this same specification; the .drawio file carries identical nodes, positions and edges.
+Neither diagrams.net nor Graphviz is installed on the build machine, so the rendered figure comes from the TikZ
+output of this same specification; the .drawio file carries the same nodes, shapes, positions and connections.
 
-Kept deliberately simple: one left-to-right pipeline, the ground-truth path beneath it, and one row for the
-investigations added after the Phase 2 design. Each box has a bold name and one short detail line.
-Styles: done = executed part of the approved Phase 2 design; gt = ground-truth channel (no LLM);
-ext = executed later investigation (not in the Phase 2 design); notrun = planned in Phase 2, not run.
+Visual language (as an architect would draw it): two grouped panels (the original study; the later studies),
+numbered stages, a database symbol for the benchmark, stacked cards for the triage arms, a separate ground-truth
+channel, chevrons for the sequence of later studies, colour by evidence status, neutral arrows.
 """
 import html
 import os
@@ -19,132 +18,167 @@ import subprocess
 OUT = os.path.join(os.getcwd(), "phase4_v2", "figures")
 NAME = "fig_final_architecture"
 
-STYLE = {  # fill, border, dash, text
-    "done": ("EAF2FC", "2A78D6", None, "0B0B0B"),
-    "gt": ("E6F6EF", "1BAF7A", None, "0B0B0B"),
-    "ext": ("F0EEFC", "6250D6", "dashed", "0B0B0B"),
-    "notrun": ("F7F7F5", "8A8984", "dotted", "5F5E5A"),
+C = {  # name: (fill, border, text)
+    "ink": ("1F2A44", "1F2A44", "FFFFFF"),
+    "stage": ("FFFFFF", "2A78D6", "1B1B1B"),
+    "data": ("EAF2FC", "2A78D6", "1B1B1B"),
+    "gt": ("E6F6EF", "1BAF7A", "1B1B1B"),
+    "notrun": ("FFFFFF", "9A9994", "6B6A66"),
+    "rule": ("F0EEFC", "6250D6", "1B1B1B"),
+    "expl": ("FDEEE7", "EB6834", "1B1B1B"),
+    "reg": ("E6F6EF", "1BAF7A", "1B1B1B"),
+    "panelA": ("F5F8FC", "C8D4E3", "33415C"),
+    "panelB": ("FAF9FD", "D7D2EE", "4B3F8F"),
+    "arrow": ("555555", "555555", "555555"),
 }
-W, H, GAP = 2.75, 1.0, 0.35
-COL = [W / 2 + i * (W + GAP) for i in range(6)]
-# id: (x_cm, y_cm, w_cm, h_cm, style, name, detail)
+
+# panels: (x0, y0, x1, y1, colour, title)
+PANELS = [(-0.25, 1.8, 19.25, -3.15, "panelA", "Original study \\textendash{} the approved Phase 2 design, as executed"),
+          (-0.25, -3.5, 19.25, -5.85, "panelB", "Later studies \\textendash{} added after Phase 2, in the order they were run")]
+
+# nodes: id -> (shape, x, y, w, h, colour, name, detail, badge)
+X = [1.25, 4.425, 7.725, 11.025, 14.325, 17.625]
+BW, BH = 2.75, 1.45
 N = {
-    "data": (COL[0], 0, W, H, "done", "Defects4J 3.0.1", "D1 real, D2 seeded"),
-    "gen": (COL[1], 0, W, H, "done", "Test generation", "Gemma 4 26B (local)"),
-    "run": (COL[2], 0, W, H, "done", "Run each test", "buggy and fixed"),
-    "ctx": (COL[3], 0, W, H, "done", "Evidence package", "S0 / S1 / S2"),
-    "arms": (COL[4], 0, W, H, "done", "Triage arms", "J1, SC, DEB"),
-    "eval": (COL[5], 0, W, H, "done", "Evaluation", "F1, MCC, bugs lost"),
-    "d3": (COL[0], -1.8, W, 0.8, "notrun", "D3 GitBug-Java", "planned, not run"),
-    "label": (COL[2], -1.8, W, 0.8, "gt", "Execution labels", "PF / TF, no LLM"),
-    "rules": (2.05, -4.2, 4.1, 0.85, "ext", "Judge-only rules", "KUU baseline (RQ4)"),
-    "cfp": (6.8, -4.2, 4.1, 0.85, "ext", "Mutation probes", "exploratory pilot"),
-    "conf": (11.55, -4.2, 4.1, 0.85, "ext", "Registered confirmation", "OSF kp79c, C1--C4"),
-    "wdp": (16.3, -4.2, 4.1, 0.85, "ext", "Whole-method probes", "exploratory, retrospective"),
+    "data": ("cyl", X[0], 0.0, 2.5, 1.75, "data", "Defects4J 3.0.1", "D1 real faults\\\\D2 seeded faults", None),
+    "gen": ("box", X[1], 0.0, BW, BH, "stage", "Test generation", "Gemma 4 26B", "1"),
+    "exec": ("box", X[2], 0.0, BW, BH, "stage", "Dual execution", "buggy \\,\\textbar\\, fixed, 3 runs", "2"),
+    "ctx": ("box", X[3], 0.0, BW, BH, "stage", "Evidence package", "S0 \\,\\textbar\\, S1 \\,\\textbar\\, S2", "3"),
+    "arms": ("stack", X[4], 0.0, BW, BH, "stage", "Triage arms", "J1 \\textperiodcentered{} SC \\textperiodcentered{} DEB", "4"),
+    "eval": ("box", X[5], 0.0, BW, BH, "stage", "Evaluation", "F1 \\textperiodcentered{} MCC \\textperiodcentered{} bugs lost", "5"),
+    "gt": ("box", X[2], -2.3, BW, 1.05, "gt", "Execution labels", "PF / TF, sealed", None),
+    "d3": ("cyl", X[0], -2.3, 2.3, 1.25, "notrun", "GitBug-Java", "D3 \\textendash{} not run", None),
+    "kuu": ("chev0", 2.425, -4.8, 4.85, 1.05, "rule", "Judge-only rules", "KUU baseline (RQ4)", None),
+    "cfp": ("chev", 7.175, -4.8, 4.85, 1.05, "expl", "Mutation probes", "pilot, exploratory", None),
+    "conf": ("chev", 11.925, -4.8, 4.85, 1.05, "reg", "Registered confirmation", "OSF kp79c, C1\\textendash{}C4", None),
+    "wdp": ("chev", 16.675, -4.8, 4.85, 1.05, "expl", "Whole-method probes", "exploratory, retrospective", None),
 }
-# (from, to, style, from_side, to_side)
-E = [
-    ("data", "gen", "done", "E", "W"), ("gen", "run", "done", "E", "W"), ("run", "ctx", "done", "E", "W"),
-    ("ctx", "arms", "done", "E", "W"), ("arms", "eval", "done", "E", "W"),
-    ("d3", "data", "notrun", "N", "S"),
-    ("run", "label", "gt", "S", "N"), ("label", "eval", "gt", "E", "S"),
-    ("rules", "cfp", "ext", "E", "W"), ("cfp", "conf", "ext", "E", "W"), ("conf", "wdp", "ext", "E", "W"),
-]
-RIGHT = COL[5] + W / 2
-TOP_TITLE = (0.85, "Original study: the approved Phase 2 design, as executed")
-BAND = (-2.85, "Later investigations, added after the Phase 2 design (in the order run)")
-LEGEND_Y = -5.2
-LEGEND = [("done", "executed (Phase 2 design)"), ("gt", "ground truth, no LLM"),
-          ("ext", "later investigation"), ("notrun", "planned, not run")]
-
-
-def anchor(nid, side):
-    x, y, w, h = N[nid][:4]
-    return {"N": (x, y + h / 2), "S": (x, y - h / 2), "E": (x + w / 2, y), "W": (x - w / 2, y)}[side]
-
-
-def path(a, b, sa, sb):
-    (x1, y1), (x2, y2) = anchor(a, sa), anchor(b, sb)
-    if sa in "EW" and sb in "NS":
-        return [(x1, y1), (x2, y1), (x2, y2)]
-    return [(x1, y1), (x2, y2)]
+# edges: (from anchor, to anchor, route, style)
+E = [("data.east", "gen.west", "--", "main"), ("gen.east", "exec.west", "--", "main"),
+     ("exec.east", "ctx.west", "--", "main"), ("ctx.east", "arms.west", "--", "main"),
+     ("[xshift=6pt]arms.east", "eval.west", "--", "main"),
+     ("exec.south", "gt.north", "--", "gt"), ("gt.east", "eval.south", "-|", "gt"),
+     ("d3.north", "data.south", "--", "notrun")]
+GT_NOTE = (13.4, -2.0, "ground-truth channel \\textendash{} no LLM sees it")
+LEGEND = [("data", "executed"), ("gt", "ground truth / registered"), ("rule", "fixed in advance"),
+          ("expl", "exploratory"), ("notrun", "planned, not run")]
+LEGEND_Y = -6.3
 
 
 def tikz():
-    L = [r"\documentclass[tikz,border=3pt]{standalone}", r"\usepackage[T1]{fontenc}", r"\usepackage{helvet}",
-         r"\renewcommand{\familydefault}{\sfdefault}", r"\usetikzlibrary{arrows.meta}", r"\begin{document}",
-         r"\begin{tikzpicture}[>={Stealth[length=2.2mm]}]"]
-    for k, (fill, border, _d, text) in STYLE.items():
-        L.append(rf"\definecolor{{f{k}}}{{HTML}}{{{fill}}}\definecolor{{b{k}}}{{HTML}}{{{border}}}"
-                 rf"\definecolor{{t{k}}}{{HTML}}{{{text}}}")
-    L.append(rf"\node[anchor=west,font=\footnotesize\bfseries,text=black!70] at (0,{TOP_TITLE[0]}) {{{TOP_TITLE[1]}}};")
-    L.append(rf"\draw[densely dashed,black!35] (0,{BAND[0]}) -- ({RIGHT},{BAND[0]});")
-    L.append(rf"\node[anchor=west,font=\footnotesize\bfseries,text=black!70] at (0,{BAND[0] - 0.4}) {{{BAND[1]}}};")
-    for nid, (x, y, w, h, st, name, detail) in N.items():
-        dash = STYLE[st][2] or "solid"
-        L.append(rf"\node[draw=b{st},fill=f{st},text=t{st},{dash},line width=0.9pt,rounded corners=3pt,"
-                 rf"minimum width={w}cm,minimum height={h}cm,text width={w - 0.2}cm,align=center,inner sep=2pt,"
-                 r"execute at begin node={\hyphenpenalty=10000\relax}] "
-                 rf"({nid}) at ({x},{y}) {{{{\footnotesize\bfseries {name}}}\\[1pt]{{\scriptsize {detail}}}}};")
-    for a, b, st, sa, sb in E:
-        dash = STYLE[st][2] or "solid"
-        side = {"N": "north", "S": "south", "E": "east", "W": "west"}
-        op = "-|" if (sa in "EW" and sb in "NS") else "--"   # attach to the drawn box edges, whatever their height
-        pts = f"({a}.{side[sa]}) {op} ({b}.{side[sb]})"
-        L.append(rf"\draw[->,draw=b{st},{dash},line width=0.9pt] {pts};")
-    for i, (st, lab) in enumerate(LEGEND):
-        x = i * 4.45
-        dash = STYLE[st][2] or "solid"
-        L.append(rf"\node[draw=b{st},fill=f{st},{dash},line width=0.9pt,minimum width=0.55cm,minimum height=0.3cm]"
-                 rf" at ({x + 0.28},{LEGEND_Y}) {{}};")
-        L.append(rf"\node[anchor=west,font=\scriptsize] at ({x + 0.65},{LEGEND_Y}) {{{lab}}};")
+    L = [r"\documentclass[tikz,border=4pt]{standalone}", r"\usepackage[T1]{fontenc}", r"\usepackage{helvet}",
+         r"\usepackage{textcomp}", r"\renewcommand{\familydefault}{\sfdefault}",
+         r"\usetikzlibrary{arrows.meta,shapes.geometric,shapes.symbols,shadows,calc}", r"\begin{document}",
+         r"\begin{tikzpicture}[>={Latex[length=2.4mm,width=1.8mm]},"
+         r"lbl/.style={align=center,execute at begin node={\hyphenpenalty=10000\relax}}]"]
+    for k, (f, b, t) in C.items():
+        L.append(rf"\definecolor{{f{k}}}{{HTML}}{{{f}}}\definecolor{{b{k}}}{{HTML}}{{{b}}}\definecolor{{t{k}}}{{HTML}}{{{t}}}")
+    for x0, y0, x1, y1, col, title in PANELS:
+        L.append(rf"\draw[fill=f{col},draw=b{col},line width=0.7pt,rounded corners=6pt] ({x0},{y0}) rectangle ({x1},{y1});")
+        L.append(rf"\node[anchor=north west,font=\footnotesize\bfseries,text=t{col}] at ({x0 + 0.2},{y0 - 0.12}) {{{title}}};")
+    for nid, (shape, x, y, w, h, col, name, detail, badge) in N.items():
+        body = rf"{{\footnotesize\bfseries {name}}}\\[1pt]{{\scriptsize\color{{black!65}} {detail}}}"
+        dash = "dash pattern=on 1.5pt off 1.5pt," if col == "notrun" else ""
+        common = rf"draw=b{col},fill=f{col},text=t{col},line width=0.9pt,{dash}lbl,text width={w - 0.12}cm"
+        if shape == "cyl":
+            L.append(rf"\node[{common},cylinder,shape border rotate=90,aspect=0.16,minimum width={w}cm,"
+                     rf"minimum height={h}cm,inner sep=2pt] ({nid}) at ({x},{y}) {{{body}}};")
+        elif shape == "stack":
+            L.append(rf"\node[{common},rounded corners=3pt,minimum width={w}cm,minimum height={h}cm,inner sep=3pt,"
+                     rf"double copy shadow={{shadow xshift=3pt,shadow yshift=3pt,fill=white,draw=b{col},line width=0.7pt}}]"
+                     rf" ({nid}) at ({x},{y}) {{{body}}};")
+        elif shape.startswith("chev"):
+            frm = "nowhere" if shape == "chev0" else "west"
+            L.append(rf"\node[{common},signal,signal to=east,signal from={frm},signal pointer angle=120,"
+                     rf"minimum width={w}cm,minimum height={h}cm,inner sep=2pt] ({nid}) at ({x},{y}) {{{body}}};")
+        else:
+            L.append(rf"\node[{common},rounded corners=3pt,minimum width={w}cm,minimum height={h}cm,inner sep=3pt]"
+                     rf" ({nid}) at ({x},{y}) {{{body}}};")
+        if badge:
+            L.append(rf"\node[circle,fill=fink,text=white,font=\scriptsize\bfseries,inner sep=0pt,minimum size=0.42cm]"
+                     rf" at ({nid}.north west) {{{badge}}};")
+    for a, b, route, st in E:
+        if st == "main":
+            sty = r"->,draw=farrow,line width=1.1pt"
+        elif st == "gt":
+            sty = r"->,draw=bgt,line width=1.1pt,rounded corners=5pt"
+        else:
+            sty = r"->,draw=bnotrun,line width=0.9pt,dash pattern=on 1.5pt off 1.5pt"
+        L.append(rf"\draw[{sty}] ({a}) {route} ({b});")
+    L.append(rf"\node[font=\scriptsize\itshape,text=bgt!80!black,fill=fpanelA,inner sep=1pt] at ({GT_NOTE[0]},{GT_NOTE[1]}) {{{GT_NOTE[2]}}};")
+    x = 0.0
+    for col, lab in LEGEND:
+        dash = ",dash pattern=on 1.5pt off 1.5pt" if col == "notrun" else ""
+        L.append(rf"\draw[fill=f{col},draw=b{col},line width=0.8pt{dash},rounded corners=1.5pt] ({x},{LEGEND_Y - 0.13}) "
+                 rf"rectangle ({x + 0.45},{LEGEND_Y + 0.13});")
+        L.append(rf"\node[anchor=west,font=\scriptsize,text=black!75] at ({x + 0.55},{LEGEND_Y}) {{{lab}}};")
+        x += 1.0 + 0.16 * len(lab)
     L += [r"\end{tikzpicture}", r"\end{document}"]
     return "\n".join(L) + "\n"
 
 
 def drawio():
-    s = 40  # px per cm
-    ox, oy = 0.5 * s, 1.5 * s
+    s = 40.0
+    ox, oy = 0.6 * s, 1.8 * s
 
     def px(x, y):
         return ox + x * s, oy - y * s
 
-    rel = {"N": (0.5, 0), "S": (0.5, 1), "E": (1, 0.5), "W": (0, 0.5)}
+    def plain(t):
+        return (t.replace("\\textendash{}", "–").replace("\\,\\textbar\\,", " | ")
+                .replace("\\textperiodcentered{}", "·").replace("\\\\", ", "))
+
     cells = ['<mxCell id="0"/>', '<mxCell id="1" parent="0"/>']
-    for nid, (x, y, w, h, st, name, detail) in N.items():
-        fill, border, dash, text = STYLE[st]
+    for i, (x0, y0, x1, y1, col, title) in enumerate(PANELS):
+        f, b, t = C[col]
+        X0, Y0 = px(x0, y0)
+        X1, Y1 = px(x1, y1)
+        cells.append(f'<mxCell id="p{i}" value="{html.escape(plain(title))}" style="rounded=1;arcSize=3;whiteSpace=wrap;'
+                     f'html=1;fillColor=#{f};strokeColor=#{b};fontColor=#{t};fontStyle=1;fontSize=11;verticalAlign=top;'
+                     f'align=left;spacingLeft=8;spacingTop=2;" vertex="1" parent="1"><mxGeometry x="{X0:.0f}" '
+                     f'y="{Y0:.0f}" width="{X1 - X0:.0f}" height="{Y1 - Y0:.0f}" as="geometry"/></mxCell>')
+    shape_style = {"cyl": "shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=7;",
+                   "stack": "rounded=1;arcSize=6;shadow=1;", "box": "rounded=1;arcSize=6;",
+                   "chev0": "shape=step;perimeter=stepPerimeter;fixedSize=1;size=14;",
+                   "chev": "shape=step;perimeter=stepPerimeter;fixedSize=1;size=14;"}
+    for nid, (shape, x, y, w, h, col, name, detail, badge) in N.items():
+        f, b, t = C[col]
         cx, cy = px(x, y)
-        label = html.escape("<b>" + html.escape(name) + "</b><br><font style=\"font-size:9px\">"
-                            + html.escape(detail.replace("--", "–")) + "</font>")
-        dstyle = "dashed=1;" if dash == "dashed" else ("dashed=1;dashPattern=1 2;" if dash == "dotted" else "")
-        cells.append(f'<mxCell id="{nid}" value="{label}" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#{fill};'
-                     f'strokeColor=#{border};fontColor=#{text};fontSize=11;{dstyle}" vertex="1" parent="1">'
-                     f'<mxGeometry x="{cx - w * s / 2:.0f}" y="{cy - h * s / 2:.0f}" width="{w * s:.0f}" '
+        label = html.escape(f"<b>{html.escape(name)}</b><br><font color=\"#555555\" style=\"font-size:9px\">"
+                            f"{html.escape(plain(detail))}</font>")
+        dash = "dashed=1;dashPattern=2 2;" if col == "notrun" else ""
+        cells.append(f'<mxCell id="{nid}" value="{label}" style="{shape_style[shape]}whiteSpace=wrap;html=1;'
+                     f'fillColor=#{f};strokeColor=#{b};fontColor=#{t};fontSize=11;strokeWidth=1.5;{dash}" vertex="1" '
+                     f'parent="1"><mxGeometry x="{cx - w * s / 2:.0f}" y="{cy - h * s / 2:.0f}" width="{w * s:.0f}" '
                      f'height="{h * s:.0f}" as="geometry"/></mxCell>')
-    for i, (a, b, st, sa, sb) in enumerate(E):
-        _f, border, dash, _t = STYLE[st]
-        (ex, ey), (nx, ny) = rel[sa], rel[sb]
-        cells.append(f'<mxCell id="e{i}" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#{border};'
-                     f'{"dashed=1;" if dash else ""}endArrow=block;endFill=1;exitX={ex};exitY={ey};entryX={nx};'
-                     f'entryY={ny};" edge="1" parent="1" source="{a}" target="{b}"><mxGeometry relative="1" '
+        if badge:
+            cells.append(f'<mxCell id="b{nid}" value="{badge}" style="ellipse;whiteSpace=wrap;html=1;fillColor=#1F2A44;'
+                         f'strokeColor=none;fontColor=#FFFFFF;fontStyle=1;fontSize=9;" vertex="1" parent="1">'
+                         f'<mxGeometry x="{cx - w * s / 2 - 8:.0f}" y="{cy - h * s / 2 - 8:.0f}" width="17" height="17" '
+                         f'as="geometry"/></mxCell>')
+    side = {"east": (1, 0.5), "west": (0, 0.5), "north": (0.5, 0), "south": (0.5, 1)}
+    for i, (a, b, route, st) in enumerate(E):
+        sa, aa = a.split("]")[-1].split(".")
+        sb, ab = b.split(".")
+        col = {"main": "555555", "gt": "1BAF7A", "notrun": "9A9994"}[st]
+        dash = "dashed=1;" if st == "notrun" else ""
+        (ex, ey), (nx, ny) = side[aa], side[ab]
+        cells.append(f'<mxCell id="e{i}" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#{col};'
+                     f'strokeWidth=1.5;{dash}endArrow=block;endFill=1;exitX={ex};exitY={ey};entryX={nx};entryY={ny};" '
+                     f'edge="1" parent="1" source="{sa}" target="{sb}"><mxGeometry relative="1" as="geometry"/></mxCell>')
+    gx, gy = px(GT_NOTE[0], GT_NOTE[1])
+    cells.append(f'<mxCell id="gtn" value="{html.escape(plain(GT_NOTE[2]))}" style="text;html=1;fontStyle=2;fontSize=9;'
+                 f'fontColor=#138A60;align=center;" vertex="1" parent="1"><mxGeometry x="{gx - 110:.0f}" y="{gy - 9:.0f}" '
+                 f'width="220" height="18" as="geometry"/></mxCell>')
+    x = 0.0
+    for i, (col, lab) in enumerate(LEGEND):
+        f, b, _t = C[col]
+        lx, ly = px(x, LEGEND_Y)
+        cells.append(f'<mxCell id="l{i}" value="{html.escape(lab)}" style="rounded=1;html=1;fillColor=#{f};'
+                     f'strokeColor=#{b};{"dashed=1;" if col == "notrun" else ""}align=left;spacingLeft=6;fontSize=9;" '
+                     f'vertex="1" parent="1"><mxGeometry x="{lx:.0f}" y="{ly - 7:.0f}" width="130" height="14" '
                      f'as="geometry"/></mxCell>')
-    for j, (y, label) in enumerate([TOP_TITLE, (BAND[0] - 0.4, BAND[1])]):
-        cx, cy = px(0, y)
-        cells.append(f'<mxCell id="t{j}" value="{html.escape(label)}" style="text;html=1;fontStyle=1;align=left;'
-                     f'verticalAlign=middle;fontColor=#555555;" vertex="1" parent="1"><mxGeometry x="{cx:.0f}" '
-                     f'y="{cy - 10:.0f}" width="560" height="20" as="geometry"/></mxCell>')
-    x1, y1 = px(0, BAND[0])
-    x2, _ = px(RIGHT, BAND[0])
-    cells.append(f'<mxCell id="band" style="endArrow=none;html=1;dashed=1;strokeColor=#AAAAAA;" edge="1" parent="1">'
-                 f'<mxGeometry relative="1" as="geometry"><mxPoint x="{x1:.0f}" y="{y1:.0f}" as="sourcePoint"/>'
-                 f'<mxPoint x="{x2:.0f}" y="{y1:.0f}" as="targetPoint"/></mxGeometry></mxCell>')
-    for i, (st, lab) in enumerate(LEGEND):
-        fill, border, dash, _t = STYLE[st]
-        cx, cy = px(i * 4.45, LEGEND_Y)
-        cells.append(f'<mxCell id="l{i}" value="{html.escape(lab)}" style="rounded=0;html=1;fillColor=#{fill};'
-                     f'strokeColor=#{border};{"dashed=1;" if dash else ""}align=left;spacingLeft=6;fontSize=10;" '
-                     f'vertex="1" parent="1"><mxGeometry x="{cx:.0f}" y="{cy - 8:.0f}" width="170" height="16" '
-                     f'as="geometry"/></mxCell>')
+        x += 1.0 + 0.16 * len(lab)
     return ('<mxfile host="generated" type="device"><diagram id="arch" name="As-implemented architecture">'
             '<mxGraphModel grid="1" gridSize="10" page="1" pageWidth="1169" pageHeight="827"><root>'
             + "".join(cells) + "</root></mxGraphModel></diagram></mxfile>\n")

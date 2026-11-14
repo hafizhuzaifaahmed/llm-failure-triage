@@ -1,47 +1,61 @@
-\documentclass[tikz,border=3pt]{standalone}
+\documentclass[tikz,border=4pt]{standalone}
 \usepackage[T1]{fontenc}
 \usepackage{helvet}
+\usepackage{textcomp}
 \renewcommand{\familydefault}{\sfdefault}
-\usetikzlibrary{arrows.meta}
+\usetikzlibrary{arrows.meta,shapes.geometric,shapes.symbols,shadows,calc}
 \begin{document}
-\begin{tikzpicture}[>={Stealth[length=2.2mm]}]
-\definecolor{fdone}{HTML}{EAF2FC}\definecolor{bdone}{HTML}{2A78D6}\definecolor{tdone}{HTML}{0B0B0B}
-\definecolor{fgt}{HTML}{E6F6EF}\definecolor{bgt}{HTML}{1BAF7A}\definecolor{tgt}{HTML}{0B0B0B}
-\definecolor{fext}{HTML}{F0EEFC}\definecolor{bext}{HTML}{6250D6}\definecolor{text}{HTML}{0B0B0B}
-\definecolor{fnotrun}{HTML}{F7F7F5}\definecolor{bnotrun}{HTML}{8A8984}\definecolor{tnotrun}{HTML}{5F5E5A}
-\node[anchor=west,font=\footnotesize\bfseries,text=black!70] at (0,0.85) {Original study: the approved Phase 2 design, as executed};
-\draw[densely dashed,black!35] (0,-2.85) -- (18.25,-2.85);
-\node[anchor=west,font=\footnotesize\bfseries,text=black!70] at (0,-3.25) {Later investigations, added after the Phase 2 design (in the order run)};
-\node[draw=bdone,fill=fdone,text=tdone,solid,line width=0.9pt,rounded corners=3pt,minimum width=2.75cm,minimum height=1.0cm,text width=2.55cm,align=center,inner sep=2pt,execute at begin node={\hyphenpenalty=10000\relax}] (data) at (1.375,0) {{\footnotesize\bfseries Defects4J 3.0.1}\\[1pt]{\scriptsize D1 real, D2 seeded}};
-\node[draw=bdone,fill=fdone,text=tdone,solid,line width=0.9pt,rounded corners=3pt,minimum width=2.75cm,minimum height=1.0cm,text width=2.55cm,align=center,inner sep=2pt,execute at begin node={\hyphenpenalty=10000\relax}] (gen) at (4.475,0) {{\footnotesize\bfseries Test generation}\\[1pt]{\scriptsize Gemma 4 26B (local)}};
-\node[draw=bdone,fill=fdone,text=tdone,solid,line width=0.9pt,rounded corners=3pt,minimum width=2.75cm,minimum height=1.0cm,text width=2.55cm,align=center,inner sep=2pt,execute at begin node={\hyphenpenalty=10000\relax}] (run) at (7.575,0) {{\footnotesize\bfseries Run each test}\\[1pt]{\scriptsize buggy and fixed}};
-\node[draw=bdone,fill=fdone,text=tdone,solid,line width=0.9pt,rounded corners=3pt,minimum width=2.75cm,minimum height=1.0cm,text width=2.55cm,align=center,inner sep=2pt,execute at begin node={\hyphenpenalty=10000\relax}] (ctx) at (10.675,0) {{\footnotesize\bfseries Evidence package}\\[1pt]{\scriptsize S0 / S1 / S2}};
-\node[draw=bdone,fill=fdone,text=tdone,solid,line width=0.9pt,rounded corners=3pt,minimum width=2.75cm,minimum height=1.0cm,text width=2.55cm,align=center,inner sep=2pt,execute at begin node={\hyphenpenalty=10000\relax}] (arms) at (13.775,0) {{\footnotesize\bfseries Triage arms}\\[1pt]{\scriptsize J1, SC, DEB}};
-\node[draw=bdone,fill=fdone,text=tdone,solid,line width=0.9pt,rounded corners=3pt,minimum width=2.75cm,minimum height=1.0cm,text width=2.55cm,align=center,inner sep=2pt,execute at begin node={\hyphenpenalty=10000\relax}] (eval) at (16.875,0) {{\footnotesize\bfseries Evaluation}\\[1pt]{\scriptsize F1, MCC, bugs lost}};
-\node[draw=bnotrun,fill=fnotrun,text=tnotrun,dotted,line width=0.9pt,rounded corners=3pt,minimum width=2.75cm,minimum height=0.8cm,text width=2.55cm,align=center,inner sep=2pt,execute at begin node={\hyphenpenalty=10000\relax}] (d3) at (1.375,-1.8) {{\footnotesize\bfseries D3 GitBug-Java}\\[1pt]{\scriptsize planned, not run}};
-\node[draw=bgt,fill=fgt,text=tgt,solid,line width=0.9pt,rounded corners=3pt,minimum width=2.75cm,minimum height=0.8cm,text width=2.55cm,align=center,inner sep=2pt,execute at begin node={\hyphenpenalty=10000\relax}] (label) at (7.575,-1.8) {{\footnotesize\bfseries Execution labels}\\[1pt]{\scriptsize PF / TF, no LLM}};
-\node[draw=bext,fill=fext,text=text,dashed,line width=0.9pt,rounded corners=3pt,minimum width=4.1cm,minimum height=0.85cm,text width=3.8999999999999995cm,align=center,inner sep=2pt,execute at begin node={\hyphenpenalty=10000\relax}] (rules) at (2.05,-4.2) {{\footnotesize\bfseries Judge-only rules}\\[1pt]{\scriptsize KUU baseline (RQ4)}};
-\node[draw=bext,fill=fext,text=text,dashed,line width=0.9pt,rounded corners=3pt,minimum width=4.1cm,minimum height=0.85cm,text width=3.8999999999999995cm,align=center,inner sep=2pt,execute at begin node={\hyphenpenalty=10000\relax}] (cfp) at (6.8,-4.2) {{\footnotesize\bfseries Mutation probes}\\[1pt]{\scriptsize exploratory pilot}};
-\node[draw=bext,fill=fext,text=text,dashed,line width=0.9pt,rounded corners=3pt,minimum width=4.1cm,minimum height=0.85cm,text width=3.8999999999999995cm,align=center,inner sep=2pt,execute at begin node={\hyphenpenalty=10000\relax}] (conf) at (11.55,-4.2) {{\footnotesize\bfseries Registered confirmation}\\[1pt]{\scriptsize OSF kp79c, C1--C4}};
-\node[draw=bext,fill=fext,text=text,dashed,line width=0.9pt,rounded corners=3pt,minimum width=4.1cm,minimum height=0.85cm,text width=3.8999999999999995cm,align=center,inner sep=2pt,execute at begin node={\hyphenpenalty=10000\relax}] (wdp) at (16.3,-4.2) {{\footnotesize\bfseries Whole-method probes}\\[1pt]{\scriptsize exploratory, retrospective}};
-\draw[->,draw=bdone,solid,line width=0.9pt] (data.east) -- (gen.west);
-\draw[->,draw=bdone,solid,line width=0.9pt] (gen.east) -- (run.west);
-\draw[->,draw=bdone,solid,line width=0.9pt] (run.east) -- (ctx.west);
-\draw[->,draw=bdone,solid,line width=0.9pt] (ctx.east) -- (arms.west);
-\draw[->,draw=bdone,solid,line width=0.9pt] (arms.east) -- (eval.west);
-\draw[->,draw=bnotrun,dotted,line width=0.9pt] (d3.north) -- (data.south);
-\draw[->,draw=bgt,solid,line width=0.9pt] (run.south) -- (label.north);
-\draw[->,draw=bgt,solid,line width=0.9pt] (label.east) -| (eval.south);
-\draw[->,draw=bext,dashed,line width=0.9pt] (rules.east) -- (cfp.west);
-\draw[->,draw=bext,dashed,line width=0.9pt] (cfp.east) -- (conf.west);
-\draw[->,draw=bext,dashed,line width=0.9pt] (conf.east) -- (wdp.west);
-\node[draw=bdone,fill=fdone,solid,line width=0.9pt,minimum width=0.55cm,minimum height=0.3cm] at (0.28,-5.2) {};
-\node[anchor=west,font=\scriptsize] at (0.65,-5.2) {executed (Phase 2 design)};
-\node[draw=bgt,fill=fgt,solid,line width=0.9pt,minimum width=0.55cm,minimum height=0.3cm] at (4.73,-5.2) {};
-\node[anchor=west,font=\scriptsize] at (5.1000000000000005,-5.2) {ground truth, no LLM};
-\node[draw=bext,fill=fext,dashed,line width=0.9pt,minimum width=0.55cm,minimum height=0.3cm] at (9.18,-5.2) {};
-\node[anchor=west,font=\scriptsize] at (9.55,-5.2) {later investigation};
-\node[draw=bnotrun,fill=fnotrun,dotted,line width=0.9pt,minimum width=0.55cm,minimum height=0.3cm] at (13.63,-5.2) {};
-\node[anchor=west,font=\scriptsize] at (14.000000000000002,-5.2) {planned, not run};
+\begin{tikzpicture}[>={Latex[length=2.4mm,width=1.8mm]},lbl/.style={align=center,execute at begin node={\hyphenpenalty=10000\relax}}]
+\definecolor{fink}{HTML}{1F2A44}\definecolor{bink}{HTML}{1F2A44}\definecolor{tink}{HTML}{FFFFFF}
+\definecolor{fstage}{HTML}{FFFFFF}\definecolor{bstage}{HTML}{2A78D6}\definecolor{tstage}{HTML}{1B1B1B}
+\definecolor{fdata}{HTML}{EAF2FC}\definecolor{bdata}{HTML}{2A78D6}\definecolor{tdata}{HTML}{1B1B1B}
+\definecolor{fgt}{HTML}{E6F6EF}\definecolor{bgt}{HTML}{1BAF7A}\definecolor{tgt}{HTML}{1B1B1B}
+\definecolor{fnotrun}{HTML}{FFFFFF}\definecolor{bnotrun}{HTML}{9A9994}\definecolor{tnotrun}{HTML}{6B6A66}
+\definecolor{frule}{HTML}{F0EEFC}\definecolor{brule}{HTML}{6250D6}\definecolor{trule}{HTML}{1B1B1B}
+\definecolor{fexpl}{HTML}{FDEEE7}\definecolor{bexpl}{HTML}{EB6834}\definecolor{texpl}{HTML}{1B1B1B}
+\definecolor{freg}{HTML}{E6F6EF}\definecolor{breg}{HTML}{1BAF7A}\definecolor{treg}{HTML}{1B1B1B}
+\definecolor{fpanelA}{HTML}{F5F8FC}\definecolor{bpanelA}{HTML}{C8D4E3}\definecolor{tpanelA}{HTML}{33415C}
+\definecolor{fpanelB}{HTML}{FAF9FD}\definecolor{bpanelB}{HTML}{D7D2EE}\definecolor{tpanelB}{HTML}{4B3F8F}
+\definecolor{farrow}{HTML}{555555}\definecolor{barrow}{HTML}{555555}\definecolor{tarrow}{HTML}{555555}
+\draw[fill=fpanelA,draw=bpanelA,line width=0.7pt,rounded corners=6pt] (-0.25,1.8) rectangle (19.25,-3.15);
+\node[anchor=north west,font=\footnotesize\bfseries,text=tpanelA] at (-0.04999999999999999,1.6800000000000002) {Original study \textendash{} the approved Phase 2 design, as executed};
+\draw[fill=fpanelB,draw=bpanelB,line width=0.7pt,rounded corners=6pt] (-0.25,-3.5) rectangle (19.25,-5.85);
+\node[anchor=north west,font=\footnotesize\bfseries,text=tpanelB] at (-0.04999999999999999,-3.62) {Later studies \textendash{} added after Phase 2, in the order they were run};
+\node[draw=bdata,fill=fdata,text=tdata,line width=0.9pt,lbl,text width=2.38cm,cylinder,shape border rotate=90,aspect=0.16,minimum width=2.5cm,minimum height=1.75cm,inner sep=2pt] (data) at (1.25,0.0) {{\footnotesize\bfseries Defects4J 3.0.1}\\[1pt]{\scriptsize\color{black!65} D1 real faults\\D2 seeded faults}};
+\node[draw=bstage,fill=fstage,text=tstage,line width=0.9pt,lbl,text width=2.63cm,rounded corners=3pt,minimum width=2.75cm,minimum height=1.45cm,inner sep=3pt] (gen) at (4.425,0.0) {{\footnotesize\bfseries Test generation}\\[1pt]{\scriptsize\color{black!65} Gemma 4 26B}};
+\node[circle,fill=fink,text=white,font=\scriptsize\bfseries,inner sep=0pt,minimum size=0.42cm] at (gen.north west) {1};
+\node[draw=bstage,fill=fstage,text=tstage,line width=0.9pt,lbl,text width=2.63cm,rounded corners=3pt,minimum width=2.75cm,minimum height=1.45cm,inner sep=3pt] (exec) at (7.725,0.0) {{\footnotesize\bfseries Dual execution}\\[1pt]{\scriptsize\color{black!65} buggy \,\textbar\, fixed, 3 runs}};
+\node[circle,fill=fink,text=white,font=\scriptsize\bfseries,inner sep=0pt,minimum size=0.42cm] at (exec.north west) {2};
+\node[draw=bstage,fill=fstage,text=tstage,line width=0.9pt,lbl,text width=2.63cm,rounded corners=3pt,minimum width=2.75cm,minimum height=1.45cm,inner sep=3pt] (ctx) at (11.025,0.0) {{\footnotesize\bfseries Evidence package}\\[1pt]{\scriptsize\color{black!65} S0 \,\textbar\, S1 \,\textbar\, S2}};
+\node[circle,fill=fink,text=white,font=\scriptsize\bfseries,inner sep=0pt,minimum size=0.42cm] at (ctx.north west) {3};
+\node[draw=bstage,fill=fstage,text=tstage,line width=0.9pt,lbl,text width=2.63cm,rounded corners=3pt,minimum width=2.75cm,minimum height=1.45cm,inner sep=3pt,double copy shadow={shadow xshift=3pt,shadow yshift=3pt,fill=white,draw=bstage,line width=0.7pt}] (arms) at (14.325,0.0) {{\footnotesize\bfseries Triage arms}\\[1pt]{\scriptsize\color{black!65} J1 \textperiodcentered{} SC \textperiodcentered{} DEB}};
+\node[circle,fill=fink,text=white,font=\scriptsize\bfseries,inner sep=0pt,minimum size=0.42cm] at (arms.north west) {4};
+\node[draw=bstage,fill=fstage,text=tstage,line width=0.9pt,lbl,text width=2.63cm,rounded corners=3pt,minimum width=2.75cm,minimum height=1.45cm,inner sep=3pt] (eval) at (17.625,0.0) {{\footnotesize\bfseries Evaluation}\\[1pt]{\scriptsize\color{black!65} F1 \textperiodcentered{} MCC \textperiodcentered{} bugs lost}};
+\node[circle,fill=fink,text=white,font=\scriptsize\bfseries,inner sep=0pt,minimum size=0.42cm] at (eval.north west) {5};
+\node[draw=bgt,fill=fgt,text=tgt,line width=0.9pt,lbl,text width=2.63cm,rounded corners=3pt,minimum width=2.75cm,minimum height=1.05cm,inner sep=3pt] (gt) at (7.725,-2.3) {{\footnotesize\bfseries Execution labels}\\[1pt]{\scriptsize\color{black!65} PF / TF, sealed}};
+\node[draw=bnotrun,fill=fnotrun,text=tnotrun,line width=0.9pt,dash pattern=on 1.5pt off 1.5pt,lbl,text width=2.1799999999999997cm,cylinder,shape border rotate=90,aspect=0.16,minimum width=2.3cm,minimum height=1.25cm,inner sep=2pt] (d3) at (1.25,-2.3) {{\footnotesize\bfseries GitBug-Java}\\[1pt]{\scriptsize\color{black!65} D3 \textendash{} not run}};
+\node[draw=brule,fill=frule,text=trule,line width=0.9pt,lbl,text width=4.7299999999999995cm,signal,signal to=east,signal from=nowhere,signal pointer angle=120,minimum width=4.85cm,minimum height=1.05cm,inner sep=2pt] (kuu) at (2.425,-4.8) {{\footnotesize\bfseries Judge-only rules}\\[1pt]{\scriptsize\color{black!65} KUU baseline (RQ4)}};
+\node[draw=bexpl,fill=fexpl,text=texpl,line width=0.9pt,lbl,text width=4.7299999999999995cm,signal,signal to=east,signal from=west,signal pointer angle=120,minimum width=4.85cm,minimum height=1.05cm,inner sep=2pt] (cfp) at (7.175,-4.8) {{\footnotesize\bfseries Mutation probes}\\[1pt]{\scriptsize\color{black!65} pilot, exploratory}};
+\node[draw=breg,fill=freg,text=treg,line width=0.9pt,lbl,text width=4.7299999999999995cm,signal,signal to=east,signal from=west,signal pointer angle=120,minimum width=4.85cm,minimum height=1.05cm,inner sep=2pt] (conf) at (11.925,-4.8) {{\footnotesize\bfseries Registered confirmation}\\[1pt]{\scriptsize\color{black!65} OSF kp79c, C1\textendash{}C4}};
+\node[draw=bexpl,fill=fexpl,text=texpl,line width=0.9pt,lbl,text width=4.7299999999999995cm,signal,signal to=east,signal from=west,signal pointer angle=120,minimum width=4.85cm,minimum height=1.05cm,inner sep=2pt] (wdp) at (16.675,-4.8) {{\footnotesize\bfseries Whole-method probes}\\[1pt]{\scriptsize\color{black!65} exploratory, retrospective}};
+\draw[->,draw=farrow,line width=1.1pt] (data.east) -- (gen.west);
+\draw[->,draw=farrow,line width=1.1pt] (gen.east) -- (exec.west);
+\draw[->,draw=farrow,line width=1.1pt] (exec.east) -- (ctx.west);
+\draw[->,draw=farrow,line width=1.1pt] (ctx.east) -- (arms.west);
+\draw[->,draw=farrow,line width=1.1pt] ([xshift=6pt]arms.east) -- (eval.west);
+\draw[->,draw=bgt,line width=1.1pt,rounded corners=5pt] (exec.south) -- (gt.north);
+\draw[->,draw=bgt,line width=1.1pt,rounded corners=5pt] (gt.east) -| (eval.south);
+\draw[->,draw=bnotrun,line width=0.9pt,dash pattern=on 1.5pt off 1.5pt] (d3.north) -- (data.south);
+\node[font=\scriptsize\itshape,text=bgt!80!black,fill=fpanelA,inner sep=1pt] at (13.4,-2.0) {ground-truth channel \textendash{} no LLM sees it};
+\draw[fill=fdata,draw=bdata,line width=0.8pt,rounded corners=1.5pt] (0.0,-6.43) rectangle (0.45,-6.17);
+\node[anchor=west,font=\scriptsize,text=black!75] at (0.55,-6.3) {executed};
+\draw[fill=fgt,draw=bgt,line width=0.8pt,rounded corners=1.5pt] (2.2800000000000002,-6.43) rectangle (2.7300000000000004,-6.17);
+\node[anchor=west,font=\scriptsize,text=black!75] at (2.83,-6.3) {ground truth / registered};
+\draw[fill=frule,draw=brule,line width=0.8pt,rounded corners=1.5pt] (7.28,-6.43) rectangle (7.73,-6.17);
+\node[anchor=west,font=\scriptsize,text=black!75] at (7.83,-6.3) {fixed in advance};
+\draw[fill=fexpl,draw=bexpl,line width=0.8pt,rounded corners=1.5pt] (10.84,-6.43) rectangle (11.29,-6.17);
+\node[anchor=west,font=\scriptsize,text=black!75] at (11.39,-6.3) {exploratory};
+\draw[fill=fnotrun,draw=bnotrun,line width=0.8pt,dash pattern=on 1.5pt off 1.5pt,rounded corners=1.5pt] (13.6,-6.43) rectangle (14.049999999999999,-6.17);
+\node[anchor=west,font=\scriptsize,text=black!75] at (14.15,-6.3) {planned, not run};
 \end{tikzpicture}
 \end{document}

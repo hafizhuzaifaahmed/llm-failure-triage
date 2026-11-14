@@ -20,19 +20,19 @@ hand-maintained source that reuses `_v2`'s verified sentences, tables and macros
 | Requirement | `_v2` | Final |
 |---|---|---|
 | Template | Springer Nature `sn-jnl` | **IEEE journal (`IEEEtran`), IEEE reference style** (authors' instruction) |
-| Section order 1–15 | probes (§8), registered confirmation (§9) and surviving signal (§10) between Ablation (§7) and Discussion (§11) | probe and WDP **method** in §III-F; their **results** in §V-E and §V-F; order Introduction → Related Work → Methodology → Setup → Results → Comparison → Ablation → Discussion → Conclusion → Data and Code Availability → Use of AI-Assisted Tools → References |
+| Section order 1–15 | probes (§8), registered confirmation (§9) and surviving signal (§10) between Ablation (§7) and Discussion (§11) | probe and WDP **method** in §III-F; their **results** in §V-E and §V-F; order Introduction → Related Work → Methodology → Setup → Results → Comparison → Ablation → Discussion → Conclusion → Data and Code Availability → References |
 | Length (8–12 pp.) | 34 pp.; main text to p. 18 | **10 pp. including references**; the text ends on p. 9. Appendices in a separate 11-page supplement |
 | Abstract 150–250 words, one paragraph, numbers | ≈ 280 words | 249 words, five components, numbers from macros |
 | Keywords 4–6 | 7 | 6 (IEEE "Index Terms") |
 | Third person | first-person plural | third person |
 | Authors and affiliation | e-mails; Department of Computer Science | **no e-mails**; "Department of Artificial Intelligence & Data Science, School of Computing, FAST-NUCES" (authors' wording) |
-| Architecture diagram | raster PNG of the Phase 2 **design** (showed D3 as if part of the pipeline) | new, **simple** as-implemented diagram (Fig. 1): one six-box pipeline, the ground-truth path beneath it, one row of later studies, D3 as a dotted not-run box; editable `.drawio` and TikZ from one spec (`build/make_architecture.py`) |
-| Changes after Phase 2 | prose list in Appendix A with a `[TODO]` for instructor feedback | Table III in §III-G (reason, origin tag, decision record) and the authors' statement that **the instructor gave no comments**, so no change was made for feedback |
+| Architecture diagram | raster PNG of the Phase 2 **design** (showed D3 as if part of the pipeline) | new as-implemented diagram (Fig. 1) in an architect's style: two grouped panels (original study; later studies), five numbered stages, a database symbol for Defects4J, stacked cards for the triage arms, a separate ground-truth channel, chevrons for the later studies coloured by evidence status, D3 as a dotted not-run database; editable `.drawio` and TikZ from one spec (`build/make_architecture.py`) |
+| Changes after Phase 2 | prose list in Appendix A with a `[TODO]` for instructor feedback | Table III (reason, origin tag, decision record), cited from §III-B and §V-C; the subsection that introduced it, with the instructor sentence, was removed at the authors' instruction (D-156). The supplement's Appendix A records that the instructor gave no comments |
 | Related-work comparison table | two tables | **Table I** (closest triage studies by design property) in §II |
 | Base-paper comparison | tables in Appendix B | §VI with Table X (summary) and Table XI (quantitative, * = published figures), methodological, improvement and fairness paragraphs |
 | Ablation | table in Appendix B | Table XII in §VII |
 | Evidence status | Appendix H | Table V in §IV |
-| Declarations | funding, conflicts, acknowledgements, author-contribution and policy `[TODO]`s | **removed** at the authors' instruction; kept: *Data and Code Availability* (repository and dataset links, registration) and *Use of AI-Assisted Tools* |
+| Declarations | funding, conflicts, acknowledgements, author-contribution and policy `[TODO]`s; AI-use paragraph | **removed** at the authors' instruction, including the AI-tool declaration (D-155); kept: *Data and Code Availability* (repository and dataset links, registration) |
 | Links | repository URL `[TODO]` | code and data: `https://github.com/hafizhuzaifaahmed/llm-failure-triage`; dataset: `https://github.com/rjust/defects4j` (tag v3.0.1), in §IV and the availability section |
 
 ## Content corrections (scientific)
@@ -47,9 +47,9 @@ hand-maintained source that reuses `_v2`'s verified sentences, tables and macros
    22 of them carry a bug-revealing test.
 5. **WDP in the abstract**: "+0.104 more wrong tests" (a count reading of a rate difference) became "raised the share
    of wrong tests removed by +0.104 [0.037, 0.201]".
-6. **AI-use declaration** names both tools accurately: Claude Opus 5.5 (implementation, analysis, figures, deck,
-   drafting) and Claude Fable 5.2 (read-only audit of the confirmation; WDP design and execution brief); the Fable 5.2
-   interpretation review was started, stopped at the usage limit with no output, and waived (D-152).
+6. **AI-use declaration**: written in round 1 and then removed from the paper at the authors' instruction (D-155).
+   The roles of Claude Opus 5.5 and Claude Fable 5.2 remain recorded in `docs/tracking/DECISIONS.md` (D-152) and in
+   the deck's backup slide B11.
 7. KUU is described as a baseline throughout; DEB is identified as the framework proposed in Phase 2.
 8. **Data availability is stated precisely**: raw model-call and inference-server logs are not in the public
    repository because single files exceed GitHub's 100 MB limit; parsed decisions and analysis outputs are.

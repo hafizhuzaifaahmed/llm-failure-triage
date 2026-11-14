@@ -455,7 +455,7 @@ Transition: this rule sits inside a nine-stage pipeline.
 """)
 
 s = new_slide("The pipeline as executed, including what did not run", None, act="Act 3 · Proposed methodology")
-picture(s, ARCH_PNG, 0.6, 1.75, w=12.15, alt="As-implemented research architecture: the approved Phase 2 pipeline (executed), the ground-truth channel, later investigations, and planned components that were not run.")
+picture(s, ARCH_PNG, 1.2, 1.5, w=10.95, alt="As-implemented research architecture: the approved Phase 2 pipeline (executed), the ground-truth channel, later investigations, and planned components that were not run.")
 text(s, 0.6, 6.45, 12.1, 0.45, "Also planned and not run: prompt paraphrases (E5-R4) and the audit of inferred specifications. Editable source: figures/fig_final_architecture.drawio",
      size=13, color=MUTED, italic=True)
 notes(s, """
