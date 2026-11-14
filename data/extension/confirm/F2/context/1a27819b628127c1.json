@@ -1,0 +1,129 @@
+{
+ "bug_name": "JacksonDatabind_88",
+ "call_sites": [
+  {
+   "line": 42,
+   "lines": [
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/jsontype/impl/ClassNameIdResolver.java",
+   "snippet": "        return _idFrom(value, type, _typeFactory);\n    }\n\n    @Override\n    public JavaType typeFromId(DatabindContext context, String id) throws IOException {\n        return _typeFromId(id, context);\n    }\n\n    protected JavaType _typeFromId(String id, DatabindContext ctxt) throws IOException\n    {\n        /* 30-Jan-2010, tatu: Most ids are basic class names; so let's first"
+  },
+  {
+   "line": 67,
+   "lines": [
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/jsontype/impl/MinimalClassNameIdResolver.java",
+   "snippet": "                // otherwise just concatenate package, with leading-dot-partial name\n                sb.append(_basePackageName).append(id);\n            }\n            id = sb.toString();\n        }\n        return super._typeFromId(id, ctxt);\n    }\n}\n"
+  },
+  {
+   "line": 127,
+   "lines": [
+    122,
+    123,
+    124,
+    125,
+    126,
+    127,
+    128,
+    129,
+    130,
+    131,
+    132
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/jsontype/impl/TypeNameIdResolver.java",
+   "snippet": "        return idFromValue(value);\n    }\n\n    @Override\n    public JavaType typeFromId(DatabindContext context, String id) {\n        return _typeFromId(id);\n    }\n    \n    protected JavaType _typeFromId(String id) {\n        /* Now: if no type is found, should we try to locate it by\n         * some other means? (specifically, if in same package as base type,"
+  }
+ ],
+ "class_simple": "ClassNameIdResolver",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * {@link com.fasterxml.jackson.databind.jsontype.TypeIdResolver} implementation\n * that converts between fully-qualified\n * Java class names and (JSON) Strings.\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [],
+ "focal_class": "com.fasterxml.jackson.databind.jsontype.impl.ClassNameIdResolver",
+ "focal_id": "JacksonDatabind_88::com.fasterxml.jackson.databind.jsontype.impl.ClassNameIdResolver::_typeFromId(String,DatabindContext)",
+ "focal_method_name": "_typeFromId",
+ "generations": 3,
+ "impl_B": "protected JavaType _typeFromId(String id, DatabindContext ctxt) throws IOException\n    {\n        /* 30-Jan-2010, tatu: Most ids are basic class names; so let's first\n         *    check if any generics info is added; and only then ask factory\n         *    to do translation when necessary\n         */\n        TypeFactory tf = ctxt.getTypeFactory();\n        if (id.indexOf('<') > 0) {\n            // note: may want to try combining with specialization (esp for EnumMap)?\n            // 17-Aug-2017, tatu: As per [databind#1735] need to ensure assignment\n            //    compatibility -- needed later anyway, and not doing so may open\n            //    security issues.\n            JavaType t = tf.constructFromCanonical(id);\n                // Probably cleaner to have a method in `TypeFactory` but can't add in patch\n            return t;\n        }\n        Class<?> cls;\n        try {\n            cls =  tf.findClass(id);\n        } catch (ClassNotFoundException e) {\n            // 24-May-2016, tatu: Ok, this is pretty ugly, but we should always get\n            //   DeserializationContext, just playing it safe\n            if (ctxt instanceof DeserializationContext) {\n                DeserializationContext dctxt = (DeserializationContext) ctxt;\n                // First: we may have problem handlers that can deal with it?\n                return dctxt.handleUnknownTypeId(_baseType, id, this, \"no such class found\");\n            }\n            // ... meaning that we really should never get here.\n            return null;\n        } catch (Exception e) {\n            throw new IllegalArgumentException(\"Invalid type id '\"+id+\"' (for id type 'Id.class'): \"+e.getMessage(), e);\n        }\n        return tf.constructSpecializedType(_baseType, cls);\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.util.*",
+  "com.fasterxml.jackson.annotation.JsonTypeInfo",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.type.TypeFactory",
+  "com.fasterxml.jackson.databind.util.ClassUtil"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.jsontype.impl",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "getMechanism"
+  },
+  {
+   "javadoc": "",
+   "name": "registerSubtype"
+  },
+  {
+   "javadoc": "",
+   "name": "idFromValue"
+  },
+  {
+   "javadoc": "",
+   "name": "idFromValueAndType"
+  },
+  {
+   "javadoc": "",
+   "name": "typeFromId"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_idFrom"
+  },
+  {
+   "javadoc": "",
+   "name": "getDescForKnownTypeIds"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class ClassNameIdResolver extends TypeIdResolverBase",
+  "constructors": [
+   "public ClassNameIdResolver(JavaType baseType, TypeFactory typeFactory);"
+  ],
+  "focal_signature": "protected JavaType _typeFromId(String id, DatabindContext ctxt) throws IOException",
+  "methods": [
+   "public JsonTypeInfo.Id getMechanism();",
+   "public void registerSubtype(Class<?> type, String name);",
+   "public String idFromValue(Object value);",
+   "public String idFromValueAndType(Object value, Class<?> type);",
+   "public JavaType typeFromId(DatabindContext context, String id) throws IOException;",
+   "protected final String _idFrom(Object value, Class<?> cls, TypeFactory typeFactory);",
+   "public String getDescForKnownTypeIds();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

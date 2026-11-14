@@ -1,0 +1,81 @@
+{
+  "bug_name": "Jsoup_93",
+  "call_sites": [
+    {
+      "line": 69,
+      "lines": [
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74
+      ],
+      "path": "src/main/java/org/jsoup/nodes/FormElement.java",
+      "snippet": "        Validate.notEmpty(action, \"Could not determine a form action URL for submit. Ensure you set a base URI when parsing.\");\n        Connection.Method method = attr(\"method\").toUpperCase().equals(\"POST\") ?\n                Connection.Method.POST : Connection.Method.GET;\n\n        return Jsoup.connect(action)\n                .data(formData())\n                .method(method);\n    }\n\n    /**\n     * Get the data that this form submits. The returned list is a copy of the data, and changes to the contents of the"
+    }
+  ],
+  "class_simple": "FormElement",
+  "doc": {
+    "class_javadoc": "/**\n * A HTML Form Element provides ready access to the form fields/controls that are associated with it. It also allows a\n * form to easily be submitted.\n */\npublic",
+    "method_javadoc": "/**\n     * Get the data that this form submits. The returned list is a copy of the data, and changes to the contents of the\n     * list will not be reflected in the DOM.\n     * @return a list of key vals\n     */"
+  },
+  "fields": [
+    "private final Elements elements"
+  ],
+  "focal_class": "org.jsoup.nodes.FormElement",
+  "focal_id": "Jsoup_93::org.jsoup.nodes.FormElement::formData()",
+  "focal_method_name": "formData",
+  "impl_B": "public List<Connection.KeyVal> formData() {\n        ArrayList<Connection.KeyVal> data = new ArrayList<>();\n\n        // iterate the form control elements and accumulate their values\n        for (Element el: elements) {\n            if (!el.tag().isFormSubmittable()) continue; // contents are form listable, superset of submitable\n            if (el.hasAttr(\"disabled\")) continue; // skip disabled form inputs\n            String name = el.attr(\"name\");\n            if (name.length() == 0) continue;\n            String type = el.attr(\"type\");\n\n\n            if (\"select\".equals(el.normalName())) {\n                Elements options = el.select(\"option[selected]\");\n                boolean set = false;\n                for (Element option: options) {\n                    data.add(HttpConnection.KeyVal.create(name, option.val()));\n                    set = true;\n                }\n                if (!set) {\n                    Element option = el.select(\"option\").first();\n                    if (option != null)\n                        data.add(HttpConnection.KeyVal.create(name, option.val()));\n                }\n            } else if (\"checkbox\".equalsIgnoreCase(type) || \"radio\".equalsIgnoreCase(type)) {\n                // only add checkbox or radio if they have the checked attribute\n                if (el.hasAttr(\"checked\")) {\n                    final String val = el.val().length() >  0 ? el.val() : \"on\";\n                    data.add(HttpConnection.KeyVal.create(name, val));\n                }\n            } else {\n                data.add(HttpConnection.KeyVal.create(name, el.val()));\n            }\n        }\n        return data;\n    }",
+  "imports": [
+    "org.jsoup.Connection",
+    "org.jsoup.Jsoup",
+    "org.jsoup.helper.HttpConnection",
+    "org.jsoup.helper.Validate",
+    "org.jsoup.parser.Tag",
+    "org.jsoup.select.Elements",
+    "java.util.ArrayList",
+    "java.util.List"
+  ],
+  "javadoc_edited_by_fix": false,
+  "package": "org.jsoup.nodes",
+  "project": "Jsoup",
+  "siblings": [
+    {
+      "javadoc": "/**\n     * Get the list of form control elements associated with this form.\n     * @return form controls associated with this element.\n     */",
+      "name": "elements"
+    },
+    {
+      "javadoc": "/**\n     * Add a form control element to this form.\n     * @param element form control to add\n     * @return this form element, for chaining\n     */",
+      "name": "addElement"
+    },
+    {
+      "javadoc": "",
+      "name": "removeChild"
+    },
+    {
+      "javadoc": "/**\n     * Prepare to submit this form. A Connection object is created with the request set up from the form values. You\n     * can then set up other options (like user-agent, timeout, cookies), then execute it.\n     * @return a connection prepared from the values of this form.\n     * @throws IllegalArgumentException if the form's absolute action URL cannot be determined. Make sure you pass the\n     * document's base URI when parsing.\n     */",
+      "name": "submit"
+    }
+  ],
+  "sig": {
+    "class_declaration": "public class FormElement extends Element",
+    "constructors": [
+      "public FormElement(Tag tag, String baseUri, Attributes attributes);"
+    ],
+    "focal_signature": "public List<Connection.KeyVal> formData()",
+    "methods": [
+      "public Elements elements();",
+      "public FormElement addElement(Element element);",
+      "protected void removeChild(Node out);",
+      "public Connection submit();"
+    ],
+    "type_signatures": []
+  },
+  "split": "dev"
+}

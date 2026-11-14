@@ -1,0 +1,173 @@
+{
+ "bug_name": "Math_65",
+ "call_sites": [
+  {
+   "line": 70,
+   "lines": [
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75
+   ],
+   "path": "src/main/java/org/apache/commons/math/estimation/Estimator.java",
+   "snippet": "   * @see #guessParametersErrors(EstimationProblem)\n   *\n   * @param problem estimation problem\n   * @return RMS value\n   */\n  double getRMS(EstimationProblem problem);\n\n  /**\n   * Get the covariance matrix of estimated parameters.\n   * @param problem estimation problem\n   * @return covariance matrix"
+  }
+ ],
+ "class_simple": "AbstractLeastSquaresOptimizer",
+ "dataset": "D1C_F1",
+ "doc": {
+  "class_javadoc": "/**\n * Base class for implementing least squares optimizers.\n * <p>This base class handles the boilerplate methods associated to thresholds\n * settings, jacobian and error estimation.</p>\n * @version $Revision$ $Date$\n * @since 1.2\n *\n */\npublic abstract",
+  "method_javadoc": "/**\n     * Get the Root Mean Square value.\n     * Get the Root Mean Square value, i.e. the root of the arithmetic\n     * mean of the square of all weighted residuals. This is related to the\n     * criterion that is minimized by the optimizer as follows: if\n     * <em>c</em> if the criterion, and <em>n</em> is the number of\n     * measurements, then the RMS is <em>sqrt (c/n)</em>.\n     *\n     * @return RMS value\n     */"
+ },
+ "fields": [
+  "public static final int DEFAULT_MAX_ITERATIONS",
+  "protected VectorialConvergenceChecker checker",
+  "protected double[][] jacobian",
+  "protected int cols",
+  "protected int rows",
+  "protected double[] targetValues",
+  "protected double[] residualsWeights",
+  "protected double[] point",
+  "protected double[] objective",
+  "protected double[] residuals",
+  "protected double cost",
+  "private int maxIterations",
+  "private int iterations",
+  "private int maxEvaluations",
+  "private int objectiveEvaluations",
+  "private int jacobianEvaluations",
+  "private DifferentiableMultivariateVectorialFunction function",
+  "private MultivariateMatrixFunction jF"
+ ],
+ "focal_class": "org.apache.commons.math.optimization.general.AbstractLeastSquaresOptimizer",
+ "focal_id": "Math_65::org.apache.commons.math.optimization.general.AbstractLeastSquaresOptimizer::getRMS()",
+ "focal_method_name": "getRMS",
+ "generations": 6,
+ "impl_B": "public double getRMS() {\n        double criterion = 0;\n        for (int i = 0; i < rows; ++i) {\n            final double residual = residuals[i];\n            criterion += residual * residual * residualsWeights[i];\n        }\n        return Math.sqrt(criterion / rows);\n    }",
+ "imports": [
+  "org.apache.commons.math.FunctionEvaluationException",
+  "org.apache.commons.math.MaxEvaluationsExceededException",
+  "org.apache.commons.math.MaxIterationsExceededException",
+  "org.apache.commons.math.analysis.DifferentiableMultivariateVectorialFunction",
+  "org.apache.commons.math.analysis.MultivariateMatrixFunction",
+  "org.apache.commons.math.exception.LocalizedFormats",
+  "org.apache.commons.math.linear.InvalidMatrixException",
+  "org.apache.commons.math.linear.LUDecompositionImpl",
+  "org.apache.commons.math.linear.MatrixUtils",
+  "org.apache.commons.math.linear.RealMatrix",
+  "org.apache.commons.math.optimization.OptimizationException",
+  "org.apache.commons.math.optimization.SimpleVectorialValueChecker",
+  "org.apache.commons.math.optimization.VectorialConvergenceChecker",
+  "org.apache.commons.math.optimization.DifferentiableMultivariateVectorialOptimizer",
+  "org.apache.commons.math.optimization.VectorialPointValuePair"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math.optimization.general",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "setMaxIterations"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getMaxIterations"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getIterations"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "setMaxEvaluations"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getMaxEvaluations"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getEvaluations"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getJacobianEvaluations"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "setConvergenceChecker"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getConvergenceChecker"
+  },
+  {
+   "javadoc": "/** Increment the iterations counter by 1.\n     * @exception OptimizationException if the maximal number\n     * of iterations is exceeded\n     */",
+   "name": "incrementIterationsCounter"
+  },
+  {
+   "javadoc": "/**\n     * Update the jacobian matrix.\n     * @exception FunctionEvaluationException if the function jacobian\n     * cannot be evaluated or its dimension doesn't match problem dimension\n     */",
+   "name": "updateJacobian"
+  },
+  {
+   "javadoc": "/**\n     * Update the residuals array and cost function value.\n     * @exception FunctionEvaluationException if the function cannot be evaluated\n     * or its dimension doesn't match problem dimension or maximal number of\n     * of evaluations is exceeded\n     */",
+   "name": "updateResidualsAndCost"
+  },
+  {
+   "javadoc": "/**\n     * Get a Chi-Square-like value assuming the N residuals follow N\n     * distinct normal distributions centered on 0 and whose variances are\n     * the reciprocal of the weights.\n     * @return chi-square value\n     */",
+   "name": "getChiSquare"
+  },
+  {
+   "javadoc": "/**\n     * Get the covariance matrix of optimized parameters.\n     * @return covariance matrix\n     * @exception FunctionEvaluationException if the function jacobian cannot\n     * be evaluated\n     * @exception OptimizationException if the covariance matrix\n     * cannot be computed (singular problem)\n     */",
+   "name": "getCovariances"
+  },
+  {
+   "javadoc": "/**\n     * Guess the errors in optimized parameters.\n     * <p>Guessing is covariance-based, it only gives rough order of magnitude.</p>\n     * @return errors in optimized parameters\n     * @exception FunctionEvaluationException if the function jacobian cannot b evaluated\n     * @exception OptimizationException if the covariances matrix cannot be computed\n     * or the number of degrees of freedom is not positive (number of measurements\n     * lesser or equal to number of parameters)\n     */",
+   "name": "guessParametersErrors"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "optimize"
+  },
+  {
+   "javadoc": "/** Perform the bulk of optimization algorithm.\n     * @return the point/value pair giving the optimal value for objective function\n     * @exception FunctionEvaluationException if the objective function throws one during\n     * the search\n     * @exception OptimizationException if the algorithm failed to converge\n     * @exception IllegalArgumentException if the start point dimension is wrong\n     */",
+   "name": "doOptimize"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public abstract class AbstractLeastSquaresOptimizer implements DifferentiableMultivariateVectorialOptimizer",
+  "constructors": [
+   "protected AbstractLeastSquaresOptimizer();"
+  ],
+  "focal_signature": "public double getRMS()",
+  "methods": [
+   "public void setMaxIterations(int maxIterations);",
+   "public int getMaxIterations();",
+   "public int getIterations();",
+   "public void setMaxEvaluations(int maxEvaluations);",
+   "public int getMaxEvaluations();",
+   "public int getEvaluations();",
+   "public int getJacobianEvaluations();",
+   "public void setConvergenceChecker(VectorialConvergenceChecker convergenceChecker);",
+   "public VectorialConvergenceChecker getConvergenceChecker();",
+   "protected void incrementIterationsCounter() throws OptimizationException;",
+   "protected void updateJacobian() throws FunctionEvaluationException;",
+   "protected void updateResidualsAndCost() throws FunctionEvaluationException;",
+   "public double getChiSquare();",
+   "public double[][] getCovariances() throws FunctionEvaluationException, OptimizationException;",
+   "public double[] guessParametersErrors() throws FunctionEvaluationException, OptimizationException;",
+   "public VectorialPointValuePair optimize(final DifferentiableMultivariateVectorialFunction f, final double[] target, final double[] weights, final double[] startPoint) throws FunctionEvaluationException, OptimizationException, IllegalArgumentException;",
+   "protected abstract VectorialPointValuePair doOptimize() throws FunctionEvaluationException, OptimizationException, IllegalArgumentException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F1"
+}

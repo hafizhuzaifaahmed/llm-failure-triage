@@ -1,0 +1,71 @@
+{
+ "bug_name": "JacksonDatabind_94",
+ "call_sites": [
+  {
+   "line": 849,
+   "lines": [
+    844,
+    845,
+    846,
+    847,
+    848,
+    849,
+    850,
+    851,
+    852
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerFactory.java",
+   "snippet": "     */\n    protected void _validateSubType(DeserializationContext ctxt, JavaType type,\n            BeanDescription beanDesc)\n        throws JsonMappingException\n    {\n        SubTypeValidator.instance().validateSubType(ctxt, type);\n    }\n}\n"
+  }
+ ],
+ "class_simple": "SubTypeValidator",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Helper class used to encapsulate rules that determine subtypes that\n * are invalid to use, even with default typing, mostly due to security\n * concerns.\n * Used by <code>BeanDeserializerFacotry</code>\n *\n * @since 2.8.11\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "protected final static String PREFIX_SPRING",
+  "protected final static Set<String> DEFAULT_NO_DESER_CLASS_NAMES",
+  "protected Set<String> _cfgIllegalClassNames",
+  "private final static SubTypeValidator instance"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.jsontype.impl.SubTypeValidator",
+ "focal_id": "JacksonDatabind_94::com.fasterxml.jackson.databind.jsontype.impl.SubTypeValidator::validateSubType(DeserializationContext,JavaType)",
+ "focal_method_name": "validateSubType",
+ "generations": 3,
+ "impl_B": "public void validateSubType(DeserializationContext ctxt, JavaType type) throws JsonMappingException\n    {\n        // There are certain nasty classes that could cause problems, mostly\n        // via default typing -- catch them here.\n        final Class<?> raw = type.getRawClass();\n        String full = raw.getName();\n\n        main_check:\n        do {\n            if (_cfgIllegalClassNames.contains(full)) {\n                break;\n            }\n\n            // 18-Dec-2017, tatu: As per [databind#1855], need bit more sophisticated handling\n            //    for some Spring framework types\n            // 05-Jan-2017, tatu: ... also, only applies to classes, not interfaces\n            if (raw.isInterface()) {\n                ;\n            } else if (full.startsWith(PREFIX_SPRING)) {\n                for (Class<?> cls = raw; (cls != null) && (cls != Object.class); cls = cls.getSuperclass()){\n                    String name = cls.getSimpleName();\n                    // looking for \"AbstractBeanFactoryPointcutAdvisor\" but no point to allow any is there?\n                    if (\"AbstractPointcutAdvisor\".equals(name)\n                            // ditto  for \"FileSystemXmlApplicationContext\": block all ApplicationContexts\n                            || \"AbstractApplicationContext\".equals(name)) {\n                        break main_check;\n                    }\n                // [databind#1737]; more 3rd party\n                // s.add(\"com.mchange.v2.c3p0.JndiRefForwardingDataSource\");\n                // s.add(\"com.mchange.v2.c3p0.WrapperConnectionPoolDataSource\");\n                // [databind#1931]; more 3rd party\n                // com.mchange.v2.c3p0.ComboPooledDataSource\n                // com.mchange.v2.c3p0.debug.AfterCloseLoggingComboPooledDataSource \n                }\n            }\n            return;\n        } while (false);\n\n        throw JsonMappingException.from(ctxt,\n                String.format(\"Illegal type (%s) to deserialize: prevented for security reasons\", full));\n    }",
+ "imports": [
+  "java.util.Collections",
+  "java.util.HashSet",
+  "java.util.Set",
+  "com.fasterxml.jackson.databind.DeserializationContext",
+  "com.fasterxml.jackson.databind.JavaType",
+  "com.fasterxml.jackson.databind.JsonMappingException"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.jsontype.impl",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "instance"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class SubTypeValidator",
+  "constructors": [
+   "protected SubTypeValidator();"
+  ],
+  "focal_signature": "public void validateSubType(DeserializationContext ctxt, JavaType type) throws JsonMappingException",
+  "methods": [
+   "public static SubTypeValidator instance();"
+  ],
+  "type_signatures": [
+   "public abstract class DeserializationContext extends DatabindContext implements java.io.Serializable { protected DeserializationContext(DeserializerFactory df); protected DeserializationContext(DeserializerFactory df, DeserializerCache cache); protected DeserializationContext(DeserializationContext src, DeserializerFactory factory); protected DeserializationContext(DeserializationContext src, DeserializationConfig config, JsonParser p, InjectableValues injectableValues); protected DeserializationContext(DeserializationContext src); public DeserializationConfig getConfig(); public final Class<?> getActiveView(); public final boolean canOverrideAccessModifiers(); public final boolean isEnabled(MapperFeature feature); public final JsonFormat.Value getDefaultPropertyFormat(Class<?> baseType); public final AnnotationIntrospector getAnnotationIntrospector(); public final TypeFactory getTypeFactory(); public Locale getLocale(); public TimeZone getTimeZone(); public Object getAttribute(Object key); }",
+   "public abstract class JavaType extends ResolvedType implements java.io.Serializable, java.lang.reflect.Type { protected JavaType(Class<?> raw, int additionalHash, Object valueHandler, Object typeHandler, boolean asStatic); protected JavaType(JavaType base); public abstract JavaType withTypeHandler(Object h); public abstract JavaType withContentTypeHandler(Object h); public abstract JavaType withValueHandler(Object h); public abstract JavaType withContentValueHandler(Object h); public abstract JavaType withContentType(JavaType contentType); public abstract JavaType withStaticTyping(); public abstract JavaType refine(Class<?> rawType, TypeBindings bindings, JavaType superClass, JavaType[] superInterfaces); public JavaType forcedNarrowBy(Class<?> subclass); // since 2.7 protected abstract JavaType _narrow(Class<?> subclass); public final Class<?> getRawClass(); public final boolean hasRawClass(Class<?> clz); public final boolean isTypeOrSubTypeOf(Class<?> clz); public boolean isAbstract(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

@@ -1,0 +1,108 @@
+{
+ "bug_name": "Lang_45",
+ "call_sites": [
+  {
+   "line": 508,
+   "lines": [
+    503,
+    504,
+    505,
+    506,
+    507,
+    508,
+    509,
+    510,
+    511,
+    512,
+    513
+   ],
+   "path": "src/java/org/apache/commons/lang/WordUtils.java",
+   "snippet": "     * @return String of initial letters, <code>null</code> if null String input\n     * @see #initials(String,char[])\n     * @since 2.2\n     */\n    public static String initials(String str) {\n        return initials(str, null);\n    }\n\n    /**\n     * <p>Extracts the initial letters from each word in the String.</p>\n     * "
+  }
+ ],
+ "class_simple": "WordUtils",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * <p>Operations on Strings that contain words.</p>\n * \n * <p>This class tries to handle <code>null</code> input gracefully.\n * An exception will not be thrown for a <code>null</code> input.\n * Each method documents its behaviour in more detail.</p>\n * \n * @author Apache Jakarta Velocity\n * @author Stephen Colebourne\n * @author <a href=\"mailto:hps@intermeta.de\">Henning P. Schmiedehausen</a>\n * @author Gary Gregory\n * @since 2.0\n * @version $Id$\n */\npublic",
+  "method_javadoc": "/**\n     * <p>Extracts the initial letters from each word in the String.</p>\n     * \n     * <p>The first letter of the string and all first letters after the\n     * defined delimiters are returned as a new string.\n     * Their case is not changed.</p>\n     *\n     * <p>If the delimiters array is null, then Whitespace is used.\n     * Whitespace is defined by {@link Character#isWhitespace(char)}.\n     * A <code>null</code> input String returns <code>null</code>.\n     * An empty delimiter array returns an empty String.</p>\n     *\n     * <pre>\n     * WordUtils.initials(null, *)                = null\n     * WordUtils.initials(\"\", *)                  = \"\"\n     * WordUtils.initials(\"Ben John Lee\", null)   = \"BJL\"\n     * WordUtils.initials(\"Ben J.Lee\", null)      = \"BJ\"\n     * WordUtils.initials(\"Ben J.Lee\", [' ','.']) = \"BJL\"\n     * WordUtils.initials(*, new char[0])         = \"\"\n     * </pre>\n     * \n     * @param str  the String to get initials from, may be null\n     * @param delimiters  set of characters to determine words, null means whitespace\n     * @return String of initial letters, <code>null</code> if null String input\n     * @see #initials(String)\n     * @since 2.2\n     */"
+ },
+ "fields": [],
+ "focal_class": "org.apache.commons.lang.WordUtils",
+ "focal_id": "Lang_45::org.apache.commons.lang.WordUtils::initials(String,char[])",
+ "focal_method_name": "initials",
+ "generations": 3,
+ "impl_B": "public static String initials(String str, char[] delimiters) {\n        if (str == null || str.length() == 0) {\n            return str;\n        }\n        if (delimiters != null && delimiters.length == 0) {\n            return \"\";\n        }\n        int strLen = str.length();\n        char[] buf = new char[strLen / 2 + 1];\n        int count = 0;\n        boolean lastWasGap = true;\n        for (int i = 0; i < strLen; i++) {\n            char ch = str.charAt(i);\n\n            if (isDelimiter(ch, delimiters)) {\n                lastWasGap = true;\n            } else if (lastWasGap) {\n                buf[count++] = ch;\n                lastWasGap = false;\n            } else {\n                // ignore ch\n            }\n        }\n        return new String(buf, 0, count);\n    }",
+ "imports": [],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.lang",
+ "project": "Lang",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * <p>Wraps a single line of text, identifying words by <code>' '</code>.</p>\n     * \n     * <p>New lines will be separated by the system property line separator.\n     * Very long words, such as URLs will <i>not</i> be wrapped.</p>\n     * \n     * <p>Leading spaces on a new line are stripped.\n     * Trailing spaces are not stripped.</p>\n     *\n     * <pre>\n     * WordUtils.wrap(null, *) = null\n     * WordUtils.wrap(\"\", *) = \"\"\n     * </pre>\n     *\n     * @param str  the String to be word wrapped, may be null\n     * @param wrapLength  the column to wrap the words at, less than 1 is treated as 1\n     * @return a line with newlines inserted, <code>null</code> if null input\n     */",
+   "name": "wrap"
+  },
+  {
+   "javadoc": "/**\n     * <p>Wraps a single line of text, identifying words by <code>' '</code>.</p>\n     * \n     * <p>Leading spaces on a new line are stripped.\n     * Trailing spaces are not stripped.</p>\n     * \n     * <pre>\n     * WordUtils.wrap(null, *, *, *) = null\n     * WordUtils.wrap(\"\", *, *, *) = \"\"\n     * </pre>\n     *\n     * @param str  the String to be word wrapped, may be null\n     * @param wrapLength  the column to wrap the words at, less than 1 is treated as 1\n     * @param newLineStr  the string to insert for a new line, \n     *  <code>null</code> uses the system property line separator\n     * @param wrapLongWords  true if long words (such as URLs) should be wrapped\n     * @return a line with newlines inserted, <code>null</code> if null input\n     */",
+   "name": "wrap"
+  },
+  {
+   "javadoc": "/**\n     * <p>Capitalizes all the whitespace separated words in a String.\n     * Only the first letter of each word is changed. To convert the \n     * rest of each word to lowercase at the same time, \n     * use {@link #capitalizeFully(String)}.</p>\n     *\n     * <p>Whitespace is defined by {@link Character#isWhitespace(char)}.\n     * A <code>null</code> input String returns <code>null</code>.\n     * Capitalization uses the unicode title case, normally equivalent to\n     * upper case.</p>\n     *\n     * <pre>\n     * WordUtils.capitalize(null)        = null\n     * WordUtils.capitalize(\"\")          = \"\"\n     * WordUtils.capitalize(\"i am FINE\") = \"I Am FINE\"\n     * </pre>\n     * \n     * @param str  the String to capitalize, may be null\n     * @return capitalized String, <code>null</code> if null String input\n     * @see #uncapitalize(String)\n     * @see #capitalizeFully(String)\n     */",
+   "name": "capitalize"
+  },
+  {
+   "javadoc": "/**\n     * <p>Capitalizes all the delimiter separated words in a String.\n     * Only the first letter of each word is changed. To convert the \n     * rest of each word to lowercase at the same time, \n     * use {@link #capitalizeFully(String, char[])}.</p>\n     *\n     * <p>The delimiters represent a set of characters understood to separate words.\n     * The first string character and the first non-delimiter character after a\n     * delimiter will be capitalized. </p>\n     *\n     * <p>A <code>null</code> input String returns <code>null</code>.\n     * Capitalization uses the unicode title case, normally equivalent to\n     * upper case.</p>\n     *\n     * <pre>\n     * WordUtils.capitalize(null, *)            = null\n     * WordUtils.capitalize(\"\", *)              = \"\"\n     * WordUtils.capitalize(*, new char[0])     = *\n     * WordUtils.capitalize(\"i am fine\", null)  = \"I Am Fine\"\n     * WordUtils.capitalize(\"i aM.fine\", {'.'}) = \"I aM.Fine\"\n     * </pre>\n     * \n     * @param str  the String to capitalize, may be null\n     * @param delimiters  set of characters to determine capitalization, null means whitespace\n     * @return capitalized String, <code>null</code> if null String input\n     * @see #uncapitalize(String)\n     * @see #capitalizeFully(String)\n     * @since 2.1\n     */",
+   "name": "capitalize"
+  },
+  {
+   "javadoc": "/**\n     * <p>Converts all the whitespace separated words in a String into capitalized words, \n     * that is each word is made up of a titlecase character and then a series of \n     * lowercase characters.  </p>\n     *\n     * <p>Whitespace is defined by {@link Character#isWhitespace(char)}.\n     * A <code>null</code> input String returns <code>null</code>.\n     * Capitalization uses the unicode title case, normally equivalent to\n     * upper case.</p>\n     *\n     * <pre>\n     * WordUtils.capitalizeFully(null)        = null\n     * WordUtils.capitalizeFully(\"\")          = \"\"\n     * WordUtils.capitalizeFully(\"i am FINE\") = \"I Am Fine\"\n     * </pre>\n     * \n     * @param str  the String to capitalize, may be null\n     * @return capitalized String, <code>null</code> if null String input\n     */",
+   "name": "capitalizeFully"
+  },
+  {
+   "javadoc": "/**\n     * <p>Converts all the delimiter separated words in a String into capitalized words, \n     * that is each word is made up of a titlecase character and then a series of \n     * lowercase characters. </p>\n     *\n     * <p>The delimiters represent a set of characters understood to separate words.\n     * The first string character and the first non-delimiter character after a\n     * delimiter will be capitalized. </p>\n     *\n     * <p>A <code>null</code> input String returns <code>null</code>.\n     * Capitalization uses the unicode title case, normally equivalent to\n     * upper case.</p>\n     *\n     * <pre>\n     * WordUtils.capitalizeFully(null, *)            = null\n     * WordUtils.capitalizeFully(\"\", *)              = \"\"\n     * WordUtils.capitalizeFully(*, null)            = *\n     * WordUtils.capitalizeFully(*, new char[0])     = *\n     * WordUtils.capitalizeFully(\"i aM.fine\", {'.'}) = \"I am.Fine\"\n     * </pre>\n     * \n     * @param str  the String to capitalize, may be null\n     * @param delimiters  set of characters to determine capitalization, null means whitespace\n     * @return capitalized String, <code>null</code> if null String input\n     * @since 2.1\n     */",
+   "name": "capitalizeFully"
+  },
+  {
+   "javadoc": "/**\n     * <p>Uncapitalizes all the whitespace separated words in a String.\n     * Only the first letter of each word is changed.</p>\n     *\n     * <p>Whitespace is defined by {@link Character#isWhitespace(char)}.\n     * A <code>null</code> input String returns <code>null</code>.</p>\n     *\n     * <pre>\n     * WordUtils.uncapitalize(null)        = null\n     * WordUtils.uncapitalize(\"\")          = \"\"\n     * WordUtils.uncapitalize(\"I Am FINE\") = \"i am fINE\"\n     * </pre>\n     * \n     * @param str  the String to uncapitalize, may be null\n     * @return uncapitalized String, <code>null</code> if null String input\n     * @see #capitalize(String)\n     */",
+   "name": "uncapitalize"
+  },
+  {
+   "javadoc": "/**\n     * <p>Uncapitalizes all the whitespace separated words in a String.\n     * Only the first letter of each word is changed.</p>\n     *\n     * <p>The delimiters represent a set of characters understood to separate words.\n     * The first string character and the first non-delimiter character after a\n     * delimiter will be uncapitalized. </p>\n     *\n     * <p>Whitespace is defined by {@link Character#isWhitespace(char)}.\n     * A <code>null</code> input String returns <code>null</code>.</p>\n     *\n     * <pre>\n     * WordUtils.uncapitalize(null, *)            = null\n     * WordUtils.uncapitalize(\"\", *)              = \"\"\n     * WordUtils.uncapitalize(*, null)            = *\n     * WordUtils.uncapitalize(*, new char[0])     = *\n     * WordUtils.uncapitalize(\"I AM.FINE\", {'.'}) = \"i AM.fINE\"\n     * </pre>\n     * \n     * @param str  the String to uncapitalize, may be null\n     * @param delimiters  set of characters to determine uncapitalization, null means whitespace\n     * @return uncapitalized String, <code>null</code> if null String input\n     * @see #capitalize(String)\n     * @since 2.1\n     */",
+   "name": "uncapitalize"
+  },
+  {
+   "javadoc": "/**\n     * <p>Swaps the case of a String using a word based algorithm.</p>\n     * \n     * <ul>\n     *  <li>Upper case character converts to Lower case</li>\n     *  <li>Title case character converts to Lower case</li>\n     *  <li>Lower case character after Whitespace or at start converts to Title case</li>\n     *  <li>Other Lower case character converts to Upper case</li>\n     * </ul>\n     * \n     * <p>Whitespace is defined by {@link Character#isWhitespace(char)}.\n     * A <code>null</code> input String returns <code>null</code>.</p>\n     * \n     * <pre>\n     * StringUtils.swapCase(null)                 = null\n     * StringUtils.swapCase(\"\")                   = \"\"\n     * StringUtils.swapCase(\"The dog has a BONE\") = \"tHE DOG HAS A bone\"\n     * </pre>\n     * \n     * @param str  the String to swap case, may be null\n     * @return the changed String, <code>null</code> if null String input\n     */",
+   "name": "swapCase"
+  },
+  {
+   "javadoc": "/**\n     * <p>Extracts the initial letters from each word in the String.</p>\n     * \n     * <p>The first letter of the string and all first letters after\n     * whitespace are returned as a new string.\n     * Their case is not changed.</p>\n     *\n     * <p>Whitespace is defined by {@link Character#isWhitespace(char)}.\n     * A <code>null</code> input String returns <code>null</code>.</p>\n     *\n     * <pre>\n     * WordUtils.initials(null)             = null\n     * WordUtils.initials(\"\")               = \"\"\n     * WordUtils.initials(\"Ben John Lee\")   = \"BJL\"\n     * WordUtils.initials(\"Ben J.Lee\")      = \"BJ\"\n     * </pre>\n     *\n     * @param str  the String to get initials from, may be null\n     * @return String of initial letters, <code>null</code> if null String input\n     * @see #initials(String,char[])\n     * @since 2.2\n     */",
+   "name": "initials"
+  },
+  {
+   "javadoc": "/**\n     * Abbreviates a string nicely.\n     * \n     * This method searches for the first space after the lower limit and abbreviates\n     * the String there. It will also append any String passed as a parameter\n     * to the end of the String. The upper limit can be specified to forcibly\n     * abbreviate a String.\n     * \n     * @param str         the string to be abbreviated. If null is passed, null is returned.\n     *                    If the empty String is passed, the empty string is returned.\n     * @param lower       the lower limit.\n     * @param upper       the upper limit; specify -1 if no limit is desired.\n     *                    If the upper limit is lower than the lower limit, it will be\n     *                    adjusted to be the same as the lower limit.\n     * @param appendToEnd String to be appended to the end of the abbreviated string.\n     *                    This is appended ONLY if the string was indeed abbreviated.\n     *                    The append does not count towards the lower or upper limits.\n     * @return the abbreviated String.\n     * @since 2.4\n     */",
+   "name": "abbreviate"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class WordUtils",
+  "constructors": [
+   "public WordUtils();"
+  ],
+  "focal_signature": "public static String initials(String str, char[] delimiters)",
+  "methods": [
+   "public static String wrap(String str, int wrapLength);",
+   "public static String wrap(String str, int wrapLength, String newLineStr, boolean wrapLongWords);",
+   "public static String capitalize(String str);",
+   "public static String capitalize(String str, char[] delimiters);",
+   "public static String capitalizeFully(String str);",
+   "public static String capitalizeFully(String str, char[] delimiters);",
+   "public static String uncapitalize(String str);",
+   "public static String uncapitalize(String str, char[] delimiters);",
+   "public static String swapCase(String str);",
+   "public static String initials(String str);",
+   "public static String abbreviate(String str, int lower, int upper, String appendToEnd);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

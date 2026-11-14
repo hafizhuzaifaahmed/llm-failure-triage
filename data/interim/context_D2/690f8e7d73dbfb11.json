@@ -1,0 +1,105 @@
+{
+ "base_focal_id": "Compress_16::org.apache.commons.compress.archivers.ArchiveStreamFactory::createArchiveInputStream(InputStream)",
+ "bug_name": "Compress_16",
+ "call_sites": [
+  {
+   "line": 50,
+   "lines": [
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/Lister.java",
+   "snippet": "            System.err.println(f + \" doesn't exist or is a directory\");\n        }\n        InputStream fis = new BufferedInputStream(new FileInputStream(f));\n        ArchiveInputStream ais;\n        if (args.length > 1) {\n            ais = factory.createArchiveInputStream(args[1], fis);\n        } else {\n            ais = factory.createArchiveInputStream(fis);\n        }\n        System.out.println(\"Created \"+ais.toString());\n        ArchiveEntry ae;"
+  },
+  {
+   "line": 52,
+   "lines": [
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/Lister.java",
+   "snippet": "        InputStream fis = new BufferedInputStream(new FileInputStream(f));\n        ArchiveInputStream ais;\n        if (args.length > 1) {\n            ais = factory.createArchiveInputStream(args[1], fis);\n        } else {\n            ais = factory.createArchiveInputStream(fis);\n        }\n        System.out.println(\"Created \"+ais.toString());\n        ArchiveEntry ae;\n        while((ae=ais.getNextEntry()) != null){\n            System.out.println(ae.getName());"
+  }
+ ],
+ "class_simple": "ArchiveStreamFactory",
+ "dataset": "D2",
+ "doc": {
+  "class_javadoc": "/**\n * <p>Factory to create Archive[In|Out]putStreams from names or the first bytes of\n * the InputStream. In order add other implementations you should extend\n * ArchiveStreamFactory and override the appropriate methods (and call their\n * implementation from super of course).</p>\n * \n * Compressing a ZIP-File:\n * \n * <pre>\n * final OutputStream out = new FileOutputStream(output); \n * ArchiveOutputStream os = new ArchiveStreamFactory().createArchiveOutputStream(ArchiveStreamFactory.ZIP, out);\n * \n * os.putArchiveEntry(new ZipArchiveEntry(\"testdata/test1.xml\"));\n * IOUtils.copy(new FileInputStream(file1), os);\n * os.closeArchiveEntry();\n *\n * os.putArchiveEntry(new ZipArchiveEntry(\"testdata/test2.xml\"));\n * IOUtils.copy(new FileInputStream(file2), os);\n * os.closeArchiveEntry();\n * os.close();\n * </pre>\n * \n * Decompressing a ZIP-File:\n * \n * <pre>\n * final InputStream is = new FileInputStream(input); \n * ArchiveInputStream in = new ArchiveStreamFactory().createArchiveInputStream(ArchiveStreamFactory.ZIP, is);\n * ZipArchiveEntry entry = (ZipArchiveEntry)in.getNextEntry();\n * OutputStream out = new FileOutputStream(new File(dir, entry.getName()));\n * IOUtils.copy(in, out);\n * out.close();\n * in.close();\n * </pre>\n * \n * @Immutable\n */\npublic",
+  "method_javadoc": "/**\n     * Create an archive input stream from an input stream, autodetecting\n     * the archive type from the first few bytes of the stream. The InputStream\n     * must support marks, like BufferedInputStream.\n     * \n     * @param in the input stream\n     * @return the archive input stream\n     * @throws ArchiveException if the archiver name is not known\n     * @throws IllegalArgumentException if the stream is null or does not support mark\n     */"
+ },
+ "fields": [
+  "public static final String AR",
+  "public static final String CPIO",
+  "public static final String DUMP",
+  "public static final String JAR",
+  "public static final String TAR",
+  "public static final String ZIP"
+ ],
+ "focal_class": "org.apache.commons.compress.archivers.ArchiveStreamFactory",
+ "focal_id": "Compress_16::org.apache.commons.compress.archivers.ArchiveStreamFactory::createArchiveInputStream(InputStream)#m28",
+ "focal_method_name": "createArchiveInputStream",
+ "impl_B": "public ArchiveInputStream createArchiveInputStream(final InputStream in)\n            throws ArchiveException {\n        if (in == null) {\n            throw new IllegalArgumentException(\"Stream must not be null.\");\n        }\n\n        if (!false) {\n            throw new IllegalArgumentException(\"Mark is not supported.\");\n        }\n\n        final byte[] signature = new byte[12];\n        in.mark(signature.length);\n        try {\n            int signatureLength = in.read(signature);\n            in.reset();\n            if (ZipArchiveInputStream.matches(signature, signatureLength)) {\n                return new ZipArchiveInputStream(in);\n            } else if (JarArchiveInputStream.matches(signature, signatureLength)) {\n                return new JarArchiveInputStream(in);\n            } else if (ArArchiveInputStream.matches(signature, signatureLength)) {\n                return new ArArchiveInputStream(in);\n            } else if (CpioArchiveInputStream.matches(signature, signatureLength)) {\n                return new CpioArchiveInputStream(in);\n            }\n\n            // Dump needs a bigger buffer to check the signature;\n            final byte[] dumpsig = new byte[32];\n            in.mark(dumpsig.length);\n            signatureLength = in.read(dumpsig);\n            in.reset();\n            if (DumpArchiveInputStream.matches(dumpsig, signatureLength)) {\n                return new DumpArchiveInputStream(in);\n            }\n\n            // Tar needs an even bigger buffer to check the signature; read the first block\n            final byte[] tarheader = new byte[512];\n            in.mark(tarheader.length);\n            signatureLength = in.read(tarheader);\n            in.reset();\n            if (TarArchiveInputStream.matches(tarheader, signatureLength)) {\n                return new TarArchiveInputStream(in);\n            }\n            // COMPRESS-117 - improve auto-recognition\n            if (signatureLength >= 512) {\n                try {\n                    TarArchiveInputStream tais = new TarArchiveInputStream(new ByteArrayInputStream(tarheader));\n                    // COMPRESS-191 - verify the header checksum\n                    if (tais.getNextTarEntry().isCheckSumOK()) {\n                        return new TarArchiveInputStream(in);\n                    }\n                } catch (Exception e) { // NOPMD\n                    // can generate IllegalArgumentException as well\n                    // as IOException\n                    // autodetection, simply not a TAR\n                    // ignored\n                }\n            }\n        } catch (IOException e) {\n            throw new ArchiveException(\"Could not use reset and mark operations.\", e);\n        }\n\n        throw new ArchiveException(\"No Archiver found for the stream signature\");\n    }",
+ "imports": [
+  "java.io.ByteArrayInputStream",
+  "java.io.IOException",
+  "java.io.InputStream",
+  "java.io.OutputStream",
+  "org.apache.commons.compress.archivers.ar.ArArchiveInputStream",
+  "org.apache.commons.compress.archivers.ar.ArArchiveOutputStream",
+  "org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream",
+  "org.apache.commons.compress.archivers.cpio.CpioArchiveOutputStream",
+  "org.apache.commons.compress.archivers.dump.DumpArchiveInputStream",
+  "org.apache.commons.compress.archivers.jar.JarArchiveInputStream",
+  "org.apache.commons.compress.archivers.jar.JarArchiveOutputStream",
+  "org.apache.commons.compress.archivers.tar.TarArchiveInputStream",
+  "org.apache.commons.compress.archivers.tar.TarArchiveOutputStream",
+  "org.apache.commons.compress.archivers.zip.ZipArchiveInputStream",
+  "org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream"
+ ],
+ "javadoc_edited_by_fix": false,
+ "mutant_id": 28,
+ "operator": "COR",
+ "package": "org.apache.commons.compress.archivers",
+ "project": "Compress",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Create an archive input stream from an archiver name and an input stream.\n     * \n     * @param archiverName the archive name, i.e. \"ar\", \"zip\", \"tar\", \"jar\", \"dump\" or \"cpio\"\n     * @param in the input stream\n     * @return the archive input stream\n     * @throws ArchiveException if the archiver name is not known\n     * @throws IllegalArgumentException if the archiver name or stream is null\n     */",
+   "name": "createArchiveInputStream"
+  },
+  {
+   "javadoc": "/**\n     * Create an archive output stream from an archiver name and an input stream.\n     * \n     * @param archiverName the archive name, i.e. \"ar\", \"zip\", \"tar\", \"jar\" or \"cpio\"\n     * @param out the output stream\n     * @return the archive output stream\n     * @throws ArchiveException if the archiver name is not known\n     * @throws IllegalArgumentException if the archiver name or stream is null\n     */",
+   "name": "createArchiveOutputStream"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class ArchiveStreamFactory",
+  "constructors": [],
+  "focal_signature": "public ArchiveInputStream createArchiveInputStream(final InputStream in) throws ArchiveException",
+  "methods": [
+   "public ArchiveInputStream createArchiveInputStream( final String archiverName, final InputStream in) throws ArchiveException;",
+   "public ArchiveOutputStream createArchiveOutputStream( final String archiverName, final OutputStream out) throws ArchiveException;"
+  ],
+  "type_signatures": [
+   "public abstract class ArchiveInputStream extends InputStream { public abstract ArchiveEntry getNextEntry() throws IOException; public int read() throws IOException; protected void count(int read); protected void count(long read); protected void pushedBackBytes(long pushedBack); public int getCount(); public long getBytesRead(); public boolean canReadEntryData(ArchiveEntry ae); }"
+  ]
+ },
+ "split": "test"
+}

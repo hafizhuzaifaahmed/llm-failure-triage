@@ -1,0 +1,152 @@
+{
+ "base_focal_id": "Math_73::org.apache.commons.math.analysis.solvers.BrentSolver::solve(UnivariateRealFunction,double,double,double)",
+ "bug_name": "Math_73",
+ "call_sites": [
+  {
+   "line": 59,
+   "lines": [
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64
+   ],
+   "path": "src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java",
+   "snippet": "\n    /** {@inheritDoc} */\n    @Deprecated\n    public double solve(double min, double max, double initial)\n        throws MaxIterationsExceededException, FunctionEvaluationException {\n        return solve(f, min, max);\n    }\n\n    /** {@inheritDoc} */\n    @Deprecated\n    public double solve(double min, double max)"
+  },
+  {
+   "line": 66,
+   "lines": [
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71
+   ],
+   "path": "src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java",
+   "snippet": "\n    /** {@inheritDoc} */\n    @Deprecated\n    public double solve(double min, double max)\n        throws MaxIterationsExceededException, FunctionEvaluationException {\n        return solve(f, min, max);\n    }\n\n    /** {@inheritDoc} */\n    public double solve(final UnivariateRealFunction f, double min, double max, double initial)\n        throws MaxIterationsExceededException, FunctionEvaluationException {"
+  },
+  {
+   "line": 72,
+   "lines": [
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77
+   ],
+   "path": "src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java",
+   "snippet": "    }\n\n    /** {@inheritDoc} */\n    public double solve(final UnivariateRealFunction f, double min, double max, double initial)\n        throws MaxIterationsExceededException, FunctionEvaluationException {\n        return solve(min, max);\n    }\n\n    /** {@inheritDoc} */\n    public double solve(final UnivariateRealFunction f, double min, double max)\n        throws MaxIterationsExceededException, FunctionEvaluationException {"
+  },
+  {
+   "line": 68,
+   "lines": [
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73
+   ],
+   "path": "src/main/java/org/apache/commons/math/analysis/solvers/BrentSolver.java",
+   "snippet": "\n    /** {@inheritDoc} */\n    @Deprecated\n    public double solve(double min, double max)\n        throws MaxIterationsExceededException, FunctionEvaluationException {\n        return solve(f, min, max);\n    }\n\n    /** {@inheritDoc} */\n    @Deprecated\n    public double solve(double min, double max, double initial)"
+  },
+  {
+   "line": 75,
+   "lines": [
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79,
+    80
+   ],
+   "path": "src/main/java/org/apache/commons/math/analysis/solvers/BrentSolver.java",
+   "snippet": "\n    /** {@inheritDoc} */\n    @Deprecated\n    public double solve(double min, double max, double initial)\n        throws MaxIterationsExceededException, FunctionEvaluationException {\n        return solve(f, min, max, initial);\n    }\n\n    /**\n     * Find a zero in the given interval with an initial guess.\n     * <p>Throws <code>IllegalArgumentException</code> if the values of the"
+  }
+ ],
+ "class_simple": "BrentSolver",
+ "dataset": "D2",
+ "doc": {
+  "class_javadoc": "/**\n * Implements the <a href=\"http://mathworld.wolfram.com/BrentsMethod.html\">\n * Brent algorithm</a> for  finding zeros of real univariate functions.\n * <p>\n * The function should be continuous but not necessarily smooth.</p>\n *\n * @version $Revision:670469 $ $Date:2008-06-23 10:01:38 +0200 (lun., 23 juin 2008) $\n */\npublic",
+  "method_javadoc": "/**\n     * Find a zero in the given interval with an initial guess.\n     * <p>Throws <code>IllegalArgumentException</code> if the values of the\n     * function at the three points have the same sign (note that it is\n     * allowed to have endpoints with the same sign if the initial point has\n     * opposite sign function-wise).</p>\n     *\n     * @param f function to solve.\n     * @param min the lower bound for the interval.\n     * @param max the upper bound for the interval.\n     * @param initial the start value to use (must be set to min if no\n     * initial point is known).\n     * @return the value where the function is zero\n     * @throws MaxIterationsExceededException the maximum iteration count\n     * is exceeded\n     * @throws FunctionEvaluationException if an error occurs evaluating\n     *  the function\n     * @throws IllegalArgumentException if initial is not between min and max\n     * (even if it <em>is</em> a root)\n     */"
+ },
+ "fields": [
+  "private static final String NON_BRACKETING_MESSAGE",
+  "private static final long serialVersionUID"
+ ],
+ "focal_class": "org.apache.commons.math.analysis.solvers.BrentSolver",
+ "focal_id": "Math_73::org.apache.commons.math.analysis.solvers.BrentSolver::solve(UnivariateRealFunction,double,double,double)#m25",
+ "focal_method_name": "solve",
+ "impl_B": "public double solve(final UnivariateRealFunction f,\n                        final double min, final double max, final double initial)\n        throws MaxIterationsExceededException, FunctionEvaluationException {\n\n        clearResult();\n        verifySequence(min, initial, max);\n\n        // return the initial guess if it is good enough\n        double yInitial = f.value(initial);\n        if (Math.abs(yInitial) <= functionValueAccuracy) {\n            setResult(initial, 0);\n            return result;\n        }\n\n        // return the first endpoint if it is good enough\n        double yMin = f.value(min);\n        if (Math.abs(yMin) <= functionValueAccuracy) {\n            setResult(yMin, 0);\n            return result;\n        }\n\n        // reduce interval if min and initial bracket the root\n        if (yInitial - yMin < 0) {\n            return solve(f, min, yMin, initial, yInitial, min, yMin);\n        }\n\n        // return the second endpoint if it is good enough\n        double yMax = f.value(max);\n        if (Math.abs(yMax) <= functionValueAccuracy) {\n            setResult(yMax, 0);\n            return result;\n        }\n\n        // reduce interval if initial and max bracket the root\n        if (yInitial * yMax < 0) {\n            return solve(f, initial, yInitial, max, yMax, initial, yInitial);\n        }\n\n        if (yMin * yMax > 0) {\n            throw MathRuntimeException.createIllegalArgumentException(\n                  NON_BRACKETING_MESSAGE, min, max, yMin, yMax);\n        }\n\n        // full Brent algorithm starting with provided initial guess\n        return solve(f, min, yMin, max, yMax, initial, yInitial);\n\n    }",
+ "imports": [
+  "org.apache.commons.math.FunctionEvaluationException",
+  "org.apache.commons.math.MathRuntimeException",
+  "org.apache.commons.math.MaxIterationsExceededException",
+  "org.apache.commons.math.analysis.UnivariateRealFunction"
+ ],
+ "javadoc_edited_by_fix": false,
+ "mutant_id": 25,
+ "operator": "AOR",
+ "package": "org.apache.commons.math.analysis.solvers",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "solve"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "solve"
+  },
+  {
+   "javadoc": "/**\n     * Find a zero in the given interval.\n     * <p>\n     * Requires that the values of the function at the endpoints have opposite\n     * signs. An <code>IllegalArgumentException</code> is thrown if this is not\n     * the case.</p>\n     *\n     * @param f the function to solve\n     * @param min the lower bound for the interval.\n     * @param max the upper bound for the interval.\n     * @return the value where the function is zero\n     * @throws MaxIterationsExceededException if the maximum iteration count is exceeded\n     * @throws FunctionEvaluationException if an error occurs evaluating the\n     * function\n     * @throws IllegalArgumentException if min is not less than max or the\n     * signs of the values of the function at the endpoints are not opposites\n     */",
+   "name": "solve"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class BrentSolver extends UnivariateRealSolverImpl",
+  "constructors": [
+   "public BrentSolver(UnivariateRealFunction f);",
+   "public BrentSolver();"
+  ],
+  "focal_signature": "public double solve(final UnivariateRealFunction f, final double min, final double max, final double initial) throws MaxIterationsExceededException, FunctionEvaluationException",
+  "methods": [
+   "public double solve(double min, double max) throws MaxIterationsExceededException, FunctionEvaluationException;",
+   "public double solve(double min, double max, double initial) throws MaxIterationsExceededException, FunctionEvaluationException;",
+   "public double solve(final UnivariateRealFunction f, final double min, final double max) throws MaxIterationsExceededException, FunctionEvaluationException;"
+  ],
+  "type_signatures": [
+   "public interface UnivariateRealFunction {  }"
+  ]
+ },
+ "split": "test"
+}

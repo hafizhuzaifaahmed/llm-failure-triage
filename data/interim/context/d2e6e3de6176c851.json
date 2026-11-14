@@ -1,0 +1,82 @@
+{
+  "bug_name": "Compress_33",
+  "call_sites": [],
+  "class_simple": "CompressorStreamFactory",
+  "doc": {
+    "class_javadoc": "/**\n * <p>Factory to create Compressor[In|Out]putStreams from names. To add other\n * implementations you should extend CompressorStreamFactory and override the\n * appropriate methods (and call their implementation from super of course).</p>\n * \n * Example (Compressing a file):\n * \n * <pre>\n * final OutputStream out = new FileOutputStream(output); \n * CompressorOutputStream cos = \n *      new CompressorStreamFactory().createCompressorOutputStream(CompressorStreamFactory.BZIP2, out);\n * IOUtils.copy(new FileInputStream(input), cos);\n * cos.close();\n * </pre>\n * \n * Example (Decompressing a file):\n * <pre>\n * final InputStream is = new FileInputStream(input); \n * CompressorInputStream in = \n *      new CompressorStreamFactory().createCompressorInputStream(CompressorStreamFactory.BZIP2, is);\n * IOUtils.copy(in, new FileOutputStream(output));\n * in.close();\n * </pre>\n * @Immutable provided that the deprecated method setDecompressConcatenated is not used.\n * @ThreadSafe even if the deprecated method setDecompressConcatenated is used\n */\npublic",
+    "method_javadoc": "/**\n     * Create an compressor input stream from an input stream, autodetecting\n     * the compressor type from the first few bytes of the stream. The InputStream\n     * must support marks, like BufferedInputStream.\n     * \n     * @param in the input stream\n     * @return the compressor input stream\n     * @throws CompressorException if the compressor name is not known\n     * @throws IllegalArgumentException if the stream is null or does not support mark\n     * @since 1.1\n     */"
+  },
+  "fields": [
+    "public static final String BZIP2",
+    "public static final String GZIP",
+    "public static final String PACK200",
+    "public static final String XZ",
+    "public static final String LZMA",
+    "public static final String SNAPPY_FRAMED",
+    "public static final String SNAPPY_RAW",
+    "public static final String Z",
+    "public static final String DEFLATE",
+    "private final Boolean decompressUntilEOF",
+    "private volatile boolean decompressConcatenated"
+  ],
+  "focal_class": "org.apache.commons.compress.compressors.CompressorStreamFactory",
+  "focal_id": "Compress_33::org.apache.commons.compress.compressors.CompressorStreamFactory::createCompressorInputStream(InputStream)",
+  "focal_method_name": "createCompressorInputStream",
+  "impl_B": "public CompressorInputStream createCompressorInputStream(final InputStream in)\n            throws CompressorException {\n        if (in == null) {\n            throw new IllegalArgumentException(\"Stream must not be null.\");\n        }\n\n        if (!in.markSupported()) {\n            throw new IllegalArgumentException(\"Mark is not supported.\");\n        }\n\n        final byte[] signature = new byte[12];\n        in.mark(signature.length);\n        try {\n            int signatureLength = IOUtils.readFully(in, signature);\n            in.reset();\n\n            if (BZip2CompressorInputStream.matches(signature, signatureLength)) {\n                return new BZip2CompressorInputStream(in, decompressConcatenated);\n            }\n\n            if (GzipCompressorInputStream.matches(signature, signatureLength)) {\n                return new GzipCompressorInputStream(in, decompressConcatenated);\n            }\n\n            if (Pack200CompressorInputStream.matches(signature, signatureLength)) {\n                return new Pack200CompressorInputStream(in);\n            }\n\n            if (FramedSnappyCompressorInputStream.matches(signature, signatureLength)) {\n                return new FramedSnappyCompressorInputStream(in);\n            }\n\n            if (ZCompressorInputStream.matches(signature, signatureLength)) {\n                return new ZCompressorInputStream(in);\n            }\n\n\n            if (XZUtils.matches(signature, signatureLength) &&\n                XZUtils.isXZCompressionAvailable()) {\n                return new XZCompressorInputStream(in, decompressConcatenated);\n            }\n\n            if (LZMAUtils.matches(signature, signatureLength) &&\n                LZMAUtils.isLZMACompressionAvailable()) {\n                return new LZMACompressorInputStream(in);\n            }\n\n        } catch (IOException e) {\n            throw new CompressorException(\"Failed to detect Compressor from InputStream.\", e);\n        }\n\n        throw new CompressorException(\"No Compressor found for the stream signature.\");\n    }",
+  "imports": [
+    "java.io.IOException",
+    "java.io.InputStream",
+    "java.io.OutputStream",
+    "org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream",
+    "org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream",
+    "org.apache.commons.compress.compressors.deflate.DeflateCompressorInputStream",
+    "org.apache.commons.compress.compressors.deflate.DeflateCompressorOutputStream",
+    "org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream",
+    "org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream",
+    "org.apache.commons.compress.compressors.lzma.LZMACompressorInputStream",
+    "org.apache.commons.compress.compressors.lzma.LZMAUtils",
+    "org.apache.commons.compress.compressors.xz.XZCompressorInputStream",
+    "org.apache.commons.compress.compressors.xz.XZCompressorOutputStream",
+    "org.apache.commons.compress.compressors.xz.XZUtils",
+    "org.apache.commons.compress.compressors.pack200.Pack200CompressorInputStream",
+    "org.apache.commons.compress.compressors.pack200.Pack200CompressorOutputStream",
+    "org.apache.commons.compress.compressors.snappy.FramedSnappyCompressorInputStream",
+    "org.apache.commons.compress.compressors.snappy.SnappyCompressorInputStream",
+    "org.apache.commons.compress.compressors.z.ZCompressorInputStream",
+    "org.apache.commons.compress.utils.IOUtils"
+  ],
+  "javadoc_edited_by_fix": false,
+  "package": "org.apache.commons.compress.compressors",
+  "project": "Compress",
+  "siblings": [
+    {
+      "javadoc": "/**\n     * Whether to decompress the full input or only the first stream\n     * in formats supporting multiple concatenated input streams.\n     *\n     * <p>This setting applies to the gzip, bzip2 and xz formats only.</p>\n     *\n     * @param       decompressConcatenated\n     *                          if true, decompress until the end of the\n     *                          input; if false, stop after the first\n     *                          stream and leave the input position to point\n     *                          to the next byte after the stream\n     * @since 1.5\n     * @deprecated 1.10 use the {@link #CompressorStreamFactory(boolean)} constructor instead\n     * @throws IllegalStateException if the constructor {@link #CompressorStreamFactory(boolean)} \n     * was used to create the factory\n     */",
+      "name": "setDecompressConcatenated"
+    },
+    {
+      "javadoc": "/**\n     * Create a compressor input stream from a compressor name and an input stream.\n     * \n     * @param name of the compressor,\n     * i.e. {@value #GZIP}, {@value #BZIP2}, {@value #XZ}, {@value #LZMA},\n     * {@value #PACK200}, {@value #SNAPPY_RAW}, {@value #SNAPPY_FRAMED}, \n     * {@value #Z} or {@value #DEFLATE} \n     * @param in the input stream\n     * @return compressor input stream\n     * @throws CompressorException if the compressor name is not known\n     * @throws IllegalArgumentException if the name or input stream is null\n     */",
+      "name": "createCompressorInputStream"
+    },
+    {
+      "javadoc": "/**\n     * Create an compressor output stream from an compressor name and an output stream.\n     * \n     * @param name the compressor name,\n     * i.e. {@value #GZIP}, {@value #BZIP2}, {@value #XZ},\n     * {@value #PACK200} or {@value #DEFLATE} \n     * @param out the output stream\n     * @return the compressor output stream\n     * @throws CompressorException if the archiver name is not known\n     * @throws IllegalArgumentException if the archiver name or stream is null\n     */",
+      "name": "createCompressorOutputStream"
+    }
+  ],
+  "sig": {
+    "class_declaration": "public class CompressorStreamFactory",
+    "constructors": [
+      "public CompressorStreamFactory();",
+      "public CompressorStreamFactory(boolean decompressUntilEOF);"
+    ],
+    "focal_signature": "public CompressorInputStream createCompressorInputStream(final InputStream in) throws CompressorException",
+    "methods": [
+      "public void setDecompressConcatenated(boolean decompressConcatenated);",
+      "public CompressorInputStream createCompressorInputStream(final String name, final InputStream in) throws CompressorException;",
+      "public CompressorOutputStream createCompressorOutputStream( final String name, final OutputStream out) throws CompressorException;"
+    ],
+    "type_signatures": [
+      "public abstract class CompressorInputStream extends InputStream { protected void count(int read); protected void count(long read); protected void pushedBackBytes(long pushedBack); public int getCount(); public long getBytesRead(); }"
+    ]
+  },
+  "split": "test"
+}

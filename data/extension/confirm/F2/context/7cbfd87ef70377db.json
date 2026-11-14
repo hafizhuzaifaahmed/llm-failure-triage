@@ -1,0 +1,110 @@
+{
+ "bug_name": "Closure_149",
+ "call_sites": [
+  {
+   "line": 512,
+   "lines": [
+    507,
+    508,
+    509,
+    510,
+    511,
+    512,
+    513,
+    514,
+    515,
+    516,
+    517
+   ],
+   "path": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java",
+   "snippet": "    List<JSSourceFile> externsList = createExterns();\n    JSSourceFile[] externs = new JSSourceFile[externsList.size()];\n    externsList.toArray(externs);\n\n    compiler = createCompiler();\n    B options = createOptions();\n\n    JSModule[] modules = null;\n    Result result;\n\n    setRunOptions(options);"
+  }
+ ],
+ "class_simple": "CommandLineRunner",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * CommandLineRunner translates flags into Java API calls on the Compiler.\n *\n * This class may be extended and used to create other Java classes\n * that behave the same as running the Compiler from the command line. If you\n * want to run the compiler in-process in Java, you should look at this class\n * for hints on what API calls to make, but you should not use this class directly.\n *\n * Example:\n * <pre>\n * class MyCommandLineRunner extends CommandLineRunner {\n *   MyCommandLineRunner(String[] args) {\n *     super(args);\n *   }\n *\n *   {@code @Override} protected CompilerOptions createOptions() {\n *     CompilerOptions options = super.createOptions();\n *     addMyCrazyCompilerPassThatOutputsAnExtraFile(options);\n *     return options;\n *   }\n *\n *   public static void main(String[] args) {\n *     MyCommandLineRunner runner = new MyCommandLineRunner(args);\n *     if (runner.shouldRunCompiler()) {\n *       runner.run();\n *     } else {\n *       System.exit(-1);\n *     }\n *   }\n * }\n * </pre>\n * @author bolinfest@google.com (Michael Bolin)\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private final Flags flags",
+  "private boolean isConfigValid",
+  "private static final List<String> DEFAULT_EXTERNS_NAMES"
+ ],
+ "focal_class": "com.google.javascript.jscomp.CommandLineRunner",
+ "focal_id": "Closure_149::com.google.javascript.jscomp.CommandLineRunner::createOptions()",
+ "focal_method_name": "createOptions",
+ "generations": 3,
+ "impl_B": "@Override\n  protected CompilerOptions createOptions() {\n    CompilerOptions options = new CompilerOptions();\n    options.setCodingConvention(new ClosureCodingConvention());\n    CompilationLevel level = flags.compilation_level;\n    level.setOptionsForCompilationLevel(options);\n    if (flags.debug) {\n      level.setDebugOptionsForCompilationLevel(options);\n    }\n\n    WarningLevel wLevel = flags.warning_level;\n    wLevel.setOptionsForWarningLevel(options);\n    for (FormattingOption formattingOption : flags.formatting) {\n      formattingOption.applyToOptions(options);\n    }\n\n    options.closurePass = flags.process_closure_primitives;\n    initOptionsFromFlags(options);\n    return options;\n  }",
+ "imports": [
+  "com.google.common.base.Preconditions",
+  "com.google.common.collect.ImmutableList",
+  "com.google.common.collect.Lists",
+  "com.google.common.collect.Maps",
+  "com.google.common.collect.Sets",
+  "com.google.common.io.LimitInputStream",
+  "org.kohsuke.args4j.CmdLineException",
+  "org.kohsuke.args4j.CmdLineParser",
+  "org.kohsuke.args4j.Option",
+  "org.kohsuke.args4j.OptionDef",
+  "org.kohsuke.args4j.spi.OptionHandler",
+  "org.kohsuke.args4j.spi.Parameters",
+  "org.kohsuke.args4j.spi.Setter",
+  "java.io.IOException",
+  "java.io.InputStream",
+  "java.io.PrintStream",
+  "java.util.List",
+  "java.util.Map",
+  "java.util.Set",
+  "java.util.logging.Level",
+  "java.util.regex.Matcher",
+  "java.util.regex.Pattern",
+  "java.util.zip.ZipEntry",
+  "java.util.zip.ZipInputStream"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "createCompiler"
+  },
+  {
+   "javadoc": "",
+   "name": "createExterns"
+  },
+  {
+   "javadoc": "/**\n   * @return a mutable list\n   * @throws IOException\n   */",
+   "name": "getDefaultExterns"
+  },
+  {
+   "javadoc": "/**\n   * @return Whether the configuration is valid.\n   */",
+   "name": "shouldRunCompiler"
+  },
+  {
+   "javadoc": "/**\n   * Runs the Compiler. Exits cleanly in the event of an error.\n   */",
+   "name": "main"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class CommandLineRunner extends AbstractCommandLineRunner<Compiler, CompilerOptions>",
+  "constructors": [
+   "protected CommandLineRunner(String[] args);",
+   "protected CommandLineRunner(String[] args, PrintStream out, PrintStream err);"
+  ],
+  "focal_signature": "protected CompilerOptions createOptions()",
+  "methods": [
+   "protected Compiler createCompiler();",
+   "protected List<JSSourceFile> createExterns() throws FlagUsageException, IOException;",
+   "public static List<JSSourceFile> getDefaultExterns() throws IOException;",
+   "public boolean shouldRunCompiler();",
+   "public static void main(String[] args);"
+  ],
+  "type_signatures": [
+   "public class CompilerOptions implements Serializable, Cloneable { public CompilerOptions(); public Map<String, Node> getDefineReplacements(); public void setDefineToBooleanLiteral(String defineName, boolean value); public void setDefineToStringLiteral(String defineName, String value); public void setDefineToNumberLiteral(String defineName, int value); public void setDefineToDoubleLiteral(String defineName, double value); public void skipAllCompilerPasses(); public void setWarningLevel(DiagnosticGroup type, CheckLevel level); public void addWarningsGuard(WarningsGuard guard); public void setRenamingPolicy(VariableRenamingPolicy newVariablePolicy, PropertyRenamingPolicy newPropertyPolicy); public void setCollapsePropertiesOnExternTypes(boolean collapse); public void setProcessObjectPropertyString(boolean process); public void setIdGenerators(Set<String> idGenerators); public void setReplaceStringsConfiguration( String placeholderToken, List<String> functionDescriptors); public void setRewriteNewDateGoogNow(boolean rewrite); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

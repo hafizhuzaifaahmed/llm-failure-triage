@@ -1,0 +1,225 @@
+{
+ "bug_name": "Time_10",
+ "call_sites": [
+  {
+   "line": 118,
+   "lines": [
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122,
+    123
+   ],
+   "path": "src/main/java/org/joda/time/Days.java",
+   "snippet": "     * @param end  the end instant, must not be null\n     * @return the period in days\n     * @throws IllegalArgumentException if the instants are null or invalid\n     */\n    public static Days daysBetween(ReadableInstant start, ReadableInstant end) {\n        int amount = BaseSingleFieldPeriod.between(start, end, DurationFieldType.days());\n        return Days.days(amount);\n    }\n\n    /**\n     * Creates a <code>Days</code> representing the number of whole days"
+  },
+  {
+   "line": 141,
+   "lines": [
+    136,
+    137,
+    138,
+    139,
+    140,
+    141,
+    142,
+    143,
+    144,
+    145,
+    146
+   ],
+   "path": "src/main/java/org/joda/time/Days.java",
+   "snippet": "            Chronology chrono = DateTimeUtils.getChronology(start.getChronology());\n            int days = chrono.days().getDifference(\n                    ((LocalDate) end).getLocalMillis(), ((LocalDate) start).getLocalMillis());\n            return Days.days(days);\n        }\n        int amount = BaseSingleFieldPeriod.between(start, end, ZERO);\n        return Days.days(amount);\n    }\n\n    /**\n     * Creates a <code>Days</code> representing the number of whole days"
+  },
+  {
+   "line": 158,
+   "lines": [
+    153,
+    154,
+    155,
+    156,
+    157,
+    158,
+    159,
+    160,
+    161,
+    162,
+    163
+   ],
+   "path": "src/main/java/org/joda/time/Days.java",
+   "snippet": "     */\n    public static Days daysIn(ReadableInterval interval) {\n        if (interval == null)   {\n            return Days.ZERO;\n        }\n        int amount = BaseSingleFieldPeriod.between(interval.getStart(), interval.getEnd(), DurationFieldType.days());\n        return Days.days(amount);\n    }\n\n    /**\n     * Creates a new <code>Days</code> representing the number of complete"
+  },
+  {
+   "line": 121,
+   "lines": [
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122,
+    123,
+    124,
+    125,
+    126
+   ],
+   "path": "src/main/java/org/joda/time/Hours.java",
+   "snippet": "     * @param end  the end instant, must not be null\n     * @return the period in hours\n     * @throws IllegalArgumentException if the instants are null or invalid\n     */\n    public static Hours hoursBetween(ReadableInstant start, ReadableInstant end) {\n        int amount = BaseSingleFieldPeriod.between(start, end, DurationFieldType.hours());\n        return Hours.hours(amount);\n    }\n\n    /**\n     * Creates a <code>Hours</code> representing the number of whole hours"
+  },
+  {
+   "line": 144,
+   "lines": [
+    139,
+    140,
+    141,
+    142,
+    143,
+    144,
+    145,
+    146,
+    147,
+    148,
+    149
+   ],
+   "path": "src/main/java/org/joda/time/Hours.java",
+   "snippet": "            Chronology chrono = DateTimeUtils.getChronology(start.getChronology());\n            int hours = chrono.hours().getDifference(\n                    ((LocalTime) end).getLocalMillis(), ((LocalTime) start).getLocalMillis());\n            return Hours.hours(hours);\n        }\n        int amount = BaseSingleFieldPeriod.between(start, end, ZERO);\n        return Hours.hours(amount);\n    }\n\n    /**\n     * Creates a <code>Hours</code> representing the number of whole hours"
+  }
+ ],
+ "class_simple": "BaseSingleFieldPeriod",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * BaseSingleFieldPeriod is an abstract implementation of ReadablePeriod that\n * manages a single duration field, such as days or minutes.\n * <p>\n * This class should generally not be used directly by API users.\n * The {@link ReadablePeriod} interface should be used when different \n * kinds of period objects are to be referenced.\n * <p>\n * BaseSingleFieldPeriod subclasses may be mutable and not thread-safe.\n *\n * @author Stephen Colebourne\n * @since 1.4\n */\npublic abstract",
+  "method_javadoc": "/**\n     * Calculates the number of whole units between the two specified partial datetimes.\n     * <p>\n     * The two partials must contain the same fields, for example you can specify\n     * two <code>LocalDate</code> objects.\n     *\n     * @param start  the start partial date, validated to not be null\n     * @param end  the end partial date, validated to not be null\n     * @param zeroInstance  the zero instance constant, must not be null\n     * @return the period\n     * @throws IllegalArgumentException if the partials are null or invalid\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "private volatile int iPeriod"
+ ],
+ "focal_class": "org.joda.time.base.BaseSingleFieldPeriod",
+ "focal_id": "Time_10::org.joda.time.base.BaseSingleFieldPeriod::between(ReadablePartial,ReadablePartial,ReadablePeriod)",
+ "focal_method_name": "between",
+ "generations": 3,
+ "impl_B": "protected static int between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance) {\n        if (start == null || end == null) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must not be null\");\n        }\n        if (start.size() != end.size()) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n        }\n        for (int i = 0, isize = start.size(); i < isize; i++) {\n            if (start.getFieldType(i) != end.getFieldType(i)) {\n                throw new IllegalArgumentException(\"ReadablePartial objects must have the same set of fields\");\n            }\n        }\n        if (DateTimeUtils.isContiguous(start) == false) {\n            throw new IllegalArgumentException(\"ReadablePartial objects must be contiguous\");\n        }\n        Chronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();\n        int[] values = chrono.get(zeroInstance, chrono.set(start, 0L), chrono.set(end, 0L));\n        return values[0];\n    }",
+ "imports": [
+  "java.io.Serializable",
+  "org.joda.time.Chronology",
+  "org.joda.time.DateTimeUtils",
+  "org.joda.time.DurationField",
+  "org.joda.time.DurationFieldType",
+  "org.joda.time.MutablePeriod",
+  "org.joda.time.Period",
+  "org.joda.time.PeriodType",
+  "org.joda.time.ReadableInstant",
+  "org.joda.time.ReadablePartial",
+  "org.joda.time.ReadablePeriod",
+  "org.joda.time.chrono.ISOChronology",
+  "org.joda.time.field.FieldUtils"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.joda.time.base",
+ "project": "Time",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Calculates the number of whole units between the two specified datetimes.\n     *\n     * @param start  the start instant, validated to not be null\n     * @param end  the end instant, validated to not be null\n     * @param field  the field type to use, must not be null\n     * @return the period\n     * @throws IllegalArgumentException if the instants are null or invalid\n     */",
+   "name": "between"
+  },
+  {
+   "javadoc": "/**\n     * Creates a new instance representing the number of complete standard length units\n     * in the specified period.\n     * <p>\n     * This factory method converts all fields from the period to hours using standardised\n     * durations for each field. Only those fields which have a precise duration in\n     * the ISO UTC chronology can be converted.\n     * <ul>\n     * <li>One week consists of 7 days.\n     * <li>One day consists of 24 hours.\n     * <li>One hour consists of 60 minutes.\n     * <li>One minute consists of 60 seconds.\n     * <li>One second consists of 1000 milliseconds.\n     * </ul>\n     * Months and Years are imprecise and periods containing these values cannot be converted.\n     *\n     * @param period  the period to get the number of hours from, must not be null\n     * @param millisPerUnit  the number of milliseconds in one standard unit of this period\n     * @throws IllegalArgumentException if the period contains imprecise duration values\n     */",
+   "name": "standardPeriodIn"
+  },
+  {
+   "javadoc": "/**\n     * Gets the amount of this period.\n     *\n     * @return the period value\n     */",
+   "name": "getValue"
+  },
+  {
+   "javadoc": "/**\n     * Sets the amount of this period.\n     * To make a subclass immutable you must declare it final, or block this method.\n     *\n     * @param value  the period value\n     */",
+   "name": "setValue"
+  },
+  {
+   "javadoc": "/**\n     * Gets the single duration field type.\n     *\n     * @return the duration field type, not null\n     */",
+   "name": "getFieldType"
+  },
+  {
+   "javadoc": "/**\n     * Gets the period type which matches the duration field type.\n     *\n     * @return the period type, not null\n     */",
+   "name": "getPeriodType"
+  },
+  {
+   "javadoc": "/**\n     * Gets the number of fields that this period supports, which is one.\n     *\n     * @return the number of fields supported, which is one\n     */",
+   "name": "size"
+  },
+  {
+   "javadoc": "/**\n     * Gets the field type at the specified index.\n     * <p>\n     * The only index supported by this period is zero which returns the\n     * field type of this class.\n     *\n     * @param index  the index to retrieve, which must be zero\n     * @return the field at the specified index\n     * @throws IndexOutOfBoundsException if the index is invalid\n     */",
+   "name": "getFieldType"
+  },
+  {
+   "javadoc": "/**\n     * Gets the value at the specified index.\n     * <p>\n     * The only index supported by this period is zero.\n     *\n     * @param index  the index to retrieve, which must be zero\n     * @return the value of the field at the specified index\n     * @throws IndexOutOfBoundsException if the index is invalid\n     */",
+   "name": "getValue"
+  },
+  {
+   "javadoc": "/**\n     * Gets the value of a duration field represented by this period.\n     * <p>\n     * If the field type specified does not match the type used by this class\n     * then zero is returned.\n     *\n     * @param type  the field type to query, null returns zero\n     * @return the value of that field, zero if field not supported\n     */",
+   "name": "get"
+  },
+  {
+   "javadoc": "/**\n     * Checks whether the duration field specified is supported by this period.\n     *\n     * @param type  the type to check, may be null which returns false\n     * @return true if the field is supported\n     */",
+   "name": "isSupported"
+  },
+  {
+   "javadoc": "/**\n     * Get this period as an immutable <code>Period</code> object.\n     * The period will use <code>PeriodType.standard()</code>.\n     *\n     * @return a <code>Period</code> representing the same number of days\n     */",
+   "name": "toPeriod"
+  },
+  {
+   "javadoc": "/**\n     * Get this object as a <code>MutablePeriod</code>.\n     * <p>\n     * This will always return a new <code>MutablePeriod</code> with the same fields.\n     * The period will use <code>PeriodType.standard()</code>.\n     * \n     * @return a MutablePeriod using the same field set and values\n     */",
+   "name": "toMutablePeriod"
+  },
+  {
+   "javadoc": "/**\n     * Compares this object with the specified object for equality based on the\n     * value of each field. All ReadablePeriod instances are accepted, but only\n     * those with a matching <code>PeriodType</code> can return true.\n     *\n     * @param period  a readable period to check against\n     * @return true if all the field values are equal, false if\n     *  not or the period is null or of an incorrect type\n     */",
+   "name": "equals"
+  },
+  {
+   "javadoc": "/**\n     * Gets a hash code for the period as defined by ReadablePeriod.\n     *\n     * @return a hash code\n     */",
+   "name": "hashCode"
+  },
+  {
+   "javadoc": "/**\n     * Compares this period to another object of the same class.\n     *\n     * @param other  the other period, must not be null\n     * @return zero if equal, positive if greater, negative if less\n     * @throws NullPointerException if the other period is null\n     * @throws ClassCastException if the other period is of a different type\n     */",
+   "name": "compareTo"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public abstract class BaseSingleFieldPeriod implements ReadablePeriod, Comparable<BaseSingleFieldPeriod>, Serializable",
+  "constructors": [
+   "protected BaseSingleFieldPeriod(int period);"
+  ],
+  "focal_signature": "protected static int between(ReadablePartial start, ReadablePartial end, ReadablePeriod zeroInstance)",
+  "methods": [
+   "protected static int between(ReadableInstant start, ReadableInstant end, DurationFieldType field);",
+   "protected static int standardPeriodIn(ReadablePeriod period, long millisPerUnit);",
+   "protected int getValue();",
+   "protected void setValue(int value);",
+   "public abstract DurationFieldType getFieldType();",
+   "public abstract PeriodType getPeriodType();",
+   "public int size();",
+   "public DurationFieldType getFieldType(int index);",
+   "public int getValue(int index);",
+   "public int get(DurationFieldType type);",
+   "public boolean isSupported(DurationFieldType type);",
+   "public Period toPeriod();",
+   "public MutablePeriod toMutablePeriod();",
+   "public boolean equals(Object period);",
+   "public int hashCode();",
+   "public int compareTo(BaseSingleFieldPeriod other);"
+  ],
+  "type_signatures": [
+   "public interface ReadablePartial extends Comparable<ReadablePartial> {  }",
+   "public interface ReadablePeriod {  }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

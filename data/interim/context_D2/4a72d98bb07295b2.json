@@ -1,0 +1,180 @@
+{
+ "base_focal_id": "Math_62::org.apache.commons.math.optimization.univariate.MultiStartUnivariateRealOptimizer::optimize(FUNC,GoalType,double,double)",
+ "bug_name": "Math_62",
+ "call_sites": [
+  {
+   "line": 146,
+   "lines": [
+    141,
+    142,
+    143,
+    144,
+    145,
+    146,
+    147,
+    148,
+    149,
+    150,
+    151
+   ],
+   "path": "src/main/java/org/apache/commons/math/optimization/BaseMultiStartMultivariateRealOptimizer.java",
+   "snippet": "\n        // Multi-start loop.\n        for (int i = 0; i < starts; ++i) {\n\n            try {\n                optima[i] = optimizer.optimize(f, goal,\n                                               i == 0 ? startPoint : generator.nextVector());\n            } catch (FunctionEvaluationException fee) {\n                optima[i] = null;\n            } catch (ConvergenceException oe) {\n                optima[i] = null;"
+  },
+  {
+   "line": 148,
+   "lines": [
+    143,
+    144,
+    145,
+    146,
+    147,
+    148,
+    149,
+    150,
+    151,
+    152,
+    153
+   ],
+   "path": "src/main/java/org/apache/commons/math/optimization/BaseMultiStartMultivariateVectorialOptimizer.java",
+   "snippet": "\n        // Multi-start loop.\n        for (int i = 0; i < starts; ++i) {\n\n            try {\n                optima[i] = optimizer.optimize(f, target, weights,\n                                               i == 0 ? startPoint : generator.nextVector());\n            } catch (FunctionEvaluationException fee) {\n                optima[i] = null;\n            } catch (ConvergenceException oe) {\n                optima[i] = null;"
+  },
+  {
+   "line": 57,
+   "lines": [
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60
+   ],
+   "path": "src/main/java/org/apache/commons/math/optimization/BaseMultivariateRealOptimizer.java",
+   "snippet": "     * @throws org.apache.commons.math.exception.TooManyEvaluationsException\n     * if the maximal number of evaluations is exceeded.\n     * @throws org.apache.commons.math.exception.NullArgumentException if\n     * any argument is {@code null}.\n     */\n    RealPointValuePair optimize(FUNC f, GoalType goalType, double[] startPoint)\n        throws FunctionEvaluationException;\n}\n"
+  },
+  {
+   "line": 59,
+   "lines": [
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63
+   ],
+   "path": "src/main/java/org/apache/commons/math/optimization/BaseMultivariateVectorialOptimizer.java",
+   "snippet": "     * @throws org.apache.commons.math.exception.TooManyEvaluationsException\n     * if the maximal number of evaluations is exceeded.\n     * @throws org.apache.commons.math.exception.NullArgumentException if\n     * any argument is {@code null}.\n     */\n    VectorialPointValuePair optimize(FUNC f, double[] target, double[] weight,\n                                     double[] startPoint)\n        throws FunctionEvaluationException;\n}\n"
+  },
+  {
+   "line": 283,
+   "lines": [
+    278,
+    279,
+    280,
+    281,
+    282,
+    283,
+    284,
+    285,
+    286,
+    287,
+    288
+   ],
+   "path": "src/main/java/org/apache/commons/math/optimization/direct/PowellOptimizer.java",
+   "snippet": "                    }\n                };\n\n            final GoalType goal = PowellOptimizer.this.getGoalType();\n            bracket.search(f, goal, 0, 1);\n            return optimize(f, goal, bracket.getLo(), bracket.getHi(),\n                            bracket.getMid());\n        }\n    }\n}\n"
+  }
+ ],
+ "class_simple": "MultiStartUnivariateRealOptimizer",
+ "dataset": "D2",
+ "doc": {
+  "class_javadoc": "/**\n * Special implementation of the {@link UnivariateRealOptimizer} interface\n * adding multi-start features to an existing optimizer.\n *\n * This class wraps a classical optimizer to use it several times in\n * turn with different starting points in order to avoid being trapped\n * into a local extremum when looking for a global one.\n *\n * @param <FUNC> Type of the objective function to be optimized.\n *\n * @version $Revision$ $Date$\n * @since 3.0\n */\npublic",
+  "method_javadoc": "/** {@inheritDoc} */"
+ },
+ "fields": [
+  "private final BaseUnivariateRealOptimizer<FUNC> optimizer",
+  "private int maxEvaluations",
+  "private int totalEvaluations",
+  "private int starts",
+  "private RandomGenerator generator",
+  "private UnivariateRealPointValuePair[] optima"
+ ],
+ "focal_class": "org.apache.commons.math.optimization.univariate.MultiStartUnivariateRealOptimizer",
+ "focal_id": "Math_62::org.apache.commons.math.optimization.univariate.MultiStartUnivariateRealOptimizer::optimize(FUNC,GoalType,double,double)#m16",
+ "focal_method_name": "optimize",
+ "impl_B": "public UnivariateRealPointValuePair optimize(final FUNC f,\n                                                 final GoalType goal,\n                                                 final double min, final double max)\n        throws FunctionEvaluationException {\n        return optimize(f, goal, min, max, min + 0.5 / (max - min));\n    }",
+ "imports": [
+  "java.util.Arrays",
+  "java.util.Comparator",
+  "org.apache.commons.math.FunctionEvaluationException",
+  "org.apache.commons.math.analysis.UnivariateRealFunction",
+  "org.apache.commons.math.exception.MathIllegalStateException",
+  "org.apache.commons.math.exception.ConvergenceException",
+  "org.apache.commons.math.exception.util.LocalizedFormats",
+  "org.apache.commons.math.random.RandomGenerator",
+  "org.apache.commons.math.optimization.GoalType",
+  "org.apache.commons.math.optimization.ConvergenceChecker",
+  "org.apache.commons.math.util.FastMath"
+ ],
+ "javadoc_edited_by_fix": false,
+ "mutant_id": 16,
+ "operator": "AOR",
+ "package": "org.apache.commons.math.optimization.univariate",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * {@inheritDoc}\n     */",
+   "name": "setConvergenceChecker"
+  },
+  {
+   "javadoc": "/**\n     * {@inheritDoc}\n     */",
+   "name": "getConvergenceChecker"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getMaxEvaluations"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getEvaluations"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "setMaxEvaluations"
+  },
+  {
+   "javadoc": "/**\n     * Get all the optima found during the last call to {@link\n     * #optimize(FUNC,GoalType,double,double) optimize}.\n     * The optimizer stores all the optima found during a set of\n     * restarts. The {@link #optimize(FUNC,GoalType,double,double) optimize}\n     * method returns the best point only. This method returns all the points\n     * found at the end of each starts, including the best one already\n     * returned by the {@link #optimize(FUNC,GoalType,double,double) optimize}\n     * method.\n     * <br/>\n     * The returned array as one element for each start as specified\n     * in the constructor. It is ordered with the results from the\n     * runs that did converge first, sorted from best to worst\n     * objective value (i.e in ascending order if minimizing and in\n     * descending order if maximizing), followed by {@code null} elements\n     * corresponding to the runs that did not converge. This means all\n     * elements will be {@code null} if the {@link\n     * #optimize(FUNC,GoalType,double,double) optimize} method did throw a\n     * {@link ConvergenceException}). This also means that if the first\n     * element is not {@code null}, it is the best point found across all\n     * starts.\n     *\n     * @return an array containing the optima.\n     * @throws MathIllegalStateException if {@link\n     * #optimize(FUNC,GoalType,double,double) optimize} has not been called.\n     */",
+   "name": "getOptima"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "optimize"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class MultiStartUnivariateRealOptimizer<FUNC extends UnivariateRealFunction> implements BaseUnivariateRealOptimizer<FUNC>",
+  "constructors": [
+   "public MultiStartUnivariateRealOptimizer(final BaseUnivariateRealOptimizer<FUNC> optimizer, final int starts, final RandomGenerator generator);"
+  ],
+  "focal_signature": "public UnivariateRealPointValuePair optimize(final FUNC f, final GoalType goal, final double min, final double max) throws FunctionEvaluationException",
+  "methods": [
+   "public void setConvergenceChecker(ConvergenceChecker<UnivariateRealPointValuePair> checker);",
+   "public ConvergenceChecker<UnivariateRealPointValuePair> getConvergenceChecker();",
+   "public int getMaxEvaluations();",
+   "public int getEvaluations();",
+   "public void setMaxEvaluations(int maxEvaluations);",
+   "public UnivariateRealPointValuePair[] getOptima();",
+   "public UnivariateRealPointValuePair optimize(final FUNC f, final GoalType goal, final double min, final double max, final double startValue) throws FunctionEvaluationException;"
+  ],
+  "type_signatures": [
+   "public enum GoalType implements Serializable {  }",
+   "public class UnivariateRealPointValuePair implements Serializable { public UnivariateRealPointValuePair(final double point, final double value); public double getPoint(); public double getValue(); }"
+  ]
+ },
+ "split": "test"
+}

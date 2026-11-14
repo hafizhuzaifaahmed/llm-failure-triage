@@ -1,0 +1,169 @@
+{
+ "base_focal_id": "Codec_7::org.apache.commons.codec.binary.Base64::encodeBase64String(byte[])",
+ "bug_name": "Codec_7",
+ "call_sites": [],
+ "class_simple": "Base64",
+ "dataset": "D2",
+ "doc": {
+  "class_javadoc": "/**\n * Provides Base64 encoding and decoding as defined by RFC 2045.\n * \n * <p>\n * This class implements section <cite>6.8. Base64 Content-Transfer-Encoding</cite> from RFC 2045 <cite>Multipurpose\n * Internet Mail Extensions (MIME) Part One: Format of Internet Message Bodies</cite> by Freed and Borenstein.\n * </p>\n * <p>\n * The class can be parameterized in the following manner with various constructors:\n * <ul>\n * <li>URL-safe mode: Default off.</li>\n * <li>Line length: Default 76. Line length that aren't multiples of 4 will still essentially end up being multiples of\n * 4 in the encoded data.\n * <li>Line separator: Default is CRLF (\"\\r\\n\")</li>\n * </ul>\n * </p>\n * <p>\n * Since this class operates directly on byte streams, and not character streams, it is hard-coded to only encode/decode\n * character encodings which are compatible with the lower 127 ASCII chart (ISO-8859-1, Windows-1252, UTF-8, etc).\n * </p>\n * \n * @see <a href=\"http://www.ietf.org/rfc/rfc2045.txt\">RFC 2045</a>\n * @author Apache Software Foundation\n * @since 1.0\n * @version $Id$\n */\npublic",
+  "method_javadoc": "/**\n     * Encodes binary data using the base64 algorithm into 76 character blocks separated by CRLF.\n     *\n     * @param binaryData\n     *            binary data to encode\n     * @return String containing Base64 characters.\n     * @since 1.4\n     */"
+ },
+ "fields": [
+  "private static final int DEFAULT_BUFFER_RESIZE_FACTOR",
+  "private static final int DEFAULT_BUFFER_SIZE",
+  "public static final int MIME_CHUNK_SIZE",
+  "public static final int PEM_CHUNK_SIZE",
+  "static final byte[] CHUNK_SEPARATOR",
+  "private static final byte[] STANDARD_ENCODE_TABLE",
+  "private static final byte[] URL_SAFE_ENCODE_TABLE",
+  "private static final byte PAD",
+  "private static final byte[] DECODE_TABLE",
+  "private static final int MASK_6BITS",
+  "private static final int MASK_8BITS",
+  "private final byte[] encodeTable",
+  "private final int lineLength",
+  "private final byte[] lineSeparator",
+  "private final int decodeSize",
+  "private final int encodeSize",
+  "private byte[] buffer",
+  "private int pos",
+  "private int readPos",
+  "private int currentLinePos",
+  "private int modulus",
+  "private boolean eof",
+  "private int x"
+ ],
+ "focal_class": "org.apache.commons.codec.binary.Base64",
+ "focal_id": "Codec_7::org.apache.commons.codec.binary.Base64::encodeBase64String(byte[])#m710",
+ "focal_method_name": "encodeBase64String",
+ "impl_B": "public static String encodeBase64String(byte[] binaryData) {\n        return StringUtils.newStringUtf8(encodeBase64(binaryData, true));\n    }",
+ "imports": [
+  "java.math.BigInteger",
+  "org.apache.commons.codec.BinaryDecoder",
+  "org.apache.commons.codec.BinaryEncoder",
+  "org.apache.commons.codec.DecoderException",
+  "org.apache.commons.codec.EncoderException"
+ ],
+ "javadoc_edited_by_fix": false,
+ "mutant_id": 710,
+ "operator": "LVR",
+ "package": "org.apache.commons.codec.binary",
+ "project": "Codec",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Returns our current encode mode. True if we're URL-SAFE, false otherwise.\n     * \n     * @return true if we're in URL-SAFE mode, false otherwise.\n     * @since 1.4\n     */",
+   "name": "isUrlSafe"
+  },
+  {
+   "javadoc": "/**\n     * Returns whether or not the <code>octet</code> is in the base 64 alphabet.\n     * \n     * @param octet\n     *            The value to test\n     * @return <code>true</code> if the value is defined in the the base 64 alphabet, <code>false</code> otherwise.\n     * @since 1.4\n     */",
+   "name": "isBase64"
+  },
+  {
+   "javadoc": "/**\n     * Tests a given byte array to see if it contains only valid characters within the Base64 alphabet. Currently the\n     * method treats whitespace as valid.\n     * \n     * @param arrayOctet\n     *            byte array to test\n     * @return <code>true</code> if all bytes are valid characters in the Base64 alphabet or if the byte array is empty;\n     *         false, otherwise\n     */",
+   "name": "isArrayByteBase64"
+  },
+  {
+   "javadoc": "/**\n     * Encodes binary data using the base64 algorithm but does not chunk the output.\n     * \n     * @param binaryData\n     *            binary data to encode\n     * @return byte[] containing Base64 characters in their UTF-8 representation.\n     */",
+   "name": "encodeBase64"
+  },
+  {
+   "javadoc": "/**\n     * Encodes binary data using a URL-safe variation of the base64 algorithm but does not chunk the output. The\n     * url-safe variation emits - and _ instead of + and / characters.\n     * \n     * @param binaryData\n     *            binary data to encode\n     * @return byte[] containing Base64 characters in their UTF-8 representation.\n     * @since 1.4\n     */",
+   "name": "encodeBase64URLSafe"
+  },
+  {
+   "javadoc": "/**\n     * Encodes binary data using a URL-safe variation of the base64 algorithm but does not chunk the output. The\n     * url-safe variation emits - and _ instead of + and / characters.\n     *\n     * @param binaryData\n     *            binary data to encode\n     * @return String containing Base64 characters\n     * @since 1.4\n     */",
+   "name": "encodeBase64URLSafeString"
+  },
+  {
+   "javadoc": "/**\n     * Encodes binary data using the base64 algorithm and chunks the encoded output into 76 character blocks\n     * \n     * @param binaryData\n     *            binary data to encode\n     * @return Base64 characters chunked in 76 character blocks\n     */",
+   "name": "encodeBase64Chunked"
+  },
+  {
+   "javadoc": "/**\n     * Decodes an Object using the base64 algorithm. This method is provided in order to satisfy the requirements of the\n     * Decoder interface, and will throw a DecoderException if the supplied object is not of type byte[] or String.\n     * \n     * @param pObject\n     *            Object to decode\n     * @return An object (of type byte[]) containing the binary data which corresponds to the byte[] or String supplied.\n     * @throws DecoderException\n     *             if the parameter supplied is not of type byte[]\n     */",
+   "name": "decode"
+  },
+  {
+   "javadoc": "/**\n     * Decodes a String containing characters in the Base64 alphabet.\n     *\n     * @param pArray\n     *            A String containing Base64 character data\n     * @return a byte array containing binary data\n     * @since 1.4\n     */",
+   "name": "decode"
+  },
+  {
+   "javadoc": "/**\n     * Decodes a byte[] containing characters in the Base64 alphabet.\n     * \n     * @param pArray\n     *            A byte array containing Base64 character data\n     * @return a byte array containing binary data\n     */",
+   "name": "decode"
+  },
+  {
+   "javadoc": "/**\n     * Encodes binary data using the base64 algorithm, optionally chunking the output into 76 character blocks.\n     * \n     * @param binaryData\n     *            Array containing binary data to encode.\n     * @param isChunked\n     *            if <code>true</code> this encoder will chunk the base64 output into 76 character blocks\n     * @return Base64-encoded data.\n     * @throws IllegalArgumentException\n     *             Thrown when the input array needs an output array bigger than {@link Integer#MAX_VALUE}\n     */",
+   "name": "encodeBase64"
+  },
+  {
+   "javadoc": "/**\n     * Encodes binary data using the base64 algorithm, optionally chunking the output into 76 character blocks.\n     * \n     * @param binaryData\n     *            Array containing binary data to encode.\n     * @param isChunked\n     *            if <code>true</code> this encoder will chunk the base64 output into 76 character blocks\n     * @param urlSafe\n     *            if <code>true</code> this encoder will emit - and _ instead of the usual + and / characters.\n     * @return Base64-encoded data.\n     * @throws IllegalArgumentException\n     *             Thrown when the input array needs an output array bigger than {@link Integer#MAX_VALUE}\n     * @since 1.4\n     */",
+   "name": "encodeBase64"
+  },
+  {
+   "javadoc": "/**\n     * Encodes binary data using the base64 algorithm, optionally chunking the output into 76 character blocks.\n     * \n     * @param binaryData\n     *            Array containing binary data to encode.\n     * @param isChunked\n     *            if <code>true</code> this encoder will chunk the base64 output into 76 character blocks\n     * @param urlSafe\n     *            if <code>true</code> this encoder will emit - and _ instead of the usual + and / characters.\n     * @param maxResultSize\n     *            The maximum result size to accept.\n     * @return Base64-encoded data.\n     * @throws IllegalArgumentException\n     *             Thrown when the input array needs an output array bigger than maxResultSize\n     * @since 1.4\n     */",
+   "name": "encodeBase64"
+  },
+  {
+   "javadoc": "/**\n     * Decodes a Base64 String into octets\n     *\n     * @param base64String\n     *            String containing Base64 data\n     * @return Array containing decoded data.\n     * @since 1.4\n     */",
+   "name": "decodeBase64"
+  },
+  {
+   "javadoc": "/**\n     * Decodes Base64 data into octets\n     * \n     * @param base64Data\n     *            Byte array containing Base64 data\n     * @return Array containing decoded data.\n     */",
+   "name": "decodeBase64"
+  },
+  {
+   "javadoc": "/**\n     * Encodes an Object using the base64 algorithm. This method is provided in order to satisfy the requirements of the\n     * Encoder interface, and will throw an EncoderException if the supplied object is not of type byte[].\n     * \n     * @param pObject\n     *            Object to encode\n     * @return An object (of type byte[]) containing the base64 encoded data which corresponds to the byte[] supplied.\n     * @throws EncoderException\n     *             if the parameter supplied is not of type byte[]\n     */",
+   "name": "encode"
+  },
+  {
+   "javadoc": "/**\n     * Encodes a byte[] containing binary data, into a String containing characters in the Base64 alphabet.\n     *\n     * @param pArray\n     *            a byte array containing binary data\n     * @return A String containing only Base64 character data\n     * @since 1.4\n     */",
+   "name": "encodeToString"
+  },
+  {
+   "javadoc": "/**\n     * Encodes a byte[] containing binary data, into a byte[] containing characters in the Base64 alphabet.\n     * \n     * @param pArray\n     *            a byte array containing binary data\n     * @return A byte array containing only Base64 character data\n     */",
+   "name": "encode"
+  },
+  {
+   "javadoc": "/**\n     * Decodes a byte64-encoded integer according to crypto standards such as W3C's XML-Signature\n     * \n     * @param pArray\n     *            a byte array containing base64 character data\n     * @return A BigInteger\n     * @since 1.4\n     */",
+   "name": "decodeInteger"
+  },
+  {
+   "javadoc": "/**\n     * Encodes to a byte64-encoded integer according to crypto standards such as W3C's XML-Signature\n     * \n     * @param bigInt\n     *            a BigInteger\n     * @return A byte array containing base64 character data\n     * @throws NullPointerException\n     *             if null is passed in\n     * @since 1.4\n     */",
+   "name": "encodeInteger"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class Base64 implements BinaryEncoder, BinaryDecoder",
+  "constructors": [
+   "public Base64();",
+   "public Base64(boolean urlSafe);",
+   "public Base64(int lineLength);",
+   "public Base64(int lineLength, byte[] lineSeparator);",
+   "public Base64(int lineLength, byte[] lineSeparator, boolean urlSafe);"
+  ],
+  "focal_signature": "public static String encodeBase64String(byte[] binaryData)",
+  "methods": [
+   "public boolean isUrlSafe();",
+   "public static boolean isBase64(byte octet);",
+   "public static boolean isArrayByteBase64(byte[] arrayOctet);",
+   "public static byte[] encodeBase64(byte[] binaryData);",
+   "public static byte[] encodeBase64URLSafe(byte[] binaryData);",
+   "public static String encodeBase64URLSafeString(byte[] binaryData);",
+   "public static byte[] encodeBase64Chunked(byte[] binaryData);",
+   "public Object decode(Object pObject) throws DecoderException;",
+   "public byte[] decode(String pArray);",
+   "public byte[] decode(byte[] pArray);",
+   "public static byte[] encodeBase64(byte[] binaryData, boolean isChunked);",
+   "public static byte[] encodeBase64(byte[] binaryData, boolean isChunked, boolean urlSafe);",
+   "public static byte[] encodeBase64(byte[] binaryData, boolean isChunked, boolean urlSafe, int maxResultSize);",
+   "public static byte[] decodeBase64(String base64String);",
+   "public static byte[] decodeBase64(byte[] base64Data);",
+   "public Object encode(Object pObject) throws EncoderException;",
+   "public String encodeToString(byte[] pArray);",
+   "public byte[] encode(byte[] pArray);",
+   "public static BigInteger decodeInteger(byte[] pArray);",
+   "public static byte[] encodeInteger(BigInteger bigInt);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test"
+}

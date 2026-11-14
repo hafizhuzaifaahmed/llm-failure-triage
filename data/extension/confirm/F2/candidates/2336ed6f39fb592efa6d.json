@@ -1,0 +1,14 @@
+{
+  "assembled": true,
+  "call_key": "94b039314d510477d9ba8529c6dba5f5266c1eba9954b59f33cf16f64df5c0e1",
+  "candidate_id": "2336ed6f39fb592efa6d",
+  "class_name": "TypeBindings_toString_TriageGen2Test",
+  "dataset": "D1C_F2",
+  "focal_id": "JacksonDatabind_53::com.fasterxml.jackson.databind.type.TypeBindings::toString()",
+  "generation": 2,
+  "model_returned": "gemma4:26b",
+  "n_tests": 4,
+  "package": "com.fasterxml.jackson.databind.type",
+  "source": "package com.fasterxml.jackson.databind.type;\n\nimport com.fasterxml.jackson.databind.JavaType;\nimport java.io.*;\nimport java.lang.reflect.*;\nimport java.math.*;\nimport java.util.*;\nimport java.util.Arrays;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.mockito.Mockito.*;\n\n/**\n * Unit tests for TypeBindings.toString()\n */\npublic class TypeBindings_toString_TriageGen2Test {\n\n    @Test\n    public void testToString_EmptyBindings() {\n        // Test the branch: if (_types.length == 0)\n        TypeBindings bindings = TypeBindings.emptyBindings();\n        assertEquals(\"<>\", bindings.toString());\n    }\n\n    @Test\n    public void testToString_SingleType() {\n        // Test the branch: i == 0 (no comma appended)\n        JavaType mockType = mock(JavaType.class);\n        when(mockType.getGenericSignature()).thenReturn(\"String\");\n\n        TypeBindings bindings = TypeBindings.create(Object.class, mockType);\n        \n        assertEquals(\"<String>\", bindings.toString());\n    }\n\n    @Test\n    public void testToString_MultipleTypes() {\n        // Test the branch: i > 0 (comma appended)\n        JavaType type1 = mock(JavaType.class);\n        JavaType type2 = mock(JavaType.class);\n        JavaType type3 = mock(JavaType.class);\n\n        when(type1.getGenericSignature()).thenReturn(\"Integer\");\n        when(type2.getGenericSignature()).thenReturn(\"Boolean\");\n        when(type3.getGenericSignature()).thenReturn(\"Double\");\n\n        TypeBindings bindings = TypeBindings.create(Object.class, new JavaType[]{type1, type2, type3});\n\n        // Expected format: <sig1,sig2,sig3>\n        assertEquals(\"<Integer,Boolean,Double>\", bindings.toString());\n    }\n\n    @Test\n    public void testToString_WithComplexSignatures() {\n        // Test with signatures containing special characters to ensure StringBuilder handles them\n        JavaType type1 = mock(JavaType.class);\n        JavaType type2 = mock(JavaType.class);\n\n        when(type1.getGenericSignature()).thenReturn(\"List<String>\");\n        when(type2.getGenericSignature()).thenReturn(\"Map<String, Integer>\");\n\n        TypeBindings bindings = TypeBindings.create(Object.class, type1, type2);\n\n        assertEquals(\"<List<String>,Map<String, Integer>>\", bindings.toString());\n    }\n}\n",
+  "tranche": "F2"
+}

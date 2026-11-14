@@ -1,0 +1,12 @@
+{
+  "assembled": true,
+  "call_key": "7ba3f5604c47343be93a325f73ac86ecf76aa4c22c4e667639009fe51b7173ff",
+  "candidate_id": "f027d021640906ebe3b7",
+  "class_name": "JsonWriter_value_TriageGen1Test",
+  "focal_id": "Gson_4::com.google.gson.stream.JsonWriter::value(boolean)",
+  "generation": 1,
+  "model_returned": "gemma4:26b",
+  "n_tests": 4,
+  "package": "com.google.gson.stream",
+  "source": "package com.google.gson.stream;\n\nimport java.io.*;\nimport java.io.Closeable;\nimport java.io.Flushable;\nimport java.io.IOException;\nimport java.io.StringWriter;\nimport java.io.Writer;\nimport java.math.*;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\nimport static org.junit.Assert.assertSame;\n\npublic class JsonWriter_value_TriageGen1Test {\n\n    private StringWriter out;\n    private JsonWriter jsonWriter;\n\n    @Before\n    public void setUp() {\n        out = new StringWriter();\n        jsonWriter = new JsonWriter(out);\n    }\n\n    @Test\n    public void testValueTrue() throws IOException {\n        // Arrange\n        jsonWriter.beginObject();\n        jsonWriter.name(\"testKey\");\n\n        // Act\n        JsonWriter result = jsonWriter.value(true);\n\n        // Assert\n        assertEquals(\"{\\\"testKey\\\":true}\", out.toString());\n        assertSame(\"Method should return this instance for chaining\", jsonWriter, result);\n    }\n\n    @Test\n    public void testValueFalse() throws IOException {\n        // Arrange\n        jsonWriter.beginObject();\n        jsonWriter.name(\"testKey\");\n\n        // Act\n        JsonWriter result = jsonWriter.value(false);\n\n        // Assert\n        assertEquals(\"{\\\"testKey\\\":false}\", out.toString());\n        assertSame(\"Method should return this instance for chaining\", jsonWriter, result);\n    }\n\n    @Test\n    public void testValueInArray() throws IOException {\n        // Arrange\n        jsonWriter.beginArray();\n\n        // Act\n        jsonWriter.value(true);\n        jsonWriter.value(false);\n\n        // Assert\n        assertEquals(\"[true,false]\", out.toString());\n    }\n\n    @Test\n    public void testValueWithChaining() throws IOException {\n        // Arrange\n        jsonWriter.beginObject();\n        jsonWriter.name(\"a\");\n\n        // Act & Assert\n        jsonWriter.value(true).name(\"b\").value(false);\n        \n        assertEquals(\"{\\\"a\\\":true,\\\"b\\\":false}\", out.toString());\n    }\n}\n"
+}

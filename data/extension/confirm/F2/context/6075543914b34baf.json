@@ -1,0 +1,375 @@
+{
+ "bug_name": "JacksonCore_24",
+ "call_sites": [
+  {
+   "line": 849,
+   "lines": [
+    844,
+    845,
+    846,
+    847,
+    848,
+    849,
+    850,
+    851,
+    852,
+    853,
+    854
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/base/ParserBase.java",
+   "snippet": "                _numberLong = Long.parseLong(numStr);\n                _numTypesValid = NR_LONG;\n            } else {\n                // 16-Oct-2018, tatu: Need to catch \"too big\" early due to [jackson-core#488]\n                if ((expType == NR_INT) || (expType == NR_LONG)) {\n                    _reportTooLongIntegral(expType, numStr);\n                }\n                if ((expType == NR_DOUBLE) || (expType == NR_FLOAT)) {\n                    _numberDouble = NumberInput.parseDouble(numStr);\n                    _numTypesValid = NR_DOUBLE;\n                } else {"
+  }
+ ],
+ "class_simple": "ParserBase",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Intermediate base class used by all Jackson {@link JsonParser}\n * implementations. Contains most common things that are independent\n * of actual underlying input source.\n */\npublic abstract",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "final protected IOContext _ioContext",
+  "protected boolean _closed",
+  "protected int _inputPtr",
+  "protected int _inputEnd",
+  "protected long _currInputProcessed",
+  "protected int _currInputRow",
+  "protected int _currInputRowStart",
+  "protected long _tokenInputTotal",
+  "protected int _tokenInputRow",
+  "protected int _tokenInputCol",
+  "protected JsonReadContext _parsingContext",
+  "protected JsonToken _nextToken",
+  "protected final TextBuffer _textBuffer",
+  "protected char[] _nameCopyBuffer",
+  "protected boolean _nameCopied",
+  "protected ByteArrayBuilder _byteArrayBuilder",
+  "protected byte[] _binaryValue",
+  "protected int _numTypesValid",
+  "protected int _numberInt",
+  "protected long _numberLong",
+  "protected double _numberDouble",
+  "protected BigInteger _numberBigInt",
+  "protected BigDecimal _numberBigDecimal",
+  "protected boolean _numberNegative",
+  "protected int _intLength",
+  "protected int _fractLength",
+  "protected int _expLength"
+ ],
+ "focal_class": "com.fasterxml.jackson.core.base.ParserBase",
+ "focal_id": "JacksonCore_24::com.fasterxml.jackson.core.base.ParserBase::_reportTooLongIntegral(int,String)",
+ "focal_method_name": "_reportTooLongIntegral",
+ "generations": 3,
+ "impl_B": "protected void _reportTooLongIntegral(int expType, String rawNum) throws IOException\n    {\n        final String numDesc = _longIntegerDesc(rawNum);\n        _reportError(\"Numeric value (%s) out of range of %s\", numDesc,\n                (expType == NR_LONG) ? \"long\" : \"int\");\n    }",
+ "imports": [
+  "java.io.*",
+  "java.math.BigDecimal",
+  "java.math.BigInteger",
+  "java.util.Arrays",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.core.JsonParser.Feature",
+  "com.fasterxml.jackson.core.io.IOContext",
+  "com.fasterxml.jackson.core.io.NumberInput",
+  "com.fasterxml.jackson.core.json.DupDetector",
+  "com.fasterxml.jackson.core.json.JsonReadContext",
+  "com.fasterxml.jackson.core.json.PackageVersion",
+  "com.fasterxml.jackson.core.util.ByteArrayBuilder",
+  "com.fasterxml.jackson.core.util.TextBuffer"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.core.base",
+ "project": "JacksonCore",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "version"
+  },
+  {
+   "javadoc": "",
+   "name": "getCurrentValue"
+  },
+  {
+   "javadoc": "",
+   "name": "setCurrentValue"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "enable"
+  },
+  {
+   "javadoc": "",
+   "name": "disable"
+  },
+  {
+   "javadoc": "",
+   "name": "setFeatureMask"
+  },
+  {
+   "javadoc": "",
+   "name": "overrideStdFeatures"
+  },
+  {
+   "javadoc": "/**\n     * Helper method called to verify changes to standard features.\n     *\n     * @param newFeatureFlags Bitflag of standard features after they were changed\n     * @param changedFeatures Bitflag of standard features for which setting\n     *    did change\n     *\n     * @since 2.7\n     */",
+   "name": "_checkStdFeatureChanges"
+  },
+  {
+   "javadoc": "/**\n     * Method that can be called to get the name associated with\n     * the current event.\n     */",
+   "name": "getCurrentName"
+  },
+  {
+   "javadoc": "",
+   "name": "overrideCurrentName"
+  },
+  {
+   "javadoc": "",
+   "name": "close"
+  },
+  {
+   "javadoc": "",
+   "name": "isClosed"
+  },
+  {
+   "javadoc": "",
+   "name": "getParsingContext"
+  },
+  {
+   "javadoc": "/**\n     * Method that return the <b>starting</b> location of the current\n     * token; that is, position of the first character from input\n     * that starts the current token.\n     */",
+   "name": "getTokenLocation"
+  },
+  {
+   "javadoc": "/**\n     * Method that returns location of the last processed character;\n     * usually for error reporting purposes\n     */",
+   "name": "getCurrentLocation"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "hasTextCharacters"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getTokenCharacterOffset"
+  },
+  {
+   "javadoc": "",
+   "name": "getTokenLineNr"
+  },
+  {
+   "javadoc": "",
+   "name": "getTokenColumnNr"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_closeInput"
+  },
+  {
+   "javadoc": "/**\n     * Method called to release internal buffers owned by the base\n     * reader. This may be called along with {@link #_closeInput} (for\n     * example, when explicitly closing this reader instance), or\n     * separately (if need be).\n     */",
+   "name": "_releaseBuffers"
+  },
+  {
+   "javadoc": "/**\n     * Method called when an EOF is encountered between tokens.\n     * If so, it may be a legitimate EOF, but only iff there\n     * is no open non-root context.\n     */",
+   "name": "_handleEOF"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.4\n     */",
+   "name": "_eofAsNextChar"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_getByteArrayBuilder"
+  },
+  {
+   "javadoc": "",
+   "name": "reset"
+  },
+  {
+   "javadoc": "",
+   "name": "resetInt"
+  },
+  {
+   "javadoc": "",
+   "name": "resetFloat"
+  },
+  {
+   "javadoc": "",
+   "name": "resetAsNaN"
+  },
+  {
+   "javadoc": "",
+   "name": "isNaN"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getNumberValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getNumberType"
+  },
+  {
+   "javadoc": "",
+   "name": "getIntValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getLongValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getBigIntegerValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getFloatValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getDoubleValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getDecimalValue"
+  },
+  {
+   "javadoc": "/**\n     * Method that will parse actual numeric value out of a syntactically\n     * valid number value. Type it will parse into depends on whether\n     * it is a floating point number, as well as its magnitude: smallest\n     * legal type (of ones available) is used for efficiency.\n     *\n     * @param expType Numeric type that we will immediately need, if any;\n     *   mostly necessary to optimize handling of floating point numbers\n     */",
+   "name": "_parseNumericValue"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.6\n     */",
+   "name": "_parseIntValue"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "convertNumberToInt"
+  },
+  {
+   "javadoc": "",
+   "name": "convertNumberToLong"
+  },
+  {
+   "javadoc": "",
+   "name": "convertNumberToBigInteger"
+  },
+  {
+   "javadoc": "",
+   "name": "convertNumberToDouble"
+  },
+  {
+   "javadoc": "",
+   "name": "convertNumberToBigDecimal"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_reportMismatchedEndMarker"
+  },
+  {
+   "javadoc": "/**\n     * Method that sub-classes must implement to support escaped sequences\n     * in base64-encoded sections.\n     * Sub-classes that do not need base64 support can leave this as is\n     */",
+   "name": "_decodeEscaped"
+  },
+  {
+   "javadoc": "",
+   "name": "_decodeBase64Escape"
+  },
+  {
+   "javadoc": "",
+   "name": "_decodeBase64Escape"
+  },
+  {
+   "javadoc": "",
+   "name": "reportInvalidBase64Char"
+  },
+  {
+   "javadoc": "/**\n     * @param bindex Relative index within base64 character unit; between 0\n     *   and 3 (as unit has exactly 4 characters)\n     */",
+   "name": "reportInvalidBase64Char"
+  },
+  {
+   "javadoc": "",
+   "name": "_handleBase64MissingPadding"
+  },
+  {
+   "javadoc": "/**\n     * Helper method used to encapsulate logic of including (or not) of\n     * \"source reference\" when constructing {@link JsonLocation} instances.\n     *\n     * @since 2.9\n     */",
+   "name": "_getSourceReference"
+  },
+  {
+   "javadoc": "",
+   "name": "growArrayBy"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "loadMoreGuaranteed"
+  },
+  {
+   "javadoc": "",
+   "name": "loadMore"
+  },
+  {
+   "javadoc": "",
+   "name": "_finishString"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public abstract class ParserBase extends ParserMinimalBase",
+  "constructors": [
+   "protected ParserBase(IOContext ctxt, int features);"
+  ],
+  "focal_signature": "protected void _reportTooLongIntegral(int expType, String rawNum) throws IOException",
+  "methods": [
+   "public Version version();",
+   "public Object getCurrentValue();",
+   "public void setCurrentValue(Object v);",
+   "public JsonParser enable(Feature f);",
+   "public JsonParser disable(Feature f);",
+   "public JsonParser setFeatureMask(int newMask);",
+   "// since 2.7 public JsonParser overrideStdFeatures(int values, int mask);",
+   "protected void _checkStdFeatureChanges(int newFeatureFlags, int changedFeatures);",
+   "public String getCurrentName() throws IOException;",
+   "public void overrideCurrentName(String name);",
+   "public void close() throws IOException;",
+   "public boolean isClosed();",
+   "public JsonReadContext getParsingContext();",
+   "public JsonLocation getTokenLocation();",
+   "public JsonLocation getCurrentLocation();",
+   "public boolean hasTextCharacters();",
+   "public long getTokenCharacterOffset();",
+   "public int getTokenLineNr();",
+   "public int getTokenColumnNr();",
+   "protected abstract void _closeInput() throws IOException;",
+   "protected void _releaseBuffers() throws IOException;",
+   "protected void _handleEOF() throws JsonParseException;",
+   "protected final int _eofAsNextChar() throws JsonParseException;",
+   "public ByteArrayBuilder _getByteArrayBuilder();",
+   "protected final JsonToken reset(boolean negative, int intLen, int fractLen, int expLen);",
+   "protected final JsonToken resetInt(boolean negative, int intLen);",
+   "protected final JsonToken resetFloat(boolean negative, int intLen, int fractLen, int expLen);",
+   "protected final JsonToken resetAsNaN(String valueStr, double value);",
+   "public boolean isNaN();",
+   "public Number getNumberValue() throws IOException;",
+   "public NumberType getNumberType() throws IOException;",
+   "public int getIntValue() throws IOException;",
+   "public long getLongValue() throws IOException;",
+   "public BigInteger getBigIntegerValue() throws IOException;",
+   "public float getFloatValue() throws IOException;",
+   "public double getDoubleValue() throws IOException;",
+   "public BigDecimal getDecimalValue() throws IOException;",
+   "protected void _parseNumericValue(int expType) throws IOException;",
+   "protected int _parseIntValue() throws IOException;",
+   "protected void convertNumberToInt() throws IOException;",
+   "protected void convertNumberToLong() throws IOException;",
+   "protected void convertNumberToBigInteger() throws IOException;",
+   "protected void convertNumberToDouble() throws IOException;",
+   "protected void convertNumberToBigDecimal() throws IOException;",
+   "protected void _reportMismatchedEndMarker(int actCh, char expCh) throws JsonParseException;",
+   "protected char _decodeEscaped() throws IOException;",
+   "protected final int _decodeBase64Escape(Base64Variant b64variant, int ch, int index) throws IOException;",
+   "protected final int _decodeBase64Escape(Base64Variant b64variant, char ch, int index) throws IOException;",
+   "protected IllegalArgumentException reportInvalidBase64Char(Base64Variant b64variant, int ch, int bindex) throws IllegalArgumentException;",
+   "protected IllegalArgumentException reportInvalidBase64Char(Base64Variant b64variant, int ch, int bindex, String msg) throws IllegalArgumentException;",
+   "protected void _handleBase64MissingPadding(Base64Variant b64variant) throws IOException;",
+   "protected Object _getSourceReference();",
+   "protected static int[] growArrayBy(int[] arr, int more);",
+   "// since 2.8 protected void loadMoreGuaranteed() throws IOException;",
+   "// since 2.8 protected boolean loadMore() throws IOException;",
+   "protected void _finishString() throws IOException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

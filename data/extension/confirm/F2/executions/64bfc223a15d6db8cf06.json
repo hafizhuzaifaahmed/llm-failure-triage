@@ -1,0 +1,384 @@
+{
+ "candidate_id": "64bfc223a15d6db8cf06",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testFormatWithZeroOffsetNoColon",
+   "testFormatWithZeroOffsetWithColon",
+   "testFormatWithPositiveOffsetWithColon",
+   "testFormatWithNegativeOffsetWithoutColon",
+   "testFormatLargeYear",
+   "testFormatBCEYear"
+  ],
+  "nc_both": [],
+  "nc_one_version": [],
+  "passes": 0
+ },
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "JacksonDatabind_104::com.fasterxml.jackson.databind.util.StdDateFormat::_format(TimeZone,Locale,Date,StringBuffer)",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testFormatWithZeroOffsetNoColon",
+   "runs_b": [
+    {
+     "duration_s": 0.176,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.172,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.152,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.148,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.142,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.217,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.databind.util;\n\nimport com.fasterxml.jackson.core.io.NumberInput;\nimport java.io.*;\nimport java.math.*;\nimport java.text.DateFormat;\nimport java.text.FieldPosition;\nimport java.text.ParseException;\nimport java.text.ParsePosition;\nimport java.text.SimpleDateFormat;\nimport java.util.*;\nimport java.util.Calendar;\nimport java.util.Date;\nimport java.util.Locale;\nimport java.util.TimeZone;\nimport java.util.regex.Matcher;\nimport java.util.regex.Pattern;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\npublic class StdDateFormat__format_TriageGen0Test {\n\n    /**\n     * Since _format is protected, we create a subclass to expose it for testing.\n     */\n    private static class TestableStdDateFormat extends StdDateFormat {\n        public TestableStdDateFormat() {\n            super();\n        }\n\n        public TestableStdDateFormat(boolean colonInTz) {\n            super();\n            // Using the public API to set the internal state for _tzSerializedWithColon\n            this.withColonInTimeZone(colonInTz);\n        }\n\n        @Override\n        public void _format(TimeZone tz, Locale loc, Date date, StringBuffer buffer) {\n            super._format(tz, loc, date, buffer);\n        }\n    }\n\n    @Test\n    public void testFormatWithZeroOffsetNoColon() {\n        TestableStdDateFormat df = new TestableStdDateFormat(false);\n        TimeZone utc = TimeZone.getTimeZone(\"UTC\");\n        Locale loc = Locale.US;\n        \n        // 2023-10-05 14:30:05.123\n        Calendar cal = Calendar.getInstance(utc);\n        cal.set(2023, Calendar.OCTOBER, 5, 14, 30, 5);\n        cal.set(Calendar.MILLISECOND, 123);\n        Date date = cal.getTime();\n\n        StringBuffer buffer = new StringBuffer();\n        df._format(utc, loc, date, buffer);\n\n        // Expected: 2023-10-05T14:30:05.123+0000\n        assertEquals(\"2023-10-05T14:30:05.123+0000\", buffer.toString());\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testFormatWithZeroOffsetWithColon",
+   "runs_b": [
+    {
+     "duration_s": 0.146,
+     "exception": "org.junit.ComparisonFailure",
+     "failing_test_line": 62,
+     "message": "expected:<...0-05T14:30:05.123+00[:]00> but was:<...0-05T14:30:05.123+00[]00>",
+     "outcome": "assertion_failure",
+     "trace": "org.junit.ComparisonFailure: expected:<...0-05T14:30:05.123+00[:]00> but was:<...0-05T14:30:05.123+00[]00>\n\tat org.junit.Assert.assertEquals(Assert.java:115)\n\tat org.junit.Assert.assertEquals(Assert.java:144)\n\tat com.fasterxml.jackson.databind.util.StdDateFormat__format_TriageGen0Test.testFormatWithZeroOffsetWithColon(StdDateFormat__format_TriageGen0Test.java:62)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.16,
+     "exception": "org.junit.ComparisonFailure",
+     "failing_test_line": 62,
+     "message": "expected:<...0-05T14:30:05.123+00[:]00> but was:<...0-05T14:30:05.123+00[]00>",
+     "outcome": "assertion_failure",
+     "trace": "org.junit.ComparisonFailure: expected:<...0-05T14:30:05.123+00[:]00> but was:<...0-05T14:30:05.123+00[]00>\n\tat org.junit.Assert.assertEquals(Assert.java:115)\n\tat org.junit.Assert.assertEquals(Assert.java:144)\n\tat com.fasterxml.jackson.databind.util.StdDateFormat__format_TriageGen0Test.testFormatWithZeroOffsetWithColon(StdDateFormat__format_TriageGen0Test.java:62)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.169,
+     "exception": "org.junit.ComparisonFailure",
+     "failing_test_line": 62,
+     "message": "expected:<...0-05T14:30:05.123+00[:]00> but was:<...0-05T14:30:05.123+00[]00>",
+     "outcome": "assertion_failure",
+     "trace": "org.junit.ComparisonFailure: expected:<...0-05T14:30:05.123+00[:]00> but was:<...0-05T14:30:05.123+00[]00>\n\tat org.junit.Assert.assertEquals(Assert.java:115)\n\tat org.junit.Assert.assertEquals(Assert.java:144)\n\tat com.fasterxml.jackson.databind.util.StdDateFormat__format_TriageGen0Test.testFormatWithZeroOffsetWithColon(StdDateFormat__format_TriageGen0Test.java:62)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.148,
+     "exception": "org.junit.ComparisonFailure",
+     "failing_test_line": 62,
+     "message": "expected:<...0-05T14:30:05.123+00[:]00> but was:<...0-05T14:30:05.123+00[]00>",
+     "outcome": "assertion_failure",
+     "trace": "org.junit.ComparisonFailure: expected:<...0-05T14:30:05.123+00[:]00> but was:<...0-05T14:30:05.123+00[]00>\n\tat org.junit.Assert.assertEquals(Assert.java:115)\n\tat org.junit.Assert.assertEquals(Assert.java:144)\n\tat com.fasterxml.jackson.databind.util.StdDateFormat__format_TriageGen0Test.testFormatWithZeroOffsetWithColon(StdDateFormat__format_TriageGen0Test.java:62)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.144,
+     "exception": "org.junit.ComparisonFailure",
+     "failing_test_line": 62,
+     "message": "expected:<...0-05T14:30:05.123+00[:]00> but was:<...0-05T14:30:05.123+00[]00>",
+     "outcome": "assertion_failure",
+     "trace": "org.junit.ComparisonFailure: expected:<...0-05T14:30:05.123+00[:]00> but was:<...0-05T14:30:05.123+00[]00>\n\tat org.junit.Assert.assertEquals(Assert.java:115)\n\tat org.junit.Assert.assertEquals(Assert.java:144)\n\tat com.fasterxml.jackson.databind.util.StdDateFormat__format_TriageGen0Test.testFormatWithZeroOffsetWithColon(StdDateFormat__format_TriageGen0Test.java:62)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.123,
+     "exception": "org.junit.ComparisonFailure",
+     "failing_test_line": 62,
+     "message": "expected:<...0-05T14:30:05.123+00[:]00> but was:<...0-05T14:30:05.123+00[]00>",
+     "outcome": "assertion_failure",
+     "trace": "org.junit.ComparisonFailure: expected:<...0-05T14:30:05.123+00[:]00> but was:<...0-05T14:30:05.123+00[]00>\n\tat org.junit.Assert.assertEquals(Assert.java:115)\n\tat org.junit.Assert.assertEquals(Assert.java:144)\n\tat com.fasterxml.jackson.databind.util.StdDateFormat__format_TriageGen0Test.testFormatWithZeroOffsetWithColon(StdDateFormat__format_TriageGen0Test.java:62)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.databind.util;\n\nimport com.fasterxml.jackson.core.io.NumberInput;\nimport java.io.*;\nimport java.math.*;\nimport java.text.DateFormat;\nimport java.text.FieldPosition;\nimport java.text.ParseException;\nimport java.text.ParsePosition;\nimport java.text.SimpleDateFormat;\nimport java.util.*;\nimport java.util.Calendar;\nimport java.util.Date;\nimport java.util.Locale;\nimport java.util.TimeZone;\nimport java.util.regex.Matcher;\nimport java.util.regex.Pattern;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\npublic class StdDateFormat__format_TriageGen0Test {\n\n    /**\n     * Since _format is protected, we create a subclass to expose it for testing.\n     */\n    private static class TestableStdDateFormat extends StdDateFormat {\n        public TestableStdDateFormat() {\n            super();\n        }\n\n        public TestableStdDateFormat(boolean colonInTz) {\n            super();\n            // Using the public API to set the internal state for _tzSerializedWithColon\n            this.withColonInTimeZone(colonInTz);\n        }\n\n        @Override\n        public void _format(TimeZone tz, Locale loc, Date date, StringBuffer buffer) {\n            super._format(tz, loc, date, buffer);\n        }\n    }\n\n    \n\n    @Test\n    public void testFormatWithZeroOffsetWithColon() {\n        TestableStdDateFormat df = new TestableStdDateFormat(true);\n        TimeZone utc = TimeZone.getTimeZone(\"UTC\");\n        Locale loc = Locale.US;\n        \n        Calendar cal = Calendar.getInstance(utc);\n        cal.set(2023, Calendar.OCTOBER, 5, 14, 30, 5);\n        cal.set(Calendar.MILLISECOND, 123);\n        Date date = cal.getTime();\n\n        StringBuffer buffer = new StringBuffer();\n        df._format(utc, loc, date, buffer);\n\n        // Expected: 2023-10-05T14:30:05.123+00:00\n        assertEquals(\"2023-10-05T14:30:05.123+00:00\", buffer.toString());\n    }\n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testFormatWithPositiveOffsetWithColon",
+   "runs_b": [
+    {
+     "duration_s": 0.152,
+     "exception": "org.junit.ComparisonFailure",
+     "failing_test_line": 64,
+     "message": "expected:<...1-01T10:00:00.005+05[:]30> but was:<...1-01T10:00:00.005+05[]30>",
+     "outcome": "assertion_failure",
+     "trace": "org.junit.ComparisonFailure: expected:<...1-01T10:00:00.005+05[:]30> but was:<...1-01T10:00:00.005+05[]30>\n\tat org.junit.Assert.assertEquals(Assert.java:115)\n\tat org.junit.Assert.assertEquals(Assert.java:144)\n\tat com.fasterxml.jackson.databind.util.StdDateFormat__format_TriageGen0Test.testFormatWithPositiveOffsetWithColon(StdDateFormat__format_TriageGen0Test.java:64)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.128,
+     "exception": "org.junit.ComparisonFailure",
+     "failing_test_line": 64,
+     "message": "expected:<...1-01T10:00:00.005+05[:]30> but was:<...1-01T10:00:00.005+05[]30>",
+     "outcome": "assertion_failure",
+     "trace": "org.junit.ComparisonFailure: expected:<...1-01T10:00:00.005+05[:]30> but was:<...1-01T10:00:00.005+05[]30>\n\tat org.junit.Assert.assertEquals(Assert.java:115)\n\tat org.junit.Assert.assertEquals(Assert.java:144)\n\tat com.fasterxml.jackson.databind.util.StdDateFormat__format_TriageGen0Test.testFormatWithPositiveOffsetWithColon(StdDateFormat__format_TriageGen0Test.java:64)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.125,
+     "exception": "org.junit.ComparisonFailure",
+     "failing_test_line": 64,
+     "message": "expected:<...1-01T10:00:00.005+05[:]30> but was:<...1-01T10:00:00.005+05[]30>",
+     "outcome": "assertion_failure",
+     "trace": "org.junit.ComparisonFailure: expected:<...1-01T10:00:00.005+05[:]30> but was:<...1-01T10:00:00.005+05[]30>\n\tat org.junit.Assert.assertEquals(Assert.java:115)\n\tat org.junit.Assert.assertEquals(Assert.java:144)\n\tat com.fasterxml.jackson.databind.util.StdDateFormat__format_TriageGen0Test.testFormatWithPositiveOffsetWithColon(StdDateFormat__format_TriageGen0Test.java:64)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.116,
+     "exception": "org.junit.ComparisonFailure",
+     "failing_test_line": 64,
+     "message": "expected:<...1-01T10:00:00.005+05[:]30> but was:<...1-01T10:00:00.005+05[]30>",
+     "outcome": "assertion_failure",
+     "trace": "org.junit.ComparisonFailure: expected:<...1-01T10:00:00.005+05[:]30> but was:<...1-01T10:00:00.005+05[]30>\n\tat org.junit.Assert.assertEquals(Assert.java:115)\n\tat org.junit.Assert.assertEquals(Assert.java:144)\n\tat com.fasterxml.jackson.databind.util.StdDateFormat__format_TriageGen0Test.testFormatWithPositiveOffsetWithColon(StdDateFormat__format_TriageGen0Test.java:64)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.127,
+     "exception": "org.junit.ComparisonFailure",
+     "failing_test_line": 64,
+     "message": "expected:<...1-01T10:00:00.005+05[:]30> but was:<...1-01T10:00:00.005+05[]30>",
+     "outcome": "assertion_failure",
+     "trace": "org.junit.ComparisonFailure: expected:<...1-01T10:00:00.005+05[:]30> but was:<...1-01T10:00:00.005+05[]30>\n\tat org.junit.Assert.assertEquals(Assert.java:115)\n\tat org.junit.Assert.assertEquals(Assert.java:144)\n\tat com.fasterxml.jackson.databind.util.StdDateFormat__format_TriageGen0Test.testFormatWithPositiveOffsetWithColon(StdDateFormat__format_TriageGen0Test.java:64)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.138,
+     "exception": "org.junit.ComparisonFailure",
+     "failing_test_line": 64,
+     "message": "expected:<...1-01T10:00:00.005+05[:]30> but was:<...1-01T10:00:00.005+05[]30>",
+     "outcome": "assertion_failure",
+     "trace": "org.junit.ComparisonFailure: expected:<...1-01T10:00:00.005+05[:]30> but was:<...1-01T10:00:00.005+05[]30>\n\tat org.junit.Assert.assertEquals(Assert.java:115)\n\tat org.junit.Assert.assertEquals(Assert.java:144)\n\tat com.fasterxml.jackson.databind.util.StdDateFormat__format_TriageGen0Test.testFormatWithPositiveOffsetWithColon(StdDateFormat__format_TriageGen0Test.java:64)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.databind.util;\n\nimport com.fasterxml.jackson.core.io.NumberInput;\nimport java.io.*;\nimport java.math.*;\nimport java.text.DateFormat;\nimport java.text.FieldPosition;\nimport java.text.ParseException;\nimport java.text.ParsePosition;\nimport java.text.SimpleDateFormat;\nimport java.util.*;\nimport java.util.Calendar;\nimport java.util.Date;\nimport java.util.Locale;\nimport java.util.TimeZone;\nimport java.util.regex.Matcher;\nimport java.util.regex.Pattern;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\npublic class StdDateFormat__format_TriageGen0Test {\n\n    /**\n     * Since _format is protected, we create a subclass to expose it for testing.\n     */\n    private static class TestableStdDateFormat extends StdDateFormat {\n        public TestableStdDateFormat() {\n            super();\n        }\n\n        public TestableStdDateFormat(boolean colonInTz) {\n            super();\n            // Using the public API to set the internal state for _tzSerializedWithColon\n            this.withColonInTimeZone(colonInTz);\n        }\n\n        @Override\n        public void _format(TimeZone tz, Locale loc, Date date, StringBuffer buffer) {\n            super._format(tz, loc, date, buffer);\n        }\n    }\n\n    \n\n    \n\n    @Test\n    public void testFormatWithPositiveOffsetWithColon() {\n        TestableStdDateFormat df = new TestableStdDateFormat(true);\n        TimeZone tz = TimeZone.getTimeZone(\"GMT+05:30\"); // India\n        Locale loc = Locale.US;\n        \n        Calendar cal = Calendar.getInstance(tz);\n        cal.set(2023, Calendar.JANUARY, 1, 10, 0, 0);\n        cal.set(Calendar.MILLISECOND, 5);\n        Date date = cal.getTime();\n\n        StringBuffer buffer = new StringBuffer();\n        df._format(tz, loc, date, buffer);\n\n        // Expected: 2023-01-01T10:00:00.005+05:30\n        assertEquals(\"2023-01-01T10:00:00.005+05:30\", buffer.toString());\n    }\n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testFormatWithNegativeOffsetWithoutColon",
+   "runs_b": [
+    {
+     "duration_s": 0.156,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.163,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.132,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.113,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.13,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.14,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.databind.util;\n\nimport com.fasterxml.jackson.core.io.NumberInput;\nimport java.io.*;\nimport java.math.*;\nimport java.text.DateFormat;\nimport java.text.FieldPosition;\nimport java.text.ParseException;\nimport java.text.ParsePosition;\nimport java.text.SimpleDateFormat;\nimport java.util.*;\nimport java.util.Calendar;\nimport java.util.Date;\nimport java.util.Locale;\nimport java.util.TimeZone;\nimport java.util.regex.Matcher;\nimport java.util.regex.Pattern;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\npublic class StdDateFormat__format_TriageGen0Test {\n\n    /**\n     * Since _format is protected, we create a subclass to expose it for testing.\n     */\n    private static class TestableStdDateFormat extends StdDateFormat {\n        public TestableStdDateFormat() {\n            super();\n        }\n\n        public TestableStdDateFormat(boolean colonInTz) {\n            super();\n            // Using the public API to set the internal state for _tzSerializedWithColon\n            this.withColonInTimeZone(colonInTz);\n        }\n\n        @Override\n        public void _format(TimeZone tz, Locale loc, Date date, StringBuffer buffer) {\n            super._format(tz, loc, date, buffer);\n        }\n    }\n\n    \n\n    \n\n    \n\n    @Test\n    public void testFormatWithNegativeOffsetWithoutColon() {\n        TestableStdDateFormat df = new TestableStdDateFormat(false);\n        TimeZone tz = TimeZone.getTimeZone(\"GMT-08:00\"); // PST\n        Locale loc = Locale.US;\n        \n        Calendar cal = Calendar.getInstance(tz);\n        cal.set(2023, Calendar.DECEMBER, 31, 23, 59, 59);\n        cal.set(Calendar.MILLISECOND, 999);\n        Date date = cal.getTime();\n\n        StringBuffer buffer = new StringBuffer();\n        df._format(tz, loc, date, buffer);\n\n        // Expected: 2023-12-31T23:59:59.999-0800\n        assertEquals(\"2023-12-31T23:59:59.999-0800\", buffer.toString());\n    }\n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testFormatLargeYear",
+   "runs_b": [
+    {
+     "duration_s": 0.176,
+     "exception": "org.junit.ComparisonFailure",
+     "failing_test_line": 69,
+     "message": "expected:<[10]000-01-01T00:00:00.0...> but was:<[:]000-01-01T00:00:00.0...>",
+     "outcome": "assertion_failure",
+     "trace": "org.junit.ComparisonFailure: expected:<[10]000-01-01T00:00:00.0...> but was:<[:]000-01-01T00:00:00.0...>\n\tat org.junit.Assert.assertEquals(Assert.java:115)\n\tat org.junit.Assert.assertEquals(Assert.java:144)\n\tat com.fasterxml.jackson.databind.util.StdDateFormat__format_TriageGen0Test.testFormatLargeYear(StdDateFormat__format_TriageGen0Test.java:69)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.186,
+     "exception": "org.junit.ComparisonFailure",
+     "failing_test_line": 69,
+     "message": "expected:<[10]000-01-01T00:00:00.0...> but was:<[:]000-01-01T00:00:00.0...>",
+     "outcome": "assertion_failure",
+     "trace": "org.junit.ComparisonFailure: expected:<[10]000-01-01T00:00:00.0...> but was:<[:]000-01-01T00:00:00.0...>\n\tat org.junit.Assert.assertEquals(Assert.java:115)\n\tat org.junit.Assert.assertEquals(Assert.java:144)\n\tat com.fasterxml.jackson.databind.util.StdDateFormat__format_TriageGen0Test.testFormatLargeYear(StdDateFormat__format_TriageGen0Test.java:69)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.201,
+     "exception": "org.junit.ComparisonFailure",
+     "failing_test_line": 69,
+     "message": "expected:<[10]000-01-01T00:00:00.0...> but was:<[:]000-01-01T00:00:00.0...>",
+     "outcome": "assertion_failure",
+     "trace": "org.junit.ComparisonFailure: expected:<[10]000-01-01T00:00:00.0...> but was:<[:]000-01-01T00:00:00.0...>\n\tat org.junit.Assert.assertEquals(Assert.java:115)\n\tat org.junit.Assert.assertEquals(Assert.java:144)\n\tat com.fasterxml.jackson.databind.util.StdDateFormat__format_TriageGen0Test.testFormatLargeYear(StdDateFormat__format_TriageGen0Test.java:69)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.194,
+     "exception": "org.junit.ComparisonFailure",
+     "failing_test_line": 69,
+     "message": "expected:<[]10000-01-01T00:00:00...> but was:<[+]10000-01-01T00:00:00...>",
+     "outcome": "assertion_failure",
+     "trace": "org.junit.ComparisonFailure: expected:<[]10000-01-01T00:00:00...> but was:<[+]10000-01-01T00:00:00...>\n\tat org.junit.Assert.assertEquals(Assert.java:115)\n\tat org.junit.Assert.assertEquals(Assert.java:144)\n\tat com.fasterxml.jackson.databind.util.StdDateFormat__format_TriageGen0Test.testFormatLargeYear(StdDateFormat__format_TriageGen0Test.java:69)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.189,
+     "exception": "org.junit.ComparisonFailure",
+     "failing_test_line": 69,
+     "message": "expected:<[]10000-01-01T00:00:00...> but was:<[+]10000-01-01T00:00:00...>",
+     "outcome": "assertion_failure",
+     "trace": "org.junit.ComparisonFailure: expected:<[]10000-01-01T00:00:00...> but was:<[+]10000-01-01T00:00:00...>\n\tat org.junit.Assert.assertEquals(Assert.java:115)\n\tat org.junit.Assert.assertEquals(Assert.java:144)\n\tat com.fasterxml.jackson.databind.util.StdDateFormat__format_TriageGen0Test.testFormatLargeYear(StdDateFormat__format_TriageGen0Test.java:69)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.16,
+     "exception": "org.junit.ComparisonFailure",
+     "failing_test_line": 69,
+     "message": "expected:<[]10000-01-01T00:00:00...> but was:<[+]10000-01-01T00:00:00...>",
+     "outcome": "assertion_failure",
+     "trace": "org.junit.ComparisonFailure: expected:<[]10000-01-01T00:00:00...> but was:<[+]10000-01-01T00:00:00...>\n\tat org.junit.Assert.assertEquals(Assert.java:115)\n\tat org.junit.Assert.assertEquals(Assert.java:144)\n\tat com.fasterxml.jackson.databind.util.StdDateFormat__format_TriageGen0Test.testFormatLargeYear(StdDateFormat__format_TriageGen0Test.java:69)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.databind.util;\n\nimport com.fasterxml.jackson.core.io.NumberInput;\nimport java.io.*;\nimport java.math.*;\nimport java.text.DateFormat;\nimport java.text.FieldPosition;\nimport java.text.ParseException;\nimport java.text.ParsePosition;\nimport java.text.SimpleDateFormat;\nimport java.util.*;\nimport java.util.Calendar;\nimport java.util.Date;\nimport java.util.Locale;\nimport java.util.TimeZone;\nimport java.util.regex.Matcher;\nimport java.util.regex.Pattern;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\npublic class StdDateFormat__format_TriageGen0Test {\n\n    /**\n     * Since _format is protected, we create a subclass to expose it for testing.\n     */\n    private static class TestableStdDateFormat extends StdDateFormat {\n        public TestableStdDateFormat() {\n            super();\n        }\n\n        public TestableStdDateFormat(boolean colonInTz) {\n            super();\n            // Using the public API to set the internal state for _tzSerializedWithColon\n            this.withColonInTimeZone(colonInTz);\n        }\n\n        @Override\n        public void _format(TimeZone tz, Locale loc, Date date, StringBuffer buffer) {\n            super._format(tz, loc, date, buffer);\n        }\n    }\n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testFormatLargeYear() {\n        TestableStdDateFormat df = new TestableStdDateFormat(false);\n        TimeZone utc = TimeZone.getTimeZone(\"UTC\");\n        Locale loc = Locale.US;\n        \n        Calendar cal = Calendar.getInstance(utc);\n        cal.set(10000, Calendar.JANUARY, 1, 0, 0, 0);\n        cal.set(Calendar.MILLISECOND, 0);\n        Date date = cal.getTime();\n\n        StringBuffer buffer = new StringBuffer();\n        df._format(utc, loc, date, buffer);\n\n        // Testing the [databind#2167] logic for years beyond 9999\n        // pad4 will likely result in 10000\n        assertEquals(\"10000-01-01T00:00:00.000+0000\", buffer.toString());\n    }\n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testFormatBCEYear",
+   "runs_b": [
+    {
+     "duration_s": 0.146,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.155,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.163,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.171,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.148,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.186,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.databind.util;\n\nimport com.fasterxml.jackson.core.io.NumberInput;\nimport java.io.*;\nimport java.math.*;\nimport java.text.DateFormat;\nimport java.text.FieldPosition;\nimport java.text.ParseException;\nimport java.text.ParsePosition;\nimport java.text.SimpleDateFormat;\nimport java.util.*;\nimport java.util.Calendar;\nimport java.util.Date;\nimport java.util.Locale;\nimport java.util.TimeZone;\nimport java.util.regex.Matcher;\nimport java.util.regex.Pattern;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\npublic class StdDateFormat__format_TriageGen0Test {\n\n    /**\n     * Since _format is protected, we create a subclass to expose it for testing.\n     */\n    private static class TestableStdDateFormat extends StdDateFormat {\n        public TestableStdDateFormat() {\n            super();\n        }\n\n        public TestableStdDateFormat(boolean colonInTz) {\n            super();\n            // Using the public API to set the internal state for _tzSerializedWithColon\n            this.withColonInTimeZone(colonInTz);\n        }\n\n        @Override\n        public void _format(TimeZone tz, Locale loc, Date date, StringBuffer buffer) {\n            super._format(tz, loc, date, buffer);\n        }\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testFormatBCEYear() {\n        TestableStdDateFormat df = new TestableStdDateFormat(false);\n        TimeZone utc = TimeZone.getTimeZone(\"UTC\");\n        Locale loc = Locale.US;\n        \n        Calendar cal = Calendar.getInstance(utc);\n        // Using a year before 1 AD (BCE)\n        cal.set(-500, Calendar.JANUARY, 1, 12, 0, 0);\n        cal.set(Calendar.MILLISECOND, 0);\n        Date date = cal.getTime();\n\n        StringBuffer buffer = new StringBuffer();\n        df._format(utc, loc, date, buffer);\n\n        // The behavior of pad4 for negative numbers depends on implementation, \n        // but for the purpose of coverage, we ensure it executes.\n        // GregorianCalendar handles negative years.\n        String result = buffer.toString();\n        // If pad4 handles negative sign, it will appear in the year part\n        // We just verify it doesn't crash and contains the date parts\n        assertEquals(true, result.contains(\"-01-01T12:00:00.000+0000\"));\n    }\n}\n"
+  }
+ ],
+ "source_sha256": "644afecab9b82afc125b3501d0ffc153bc934001e8ecdcca4bfe6ab53d995507",
+ "utc": "2026-11-13T06:23:32Z"
+}

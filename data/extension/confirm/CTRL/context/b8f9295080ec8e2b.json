@@ -1,0 +1,160 @@
+{
+ "bug_name": "JacksonDatabind_13",
+ "call_sites": [
+  {
+   "line": 1708,
+   "lines": [
+    1703,
+    1704,
+    1705,
+    1706,
+    1707,
+    1708,
+    1709,
+    1710,
+    1711,
+    1712,
+    1713
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java",
+   "snippet": "             *   (not 100% why or how, but this does seem to get called more than once, which\n             *   is not good: for now, let's just avoid errors)\n             */\n            if (keyType != null && keyType.getValueHandler() == null) {\n                Object kdDef = intr.findKeyDeserializer(a);\n                KeyDeserializer kd = ctxt.keyDeserializerInstance(a, kdDef);\n                if (kd != null) {\n                    type = (T) ((MapLikeType) type).withKeyValueHandler(kd);\n                    keyType = type.getKeyType(); // just in case it's used below\n                }\n            }            "
+  },
+  {
+   "line": 1754,
+   "lines": [
+    1749,
+    1750,
+    1751,
+    1752,
+    1753,
+    1754,
+    1755,
+    1756,
+    1757,
+    1758,
+    1759
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java",
+   "snippet": "        if (type.isContainerType()) {\n            AnnotationIntrospector intr = ctxt.getAnnotationIntrospector();\n            JavaType keyType = type.getKeyType();\n            if (keyType != null) {\n                Object kdDef = intr.findKeyDeserializer(member);\n                KeyDeserializer kd = ctxt.keyDeserializerInstance(member, kdDef);\n                if (kd != null) {\n                    type = ((MapLikeType) type).withKeyValueHandler(kd);\n                    keyType = type.getKeyType(); // just in case it's used below\n                }\n            }"
+  },
+  {
+   "line": 242,
+   "lines": [
+    237,
+    238,
+    239,
+    240,
+    241,
+    242,
+    243,
+    244,
+    245,
+    246,
+    247
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/DefaultDeserializationContext.java",
+   "snippet": "            if (!KeyDeserializer.class.isAssignableFrom(deserClass)) {\n                throw new IllegalStateException(\"AnnotationIntrospector returned Class \"+deserClass.getName()\n                        +\"; expected Class<KeyDeserializer>\");\n            }\n            HandlerInstantiator hi = _config.getHandlerInstantiator();\n            deser = (hi == null) ? null : hi.keyDeserializerInstance(_config, ann, deserClass);\n            if (deser == null) {\n                deser = (KeyDeserializer) ClassUtil.createInstance(deserClass,\n                        _config.canOverrideAccessModifiers());\n            }\n        }"
+  },
+  {
+   "line": 511,
+   "lines": [
+    506,
+    507,
+    508,
+    509,
+    510,
+    511,
+    512,
+    513,
+    514,
+    515,
+    516
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/DeserializerCache.java",
+   "snippet": "             *   is not good: for now, let's just avoid errors)\n             */\n            if (keyType != null && keyType.getValueHandler() == null) {\n                Object kdDef = intr.findKeyDeserializer(a);\n                if (kdDef != null) {\n                    KeyDeserializer kd = ctxt.keyDeserializerInstance(a, kdDef);\n                    if (kd != null) {\n                        type = ((MapLikeType) type).withKeyValueHandler(kd);\n                        keyType = type.getKeyType(); // just in case it's used below\n                    }\n                }"
+  }
+ ],
+ "class_simple": "DefaultDeserializationContext",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Complete {@link DeserializationContext} implementation that adds\n * extended API for {@link ObjectMapper} (and {@link ObjectReader})\n * to call, as well as implements certain parts that base class\n * has left abstract.\n * The remaining abstract methods ({@link #createInstance}, {@link #with})\n * are left so that custom implementations will properly implement them\n * to return intended subtype.\n */\npublic abstract",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "protected transient LinkedHashMap<ObjectIdGenerator.IdKey, ReadableObjectId> _objectIds",
+  "private List<ObjectIdResolver> _objectIdResolvers"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.deser.DefaultDeserializationContext",
+ "focal_id": "JacksonDatabind_13::com.fasterxml.jackson.databind.deser.DefaultDeserializationContext::keyDeserializerInstance(Annotated,Object)",
+ "focal_method_name": "keyDeserializerInstance",
+ "generations": 3,
+ "impl_B": "@Override\n    public final KeyDeserializer keyDeserializerInstance(Annotated ann, Object deserDef)\n        throws JsonMappingException\n    {\n        if (deserDef == null) {\n            return null;\n        }\n\n        KeyDeserializer deser;\n        \n        if (deserDef instanceof KeyDeserializer) {\n            deser = (KeyDeserializer) deserDef;\n        } else {\n            if (!(deserDef instanceof Class)) {\n                throw new IllegalStateException(\"AnnotationIntrospector returned key deserializer definition of type \"\n                        +deserDef.getClass().getName()\n                        +\"; expected type KeyDeserializer or Class<KeyDeserializer> instead\");\n            }\n            Class<?> deserClass = (Class<?>)deserDef;\n            // there are some known \"no class\" markers to consider too:\n            if (deserClass == KeyDeserializer.None.class || ClassUtil.isBogusClass(deserClass)) {\n                return null;\n            }\n            if (!KeyDeserializer.class.isAssignableFrom(deserClass)) {\n                throw new IllegalStateException(\"AnnotationIntrospector returned Class \"+deserClass.getName()\n                        +\"; expected Class<KeyDeserializer>\");\n            }\n            HandlerInstantiator hi = _config.getHandlerInstantiator();\n            deser = (hi == null) ? null : hi.keyDeserializerInstance(_config, ann, deserClass);\n            if (deser == null) {\n                deser = (KeyDeserializer) ClassUtil.createInstance(deserClass,\n                        _config.canOverrideAccessModifiers());\n            }\n        }\n        // First: need to resolve\n        if (deser instanceof ResolvableDeserializer) {\n            ((ResolvableDeserializer) deser).resolve(this);\n        }\n        return deser;\n    }",
+ "imports": [
+  "java.util.*",
+  "java.util.Map.Entry",
+  "com.fasterxml.jackson.annotation.ObjectIdGenerator",
+  "com.fasterxml.jackson.annotation.ObjectIdResolver",
+  "com.fasterxml.jackson.annotation.ObjectIdGenerator.IdKey",
+  "com.fasterxml.jackson.annotation.SimpleObjectIdResolver",
+  "com.fasterxml.jackson.core.JsonParser",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.cfg.HandlerInstantiator",
+  "com.fasterxml.jackson.databind.deser.impl.ReadableObjectId",
+  "com.fasterxml.jackson.databind.deser.impl.ReadableObjectId.Referring",
+  "com.fasterxml.jackson.databind.introspect.Annotated",
+  "com.fasterxml.jackson.databind.util.ClassUtil"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.deser",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Method needed to ensure that {@link ObjectMapper#copy} will work\n     * properly; specifically, that caches are cleared, but settings\n     * will otherwise remain identical; and that no sharing of state\n     * occurs.\n     * \n     * @since 2.4.4\n     */",
+   "name": "copy"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findObjectId"
+  },
+  {
+   "javadoc": "",
+   "name": "findObjectId"
+  },
+  {
+   "javadoc": "",
+   "name": "checkUnresolvedObjectId"
+  },
+  {
+   "javadoc": "/**\n     * Fluent factory method used for constructing a blueprint instance\n     * with different factory\n     */",
+   "name": "with"
+  },
+  {
+   "javadoc": "/**\n     * Method called to create actual usable per-deserialization\n     * context instance.\n     */",
+   "name": "createInstance"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public abstract class DefaultDeserializationContext extends DeserializationContext implements java.io.Serializable",
+  "constructors": [
+   "protected DefaultDeserializationContext(DeserializerFactory df, DeserializerCache cache);",
+   "protected DefaultDeserializationContext(DefaultDeserializationContext src, DeserializationConfig config, JsonParser jp, InjectableValues values);",
+   "protected DefaultDeserializationContext(DefaultDeserializationContext src, DeserializerFactory factory);",
+   "protected DefaultDeserializationContext(DefaultDeserializationContext src);"
+  ],
+  "focal_signature": "public final KeyDeserializer keyDeserializerInstance(Annotated ann, Object deserDef) throws JsonMappingException",
+  "methods": [
+   "public DefaultDeserializationContext copy();",
+   "public ReadableObjectId findObjectId(Object id, ObjectIdGenerator<?> gen, ObjectIdResolver resolverType);",
+   "// since 2.4 public ReadableObjectId findObjectId(Object id, ObjectIdGenerator<?> gen);",
+   "public void checkUnresolvedObjectId() throws UnresolvedForwardReference;",
+   "public abstract DefaultDeserializationContext with(DeserializerFactory factory);",
+   "public abstract DefaultDeserializationContext createInstance( DeserializationConfig config, JsonParser jp, InjectableValues values);"
+  ],
+  "type_signatures": [
+   "public abstract class Annotated { protected Annotated(); public abstract <A extends Annotation> A getAnnotation(Class<A> acls); public final <A extends Annotation> boolean hasAnnotation(Class<A> acls); public abstract Annotated withAnnotations(AnnotationMap fallback); public final Annotated withFallBackAnnotationsFrom(Annotated annotated); public abstract AnnotatedElement getAnnotated(); protected abstract int getModifiers(); public final boolean isPublic(); public abstract String getName(); public JavaType getType(TypeBindings context); public abstract Type getGenericType(); public abstract Class<?> getRawType(); public abstract Iterable<Annotation> annotations(); protected abstract AnnotationMap getAllAnnotations(); public abstract boolean equals(Object o); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

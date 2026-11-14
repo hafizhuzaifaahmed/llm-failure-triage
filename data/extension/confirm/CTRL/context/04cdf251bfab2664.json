@@ -1,0 +1,298 @@
+{
+ "bug_name": "JacksonDatabind_104",
+ "call_sites": [
+  {
+   "line": 195,
+   "lines": [
+    190,
+    191,
+    192,
+    193,
+    194,
+    195,
+    196,
+    197,
+    198,
+    199,
+    200
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/std/DateDeserializers.java",
+   "snippet": "                                    \"expected format \\\"%s\\\"\", _formatString);\n                        }\n                    }\n                }\n            }\n            return super._parseDate(p, ctxt);\n        }\n    }\n\n    /*\n    /**********************************************************"
+  },
+  {
+   "line": 240,
+   "lines": [
+    235,
+    236,
+    237,
+    238,
+    239,
+    240,
+    241,
+    242,
+    243,
+    244,
+    245
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/std/DateDeserializers.java",
+   "snippet": "        }\n\n        @Override\n        public Calendar deserialize(JsonParser p, DeserializationContext ctxt) throws IOException\n        {\n            Date d = _parseDate(p, ctxt);\n            if (d == null) {\n                return null;\n            }\n            if (_defaultCtor == null) {\n                return ctxt.constructCalendar(d);"
+  },
+  {
+   "line": 285,
+   "lines": [
+    280,
+    281,
+    282,
+    283,
+    284,
+    285,
+    286,
+    287,
+    288,
+    289,
+    290
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/std/DateDeserializers.java",
+   "snippet": "            return new DateDeserializer(this, df, formatString);\n        }\n        \n        @Override\n        public java.util.Date deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {\n            return _parseDate(p, ctxt);\n        }\n    }\n\n    /**\n     * Compared to plain old {@link java.util.Date}, SQL version is easier"
+  },
+  {
+   "line": 308,
+   "lines": [
+    303,
+    304,
+    305,
+    306,
+    307,
+    308,
+    309,
+    310,
+    311,
+    312,
+    313
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/std/DateDeserializers.java",
+   "snippet": "            return new SqlDateDeserializer(this, df, formatString);\n        }\n        \n        @Override\n        public java.sql.Date deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {\n            Date d = _parseDate(p, ctxt);\n            return (d == null) ? null : new java.sql.Date(d.getTime());\n        }\n    }\n\n    /**"
+  },
+  {
+   "line": 335,
+   "lines": [
+    330,
+    331,
+    332,
+    333,
+    334,
+    335,
+    336,
+    337,
+    338,
+    339,
+    340
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/std/DateDeserializers.java",
+   "snippet": "        }\n        \n        @Override\n        public java.sql.Timestamp deserialize(JsonParser p, DeserializationContext ctxt) throws IOException\n        {\n            Date d = _parseDate(p, ctxt);\n            return (d == null) ? null : new Timestamp(d.getTime());\n        }\n    }\n}\n"
+  }
+ ],
+ "class_simple": "StdDateFormat",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Default {@link DateFormat} implementation used by standard Date\n * serializers and deserializers. For serialization defaults to using\n * an ISO-8601 compliant format (format String \"yyyy-MM-dd'T'HH:mm:ss.SSSZ\")\n * and for deserialization, both ISO-8601 and RFC-1123.\n */\n@SuppressWarnings(\"serial\")\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "protected final static String PATTERN_PLAIN_STR",
+  "protected final static Pattern PATTERN_PLAIN",
+  "protected final static Pattern PATTERN_ISO8601",
+  "public final static String DATE_FORMAT_STR_ISO8601",
+  "protected final static String DATE_FORMAT_STR_PLAIN",
+  "protected final static String DATE_FORMAT_STR_RFC1123",
+  "protected final static String[] ALL_FORMATS",
+  "protected final static TimeZone DEFAULT_TIMEZONE",
+  "protected final static Locale DEFAULT_LOCALE",
+  "protected final static DateFormat DATE_FORMAT_RFC1123",
+  "protected final static DateFormat DATE_FORMAT_ISO8601",
+  "public final static StdDateFormat instance",
+  "protected static final Calendar CALENDAR",
+  "protected transient TimeZone _timezone",
+  "protected final Locale _locale",
+  "protected Boolean _lenient",
+  "private transient Calendar _calendar",
+  "private transient DateFormat _formatRFC1123",
+  "private boolean _tzSerializedWithColon"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.util.StdDateFormat",
+ "focal_id": "JacksonDatabind_104::com.fasterxml.jackson.databind.util.StdDateFormat::_parseDate(String,ParsePosition)",
+ "focal_method_name": "_parseDate",
+ "generations": 3,
+ "impl_B": "protected Date _parseDate(String dateStr, ParsePosition pos) throws ParseException\n    {\n        if (looksLikeISO8601(dateStr)) { // also includes \"plain\"\n            return parseAsISO8601(dateStr, pos);\n        }\n        // Also consider \"stringified\" simple time stamp\n        int i = dateStr.length();\n        while (--i >= 0) {\n            char ch = dateStr.charAt(i);\n            if (ch < '0' || ch > '9') {\n                // 07-Aug-2013, tatu: And [databind#267] points out that negative numbers should also work\n                if (i > 0 || ch != '-') {\n                    break;\n                }\n            }\n        }\n        if ((i < 0)\n            // let's just assume negative numbers are fine (can't be RFC-1123 anyway); check length for positive\n                && (dateStr.charAt(0) == '-' || NumberInput.inLongRange(dateStr, false))) {\n            return _parseDateFromLong(dateStr, pos);\n        }\n        // Otherwise, fall back to using RFC 1123. NOTE: call will NOT throw, just returns `null`\n        return parseAsRFC1123(dateStr, pos);\n    }",
+ "imports": [
+  "java.text.DateFormat",
+  "java.text.FieldPosition",
+  "java.text.ParseException",
+  "java.text.ParsePosition",
+  "java.text.SimpleDateFormat",
+  "java.util.*",
+  "java.util.regex.Matcher",
+  "java.util.regex.Pattern",
+  "com.fasterxml.jackson.core.io.NumberInput"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.util",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "getDefaultTimeZone"
+  },
+  {
+   "javadoc": "/**\n     * Method used for creating a new instance with specified timezone;\n     * if no timezone specified, defaults to the default timezone (UTC).\n     */",
+   "name": "withTimeZone"
+  },
+  {
+   "javadoc": "/**\n     * \"Mutant factory\" method that will return an instance that uses specified\n     * {@code Locale}:\n     * either {@code this} instance (if setting would not change), or newly\n     * constructed instance with different {@code Locale} to use.\n     */",
+   "name": "withLocale"
+  },
+  {
+   "javadoc": "/**\n     * \"Mutant factory\" method that will return an instance that has specified leniency\n     * setting: either {@code this} instance (if setting would not change), or newly\n     * constructed instance.\n     *\n     * @since 2.9\n     */",
+   "name": "withLenient"
+  },
+  {
+   "javadoc": "/**\n     * \"Mutant factory\" method that will return an instance that has specified\n     * handling of colon when serializing timezone (timezone either written\n     * like {@code +0500} or {@code +05:00}):\n     * either {@code this} instance (if setting would not change), or newly\n     * constructed instance with desired setting for colon inclusion.\n     *<p>\n     * NOTE: does NOT affect deserialization as colon is optional accepted\n     * but not required -- put another way, either serialization is accepted\n     * by this class.\n     *\n     * @since 2.9.1\n     */",
+   "name": "withColonInTimeZone"
+  },
+  {
+   "javadoc": "",
+   "name": "clone"
+  },
+  {
+   "javadoc": "/**\n     * Method for getting a non-shared DateFormat instance\n     * that uses specified timezone and can handle simple ISO-8601\n     * compliant date format.\n     * \n     * @since 2.4\n     *\n     * @deprecated Since 2.9\n     */",
+   "name": "getISO8601Format"
+  },
+  {
+   "javadoc": "/**\n     * Method for getting a non-shared DateFormat instance\n     * that uses specific timezone and can handle RFC-1123\n     * compliant date format.\n     * \n     * @since 2.4\n     *\n     * @deprecated Since 2.9\n     */",
+   "name": "getRFC1123Format"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getTimeZone"
+  },
+  {
+   "javadoc": "",
+   "name": "setTimeZone"
+  },
+  {
+   "javadoc": "/**\n     * Need to override since we need to keep track of leniency locally,\n     * and not via underlying {@link Calendar} instance like base class\n     * does.\n     */",
+   "name": "setLenient"
+  },
+  {
+   "javadoc": "",
+   "name": "isLenient"
+  },
+  {
+   "javadoc": "/**\n     * Accessor for checking whether this instance would include colon\n     * within timezone serialization or not: if {code true}, timezone offset\n     * is serialized like {@code -06:00}; if {code false} as {@code -0600}.\n     *<p>\n     * NOTE: only relevant for serialization (formatting), as deserialization\n     * (parsing) always accepts optional colon but does not require it, regardless\n     * of this setting.\n     *\n     * @return {@code true} if a colon is to be inserted between the hours and minutes \n     * of the TZ offset when serializing as String; otherwise {@code false}\n     *\n     * @since 2.9.1\n     */",
+   "name": "isColonIncludedInTimeZone"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "parse"
+  },
+  {
+   "javadoc": "",
+   "name": "parse"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "format"
+  },
+  {
+   "javadoc": "",
+   "name": "_format"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "toString"
+  },
+  {
+   "javadoc": "",
+   "name": "toPattern"
+  },
+  {
+   "javadoc": "",
+   "name": "equals"
+  },
+  {
+   "javadoc": "",
+   "name": "hashCode"
+  },
+  {
+   "javadoc": "/**\n     * Helper method used to figure out if input looks like valid\n     * ISO-8601 string.\n     */",
+   "name": "looksLikeISO8601"
+  },
+  {
+   "javadoc": "",
+   "name": "parseAsISO8601"
+  },
+  {
+   "javadoc": "",
+   "name": "_parseAsISO8601"
+  },
+  {
+   "javadoc": "",
+   "name": "parseAsRFC1123"
+  },
+  {
+   "javadoc": "",
+   "name": "_clearFormats"
+  },
+  {
+   "javadoc": "",
+   "name": "_getCalendar"
+  },
+  {
+   "javadoc": "",
+   "name": "_equals"
+  }
+ ],
+ "sig": {
+  "class_declaration": "@SuppressWarnings(\"serial\") public class StdDateFormat extends DateFormat",
+  "constructors": [
+   "public StdDateFormat();",
+   "// since 2.7 public StdDateFormat(TimeZone tz, Locale loc);",
+   "protected StdDateFormat(TimeZone tz, Locale loc, Boolean lenient);",
+   "protected StdDateFormat(TimeZone tz, Locale loc, Boolean lenient, boolean formatTzOffsetWithColon);"
+  ],
+  "focal_signature": "protected Date _parseDate(String dateStr, ParsePosition pos) throws ParseException",
+  "methods": [
+   "public static TimeZone getDefaultTimeZone();",
+   "public StdDateFormat withTimeZone(TimeZone tz);",
+   "public StdDateFormat withLocale(Locale loc);",
+   "public StdDateFormat withLenient(Boolean b);",
+   "public StdDateFormat withColonInTimeZone(boolean b);",
+   "public StdDateFormat clone();",
+   "// since 2.9 public static DateFormat getISO8601Format(TimeZone tz, Locale loc);",
+   "// since 2.9 public static DateFormat getRFC1123Format(TimeZone tz, Locale loc);",
+   "// since 2.6 public TimeZone getTimeZone();",
+   "public void setTimeZone(TimeZone tz);",
+   "// since 2.7 public void setLenient(boolean enabled);",
+   "// since 2.7 public boolean isLenient();",
+   "public boolean isColonIncludedInTimeZone();",
+   "public Date parse(String dateStr) throws ParseException;",
+   "public Date parse(String dateStr, ParsePosition pos);",
+   "public StringBuffer format(Date date, StringBuffer toAppendTo, FieldPosition fieldPosition);",
+   "protected void _format(TimeZone tz, Locale loc, Date date, StringBuffer buffer);",
+   "public String toString();",
+   "public String toPattern();",
+   "// since 2.7[.2], as per [databind#1130] public boolean equals(Object o);",
+   "// since 2.7[.2], as per [databind#1130] public int hashCode();",
+   "protected boolean looksLikeISO8601(String dateStr);",
+   "protected Date parseAsISO8601(String dateStr, ParsePosition pos) throws ParseException;",
+   "protected Date _parseAsISO8601(String dateStr, ParsePosition bogus) throws IllegalArgumentException, ParseException;",
+   "protected Date parseAsRFC1123(String dateStr, ParsePosition pos);",
+   "protected void _clearFormats();",
+   "protected Calendar _getCalendar(TimeZone tz);",
+   "protected static <T> boolean _equals(T value1, T value2);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

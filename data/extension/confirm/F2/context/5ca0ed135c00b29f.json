@@ -1,0 +1,254 @@
+{
+ "bug_name": "JacksonDatabind_24",
+ "call_sites": [
+  {
+   "line": 305,
+   "lines": [
+    300,
+    301,
+    302,
+    303,
+    304,
+    305,
+    306,
+    307,
+    308,
+    309,
+    310
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationConfig.java",
+   "snippet": "        return _withBase( _base.withTypeFactory(tf));\n    }\n\n    @Override\n    public DeserializationConfig with(DateFormat df) {\n        return _withBase(_base.withDateFormat(df));\n    }\n    \n    @Override\n    public DeserializationConfig with(HandlerInstantiator hi) {\n        return _withBase(_base.withHandlerInstantiator(hi));"
+  },
+  {
+   "line": 321,
+   "lines": [
+    316,
+    317,
+    318,
+    319,
+    320,
+    321,
+    322,
+    323,
+    324,
+    325,
+    326
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/SerializationConfig.java",
+   "snippet": "     * will enable or disable <code>SerializationFeature.WRITE_DATES_AS_TIMESTAMPS</code>\n     * (enable if format set as null; disable if non-null)\n     */\n    @Override\n    public SerializationConfig with(DateFormat df) {\n        SerializationConfig cfg =  new SerializationConfig(this, _base.withDateFormat(df));\n        // Also need to toggle this feature based on existence of date format:\n        if (df == null) {\n            cfg = cfg.with(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);\n        } else {\n            cfg = cfg.without(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);"
+  },
+  {
+   "line": 119,
+   "lines": [
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122,
+    123,
+    124
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/std/DateDeserializers.java",
+   "snippet": "                        SimpleDateFormat df = new SimpleDateFormat(pattern, loc);\n                        if (tz == null) {\n                            tz = ctxt.getTimeZone();\n                        }\n                        df.setTimeZone(tz);\n                        return withDateFormat(df, pattern);\n                    }\n                    // But if not, can still override timezone\n                    if (tz != null) {\n                        DateFormat df = ctxt.getConfig().getDateFormat();\n                        // one shortcut: with our custom format, can simplify handling a bit"
+  },
+  {
+   "line": 136,
+   "lines": [
+    131,
+    132,
+    133,
+    134,
+    135,
+    136,
+    137,
+    138,
+    139,
+    140,
+    141
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/std/DateDeserializers.java",
+   "snippet": "                        } else {\n                            // otherwise need to clone, re-set timezone:\n                            df = (DateFormat) df.clone();\n                            df.setTimeZone(tz);\n                        }\n                        return withDateFormat(df, _formatString);\n                    }\n                }\n            }\n            return this;\n        }"
+  }
+ ],
+ "class_simple": "BaseSettings",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Immutable container class used to store simple configuration\n * settings. Since instances are fully immutable, instances can\n * be freely shared and used without synchronization.\n */\npublic final",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "protected final ClassIntrospector _classIntrospector",
+  "protected final AnnotationIntrospector _annotationIntrospector",
+  "protected final VisibilityChecker<?> _visibilityChecker",
+  "protected final PropertyNamingStrategy _propertyNamingStrategy",
+  "protected final TypeFactory _typeFactory",
+  "protected final TypeResolverBuilder<?> _typeResolverBuilder",
+  "protected final DateFormat _dateFormat",
+  "protected final HandlerInstantiator _handlerInstantiator",
+  "protected final Locale _locale",
+  "protected final TimeZone _timeZone",
+  "protected final Base64Variant _defaultBase64"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.cfg.BaseSettings",
+ "focal_id": "JacksonDatabind_24::com.fasterxml.jackson.databind.cfg.BaseSettings::withDateFormat(DateFormat)",
+ "focal_method_name": "withDateFormat",
+ "generations": 3,
+ "impl_B": "public BaseSettings withDateFormat(DateFormat df) {\n        if (_dateFormat == df) {\n            return this;\n        }\n        TimeZone tz = (df == null) ? _timeZone : df.getTimeZone();\n        return new BaseSettings(_classIntrospector, _annotationIntrospector, _visibilityChecker, _propertyNamingStrategy, _typeFactory,\n                _typeResolverBuilder, df, _handlerInstantiator, _locale,\n                tz, _defaultBase64);\n    }",
+ "imports": [
+  "java.text.DateFormat",
+  "java.util.Locale",
+  "java.util.TimeZone",
+  "com.fasterxml.jackson.annotation.JsonAutoDetect",
+  "com.fasterxml.jackson.annotation.PropertyAccessor",
+  "com.fasterxml.jackson.core.Base64Variant",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.introspect.AnnotationIntrospectorPair",
+  "com.fasterxml.jackson.databind.introspect.ClassIntrospector",
+  "com.fasterxml.jackson.databind.introspect.VisibilityChecker",
+  "com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder",
+  "com.fasterxml.jackson.databind.type.TypeFactory",
+  "com.fasterxml.jackson.databind.util.StdDateFormat"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.cfg",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "withClassIntrospector"
+  },
+  {
+   "javadoc": "",
+   "name": "withAnnotationIntrospector"
+  },
+  {
+   "javadoc": "",
+   "name": "withInsertedAnnotationIntrospector"
+  },
+  {
+   "javadoc": "",
+   "name": "withAppendedAnnotationIntrospector"
+  },
+  {
+   "javadoc": "",
+   "name": "withVisibilityChecker"
+  },
+  {
+   "javadoc": "",
+   "name": "withVisibility"
+  },
+  {
+   "javadoc": "",
+   "name": "withPropertyNamingStrategy"
+  },
+  {
+   "javadoc": "",
+   "name": "withTypeFactory"
+  },
+  {
+   "javadoc": "",
+   "name": "withTypeResolverBuilder"
+  },
+  {
+   "javadoc": "",
+   "name": "withHandlerInstantiator"
+  },
+  {
+   "javadoc": "",
+   "name": "with"
+  },
+  {
+   "javadoc": "/**\n     * Fluent factory for constructing a new instance that uses specified TimeZone.\n     * Note that timezone used with also be assigned to configured {@link DateFormat},\n     * changing time formatting defaults.\n     */",
+   "name": "with"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.1\n     */",
+   "name": "with"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getClassIntrospector"
+  },
+  {
+   "javadoc": "",
+   "name": "getAnnotationIntrospector"
+  },
+  {
+   "javadoc": "",
+   "name": "getVisibilityChecker"
+  },
+  {
+   "javadoc": "",
+   "name": "getPropertyNamingStrategy"
+  },
+  {
+   "javadoc": "",
+   "name": "getTypeFactory"
+  },
+  {
+   "javadoc": "",
+   "name": "getTypeResolverBuilder"
+  },
+  {
+   "javadoc": "",
+   "name": "getDateFormat"
+  },
+  {
+   "javadoc": "",
+   "name": "getHandlerInstantiator"
+  },
+  {
+   "javadoc": "",
+   "name": "getLocale"
+  },
+  {
+   "javadoc": "",
+   "name": "getTimeZone"
+  },
+  {
+   "javadoc": "",
+   "name": "getBase64Variant"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public final class BaseSettings implements java.io.Serializable",
+  "constructors": [
+   "public BaseSettings(ClassIntrospector ci, AnnotationIntrospector ai, VisibilityChecker<?> vc, PropertyNamingStrategy pns, TypeFactory tf, TypeResolverBuilder<?> typer, DateFormat dateFormat, HandlerInstantiator hi, Locale locale, TimeZone tz, Base64Variant defaultBase64);"
+  ],
+  "focal_signature": "public BaseSettings withDateFormat(DateFormat df)",
+  "methods": [
+   "public BaseSettings withClassIntrospector(ClassIntrospector ci);",
+   "public BaseSettings withAnnotationIntrospector(AnnotationIntrospector ai);",
+   "public BaseSettings withInsertedAnnotationIntrospector(AnnotationIntrospector ai);",
+   "public BaseSettings withAppendedAnnotationIntrospector(AnnotationIntrospector ai);",
+   "public BaseSettings withVisibilityChecker(VisibilityChecker<?> vc);",
+   "public BaseSettings withVisibility(PropertyAccessor forMethod, JsonAutoDetect.Visibility visibility);",
+   "public BaseSettings withPropertyNamingStrategy(PropertyNamingStrategy pns);",
+   "public BaseSettings withTypeFactory(TypeFactory tf);",
+   "public BaseSettings withTypeResolverBuilder(TypeResolverBuilder<?> typer);",
+   "public BaseSettings withHandlerInstantiator(HandlerInstantiator hi);",
+   "public BaseSettings with(Locale l);",
+   "public BaseSettings with(TimeZone tz);",
+   "public BaseSettings with(Base64Variant base64);",
+   "public ClassIntrospector getClassIntrospector();",
+   "public AnnotationIntrospector getAnnotationIntrospector();",
+   "public VisibilityChecker<?> getVisibilityChecker();",
+   "public PropertyNamingStrategy getPropertyNamingStrategy();",
+   "public TypeFactory getTypeFactory();",
+   "public TypeResolverBuilder<?> getTypeResolverBuilder();",
+   "public DateFormat getDateFormat();",
+   "public HandlerInstantiator getHandlerInstantiator();",
+   "public Locale getLocale();",
+   "public TimeZone getTimeZone();",
+   "public Base64Variant getBase64Variant();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

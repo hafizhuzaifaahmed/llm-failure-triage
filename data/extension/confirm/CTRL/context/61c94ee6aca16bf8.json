@@ -1,0 +1,77 @@
+{
+ "bug_name": "Math_28",
+ "call_sites": [
+  {
+   "line": 223,
+   "lines": [
+    218,
+    219,
+    220,
+    221,
+    222,
+    223,
+    224,
+    225,
+    226,
+    227,
+    228
+   ],
+   "path": "src/main/java/org/apache/commons/math3/optimization/linear/SimplexSolver.java",
+   "snippet": "                               getGoalType(),\n                               restrictToNonNegative(),\n                               epsilon,\n                               maxUlps);\n\n        solvePhase1(tableau);\n        tableau.dropPhase1Objective();\n\n        while (!tableau.isOptimal()) {\n            doIteration(tableau);\n        }"
+  }
+ ],
+ "class_simple": "SimplexSolver",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Solves a linear problem using the Two-Phase Simplex Method.\n * @version $Id$\n * @since 2.0\n */\npublic",
+  "method_javadoc": "/**\n     * Solves Phase 1 of the Simplex method.\n     * @param tableau simple tableau for the problem\n     * @throws MaxCountExceededException if the maximal iteration count has been exceeded\n     * @throws UnboundedSolutionException if the model is found not to have a bounded solution\n     * @throws NoFeasibleSolutionException if there is no feasible solution\n     */"
+ },
+ "fields": [
+  "private static final double DEFAULT_EPSILON",
+  "private static final int DEFAULT_ULPS",
+  "private final double epsilon",
+  "private final int maxUlps"
+ ],
+ "focal_class": "org.apache.commons.math3.optimization.linear.SimplexSolver",
+ "focal_id": "Math_28::org.apache.commons.math3.optimization.linear.SimplexSolver::solvePhase1(SimplexTableau)",
+ "focal_method_name": "solvePhase1",
+ "generations": 3,
+ "impl_B": "protected void solvePhase1(final SimplexTableau tableau)\n        throws MaxCountExceededException, UnboundedSolutionException, NoFeasibleSolutionException {\n\n        // make sure we're in Phase 1\n        if (tableau.getNumArtificialVariables() == 0) {\n            return;\n        }\n\n        while (!tableau.isOptimal()) {\n            doIteration(tableau);\n        }\n\n        // if W is not zero then we have no feasible solution\n        if (!Precision.equals(tableau.getEntry(0, tableau.getRhsOffset()), 0d, epsilon)) {\n            throw new NoFeasibleSolutionException();\n        }\n    }",
+ "imports": [
+  "java.util.ArrayList",
+  "java.util.List",
+  "org.apache.commons.math3.exception.MaxCountExceededException",
+  "org.apache.commons.math3.optimization.PointValuePair",
+  "org.apache.commons.math3.util.Precision"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math3.optimization.linear",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Runs one iteration of the Simplex method on the given model.\n     * @param tableau simple tableau for the problem\n     * @throws MaxCountExceededException if the maximal iteration count has been exceeded\n     * @throws UnboundedSolutionException if the model is found not to have a bounded solution\n     */",
+   "name": "doIteration"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "doOptimize"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class SimplexSolver extends AbstractLinearOptimizer",
+  "constructors": [
+   "public SimplexSolver();",
+   "public SimplexSolver(final double epsilon, final int maxUlps);"
+  ],
+  "focal_signature": "protected void solvePhase1(final SimplexTableau tableau) throws MaxCountExceededException, UnboundedSolutionException, NoFeasibleSolutionException",
+  "methods": [
+   "protected void doIteration(final SimplexTableau tableau) throws MaxCountExceededException, UnboundedSolutionException;",
+   "public PointValuePair doOptimize() throws MaxCountExceededException, UnboundedSolutionException, NoFeasibleSolutionException;"
+  ],
+  "type_signatures": [
+   "class SimplexTableau implements Serializable { protected void initializeColumnLabels(); protected RealMatrix createTableau(final boolean maximize); public List<LinearConstraint> normalizeConstraints(Collection<LinearConstraint> originalConstraints); protected final int getNumObjectiveFunctions(); protected static double getInvertedCoefficientSum(final RealVector coefficients); protected Integer getBasicRow(final int col); protected void dropPhase1Objective(); protected PointValuePair getSolution(); protected void divideRow(final int dividendRow, final double divisor); protected void subtractRow(final int minuendRow, final int subtrahendRow, final double multiple); protected final int getWidth(); protected final int getHeight(); protected final double getEntry(final int row, final int column); protected final void setEntry(final int row, final int column, final double value); protected final int getSlackVariableOffset(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

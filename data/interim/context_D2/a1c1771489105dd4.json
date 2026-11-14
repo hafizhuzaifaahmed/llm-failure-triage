@@ -1,0 +1,176 @@
+{
+ "base_focal_id": "Time_2::org.joda.time.Partial::with(DateTimeFieldType,int)",
+ "bug_name": "Time_2",
+ "call_sites": [],
+ "class_simple": "Partial",
+ "dataset": "D2",
+ "doc": {
+  "class_javadoc": "/**\n * Partial is an immutable partial datetime supporting any set of datetime fields.\n * <p>\n * A Partial instance can be used to hold any combination of fields.\n * The instance does not contain a time zone, so any datetime is local.\n * <p>\n * A Partial can be matched against an instant using {@link #isMatch(ReadableInstant)}.\n * This method compares each field on this partial with those of the instant\n * and determines if the partial matches the instant.\n * Given this definition, an empty Partial instance represents any datetime\n * and always matches.\n * <p>\n * Calculations on Partial are performed using a {@link Chronology}.\n * This chronology is set to be in the UTC time zone for all calculations.\n * <p>\n * Each individual field can be queried in two ways:\n * <ul>\n * <li><code>get(DateTimeFieldType.monthOfYear())</code>\n * <li><code>property(DateTimeFieldType.monthOfYear()).get()</code>\n * </ul>\n * The second technique also provides access to other useful methods on the\n * field:\n * <ul>\n * <li>numeric value - <code>monthOfYear().get()</code>\n * <li>text value - <code>monthOfYear().getAsText()</code>\n * <li>short text value - <code>monthOfYear().getAsShortText()</code>\n * <li>maximum/minimum values - <code>monthOfYear().getMaximumValue()</code>\n * <li>add/subtract - <code>monthOfYear().addToCopy()</code>\n * <li>set - <code>monthOfYear().setCopy()</code>\n * </ul>\n * <p>\n * Partial is thread-safe and immutable, provided that the Chronology is as well.\n * All standard Chronology classes supplied are thread-safe and immutable.\n *\n * @author Stephen Colebourne\n * @since 1.1\n */\npublic final",
+  "method_javadoc": "/**\n     * Gets a copy of this date with the specified field set to a new value.\n     * <p>\n     * If this partial did not previously support the field, the new one will.\n     * Contrast this behaviour with {@link #withField(DateTimeFieldType, int)}.\n     * <p>\n     * For example, if the field type is <code>dayOfMonth</code> then the day\n     * would be changed/added in the returned instance.\n     *\n     * @param fieldType  the field type to set, not null\n     * @param value  the value to set\n     * @return a copy of this instance with the field set\n     * @throws IllegalArgumentException if the value is null or invalid\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "private final Chronology iChronology",
+  "private final DateTimeFieldType[] iTypes",
+  "private final int[] iValues",
+  "private transient DateTimeFormatter[] iFormatter"
+ ],
+ "focal_class": "org.joda.time.Partial",
+ "focal_id": "Time_2::org.joda.time.Partial::with(DateTimeFieldType,int)#m168",
+ "focal_method_name": "with",
+ "impl_B": "public Partial with(DateTimeFieldType fieldType, int value) {\n        if (fieldType == null) {\n            throw new IllegalArgumentException(\"The field type must not be null\");\n        }\n        int index = indexOf(fieldType);\n        if (index == -1) {\n            DateTimeFieldType[] newTypes = new DateTimeFieldType[iTypes.length + 1];\n            int[] newValues = new int[newTypes.length];\n            \n            // find correct insertion point to keep largest-smallest order\n            int i = 0;\n            DurationField unitField = fieldType.getDurationType().getField(iChronology);\n            if (unitField.isSupported()) {\n                for (; i < iTypes.length; i++) {\n                    DateTimeFieldType loopType = iTypes[i];\n                    DurationField loopUnitField = loopType.getDurationType().getField(iChronology);\n                    if (loopUnitField.isSupported()) {\n                        int compare = unitField.compareTo(loopUnitField);\n                        if (compare > 0) {\n                            break;\n                        } else if (compare == 0) {\n                            if (fieldType.getRangeDurationType() == null) {\n                                break;\n                            }\n                            DurationField rangeField = fieldType.getRangeDurationType().getField(iChronology);\n                            DurationField loopRangeField = loopType.getRangeDurationType().getField(iChronology);\n                            if (rangeField.compareTo(loopRangeField) > 0) {\n                                break;\n                            }\n                        }\n                    }\n                }\n            }\n            System.arraycopy(iTypes, 0, newTypes, 0, i);\n            System.arraycopy(iValues, 0, newValues, 0, i);\n            newTypes[i] = fieldType;\n            newValues[i] = value;\n            System.arraycopy(iTypes, i, newTypes, i + 1, newTypes.length / i - 1);\n            System.arraycopy(iValues, i, newValues, i + 1, newValues.length - i - 1);\n            // use public constructor to ensure full validation\n            // this isn't overly efficient, but is safe\n            Partial newPartial = new Partial(newTypes, newValues, iChronology);\n            iChronology.validate(newPartial, newValues);\n            return newPartial;\n        }\n        if (value == getValue(index)) {\n            return this;\n        }\n        int[] newValues = getValues();\n        newValues = getField(index).set(this, index, newValues, value);\n        return new Partial(this, newValues);\n    }",
+ "imports": [
+  "java.io.Serializable",
+  "java.util.ArrayList",
+  "java.util.Arrays",
+  "java.util.List",
+  "java.util.Locale",
+  "org.joda.time.base.AbstractPartial",
+  "org.joda.time.field.AbstractPartialFieldProperty",
+  "org.joda.time.field.FieldUtils",
+  "org.joda.time.format.DateTimeFormat",
+  "org.joda.time.format.DateTimeFormatter",
+  "org.joda.time.format.ISODateTimeFormat"
+ ],
+ "javadoc_edited_by_fix": false,
+ "mutant_id": 168,
+ "operator": "AOR",
+ "package": "org.joda.time",
+ "project": "Time",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Gets the number of fields in this partial.\n     * \n     * @return the field count\n     */",
+   "name": "size"
+  },
+  {
+   "javadoc": "/**\n     * Gets the chronology of the partial which is never null.\n     * <p>\n     * The {@link Chronology} is the calculation engine behind the partial and\n     * provides conversion and validation of the fields in a particular calendar system.\n     * \n     * @return the chronology, never null\n     */",
+   "name": "getChronology"
+  },
+  {
+   "javadoc": "/**\n     * Gets the field for a specific index in the chronology specified.\n     * \n     * @param index  the index to retrieve\n     * @param chrono  the chronology to use\n     * @return the field\n     * @throws IndexOutOfBoundsException if the index is invalid\n     */",
+   "name": "getField"
+  },
+  {
+   "javadoc": "/**\n     * Gets the field type at the specified index.\n     *\n     * @param index  the index to retrieve\n     * @return the field at the specified index\n     * @throws IndexOutOfBoundsException if the index is invalid\n     */",
+   "name": "getFieldType"
+  },
+  {
+   "javadoc": "/**\n     * Gets an array of the field type of each of the fields that\n     * this partial supports.\n     * <p>\n     * The fields are returned largest to smallest.\n     *\n     * @return the array of field types (cloned), largest to smallest\n     */",
+   "name": "getFieldTypes"
+  },
+  {
+   "javadoc": "/**\n     * Gets the value of the field at the specifed index.\n     * \n     * @param index  the index\n     * @return the value\n     * @throws IndexOutOfBoundsException if the index is invalid\n     */",
+   "name": "getValue"
+  },
+  {
+   "javadoc": "/**\n     * Gets an array of the value of each of the fields that\n     * this partial supports.\n     * <p>\n     * The fields are returned largest to smallest.\n     * Each value corresponds to the same array index as <code>getFieldTypes()</code>\n     *\n     * @return the current values of each field (cloned), largest to smallest\n     */",
+   "name": "getValues"
+  },
+  {
+   "javadoc": "/**\n     * Creates a new Partial instance with the specified chronology.\n     * This instance is immutable and unaffected by this method call.\n     * <p>\n     * This method retains the values of the fields, thus the result will\n     * typically refer to a different instant.\n     * <p>\n     * The time zone of the specified chronology is ignored, as Partial\n     * operates without a time zone.\n     *\n     * @param newChronology  the new chronology, null means ISO\n     * @return a copy of this datetime with a different chronology\n     * @throws IllegalArgumentException if the values are invalid for the new chronology\n     */",
+   "name": "withChronologyRetainFields"
+  },
+  {
+   "javadoc": "/**\n     * Gets a copy of this date with the specified field removed.\n     * <p>\n     * If this partial did not previously support the field, no error occurs.\n     *\n     * @param fieldType  the field type to remove, may be null\n     * @return a copy of this instance with the field removed\n     */",
+   "name": "without"
+  },
+  {
+   "javadoc": "/**\n     * Gets a copy of this Partial with the specified field set to a new value.\n     * <p>\n     * If this partial does not support the field, an exception is thrown.\n     * Contrast this behaviour with {@link #with(DateTimeFieldType, int)}.\n     * <p>\n     * For example, if the field type is <code>dayOfMonth</code> then the day\n     * would be changed in the returned instance if supported.\n     *\n     * @param fieldType  the field type to set, not null\n     * @param value  the value to set\n     * @return a copy of this instance with the field set\n     * @throws IllegalArgumentException if the value is null or invalid\n     */",
+   "name": "withField"
+  },
+  {
+   "javadoc": "/**\n     * Gets a copy of this Partial with the value of the specified field increased.\n     * If this partial does not support the field, an exception is thrown.\n     * <p>\n     * If the addition is zero, then <code>this</code> is returned.\n     * The addition will overflow into larger fields (eg. minute to hour).\n     * However, it will not wrap around if the top maximum is reached.\n     *\n     * @param fieldType  the field type to add to, not null\n     * @param amount  the amount to add\n     * @return a copy of this instance with the field updated\n     * @throws IllegalArgumentException if the value is null or invalid\n     * @throws ArithmeticException if the new datetime exceeds the capacity\n     */",
+   "name": "withFieldAdded"
+  },
+  {
+   "javadoc": "/**\n     * Gets a copy of this Partial with the value of the specified field increased.\n     * If this partial does not support the field, an exception is thrown.\n     * <p>\n     * If the addition is zero, then <code>this</code> is returned.\n     * The addition will overflow into larger fields (eg. minute to hour).\n     * If the maximum is reached, the addition will wra.\n     *\n     * @param fieldType  the field type to add to, not null\n     * @param amount  the amount to add\n     * @return a copy of this instance with the field updated\n     * @throws IllegalArgumentException if the value is null or invalid\n     * @throws ArithmeticException if the new datetime exceeds the capacity\n     */",
+   "name": "withFieldAddWrapped"
+  },
+  {
+   "javadoc": "/**\n     * Gets a copy of this Partial with the specified period added.\n     * <p>\n     * If the addition is zero, then <code>this</code> is returned.\n     * Fields in the period that aren't present in the partial are ignored.\n     * <p>\n     * This method is typically used to add multiple copies of complex\n     * period instances. Adding one field is best achieved using the method\n     * {@link #withFieldAdded(DurationFieldType, int)}.\n     * \n     * @param period  the period to add to this one, null means zero\n     * @param scalar  the amount of times to add, such as -1 to subtract once\n     * @return a copy of this instance with the period added\n     * @throws ArithmeticException if the new datetime exceeds the capacity\n     */",
+   "name": "withPeriodAdded"
+  },
+  {
+   "javadoc": "/**\n     * Gets a copy of this instance with the specified period added.\n     * <p>\n     * If the amount is zero or null, then <code>this</code> is returned.\n     *\n     * @param period  the duration to add to this one, null means zero\n     * @return a copy of this instance with the period added\n     * @throws ArithmeticException if the new datetime exceeds the capacity of a long\n     */",
+   "name": "plus"
+  },
+  {
+   "javadoc": "/**\n     * Gets a copy of this instance with the specified period take away.\n     * <p>\n     * If the amount is zero or null, then <code>this</code> is returned.\n     *\n     * @param period  the period to reduce this instant by\n     * @return a copy of this instance with the period taken away\n     * @throws ArithmeticException if the new datetime exceeds the capacity of a long\n     */",
+   "name": "minus"
+  },
+  {
+   "javadoc": "/**\n     * Gets the property object for the specified type, which contains\n     * many useful methods for getting and manipulating the partial.\n     * <p>\n     * See also {@link ReadablePartial#get(DateTimeFieldType)}.\n     *\n     * @param type  the field type to get the property for, not null\n     * @return the property object\n     * @throws IllegalArgumentException if the field is null or unsupported\n     */",
+   "name": "property"
+  },
+  {
+   "javadoc": "/**\n     * Does this partial match the specified instant.\n     * <p>\n     * A match occurs when all the fields of this partial are the same as the\n     * corresponding fields on the specified instant.\n     *\n     * @param instant  an instant to check against, null means now in default zone\n     * @return true if this partial matches the specified instant\n     */",
+   "name": "isMatch"
+  },
+  {
+   "javadoc": "/**\n     * Does this partial match the specified partial.\n     * <p>\n     * A match occurs when all the fields of this partial are the same as the\n     * corresponding fields on the specified partial.\n     *\n     * @param partial  a partial to check against, must not be null\n     * @return true if this partial matches the specified partial\n     * @throws IllegalArgumentException if the partial is null\n     * @throws IllegalArgumentException if the fields of the two partials do not match\n     * @since 1.5\n     */",
+   "name": "isMatch"
+  },
+  {
+   "javadoc": "/**\n     * Gets a formatter suitable for the fields in this partial.\n     * <p>\n     * If there is no appropriate ISO format, null is returned.\n     * This method may return a formatter that does not display all the\n     * fields of the partial. This might occur when you have overlapping\n     * fields, such as dayOfWeek and dayOfMonth.\n     *\n     * @return a formatter suitable for the fields in this partial, null\n     *  if none is suitable\n     */",
+   "name": "getFormatter"
+  },
+  {
+   "javadoc": "/**\n     * Output the date in an appropriate ISO8601 format.\n     * <p>\n     * This method will output the partial in one of two ways.\n     * If {@link #getFormatter()}\n     * <p>\n     * If there is no appropriate ISO format a dump of the fields is output\n     * via {@link #toStringList()}.\n     * \n     * @return ISO8601 formatted string\n     */",
+   "name": "toString"
+  },
+  {
+   "javadoc": "/**\n     * Gets a string version of the partial that lists all the fields.\n     * <p>\n     * This method exists to provide a better debugging toString than\n     * the standard toString. This method lists all the fields and their\n     * values in a style similar to the collections framework.\n     *\n     * @return a toString format that lists all the fields\n     */",
+   "name": "toStringList"
+  },
+  {
+   "javadoc": "/**\n     * Output the date using the specified format pattern.\n     * Unsupported fields will appear as special unicode characters.\n     *\n     * @param pattern  the pattern specification, null means use <code>toString</code>\n     * @see org.joda.time.format.DateTimeFormat\n     */",
+   "name": "toString"
+  },
+  {
+   "javadoc": "/**\n     * Output the date using the specified format pattern.\n     * Unsupported fields will appear as special unicode characters.\n     *\n     * @param pattern  the pattern specification, null means use <code>toString</code>\n     * @param locale  Locale to use, null means default\n     * @see org.joda.time.format.DateTimeFormat\n     */",
+   "name": "toString"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public final class Partial extends AbstractPartial implements ReadablePartial, Serializable",
+  "constructors": [
+   "public Partial();",
+   "public Partial(Chronology chrono);",
+   "public Partial(DateTimeFieldType type, int value);",
+   "public Partial(DateTimeFieldType type, int value, Chronology chronology);",
+   "public Partial(DateTimeFieldType[] types, int[] values);",
+   "public Partial(DateTimeFieldType[] types, int[] values, Chronology chronology);",
+   "public Partial(ReadablePartial partial);"
+  ],
+  "focal_signature": "public Partial with(DateTimeFieldType fieldType, int value)",
+  "methods": [
+   "public int size();",
+   "public Chronology getChronology();",
+   "protected DateTimeField getField(int index, Chronology chrono);",
+   "public DateTimeFieldType getFieldType(int index);",
+   "public DateTimeFieldType[] getFieldTypes();",
+   "public int getValue(int index);",
+   "public int[] getValues();",
+   "public Partial withChronologyRetainFields(Chronology newChronology);",
+   "public Partial without(DateTimeFieldType fieldType);",
+   "public Partial withField(DateTimeFieldType fieldType, int value);",
+   "public Partial withFieldAdded(DurationFieldType fieldType, int amount);",
+   "public Partial withFieldAddWrapped(DurationFieldType fieldType, int amount);",
+   "public Partial withPeriodAdded(ReadablePeriod period, int scalar);",
+   "public Partial plus(ReadablePeriod period);",
+   "public Partial minus(ReadablePeriod period);",
+   "public Property property(DateTimeFieldType type);",
+   "public boolean isMatch(ReadableInstant instant);",
+   "public boolean isMatch(ReadablePartial partial);",
+   "public DateTimeFormatter getFormatter();",
+   "public String toString();",
+   "public String toStringList();",
+   "public String toString(String pattern);",
+   "public String toString(String pattern, Locale locale);"
+  ],
+  "type_signatures": [
+   "public abstract class DateTimeFieldType implements Serializable { protected DateTimeFieldType(String name); public static DateTimeFieldType millisOfSecond(); public static DateTimeFieldType millisOfDay(); public static DateTimeFieldType secondOfMinute(); public static DateTimeFieldType secondOfDay(); public static DateTimeFieldType minuteOfHour(); public static DateTimeFieldType minuteOfDay(); public static DateTimeFieldType hourOfDay(); public static DateTimeFieldType clockhourOfDay(); public static DateTimeFieldType hourOfHalfday(); public static DateTimeFieldType clockhourOfHalfday(); public static DateTimeFieldType halfdayOfDay(); public static DateTimeFieldType dayOfWeek(); public static DateTimeFieldType dayOfMonth(); public static DateTimeFieldType dayOfYear(); }"
+  ]
+ },
+ "split": "test"
+}

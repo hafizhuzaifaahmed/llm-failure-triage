@@ -1,0 +1,128 @@
+{
+ "bug_name": "JacksonDatabind_105",
+ "call_sites": [
+  {
+   "line": 1815,
+   "lines": [
+    1810,
+    1811,
+    1812,
+    1813,
+    1814,
+    1815,
+    1816,
+    1817,
+    1818,
+    1819,
+    1820
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java",
+   "snippet": "            return new MapEntryDeserializer(type, keyDes, valueDeser, vts);\n        }\n        String clsName = rawType.getName();\n        if (rawType.isPrimitive() || clsName.startsWith(\"java.\")) {\n            // Primitives/wrappers, other Numbers:\n            JsonDeserializer<?> deser = NumberDeserializers.find(rawType, clsName);\n            if (deser == null) {\n                deser = DateDeserializers.find(rawType, clsName);\n            }\n            if (deser != null) {\n                return deser;"
+  },
+  {
+   "line": 1817,
+   "lines": [
+    1812,
+    1813,
+    1814,
+    1815,
+    1816,
+    1817,
+    1818,
+    1819,
+    1820,
+    1821,
+    1822
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java",
+   "snippet": "        String clsName = rawType.getName();\n        if (rawType.isPrimitive() || clsName.startsWith(\"java.\")) {\n            // Primitives/wrappers, other Numbers:\n            JsonDeserializer<?> deser = NumberDeserializers.find(rawType, clsName);\n            if (deser == null) {\n                deser = DateDeserializers.find(rawType, clsName);\n            }\n            if (deser != null) {\n                return deser;\n            }\n        }"
+  },
+  {
+   "line": 1831,
+   "lines": [
+    1826,
+    1827,
+    1828,
+    1829,
+    1830,
+    1831,
+    1832,
+    1833,
+    1834,
+    1835,
+    1836
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java",
+   "snippet": "        }\n        JsonDeserializer<?> deser = findOptionalStdDeserializer(ctxt, type, beanDesc);\n        if (deser != null) {\n            return deser;\n        }\n        return JdkDeserializers.find(rawType, clsName);\n    }\n\n    protected JavaType _findRemappedType(DeserializationConfig config, Class<?> rawType) throws JsonMappingException {\n        JavaType type = mapAbstractType(config, config.constructType(rawType));\n        return (type == null || type.hasRawClass(rawType)) ? null : type;"
+  },
+  {
+   "line": 248,
+   "lines": [
+    243,
+    244,
+    245,
+    246,
+    247,
+    248,
+    249,
+    250,
+    251,
+    252,
+    253
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java",
+   "snippet": "                return deserializeWithView(p, ctxt, bean, view);\n            }\n        }\n        do {\n            p.nextToken();\n            SettableBeanProperty prop = _beanProperties.find(propName);\n\n            if (prop != null) { // normal case\n                try {\n                    prop.deserializeAndSet(p, ctxt, bean);\n                } catch (Exception e) {"
+  },
+  {
+   "line": 284,
+   "lines": [
+    279,
+    280,
+    281,
+    282,
+    283,
+    284,
+    285,
+    286,
+    287,
+    288,
+    289
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java",
+   "snippet": "        p.setCurrentValue(bean);\n        if (p.hasTokenId(JsonTokenId.ID_FIELD_NAME)) {\n            String propName = p.getCurrentName();\n            do {\n                p.nextToken();\n                SettableBeanProperty prop = _beanProperties.find(propName);\n\n                if (prop != null) { // normal case\n                    try {\n                        prop.deserializeAndSet(p, ctxt, bean);\n                    } catch (Exception e) {"
+  }
+ ],
+ "class_simple": "JdkDeserializers",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Container class that contains serializers for JDK types that\n * require special handling for some reason.\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private final static HashSet<String> _classNames"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.deser.std.JdkDeserializers",
+ "focal_id": "JacksonDatabind_105::com.fasterxml.jackson.databind.deser.std.JdkDeserializers::find(Class<?>,String)",
+ "focal_method_name": "find",
+ "generations": 3,
+ "impl_B": "public static JsonDeserializer<?> find(Class<?> rawType, String clsName)\n    {\n        if (_classNames.contains(clsName)) {\n            JsonDeserializer<?> d = FromStringDeserializer.findDeserializer(rawType);\n            if (d != null) {\n                return d;\n            }\n            if (rawType == UUID.class) {\n                return new UUIDDeserializer();\n            }\n            if (rawType == StackTraceElement.class) {\n                return new StackTraceElementDeserializer();\n            }\n            if (rawType == AtomicBoolean.class) {\n                // (note: AtomicInteger/Long work due to single-arg constructor. For now?\n                return new AtomicBooleanDeserializer();\n            }\n            if (rawType == ByteBuffer.class) {\n                return new ByteBufferDeserializer();\n            }\n        }\n        return null;\n    }",
+ "imports": [
+  "java.nio.ByteBuffer",
+  "java.util.*",
+  "java.util.concurrent.atomic.AtomicBoolean",
+  "com.fasterxml.jackson.databind.*"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.deser.std",
+ "project": "JacksonDatabind",
+ "siblings": [],
+ "sig": {
+  "class_declaration": "public class JdkDeserializers",
+  "constructors": [],
+  "focal_signature": "public static JsonDeserializer<?> find(Class<?> rawType, String clsName)",
+  "methods": [],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

@@ -1,0 +1,112 @@
+{
+ "bug_name": "Closure_134",
+ "call_sites": [
+  {
+   "line": 156,
+   "lines": [
+    151,
+    152,
+    153,
+    154,
+    155,
+    156,
+    157,
+    158,
+    159,
+    160,
+    161
+   ],
+   "path": "src/com/google/javascript/jscomp/graph/GraphColoring.java",
+   "snippet": "      do {\n        Color color = new Color(count);\n        SubGraph<N, E> subgraph = graph.newSubGraph();\n        for (Iterator<GraphNode<N, E>> i = worklist.iterator(); i.hasNext();) {\n          GraphNode<N, E> node = i.next();\n          if (subgraph.isIndependentOf(node.getValue())) {\n            subgraph.addNode(node.getValue());\n            node.setAnnotation(color);\n            i.remove();\n          }\n        }"
+  },
+  {
+   "line": 30,
+   "lines": [
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35
+   ],
+   "path": "src/com/google/javascript/jscomp/graph/SubGraph.java",
+   "snippet": " * @param <E> Value type that the graph edge stores.\n*\n */\npublic interface SubGraph<N, E> {\n  /** Returns true if the node is a neighbor of any node in this SubGraph. */\n  boolean isIndependentOf(N node);\n\n  /** Adds the node into this subgraph. */\n  void addNode(N value);\n}\n"
+  }
+ ],
+ "class_simple": "PropertySubGraph",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Renames unrelated properties to the same name, using type information.\n * This allows better compression as more properties can be given short names.\n *\n * <p>Properties are considered unrelated if they are never referenced from the\n * same type or from a subtype of each others' types, thus this pass is only\n * effective if type checking is enabled.\n *\n * Example:\n * <code>\n *   Foo.fooprop = 0;\n *   Foo.fooprop2 = 0;\n *   Bar.barprop = 0;\n * </code>\n *\n * becomes:\n *\n * <code>\n *   Foo.a = 0;\n *   Foo.b = 0;\n *   Bar.a = 0;\n * </code>\n *\n*\n */\nclass AmbiguateProperties implements CompilerPass {\n  private static final Logger logger = Logger.getLogger(\n      AmbiguateProperties.class.getName());\n\n  private final AbstractCompiler compiler;\n\n  private final List<Node> stringNodesToRename = Lists.newArrayList();\n  private final char[] reservedCharacters;\n\n  /** Map from property name to Property object */\n  private final Map<String, Property> propertyMap = Maps.newHashMap();\n\n  /** Property names that don't get renamed */\n  private final Set<String> externedNames = Sets.newHashSet();\n\n  /** Names to which properties shouldn't be renamed, to avoid name conflicts */\n  private final Set<String> quotedNames = Sets.newHashSet();\n\n  /** Map from original property name to new name. */\n  private final Map<String, String> renamingMap = Maps.newHashMap();\n\n  /** Map from color assigned by GraphColoring to new name. */\n  private final Map<Integer, String> colorMap = Maps.newHashMap();\n\n  /**\n   * Sorts Property objects by their count, breaking ties alphabetically to\n   * ensure a deterministic total ordering.\n   */\n  private static final Comparator<Property> FREQUENCY_COMPARATOR =\n      new Comparator<Property>() {\n        public int compare(Property p1, Property p2) {\n          if (p1.numOccurrences != p2.numOccurrences) {\n            return p2.numOccurrences - p1.numOccurrences;\n          }\n          return p1.oldName.compareTo(p2.oldName);\n        }\n      };\n\n  /** A map from JSType to a unique representative Integer. */\n  private BiMap<JSType, Integer> intForType = HashBiMap.create();\n\n  /**\n   * A map from JSType to JSTypeBitSet representing the types related\n   * to the type.\n   */\n  private Map<JSType, JSTypeBitSet> relatedBitsets = Maps.newHashMap();\n\n  /** A set of types that invalidate properties from ambiguation. */\n  private final Set<JSType> invalidatingTypes;\n\n  /**\n   * Prefix of properties to skip renaming.  These should be renamed in the\n   * RenameProperties pass.\n   */\n  static final String SKIP_PREFIX = \"JSAbstractCompiler\";\n\n  AmbiguateProperties(AbstractCompiler compiler,\n      char[] reservedCharacters) {\n    this.compiler = compiler;\n    this.reservedCharacters = reservedCharacters;\n\n    JSTypeRegistry r = compiler.getTypeRegistry();\n    invalidatingTypes = Sets.newHashSet(\n        r.getNativeType(JSTypeNative.ALL_TYPE),\n        r.getNativeType(JSTypeNative.NO_OBJECT_TYPE),\n        r.getNativeType(JSTypeNative.NO_TYPE),\n        r.getNativeType(JSTypeNative.NULL_TYPE),\n        r.getNativeType(JSTypeNative.VOID_TYPE),\n        r.getNativeType(JSTypeNative.FUNCTION_FUNCTION_TYPE),\n        r.getNativeType(JSTypeNative.FUNCTION_PROTOTYPE),\n        r.getNativeType(JSTypeNative.GLOBAL_THIS),\n        r.getNativeType(JSTypeNative.OBJECT_TYPE),\n        r.getNativeType(JSTypeNative.OBJECT_PROTOTYPE),\n        r.getNativeType(JSTypeNative.OBJECT_FUNCTION_TYPE),\n        r.getNativeType(JSTypeNative.TOP_LEVEL_PROTOTYPE),\n        r.getNativeType(JSTypeNative.UNKNOWN_TYPE));\n\n    for (TypeMismatch mis : compiler.getTypeValidator().getMismatches()) {\n      addInvalidatingType(mis.first);\n      addInvalidatingType(mis.second);\n    }\n  }\n\n  /**\n   * Invalidates the given type, so that no properties on it will be renamed.\n   */\n  private void addInvalidatingType(JSType type) {\n    type = type.restrictByNotNullOrUndefined();\n    if (type instanceof UnionType) {\n      for (JSType alt : ((UnionType) type).getAlternates()) {\n        addInvalidatingType(alt);\n      }\n    }\n\n    invalidatingTypes.add(type);\n    ObjectType objType = ObjectType.cast(type);\n    if (objType instanceof InstanceObjectType) {\n      invalidatingTypes.add(objType.getImplicitPrototype());\n    }\n  }\n\n  Map<String, String> getRenamingMap() {\n    return renamingMap;\n  }\n\n  /** Returns an integer that uniquely identifies a JSType. */\n  private int getIntForType(JSType type) {\n    if (intForType.containsKey(type)) {\n      return intForType.get(type).intValue();\n    }\n    int newInt = intForType.size() + 1;\n    intForType.put(type, newInt);\n    return newInt;\n  }\n\n  public void process(Node externs, Node root) {\n    NodeTraversal.traverse(compiler, externs, new ProcessExterns());\n    NodeTraversal.traverse(compiler, root, new ProcessProperties());\n\n    Set<String> reservedNames =\n        new HashSet<String>(externedNames.size() + quotedNames.size());\n    reservedNames.addAll(externedNames);\n    reservedNames.addAll(quotedNames);\n\n    int numRenamedPropertyNames = 0;\n    int numSkippedPropertyNames = 0;\n    Set<Property> propsByFreq = new TreeSet<Property>(FREQUENCY_COMPARATOR);\n    for (Property p : propertyMap.values()) {\n      if (!p.skipAmbiguating) {\n        ++numRenamedPropertyNames;\n        computeRelatedTypes(p.type);\n        propsByFreq.add(p);\n      } else {\n        ++numSkippedPropertyNames;\n        reservedNames.add(p.oldName);\n      }\n    }\n\n    PropertyGraph graph = new PropertyGraph(Lists.newLinkedList(propsByFreq));\n    GraphColoring<Property, Void> coloring =\n        new GreedyGraphColoring<Property, Void>(graph, FREQUENCY_COMPARATOR);\n    int numNewPropertyNames = coloring.color();\n\n    NameGenerator nameGen = new NameGenerator(\n        reservedNames, \"\", reservedCharacters);\n    for (int i = 0; i < numNewPropertyNames; ++i) {\n      colorMap.put(i, nameGen.generateNextName());\n    }\n    for (GraphNode<Property, Void> node : graph.getNodes()) {\n      node.getValue().newName = colorMap.get(node.getAnnotation().hashCode());\n      renamingMap.put(node.getValue().oldName, node.getValue().newName);\n    }\n\n    // Update the string nodes.\n    for (Node n : stringNodesToRename) {\n      String oldName = n.getString();\n      Property p = propertyMap.get(oldName);\n      if (p != null && p.newName != null) {\n        Preconditions.checkState(oldName.equals(p.oldName));\n        if (!p.newName.equals(oldName)) {\n          n.setString(p.newName);\n          compiler.reportCodeChange();\n        }\n      }\n    }\n\n    logger.info(\"Collapsed \" + numRenamedPropertyNames + \" properties into \"\n                + numNewPropertyNames + \" and skipped renaming \"\n                + numSkippedPropertyNames + \" properties.\");\n  }\n\n  private BitSet getRelatedTypesOnNonUnion(JSType type) {\n    // All of the types we encounter should have been added to the\n    // relatedBitsets via computeRelatedTypes.\n    if (relatedBitsets.containsKey(type)) {\n      return relatedBitsets.get(type);\n    } else {\n      throw new RuntimeException(\"Related types should have been computed for\"\n                                 + \" type: \" + type + \" but have not been.\");\n    }\n  }\n\n  /** Add supertypes of the type to its JSTypeBitSet of related types. */\n  private void computeRelatedTypes(JSType type) {\n    if (type instanceof UnionType) {\n      type = type.restrictByNotNullOrUndefined();\n      if (type instanceof UnionType) {\n        for (JSType alt : ((UnionType) type).getAlternates()) {\n          computeRelatedTypes(alt);\n        }\n        return;\n      }\n    }\n\n    if (relatedBitsets.containsKey(type)) {\n      // We only need to generate the bit set once.\n      return;\n    }\n\n    JSTypeBitSet related = new JSTypeBitSet(intForType.size());\n    relatedBitsets.put(type, related);\n\n    ObjectType parentType = type.toObjectType();\n    while (parentType != null) {\n      related.set(getIntForType(parentType));\n      parentType = parentType.getImplicitPrototype();\n    }\n\n    FunctionType constructor = null;\n    if (type instanceof FunctionType) {\n      constructor = (FunctionType) type;\n    } else if (type instanceof FunctionPrototypeType) {\n      constructor = ((FunctionPrototypeType) type).getOwnerFunction();\n    } else {\n      constructor = type.toObjectType().getConstructor();\n    }\n    if (constructor != null) {\n      for (ObjectType itype : constructor.getAllImplementedInterfaces()) {\n        related.set(getIntForType(itype));\n      }\n    }\n  }\n\n  class PropertyGraph implements AdjacencyGraph<Property, Void> {\n    protected final Map<Property, PropertyGraphNode> nodes = Maps.newHashMap();\n\n    PropertyGraph(Collection<Property> props) {\n      for (Property prop : props) {\n        nodes.put(prop, new PropertyGraphNode(prop));\n      }\n    }\n\n    public List<GraphNode<Property, Void>> getNodes() {\n      return Lists.<GraphNode<Property, Void>>newArrayList(nodes.values());\n    }\n\n    public GraphNode<Property, Void> getNode(Property property) {\n      return nodes.get(property);\n    }\n\n    public SubGraph<Property, Void> newSubGraph() {\n      return new PropertySubGraph();\n    }\n\n    public void clearNodeAnnotations() {\n      for (PropertyGraphNode node : nodes.values()) {\n        node.setAnnotation(null);\n      }\n    }\n\n    public int getWeight(Property value) {\n      return value.numOccurrences;\n    }\n  }\n\n  /**\n   * A {@link SubGraph} that represents properties. The types of the properties\n   * are used to efficiently calculate adjacency information.\n   */",
+  "method_javadoc": "/**\n     * Returns true if prop is in an independent set from all properties in\n     * this sub graph.  That is, if none of its types is contained in the\n     * related types for this sub graph and if none if its related types is one\n     * of the types in the sub graph.\n     */"
+ },
+ "fields": [
+  "JSTypeBitSet typesInSet",
+  "JSTypeBitSet typesRelatedToSet"
+ ],
+ "focal_class": "com.google.javascript.jscomp.AmbiguateProperties.PropertySubGraph",
+ "focal_id": "Closure_134::com.google.javascript.jscomp.AmbiguateProperties$PropertySubGraph::isIndependentOf(Property)",
+ "focal_method_name": "isIndependentOf",
+ "generations": 3,
+ "impl_B": "public boolean isIndependentOf(Property prop) {\n      if (typesRelatedToSet.intersects(prop.typesSet)) {\n        return false;\n      }\n      return !getRelated(prop.type).intersects(typesInSet);\n    }",
+ "imports": [
+  "com.google.common.base.Joiner",
+  "com.google.common.base.Preconditions",
+  "com.google.common.collect.BiMap",
+  "com.google.common.collect.HashBiMap",
+  "com.google.common.collect.Lists",
+  "com.google.common.collect.Maps",
+  "com.google.common.collect.Sets",
+  "com.google.javascript.jscomp.NodeTraversal.AbstractPostOrderCallback",
+  "com.google.javascript.jscomp.TypeValidator.TypeMismatch",
+  "com.google.javascript.jscomp.graph.AdjacencyGraph",
+  "com.google.javascript.jscomp.graph.Annotation",
+  "com.google.javascript.jscomp.graph.GraphColoring",
+  "com.google.javascript.jscomp.graph.GraphColoring.GreedyGraphColoring",
+  "com.google.javascript.jscomp.graph.GraphNode",
+  "com.google.javascript.jscomp.graph.SubGraph",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.Token",
+  "com.google.javascript.rhino.jstype.FunctionPrototypeType",
+  "com.google.javascript.rhino.jstype.FunctionType",
+  "com.google.javascript.rhino.jstype.InstanceObjectType",
+  "com.google.javascript.rhino.jstype.JSType",
+  "com.google.javascript.rhino.jstype.JSTypeNative",
+  "com.google.javascript.rhino.jstype.JSTypeRegistry",
+  "com.google.javascript.rhino.jstype.ObjectType",
+  "com.google.javascript.rhino.jstype.UnionType",
+  "java.util.BitSet",
+  "java.util.Collection",
+  "java.util.Comparator",
+  "java.util.HashSet",
+  "java.util.List",
+  "java.util.Map",
+  "java.util.Set",
+  "java.util.TreeSet",
+  "java.util.logging.Logger"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Adds the node to the sub graph, adding all of its types to the set of\n     * types in the sub graph and all of its related types to the related types\n     * for the sub graph.\n     */",
+   "name": "addNode"
+  }
+ ],
+ "sig": {
+  "class_declaration": "class PropertySubGraph implements SubGraph<Property, Void>",
+  "constructors": [],
+  "focal_signature": "public boolean isIndependentOf(Property prop)",
+  "methods": [
+   "public void addNode(Property prop);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

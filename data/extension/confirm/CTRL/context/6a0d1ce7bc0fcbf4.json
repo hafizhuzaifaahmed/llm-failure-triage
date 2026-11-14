@@ -1,0 +1,175 @@
+{
+ "bug_name": "JacksonDatabind_75",
+ "call_sites": [
+  {
+   "line": 359,
+   "lines": [
+    354,
+    355,
+    356,
+    357,
+    358,
+    359,
+    360,
+    361,
+    362,
+    363,
+    364
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/MappingIterator.java",
+   "snippet": "     * formats use schemas.\n     * \n     * @since 2.2\n     */\n    public FormatSchema getParserSchema() {\n    \treturn _parser.getSchema();\n    }\n\n    /**\n     * Convenience method, functionally equivalent to:\n     *<code>"
+  },
+  {
+   "line": 850,
+   "lines": [
+    845,
+    846,
+    847,
+    848,
+    849,
+    850,
+    851,
+    852,
+    853,
+    854,
+    855
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ser/BeanPropertyWriter.java",
+   "snippet": "        if (ser == null) { // nope\n            ser = provider.findValueSerializer(getType(), this);\n        }\n        boolean isOptional = !isRequired();\n        if (ser instanceof SchemaAware) {\n            schemaNode = ((SchemaAware) ser).getSchema(provider, hint,\n                    isOptional);\n        } else {\n            schemaNode = com.fasterxml.jackson.databind.jsonschema.JsonSchema\n                    .getDefaultSchemaNode();\n        }"
+  },
+  {
+   "line": 604,
+   "lines": [
+    599,
+    600,
+    601,
+    602,
+    603,
+    604,
+    605,
+    606,
+    607,
+    608,
+    609
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ser/DefaultSerializerProvider.java",
+   "snippet": "        /* no need for embedded type information for JSON schema generation (all\n         * type information it needs is accessible via \"untyped\" serializer)\n         */\n        JsonSerializer<Object> ser = findValueSerializer(type, null);\n        JsonNode schemaNode = (ser instanceof SchemaAware) ?\n                ((SchemaAware) ser).getSchema(this, null) : com.fasterxml.jackson.databind.jsonschema.JsonSchema.getDefaultSchemaNode();\n        if (!(schemaNode instanceof ObjectNode)) {\n            throw new IllegalArgumentException(\"Class \" + type.getName()\n                    +\" would not be serialized as a JSON object and therefore has no schema\");\n        }\n        return new com.fasterxml.jackson.databind.jsonschema.JsonSchema((ObjectNode) schemaNode);"
+  },
+  {
+   "line": 283,
+   "lines": [
+    278,
+    279,
+    280,
+    281,
+    282,
+    283,
+    284,
+    285,
+    286,
+    287,
+    288
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ser/std/AsArraySerializerBase.java",
+   "snippet": "            JsonNode schemaNode = null;\n            // 15-Oct-2010, tatu: We can't serialize plain Object.class; but what should it produce here? Untyped?\n            if (contentType.getRawClass() != Object.class) {\n                JsonSerializer<Object> ser = provider.findValueSerializer(contentType, _property);\n                if (ser instanceof SchemaAware) {\n                    schemaNode = ((SchemaAware) ser).getSchema(provider, null);\n                }\n            }\n            if (schemaNode == null) {\n                schemaNode = com.fasterxml.jackson.databind.jsonschema.JsonSchema.getDefaultSchemaNode();\n            }"
+  },
+  {
+   "line": 253,
+   "lines": [
+    248,
+    249,
+    250,
+    251,
+    252,
+    253,
+    254,
+    255,
+    256,
+    257,
+    258
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ser/std/JsonValueSerializer.java",
+   "snippet": "    @Override\n    public JsonNode getSchema(SerializerProvider provider, Type typeHint)\n        throws JsonMappingException\n    {\n        if (_valueSerializer instanceof SchemaAware) {\n            return ((SchemaAware)_valueSerializer).getSchema(provider, null);\n        }\n        return com.fasterxml.jackson.databind.jsonschema.JsonSchema.getDefaultSchemaNode();\n    }\n\n    @Override"
+  }
+ ],
+ "class_simple": "EnumSerializer",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Standard serializer used for {@link java.lang.Enum} types.\n *<p>\n * Based on {@link StdScalarSerializer} since the JSON value is\n * scalar (String).\n */\n@JacksonStdImpl\npublic",
+  "method_javadoc": "/**********************************************************\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "protected final EnumValues _values",
+  "protected final Boolean _serializeAsIndex"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.ser.std.EnumSerializer",
+ "focal_id": "JacksonDatabind_75::com.fasterxml.jackson.databind.ser.std.EnumSerializer::getSchema(SerializerProvider,Type)",
+ "focal_method_name": "getSchema",
+ "generations": 3,
+ "impl_B": "@Override\n    public JsonNode getSchema(SerializerProvider provider, Type typeHint)\n    {\n        if (_serializeAsIndex(provider)) {\n            return createSchemaNode(\"integer\", true);\n        }\n        ObjectNode objectNode = createSchemaNode(\"string\", true);\n        if (typeHint != null) {\n            JavaType type = provider.constructType(typeHint);\n            if (type.isEnumType()) {\n                ArrayNode enumNode = objectNode.putArray(\"enum\");\n                for (SerializableString value : _values.values()) {\n                    enumNode.add(value.getValue());\n                }\n            }\n        }\n        return objectNode;\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.lang.reflect.Type",
+  "java.util.*",
+  "com.fasterxml.jackson.annotation.JsonFormat",
+  "com.fasterxml.jackson.annotation.JsonFormat.Shape",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.annotation.JacksonStdImpl",
+  "com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper",
+  "com.fasterxml.jackson.databind.jsonFormatVisitors.JsonStringFormatVisitor",
+  "com.fasterxml.jackson.databind.node.ArrayNode",
+  "com.fasterxml.jackson.databind.node.ObjectNode",
+  "com.fasterxml.jackson.databind.ser.ContextualSerializer",
+  "com.fasterxml.jackson.databind.util.EnumValues"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.ser.std",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * To support some level of per-property configuration, we will need\n     * to make things contextual. We are limited to \"textual vs index\"\n     * choice here, however.\n     */",
+   "name": "createContextual"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getEnumValues"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "serialize"
+  },
+  {
+   "javadoc": "",
+   "name": "acceptJsonFormatVisitor"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_serializeAsIndex"
+  },
+  {
+   "javadoc": "/**\n     * Helper method called to check whether serialization should be done using\n     * index (number) or not.\n     */",
+   "name": "_isShapeWrittenUsingIndex"
+  }
+ ],
+ "sig": {
+  "class_declaration": "@JacksonStdImpl public class EnumSerializer extends StdScalarSerializer<Enum<?>> implements ContextualSerializer",
+  "constructors": [
+   "public EnumSerializer(EnumValues v);",
+   "public EnumSerializer(EnumValues v, Boolean serializeAsIndex);"
+  ],
+  "focal_signature": "public JsonNode getSchema(SerializerProvider provider, Type typeHint)",
+  "methods": [
+   "public JsonSerializer<?> createContextual(SerializerProvider serializers, BeanProperty property) throws JsonMappingException;",
+   "public EnumValues getEnumValues();",
+   "public final void serialize(Enum<?> en, JsonGenerator gen, SerializerProvider serializers) throws IOException;",
+   "public void acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint) throws JsonMappingException;",
+   "protected final boolean _serializeAsIndex(SerializerProvider serializers);",
+   "protected static Boolean _isShapeWrittenUsingIndex(Class<?> enumClass, JsonFormat.Value format, boolean fromClass);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

@@ -1,0 +1,266 @@
+{
+ "candidate_id": "bd78722b69cde646300d",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testRemoveObject_WhenRowBecomesEmpty_ShouldRemoveRowFromDataStructures",
+   "testRemoveObject_WhenRowIsNotEmpty_ShouldKeepRow",
+   "testRemoveObject_WhenObjectIsAlreadyNull_ShouldNotChangeRowCount",
+   "testRemoveObject_OnNonExistentKeys"
+  ],
+  "nc_both": [],
+  "nc_one_version": [],
+  "passes": 0
+ },
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "Chart_22::org.jfree.data.KeyedObjects2D::removeObject(Comparable,Comparable)",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRemoveObject_WhenRowBecomesEmpty_ShouldRemoveRowFromDataStructures",
+   "runs_b": [
+    {
+     "duration_s": 0.134,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.127,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.136,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.136,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.155,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.162,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.jfree.data;\n\nimport java.io.*;\nimport java.io.Serializable;\nimport java.math.*;\nimport java.util.*;\nimport java.util.Collections;\nimport java.util.Iterator;\nimport java.util.List;\nimport org.junit.*;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\nimport static org.junit.Assert.assertNull;\nimport static org.junit.Assert.assertTrue;\n\npublic class KeyedObjects2D_removeObject_TriageGen2Test {\n\n    private KeyedObjects2D dataset;\n    private final Comparable rowKey1 = \"Row1\";\n    private final Comparable rowKey2 = \"Row2\";\n    private final Comparable colKey1 = \"Col1\";\n    private final Comparable colKey2 = \"Col2\";\n\n    @Before\n    public void setUp() {\n        dataset = new KeyedObjects2D();\n    }\n\n    @Test\n    public void testRemoveObject_WhenRowBecomesEmpty_ShouldRemoveRowFromDataStructures() {\n        // Arrange: Setup a row with only one object\n        dataset.addObject(\"Value1\", rowKey1, colKey1);\n        \n        // Verify initial state\n        assertEquals(1, dataset.getRowCount());\n        assertEquals(\"Value1\", dataset.getObject(rowKey1, colKey1));\n\n        // Act: Remove the only object in the row\n        dataset.removeObject(rowKey1, colKey1);\n\n        // Assert: Row should be removed from rowKeys and rows map\n        // Since row is empty, getRowCount should be 0\n        assertEquals(0, dataset.getRowCount());\n        \n        // Attempting to get row index for a removed row might throw exception or return -1 \n        // depending on internal implementation, but based on the code logic:\n        // if allNull is true, rowKeys.remove(rowIndex) occurs.\n        List rowKeys = dataset.getRowKeys();\n        boolean rowKeyExists = false;\n        for (int i = 0; i < rowKeys.size(); i++) {\n            if (rowKeys.get(i).equals(rowKey1)) {\n                rowKeyExists = true;\n                break;\n            }\n        }\n        assertTrue(\"Row key should have been removed\", !rowKeyExists);\n    }\n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRemoveObject_WhenRowIsNotEmpty_ShouldKeepRow",
+   "runs_b": [
+    {
+     "duration_s": 0.11,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.112,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.115,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.133,
+     "exception": "org.jfree.data.UnknownKeyException",
+     "failing_test_line": 44,
+     "message": "Column key (Col1) not recognised.",
+     "outcome": "exception",
+     "trace": "org.jfree.data.UnknownKeyException: Column key (Col1) not recognised.\n\tat org.jfree.data.KeyedObjects2D.getObject(KeyedObjects2D.java:228)\n\tat org.jfree.data.KeyedObjects2D_removeObject_TriageGen2Test.testRemoveObject_WhenRowIsNotEmpty_ShouldKeepRow(KeyedObjects2D_removeObject_TriageGen2Test.java:44)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.109,
+     "exception": "org.jfree.data.UnknownKeyException",
+     "failing_test_line": 44,
+     "message": "Column key (Col1) not recognised.",
+     "outcome": "exception",
+     "trace": "org.jfree.data.UnknownKeyException: Column key (Col1) not recognised.\n\tat org.jfree.data.KeyedObjects2D.getObject(KeyedObjects2D.java:228)\n\tat org.jfree.data.KeyedObjects2D_removeObject_TriageGen2Test.testRemoveObject_WhenRowIsNotEmpty_ShouldKeepRow(KeyedObjects2D_removeObject_TriageGen2Test.java:44)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.112,
+     "exception": "org.jfree.data.UnknownKeyException",
+     "failing_test_line": 44,
+     "message": "Column key (Col1) not recognised.",
+     "outcome": "exception",
+     "trace": "org.jfree.data.UnknownKeyException: Column key (Col1) not recognised.\n\tat org.jfree.data.KeyedObjects2D.getObject(KeyedObjects2D.java:228)\n\tat org.jfree.data.KeyedObjects2D_removeObject_TriageGen2Test.testRemoveObject_WhenRowIsNotEmpty_ShouldKeepRow(KeyedObjects2D_removeObject_TriageGen2Test.java:44)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package org.jfree.data;\n\nimport java.io.*;\nimport java.io.Serializable;\nimport java.math.*;\nimport java.util.*;\nimport java.util.Collections;\nimport java.util.Iterator;\nimport java.util.List;\nimport org.junit.*;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\nimport static org.junit.Assert.assertNull;\nimport static org.junit.Assert.assertTrue;\n\npublic class KeyedObjects2D_removeObject_TriageGen2Test {\n\n    private KeyedObjects2D dataset;\n    private final Comparable rowKey1 = \"Row1\";\n    private final Comparable rowKey2 = \"Row2\";\n    private final Comparable colKey1 = \"Col1\";\n    private final Comparable colKey2 = \"Col2\";\n\n    @Before\n    public void setUp() {\n        dataset = new KeyedObjects2D();\n    }\n\n    \n\n    @Test\n    public void testRemoveObject_WhenRowIsNotEmpty_ShouldKeepRow() {\n        // Arrange: Setup a row with two objects\n        dataset.addObject(\"Value1\", rowKey1, colKey1);\n        dataset.addObject(\"Value2\", rowKey1, colKey2);\n\n        // Act: Remove only one object\n        dataset.removeObject(rowKey1, colKey1);\n\n        // Assert: Row should still exist because it contains \"Value2\"\n        assertEquals(1, dataset.getRowCount());\n        assertNull(\"Object at (rowKey1, colKey1) should be null\", dataset.getObject(rowKey1, colKey1));\n        assertEquals(\"Value2\", dataset.getObject(rowKey1, colKey2));\n        \n        List rowKeys = dataset.getRowKeys();\n        boolean rowKeyExists = false;\n        for (int i = 0; i < rowKeys.size(); i++) {\n            if (rowKeys.get(i).equals(rowKey1)) {\n                rowKeyExists = true;\n                break;\n            }\n        }\n        assertTrue(\"Row key should still exist\", rowKeyExists);\n    }\n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRemoveObject_WhenObjectIsAlreadyNull_ShouldNotChangeRowCount",
+   "runs_b": [
+    {
+     "duration_s": 0.128,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.132,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.126,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.119,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.113,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.122,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.jfree.data;\n\nimport java.io.*;\nimport java.io.Serializable;\nimport java.math.*;\nimport java.util.*;\nimport java.util.Collections;\nimport java.util.Iterator;\nimport java.util.List;\nimport org.junit.*;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\nimport static org.junit.Assert.assertNull;\nimport static org.junit.Assert.assertTrue;\n\npublic class KeyedObjects2D_removeObject_TriageGen2Test {\n\n    private KeyedObjects2D dataset;\n    private final Comparable rowKey1 = \"Row1\";\n    private final Comparable rowKey2 = \"Row2\";\n    private final Comparable colKey1 = \"Col1\";\n    private final Comparable colKey2 = \"Col2\";\n\n    @Before\n    public void setUp() {\n        dataset = new KeyedObjects2D();\n    }\n\n    \n\n    \n\n    @Test\n    public void testRemoveObject_WhenObjectIsAlreadyNull_ShouldNotChangeRowCount() {\n        // Arrange: Setup row with one object and one null\n        dataset.addObject(\"Value1\", rowKey1, colKey1);\n        dataset.setObject(null, rowKey1, colKey2);\n\n        // Act: Remove the existing object\n        dataset.removeObject(rowKey1, colKey1);\n\n        // Assert: Row becomes empty and is removed\n        assertEquals(0, dataset.getRowCount());\n    }\n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRemoveObject_OnNonExistentKeys",
+   "runs_b": [
+    {
+     "duration_s": 0.122,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.128,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.123,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.151,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.126,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.116,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.jfree.data;\n\nimport java.io.*;\nimport java.io.Serializable;\nimport java.math.*;\nimport java.util.*;\nimport java.util.Collections;\nimport java.util.Iterator;\nimport java.util.List;\nimport org.junit.*;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\nimport static org.junit.Assert.assertNull;\nimport static org.junit.Assert.assertTrue;\n\npublic class KeyedObjects2D_removeObject_TriageGen2Test {\n\n    private KeyedObjects2D dataset;\n    private final Comparable rowKey1 = \"Row1\";\n    private final Comparable rowKey2 = \"Row2\";\n    private final Comparable colKey1 = \"Col1\";\n    private final Comparable colKey2 = \"Col2\";\n\n    @Before\n    public void setUp() {\n        dataset = new KeyedObjects2D();\n    }\n\n    \n\n    \n\n    \n\n    @Test\n    public void testRemoveObject_OnNonExistentKeys() {\n        // Arrange: Dataset is empty\n        \n        // Act & Assert: Should handle gracefully or throw based on implementation. \n        // Given the code provided, getRowIndex(rowKey) is called. \n        // If rowKey doesn't exist, getRowIndex likely returns -1 or throws.\n        // If it returns -1, the subsequent rows.get(-1) would throw NullPointerException or IndexOutOfBounds.\n        // However, we test the path where the object exists but we set it to null.\n        \n        dataset.addObject(\"Val\", rowKey1, colKey1);\n        dataset.removeObject(rowKey1, colKey1);\n        assertEquals(0, dataset.getRowCount());\n    }\n}\n"
+  }
+ ],
+ "source_sha256": "b5e6b484fedbdc82621bb0f88ada8aad14aa6e46bb703947af07036295028a5b",
+ "utc": "2026-11-01T20:13:23Z"
+}

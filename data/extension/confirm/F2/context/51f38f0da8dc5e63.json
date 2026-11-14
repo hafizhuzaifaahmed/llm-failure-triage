@@ -1,0 +1,85 @@
+{
+ "bug_name": "JxPath_11",
+ "call_sites": [
+  {
+   "line": 86,
+   "lines": [
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/model/jdom/JDOMNodePointer.java",
+   "snippet": "    {\n        return new JDOMNodeIterator(this, test, reverse, startWith);\n    }\n\n    public NodeIterator attributeIterator(QName name) {\n        return new JDOMAttributeIterator(this, name);\n    }\n\n    public NodeIterator namespaceIterator() {\n        return new JDOMNamespaceIterator(this);\n    }"
+  }
+ ],
+ "class_simple": "JDOMAttributeIterator",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * An iterator of attributes of a DOM Node.\n *\n * @author Dmitri Plotnikov\n * @version $Revision$ $Date$\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private NodePointer parent",
+  "private List attributes",
+  "private int position"
+ ],
+ "focal_class": "org.apache.commons.jxpath.ri.model.jdom.JDOMAttributeIterator",
+ "focal_id": "JxPath_11::org.apache.commons.jxpath.ri.model.jdom.JDOMAttributeIterator::JDOMAttributeIterator(NodePointer,QName)",
+ "focal_method_name": "JDOMAttributeIterator",
+ "generations": 3,
+ "impl_B": "public JDOMAttributeIterator(NodePointer parent, QName name) {\n        this.parent = parent;\n        if (parent.getNode() instanceof Element) {\n            Element element = (Element) parent.getNode();\n            String prefix = name.getPrefix();\n            Namespace ns = null;\n            if (prefix != null) {\n                if (prefix.equals(\"xml\")) {\n                    ns = Namespace.XML_NAMESPACE;\n                }\n                else {\n                        ns = element.getNamespace(prefix);\n                        if (ns == null) {\n                            // TBD: no attributes\n                            attributes = Collections.EMPTY_LIST;\n                            return;\n                        }\n                }\n            }\n            else {\n                ns = Namespace.NO_NAMESPACE;\n            }\n\n            String lname = name.getName();\n            if (!lname.equals(\"*\")) {\n                attributes = new ArrayList();\n                if (ns != null) {\n                    Attribute attr = element.getAttribute(lname, ns);\n                    if (attr != null) {\n                        attributes.add(attr);\n                    }\n                }\n            }\n            else {\n                attributes = new ArrayList();\n                List allAttributes = element.getAttributes();\n                for (int i = 0; i < allAttributes.size(); i++) {\n                    Attribute attr = (Attribute) allAttributes.get(i);\n                    if (attr.getNamespace().equals(ns)) {\n                        attributes.add(attr);\n                    }\n                }\n            }\n        }\n    }",
+ "imports": [
+  "java.util.ArrayList",
+  "java.util.Collections",
+  "java.util.List",
+  "org.apache.commons.jxpath.ri.QName",
+  "org.apache.commons.jxpath.ri.model.NodeIterator",
+  "org.apache.commons.jxpath.ri.model.NodePointer",
+  "org.jdom.Attribute",
+  "org.jdom.Element",
+  "org.jdom.Namespace"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.jxpath.ri.model.jdom",
+ "project": "JxPath",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "getNodePointer"
+  },
+  {
+   "javadoc": "",
+   "name": "getPosition"
+  },
+  {
+   "javadoc": "",
+   "name": "setPosition"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class JDOMAttributeIterator implements NodeIterator",
+  "constructors": [
+   "public JDOMAttributeIterator(NodePointer parent, QName name);"
+  ],
+  "focal_signature": "public JDOMAttributeIterator(NodePointer parent, QName name)",
+  "methods": [
+   "public NodePointer getNodePointer();",
+   "public int getPosition();",
+   "public boolean setPosition(int position);"
+  ],
+  "type_signatures": [
+   "public abstract class NodePointer implements Pointer { public static NodePointer newNodePointer( QName name, Object bean, Locale locale); public static NodePointer newChildNodePointer( NodePointer parent, QName name, Object bean); protected NodePointer(NodePointer parent); protected NodePointer(NodePointer parent, Locale locale); public NamespaceResolver getNamespaceResolver(); public void setNamespaceResolver(NamespaceResolver namespaceResolver); public NodePointer getParent(); public NodePointer getImmediateParentPointer(); public void setAttribute(boolean attribute); public boolean isAttribute(); public boolean isRoot(); public abstract boolean isLeaf(); public boolean isNode(); public boolean isContainer(); public int getIndex(); }",
+   "public class QName { public QName(String qualifiedName); public QName(String prefix, String localName); public String getPrefix(); public String getName(); public String toString(); public int hashCode(); public boolean equals(Object object); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

@@ -1,0 +1,233 @@
+{
+ "bug_name": "JacksonDatabind_53",
+ "call_sites": [
+  {
+   "line": 189,
+   "lines": [
+    184,
+    185,
+    186,
+    187,
+    188,
+    189,
+    190,
+    191,
+    192,
+    193,
+    194
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/cfg/BaseSettings.java",
+   "snippet": "                _typeResolverBuilder, _dateFormat, _handlerInstantiator, _locale,\n                _timeZone, _defaultBase64);\n    }\n\n    public BaseSettings withInsertedAnnotationIntrospector(AnnotationIntrospector ai) {\n        return withAnnotationIntrospector(AnnotationIntrospectorPair.create(ai, _annotationIntrospector));\n    }\n\n    public BaseSettings withAppendedAnnotationIntrospector(AnnotationIntrospector ai) {\n        return withAnnotationIntrospector(AnnotationIntrospectorPair.create(_annotationIntrospector, ai));\n    }"
+  },
+  {
+   "line": 193,
+   "lines": [
+    188,
+    189,
+    190,
+    191,
+    192,
+    193,
+    194,
+    195,
+    196,
+    197,
+    198
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/cfg/BaseSettings.java",
+   "snippet": "    public BaseSettings withInsertedAnnotationIntrospector(AnnotationIntrospector ai) {\n        return withAnnotationIntrospector(AnnotationIntrospectorPair.create(ai, _annotationIntrospector));\n    }\n\n    public BaseSettings withAppendedAnnotationIntrospector(AnnotationIntrospector ai) {\n        return withAnnotationIntrospector(AnnotationIntrospectorPair.create(_annotationIntrospector, ai));\n    }\n    \n    public BaseSettings withVisibilityChecker(VisibilityChecker<?> vc) {\n        if (_visibilityChecker == vc) {\n            return this;"
+  },
+  {
+   "line": 214,
+   "lines": [
+    209,
+    210,
+    211,
+    212,
+    213,
+    214,
+    215,
+    216,
+    217,
+    218,
+    219
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/std/FromStringDeserializer.java",
+   "snippet": "            case STD_FILE:\n                return new File(value);\n            case STD_URL:\n                return new URL(value);\n            case STD_URI:\n                return URI.create(value);\n            case STD_CLASS:\n                try {\n                    return ctxt.findClass(value);\n                } catch (Exception e) {\n                    throw ctxt.instantiationException(_valueClass, ClassUtil.getRootCause(e));"
+  },
+  {
+   "line": 282,
+   "lines": [
+    277,
+    278,
+    279,
+    280,
+    281,
+    282,
+    283,
+    284,
+    285,
+    286,
+    287
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/std/FromStringDeserializer.java",
+   "snippet": "\n        @Override\n        protected Object _deserializeFromEmptyString() throws IOException {\n            // As per [databind#398], URI requires special handling\n            if (_kind == STD_URI) {\n                return URI.create(\"\");\n            }\n            // As per [databind#1123], Locale too\n            if (_kind == STD_LOCALE) {\n                return Locale.ROOT;\n            }"
+  },
+  {
+   "line": 205,
+   "lines": [
+    200,
+    201,
+    202,
+    203,
+    204,
+    205,
+    206,
+    207,
+    208,
+    209,
+    210
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/std/StdKeyDeserializer.java",
+   "snippet": "            java.util.Date date = ctxt.parseDate(key);\n            return (date == null)  ? null : ctxt.constructCalendar(date);\n        case TYPE_UUID:\n            return UUID.fromString(key);\n        case TYPE_URI:\n            return URI.create(key);\n        case TYPE_URL:\n            return new URL(key);\n        case TYPE_CLASS:\n            try {\n                return ctxt.findClass(key);"
+  }
+ ],
+ "class_simple": "TypeBindings",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Helper class used for resolving type parameters for given class\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "private final static String[] NO_STRINGS",
+  "private final static JavaType[] NO_TYPES",
+  "private final static TypeBindings EMPTY",
+  "private final String[] _names",
+  "private final JavaType[] _types",
+  "private final String[] _unboundVariables",
+  "private final int _hashCode"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.type.TypeBindings",
+ "focal_id": "JacksonDatabind_53::com.fasterxml.jackson.databind.type.TypeBindings::create(Class<?>,JavaType)",
+ "focal_method_name": "create",
+ "generations": 3,
+ "impl_B": "public static TypeBindings create(Class<?> erasedType, JavaType typeArg1)\n    {\n        // 30-Oct-2015, tatu: Minor optimization for relatively common cases\n        TypeVariable<?>[] vars = TypeParamStash.paramsFor1(erasedType);\n        int varLen = (vars == null) ? 0 : vars.length;\n        if (varLen != 1) {\n            throw new IllegalArgumentException(\"Can not create TypeBindings for class \"+erasedType.getName()\n                    +\" with 1 type parameter: class expects \"+varLen);\n        }\n        return new TypeBindings(new String[] { vars[0].getName() },\n                new JavaType[] { typeArg1 }, null);\n    }",
+ "imports": [
+  "java.lang.reflect.*",
+  "java.util.*",
+  "com.fasterxml.jackson.databind.JavaType"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.type",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "emptyBindings"
+  },
+  {
+   "javadoc": "",
+   "name": "readResolve"
+  },
+  {
+   "javadoc": "/**\n     * Factory method for constructing bindings for given class using specified type\n     * parameters.\n     */",
+   "name": "create"
+  },
+  {
+   "javadoc": "",
+   "name": "create"
+  },
+  {
+   "javadoc": "",
+   "name": "create"
+  },
+  {
+   "javadoc": "/**\n     * Alternate factory method that may be called if it is possible that type\n     * does or does not require type parameters; this is mostly useful for\n     * collection- and map-like types.\n     */",
+   "name": "createIfNeeded"
+  },
+  {
+   "javadoc": "/**\n     * Alternate factory method that may be called if it is possible that type\n     * does or does not require type parameters; this is mostly useful for\n     * collection- and map-like types.\n     */",
+   "name": "createIfNeeded"
+  },
+  {
+   "javadoc": "/**\n     * Method for creating an instance that has same bindings as this object,\n     * plus an indicator for additional type variable that may be unbound within\n     * this context; this is needed to resolve recursive self-references.\n     */",
+   "name": "withUnboundVariable"
+  },
+  {
+   "javadoc": "/**\n     * Find type bound to specified name, if there is one; returns bound type if so, null if not.\n     */",
+   "name": "findBoundType"
+  },
+  {
+   "javadoc": "",
+   "name": "isEmpty"
+  },
+  {
+   "javadoc": "/**\n     * Returns number of bindings contained\n     */",
+   "name": "size"
+  },
+  {
+   "javadoc": "",
+   "name": "getBoundName"
+  },
+  {
+   "javadoc": "",
+   "name": "getBoundType"
+  },
+  {
+   "javadoc": "/**\n     * Accessor for getting bound types in declaration order\n     */",
+   "name": "getTypeParameters"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.3\n     */",
+   "name": "hasUnbound"
+  },
+  {
+   "javadoc": "/**********************************************************************\n     */",
+   "name": "toString"
+  },
+  {
+   "javadoc": "",
+   "name": "hashCode"
+  },
+  {
+   "javadoc": "",
+   "name": "equals"
+  },
+  {
+   "javadoc": "/**********************************************************************\n     */",
+   "name": "typeParameterArray"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class TypeBindings implements java.io.Serializable",
+  "constructors": [],
+  "focal_signature": "public static TypeBindings create(Class<?> erasedType, JavaType typeArg1)",
+  "methods": [
+   "public static TypeBindings emptyBindings();",
+   "protected Object readResolve();",
+   "public static TypeBindings create(Class<?> erasedType, List<JavaType> typeList);",
+   "public static TypeBindings create(Class<?> erasedType, JavaType[] types);",
+   "public static TypeBindings create(Class<?> erasedType, JavaType typeArg1, JavaType typeArg2);",
+   "public static TypeBindings createIfNeeded(Class<?> erasedType, JavaType typeArg1);",
+   "public static TypeBindings createIfNeeded(Class<?> erasedType, JavaType[] types);",
+   "public TypeBindings withUnboundVariable(String name);",
+   "public JavaType findBoundType(String name);",
+   "public boolean isEmpty();",
+   "public int size();",
+   "public String getBoundName(int index);",
+   "public JavaType getBoundType(int index);",
+   "public List<JavaType> getTypeParameters();",
+   "public boolean hasUnbound(String name);",
+   "public String toString();",
+   "public int hashCode();",
+   "public boolean equals(Object o);",
+   "protected JavaType[] typeParameterArray();"
+  ],
+  "type_signatures": [
+   "public abstract class JavaType extends ResolvedType implements java.io.Serializable, java.lang.reflect.Type { protected JavaType(Class<?> raw, int additionalHash, Object valueHandler, Object typeHandler, boolean asStatic); protected JavaType(JavaType base); public abstract JavaType withTypeHandler(Object h); public abstract JavaType withContentTypeHandler(Object h); public abstract JavaType withValueHandler(Object h); public abstract JavaType withContentValueHandler(Object h); public abstract JavaType withContentType(JavaType contentType); public abstract JavaType withStaticTyping(); public abstract JavaType refine(Class<?> rawType, TypeBindings bindings, JavaType superClass, JavaType[] superInterfaces); public JavaType forcedNarrowBy(Class<?> subclass); // since 2.7 protected abstract JavaType _narrow(Class<?> subclass); public final Class<?> getRawClass(); public final boolean hasRawClass(Class<?> clz); public final boolean isTypeOrSubTypeOf(Class<?> clz); public boolean isAbstract(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

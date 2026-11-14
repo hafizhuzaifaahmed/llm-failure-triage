@@ -1,0 +1,138 @@
+{
+ "bug_name": "JacksonDatabind_39",
+ "call_sites": [
+  {
+   "line": 758,
+   "lines": [
+    753,
+    754,
+    755,
+    756,
+    757,
+    758,
+    759,
+    760,
+    761,
+    762,
+    763
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "    public <T> T readValue(JsonParser p, JavaType type) throws IOException {\n        JsonDeserializer<Object> deser = findRootValueDeserializer(type);\n        if (deser == null) {\n            throw mappingException(\"Could not find JsonDeserializer for type %s\", type);\n        }\n        return (T) deser.deserialize(p, this);\n    }\n\n    /**\n     * Convenience method that may be used by composite or container deserializers,\n     * for reading one-off values for the composite type, taking into account"
+  },
+  {
+   "line": 784,
+   "lines": [
+    779,
+    780,
+    781,
+    782,
+    783,
+    784,
+    785,
+    786,
+    787,
+    788,
+    789
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "        if (deser == null) {\n            String propName = (prop == null) ? \"NULL\" : (\"'\"+prop.getName()+\"'\");\n            throw mappingException(\"Could not find JsonDeserializer for type %s (via property %s)\",\n                    type, propName);\n        }\n        return (T) deser.deserialize(p, this);\n    }\n\n    /*\n    /**********************************************************\n    /* Methods for problem handling, reporting"
+  },
+  {
+   "line": 277,
+   "lines": [
+    272,
+    273,
+    274,
+    275,
+    276,
+    277,
+    278,
+    279,
+    280,
+    281,
+    282
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/MappingIterator.java",
+   "snippet": "\n        int nextState = STATE_NEED_RESYNC;\n        try {\n            T value;\n            if (_updatedValue == null) {\n                value = _deserializer.deserialize(_parser, _context);\n            } else{\n                _deserializer.deserialize(_parser, _context, _updatedValue);\n                value = _updatedValue;\n            }\n            nextState = STATE_MAY_HAVE_VALUE;"
+  },
+  {
+   "line": 279,
+   "lines": [
+    274,
+    275,
+    276,
+    277,
+    278,
+    279,
+    280,
+    281,
+    282,
+    283,
+    284
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/MappingIterator.java",
+   "snippet": "        try {\n            T value;\n            if (_updatedValue == null) {\n                value = _deserializer.deserialize(_parser, _context);\n            } else{\n                _deserializer.deserialize(_parser, _context, _updatedValue);\n                value = _updatedValue;\n            }\n            nextState = STATE_MAY_HAVE_VALUE;\n            return value;\n        } finally {"
+  },
+  {
+   "line": 3454,
+   "lines": [
+    3449,
+    3450,
+    3451,
+    3452,
+    3453,
+    3454,
+    3455,
+    3456,
+    3457,
+    3458,
+    3459
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java",
+   "snippet": "                result = null;\n            } else { // pointing to event other than null\n                DeserializationContext ctxt = createDeserializationContext(jp, deserConfig);\n                JsonDeserializer<Object> deser = _findRootDeserializer(ctxt, toValueType);\n                // note: no handling of unwarpping\n                result = deser.deserialize(jp, ctxt);\n            }\n            jp.close();\n            return result;\n        } catch (IOException e) { // should not occur, no real i/o...\n            throw new IllegalArgumentException(e.getMessage(), e);"
+  }
+ ],
+ "class_simple": "NullifyingDeserializer",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Bogus deserializer that will simply skip all content there is to map\n * and returns Java null reference.\n * \n * @since 2.2\n */\npublic",
+  "method_javadoc": "/**********************************************************\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "public final static NullifyingDeserializer instance"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.deser.std.NullifyingDeserializer",
+ "focal_id": "JacksonDatabind_39::com.fasterxml.jackson.databind.deser.std.NullifyingDeserializer::deserialize(JsonParser,DeserializationContext)",
+ "focal_method_name": "deserialize",
+ "generations": 3,
+ "impl_B": "@Override\n    public Object deserialize(JsonParser p, DeserializationContext ctxt) throws IOException\n    {\n        // 29-Jan-2016, tatu: Simple skipping for all other tokens, but FIELD_NAME bit\n        //    special unfortunately\n            p.skipChildren();\n        return null;\n    }",
+ "imports": [
+  "java.io.IOException",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.jsontype.TypeDeserializer"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.deser.std",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "deserializeWithType"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class NullifyingDeserializer extends StdDeserializer<Object>",
+  "constructors": [
+   "public NullifyingDeserializer();"
+  ],
+  "focal_signature": "public Object deserialize(JsonParser p, DeserializationContext ctxt) throws IOException",
+  "methods": [
+   "public Object deserializeWithType(JsonParser p, DeserializationContext ctxt, TypeDeserializer typeDeserializer) throws IOException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

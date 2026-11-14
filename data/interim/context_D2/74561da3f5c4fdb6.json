@@ -1,0 +1,117 @@
+{
+ "base_focal_id": "Compress_47::org.apache.commons.compress.archivers.zip.ZipArchiveInputStream::canReadEntryData(ArchiveEntry)",
+ "bug_name": "Compress_47",
+ "call_sites": [],
+ "class_simple": "ZipArchiveInputStream",
+ "dataset": "D2",
+ "doc": {
+  "class_javadoc": "/**\n * Implements an input stream that can read Zip archives.\n *\n * <p>As of Apache Commons Compress it transparently supports Zip64\n * extensions and thus individual entries and archives larger than 4\n * GB or with more than 65536 entries.</p>\n *\n * <p>The {@link ZipFile} class is preferred when reading from files\n * as {@link ZipArchiveInputStream} is limited by not being able to\n * read the central directory header before returning entries.  In\n * particular {@link ZipArchiveInputStream}</p>\n *\n * <ul>\n *\n *  <li>may return entries that are not part of the central directory\n *  at all and shouldn't be considered part of the archive.</li>\n *\n *  <li>may return several entries with the same name.</li>\n *\n *  <li>will not return internal or external attributes.</li>\n *\n *  <li>may return incomplete extra field data.</li>\n *\n *  <li>may return unknown sizes and CRC values for entries until the\n *  next entry has been reached if the archive uses the data\n *  descriptor feature.</li>\n *\n * </ul>\n *\n * @see ZipFile\n * @NotThreadSafe\n */\npublic",
+  "method_javadoc": "/**\n     * Whether this class is able to read the given entry.\n     *\n     * <p>May return false if it is set up to use encryption or a\n     * compression method that hasn't been implemented yet.</p>\n     * @since 1.1\n     */"
+ },
+ "fields": [
+  "private final ZipEncoding zipEncoding",
+  "final String encoding",
+  "private final boolean useUnicodeExtraFields",
+  "private final InputStream in",
+  "private final Inflater inf",
+  "private final ByteBuffer buf",
+  "private CurrentEntry current",
+  "private boolean closed",
+  "private boolean hitCentralDirectory",
+  "private ByteArrayInputStream lastStoredEntry",
+  "private boolean allowStoredEntriesWithDataDescriptor",
+  "private static final int LFH_LEN",
+  "private static final int CFH_LEN",
+  "private static final long TWO_EXP_32",
+  "private final byte[] lfhBuf",
+  "private final byte[] skipBuf",
+  "private final byte[] shortBuf",
+  "private final byte[] wordBuf",
+  "private final byte[] twoDwordBuf",
+  "private int entriesRead",
+  "private static final byte[] LFH",
+  "private static final byte[] CFH",
+  "private static final byte[] DD"
+ ],
+ "focal_class": "org.apache.commons.compress.archivers.zip.ZipArchiveInputStream",
+ "focal_id": "Compress_47::org.apache.commons.compress.archivers.zip.ZipArchiveInputStream::canReadEntryData(ArchiveEntry)#m166",
+ "focal_method_name": "canReadEntryData",
+ "impl_B": "@Override\n    public boolean canReadEntryData(final ArchiveEntry ae) {\n        if (ae instanceof ZipArchiveEntry) {\n            final ZipArchiveEntry ze = (ZipArchiveEntry) ae;\n            return ZipUtil.canHandleEntryData(ze) && supportsDataDescriptorFor(ze);\n        }\n        return false;\n    }",
+ "imports": [
+  "java.io.ByteArrayInputStream",
+  "java.io.ByteArrayOutputStream",
+  "java.io.EOFException",
+  "java.io.IOException",
+  "java.io.InputStream",
+  "java.io.PushbackInputStream",
+  "java.nio.ByteBuffer",
+  "java.util.zip.CRC32",
+  "java.util.zip.DataFormatException",
+  "java.util.zip.Inflater",
+  "java.util.zip.ZipEntry",
+  "java.util.zip.ZipException",
+  "org.apache.commons.compress.archivers.ArchiveEntry",
+  "org.apache.commons.compress.archivers.ArchiveInputStream",
+  "org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream",
+  "org.apache.commons.compress.compressors.deflate64.Deflate64CompressorInputStream",
+  "org.apache.commons.compress.utils.ArchiveUtils",
+  "org.apache.commons.compress.utils.IOUtils",
+  "static org.apache.commons.compress.archivers.zip.ZipConstants.DWORD",
+  "static org.apache.commons.compress.archivers.zip.ZipConstants.SHORT",
+  "static org.apache.commons.compress.archivers.zip.ZipConstants.WORD",
+  "static org.apache.commons.compress.archivers.zip.ZipConstants.ZIP64_MAGIC"
+ ],
+ "javadoc_edited_by_fix": false,
+ "mutant_id": 166,
+ "operator": "COR",
+ "package": "org.apache.commons.compress.archivers.zip",
+ "project": "Compress",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "getNextZipEntry"
+  },
+  {
+   "javadoc": "",
+   "name": "getNextEntry"
+  },
+  {
+   "javadoc": "",
+   "name": "read"
+  },
+  {
+   "javadoc": "",
+   "name": "close"
+  },
+  {
+   "javadoc": "/**\n     * Skips over and discards value bytes of data from this input\n     * stream.\n     *\n     * <p>This implementation may end up skipping over some smaller\n     * number of bytes, possibly 0, if and only if it reaches the end\n     * of the underlying stream.</p>\n     *\n     * <p>The actual number of bytes skipped is returned.</p>\n     *\n     * @param value the number of bytes to be skipped.\n     * @return the actual number of bytes skipped.\n     * @throws IOException - if an I/O error occurs.\n     * @throws IllegalArgumentException - if value is negative.\n     */",
+   "name": "skip"
+  },
+  {
+   "javadoc": "/**\n     * Checks if the signature matches what is expected for a zip file.\n     * Does not currently handle self-extracting zips which may have arbitrary\n     * leading content.\n     *\n     * @param signature the bytes to check\n     * @param length    the number of bytes to check\n     * @return true, if this stream is a zip archive stream, false otherwise\n     */",
+   "name": "matches"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class ZipArchiveInputStream extends ArchiveInputStream",
+  "constructors": [
+   "public ZipArchiveInputStream(final InputStream inputStream);",
+   "public ZipArchiveInputStream(final InputStream inputStream, final String encoding);",
+   "public ZipArchiveInputStream(final InputStream inputStream, final String encoding, final boolean useUnicodeExtraFields);",
+   "public ZipArchiveInputStream(final InputStream inputStream, final String encoding, final boolean useUnicodeExtraFields, final boolean allowStoredEntriesWithDataDescriptor);"
+  ],
+  "focal_signature": "public boolean canReadEntryData(final ArchiveEntry ae)",
+  "methods": [
+   "public ZipArchiveEntry getNextZipEntry() throws IOException;",
+   "public ArchiveEntry getNextEntry() throws IOException;",
+   "public int read(final byte[] buffer, final int offset, final int length) throws IOException;",
+   "public void close() throws IOException;",
+   "public long skip(final long value) throws IOException;",
+   "public static boolean matches(final byte[] signature, final int length);"
+  ],
+  "type_signatures": [
+   "public interface ArchiveEntry {  }"
+  ]
+ },
+ "split": "test"
+}

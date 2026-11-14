@@ -1,0 +1,12 @@
+{
+  "assembled": true,
+  "call_key": "3eff82bd0d56302c76422936c3c22b0c41f175c5ae48e9b4708b548b1f4ae53f",
+  "candidate_id": "e095055ff234f707a6cf",
+  "class_name": "Document_title_TriageGen2Test",
+  "focal_id": "Jsoup_29::org.jsoup.nodes.Document::title()",
+  "generation": 2,
+  "model_returned": "gemma4:26b",
+  "n_tests": 6,
+  "package": "org.jsoup.nodes",
+  "source": "package org.jsoup.nodes;\n\nimport java.io.*;\nimport java.math.*;\nimport java.nio.charset.Charset;\nimport java.nio.charset.CharsetEncoder;\nimport java.util.*;\nimport java.util.ArrayList;\nimport java.util.List;\nimport org.jsoup.Jsoup;\nimport org.jsoup.helper.Validate;\nimport org.jsoup.parser.Tag;\nimport org.jsoup.select.Elements;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\npublic class Document_title_TriageGen2Test {\n\n    @Test\n    public void testTitle_WithValidTitle() {\n        Document doc = Jsoup.parse(\"<html><head><title>  Hello World  </title></head><body></body></html>\");\n        String result = doc.title();\n        assertEquals(\"Hello World\", result);\n    }\n\n    @Test\n    public void testTitle_WithEmptyTitle() {\n        Document doc = Jsoup.parse(\"<html><head><title></title></head><body></body></html>\");\n        String result = doc.title();\n        assertEquals(\"\", result);\n    }\n\n    @Test\n    public void testTitle_WithWhitespaceOnlyTitle() {\n        Document doc = Jsoup.parse(\"<html><head><title>   </title></head><body></body></html>\");\n        String result = doc.title();\n        assertEquals(\"\", result);\n    }\n\n    @Test\n    public void testTitle_WithoutTitleTag() {\n        Document doc = Jsoup.parse(\"<html><head></head><body></body></html>\");\n        String result = doc.title();\n        assertEquals(\"\", result);\n    }\n\n    @Test\n    public void testTitle_WithMultipleTitleTags() {\n        // The implementation uses .first(), so it should return the first one found\n        Document doc = Jsoup.parse(\"<html><head><title>First</title><title>Second</title></head><body></body></html>\");\n        String result = doc.title();\n        assertEquals(\"First\", result);\n    }\n\n    @Test\n    public void testTitle_WithTitleInBody() {\n        // Even if in body, getElementsByTag(\"title\") should find it\n        Document doc = Jsoup.parse(\"<html><head></head><body><title>Body Title</title></body></html>\");\n        String result = doc.title();\n        assertEquals(\"Body Title\", result);\n    }\n}\n"
+}

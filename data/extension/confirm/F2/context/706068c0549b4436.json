@@ -1,0 +1,154 @@
+{
+ "bug_name": "JacksonDatabind_4",
+ "call_sites": [
+  {
+   "line": 143,
+   "lines": [
+    138,
+    139,
+    140,
+    141,
+    142,
+    143,
+    144,
+    145,
+    146,
+    147,
+    148
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/SettableAnyProperty.java",
+   "snippet": "        JsonToken t = jp.getCurrentToken();\n        if (t == JsonToken.VALUE_NULL) {\n            return null;\n        }\n        if (_valueTypeDeserializer != null) {\n            return _valueDeserializer.deserializeWithType(jp, ctxt, _valueTypeDeserializer);\n        }\n        return _valueDeserializer.deserialize(jp, ctxt);\n    }\n\n    public void set(Object instance, String propName, Object value) throws IOException"
+  },
+  {
+   "line": 536,
+   "lines": [
+    531,
+    532,
+    533,
+    534,
+    535,
+    536,
+    537,
+    538,
+    539,
+    540,
+    541
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/SettableBeanProperty.java",
+   "snippet": "\n        if (t == JsonToken.VALUE_NULL) {\n            return (_nullProvider == null) ? null : _nullProvider.nullValue(ctxt);\n        }\n        if (_valueTypeDeserializer != null) {\n            return _valueDeserializer.deserializeWithType(jp, ctxt, _valueTypeDeserializer);\n        }\n        return _valueDeserializer.deserialize(jp, ctxt);\n    }\n    \n    /*"
+  },
+  {
+   "line": 94,
+   "lines": [
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    99
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/impl/InnerClassProperty.java",
+   "snippet": "        JsonToken t = jp.getCurrentToken();\n        Object value;\n        if (t == JsonToken.VALUE_NULL) {\n            value = (_nullProvider == null) ? null : _nullProvider.nullValue(ctxt);\n        } else if (_valueTypeDeserializer != null) {\n            value = _valueDeserializer.deserializeWithType(jp, ctxt, _valueTypeDeserializer);\n        } else  { // the usual case\n            try {\n                value = _creator.newInstance(bean);\n            } catch (Exception e) {\n                ClassUtil.unwrapAndThrowAsIAE(e, \"Failed to instantiate class \"+_creator.getDeclaringClass().getName()+\", problem: \"+e.getMessage());"
+  },
+  {
+   "line": 41,
+   "lines": [
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/impl/TypeWrappedDeserializer.java",
+   "snippet": "    \n    @Override\n    public Object deserialize(JsonParser jp, DeserializationContext ctxt)\n            throws IOException, JsonProcessingException\n    {\n        return _deserializer.deserializeWithType(jp, ctxt, _typeDeserializer);\n    }\n\n    @Override\n    public Object deserializeWithType(JsonParser jp, DeserializationContext ctxt,\n        TypeDeserializer typeDeserializer)"
+  },
+  {
+   "line": 109,
+   "lines": [
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/std/ArrayBlockingQueueDeserializer.java",
+   "snippet": "            if (t == JsonToken.VALUE_NULL) {\n                value = valueDes.getNullValue();\n            } else if (typeDeser == null) {\n                value = valueDes.deserialize(jp, ctxt);\n            } else {\n                value = valueDes.deserializeWithType(jp, ctxt, typeDeser);\n            }\n            tmp.add(value);\n        }\n        if (result0 != null) {\n            result0.addAll(tmp);"
+  }
+ ],
+ "class_simple": "StringArrayDeserializer",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Separate implementation for serializing String arrays (instead of\n * using {@link ObjectArrayDeserializer}.\n * Used if (and only if) no custom value deserializers are used.\n */\n@JacksonStdImpl\npublic final",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "public final static StringArrayDeserializer instance",
+  "protected JsonDeserializer<String> _elementDeserializer"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.deser.std.StringArrayDeserializer",
+ "focal_id": "JacksonDatabind_4::com.fasterxml.jackson.databind.deser.std.StringArrayDeserializer::deserializeWithType(JsonParser,DeserializationContext,TypeDeserializer)",
+ "focal_method_name": "deserializeWithType",
+ "generations": 3,
+ "impl_B": "@Override\n    public Object deserializeWithType(JsonParser jp, DeserializationContext ctxt, TypeDeserializer typeDeserializer) throws IOException {\n        return typeDeserializer.deserializeTypedFromArray(jp, ctxt);\n    }",
+ "imports": [
+  "java.io.IOException",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.annotation.JacksonStdImpl",
+  "com.fasterxml.jackson.databind.deser.ContextualDeserializer",
+  "com.fasterxml.jackson.databind.jsontype.TypeDeserializer",
+  "com.fasterxml.jackson.databind.util.ObjectBuffer"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.deser.std",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "deserialize"
+  },
+  {
+   "javadoc": "/**\n     * Offlined version used when we do not use the default deserialization method.\n     */",
+   "name": "_deserializeCustom"
+  },
+  {
+   "javadoc": "/**\n     * Contextualization is needed to see whether we can \"inline\" deserialization\n     * of String values, or if we have to use separate value deserializer.\n     */",
+   "name": "createContextual"
+  }
+ ],
+ "sig": {
+  "class_declaration": "@JacksonStdImpl public final class StringArrayDeserializer extends StdDeserializer<String[]> implements ContextualDeserializer",
+  "constructors": [
+   "public StringArrayDeserializer();"
+  ],
+  "focal_signature": "public Object deserializeWithType(JsonParser jp, DeserializationContext ctxt, TypeDeserializer typeDeserializer) throws IOException",
+  "methods": [
+   "public String[] deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException;",
+   "protected final String[] _deserializeCustom(JsonParser jp, DeserializationContext ctxt) throws IOException;",
+   "public JsonDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property) throws JsonMappingException;"
+  ],
+  "type_signatures": [
+   "public abstract class TypeDeserializer { public abstract TypeDeserializer forProperty(BeanProperty prop); public abstract As getTypeInclusion(); public abstract String getPropertyName(); public abstract TypeIdResolver getTypeIdResolver(); public abstract Class<?> getDefaultImpl(); public abstract Object deserializeTypedFromObject(JsonParser jp, DeserializationContext ctxt) throws IOException; public abstract Object deserializeTypedFromArray(JsonParser jp, DeserializationContext ctxt) throws IOException; public abstract Object deserializeTypedFromScalar(JsonParser jp, DeserializationContext ctxt) throws IOException; public abstract Object deserializeTypedFromAny(JsonParser jp, DeserializationContext ctxt) throws IOException; public static Object deserializeIfNatural(JsonParser jp, DeserializationContext ctxt, JavaType baseType) throws IOException; }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

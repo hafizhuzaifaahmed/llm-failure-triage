@@ -1,0 +1,279 @@
+{
+  "bug_name": "Cli_32",
+  "call_sites": [
+    {
+      "line": 848,
+      "lines": [
+        843,
+        844,
+        845,
+        846,
+        847,
+        848,
+        849,
+        850,
+        851,
+        852,
+        853
+      ],
+      "path": "src/main/java/org/apache/commons/cli/HelpFormatter.java",
+      "snippet": "     * @return the StringBuffer with the rendered Options contents.\n     */\n    protected StringBuffer renderWrappedText(StringBuffer sb, int width, \n                                             int nextLineTabStop, String text)\n    {\n        int pos = findWrapPos(text, width, 0);\n\n        if (pos == -1)\n        {\n            sb.append(rtrim(text));\n"
+    },
+    {
+      "line": 870,
+      "lines": [
+        865,
+        866,
+        867,
+        868,
+        869,
+        870,
+        871,
+        872,
+        873,
+        874,
+        875
+      ],
+      "path": "src/main/java/org/apache/commons/cli/HelpFormatter.java",
+      "snippet": "        final String padding = createPadding(nextLineTabStop);\n\n        while (true)\n        {\n            text = padding + text.substring(pos).trim();\n            pos = findWrapPos(text, width, 0);\n\n            if (pos == -1)\n            {\n                sb.append(text);\n"
+    }
+  ],
+  "class_simple": "HelpFormatter",
+  "doc": {
+    "class_javadoc": "/**\n * Licensed to the Apache Software Foundation (ASF) under one or more\n * contributor license agreements.  See the NOTICE file distributed with\n * this work for additional information regarding copyright ownership.\n * The ASF licenses this file to You under the Apache License, Version 2.0\n * (the \"License\"); you may not use this file except in compliance with\n * the License.  You may obtain a copy of the License at\n *\n *     http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\n\npackage org.apache.commons.cli;\n\nimport java.io.PrintWriter;\nimport java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.Collection;\nimport java.util.Collections;\nimport java.util.Comparator;\nimport java.util.Iterator;\nimport java.util.List;\n\n/** \n * A formatter of help messages for the current command line options\n *\n * @author Slawek Zachcial\n * @author John Keyes (john at integralsource.com)\n * @version $Revision$, $Date$\n */\npublic",
+    "method_javadoc": "/**\n     * Finds the next text wrap position after <code>startPos</code> for the\n     * text in <code>text</code> with the column width <code>width</code>.\n     * The wrap point is the last position before startPos+width having a \n     * whitespace character (space, \\n, \\r). If there is no whitespace character\n     * before startPos+width, it will return startPos+width.\n     *\n     * @param text The text being searched for the wrap position\n     * @param width width of the wrapped text\n     * @param startPos position from which to start the lookup whitespace\n     * character\n     * @return postion on which the text must be wrapped or -1 if the wrap\n     * position is at the end of the text\n     */"
+  },
+  "fields": [
+    "public static final int DEFAULT_WIDTH",
+    "public static final int DEFAULT_LEFT_PAD",
+    "public static final int DEFAULT_DESC_PAD",
+    "public static final String DEFAULT_SYNTAX_PREFIX",
+    "public static final String DEFAULT_OPT_PREFIX",
+    "public static final String DEFAULT_LONG_OPT_PREFIX",
+    "public static final String DEFAULT_LONG_OPT_SEPARATOR",
+    "public static final String DEFAULT_ARG_NAME",
+    "public int defaultWidth",
+    "public int defaultLeftPad",
+    "public int defaultDescPad",
+    "public String defaultSyntaxPrefix",
+    "public String defaultNewLine",
+    "public String defaultOptPrefix",
+    "public String defaultLongOptPrefix",
+    "private String longOptSeparator",
+    "public String defaultArgName",
+    "protected Comparator optionComparator"
+  ],
+  "focal_class": "org.apache.commons.cli.HelpFormatter",
+  "focal_id": "Cli_32::org.apache.commons.cli.HelpFormatter::findWrapPos(String,int,int)",
+  "focal_method_name": "findWrapPos",
+  "impl_B": "protected int findWrapPos(String text, int width, int startPos)\n    {\n        int pos;\n        \n        // the line ends before the max wrap pos or a new line char found\n        if (((pos = text.indexOf('\\n', startPos)) != -1 && pos <= width)\n                || ((pos = text.indexOf('\\t', startPos)) != -1 && pos <= width))\n        {\n            return pos + 1;\n        }\n        else if (startPos + width >= text.length())\n        {\n            return -1;\n        }\n\n\n        // look for the last whitespace character before startPos+width\n        pos = startPos + width;\n\n        char c;\n\n        while ((pos >= startPos) && ((c = text.charAt(pos)) != ' ')\n                && (c != '\\n') && (c != '\\r'))\n        {\n            --pos;\n        }\n\n        // if we found it - just return\n        if (pos > startPos)\n        {\n            return pos;\n        }\n        \n        // if we didn't find one, simply chop at startPos+width\n        pos = startPos + width;\n        while ((pos <= text.length()) && ((c = text.charAt(pos)) != ' ')\n               && (c != '\\n') && (c != '\\r'))\n        {\n            ++pos;\n        }        \n        return pos == text.length() ? -1 : pos;\n    }",
+  "imports": [
+    "java.io.PrintWriter",
+    "java.util.ArrayList",
+    "java.util.Arrays",
+    "java.util.Collection",
+    "java.util.Collections",
+    "java.util.Comparator",
+    "java.util.Iterator",
+    "java.util.List"
+  ],
+  "javadoc_edited_by_fix": false,
+  "package": "org.apache.commons.cli",
+  "project": "Cli",
+  "siblings": [
+    {
+      "javadoc": "/**\n     * Sets the 'width'.\n     *\n     * @param width the new value of 'width'\n     */",
+      "name": "setWidth"
+    },
+    {
+      "javadoc": "/**\n     * Returns the 'width'.\n     *\n     * @return the 'width'\n     */",
+      "name": "getWidth"
+    },
+    {
+      "javadoc": "/**\n     * Sets the 'leftPadding'.\n     *\n     * @param padding the new value of 'leftPadding'\n     */",
+      "name": "setLeftPadding"
+    },
+    {
+      "javadoc": "/**\n     * Returns the 'leftPadding'.\n     *\n     * @return the 'leftPadding'\n     */",
+      "name": "getLeftPadding"
+    },
+    {
+      "javadoc": "/**\n     * Sets the 'descPadding'.\n     *\n     * @param padding the new value of 'descPadding'\n     */",
+      "name": "setDescPadding"
+    },
+    {
+      "javadoc": "/**\n     * Returns the 'descPadding'.\n     *\n     * @return the 'descPadding'\n     */",
+      "name": "getDescPadding"
+    },
+    {
+      "javadoc": "/**\n     * Sets the 'syntaxPrefix'.\n     *\n     * @param prefix the new value of 'syntaxPrefix'\n     */",
+      "name": "setSyntaxPrefix"
+    },
+    {
+      "javadoc": "/**\n     * Returns the 'syntaxPrefix'.\n     *\n     * @return the 'syntaxPrefix'\n     */",
+      "name": "getSyntaxPrefix"
+    },
+    {
+      "javadoc": "/**\n     * Sets the 'newLine'.\n     *\n     * @param newline the new value of 'newLine'\n     */",
+      "name": "setNewLine"
+    },
+    {
+      "javadoc": "/**\n     * Returns the 'newLine'.\n     *\n     * @return the 'newLine'\n     */",
+      "name": "getNewLine"
+    },
+    {
+      "javadoc": "/**\n     * Sets the 'optPrefix'.\n     *\n     * @param prefix the new value of 'optPrefix'\n     */",
+      "name": "setOptPrefix"
+    },
+    {
+      "javadoc": "/**\n     * Returns the 'optPrefix'.\n     *\n     * @return the 'optPrefix'\n     */",
+      "name": "getOptPrefix"
+    },
+    {
+      "javadoc": "/**\n     * Sets the 'longOptPrefix'.\n     *\n     * @param prefix the new value of 'longOptPrefix'\n     */",
+      "name": "setLongOptPrefix"
+    },
+    {
+      "javadoc": "/**\n     * Returns the 'longOptPrefix'.\n     *\n     * @return the 'longOptPrefix'\n     */",
+      "name": "getLongOptPrefix"
+    },
+    {
+      "javadoc": "/**\n     * Set the separator displayed between a long option and its value.\n     * Ensure that the separator specified is supported by the parser used,\n     * typically ' ' or '='.\n     * \n     * @param longOptSeparator the separator, typically ' ' or '='.\n     * @since 1.3\n     */",
+      "name": "setLongOptSeparator"
+    },
+    {
+      "javadoc": "/**\n     * Returns the separator displayed between a long option and its value.\n     * \n     * @return the separator\n     * @since 1.3\n     */",
+      "name": "getLongOptSeparator"
+    },
+    {
+      "javadoc": "/**\n     * Sets the 'argName'.\n     *\n     * @param name the new value of 'argName'\n     */",
+      "name": "setArgName"
+    },
+    {
+      "javadoc": "/**\n     * Returns the 'argName'.\n     *\n     * @return the 'argName'\n     */",
+      "name": "getArgName"
+    },
+    {
+      "javadoc": "/**\n     * Comparator used to sort the options when they output in help text.\n     * Defaults to case-insensitive alphabetical sorting by option key.\n     * \n     * @since 1.2\n     */",
+      "name": "getOptionComparator"
+    },
+    {
+      "javadoc": "/**\n     * Set the comparator used to sort the options when they output in help text.\n     * Passing in a null parameter will set the ordering to the default mode.\n     * \n     * @since 1.2\n     */",
+      "name": "setOptionComparator"
+    },
+    {
+      "javadoc": "/**\n     * Print the help for <code>options</code> with the specified\n     * command line syntax.  This method prints help information to\n     * System.out.\n     *\n     * @param cmdLineSyntax the syntax for this application\n     * @param options the Options instance\n     */",
+      "name": "printHelp"
+    },
+    {
+      "javadoc": "/**\n     * Print the help for <code>options</code> with the specified\n     * command line syntax.  This method prints help information to \n     * System.out.\n     *\n     * @param cmdLineSyntax the syntax for this application\n     * @param options the Options instance\n     * @param autoUsage whether to print an automatically generated\n     * usage statement\n     */",
+      "name": "printHelp"
+    },
+    {
+      "javadoc": "/**\n     * Print the help for <code>options</code> with the specified\n     * command line syntax.  This method prints help information to\n     * System.out.\n     *\n     * @param cmdLineSyntax the syntax for this application\n     * @param header the banner to display at the begining of the help\n     * @param options the Options instance\n     * @param footer the banner to display at the end of the help\n     */",
+      "name": "printHelp"
+    },
+    {
+      "javadoc": "/**\n     * Print the help for <code>options</code> with the specified\n     * command line syntax.  This method prints help information to \n     * System.out.\n     *\n     * @param cmdLineSyntax the syntax for this application\n     * @param header the banner to display at the begining of the help\n     * @param options the Options instance\n     * @param footer the banner to display at the end of the help\n     * @param autoUsage whether to print an automatically generated\n     * usage statement\n     */",
+      "name": "printHelp"
+    },
+    {
+      "javadoc": "/**\n     * Print the help for <code>options</code> with the specified\n     * command line syntax.  This method prints help information to\n     * System.out.\n     *\n     * @param width the number of characters to be displayed on each line\n     * @param cmdLineSyntax the syntax for this application\n     * @param header the banner to display at the beginning of the help\n     * @param options the Options instance\n     * @param footer the banner to display at the end of the help\n     */",
+      "name": "printHelp"
+    },
+    {
+      "javadoc": "/**\n     * Print the help for <code>options</code> with the specified\n     * command line syntax.  This method prints help information to\n     * System.out.\n     *\n     * @param width the number of characters to be displayed on each line\n     * @param cmdLineSyntax the syntax for this application\n     * @param header the banner to display at the begining of the help\n     * @param options the Options instance\n     * @param footer the banner to display at the end of the help\n     * @param autoUsage whether to print an automatically generated \n     * usage statement\n     */",
+      "name": "printHelp"
+    },
+    {
+      "javadoc": "/**\n     * Print the help for <code>options</code> with the specified\n     * command line syntax.\n     *\n     * @param pw the writer to which the help will be written\n     * @param width the number of characters to be displayed on each line\n     * @param cmdLineSyntax the syntax for this application\n     * @param header the banner to display at the begining of the help\n     * @param options the Options instance\n     * @param leftPad the number of characters of padding to be prefixed\n     * to each line\n     * @param descPad the number of characters of padding to be prefixed\n     * to each description line\n     * @param footer the banner to display at the end of the help\n     *\n     * @throws IllegalStateException if there is no room to print a line\n     */",
+      "name": "printHelp"
+    },
+    {
+      "javadoc": "/**\n     * Print the help for <code>options</code> with the specified\n     * command line syntax.\n     *\n     * @param pw the writer to which the help will be written\n     * @param width the number of characters to be displayed on each line\n     * @param cmdLineSyntax the syntax for this application\n     * @param header the banner to display at the begining of the help\n     * @param options the Options instance\n     * @param leftPad the number of characters of padding to be prefixed\n     * to each line\n     * @param descPad the number of characters of padding to be prefixed\n     * to each description line\n     * @param footer the banner to display at the end of the help\n     * @param autoUsage whether to print an automatically generated\n     * usage statement\n     *\n     * @throws IllegalStateException if there is no room to print a line\n     */",
+      "name": "printHelp"
+    },
+    {
+      "javadoc": "/**\n     * Prints the usage statement for the specified application.\n     *\n     * @param pw The PrintWriter to print the usage statement \n     * @param width The number of characters to display per line\n     * @param app The application name\n     * @param options The command line Options\n     */",
+      "name": "printUsage"
+    },
+    {
+      "javadoc": "/**\n     * Print the cmdLineSyntax to the specified writer, using the\n     * specified width.\n     *\n     * @param pw The printWriter to write the help to\n     * @param width The number of characters per line for the usage statement.\n     * @param cmdLineSyntax The usage statement.\n     */",
+      "name": "printUsage"
+    },
+    {
+      "javadoc": "/**\n     * Print the help for the specified Options to the specified writer, \n     * using the specified width, left padding and description padding.\n     *\n     * @param pw The printWriter to write the help to\n     * @param width The number of characters to display per line\n     * @param options The command line Options\n     * @param leftPad the number of characters of padding to be prefixed\n     * to each line\n     * @param descPad the number of characters of padding to be prefixed\n     * to each description line\n     */",
+      "name": "printOptions"
+    },
+    {
+      "javadoc": "/**\n     * Print the specified text to the specified PrintWriter.\n     *\n     * @param pw The printWriter to write the help to\n     * @param width The number of characters to display per line\n     * @param text The text to be written to the PrintWriter\n     */",
+      "name": "printWrapped"
+    },
+    {
+      "javadoc": "/**\n     * Print the specified text to the specified PrintWriter.\n     *\n     * @param pw The printWriter to write the help to\n     * @param width The number of characters to display per line\n     * @param nextLineTabStop The position on the next line for the first tab.\n     * @param text The text to be written to the PrintWriter\n     */",
+      "name": "printWrapped"
+    },
+    {
+      "javadoc": "/**\n     * Render the specified Options and return the rendered Options\n     * in a StringBuffer.\n     *\n     * @param sb The StringBuffer to place the rendered Options into.\n     * @param width The number of characters to display per line\n     * @param options The command line Options\n     * @param leftPad the number of characters of padding to be prefixed\n     * to each line\n     * @param descPad the number of characters of padding to be prefixed\n     * to each description line\n     *\n     * @return the StringBuffer with the rendered Options contents.\n     */",
+      "name": "renderOptions"
+    },
+    {
+      "javadoc": "/**\n     * Render the specified text and return the rendered Options\n     * in a StringBuffer.\n     *\n     * @param sb The StringBuffer to place the rendered text into.\n     * @param width The number of characters to display per line\n     * @param nextLineTabStop The position on the next line for the first tab.\n     * @param text The text to be rendered.\n     *\n     * @return the StringBuffer with the rendered Options contents.\n     */",
+      "name": "renderWrappedText"
+    },
+    {
+      "javadoc": "/**\n     * Return a String of padding of length <code>len</code>.\n     *\n     * @param len The length of the String of padding to create.\n     *\n     * @return The String of padding\n     */",
+      "name": "createPadding"
+    },
+    {
+      "javadoc": "/**\n     * Remove the trailing whitespace from the specified String.\n     *\n     * @param s The String to remove the trailing padding from.\n     *\n     * @return The String of without the trailing padding\n     */",
+      "name": "rtrim"
+    }
+  ],
+  "sig": {
+    "class_declaration": "public class HelpFormatter",
+    "constructors": [],
+    "focal_signature": "protected int findWrapPos(String text, int width, int startPos)",
+    "methods": [
+      "public void setWidth(int width);",
+      "public int getWidth();",
+      "public void setLeftPadding(int padding);",
+      "public int getLeftPadding();",
+      "public void setDescPadding(int padding);",
+      "public int getDescPadding();",
+      "public void setSyntaxPrefix(String prefix);",
+      "public String getSyntaxPrefix();",
+      "public void setNewLine(String newline);",
+      "public String getNewLine();",
+      "public void setOptPrefix(String prefix);",
+      "public String getOptPrefix();",
+      "public void setLongOptPrefix(String prefix);",
+      "public String getLongOptPrefix();",
+      "public void setLongOptSeparator(String longOptSeparator);",
+      "public String getLongOptSeparator();",
+      "public void setArgName(String name);",
+      "public String getArgName();",
+      "public Comparator getOptionComparator();",
+      "public void setOptionComparator(Comparator comparator);",
+      "public void printHelp(String cmdLineSyntax, Options options);",
+      "public void printHelp(String cmdLineSyntax, Options options, boolean autoUsage);",
+      "public void printHelp(String cmdLineSyntax, String header, Options options, String footer);",
+      "public void printHelp(String cmdLineSyntax, String header, Options options, String footer, boolean autoUsage);",
+      "public void printHelp(int width, String cmdLineSyntax, String header, Options options, String footer);",
+      "public void printHelp(int width, String cmdLineSyntax, String header, Options options, String footer, boolean autoUsage);",
+      "public void printHelp(PrintWriter pw, int width, String cmdLineSyntax, String header, Options options, int leftPad, int descPad, String footer);",
+      "public void printHelp(PrintWriter pw, int width, String cmdLineSyntax, String header, Options options, int leftPad, int descPad, String footer, boolean autoUsage);",
+      "public void printUsage(PrintWriter pw, int width, String app, Options options);",
+      "public void printUsage(PrintWriter pw, int width, String cmdLineSyntax);",
+      "public void printOptions(PrintWriter pw, int width, Options options, int leftPad, int descPad);",
+      "public void printWrapped(PrintWriter pw, int width, String text);",
+      "public void printWrapped(PrintWriter pw, int width, int nextLineTabStop, String text);",
+      "protected StringBuffer renderOptions(StringBuffer sb, int width, Options options, int leftPad, int descPad);",
+      "protected StringBuffer renderWrappedText(StringBuffer sb, int width, int nextLineTabStop, String text);",
+      "protected String createPadding(int len);",
+      "protected String rtrim(String s);"
+    ],
+    "type_signatures": []
+  },
+  "split": "dev"
+}

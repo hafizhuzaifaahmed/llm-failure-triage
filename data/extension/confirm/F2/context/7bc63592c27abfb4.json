@@ -1,0 +1,324 @@
+{
+ "bug_name": "JxPath_12",
+ "call_sites": [
+  {
+   "line": 82,
+   "lines": [
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/axes/AncestorContext.java",
+   "snippet": "    public boolean nextNode() {\n        if (!setStarted) {\n            setStarted = true;\n            currentNodePointer = parentContext.getCurrentNodePointer();\n            if (includeSelf) {\n                if (currentNodePointer.testNode(nodeTest)) {\n                    position++;\n                    return true;\n                }\n            }\n        }"
+  },
+  {
+   "line": 96,
+   "lines": [
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/axes/AncestorContext.java",
+   "snippet": "\n            if (currentNodePointer == null) {\n                return false;\n            }\n\n            if (currentNodePointer.testNode(nodeTest)) {\n                position++;\n                return true;\n            }\n        }\n    }"
+  },
+  {
+   "line": 100,
+   "lines": [
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/axes/DescendantContext.java",
+   "snippet": "                            ELEMENT_NODE_TEST,\n                            false,\n                            null));\n                }\n                if (includeSelf) {\n                    if (currentNodePointer.testNode(nodeTest)) {\n                        position++;\n                        return true;\n                    }\n                }\n            }"
+  },
+  {
+   "line": 120,
+   "lines": [
+    115,
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122,
+    123,
+    124,
+    125
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/axes/DescendantContext.java",
+   "snippet": "                            currentNodePointer.childIterator(\n                                ELEMENT_NODE_TEST,\n                                false,\n                                null));\n                    }\n                    if (currentNodePointer.testNode(nodeTest)) {\n                        position++;\n                        return true;\n                    }\n                }\n            }"
+  },
+  {
+   "line": 74,
+   "lines": [
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/axes/ParentContext.java",
+   "snippet": "        while (currentNodePointer != null\n            && currentNodePointer.isContainer()) {\n            currentNodePointer = currentNodePointer.getImmediateParentPointer();\n        }\n        if (currentNodePointer != null\n            && currentNodePointer.testNode(nodeTest)) {\n            position++;\n            return true;\n        }\n        return false;\n    }"
+  }
+ ],
+ "class_simple": "DOMNodePointer",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * A Pointer that points to a DOM node.\n *\n * @author Dmitri Plotnikov\n * @version $Revision$ $Date$\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "private Node node",
+  "private Map namespaces",
+  "private String defaultNamespace",
+  "private String id",
+  "public static final String XML_NAMESPACE_URI",
+  "public static final String XMLNS_NAMESPACE_URI"
+ ],
+ "focal_class": "org.apache.commons.jxpath.ri.model.dom.DOMNodePointer",
+ "focal_id": "JxPath_12::org.apache.commons.jxpath.ri.model.dom.DOMNodePointer::testNode(Node,NodeTest)",
+ "focal_method_name": "testNode",
+ "generations": 3,
+ "impl_B": "public static boolean testNode(Node node, NodeTest test) {\n        if (test == null) {\n            return true;\n        }\n        if (test instanceof NodeNameTest) {\n            if (node.getNodeType() != Node.ELEMENT_NODE) {\n                return false;\n            }\n\n            NodeNameTest nodeNameTest = (NodeNameTest) test;\n            QName testName = nodeNameTest.getNodeName();\n            String namespaceURI = nodeNameTest.getNamespaceURI();\n            boolean wildcard = nodeNameTest.isWildcard();\n            String testPrefix = testName.getPrefix();\n            if (wildcard && testPrefix == null) {\n                return true;\n            }\n            if (wildcard\n                || testName.getName()\n                        .equals(DOMNodePointer.getLocalName(node))) {\n                String nodeNS = DOMNodePointer.getNamespaceURI(node);\n                return equalStrings(namespaceURI, nodeNS);\n            }\n            return false;\n        }\n        if (test instanceof NodeTypeTest) {\n            int nodeType = node.getNodeType();\n            switch (((NodeTypeTest) test).getNodeType()) {\n                case Compiler.NODE_TYPE_NODE :\n                    return nodeType == Node.ELEMENT_NODE\n                            || nodeType == Node.DOCUMENT_NODE;\n                case Compiler.NODE_TYPE_TEXT :\n                    return nodeType == Node.CDATA_SECTION_NODE\n                        || nodeType == Node.TEXT_NODE;\n                case Compiler.NODE_TYPE_COMMENT :\n                    return nodeType == Node.COMMENT_NODE;\n                case Compiler.NODE_TYPE_PI :\n                    return nodeType == Node.PROCESSING_INSTRUCTION_NODE;\n            }\n            return false;\n        }\n        if (test instanceof ProcessingInstructionTest) {\n            if (node.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE) {\n                String testPI = ((ProcessingInstructionTest) test).getTarget();\n                String nodePI = ((ProcessingInstruction) node).getTarget();\n                return testPI.equals(nodePI);\n            }\n        }\n        return false;\n    }",
+ "imports": [
+  "java.util.HashMap",
+  "java.util.Locale",
+  "java.util.Map",
+  "org.apache.commons.jxpath.AbstractFactory",
+  "org.apache.commons.jxpath.JXPathAbstractFactoryException",
+  "org.apache.commons.jxpath.JXPathContext",
+  "org.apache.commons.jxpath.JXPathException",
+  "org.apache.commons.jxpath.Pointer",
+  "org.apache.commons.jxpath.ri.Compiler",
+  "org.apache.commons.jxpath.ri.QName",
+  "org.apache.commons.jxpath.ri.compiler.NodeNameTest",
+  "org.apache.commons.jxpath.ri.compiler.NodeTest",
+  "org.apache.commons.jxpath.ri.compiler.NodeTypeTest",
+  "org.apache.commons.jxpath.ri.compiler.ProcessingInstructionTest",
+  "org.apache.commons.jxpath.ri.model.NodeIterator",
+  "org.apache.commons.jxpath.ri.model.NodePointer",
+  "org.apache.commons.jxpath.ri.model.beans.NullPointer",
+  "org.apache.commons.jxpath.util.TypeUtils",
+  "org.w3c.dom.Attr",
+  "org.w3c.dom.Comment",
+  "org.w3c.dom.Document",
+  "org.w3c.dom.Element",
+  "org.w3c.dom.NamedNodeMap",
+  "org.w3c.dom.Node",
+  "org.w3c.dom.NodeList",
+  "org.w3c.dom.ProcessingInstruction"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.jxpath.ri.model.dom",
+ "project": "JxPath",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "testNode"
+  },
+  {
+   "javadoc": "",
+   "name": "getName"
+  },
+  {
+   "javadoc": "",
+   "name": "getNamespaceURI"
+  },
+  {
+   "javadoc": "",
+   "name": "childIterator"
+  },
+  {
+   "javadoc": "",
+   "name": "attributeIterator"
+  },
+  {
+   "javadoc": "",
+   "name": "namespacePointer"
+  },
+  {
+   "javadoc": "",
+   "name": "namespaceIterator"
+  },
+  {
+   "javadoc": "",
+   "name": "getNamespaceURI"
+  },
+  {
+   "javadoc": "",
+   "name": "getDefaultNamespaceURI"
+  },
+  {
+   "javadoc": "",
+   "name": "getBaseValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getImmediateNode"
+  },
+  {
+   "javadoc": "",
+   "name": "isActual"
+  },
+  {
+   "javadoc": "",
+   "name": "isCollection"
+  },
+  {
+   "javadoc": "",
+   "name": "getLength"
+  },
+  {
+   "javadoc": "",
+   "name": "isLeaf"
+  },
+  {
+   "javadoc": "/**\n     * Returns true if the xml:lang attribute for the current node\n     * or its parent has the specified prefix <i>lang</i>.\n     * If no node has this prefix, calls <code>super.isLanguage(lang)</code>.\n     */",
+   "name": "isLanguage"
+  },
+  {
+   "javadoc": "",
+   "name": "findEnclosingAttribute"
+  },
+  {
+   "javadoc": "",
+   "name": "getLanguage"
+  },
+  {
+   "javadoc": "/**\n     * Sets contents of the node to the specified value. If the value is\n     * a String, the contents of the node are replaced with this text.\n     * If the value is an Element or Document, the children of the\n     * node are replaced with the children of the passed node.\n     */",
+   "name": "setValue"
+  },
+  {
+   "javadoc": "",
+   "name": "createChild"
+  },
+  {
+   "javadoc": "",
+   "name": "createChild"
+  },
+  {
+   "javadoc": "",
+   "name": "createAttribute"
+  },
+  {
+   "javadoc": "",
+   "name": "remove"
+  },
+  {
+   "javadoc": "",
+   "name": "asPath"
+  },
+  {
+   "javadoc": "",
+   "name": "hashCode"
+  },
+  {
+   "javadoc": "",
+   "name": "equals"
+  },
+  {
+   "javadoc": "",
+   "name": "getPrefix"
+  },
+  {
+   "javadoc": "",
+   "name": "getLocalName"
+  },
+  {
+   "javadoc": "",
+   "name": "getNamespaceURI"
+  },
+  {
+   "javadoc": "",
+   "name": "getValue"
+  },
+  {
+   "javadoc": "/**\n     * Locates a node by ID.\n     */",
+   "name": "getPointerByID"
+  },
+  {
+   "javadoc": "",
+   "name": "compareChildNodePointers"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class DOMNodePointer extends NodePointer",
+  "constructors": [
+   "public DOMNodePointer(Node node, Locale locale);",
+   "public DOMNodePointer(Node node, Locale locale, String id);",
+   "public DOMNodePointer(NodePointer parent, Node node);"
+  ],
+  "focal_signature": "public static boolean testNode(Node node, NodeTest test)",
+  "methods": [
+   "public boolean testNode(NodeTest test);",
+   "public QName getName();",
+   "public String getNamespaceURI();",
+   "public NodeIterator childIterator( NodeTest test, boolean reverse, NodePointer startWith);",
+   "public NodeIterator attributeIterator(QName name);",
+   "public NodePointer namespacePointer(String prefix);",
+   "public NodeIterator namespaceIterator();",
+   "public String getNamespaceURI(String prefix);",
+   "public String getDefaultNamespaceURI();",
+   "public Object getBaseValue();",
+   "public Object getImmediateNode();",
+   "public boolean isActual();",
+   "public boolean isCollection();",
+   "public int getLength();",
+   "public boolean isLeaf();",
+   "public boolean isLanguage(String lang);",
+   "protected static String findEnclosingAttribute(Node n, String attrName);",
+   "protected String getLanguage();",
+   "public void setValue(Object value);",
+   "public NodePointer createChild( JXPathContext context, QName name, int index);",
+   "public NodePointer createChild(JXPathContext context, QName name, int index, Object value);",
+   "public NodePointer createAttribute(JXPathContext context, QName name);",
+   "public void remove();",
+   "public String asPath();",
+   "public int hashCode();",
+   "public boolean equals(Object object);",
+   "public static String getPrefix(Node node);",
+   "public static String getLocalName(Node node);",
+   "public static String getNamespaceURI(Node node);",
+   "public Object getValue();",
+   "public Pointer getPointerByID(JXPathContext context, String id);",
+   "public int compareChildNodePointers( NodePointer pointer1, NodePointer pointer2);"
+  ],
+  "type_signatures": [
+   "public abstract class NodeTest {  }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

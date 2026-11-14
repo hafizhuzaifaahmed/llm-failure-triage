@@ -1,0 +1,175 @@
+{
+ "bug_name": "JxPath_13",
+ "call_sites": [
+  {
+   "line": 626,
+   "lines": [
+    621,
+    622,
+    623,
+    624,
+    625,
+    626,
+    627,
+    628,
+    629,
+    630,
+    631
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/JXPathContextReferenceImpl.java",
+   "snippet": "        return NodePointer.newNodePointer(name, VariablePointerFactory\n                .contextWrapper(this), getLocale());\n    }\n\n    public Function getFunction(QName functionName, Object[] parameters) {\n        String namespace = functionName.getPrefix();\n        String name = functionName.getName();\n        JXPathContext funcCtx = this;\n        Function func = null;\n        Functions funcs;\n        while (funcCtx != null) {"
+  },
+  {
+   "line": 661,
+   "lines": [
+    656,
+    657,
+    658,
+    659,
+    660,
+    661,
+    662,
+    663,
+    664,
+    665,
+    666
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/JXPathContextReferenceImpl.java",
+   "snippet": "    /**\n     * {@inheritDoc}\n     * @see org.apache.commons.jxpath.JXPathContext#getPrefix(java.lang.String)\n     */\n    public String getPrefix(String namespaceURI) {\n        return namespaceResolver.getPrefix(namespaceURI);\n    }\n\n    public void setNamespaceContextPointer(Pointer pointer) {\n        if (namespaceResolver.isSealed()) {\n            namespaceResolver = (NamespaceResolver) namespaceResolver.clone();"
+  },
+  {
+   "line": 160,
+   "lines": [
+    155,
+    156,
+    157,
+    158,
+    159,
+    160,
+    161,
+    162,
+    163,
+    164,
+    165
+   ],
+   "patch_lines_removed": true,
+   "path": "src/java/org/apache/commons/jxpath/ri/NamespaceResolver.java",
+   "snippet": "                reverseMap.put(entry.getValue(), entry.getKey());\n            }\n        }\n        String prefix = (String) reverseMap.get(namespaceURI);\n        if (prefix == null && parent != null) {\n            return parent.getPrefix(namespaceURI);\n        }\n    }\n"
+  },
+  {
+   "line": 80,
+   "lines": [
+    75,
+    76,
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/axes/NamespaceContext.java",
+   "snippet": "                return false;\n            }\n\n            NodeNameTest nodeNameTest = (NodeNameTest) nodeTest;\n            QName testName = nodeNameTest.getNodeName();\n            if (testName.getPrefix() != null) {\n                return false;\n            }\n            if (nodeNameTest.isWildcard()) {\n                iterator =\n                    parentContext.getCurrentNodePointer().namespaceIterator();"
+  },
+  {
+   "line": 798,
+   "lines": [
+    793,
+    794,
+    795,
+    796,
+    797,
+    798,
+    799,
+    800,
+    801,
+    802,
+    803
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/axes/SimplePathInterpreter.java",
+   "snippet": "        Step step) \n    {\n        if (step.getAxis() == Compiler.AXIS_CHILD) {\n            NodeTest nodeTest = step.getNodeTest();\n            QName qname = ((NodeNameTest) nodeTest).getNodeName();\n            String prefix = qname.getPrefix();\n            if (prefix != null) {\n                String namespaceURI = context.getJXPathContext()\n                        .getNamespaceURI(prefix);\n                nodeTest = new NodeNameTest(qname, namespaceURI);\n            }"
+  }
+ ],
+ "class_simple": "NamespaceResolver",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Namespace resolver for JXPathContextReferenceImpl.\n *\n * @author Dmitri Plotnikov\n * @version $Revision$ $Date$\n */\npublic",
+  "method_javadoc": "/**\n     * Get the prefix associated with the specifed namespace URI.\n     * @param namespaceURI the ns URI to check.\n     * @return String prefix\n     */"
+ },
+ "fields": [
+  "final protected NamespaceResolver parent",
+  "protected HashMap namespaceMap",
+  "protected HashMap reverseMap",
+  "protected NodePointer pointer",
+  "private boolean sealed"
+ ],
+ "focal_class": "org.apache.commons.jxpath.ri.NamespaceResolver",
+ "focal_id": "JxPath_13::org.apache.commons.jxpath.ri.NamespaceResolver::getPrefix(String)",
+ "focal_method_name": "getPrefix",
+ "generations": 3,
+ "impl_B": "public synchronized String getPrefix(String namespaceURI) {\n\n    /**\n     * Get the nearest prefix found that matches an externally-registered namespace. \n     * @param namespaceURI\n     * @return String prefix if found.\n     * @since JXPath 1.3\n     */\n        if (reverseMap == null) {\n            reverseMap = new HashMap();\n            NodeIterator ni = pointer.namespaceIterator();\n            if (ni != null) {\n                for (int position = 1; ni.setPosition(position); position++) {\n                    NodePointer nsPointer = ni.getNodePointer();\n                    String uri = nsPointer.getNamespaceURI();                    \n                    String prefix = nsPointer.getName().getName();\n                    if (!\"\".equals(prefix)) {\n                        reverseMap.put(uri, prefix);\n                    }\n                }\n            }\n            Iterator it = namespaceMap.entrySet().iterator();\n            while (it.hasNext()) {\n                Map.Entry entry = (Map.Entry) it.next();\n                reverseMap.put(entry.getValue(), entry.getKey());\n            }\n        }\n        String prefix = (String) reverseMap.get(namespaceURI);\n        if (prefix == null && parent != null) {\n            return parent.getPrefix(namespaceURI);\n        }\n        return prefix;\n    }",
+ "imports": [
+  "java.util.HashMap",
+  "java.util.Iterator",
+  "java.util.Map",
+  "org.apache.commons.jxpath.Pointer",
+  "org.apache.commons.jxpath.ri.model.NodeIterator",
+  "org.apache.commons.jxpath.ri.model.NodePointer"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.jxpath.ri",
+ "project": "JxPath",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Registers a namespace prefix.\n     * \n     * @param prefix A namespace prefix\n     * @param namespaceURI A URI for that prefix\n     */",
+   "name": "registerNamespace"
+  },
+  {
+   "javadoc": "/**\n     * Register a namespace for the expression context.\n     * @param pointer the Pointer to set.\n     */",
+   "name": "setNamespaceContextPointer"
+  },
+  {
+   "javadoc": "/**\n     * Get the namespace context pointer.\n     * @return Pointer\n     */",
+   "name": "getNamespaceContextPointer"
+  },
+  {
+   "javadoc": "/**\n     * Given a prefix, returns a registered namespace URI. If the requested\n     * prefix was not defined explicitly using the registerNamespace method,\n     * JXPathContext will then check the context node to see if the prefix is\n     * defined there. See\n     * {@link #setNamespaceContextPointer(NodePointer) setNamespaceContextPointer}.\n     * \n     * @param prefix The namespace prefix to look up\n     * @return namespace URI or null if the prefix is undefined.\n     */",
+   "name": "getNamespaceURI"
+  },
+  {
+   "javadoc": "/**\n     * Learn whether this NamespaceResolver has been sealed.\n     * @return\n     */",
+   "name": "isSealed"
+  },
+  {
+   "javadoc": "/**\n     * Seal this {@link NamespaceResolver}.\n     */",
+   "name": "seal"
+  },
+  {
+   "javadoc": "/**\n     * {@inheritDoc}\n     * @see java.lang.Object#clone()\n     */",
+   "name": "clone"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class NamespaceResolver implements Cloneable",
+  "constructors": [
+   "public NamespaceResolver();",
+   "public NamespaceResolver(NamespaceResolver parent);"
+  ],
+  "focal_signature": "public synchronized String getPrefix(String namespaceURI)",
+  "methods": [
+   "public synchronized void registerNamespace(String prefix, String namespaceURI);",
+   "public void setNamespaceContextPointer(NodePointer pointer);",
+   "public Pointer getNamespaceContextPointer();",
+   "public synchronized String getNamespaceURI(String prefix);",
+   "public boolean isSealed();",
+   "public void seal();",
+   "public Object clone();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

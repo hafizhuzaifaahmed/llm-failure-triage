@@ -1,0 +1,14 @@
+{
+  "assembled": true,
+  "call_key": "68511a5d18cfa88d8dc549a0d6ff90d05f6b5a03421deb751f081e218ac816e4",
+  "candidate_id": "1986a9041231c7291c72",
+  "class_name": "Timer_isCounting_TriageGen0Test",
+  "dataset": "D1C_CTRL",
+  "focal_id": "Mockito_2::org.mockito.internal.util.Timer::isCounting()",
+  "generation": 0,
+  "model_returned": "gemma4:26b",
+  "n_tests": 4,
+  "package": "org.mockito.internal.util",
+  "source": "package org.mockito.internal.util;\n\nimport java.io.*;\nimport java.math.*;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class Timer_isCounting_TriageGen0Test {\n\n    @Test\n    public void testIsCounting_TrueWhenWithinDuration() throws InterruptedException {\n        // Arrange\n        long duration = 500L;\n        Timer timer = new Timer(duration);\n        timer.start();\n\n        // Act\n        boolean result = timer.isCounting();\n\n        // Assert\n        assertTrue(\"Should be counting immediately after start\", result);\n    }\n\n    @Test\n    public void testIsCounting_TrueWhenNearEnd() throws InterruptedException {\n        // Arrange\n        long duration = 100L;\n        Timer timer = new Timer(duration);\n        timer.start();\n        \n        // Sleep for slightly less than duration\n        Thread.sleep(50L);\n\n        // Act\n        boolean result = timer.isCounting();\n\n        // Assert\n        assertTrue(\"Should still be counting before duration expires\", result);\n    }\n\n    @Test\n    public void testIsCounting_FalseWhenDurationExpired() throws InterruptedException {\n        // Arrange\n        long duration = 10L;\n        Timer timer = new Timer(duration);\n        timer.start();\n\n        // Act\n        // Sleep longer than the duration to ensure expiration\n        Thread.sleep(30L);\n        boolean result = timer.isCounting();\n\n        // Assert\n        assertFalse(\"Should not be counting after duration has passed\", result);\n    }\n\n    @Test(expected = AssertionError.class)\n    public void testIsCounting_ThrowsAssertionErrorWhenNotStarted() {\n        // Arrange\n        Timer timer = new Timer(1000L);\n\n        // Act\n        // Calling isCounting before start() should trigger 'assert startTime != -1'\n        timer.isCounting();\n    }\n}\n",
+  "tranche": "CTRL"
+}

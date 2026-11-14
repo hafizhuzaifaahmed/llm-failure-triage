@@ -1,0 +1,385 @@
+{
+ "base_focal_id": "Time_5::org.joda.time.Period::normalizedStandard(PeriodType)",
+ "bug_name": "Time_5",
+ "call_sites": [
+  {
+   "line": 1581,
+   "lines": [
+    1576,
+    1577,
+    1578,
+    1579,
+    1580,
+    1581,
+    1582,
+    1583,
+    1584,
+    1585,
+    1586
+   ],
+   "path": "src/main/java/org/joda/time/Period.java",
+   "snippet": "     * @return a normalized period equivalent to this period\n     * @throws ArithmeticException if any field is too large to be represented\n     * @since 1.5\n     */\n    public Period normalizedStandard() {\n        return normalizedStandard(PeriodType.standard());\n    }\n\n    //-----------------------------------------------------------------------\n    /**\n     * Normalizes this period using standard rules, assuming a 12 month year,"
+  }
+ ],
+ "class_simple": "Period",
+ "dataset": "D2",
+ "doc": {
+  "class_javadoc": "/**\n * An immutable time period specifying a set of duration field values.\n * <p>\n * A time period is divided into a number of fields, such as hours and seconds.\n * Which fields are supported is defined by the PeriodType class.\n * The default is the standard period type, which supports years, months, weeks, days,\n * hours, minutes, seconds and millis.\n * <p>\n * When this time period is added to an instant, the effect is of adding each field in turn.\n * As a result, this takes into account daylight savings time.\n * Adding a time period of 1 day to the day before daylight savings starts will only add\n * 23 hours rather than 24 to ensure that the time remains the same.\n * If this is not the behaviour you want, then see {@link Duration}.\n * <p>\n * The definition of a period also affects the equals method. A period of 1\n * day is not equal to a period of 24 hours, nor 1 hour equal to 60 minutes.\n * This is because periods represent an abstracted definition of a time period\n * (eg. a day may not actually be 24 hours, it might be 23 or 25 at daylight\n * savings boundary). To compare the actual duration of two periods, convert\n * both to durations using toDuration, an operation that emphasises that the\n * result may differ according to the date you choose.\n * <p>\n * Period is thread-safe and immutable, provided that the PeriodType is as well.\n * All standard PeriodType classes supplied are thread-safe and immutable.\n *\n * @author Brian S O'Neill\n * @author Stephen Colebourne\n * @since 1.0\n * @see MutablePeriod\n */\npublic final",
+  "method_javadoc": "/**\n     * Normalizes this period using standard rules, assuming a 12 month year,\n     * 7 day week, 24 hour day, 60 minute hour and 60 second minute,\n     * providing control over how the result is split into fields.\n     * <p>\n     * This method allows you to normalize a period.\n     * However to achieve this it makes the assumption that all years are\n     * 12 months, all weeks are 7 days, all days are 24 hours,\n     * all hours are 60 minutes and all minutes are 60 seconds. This is not\n     * true when daylight savings time is considered, and may also not be true\n     * for some chronologies. However, it is included as it is a useful operation\n     * for many applications and business rules.\n     * <p>\n     * If the period contains years or months, then the months will be\n     * normalized to be between 0 and 11. The days field and below will be\n     * normalized as necessary, however this will not overflow into the months\n     * field. Thus a period of 1 year 15 months will normalize to 2 years 3 months.\n     * But a period of 1 month 40 days will remain as 1 month 40 days.\n     * <p>\n     * The PeriodType parameter controls how the result is created. It allows\n     * you to omit certain fields from the result if desired. For example,\n     * you may not want the result to include weeks, in which case you pass\n     * in <code>PeriodType.yearMonthDayTime()</code>.\n     * \n     * @param type  the period type of the new period, null means standard type\n     * @return a normalized period equivalent to this period\n     * @throws ArithmeticException if any field is too large to be represented\n     * @throws UnsupportedOperationException if this period contains non-zero\n     *  years or months but the specified period type does not support them\n     * @since 1.5\n     */"
+ },
+ "fields": [
+  "public static final Period ZERO",
+  "private static final long serialVersionUID"
+ ],
+ "focal_class": "org.joda.time.Period",
+ "focal_id": "Time_5::org.joda.time.Period::normalizedStandard(PeriodType)#m517",
+ "focal_method_name": "normalizedStandard",
+ "impl_B": "public Period normalizedStandard(PeriodType type) {\n        type = DateTimeUtils.getPeriodType(type);\n        long millis = getMillis();  // no overflow can happen, even with Integer.MAX_VALUEs\n        millis += (((long) getSeconds()) * ((long) DateTimeConstants.MILLIS_PER_SECOND));\n        millis += (((long) getMinutes()) * ((long) DateTimeConstants.MILLIS_PER_MINUTE));\n        millis += (((long) getHours()) * ((long) DateTimeConstants.MILLIS_PER_HOUR));\n        millis += (((long) getDays()) * ((long) DateTimeConstants.MILLIS_PER_DAY));\n        millis += (((long) getWeeks()) * ((long) DateTimeConstants.MILLIS_PER_WEEK));\n        Period result = new Period(millis, type, ISOChronology.getInstanceUTC());\n        int years = getYears();\n        int months = getMonths();\n        if (years != 0 || months != 0) {\n            long totalMonths = years * 12L / months;\n            if (type.isSupported(DurationFieldType.YEARS_TYPE)) {\n                int normalizedYears = FieldUtils.safeToInt(totalMonths / 12);\n                result = result.withYears(normalizedYears);\n                totalMonths = totalMonths - (normalizedYears * 12);\n            }\n            if (type.isSupported(DurationFieldType.MONTHS_TYPE)) {\n                int normalizedMonths = FieldUtils.safeToInt(totalMonths);\n                result = result.withMonths(normalizedMonths);\n                totalMonths = totalMonths - normalizedMonths;\n            }\n            if (totalMonths != 0) {\n                throw new UnsupportedOperationException(\"Unable to normalize as PeriodType is missing either years or months but period has a month/year amount: \" + toString());\n            }\n        }\n        return result;\n    }",
+ "imports": [
+  "java.io.Serializable",
+  "org.joda.convert.FromString",
+  "org.joda.time.base.BasePeriod",
+  "org.joda.time.chrono.ISOChronology",
+  "org.joda.time.field.FieldUtils",
+  "org.joda.time.format.ISOPeriodFormat",
+  "org.joda.time.format.PeriodFormatter"
+ ],
+ "javadoc_edited_by_fix": false,
+ "mutant_id": 517,
+ "operator": "AOR",
+ "package": "org.joda.time",
+ "project": "Time",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Parses a {@code Period} from the specified string.\n     * <p>\n     * This uses {@link ISOPeriodFormat#standard()}.\n     * \n     * @param str  the string to parse, not null\n     * @since 2.0\n     */",
+   "name": "parse"
+  },
+  {
+   "javadoc": "/**\n     * Parses a {@code Period} from the specified string using a formatter.\n     * \n     * @param str  the string to parse, not null\n     * @param formatter  the formatter to use, not null\n     * @since 2.0\n     */",
+   "name": "parse"
+  },
+  {
+   "javadoc": "/**\n     * Create a period with a specified number of years.\n     * <p>\n     * The standard period type is used, thus you can add other fields such\n     * as months or days using the <code>withXxx()</code> methods.\n     * For example, <code>Period.years(2).withMonths(6);</code>\n     * <p>\n     * If you want a year-based period that cannot have other fields added,\n     * then you should consider using {@link Years}.\n     *\n     * @param years  the amount of years in this period\n     * @return the period\n     */",
+   "name": "years"
+  },
+  {
+   "javadoc": "/**\n     * Create a period with a specified number of months.\n     * <p>\n     * The standard period type is used, thus you can add other fields such\n     * as years or days using the <code>withXxx()</code> methods.\n     * For example, <code>Period.months(2).withDays(6);</code>\n     * <p>\n     * If you want a month-based period that cannot have other fields added,\n     * then you should consider using {@link Months}.\n     *\n     * @param months  the amount of months in this period\n     * @return the period\n     */",
+   "name": "months"
+  },
+  {
+   "javadoc": "/**\n     * Create a period with a specified number of weeks.\n     * <p>\n     * The standard period type is used, thus you can add other fields such\n     * as months or days using the <code>withXxx()</code> methods.\n     * For example, <code>Period.weeks(2).withDays(6);</code>\n     * <p>\n     * If you want a week-based period that cannot have other fields added,\n     * then you should consider using {@link Weeks}.\n     *\n     * @param weeks  the amount of weeks in this period\n     * @return the period\n     */",
+   "name": "weeks"
+  },
+  {
+   "javadoc": "/**\n     * Create a period with a specified number of days.\n     * <p>\n     * The standard period type is used, thus you can add other fields such\n     * as months or weeks using the <code>withXxx()</code> methods.\n     * For example, <code>Period.days(2).withHours(6);</code>\n     * <p>\n     * If you want a day-based period that cannot have other fields added,\n     * then you should consider using {@link Days}.\n     *\n     * @param days  the amount of days in this period\n     * @return the period\n     */",
+   "name": "days"
+  },
+  {
+   "javadoc": "/**\n     * Create a period with a specified number of hours.\n     * <p>\n     * The standard period type is used, thus you can add other fields such\n     * as months or days using the <code>withXxx()</code> methods.\n     * For example, <code>Period.hours(2).withMinutes(30);</code>\n     * <p>\n     * If you want a hour-based period that cannot have other fields added,\n     * then you should consider using {@link Hours}.\n     *\n     * @param hours  the amount of hours in this period\n     * @return the period\n     */",
+   "name": "hours"
+  },
+  {
+   "javadoc": "/**\n     * Create a period with a specified number of minutes.\n     * <p>\n     * The standard period type is used, thus you can add other fields such\n     * as days or hours using the <code>withXxx()</code> methods.\n     * For example, <code>Period.minutes(2).withSeconds(30);</code>\n     * <p>\n     * If you want a minute-based period that cannot have other fields added,\n     * then you should consider using {@link Minutes}.\n     *\n     * @param minutes  the amount of minutes in this period\n     * @return the period\n     */",
+   "name": "minutes"
+  },
+  {
+   "javadoc": "/**\n     * Create a period with a specified number of seconds.\n     * <p>\n     * The standard period type is used, thus you can add other fields such\n     * as days or hours using the <code>withXxx()</code> methods.\n     * For example, <code>Period.seconds(2).withMillis(30);</code>\n     * <p>\n     * If you want a second-based period that cannot have other fields added,\n     * then you should consider using {@link Seconds}.\n     *\n     * @param seconds  the amount of seconds in this period\n     * @return the period\n     */",
+   "name": "seconds"
+  },
+  {
+   "javadoc": "/**\n     * Create a period with a specified number of millis.\n     * <p>\n     * The standard period type is used, thus you can add other fields such\n     * as days or hours using the <code>withXxx()</code> methods.\n     * For example, <code>Period.millis(20).withSeconds(30);</code>\n     *\n     * @param millis  the amount of millis in this period\n     * @return the period\n     */",
+   "name": "millis"
+  },
+  {
+   "javadoc": "/**\n     * Creates a period from two partially specified times, calculating\n     * by field difference.\n     * <p>\n     * The two partials must contain the same fields, thus you can specify\n     * two <code>LocalDate</code> objects, or two <code>LocalTime</code> objects,\n     * but not one of each. Also, the partial may not contain overlapping\n     * fields, such as dayOfWeek and dayOfMonth.\n     * <p>\n     * Calculation by field difference works by extracting the difference\n     * one field at a time and not wrapping into other fields.\n     * Thus 2005-06-09/2007-04-12 will yield P1Y-2M3D.\n     * <p>\n     * For example, you have an event that always runs from the 27th of\n     * each month to the 2nd of the next month. If you calculate this\n     * period using a standard constructor, then you will get between\n     * P3D and P6D depending on the month. If you use this method, then\n     * you will get P1M-25D. This field-difference based period can\n     * be successfully applied to each month of the year to obtain the\n     * correct end date for a given start date.\n     *\n     * @param start  the start of the period, must not be null\n     * @param end  the end of the period, must not be null\n     * @throws IllegalArgumentException if the partials are null or invalid\n     * @since 1.1\n     */",
+   "name": "fieldDifference"
+  },
+  {
+   "javadoc": "/**\n     * Get this period as an immutable <code>Period</code> object\n     * by returning <code>this</code>.\n     * \n     * @return <code>this</code>\n     */",
+   "name": "toPeriod"
+  },
+  {
+   "javadoc": "/**\n     * Gets the years field part of the period.\n     * \n     * @return the number of years in the period, zero if unsupported\n     */",
+   "name": "getYears"
+  },
+  {
+   "javadoc": "/**\n     * Gets the months field part of the period.\n     * \n     * @return the number of months in the period, zero if unsupported\n     */",
+   "name": "getMonths"
+  },
+  {
+   "javadoc": "/**\n     * Gets the weeks field part of the period.\n     * \n     * @return the number of weeks in the period, zero if unsupported\n     */",
+   "name": "getWeeks"
+  },
+  {
+   "javadoc": "/**\n     * Gets the days field part of the period.\n     * \n     * @return the number of days in the period, zero if unsupported\n     */",
+   "name": "getDays"
+  },
+  {
+   "javadoc": "/**\n     * Gets the hours field part of the period.\n     * \n     * @return the number of hours in the period, zero if unsupported\n     */",
+   "name": "getHours"
+  },
+  {
+   "javadoc": "/**\n     * Gets the minutes field part of the period.\n     * \n     * @return the number of minutes in the period, zero if unsupported\n     */",
+   "name": "getMinutes"
+  },
+  {
+   "javadoc": "/**\n     * Gets the seconds field part of the period.\n     * \n     * @return the number of seconds in the period, zero if unsupported\n     */",
+   "name": "getSeconds"
+  },
+  {
+   "javadoc": "/**\n     * Gets the millis field part of the period.\n     * \n     * @return the number of millis in the period, zero if unsupported\n     */",
+   "name": "getMillis"
+  },
+  {
+   "javadoc": "/**\n     * Creates a new Period instance with the same field values but\n     * different PeriodType.\n     * <p>\n     * This period instance is immutable and unaffected by this method call.\n     * \n     * @param type  the period type to use, null means standard\n     * @return the new period instance\n     * @throws IllegalArgumentException if the new period won't accept all of the current fields\n     */",
+   "name": "withPeriodType"
+  },
+  {
+   "javadoc": "/**\n     * Creates a new Period instance with the fields from the specified period\n     * copied on top of those from this period.\n     * <p>\n     * This period instance is immutable and unaffected by this method call.\n     * \n     * @param period  the period to copy from, null ignored\n     * @return the new period instance\n     * @throws IllegalArgumentException if a field type is unsupported\n     */",
+   "name": "withFields"
+  },
+  {
+   "javadoc": "/**\n     * Creates a new Period instance with the specified field set to a new value.\n     * <p>\n     * This period instance is immutable and unaffected by this method call.\n     * \n     * @param field  the field to set, not null\n     * @param value  the value to set to\n     * @return the new period instance\n     * @throws IllegalArgumentException if the field type is null or unsupported\n     */",
+   "name": "withField"
+  },
+  {
+   "javadoc": "/**\n     * Creates a new Period instance with the valueToAdd added to the specified field.\n     * <p>\n     * This period instance is immutable and unaffected by this method call.\n     * \n     * @param field  the field to set, not null\n     * @param value  the value to add\n     * @return the new period instance\n     * @throws IllegalArgumentException if the field type is null or unsupported\n     */",
+   "name": "withFieldAdded"
+  },
+  {
+   "javadoc": "/**\n     * Returns a new period with the specified number of years.\n     * <p>\n     * This period instance is immutable and unaffected by this method call.\n     *\n     * @param years  the amount of years to add, may be negative\n     * @return the new period with the increased years\n     * @throws UnsupportedOperationException if the field is not supported\n     */",
+   "name": "withYears"
+  },
+  {
+   "javadoc": "/**\n     * Returns a new period with the specified number of months.\n     * <p>\n     * This period instance is immutable and unaffected by this method call.\n     *\n     * @param months  the amount of months to add, may be negative\n     * @return the new period with the increased months\n     * @throws UnsupportedOperationException if the field is not supported\n     */",
+   "name": "withMonths"
+  },
+  {
+   "javadoc": "/**\n     * Returns a new period with the specified number of weeks.\n     * <p>\n     * This period instance is immutable and unaffected by this method call.\n     *\n     * @param weeks  the amount of weeks to add, may be negative\n     * @return the new period with the increased weeks\n     * @throws UnsupportedOperationException if the field is not supported\n     */",
+   "name": "withWeeks"
+  },
+  {
+   "javadoc": "/**\n     * Returns a new period with the specified number of days.\n     * <p>\n     * This period instance is immutable and unaffected by this method call.\n     *\n     * @param days  the amount of days to add, may be negative\n     * @return the new period with the increased days\n     * @throws UnsupportedOperationException if the field is not supported\n     */",
+   "name": "withDays"
+  },
+  {
+   "javadoc": "/**\n     * Returns a new period with the specified number of hours.\n     * <p>\n     * This period instance is immutable and unaffected by this method call.\n     *\n     * @param hours  the amount of hours to add, may be negative\n     * @return the new period with the increased hours\n     * @throws UnsupportedOperationException if the field is not supported\n     */",
+   "name": "withHours"
+  },
+  {
+   "javadoc": "/**\n     * Returns a new period with the specified number of minutes.\n     * <p>\n     * This period instance is immutable and unaffected by this method call.\n     *\n     * @param minutes  the amount of minutes to add, may be negative\n     * @return the new period with the increased minutes\n     * @throws UnsupportedOperationException if the field is not supported\n     */",
+   "name": "withMinutes"
+  },
+  {
+   "javadoc": "/**\n     * Returns a new period with the specified number of seconds.\n     * <p>\n     * This period instance is immutable and unaffected by this method call.\n     *\n     * @param seconds  the amount of seconds to add, may be negative\n     * @return the new period with the increased seconds\n     * @throws UnsupportedOperationException if the field is not supported\n     */",
+   "name": "withSeconds"
+  },
+  {
+   "javadoc": "/**\n     * Returns a new period with the specified number of millis.\n     * <p>\n     * This period instance is immutable and unaffected by this method call.\n     *\n     * @param millis  the amount of millis to add, may be negative\n     * @return the new period with the increased millis\n     * @throws UnsupportedOperationException if the field is not supported\n     */",
+   "name": "withMillis"
+  },
+  {
+   "javadoc": "/**\n     * Returns a new period with the specified period added.\n     * <p>\n     * Each field of the period is added separately. Thus a period of\n     * 2 hours 30 minutes plus 3 hours 40 minutes will produce a result\n     * of 5 hours 70 minutes - see {@link #normalizedStandard()}.\n     * <p>\n     * If the period being added contains a non-zero amount for a field that\n     * is not supported in this period then an exception is thrown.\n     * <p>\n     * This period instance is immutable and unaffected by this method call.\n     *\n     * @param period  the period to add, null adds zero and returns this\n     * @return the new updated period\n     * @throws UnsupportedOperationException if any field is not supported\n     * @since 1.5\n     */",
+   "name": "plus"
+  },
+  {
+   "javadoc": "/**\n     * Returns a new period with the specified number of years added.\n     * <p>\n     * This period instance is immutable and unaffected by this method call.\n     *\n     * @param years  the amount of years to add, may be negative\n     * @return the new period with the increased years\n     * @throws UnsupportedOperationException if the field is not supported\n     */",
+   "name": "plusYears"
+  },
+  {
+   "javadoc": "/**\n     * Returns a new period plus the specified number of months added.\n     * <p>\n     * This period instance is immutable and unaffected by this method call.\n     *\n     * @param months  the amount of months to add, may be negative\n     * @return the new period plus the increased months\n     * @throws UnsupportedOperationException if the field is not supported\n     */",
+   "name": "plusMonths"
+  },
+  {
+   "javadoc": "/**\n     * Returns a new period plus the specified number of weeks added.\n     * <p>\n     * This period instance is immutable and unaffected by this method call.\n     *\n     * @param weeks  the amount of weeks to add, may be negative\n     * @return the new period plus the increased weeks\n     * @throws UnsupportedOperationException if the field is not supported\n     */",
+   "name": "plusWeeks"
+  },
+  {
+   "javadoc": "/**\n     * Returns a new period plus the specified number of days added.\n     * <p>\n     * This period instance is immutable and unaffected by this method call.\n     *\n     * @param days  the amount of days to add, may be negative\n     * @return the new period plus the increased days\n     * @throws UnsupportedOperationException if the field is not supported\n     */",
+   "name": "plusDays"
+  },
+  {
+   "javadoc": "/**\n     * Returns a new period plus the specified number of hours added.\n     * <p>\n     * This period instance is immutable and unaffected by this method call.\n     *\n     * @param hours  the amount of hours to add, may be negative\n     * @return the new period plus the increased hours\n     * @throws UnsupportedOperationException if the field is not supported\n     */",
+   "name": "plusHours"
+  },
+  {
+   "javadoc": "/**\n     * Returns a new period plus the specified number of minutes added.\n     * <p>\n     * This period instance is immutable and unaffected by this method call.\n     *\n     * @param minutes  the amount of minutes to add, may be negative\n     * @return the new period plus the increased minutes\n     * @throws UnsupportedOperationException if the field is not supported\n     */",
+   "name": "plusMinutes"
+  },
+  {
+   "javadoc": "/**\n     * Returns a new period plus the specified number of seconds added.\n     * <p>\n     * This period instance is immutable and unaffected by this method call.\n     *\n     * @param seconds  the amount of seconds to add, may be negative\n     * @return the new period plus the increased seconds\n     * @throws UnsupportedOperationException if the field is not supported\n     */",
+   "name": "plusSeconds"
+  },
+  {
+   "javadoc": "/**\n     * Returns a new period plus the specified number of millis added.\n     * <p>\n     * This period instance is immutable and unaffected by this method call.\n     *\n     * @param millis  the amount of millis to add, may be negative\n     * @return the new period plus the increased millis\n     * @throws UnsupportedOperationException if the field is not supported\n     */",
+   "name": "plusMillis"
+  },
+  {
+   "javadoc": "/**\n     * Returns a new period with the specified period subtracted.\n     * <p>\n     * Each field of the period is subtracted separately. Thus a period of\n     * 3 hours 30 minutes minus 2 hours 40 minutes will produce a result\n     * of 1 hour and -10 minutes - see {@link #normalizedStandard()}.\n     * <p>\n     * If the period being added contains a non-zero amount for a field that\n     * is not supported in this period then an exception is thrown.\n     * <p>\n     * This period instance is immutable and unaffected by this method call.\n     *\n     * @param period  the period to add, null adds zero and returns this\n     * @return the new updated period\n     * @throws UnsupportedOperationException if any field is not supported\n     * @since 1.5\n     */",
+   "name": "minus"
+  },
+  {
+   "javadoc": "/**\n     * Returns a new period with the specified number of years taken away.\n     * <p>\n     * This period instance is immutable and unaffected by this method call.\n     *\n     * @param years  the amount of years to take away, may be negative\n     * @return the new period with the increased years\n     * @throws UnsupportedOperationException if the field is not supported\n     */",
+   "name": "minusYears"
+  },
+  {
+   "javadoc": "/**\n     * Returns a new period minus the specified number of months taken away.\n     * <p>\n     * This period instance is immutable and unaffected by this method call.\n     *\n     * @param months  the amount of months to take away, may be negative\n     * @return the new period minus the increased months\n     * @throws UnsupportedOperationException if the field is not supported\n     */",
+   "name": "minusMonths"
+  },
+  {
+   "javadoc": "/**\n     * Returns a new period minus the specified number of weeks taken away.\n     * <p>\n     * This period instance is immutable and unaffected by this method call.\n     *\n     * @param weeks  the amount of weeks to take away, may be negative\n     * @return the new period minus the increased weeks\n     * @throws UnsupportedOperationException if the field is not supported\n     */",
+   "name": "minusWeeks"
+  },
+  {
+   "javadoc": "/**\n     * Returns a new period minus the specified number of days taken away.\n     * <p>\n     * This period instance is immutable and unaffected by this method call.\n     *\n     * @param days  the amount of days to take away, may be negative\n     * @return the new period minus the increased days\n     * @throws UnsupportedOperationException if the field is not supported\n     */",
+   "name": "minusDays"
+  },
+  {
+   "javadoc": "/**\n     * Returns a new period minus the specified number of hours taken away.\n     * <p>\n     * This period instance is immutable and unaffected by this method call.\n     *\n     * @param hours  the amount of hours to take away, may be negative\n     * @return the new period minus the increased hours\n     * @throws UnsupportedOperationException if the field is not supported\n     */",
+   "name": "minusHours"
+  },
+  {
+   "javadoc": "/**\n     * Returns a new period minus the specified number of minutes taken away.\n     * <p>\n     * This period instance is immutable and unaffected by this method call.\n     *\n     * @param minutes  the amount of minutes to take away, may be negative\n     * @return the new period minus the increased minutes\n     * @throws UnsupportedOperationException if the field is not supported\n     */",
+   "name": "minusMinutes"
+  },
+  {
+   "javadoc": "/**\n     * Returns a new period minus the specified number of seconds taken away.\n     * <p>\n     * This period instance is immutable and unaffected by this method call.\n     *\n     * @param seconds  the amount of seconds to take away, may be negative\n     * @return the new period minus the increased seconds\n     * @throws UnsupportedOperationException if the field is not supported\n     */",
+   "name": "minusSeconds"
+  },
+  {
+   "javadoc": "/**\n     * Returns a new period minus the specified number of millis taken away.\n     * <p>\n     * This period instance is immutable and unaffected by this method call.\n     *\n     * @param millis  the amount of millis to take away, may be negative\n     * @return the new period minus the increased millis\n     * @throws UnsupportedOperationException if the field is not supported\n     */",
+   "name": "minusMillis"
+  },
+  {
+   "javadoc": "/**\n     * Returns a new instance with each element in this period multiplied\n     * by the specified scalar.\n     *\n     * @param scalar  the scalar to multiply by, not null\n     * @return a {@code Period} based on this period with the amounts multiplied by the scalar, never null\n     * @throws ArithmeticException if the capacity of any field is exceeded\n     * @since 2.1\n     */",
+   "name": "multipliedBy"
+  },
+  {
+   "javadoc": "/**\n     * Returns a new instance with each amount in this period negated.\n     *\n     * @return a {@code Period} based on this period with the amounts negated, never null\n     * @throws ArithmeticException if any field has the minimum value\n     * @since 2.1\n     */",
+   "name": "negated"
+  },
+  {
+   "javadoc": "/**\n     * Converts this period to a period in weeks assuming a\n     * 7 day week, 24 hour day, 60 minute hour and 60 second minute.\n     * <p>\n     * This method allows you to convert between different types of period.\n     * However to achieve this it makes the assumption that all\n     * weeks are 7 days, all days are 24 hours, all hours are 60 minutes and\n     * all minutes are 60 seconds. This is not true when daylight savings time\n     * is considered, and may also not be true for some unusual chronologies.\n     * However, it is included as it is a useful operation for many\n     * applications and business rules.\n     * <p>\n     * If the period contains years or months, an exception will be thrown.\n     * \n     * @return a period representing the number of standard weeks in this period\n     * @throws UnsupportedOperationException if the period contains years or months\n     * @throws ArithmeticException if the number of weeks is too large to be represented\n     * @since 1.5\n     */",
+   "name": "toStandardWeeks"
+  },
+  {
+   "javadoc": "/**\n     * Converts this period to a period in days assuming a\n     * 7 day week, 24 hour day, 60 minute hour and 60 second minute.\n     * <p>\n     * This method allows you to convert between different types of period.\n     * However to achieve this it makes the assumption that all\n     * weeks are 7 days, all days are 24 hours, all hours are 60 minutes and\n     * all minutes are 60 seconds. This is not true when daylight savings time\n     * is considered, and may also not be true for some unusual chronologies.\n     * However, it is included as it is a useful operation for many\n     * applications and business rules.\n     * <p>\n     * If the period contains years or months, an exception will be thrown.\n     * \n     * @return a period representing the number of standard days in this period\n     * @throws UnsupportedOperationException if the period contains years or months\n     * @throws ArithmeticException if the number of days is too large to be represented\n     * @since 1.5\n     */",
+   "name": "toStandardDays"
+  },
+  {
+   "javadoc": "/**\n     * Converts this period to a period in hours assuming a\n     * 7 day week, 24 hour day, 60 minute hour and 60 second minute.\n     * <p>\n     * This method allows you to convert between different types of period.\n     * However to achieve this it makes the assumption that all\n     * weeks are 7 days, all days are 24 hours, all hours are 60 minutes and\n     * all minutes are 60 seconds. This is not true when daylight savings time\n     * is considered, and may also not be true for some unusual chronologies.\n     * However, it is included as it is a useful operation for many\n     * applications and business rules.\n     * <p>\n     * If the period contains years or months, an exception will be thrown.\n     * \n     * @return a period representing the number of standard hours in this period\n     * @throws UnsupportedOperationException if the period contains years or months\n     * @throws ArithmeticException if the number of hours is too large to be represented\n     * @since 1.5\n     */",
+   "name": "toStandardHours"
+  },
+  {
+   "javadoc": "/**\n     * Converts this period to a period in minutes assuming a\n     * 7 day week, 24 hour day, 60 minute hour and 60 second minute.\n     * <p>\n     * This method allows you to convert between different types of period.\n     * However to achieve this it makes the assumption that all\n     * weeks are 7 days, all days are 24 hours, all hours are 60 minutes and\n     * all minutes are 60 seconds. This is not true when daylight savings time\n     * is considered, and may also not be true for some unusual chronologies.\n     * However, it is included as it is a useful operation for many\n     * applications and business rules.\n     * <p>\n     * If the period contains years or months, an exception will be thrown.\n     * \n     * @return a period representing the number of standard minutes in this period\n     * @throws UnsupportedOperationException if the period contains years or months\n     * @throws ArithmeticException if the number of minutes is too large to be represented\n     * @since 1.5\n     */",
+   "name": "toStandardMinutes"
+  },
+  {
+   "javadoc": "/**\n     * Converts this period to a period in seconds assuming a\n     * 7 day week, 24 hour day, 60 minute hour and 60 second minute.\n     * <p>\n     * This method allows you to convert between different types of period.\n     * However to achieve this it makes the assumption that all\n     * weeks are 7 days, all days are 24 hours, all hours are 60 minutes and\n     * all minutes are 60 seconds. This is not true when daylight savings time\n     * is considered, and may also not be true for some unusual chronologies.\n     * However, it is included as it is a useful operation for many\n     * applications and business rules.\n     * <p>\n     * If the period contains years or months, an exception will be thrown.\n     * \n     * @return a period representing the number of standard seconds in this period\n     * @throws UnsupportedOperationException if the period contains years or months\n     * @throws ArithmeticException if the number of seconds is too large to be represented\n     * @since 1.5\n     */",
+   "name": "toStandardSeconds"
+  },
+  {
+   "javadoc": "/**\n     * Converts this period to a duration assuming a\n     * 7 day week, 24 hour day, 60 minute hour and 60 second minute.\n     * <p>\n     * This method allows you to convert from a period to a duration.\n     * However to achieve this it makes the assumption that all\n     * weeks are 7 days, all days are 24 hours, all hours are 60 minutes and\n     * all minutes are 60 seconds. This is not true when daylight savings time\n     * is considered, and may also not be true for some unusual chronologies.\n     * However, it is included as it is a useful operation for many\n     * applications and business rules.\n     * <p>\n     * If the period contains years or months, an exception will be thrown.\n     * \n     * @return a duration equivalent to this period\n     * @throws UnsupportedOperationException if the period contains years or months\n     * @since 1.5\n     */",
+   "name": "toStandardDuration"
+  },
+  {
+   "javadoc": "/**\n     * Normalizes this period using standard rules, assuming a 12 month year,\n     * 7 day week, 24 hour day, 60 minute hour and 60 second minute.\n     * <p>\n     * This method allows you to normalize a period.\n     * However to achieve this it makes the assumption that all years are\n     * 12 months, all weeks are 7 days, all days are 24 hours,\n     * all hours are 60 minutes and all minutes are 60 seconds. This is not\n     * true when daylight savings time is considered, and may also not be true\n     * for some chronologies. However, it is included as it is a useful operation\n     * for many applications and business rules.\n     * <p>\n     * If the period contains years or months, then the months will be\n     * normalized to be between 0 and 11. The days field and below will be\n     * normalized as necessary, however this will not overflow into the months\n     * field. Thus a period of 1 year 15 months will normalize to 2 years 3 months.\n     * But a period of 1 month 40 days will remain as 1 month 40 days.\n     * <p>\n     * The result will always have a <code>PeriodType</code> of standard, thus\n     * days will be grouped into weeks.\n     * \n     * @return a normalized period equivalent to this period\n     * @throws ArithmeticException if any field is too large to be represented\n     * @since 1.5\n     */",
+   "name": "normalizedStandard"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public final class Period extends BasePeriod implements ReadablePeriod, Serializable",
+  "constructors": [
+   "public Period();",
+   "public Period(int hours, int minutes, int seconds, int millis);",
+   "public Period(int years, int months, int weeks, int days, int hours, int minutes, int seconds, int millis);",
+   "public Period(int years, int months, int weeks, int days, int hours, int minutes, int seconds, int millis, PeriodType type);",
+   "public Period(long duration);",
+   "public Period(long duration, PeriodType type);",
+   "public Period(long duration, Chronology chronology);",
+   "public Period(long duration, PeriodType type, Chronology chronology);",
+   "public Period(long startInstant, long endInstant);",
+   "public Period(long startInstant, long endInstant, PeriodType type);",
+   "public Period(long startInstant, long endInstant, Chronology chrono);",
+   "public Period(long startInstant, long endInstant, PeriodType type, Chronology chrono);",
+   "public Period(ReadableInstant startInstant, ReadableInstant endInstant);",
+   "public Period(ReadableInstant startInstant, ReadableInstant endInstant, PeriodType type);",
+   "public Period(ReadablePartial start, ReadablePartial end);",
+   "public Period(ReadablePartial start, ReadablePartial end, PeriodType type);",
+   "public Period(ReadableInstant startInstant, ReadableDuration duration);",
+   "public Period(ReadableInstant startInstant, ReadableDuration duration, PeriodType type);",
+   "public Period(ReadableDuration duration, ReadableInstant endInstant);",
+   "public Period(ReadableDuration duration, ReadableInstant endInstant, PeriodType type);",
+   "public Period(Object period);",
+   "public Period(Object period, PeriodType type);",
+   "public Period(Object period, Chronology chrono);",
+   "public Period(Object period, PeriodType type, Chronology chrono);"
+  ],
+  "focal_signature": "public Period normalizedStandard(PeriodType type)",
+  "methods": [
+   "public static Period parse(String str);",
+   "public static Period parse(String str, PeriodFormatter formatter);",
+   "public static Period years(int years);",
+   "public static Period months(int months);",
+   "public static Period weeks(int weeks);",
+   "public static Period days(int days);",
+   "public static Period hours(int hours);",
+   "public static Period minutes(int minutes);",
+   "public static Period seconds(int seconds);",
+   "public static Period millis(int millis);",
+   "public static Period fieldDifference(ReadablePartial start, ReadablePartial end);",
+   "public Period toPeriod();",
+   "public int getYears();",
+   "public int getMonths();",
+   "public int getWeeks();",
+   "public int getDays();",
+   "public int getHours();",
+   "public int getMinutes();",
+   "public int getSeconds();",
+   "public int getMillis();",
+   "public Period withPeriodType(PeriodType type);",
+   "public Period withFields(ReadablePeriod period);",
+   "public Period withField(DurationFieldType field, int value);",
+   "public Period withFieldAdded(DurationFieldType field, int value);",
+   "public Period withYears(int years);",
+   "public Period withMonths(int months);",
+   "public Period withWeeks(int weeks);",
+   "public Period withDays(int days);",
+   "public Period withHours(int hours);",
+   "public Period withMinutes(int minutes);",
+   "public Period withSeconds(int seconds);",
+   "public Period withMillis(int millis);",
+   "public Period plus(ReadablePeriod period);",
+   "public Period plusYears(int years);",
+   "public Period plusMonths(int months);",
+   "public Period plusWeeks(int weeks);",
+   "public Period plusDays(int days);",
+   "public Period plusHours(int hours);",
+   "public Period plusMinutes(int minutes);",
+   "public Period plusSeconds(int seconds);",
+   "public Period plusMillis(int millis);",
+   "public Period minus(ReadablePeriod period);",
+   "public Period minusYears(int years);",
+   "public Period minusMonths(int months);",
+   "public Period minusWeeks(int weeks);",
+   "public Period minusDays(int days);",
+   "public Period minusHours(int hours);",
+   "public Period minusMinutes(int minutes);",
+   "public Period minusSeconds(int seconds);",
+   "public Period minusMillis(int millis);",
+   "public Period multipliedBy(int scalar);",
+   "public Period negated();",
+   "public Weeks toStandardWeeks();",
+   "public Days toStandardDays();",
+   "public Hours toStandardHours();",
+   "public Minutes toStandardMinutes();",
+   "public Seconds toStandardSeconds();",
+   "public Duration toStandardDuration();",
+   "public Period normalizedStandard();"
+  ],
+  "type_signatures": [
+   "public class PeriodType implements Serializable { public static PeriodType standard(); public static PeriodType yearMonthDayTime(); public static PeriodType yearMonthDay(); public static PeriodType yearWeekDayTime(); public static PeriodType yearWeekDay(); public static PeriodType yearDayTime(); public static PeriodType yearDay(); public static PeriodType dayTime(); public static PeriodType time(); public static PeriodType years(); public static PeriodType months(); public static PeriodType weeks(); public static PeriodType days(); public static PeriodType hours(); public static PeriodType minutes(); }"
+  ]
+ },
+ "split": "test"
+}

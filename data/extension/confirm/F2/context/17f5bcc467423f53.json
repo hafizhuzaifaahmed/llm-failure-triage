@@ -1,0 +1,167 @@
+{
+ "bug_name": "Closure_164",
+ "call_sites": [
+  {
+   "line": 574,
+   "lines": [
+    569,
+    570,
+    571,
+    572,
+    573,
+    574,
+    575,
+    576,
+    577,
+    578,
+    579
+   ],
+   "path": "src/com/google/javascript/jscomp/ChainableReverseAbstractInterpreter.java",
+   "snippet": "\n    @Override\n    public JSType caseObjectType(ObjectType type) {\n      if (value.equals(\"function\")) {\n        JSType ctorType = getNativeType(U2U_CONSTRUCTOR_TYPE);\n        return resultEqualsValue && ctorType.isSubtype(type) ? ctorType : null;\n      }\n      return matchesExpectation(\"object\") ? type : null;\n    }\n\n    @Override"
+  },
+  {
+   "line": 509,
+   "lines": [
+    504,
+    505,
+    506,
+    507,
+    508,
+    509,
+    510,
+    511,
+    512,
+    513,
+    514
+   ],
+   "path": "src/com/google/javascript/jscomp/CheckAccessControls.java",
+   "snippet": "          // There are 3 types of legal accesses of a protected property:\n          // 1) Accesses in the same file\n          // 2) Overriding the property in a subclass\n          // 3) Accessing the property from inside a subclass\n          // The first two have already been checked for.\n          if (currentClass == null || !currentClass.isSubtype(ownerType)) {\n            compiler.report(\n                t.makeError(getprop,  BAD_PROTECTED_PROPERTY_ACCESS,\n                    propertyName,\n                    validator.getReadableJSTypeName(\n                        getprop.getFirstChild(), true)));"
+  },
+  {
+   "line": 191,
+   "lines": [
+    186,
+    187,
+    188,
+    189,
+    190,
+    191,
+    192,
+    193,
+    194
+   ],
+   "path": "src/com/google/javascript/jscomp/CheckMissingReturn.java",
+   "snippet": "   *     containing void or unknown\n   */\n  private boolean isVoidOrUnknown(JSType returnType) {\n    final JSType voidType =\n        compiler.getTypeRegistry().getNativeType(JSTypeNative.VOID_TYPE);\n    return voidType.isSubtype(returnType);\n  }\n}\n"
+  },
+  {
+   "line": 58,
+   "lines": [
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63
+   ],
+   "path": "src/com/google/javascript/jscomp/ClosureReverseAbstractInterpreter.java",
+   "snippet": "        }\n\n        @Override\n        public JSType caseObjectType(ObjectType type) {\n          JSType arrayType = getNativeType(ARRAY_TYPE);\n          return arrayType.isSubtype(type) ? arrayType : null;\n        }\n      };\n\n  /**\n   * For when {@code goog.isArray} returns false."
+  },
+  {
+   "line": 69,
+   "lines": [
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74
+   ],
+   "path": "src/com/google/javascript/jscomp/ClosureReverseAbstractInterpreter.java",
+   "snippet": "   */\n  private final Visitor<JSType> restrictToNotArrayVisitor =\n      new RestrictByFalseTypeOfResultVisitor() {\n        @Override\n        public JSType caseObjectType(ObjectType type) {\n          return type.isSubtype(getNativeType(ARRAY_TYPE)) ? null : type;\n        }\n      };\n\n  /**\n   * For when {@code goog.isObject} returns true. This includes functions, but"
+  }
+ ],
+ "class_simple": "ArrowType",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * The arrow type is an internal type that models the functional arrow type\n * seen in typical functional programming languages.  It is used soley for\n * separating the management of the arrow type from the complex\n * {@link FunctionType} that models JavaScript's notion of functions.\n */\nfinal",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "final Node parameters",
+  "JSType returnType",
+  "final boolean returnTypeInferred"
+ ],
+ "focal_class": "com.google.javascript.rhino.jstype.ArrowType",
+ "focal_id": "Closure_164::com.google.javascript.rhino.jstype.ArrowType::isSubtype(JSType)",
+ "focal_method_name": "isSubtype",
+ "generations": 3,
+ "impl_B": "@Override\n  public boolean isSubtype(JSType other) {\n    if (!(other instanceof ArrowType)) {\n      return false;\n    }\n\n    ArrowType that = (ArrowType) other;\n\n    // This is described in Draft 2 of the ES4 spec,\n    // Section 3.4.7: Subtyping Function Types.\n\n    // this.returnType <: that.returnType (covariant)\n    if (!this.returnType.isSubtype(that.returnType)) {\n      return false;\n    }\n\n    // that.paramType[i] <: this.paramType[i] (contravariant)\n    //\n    // If this.paramType[i] is required,\n    // then that.paramType[i] is required.\n    //\n    // In theory, the \"required-ness\" should work in the other direction as\n    // well. In other words, if we have\n    //\n    // function f(number, number) {}\n    // function g(number) {}\n    //\n    // Then f *should* not be a subtype of g, and g *should* not be\n    // a subtype of f. But in practice, we do not implement it this way.\n    // We want to support the use case where you can pass g where f is\n    // expected, and pretend that g ignores the second argument.\n    // That way, you can have a single \"no-op\" function, and you don't have\n    // to create a new no-op function for every possible type signature.\n    //\n    // So, in this case, g < f, but f !< g\n    Node thisParam = parameters.getFirstChild();\n    Node thatParam = that.parameters.getFirstChild();\n    while (thisParam != null && thatParam != null) {\n      JSType thisParamType = thisParam.getJSType();\n      JSType thatParamType = thatParam.getJSType();\n      if (thisParamType != null) {\n        if (thatParamType == null ||\n            !thatParamType.isSubtype(thisParamType)) {\n          return false;\n        }\n      }\n\n      boolean thisIsVarArgs = thisParam.isVarArgs();\n      boolean thatIsVarArgs = thatParam.isVarArgs();\n\n      // \"that\" can't be a supertype, because it's missing a required argument.\n        // NOTE(nicksantos): In our type system, we use {function(...?)} and\n        // {function(...NoType)} to to indicate that arity should not be\n        // checked. Strictly speaking, this is not a correct formulation,\n        // because now a sub-function can required arguments that are var_args\n        // in the super-function. So we special-case this.\n\n      // don't advance if we have variable arguments\n      if (!thisIsVarArgs) {\n        thisParam = thisParam.getNext();\n      }\n      if (!thatIsVarArgs) {\n        thatParam = thatParam.getNext();\n      }\n\n      // both var_args indicates the end\n      if (thisIsVarArgs && thatIsVarArgs) {\n        thisParam = null;\n        thatParam = null;\n      }\n    }\n\n    // \"that\" can't be a supertype, because it's missing a required arguement.\n\n    return true;\n  }",
+ "imports": [
+  "static com.google.javascript.rhino.jstype.JSTypeNative.UNKNOWN_TYPE",
+  "com.google.javascript.rhino.ErrorReporter",
+  "com.google.javascript.rhino.Node"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.rhino.jstype",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "isEquivalentTo"
+  },
+  {
+   "javadoc": "",
+   "name": "hashCode"
+  },
+  {
+   "javadoc": "",
+   "name": "getLeastSupertype"
+  },
+  {
+   "javadoc": "",
+   "name": "getGreatestSubtype"
+  },
+  {
+   "javadoc": "",
+   "name": "testForEquality"
+  },
+  {
+   "javadoc": "",
+   "name": "visit"
+  },
+  {
+   "javadoc": "",
+   "name": "getPossibleToBooleanOutcomes"
+  }
+ ],
+ "sig": {
+  "class_declaration": "final class ArrowType extends JSType",
+  "constructors": [],
+  "focal_signature": "public boolean isSubtype(JSType other)",
+  "methods": [
+   "public boolean isEquivalentTo(JSType object);",
+   "public int hashCode();",
+   "public JSType getLeastSupertype(JSType that);",
+   "public JSType getGreatestSubtype(JSType that);",
+   "public TernaryValue testForEquality(JSType that);",
+   "public <T> T visit(Visitor<T> visitor);",
+   "public BooleanLiteralSet getPossibleToBooleanOutcomes();"
+  ],
+  "type_signatures": [
+   "public abstract class JSType implements Serializable { public JSDocInfo getJSDocInfo(); public String getDisplayName(); public boolean hasDisplayName(); public boolean isNoType(); public boolean isNoResolvedType(); public boolean isNoObjectType(); public final boolean isEmptyType(); public boolean isNumberObjectType(); public boolean isNumberValueType(); public boolean isFunctionPrototypeType(); public boolean isStringObjectType(); public boolean isStringValueType(); public final boolean isString(); public final boolean isNumber(); public boolean isArrayType(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

@@ -1,0 +1,151 @@
+{
+ "base_focal_id": "JacksonDatabind_34::com.fasterxml.jackson.databind.ser.std.NumberSerializer::acceptJsonFormatVisitor(JsonFormatVisitorWrapper,JavaType)",
+ "bug_name": "JacksonDatabind_34",
+ "call_sites": [
+  {
+   "line": 3535,
+   "lines": [
+    3530,
+    3531,
+    3532,
+    3533,
+    3534,
+    3535,
+    3536,
+    3537,
+    3538,
+    3539,
+    3540
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java",
+   "snippet": "     * @since 2.1\n     */\n    public void acceptJsonFormatVisitor(Class<?> type, JsonFormatVisitorWrapper visitor)\n        throws JsonMappingException\n    {\n        acceptJsonFormatVisitor(_typeFactory.constructType(type), visitor);\n    }\n    \n    /**\n     * Method for visiting type hierarchy for given type, using specified visitor.\n     * Visitation uses <code>Serializer</code> hierarchy and related properties"
+  },
+  {
+   "line": 3556,
+   "lines": [
+    3551,
+    3552,
+    3553,
+    3554,
+    3555,
+    3556,
+    3557,
+    3558,
+    3559,
+    3560,
+    3561
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java",
+   "snippet": "        throws JsonMappingException\n    {\n        if (type == null) {\n            throw new IllegalArgumentException(\"type must be provided\");\n        }\n        _serializerProvider(getSerializationConfig()).acceptJsonFormatVisitor(type, visitor);\n    }\n    \n    /*\n    /**********************************************************\n    /* Internal methods for serialization, overridable"
+  },
+  {
+   "line": 1059,
+   "lines": [
+    1054,
+    1055,
+    1056,
+    1057,
+    1058,
+    1059,
+    1060,
+    1061,
+    1062,
+    1063,
+    1064
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectWriter.java",
+   "snippet": "    public void acceptJsonFormatVisitor(JavaType type, JsonFormatVisitorWrapper visitor) throws JsonMappingException\n    {\n        if (type == null) {\n            throw new IllegalArgumentException(\"type must be provided\");\n        }\n        _serializerProvider().acceptJsonFormatVisitor(type, visitor);\n    }\n\n    /**\n     * Since 2.6\n     */"
+  },
+  {
+   "line": 1066,
+   "lines": [
+    1061,
+    1062,
+    1063,
+    1064,
+    1065,
+    1066,
+    1067,
+    1068,
+    1069,
+    1070,
+    1071
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectWriter.java",
+   "snippet": "\n    /**\n     * Since 2.6\n     */\n    public void acceptJsonFormatVisitor(Class<?> rawType, JsonFormatVisitorWrapper visitor) throws JsonMappingException {\n        acceptJsonFormatVisitor(_config.constructType(rawType), visitor);\n    }\n\n    public boolean canSerialize(Class<?> type) {\n        return _serializerProvider().hasSerializerFor(type, null);\n    }"
+  },
+  {
+   "line": 89,
+   "lines": [
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ext/CoreXMLSerializers.java",
+   "snippet": "            _delegate.serializeWithType(_convert(value), gen, provider, typeSer);\n        }\n\n        @Override\n        public void acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint) throws JsonMappingException {\n            _delegate.acceptJsonFormatVisitor(visitor, null);\n        }\n\n        @Override\n        public JsonSerializer<?> createContextual(SerializerProvider prov, BeanProperty property)\n                throws JsonMappingException {"
+  }
+ ],
+ "class_simple": "NumberSerializer",
+ "dataset": "D2",
+ "doc": {
+  "class_javadoc": "/**\n * As a fallback, we may need to use this serializer for other\n * types of {@link Number}s: both custom types and \"big\" numbers\n * like {@link BigInteger} and {@link BigDecimal}.\n */\n@JacksonStdImpl\n@SuppressWarnings(\"serial\")\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "public final static NumberSerializer instance",
+  "protected final boolean _isInt"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.ser.std.NumberSerializer",
+ "focal_id": "JacksonDatabind_34::com.fasterxml.jackson.databind.ser.std.NumberSerializer::acceptJsonFormatVisitor(JsonFormatVisitorWrapper,JavaType)#m19",
+ "focal_method_name": "acceptJsonFormatVisitor",
+ "impl_B": "@Override\n    public void acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint) throws JsonMappingException\n    {\n        if (true) {\n            visitIntFormat(visitor, typeHint, JsonParser.NumberType.BIG_INTEGER);\n        } else {\n            Class<?> h = handledType();\n            if (h == BigDecimal.class) {\n                visitFloatFormat(visitor, typeHint, JsonParser.NumberType.BIG_DECIMAL);\n            } else {\n                // otherwise bit unclear what to call... but let's try:\n                /*JsonNumberFormatVisitor v2 =*/ visitor.expectNumberFormat(typeHint);\n            }\n        }\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.lang.reflect.Type",
+  "java.math.BigDecimal",
+  "java.math.BigInteger",
+  "com.fasterxml.jackson.core.JsonGenerator",
+  "com.fasterxml.jackson.core.JsonParser",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.annotation.JacksonStdImpl",
+  "com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper"
+ ],
+ "javadoc_edited_by_fix": false,
+ "mutant_id": 19,
+ "operator": "COR",
+ "package": "com.fasterxml.jackson.databind.ser.std",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "serialize"
+  },
+  {
+   "javadoc": "",
+   "name": "getSchema"
+  }
+ ],
+ "sig": {
+  "class_declaration": "@JacksonStdImpl @SuppressWarnings(\"serial\") public class NumberSerializer extends StdScalarSerializer<Number>",
+  "constructors": [
+   "public NumberSerializer(Class<? extends Number> rawType);"
+  ],
+  "focal_signature": "public void acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint) throws JsonMappingException",
+  "methods": [
+   "public void serialize(Number value, JsonGenerator g, SerializerProvider provider) throws IOException;",
+   "public JsonNode getSchema(SerializerProvider provider, Type typeHint);"
+  ],
+  "type_signatures": [
+   "public interface JsonFormatVisitorWrapper extends JsonFormatVisitorWithSerializerProvider { public JsonObjectFormatVisitor expectObjectFormat(JavaType type) throws JsonMappingException; public JsonArrayFormatVisitor expectArrayFormat(JavaType type) throws JsonMappingException; public JsonStringFormatVisitor expectStringFormat(JavaType type) throws JsonMappingException; public JsonNumberFormatVisitor expectNumberFormat(JavaType type) throws JsonMappingException; public JsonIntegerFormatVisitor expectIntegerFormat(JavaType type) throws JsonMappingException; public JsonBooleanFormatVisitor expectBooleanFormat(JavaType type) throws JsonMappingException; public JsonNullFormatVisitor expectNullFormat(JavaType type) throws JsonMappingException; public JsonAnyFormatVisitor expectAnyFormat(JavaType type) throws JsonMappingException; public JsonMapFormatVisitor expectMapFormat(JavaType type) throws JsonMappingException; }"
+  ]
+ },
+ "split": "test"
+}

@@ -1,0 +1,466 @@
+{
+ "bug_name": "JacksonCore_24",
+ "call_sites": [
+  {
+   "line": 921,
+   "lines": [
+    916,
+    917,
+    918,
+    919,
+    920,
+    921,
+    922,
+    923,
+    924,
+    925,
+    926
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/base/ParserBase.java",
+   "snippet": "        if ((_numTypesValid & NR_INT) != 0) {\n            _numberLong = (long) _numberInt;\n        } else if ((_numTypesValid & NR_BIGINT) != 0) {\n            if (BI_MIN_LONG.compareTo(_numberBigInt) > 0 \n                    || BI_MAX_LONG.compareTo(_numberBigInt) < 0) {\n                reportOverflowLong();\n            }\n            _numberLong = _numberBigInt.longValue();\n        } else if ((_numTypesValid & NR_DOUBLE) != 0) {\n            // Need to check boundaries\n            if (_numberDouble < MIN_LONG_D || _numberDouble > MAX_LONG_D) {"
+  },
+  {
+   "line": 927,
+   "lines": [
+    922,
+    923,
+    924,
+    925,
+    926,
+    927,
+    928,
+    929,
+    930,
+    931,
+    932
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/base/ParserBase.java",
+   "snippet": "            }\n            _numberLong = _numberBigInt.longValue();\n        } else if ((_numTypesValid & NR_DOUBLE) != 0) {\n            // Need to check boundaries\n            if (_numberDouble < MIN_LONG_D || _numberDouble > MAX_LONG_D) {\n                reportOverflowLong();\n            }\n            _numberLong = (long) _numberDouble;\n        } else if ((_numTypesValid & NR_BIGDECIMAL) != 0) {\n            if (BD_MIN_LONG.compareTo(_numberBigDecimal) > 0 \n                || BD_MAX_LONG.compareTo(_numberBigDecimal) < 0) {"
+  },
+  {
+   "line": 933,
+   "lines": [
+    928,
+    929,
+    930,
+    931,
+    932,
+    933,
+    934,
+    935,
+    936,
+    937,
+    938
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/base/ParserBase.java",
+   "snippet": "            }\n            _numberLong = (long) _numberDouble;\n        } else if ((_numTypesValid & NR_BIGDECIMAL) != 0) {\n            if (BD_MIN_LONG.compareTo(_numberBigDecimal) > 0 \n                || BD_MAX_LONG.compareTo(_numberBigDecimal) < 0) {\n                reportOverflowLong();\n            }\n            _numberLong = _numberBigDecimal.longValue();\n        } else {\n            _throwInternal();\n        }"
+  },
+  {
+   "line": 577,
+   "lines": [
+    572,
+    573,
+    574,
+    575,
+    576,
+    577,
+    578,
+    579,
+    580,
+    581,
+    582
+   ],
+   "patch_lines_removed": true,
+   "path": "src/main/java/com/fasterxml/jackson/core/base/ParserMinimalBase.java",
+   "snippet": "     * Result will be {@link InputCoercionException} being thrown.\n     */\n    protected void reportOverflowLong() throws IOException {\n        reportOverflowLong(getText());\n    }\n\n    // @since 2.10\n    protected void reportOverflowLong(String numDesc) throws IOException {\n        _reportError(String.format(\"Numeric value (%s) out of range of long (%d - %s)\","
+  }
+ ],
+ "class_simple": "ParserMinimalBase",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Intermediate base class used by all Jackson {@link JsonParser}\n * implementations, but does not add any additional fields that depend\n * on particular method of obtaining input.\n *<p>\n * Note that 'minimal' here mostly refers to minimal number of fields\n * (size) and functionality that is specific to certain types\n * of parser implementations; but not necessarily to number of methods.\n */\npublic abstract",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "protected final static int INT_TAB",
+  "protected final static int INT_LF",
+  "protected final static int INT_CR",
+  "protected final static int INT_SPACE",
+  "protected final static int INT_LBRACKET",
+  "protected final static int INT_RBRACKET",
+  "protected final static int INT_LCURLY",
+  "protected final static int INT_RCURLY",
+  "protected final static int INT_QUOTE",
+  "protected final static int INT_APOS",
+  "protected final static int INT_BACKSLASH",
+  "protected final static int INT_SLASH",
+  "protected final static int INT_ASTERISK",
+  "protected final static int INT_COLON",
+  "protected final static int INT_COMMA",
+  "protected final static int INT_HASH",
+  "protected final static int INT_0",
+  "protected final static int INT_9",
+  "protected final static int INT_MINUS",
+  "protected final static int INT_PLUS",
+  "protected final static int INT_PERIOD",
+  "protected final static int INT_e",
+  "protected final static int INT_E",
+  "protected final static char CHAR_NULL",
+  "protected final static byte[] NO_BYTES",
+  "protected final static int[] NO_INTS",
+  "protected final static int NR_UNKNOWN",
+  "protected final static int NR_INT",
+  "protected final static int NR_LONG",
+  "protected final static int NR_BIGINT",
+  "protected final static int NR_DOUBLE",
+  "protected final static int NR_BIGDECIMAL",
+  "protected final static int NR_FLOAT",
+  "protected final static BigInteger BI_MIN_INT",
+  "protected final static BigInteger BI_MAX_INT",
+  "protected final static BigInteger BI_MIN_LONG",
+  "protected final static BigInteger BI_MAX_LONG",
+  "protected final static BigDecimal BD_MIN_LONG",
+  "protected final static BigDecimal BD_MAX_LONG",
+  "protected final static BigDecimal BD_MIN_INT"
+ ],
+ "focal_class": "com.fasterxml.jackson.core.base.ParserMinimalBase",
+ "focal_id": "JacksonCore_24::com.fasterxml.jackson.core.base.ParserMinimalBase::reportOverflowLong(String)",
+ "focal_method_name": "reportOverflowLong",
+ "generations": 3,
+ "impl_B": "protected void reportOverflowLong(String numDesc) throws IOException {\n        _reportError(String.format(\"Numeric value (%s) out of range of long (%d - %s)\",\n                _longIntegerDesc(numDesc), Long.MIN_VALUE, Long.MAX_VALUE));\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.math.BigDecimal",
+  "java.math.BigInteger",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.core.exc.InputCoercionException",
+  "com.fasterxml.jackson.core.io.JsonEOFException",
+  "com.fasterxml.jackson.core.io.NumberInput",
+  "com.fasterxml.jackson.core.util.ByteArrayBuilder",
+  "com.fasterxml.jackson.core.util.VersionUtil",
+  "static com.fasterxml.jackson.core.JsonTokenId.*"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.core.base",
+ "project": "JacksonCore",
+ "siblings": [
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "nextToken"
+  },
+  {
+   "javadoc": "",
+   "name": "currentToken"
+  },
+  {
+   "javadoc": "",
+   "name": "currentTokenId"
+  },
+  {
+   "javadoc": "",
+   "name": "getCurrentToken"
+  },
+  {
+   "javadoc": "",
+   "name": "getCurrentTokenId"
+  },
+  {
+   "javadoc": "",
+   "name": "hasCurrentToken"
+  },
+  {
+   "javadoc": "",
+   "name": "hasTokenId"
+  },
+  {
+   "javadoc": "",
+   "name": "hasToken"
+  },
+  {
+   "javadoc": "",
+   "name": "isExpectedStartArrayToken"
+  },
+  {
+   "javadoc": "",
+   "name": "isExpectedStartObjectToken"
+  },
+  {
+   "javadoc": "",
+   "name": "nextValue"
+  },
+  {
+   "javadoc": "",
+   "name": "skipChildren"
+  },
+  {
+   "javadoc": "/**\n     * Method sub-classes need to implement\n     */",
+   "name": "_handleEOF"
+  },
+  {
+   "javadoc": "",
+   "name": "getCurrentName"
+  },
+  {
+   "javadoc": "",
+   "name": "close"
+  },
+  {
+   "javadoc": "",
+   "name": "isClosed"
+  },
+  {
+   "javadoc": "",
+   "name": "getParsingContext"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "clearCurrentToken"
+  },
+  {
+   "javadoc": "",
+   "name": "getLastClearedToken"
+  },
+  {
+   "javadoc": "",
+   "name": "overrideCurrentName"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getText"
+  },
+  {
+   "javadoc": "",
+   "name": "getTextCharacters"
+  },
+  {
+   "javadoc": "",
+   "name": "hasTextCharacters"
+  },
+  {
+   "javadoc": "",
+   "name": "getTextLength"
+  },
+  {
+   "javadoc": "",
+   "name": "getTextOffset"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getBinaryValue"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getValueAsBoolean"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueAsInt"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueAsInt"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueAsLong"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueAsLong"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueAsDouble"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueAsString"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueAsString"
+  },
+  {
+   "javadoc": "/**\n     * Helper method that can be used for base64 decoding in cases where\n     * encoded content has already been read as a String.\n     */",
+   "name": "_decodeBase64"
+  },
+  {
+   "javadoc": "/**\n     * Helper method used to determine whether we are currently pointing to\n     * a String value of \"null\" (NOT a null token); and, if so, that parser\n     * is to recognize and return it similar to if it was real null token.\n     * \n     * @since 2.3\n     */",
+   "name": "_hasTextualNull"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "reportUnexpectedNumberChar"
+  },
+  {
+   "javadoc": "/**\n     * Method called to throw an exception for input token that looks like a number\n     * based on first character(s), but is not valid according to rules of format.\n     * In case of JSON this also includes invalid forms like positive sign and\n     * leading zeroes.\n     */",
+   "name": "reportInvalidNumber"
+  },
+  {
+   "javadoc": "/**\n     * Method called to throw an exception for integral (not floating point) input\n     * token with value outside of Java signed 32-bit range when requested as {@link int}.\n     * Result will be {@link InputCoercionException} being thrown.\n     */",
+   "name": "reportOverflowInt"
+  },
+  {
+   "javadoc": "",
+   "name": "reportOverflowInt"
+  },
+  {
+   "javadoc": "/**\n     * Method called to throw an exception for integral (not floating point) input\n     * token with value outside of Java signed 64-bit range when requested as {@link long}.\n     * Result will be {@link InputCoercionException} being thrown.\n     */",
+   "name": "reportOverflowLong"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.10\n     */",
+   "name": "_reportInputCoercion"
+  },
+  {
+   "javadoc": "",
+   "name": "_longIntegerDesc"
+  },
+  {
+   "javadoc": "",
+   "name": "_longNumberDesc"
+  },
+  {
+   "javadoc": "",
+   "name": "_reportUnexpectedChar"
+  },
+  {
+   "javadoc": "",
+   "name": "_reportInvalidEOF"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.8\n     */",
+   "name": "_reportInvalidEOFInValue"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.8\n     */",
+   "name": "_reportInvalidEOF"
+  },
+  {
+   "javadoc": "/**\n     * @deprecated Since 2.8 use {@link #_reportInvalidEOF(String, JsonToken)} instead\n     */",
+   "name": "_reportInvalidEOFInValue"
+  },
+  {
+   "javadoc": "/**\n     * @deprecated Since 2.8 use {@link #_reportInvalidEOF(String, JsonToken)} instead\n     */",
+   "name": "_reportInvalidEOF"
+  },
+  {
+   "javadoc": "",
+   "name": "_reportMissingRootWS"
+  },
+  {
+   "javadoc": "",
+   "name": "_throwInvalidSpace"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_getCharDesc"
+  },
+  {
+   "javadoc": "",
+   "name": "_reportError"
+  },
+  {
+   "javadoc": "",
+   "name": "_reportError"
+  },
+  {
+   "javadoc": "",
+   "name": "_reportError"
+  },
+  {
+   "javadoc": "",
+   "name": "_wrapError"
+  },
+  {
+   "javadoc": "",
+   "name": "_throwInternal"
+  },
+  {
+   "javadoc": "",
+   "name": "_constructError"
+  },
+  {
+   "javadoc": "",
+   "name": "_asciiBytes"
+  },
+  {
+   "javadoc": "",
+   "name": "_ascii"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public abstract class ParserMinimalBase extends JsonParser",
+  "constructors": [
+   "protected ParserMinimalBase();",
+   "protected ParserMinimalBase(int features);"
+  ],
+  "focal_signature": "protected void reportOverflowLong(String numDesc) throws IOException",
+  "methods": [
+   "public abstract JsonToken nextToken() throws IOException;",
+   "public JsonToken currentToken();",
+   "public int currentTokenId();",
+   "public JsonToken getCurrentToken();",
+   "public int getCurrentTokenId();",
+   "public boolean hasCurrentToken();",
+   "public boolean hasTokenId(int id);",
+   "public boolean hasToken(JsonToken t);",
+   "public boolean isExpectedStartArrayToken();",
+   "public boolean isExpectedStartObjectToken();",
+   "public JsonToken nextValue() throws IOException;",
+   "public JsonParser skipChildren() throws IOException;",
+   "protected abstract void _handleEOF() throws JsonParseException;",
+   "public abstract String getCurrentName() throws IOException;",
+   "public abstract void close() throws IOException;",
+   "public abstract boolean isClosed();",
+   "public abstract JsonStreamContext getParsingContext();",
+   "public void clearCurrentToken();",
+   "public JsonToken getLastClearedToken();",
+   "public abstract void overrideCurrentName(String name);",
+   "public abstract String getText() throws IOException;",
+   "public abstract char[] getTextCharacters() throws IOException;",
+   "public abstract boolean hasTextCharacters();",
+   "public abstract int getTextLength() throws IOException;",
+   "public abstract int getTextOffset() throws IOException;",
+   "public abstract byte[] getBinaryValue(Base64Variant b64variant) throws IOException;",
+   "public boolean getValueAsBoolean(boolean defaultValue) throws IOException;",
+   "public int getValueAsInt() throws IOException;",
+   "public int getValueAsInt(int defaultValue) throws IOException;",
+   "public long getValueAsLong() throws IOException;",
+   "public long getValueAsLong(long defaultValue) throws IOException;",
+   "public double getValueAsDouble(double defaultValue) throws IOException;",
+   "public String getValueAsString() throws IOException;",
+   "public String getValueAsString(String defaultValue) throws IOException;",
+   "protected void _decodeBase64(String str, ByteArrayBuilder builder, Base64Variant b64variant) throws IOException;",
+   "protected boolean _hasTextualNull(String value);",
+   "protected void reportUnexpectedNumberChar(int ch, String comment) throws JsonParseException;",
+   "protected void reportInvalidNumber(String msg) throws JsonParseException;",
+   "protected void reportOverflowInt() throws IOException;",
+   "protected void reportOverflowInt(String numDesc) throws IOException;",
+   "protected void reportOverflowLong() throws IOException;",
+   "protected void _reportInputCoercion(String msg, JsonToken inputType, Class<?> targetType) throws InputCoercionException;",
+   "protected String _longIntegerDesc(String rawNum);",
+   "protected String _longNumberDesc(String rawNum);",
+   "protected void _reportUnexpectedChar(int ch, String comment) throws JsonParseException;",
+   "protected void _reportInvalidEOF() throws JsonParseException;",
+   "protected void _reportInvalidEOFInValue(JsonToken type) throws JsonParseException;",
+   "protected void _reportInvalidEOF(String msg, JsonToken currToken) throws JsonParseException;",
+   "// since 2.8 protected void _reportInvalidEOFInValue() throws JsonParseException;",
+   "// since 2.8 protected void _reportInvalidEOF(String msg) throws JsonParseException;",
+   "protected void _reportMissingRootWS(int ch) throws JsonParseException;",
+   "protected void _throwInvalidSpace(int i) throws JsonParseException;",
+   "protected final static String _getCharDesc(int ch);",
+   "protected final void _reportError(String msg) throws JsonParseException;",
+   "protected final void _reportError(String msg, Object arg) throws JsonParseException;",
+   "protected final void _reportError(String msg, Object arg1, Object arg2) throws JsonParseException;",
+   "protected final void _wrapError(String msg, Throwable t) throws JsonParseException;",
+   "protected final void _throwInternal();",
+   "protected final JsonParseException _constructError(String msg, Throwable t);",
+   "protected static byte[] _asciiBytes(String str);",
+   "protected static String _ascii(byte[] b);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

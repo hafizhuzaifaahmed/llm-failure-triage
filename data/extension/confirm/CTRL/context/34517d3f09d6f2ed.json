@@ -1,0 +1,188 @@
+{
+ "bug_name": "Math_88",
+ "call_sites": [
+  {
+   "line": 188,
+   "lines": [
+    183,
+    184,
+    185,
+    186,
+    187,
+    188,
+    189,
+    190,
+    191,
+    192,
+    193
+   ],
+   "path": "src/java/org/apache/commons/math/optimization/linear/SimplexSolver.java",
+   "snippet": "    public RealPointValuePair doOptimize()\n        throws OptimizationException {\n        final SimplexTableau tableau =\n            new SimplexTableau(f, constraints, goalType, restrictToNonNegative, epsilon);\n        solvePhase1(tableau);\n        tableau.discardArtificialVariables();\n        while (!isOptimal(tableau)) {\n            doIteration(tableau);\n        }\n        return tableau.getSolution();\n    }"
+  }
+ ],
+ "class_simple": "SimplexTableau",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * A tableau for use in the Simplex method.\n * \n * <p>\n * Example:\n * <pre>\n *   W |  Z |  x1 |  x2 |  x- | s1 |  s2 |  a1 |  RHS\n * ---------------------------------------------------\n *  -1    0    0     0     0     0     0     1     0   &lt;= phase 1 objective\n *   0    1   -15   -10    0     0     0     0     0   &lt;= phase 2 objective\n *   0    0    1     0     0     1     0     0     2   &lt;= constraint 1\n *   0    0    0     1     0     0     1     0     3   &lt;= constraint 2\n *   0    0    1     1     0     0     0     1     4   &lt;= constraint 3\n * </pre>\n * W: Phase 1 objective function</br>\n * Z: Phase 2 objective function</br>\n * x1 &amp; x2: Decision variables</br>\n * x-: Extra decision variable to allow for negative values</br>\n * s1 &amp; s2: Slack/Surplus variables</br>\n * a1: Artificial variable</br>\n * RHS: Right hand side</br>\n * </p>\n * @version $Revision$ $Date$\n * @since 2.0\n */",
+  "method_javadoc": "/**\n     * Removes the phase 1 objective function and artificial variables from this tableau.\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "private final LinearObjectiveFunction f",
+  "private final Collection<LinearConstraint> constraints",
+  "private final boolean restrictToNonNegative",
+  "protected transient RealMatrix tableau",
+  "protected final int numDecisionVariables",
+  "protected final int numSlackVariables",
+  "protected int numArtificialVariables",
+  "protected final double epsilon"
+ ],
+ "focal_class": "org.apache.commons.math.optimization.linear.SimplexTableau",
+ "focal_id": "Math_88::org.apache.commons.math.optimization.linear.SimplexTableau::discardArtificialVariables()",
+ "focal_method_name": "discardArtificialVariables",
+ "generations": 3,
+ "impl_B": "protected void discardArtificialVariables() {\n        if (numArtificialVariables == 0) {\n            return;\n        }\n        int width = getWidth() - numArtificialVariables - 1;\n        int height = getHeight() - 1;\n        double[][] matrix = new double[height][width];\n        for (int i = 0; i < height; i++) {\n            for (int j = 0; j < width - 1; j++) {\n                matrix[i][j] = getEntry(i + 1, j + 1);\n            }\n            matrix[i][width - 1] = getEntry(i + 1, getRhsOffset());\n        }\n        this.tableau = new RealMatrixImpl(matrix);\n        this.numArtificialVariables = 0;\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.io.ObjectInputStream",
+  "java.io.ObjectOutputStream",
+  "java.io.Serializable",
+  "java.util.ArrayList",
+  "java.util.Collection",
+  "java.util.HashSet",
+  "java.util.List",
+  "java.util.Set",
+  "org.apache.commons.math.linear.MatrixUtils",
+  "org.apache.commons.math.linear.RealMatrix",
+  "org.apache.commons.math.linear.RealMatrixImpl",
+  "org.apache.commons.math.linear.RealVector",
+  "org.apache.commons.math.optimization.GoalType",
+  "org.apache.commons.math.optimization.RealPointValuePair",
+  "org.apache.commons.math.util.MathUtils"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math.optimization.linear",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Create the tableau by itself.\n     * @param maximize if true, goal is to maximize the objective function\n     * @return created tableau\n     */",
+   "name": "createTableau"
+  },
+  {
+   "javadoc": "/** Get the number of variables.\n     * @return number of variables\n     */",
+   "name": "getNumVariables"
+  },
+  {
+   "javadoc": "/**\n     * Get new versions of the constraints which have positive right hand sides.\n     * @return new versions of the constraints\n     */",
+   "name": "getNormalizedConstraints"
+  },
+  {
+   "javadoc": "/**\n     * Get the number of objective functions in this tableau.\n     * @return 2 for Phase 1.  1 for Phase 2.\n     */",
+   "name": "getNumObjectiveFunctions"
+  },
+  {
+   "javadoc": "/**\n     * Get the -1 times the sum of all coefficients in the given array.\n     * @param coefficients coefficients to sum\n     * @return the -1 times the sum of all coefficients in the given array.\n     */",
+   "name": "getInvertedCoeffiecientSum"
+  },
+  {
+   "javadoc": "/**\n     * Get the current solution.\n     * <p>\n     * {@link #solve} should be called first for this to be the optimal solution.\n     * </p>\n     * @return current solution\n     */",
+   "name": "getSolution"
+  },
+  {
+   "javadoc": "/**\n     * Subtracts a multiple of one row from another.\n     * <p>\n     * After application of this operation, the following will hold:\n     *   minuendRow = minuendRow - multiple * subtrahendRow\n     * </p>\n     * @param dividendRow index of the row\n     * @param divisor value of the divisor\n     */",
+   "name": "divideRow"
+  },
+  {
+   "javadoc": "/**\n     * Subtracts a multiple of one row from another.\n     * <p>\n     * After application of this operation, the following will hold:\n     *   minuendRow = minuendRow - multiple * subtrahendRow\n     * </p>\n     * @param minuendRow row index\n     * @param subtrahendRow row index\n     * @param multiple multiplication factor\n     */",
+   "name": "subtractRow"
+  },
+  {
+   "javadoc": "/**\n     * Get the width of the tableau.\n     * @return width of the tableau\n     */",
+   "name": "getWidth"
+  },
+  {
+   "javadoc": "/**\n     * Get the height of the tableau.\n     * @return height of the tableau\n     */",
+   "name": "getHeight"
+  },
+  {
+   "javadoc": "/** Get an entry of the tableau.\n     * @param row row index\n     * @param column column index\n     * @return entry at (row, column)\n     */",
+   "name": "getEntry"
+  },
+  {
+   "javadoc": "/** Set an entry of the tableau.\n     * @param row row index\n     * @param column column index\n     * @param value for the entry\n     */",
+   "name": "setEntry"
+  },
+  {
+   "javadoc": "/**\n     * Get the offset of the first slack variable.\n     * @return offset of the first slack variable\n     */",
+   "name": "getSlackVariableOffset"
+  },
+  {
+   "javadoc": "/**\n     * Get the offset of the first artificial variable.\n     * @return offset of the first artificial variable\n     */",
+   "name": "getArtificialVariableOffset"
+  },
+  {
+   "javadoc": "/**\n     * Get the offset of the right hand side.\n     * @return offset of the right hand side\n     */",
+   "name": "getRhsOffset"
+  },
+  {
+   "javadoc": "/**\n     * Get the number of decision variables.\n     * <p>\n     * If variables are not restricted to positive values, this will include 1\n     * extra decision variable to represent the absolute value of the most\n     * negative variable.\n     * </p>\n     * @return number of decision variables\n     * @see #getOriginalNumDecisionVariables()\n     */",
+   "name": "getNumDecisionVariables"
+  },
+  {
+   "javadoc": "/**\n     * Get the original number of decision variables.\n     * @return original number of decision variables\n     * @see #getNumDecisionVariables()\n     */",
+   "name": "getOriginalNumDecisionVariables"
+  },
+  {
+   "javadoc": "/**\n     * Get the number of slack variables.\n     * @return number of slack variables\n     */",
+   "name": "getNumSlackVariables"
+  },
+  {
+   "javadoc": "/**\n     * Get the number of artificial variables.\n     * @return number of artificial variables\n     */",
+   "name": "getNumArtificialVariables"
+  },
+  {
+   "javadoc": "/**\n     * Get the tableau data.\n     * @return tableau data\n     */",
+   "name": "getData"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "equals"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "hashCode"
+  }
+ ],
+ "sig": {
+  "class_declaration": "class SimplexTableau implements Serializable",
+  "constructors": [],
+  "focal_signature": "protected void discardArtificialVariables()",
+  "methods": [
+   "protected double[][] createTableau(final boolean maximize);",
+   "public int getNumVariables();",
+   "public List<LinearConstraint> getNormalizedConstraints();",
+   "protected final int getNumObjectiveFunctions();",
+   "protected static double getInvertedCoeffiecientSum(final RealVector coefficients);",
+   "protected RealPointValuePair getSolution();",
+   "protected void divideRow(final int dividendRow, final double divisor);",
+   "protected void subtractRow(final int minuendRow, final int subtrahendRow, final double multiple);",
+   "protected final int getWidth();",
+   "protected final int getHeight();",
+   "protected final double getEntry(final int row, final int column);",
+   "protected final void setEntry(final int row, final int column, final double value);",
+   "protected final int getSlackVariableOffset();",
+   "protected final int getArtificialVariableOffset();",
+   "protected final int getRhsOffset();",
+   "protected final int getNumDecisionVariables();",
+   "protected final int getOriginalNumDecisionVariables();",
+   "protected final int getNumSlackVariables();",
+   "protected final int getNumArtificialVariables();",
+   "protected final double[][] getData();",
+   "public boolean equals(Object other);",
+   "public int hashCode();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

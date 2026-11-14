@@ -1,0 +1,282 @@
+{
+ "bug_name": "JacksonCore_10",
+ "call_sites": [
+  {
+   "line": 416,
+   "lines": [
+    411,
+    412,
+    413,
+    414,
+    415,
+    416,
+    417,
+    418,
+    419,
+    420,
+    421
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/Base64Variant.java",
+   "snippet": "        }\n\n        if (addQuotes) {\n            sb.append('\"');\n        }\n        return sb.toString();\n    }\n\n    /**\n     * Convenience method for decoding contents of a Base64-encoded String,\n     * using this variant's settings."
+  },
+  {
+   "line": 74,
+   "lines": [
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/Base64Variants.java",
+   "snippet": "        sb.setCharAt(sb.indexOf(\"+\"), '-');\n        sb.setCharAt(sb.indexOf(\"/\"), '_');\n        /* And finally, let's not split lines either, wouldn't work too\n         * well with URLs\n         */\n        MODIFIED_FOR_URL = new Base64Variant(\"MODIFIED-FOR-URL\", sb.toString(), false, Base64Variant.PADDING_CHAR_NONE, Integer.MAX_VALUE);\n    }\n\n    /**\n     * Method used to get the default variant (\"MIME_NO_LINEFEEDS\") for cases\n     * where caller does not explicitly specify the variant."
+  },
+  {
+   "line": 100,
+   "lines": [
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/JsonLocation.java",
+   "snippet": "        StringBuilder sb = new StringBuilder(80);\n        sb.append(\"[Source: \");\n        if (_sourceRef == null) {\n            sb.append(\"UNKNOWN\");\n        } else {\n            sb.append(_sourceRef.toString());\n        }\n        sb.append(\"; line: \");\n        sb.append(_lineNr);\n        sb.append(\", column: \");\n        sb.append(_columnNr);"
+  },
+  {
+   "line": 107,
+   "lines": [
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/JsonLocation.java",
+   "snippet": "        sb.append(\"; line: \");\n        sb.append(_lineNr);\n        sb.append(\", column: \");\n        sb.append(_columnNr);\n        sb.append(']');\n        return sb.toString();\n    }\n\n    @Override\n    public int hashCode()\n    {"
+  },
+  {
+   "line": 357,
+   "lines": [
+    352,
+    353,
+    354,
+    355,
+    356,
+    357,
+    358,
+    359,
+    360,
+    361,
+    362
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/JsonPointer.java",
+   "snippet": "        }\n        _appendEscape(sb, input.charAt(i++));\n        while (i < end) {\n            char c = input.charAt(i);\n            if (c == '/') { // end is nigh!\n                return new JsonPointer(input, sb.toString(),\n                        _parseTail(input.substring(i)));\n            }\n            ++i;\n            if (c == '~' && i < end) {\n                _appendEscape(sb, input.charAt(i++));"
+  }
+ ],
+ "class_simple": "ByteQuadsCanonicalizer",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Replacement for <code>BytesToNameCanonicalizer</code> which aims at more localized\n * memory access due to flattening of name quad data.\n * Performance improvement modest for simple JSON document data binding (maybe 3%),\n * but should help more for larger symbol tables, or for binary formats like Smile.\n *\n * @since 2.6\n */\npublic final",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final int DEFAULT_T_SIZE",
+  "private static final int MAX_T_SIZE",
+  "final static int MIN_HASH_SIZE",
+  "final static int MAX_ENTRIES_FOR_REUSE",
+  "final protected ByteQuadsCanonicalizer _parent",
+  "final protected AtomicReference<TableInfo> _tableInfo",
+  "final private int _seed",
+  "protected boolean _intern",
+  "protected final boolean _failOnDoS",
+  "protected int[] _hashArea",
+  "protected int _hashSize",
+  "protected int _secondaryStart",
+  "protected int _tertiaryStart",
+  "protected int _tertiaryShift",
+  "protected int _count",
+  "protected String[] _names",
+  "protected int _spilloverEnd",
+  "protected int _longNameOffset",
+  "private transient boolean _needRehash",
+  "private boolean _hashShared",
+  "private final static int MULT",
+  "private final static int MULT2",
+  "private final static int MULT3"
+ ],
+ "focal_class": "com.fasterxml.jackson.core.sym.ByteQuadsCanonicalizer",
+ "focal_id": "JacksonCore_10::com.fasterxml.jackson.core.sym.ByteQuadsCanonicalizer::toString()",
+ "focal_method_name": "toString",
+ "generations": 3,
+ "impl_B": "@Override\n    public String toString() {\n        int pri = primaryCount();\n        int sec = secondaryCount();\n        int tert = tertiaryCount();\n        int spill = spilloverCount();\n        int total = totalCount();\n        return String.format(\"[%s: size=%d, hashSize=%d, %d/%d/%d/%d pri/sec/ter/spill (=%s), total:%d]\",\n                getClass().getName(), _count, _hashSize,\n                pri, sec, tert, spill, total, (pri+sec+tert+spill), total);\n    }",
+ "imports": [
+  "java.util.Arrays",
+  "java.util.concurrent.atomic.AtomicReference",
+  "com.fasterxml.jackson.core.JsonFactory",
+  "com.fasterxml.jackson.core.util.InternCache"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.core.sym",
+ "project": "JacksonCore",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Factory method to call to create a symbol table instance with a\n     * randomized seed value.\n     */",
+   "name": "createRoot"
+  },
+  {
+   "javadoc": "/**\n     * Factory method that should only be called from unit tests, where seed\n     * value should remain the same.\n     */",
+   "name": "createRoot"
+  },
+  {
+   "javadoc": "/**\n     * Factory method used to create actual symbol table instance to\n     * use for parsing.\n     */",
+   "name": "makeChild"
+  },
+  {
+   "javadoc": "/**\n     * Method called by the using code to indicate it is done\n     * with this instance. This lets instance merge accumulated\n     * changes into parent (if need be), safely and efficiently,\n     * and without calling code having to know about parent\n     * information\n     */",
+   "name": "release"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "size"
+  },
+  {
+   "javadoc": "/**\n     * Returns number of primary slots table has currently\n     */",
+   "name": "bucketCount"
+  },
+  {
+   "javadoc": "/**\n     * Method called to check to quickly see if a child symbol table\n     * may have gotten additional entries. Used for checking to see\n     * if a child table should be merged into shared table.\n     */",
+   "name": "maybeDirty"
+  },
+  {
+   "javadoc": "",
+   "name": "hashSeed"
+  },
+  {
+   "javadoc": "/**\n     * Method mostly needed by unit tests; calculates number of\n     * entries that are in the primary slot set. These are\n     * \"perfect\" entries, accessible with a single lookup\n     */",
+   "name": "primaryCount"
+  },
+  {
+   "javadoc": "/**\n     * Method mostly needed by unit tests; calculates number of entries\n     * in secondary buckets\n     */",
+   "name": "secondaryCount"
+  },
+  {
+   "javadoc": "/**\n     * Method mostly needed by unit tests; calculates number of entries\n     * in tertiary buckets\n     */",
+   "name": "tertiaryCount"
+  },
+  {
+   "javadoc": "/**\n     * Method mostly needed by unit tests; calculates number of entries\n     * in shared spillover area\n     */",
+   "name": "spilloverCount"
+  },
+  {
+   "javadoc": "",
+   "name": "totalCount"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findName"
+  },
+  {
+   "javadoc": "",
+   "name": "findName"
+  },
+  {
+   "javadoc": "",
+   "name": "findName"
+  },
+  {
+   "javadoc": "",
+   "name": "findName"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "addName"
+  },
+  {
+   "javadoc": "",
+   "name": "addName"
+  },
+  {
+   "javadoc": "",
+   "name": "addName"
+  },
+  {
+   "javadoc": "",
+   "name": "addName"
+  },
+  {
+   "javadoc": "",
+   "name": "calcHash"
+  },
+  {
+   "javadoc": "",
+   "name": "calcHash"
+  },
+  {
+   "javadoc": "",
+   "name": "calcHash"
+  },
+  {
+   "javadoc": "",
+   "name": "calcHash"
+  },
+  {
+   "javadoc": "",
+   "name": "_reportTooManyCollisions"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public final class ByteQuadsCanonicalizer",
+  "constructors": [],
+  "focal_signature": "public String toString()",
+  "methods": [
+   "public static ByteQuadsCanonicalizer createRoot();",
+   "protected static ByteQuadsCanonicalizer createRoot(int seed);",
+   "public ByteQuadsCanonicalizer makeChild(int flags);",
+   "public void release();",
+   "public int size();",
+   "public int bucketCount();",
+   "public boolean maybeDirty();",
+   "public int hashSeed();",
+   "public int primaryCount();",
+   "public int secondaryCount();",
+   "public int tertiaryCount();",
+   "public int spilloverCount();",
+   "public int totalCount();",
+   "public String findName(int q1);",
+   "public String findName(int q1, int q2);",
+   "public String findName(int q1, int q2, int q3);",
+   "public String findName(int[] q, int qlen);",
+   "public String addName(String name, int q1);",
+   "public String addName(String name, int q1, int q2);",
+   "public String addName(String name, int q1, int q2, int q3);",
+   "public String addName(String name, int[] q, int qlen);",
+   "public int calcHash(int q1);",
+   "public int calcHash(int q1, int q2);",
+   "public int calcHash(int q1, int q2, int q3);",
+   "public int calcHash(int[] q, int qlen);",
+   "protected void _reportTooManyCollisions();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

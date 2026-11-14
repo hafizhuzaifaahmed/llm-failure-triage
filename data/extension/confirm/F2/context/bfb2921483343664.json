@@ -1,0 +1,179 @@
+{
+ "bug_name": "Closure_155",
+ "call_sites": [
+  {
+   "line": 500,
+   "lines": [
+    495,
+    496,
+    497,
+    498,
+    499,
+    500,
+    501,
+    502,
+    503,
+    504,
+    505
+   ],
+   "path": "src/com/google/debugging/sourcemap/SourceMapGeneratorV1.java",
+   "snippet": "     * @param col The starting column for this code segment.\n     * @param endLine The ending line\n     * @param endCol The ending column\n     * @throws IOException\n     */\n    void visit(Mapping m, int line, int col, int endLine, int endCol)\n        throws IOException;\n  }\n\n  /**\n   * Walk the mappings and visit each segment of the mappings, unmapped"
+  },
+  {
+   "line": 589,
+   "lines": [
+    584,
+    585,
+    586,
+    587,
+    588,
+    589,
+    590,
+    591,
+    592,
+    593,
+    594
+   ],
+   "path": "src/com/google/debugging/sourcemap/SourceMapGeneratorV1.java",
+   "snippet": "      int nextLine = getAdjustedLine(m.endPosition);\n      int nextCol = getAdjustedCol(m.endPosition);\n      // If this anything remaining in this mapping beyond the\n      // current line and column position, write it out now.\n      if (line < nextLine || (line == nextLine && col < nextCol)) {\n        visit(v, m, nextLine, nextCol);\n      }\n    }\n\n    /**\n     * Write any needed entries to complete the provided mapping."
+  },
+  {
+   "line": 603,
+   "lines": [
+    598,
+    599,
+    600,
+    601,
+    602,
+    603,
+    604,
+    605,
+    606,
+    607,
+    608
+   ],
+   "path": "src/com/google/debugging/sourcemap/SourceMapGeneratorV1.java",
+   "snippet": "      int nextLine = getAdjustedLine(m.startPosition);\n      int nextCol = getAdjustedCol(m.startPosition);\n      // If the previous value is null, no mapping exists.\n      Preconditions.checkState(line < nextLine || col <= nextCol);\n      if (line < nextLine || (line == nextLine && col < nextCol)) {\n        visit(v, parent, nextLine, nextCol);\n      }\n    }\n\n    /**\n     * Write any entries needed between the current position the next position"
+  },
+  {
+   "line": 623,
+   "lines": [
+    618,
+    619,
+    620,
+    621,
+    622,
+    623,
+    624,
+    625,
+    626,
+    627,
+    628
+   ],
+   "path": "src/com/google/debugging/sourcemap/SourceMapGeneratorV1.java",
+   "snippet": "        // Nothing to do.\n        Preconditions.checkState(false);\n        return;\n      }\n\n      v.visit(m, line, col, nextLine, nextCol);\n\n      line = nextLine;\n      col = nextCol;\n    }\n  }"
+  },
+  {
+   "line": 827,
+   "lines": [
+    822,
+    823,
+    824,
+    825,
+    826,
+    827,
+    828,
+    829,
+    830,
+    831,
+    832
+   ],
+   "path": "src/com/google/debugging/sourcemap/SourceMapGeneratorV2.java",
+   "snippet": "     * @param col The starting column for this code segment.\n     * @param endLine The ending line\n     * @param endCol The ending column\n     * @throws IOException\n     */\n    void visit(Mapping m, int line, int col, int endLine, int endCol)\n        throws IOException;\n  }\n\n  /**\n   * Walk the mappings and visit each segment of the mappings, unmapped"
+  }
+ ],
+ "class_simple": "ReferenceCollectingCallback",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * A helper class for passes that want to access all information about where a\n * variable is referenced and declared at once and then make a decision as to\n * how it should be handled, possibly inlining, reordering, or generating\n * warnings. Callers do this by providing {@link Behavior} and then\n * calling {@link #process(Node, Node)}.\n *\n * @author kushal@google.com (Kushal Dave)\n */",
+  "method_javadoc": "/**\n   * For each node, update the block stack and reference collection\n   * as appropriate.\n   */"
+ },
+ "fields": [
+  "private final Map<Var, ReferenceCollection> referenceMap",
+  "private final Deque<BasicBlock> blockStack",
+  "private final Behavior behavior",
+  "private final AbstractCompiler compiler",
+  "private final Predicate<Var> varFilter",
+  "static Behavior DO_NOTHING_BEHAVIOR"
+ ],
+ "focal_class": "com.google.javascript.jscomp.ReferenceCollectingCallback",
+ "focal_id": "Closure_155::com.google.javascript.jscomp.ReferenceCollectingCallback::visit(NodeTraversal,Node,Node)",
+ "focal_method_name": "visit",
+ "generations": 3,
+ "impl_B": "public void visit(NodeTraversal t, Node n, Node parent) {\n    if (n.getType() == Token.NAME) {\n      Var v = t.getScope().getVar(n.getString());\n      if (v != null && varFilter.apply(v)) {\n        addReference(t, v,\n            new Reference(n, parent, t, blockStack.peek()));\n      }\n    }\n\n    if (isBlockBoundary(n, parent)) {\n      blockStack.pop();\n    }\n  }",
+ "imports": [
+  "com.google.common.base.Preconditions",
+  "com.google.common.base.Predicate",
+  "com.google.common.base.Predicates",
+  "com.google.common.collect.ImmutableSet",
+  "com.google.common.collect.Lists",
+  "com.google.common.collect.Maps",
+  "com.google.javascript.jscomp.NodeTraversal.ScopedCallback",
+  "com.google.javascript.jscomp.Scope.Var",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.Token",
+  "java.util.ArrayDeque",
+  "java.util.Deque",
+  "java.util.List",
+  "java.util.Map",
+  "java.util.Set"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "/**\n   * Convenience method for running this pass over a tree with this\n   * class as a callback.\n   */",
+   "name": "process"
+  },
+  {
+   "javadoc": "/**\n   * Gets the variables that were referenced in this callback.\n   */",
+   "name": "getReferencedVariables"
+  },
+  {
+   "javadoc": "/**\n   * Gets the reference collection for the given variable.\n   */",
+   "name": "getReferenceCollection"
+  },
+  {
+   "javadoc": "/**\n   * Updates block stack and invokes any additional behavior.\n   */",
+   "name": "enterScope"
+  },
+  {
+   "javadoc": "/**\n   * Updates block statck and invokes any additional behavior.\n   */",
+   "name": "exitScope"
+  },
+  {
+   "javadoc": "/**\n   * Updates block stack.\n   */",
+   "name": "shouldTraverse"
+  }
+ ],
+ "sig": {
+  "class_declaration": "class ReferenceCollectingCallback implements ScopedCallback, CompilerPass",
+  "constructors": [],
+  "focal_signature": "public void visit(NodeTraversal t, Node n, Node parent)",
+  "methods": [
+   "public void process(Node externs, Node root);",
+   "public Set<Var> getReferencedVariables();",
+   "public ReferenceCollection getReferenceCollection(Var v);",
+   "public void enterScope(NodeTraversal t);",
+   "public void exitScope(NodeTraversal t);",
+   "public boolean shouldTraverse(NodeTraversal nodeTraversal, Node n, Node parent);"
+  ],
+  "type_signatures": [
+   "public class NodeTraversal { public NodeTraversal(AbstractCompiler compiler, Callback cb); public NodeTraversal(AbstractCompiler compiler, Callback cb, ScopeCreator scopeCreator); public void traverse(Node root); public void traverseRoots(Node ... roots); public void traverseRoots(List<Node> roots); protected void traverseInnerNode(Node node, Node parent, Scope refinedScope); public Compiler getCompiler(); public int getLineNumber(); public String getSourceName(); public CompilerInput getInput(); public JSModule getModule(); public Node getCurrentNode(); public static void traverse( AbstractCompiler compiler, Node root, Callback cb); public static void traverseRoots( AbstractCompiler compiler, List<Node> roots, Callback cb); public Scope getScope(); }",
+   "public class Node implements Cloneable, Serializable { public Node(int nodeType); public Node(int nodeType, Node child); public Node(int nodeType, Node left, Node right); public Node(int nodeType, Node left, Node mid, Node right); public Node(int nodeType, Node left, Node mid, Node mid2, Node right); public Node(int nodeType, int lineno, int charno); public Node(int nodeType, Node child, int lineno, int charno); public Node(int nodeType, Node left, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node mid2, Node right, int lineno, int charno); public Node(int nodeType, Node[] children, int lineno, int charno); public Node(int nodeType, Node[] children); public static Node newNumber(double number); public static Node newNumber(double number, int lineno, int charno); public static Node newString(String str); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

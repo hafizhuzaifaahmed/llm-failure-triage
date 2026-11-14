@@ -1,0 +1,194 @@
+{
+  "bug_name": "Math_76",
+  "call_sites": [
+    {
+      "line": 62,
+      "lines": [
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67
+      ],
+      "path": "src/main/java/org/apache/commons/math/linear/FieldLUDecomposition.java",
+      "snippet": "    /**\n     * Returns the matrix U of the decomposition.\n     * <p>U is an upper-triangular matrix</p>\n     * @return the U matrix (or null if decomposed matrix is singular)\n     */\n    FieldMatrix<T> getU();\n\n    /**\n     * Returns the P rows permutation matrix.\n     * <p>P is a sparse matrix with exactly one element set to 1.0 in\n     * each row and each column, all other elements being set to 0.0.</p>"
+    },
+    {
+      "line": 60,
+      "lines": [
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65
+      ],
+      "path": "src/main/java/org/apache/commons/math/linear/LUDecomposition.java",
+      "snippet": "    /**\n     * Returns the matrix U of the decomposition.\n     * <p>U is an upper-triangular matrix</p>\n     * @return the U matrix (or null if decomposed matrix is singular)\n     */\n    RealMatrix getU();\n\n    /**\n     * Returns the P rows permutation matrix.\n     * <p>P is a sparse matrix with exactly one element set to 1.0 in\n     * each row and each column, all other elements being set to 0.0.</p>"
+    },
+    {
+      "line": 66,
+      "lines": [
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71
+      ],
+      "path": "src/main/java/org/apache/commons/math/linear/SingularValueDecomposition.java",
+      "snippet": "     * Returns the matrix U of the decomposition.\n     * <p>U is an orthogonal matrix, i.e. its transpose is also its inverse.</p>\n     * @return the U matrix\n     * @see #getUT()\n     */\n    RealMatrix getU();\n\n    /**\n     * Returns the transpose of the matrix U of the decomposition.\n     * <p>U is an orthogonal matrix, i.e. its transpose is also its inverse.</p>\n     * @return the U matrix (or null if decomposed matrix is singular)"
+    },
+    {
+      "line": 185,
+      "lines": [
+        180,
+        181,
+        182,
+        183,
+        184,
+        185,
+        186,
+        187,
+        188,
+        189,
+        190
+      ],
+      "patch_lines_removed": true,
+      "path": "src/main/java/org/apache/commons/math/linear/SingularValueDecompositionImpl.java",
+      "snippet": "                    wData[i] = new double[p];\n                cachedU =\n                    transformer.getU().multiply(MatrixUtils.createRealMatrix(wData));\n            } else {\n                // the tridiagonal matrix is B.Bt, where B is lower bidiagonal\n                final RealMatrix e =\n                    eigenDecomposition.getV().getSubMatrix(0, m - 1, 0, p - 1);\n                cachedU = transformer.getU().multiply(e);"
+    },
+    {
+      "line": 190,
+      "lines": [
+        185,
+        186,
+        187,
+        188,
+        189,
+        190,
+        191,
+        192,
+        193,
+        194,
+        195
+      ],
+      "path": "src/main/java/org/apache/commons/math/linear/SingularValueDecompositionImpl.java",
+      "snippet": "                    transformer.getU().multiply(MatrixUtils.createRealMatrix(wData));\n            } else {\n                // the tridiagonal matrix is B.Bt, where B is lower bidiagonal\n                final RealMatrix e =\n                    eigenDecomposition.getV().getSubMatrix(0, m - 1, 0, p - 1);\n                cachedU = transformer.getU().multiply(e);\n            }\n\n        }\n\n        // return the cached matrix"
+    }
+  ],
+  "class_simple": "SingularValueDecompositionImpl",
+  "doc": {
+    "class_javadoc": "/**\n * Calculates the compact or truncated Singular Value Decomposition of a matrix.\n * <p>The Singular Value Decomposition of matrix A is a set of three matrices:\n * U, &Sigma; and V such that A = U &times; &Sigma; &times; V<sup>T</sup>.\n * Let A be a m &times; n matrix, then U is a m &times; p orthogonal matrix,\n * &Sigma; is a p &times; p diagonal matrix with positive diagonal elements,\n * V is a n &times; p orthogonal matrix (hence V<sup>T</sup> is a p &times; n\n * orthogonal matrix). The size p depends on the chosen algorithm:\n * <ul>\n *   <li>for full SVD, p would be n, but this is not supported by this implementation,</li>\n *   <li>for compact SVD, p is the rank r of the matrix\n *       (i. e. the number of positive singular values),</li>\n *   <li>for truncated SVD p is min(r, t) where t is user-specified.</li>\n * </ul>\n * </p>\n * <p>\n * Note that since this class computes only the compact or truncated SVD and not\n * the full SVD, the singular values computed are always positive.\n * </p>\n *\n * @version $Revision$ $Date$\n * @since 2.0\n */\npublic",
+    "method_javadoc": "/** {@inheritDoc} */"
+  },
+  "fields": [
+    "private int m",
+    "private int n",
+    "private BiDiagonalTransformer transformer",
+    "private double[] mainBidiagonal",
+    "private double[] secondaryBidiagonal",
+    "private double[] mainTridiagonal",
+    "private double[] secondaryTridiagonal",
+    "private EigenDecomposition eigenDecomposition",
+    "private double[] singularValues",
+    "private RealMatrix cachedU",
+    "private RealMatrix cachedUt",
+    "private RealMatrix cachedS",
+    "private RealMatrix cachedV",
+    "private RealMatrix cachedVt"
+  ],
+  "focal_class": "org.apache.commons.math.linear.SingularValueDecompositionImpl",
+  "focal_id": "Math_76::org.apache.commons.math.linear.SingularValueDecompositionImpl::getU()",
+  "focal_method_name": "getU",
+  "impl_B": "public RealMatrix getU()\n        throws InvalidMatrixException {\n\n        if (cachedU == null) {\n\n            final int p = singularValues.length;\n            if (m >= n) {\n                // the tridiagonal matrix is Bt.B, where B is upper bidiagonal\n                final RealMatrix e =\n                    eigenDecomposition.getV().getSubMatrix(0, p - 1, 0, p - 1);\n                final double[][] eData = e.getData();\n                final double[][] wData = new double[m][p];\n                double[] ei1 = eData[0];\n                for (int i = 0; i < p - 1; ++i) {\n                    // compute W = B.E.S^(-1) where E is the eigenvectors matrix\n                    final double mi = mainBidiagonal[i];\n                    final double[] ei0 = ei1;\n                    final double[] wi  = wData[i];\n                        ei1 = eData[i + 1];\n                        final double si = secondaryBidiagonal[i];\n                        for (int j = 0; j < p; ++j) {\n                            wi[j] = (mi * ei0[j] + si * ei1[j]) / singularValues[j];\n                        }\n                }\n                        for (int j = 0; j < p; ++j) {\n                            wData[p - 1][j] = ei1[j] * mainBidiagonal[p - 1] / singularValues[j];\n                        }\n\n                for (int i = p; i < m; ++i) {\n                    wData[i] = new double[p];\n                }\n                cachedU =\n                    transformer.getU().multiply(MatrixUtils.createRealMatrix(wData));\n            } else {\n                // the tridiagonal matrix is B.Bt, where B is lower bidiagonal\n                final RealMatrix e =\n                    eigenDecomposition.getV().getSubMatrix(0, m - 1, 0, p - 1);\n                cachedU = transformer.getU().multiply(e);\n            }\n\n        }\n\n        // return the cached matrix\n        return cachedU;\n\n    }",
+  "imports": [
+    "org.apache.commons.math.MathRuntimeException",
+    "org.apache.commons.math.util.MathUtils"
+  ],
+  "javadoc_edited_by_fix": false,
+  "package": "org.apache.commons.math.linear",
+  "project": "Math",
+  "siblings": [
+    {
+      "javadoc": "/** {@inheritDoc} */",
+      "name": "getUT"
+    },
+    {
+      "javadoc": "/** {@inheritDoc} */",
+      "name": "getS"
+    },
+    {
+      "javadoc": "/** {@inheritDoc} */",
+      "name": "getSingularValues"
+    },
+    {
+      "javadoc": "/** {@inheritDoc} */",
+      "name": "getV"
+    },
+    {
+      "javadoc": "/** {@inheritDoc} */",
+      "name": "getVT"
+    },
+    {
+      "javadoc": "/** {@inheritDoc} */",
+      "name": "getCovariance"
+    },
+    {
+      "javadoc": "/** {@inheritDoc} */",
+      "name": "getNorm"
+    },
+    {
+      "javadoc": "/** {@inheritDoc} */",
+      "name": "getConditionNumber"
+    },
+    {
+      "javadoc": "/** {@inheritDoc} */",
+      "name": "getRank"
+    },
+    {
+      "javadoc": "/** {@inheritDoc} */",
+      "name": "getSolver"
+    }
+  ],
+  "sig": {
+    "class_declaration": "public class SingularValueDecompositionImpl implements SingularValueDecomposition",
+    "constructors": [
+      "public SingularValueDecompositionImpl(final RealMatrix matrix) throws InvalidMatrixException;",
+      "public SingularValueDecompositionImpl(final RealMatrix matrix, final int max) throws InvalidMatrixException;"
+    ],
+    "focal_signature": "public RealMatrix getU() throws InvalidMatrixException",
+    "methods": [
+      "public RealMatrix getUT() throws InvalidMatrixException;",
+      "public RealMatrix getS() throws InvalidMatrixException;",
+      "public double[] getSingularValues() throws InvalidMatrixException;",
+      "public RealMatrix getV() throws InvalidMatrixException;",
+      "public RealMatrix getVT() throws InvalidMatrixException;",
+      "public RealMatrix getCovariance(final double minSingularValue);",
+      "public double getNorm() throws InvalidMatrixException;",
+      "public double getConditionNumber() throws InvalidMatrixException;",
+      "public int getRank() throws IllegalStateException;",
+      "public DecompositionSolver getSolver();"
+    ],
+    "type_signatures": [
+      "public interface RealMatrix extends AnyMatrix {  }"
+    ]
+  },
+  "split": "test"
+}

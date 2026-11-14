@@ -1,0 +1,327 @@
+{
+ "bug_name": "Math_29",
+ "call_sites": [
+  {
+   "line": 577,
+   "lines": [
+    572,
+    573,
+    574,
+    575,
+    576,
+    577,
+    578,
+    579,
+    580,
+    581,
+    582
+   ],
+   "path": "src/main/java/org/apache/commons/math3/linear/ArrayFieldVector.java",
+   "snippet": "    }\n\n    /** {@inheritDoc} */\n    public FieldVector<T> ebeDivide(FieldVector<T> v) {\n        try {\n            return ebeDivide((ArrayFieldVector<T>) v);\n        } catch (ClassCastException cce) {\n            checkVectorDimensions(v);\n            T[] out = buildArray(data.length);\n            for (int i = 0; i < data.length; i++) {\n                out[i] = data[i].divide(v.getEntry(i));"
+  },
+  {
+   "line": 165,
+   "lines": [
+    160,
+    161,
+    162,
+    163,
+    164,
+    165,
+    166,
+    167,
+    168,
+    169,
+    170
+   ],
+   "path": "src/main/java/org/apache/commons/math3/linear/FieldVector.java",
+   "snippet": "     * Element-by-element division.\n     * @param v vector by which instance elements must be divided\n     * @return a vector containing this[i] / v[i] for all i\n     * @throws IllegalArgumentException if v is not the same size as this\n     */\n    FieldVector<T> ebeDivide(FieldVector<T> v) throws IllegalArgumentException;\n\n    /**\n     * Returns vector entries as a T array.\n     * @return T array of entries\n     */"
+  },
+  {
+   "line": 98,
+   "lines": [
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103
+   ],
+   "path": "src/main/java/org/apache/commons/math3/linear/JacobiPreconditioner.java",
+   "snippet": "\n    /** {@inheritDoc} */\n    @Override\n    public RealVector operate(final RealVector x) {\n        // Dimension check is carried out by ebeDivide\n        return x.ebeDivide(diag);\n    }\n\n    /**\n     * Returns the square root of {@code this} diagonal operator. More\n     * precisely, this method returns"
+  },
+  {
+   "line": 114,
+   "lines": [
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119
+   ],
+   "path": "src/main/java/org/apache/commons/math3/linear/JacobiPreconditioner.java",
+   "snippet": "        final RealVector sqrtDiag = diag.map(new Sqrt());\n        return new RealLinearOperator() {\n            /** {@inheritDoc} */\n            @Override\n            public RealVector operate(final RealVector x) {\n                return x.ebeDivide(sqrtDiag);\n            }\n\n            /** {@inheritDoc} */\n            @Override\n            public int getRowDimension() {"
+  },
+  {
+   "line": 1275,
+   "lines": [
+    1270,
+    1271,
+    1272,
+    1273,
+    1274,
+    1275,
+    1276,
+    1277,
+    1278,
+    1279,
+    1280
+   ],
+   "path": "src/main/java/org/apache/commons/math3/linear/RealVector.java",
+   "snippet": "            }\n\n            /** {@inheritDoc} */\n            @Override\n            public RealVector ebeDivide(RealVector w) {\n                return v.ebeDivide(w);\n            }\n\n            /** {@inheritDoc} */\n            @Override\n            public double dotProduct(RealVector w) {"
+  }
+ ],
+ "class_simple": "OpenMapRealVector",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * This class implements the {@link RealVector} interface with a\n * {@link OpenIntToDoubleHashMap} backing store.\n * @version $Id$\n * @since 2.0\n*/\npublic",
+  "method_javadoc": "/** {@inheritDoc} */"
+ },
+ "fields": [
+  "public static final double DEFAULT_ZERO_TOLERANCE",
+  "private static final long serialVersionUID",
+  "private final OpenIntToDoubleHashMap entries",
+  "private final int virtualSize",
+  "private final double epsilon"
+ ],
+ "focal_class": "org.apache.commons.math3.linear.OpenMapRealVector",
+ "focal_id": "Math_29::org.apache.commons.math3.linear.OpenMapRealVector::ebeDivide(RealVector)",
+ "focal_method_name": "ebeDivide",
+ "generations": 3,
+ "impl_B": "@Override\n    public OpenMapRealVector ebeDivide(RealVector v) {\n        checkVectorDimensions(v.getDimension());\n        OpenMapRealVector res = new OpenMapRealVector(this);\n        /*\n         * MATH-803: it is not sufficient to loop through non zero entries of\n         * this only. Indeed, if this[i] = 0d and v[i] = 0d, then\n         * this[i] / v[i] = NaN, and not 0d.\n         */\n        Iterator iter = entries.iterator();\n        while (iter.hasNext()) {\n            iter.advance();\n            res.setEntry(iter.key(), iter.value() / v.getEntry(iter.key()));\n        }\n        return res;\n    }",
+ "imports": [
+  "java.io.Serializable",
+  "org.apache.commons.math3.exception.MathArithmeticException",
+  "org.apache.commons.math3.exception.NotPositiveException",
+  "org.apache.commons.math3.exception.util.LocalizedFormats",
+  "org.apache.commons.math3.util.OpenIntToDoubleHashMap",
+  "org.apache.commons.math3.util.OpenIntToDoubleHashMap.Iterator",
+  "org.apache.commons.math3.util.FastMath"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math3.linear",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Determine if this value is within epsilon of zero.\n     *\n     * @param value Value to test\n     * @return {@code true} if this value is within epsilon to zero,\n     * {@code false} otherwise.\n     * @since 2.1\n     */",
+   "name": "isDefaultValue"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "add"
+  },
+  {
+   "javadoc": "/**\n     * Optimized method to add two OpenMapRealVectors.\n     * It copies the larger vector, then iterates over the smaller.\n     *\n     * @param v Vector to add.\n     * @return the sum of {@code this} and {@code v}.\n     * @throws org.apache.commons.math3.exception.DimensionMismatchException\n     * if the dimensions do not match.\n     */",
+   "name": "add"
+  },
+  {
+   "javadoc": "/**\n     * Optimized method to append a OpenMapRealVector.\n     * @param v vector to append\n     * @return The result of appending {@code v} to self\n     */",
+   "name": "append"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "append"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "append"
+  },
+  {
+   "javadoc": "/**\n     * {@inheritDoc}\n     * @since 2.1\n     */",
+   "name": "copy"
+  },
+  {
+   "javadoc": "/**\n     * Optimized method to compute the dot product with an OpenMapRealVector.\n     * It iterates over the smallest of the two.\n     *\n     * @param v Cector to compute the dot product with.\n     * @return the dot product of {@code this} and {@code v}.\n     * @throws org.apache.commons.math3.exception.DimensionMismatchException\n     * if the dimensions do not match.\n     */",
+   "name": "dotProduct"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "dotProduct"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "ebeMultiply"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getSubVector"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getDimension"
+  },
+  {
+   "javadoc": "/**\n     * Optimized method to compute distance.\n     *\n     * @param v Vector to compute distance to.\n     * @return the distance from {@code this} and {@code v}.\n     * @throws org.apache.commons.math3.exception.DimensionMismatchException\n     * if the dimensions do not match.\n     */",
+   "name": "getDistance"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getDistance"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getEntry"
+  },
+  {
+   "javadoc": "/**\n     * Distance between two vectors.\n     * This method computes the distance consistent with\n     * L<sub>1</sub> norm, i.e. the sum of the absolute values of\n     * elements differences.\n     *\n     * @param v Vector to which distance is requested.\n     * @return distance between this vector and {@code v}.\n     */",
+   "name": "getL1Distance"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getL1Distance"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getLInfDistance"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "isInfinite"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "isNaN"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "mapAdd"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "mapAddToSelf"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "projection"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "setEntry"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "setSubVector"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "set"
+  },
+  {
+   "javadoc": "/**\n     * Optimized method to subtract OpenMapRealVectors.\n     *\n     * @param v Vector to subtract from {@code this}.\n     * @return the difference of {@code this} and {@code v}.\n     * @throws org.apache.commons.math3.exception.DimensionMismatchException\n     * if the dimensions do not match.\n     */",
+   "name": "subtract"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "subtract"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "unitVector"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "unitize"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "toArray"
+  },
+  {
+   "javadoc": "/**\n     * {@inheritDoc}\n     * Implementation Note: This works on exact values, and as a result\n     * it is possible for {@code a.subtract(b)} to be the zero vector, while\n     * {@code a.hashCode() != b.hashCode()}.\n     */",
+   "name": "hashCode"
+  },
+  {
+   "javadoc": "/**\n     * {@inheritDoc}\n     * Implementation Note: This performs an exact comparison, and as a result\n     * it is possible for {@code a.subtract(b}} to be the zero vector, while\n     * {@code  a.equals(b) == false}.\n     */",
+   "name": "equals"
+  },
+  {
+   "javadoc": "/**\n     *\n     * @return the percentage of none zero elements as a decimal percent.\n     * @since 2.2\n     */",
+   "name": "getSparsity"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "sparseIterator"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class OpenMapRealVector extends SparseRealVector implements Serializable",
+  "constructors": [
+   "public OpenMapRealVector();",
+   "public OpenMapRealVector(int dimension);",
+   "public OpenMapRealVector(int dimension, double epsilon);",
+   "protected OpenMapRealVector(OpenMapRealVector v, int resize);",
+   "public OpenMapRealVector(int dimension, int expectedSize);",
+   "public OpenMapRealVector(int dimension, int expectedSize, double epsilon);",
+   "public OpenMapRealVector(double[] values);",
+   "public OpenMapRealVector(double[] values, double epsilon);",
+   "public OpenMapRealVector(Double[] values);",
+   "public OpenMapRealVector(Double[] values, double epsilon);",
+   "public OpenMapRealVector(OpenMapRealVector v);",
+   "public OpenMapRealVector(RealVector v);"
+  ],
+  "focal_signature": "public OpenMapRealVector ebeDivide(RealVector v)",
+  "methods": [
+   "protected boolean isDefaultValue(double value);",
+   "public RealVector add(RealVector v);",
+   "public OpenMapRealVector add(OpenMapRealVector v);",
+   "public OpenMapRealVector append(OpenMapRealVector v);",
+   "public OpenMapRealVector append(RealVector v);",
+   "public OpenMapRealVector append(double d);",
+   "public OpenMapRealVector copy();",
+   "public double dotProduct(OpenMapRealVector v);",
+   "public double dotProduct(RealVector v);",
+   "public OpenMapRealVector ebeMultiply(RealVector v);",
+   "public OpenMapRealVector getSubVector(int index, int n);",
+   "public int getDimension();",
+   "public double getDistance(OpenMapRealVector v);",
+   "public double getDistance(RealVector v);",
+   "public double getEntry(int index);",
+   "public double getL1Distance(OpenMapRealVector v);",
+   "public double getL1Distance(RealVector v);",
+   "public double getLInfDistance(RealVector v);",
+   "public boolean isInfinite();",
+   "public boolean isNaN();",
+   "public OpenMapRealVector mapAdd(double d);",
+   "public OpenMapRealVector mapAddToSelf(double d);",
+   "public RealVector projection(RealVector v);",
+   "public void setEntry(int index, double value);",
+   "public void setSubVector(int index, RealVector v);",
+   "public void set(double value);",
+   "public OpenMapRealVector subtract(OpenMapRealVector v);",
+   "public RealVector subtract(RealVector v);",
+   "public OpenMapRealVector unitVector();",
+   "public void unitize();",
+   "public double[] toArray();",
+   "public int hashCode();",
+   "public boolean equals(Object obj);",
+   "public double getSparsity();",
+   "public java.util.Iterator<Entry> sparseIterator();"
+  ],
+  "type_signatures": [
+   "public abstract class RealVector { public abstract int getDimension(); public abstract double getEntry(int index); public abstract void setEntry(int index, double value); public void addToEntry(int index, double increment); public abstract RealVector append(RealVector v); public abstract RealVector append(double d); public abstract RealVector getSubVector(int index, int n); public abstract void setSubVector(int index, RealVector v); public abstract boolean isNaN(); public abstract boolean isInfinite(); protected void checkVectorDimensions(RealVector v); protected void checkVectorDimensions(int n); protected void checkIndex(final int index); protected void checkIndices(final int start, final int end); public RealVector add(RealVector v); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

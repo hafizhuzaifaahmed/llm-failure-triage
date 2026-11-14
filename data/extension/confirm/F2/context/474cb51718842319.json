@@ -1,0 +1,154 @@
+{
+ "bug_name": "Math_31",
+ "call_sites": [
+  {
+   "line": 92,
+   "lines": [
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97
+   ],
+   "path": "src/main/java/org/apache/commons/math3/analysis/polynomials/PolynomialFunction.java",
+   "snippet": "     * @param x Argument for which the function value should be computed.\n     * @return the value of the polynomial at the given point.\n     * @see UnivariateFunction#value(double)\n     */\n    public double value(double x) {\n       return evaluate(coefficients, x);\n    }\n\n    /**\n     * Returns the degree of the polynomial.\n     *"
+  },
+  {
+   "line": 386,
+   "lines": [
+    381,
+    382,
+    383,
+    384,
+    385,
+    386,
+    387,
+    388,
+    389,
+    390
+   ],
+   "path": "src/main/java/org/apache/commons/math3/analysis/polynomials/PolynomialFunction.java",
+   "snippet": "            return gradient;\n        }\n\n        /** {@inheritDoc} */\n        public double value(final double x, final double ... parameters) {\n            return PolynomialFunction.evaluate(parameters, x);\n        }\n    }\n}\n"
+  },
+  {
+   "line": 94,
+   "lines": [
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    99
+   ],
+   "path": "src/main/java/org/apache/commons/math3/analysis/polynomials/PolynomialFunctionNewtonForm.java",
+   "snippet": "     *\n     * @param z Point at which the function value is to be computed.\n     * @return the function value.\n     */\n    public double value(double z) {\n       return evaluate(a, c, z);\n    }\n\n    /**\n     * Returns the degree of the polynomial.\n     *"
+  },
+  {
+   "line": 213,
+   "lines": [
+    208,
+    209,
+    210,
+    211,
+    212,
+    213,
+    214,
+    215,
+    216,
+    217,
+    218
+   ],
+   "path": "src/main/java/org/apache/commons/math3/optimization/direct/MultiDirectionalSimplex.java",
+   "snippet": "            }\n            setPoint(i, new PointValuePair(xTransformed, Double.NaN, false));\n        }\n\n        // Evaluate the simplex.\n        evaluate(evaluationFunction, comparator);\n\n        return getPoint(0);\n    }\n}\n"
+  },
+  {
+   "line": 279,
+   "lines": [
+    274,
+    275,
+    276,
+    277,
+    278,
+    279,
+    280,
+    281,
+    282,
+    283
+   ],
+   "path": "src/main/java/org/apache/commons/math3/optimization/direct/NelderMeadSimplex.java",
+   "snippet": "                for (int j = 0; j < n; j++) {\n                    x[j] = xSmallest[j] + sigma * (x[j] - xSmallest[j]);\n                }\n                setPoint(i, new PointValuePair(x, Double.NaN, false));\n            }\n            evaluate(evaluationFunction, comparator);\n        }\n    }\n}\n"
+  }
+ ],
+ "class_simple": "ContinuedFraction",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Provides a generic means to evaluate continued fractions.  Subclasses simply\n * provided the a and b coefficients to evaluate the continued fraction.\n *\n * <p>\n * References:\n * <ul>\n * <li><a href=\"http://mathworld.wolfram.com/ContinuedFraction.html\">\n * Continued Fraction</a></li>\n * </ul>\n * </p>\n *\n * @version $Id$\n */\npublic abstract",
+  "method_javadoc": "/**\n     * <p>\n     * Evaluates the continued fraction at the value x.\n     * </p>\n     *\n     * <p>\n     * The implementation of this method is based on the modified Lentz algorithm as described\n     * on page 18 ff. in:\n     * <ul>\n     * <li>\n     *   I. J. Thompson,  A. R. Barnett. \"Coulomb and Bessel Functions of Complex Arguments and Order.\"\n     *   <a target=\"_blank\" href=\"http://www.fresco.org.uk/papers/Thompson-JCP64p490.pdf\">\n     *   http://www.fresco.org.uk/papers/Thompson-JCP64p490.pdf</a>\n     * </li>\n     * </ul>\n     * Note: the implementation uses the terms a<sub>i</sub> and b<sub>i</sub> as defined in\n     * <a href=\"http://mathworld.wolfram.com/ContinuedFraction.html\">Continued Fraction / MathWorld</a>.\n     * </p>\n     *\n     * @param x the evaluation point.\n     * @param epsilon maximum error allowed.\n     * @param maxIterations maximum number of convergents\n     * @return the value of the continued fraction evaluated at x.\n     * @throws ConvergenceException if the algorithm fails to converge.\n     */"
+ },
+ "fields": [
+  "private static final double DEFAULT_EPSILON"
+ ],
+ "focal_class": "org.apache.commons.math3.util.ContinuedFraction",
+ "focal_id": "Math_31::org.apache.commons.math3.util.ContinuedFraction::evaluate(double,double,int)",
+ "focal_method_name": "evaluate",
+ "generations": 3,
+ "impl_B": "public double evaluate(double x, double epsilon, int maxIterations) {\n        final double small = 1e-50;\n        double hPrev = getA(0, x);\n\n        // use the value of small as epsilon criteria for zero checks\n        if (Precision.equals(hPrev, 0.0, small)) {\n            hPrev = small;\n        }\n\n        int n = 1;\n        double dPrev = 0.0;\n        double p0 = 1.0;\n        double q1 = 1.0;\n        double cPrev = hPrev;\n        double hN = hPrev;\n\n        while (n < maxIterations) {\n            final double a = getA(n, x);\n            final double b = getB(n, x);\n\n            double cN = a * hPrev + b * p0;\n            double q2 = a * q1 + b * dPrev;\n            if (Double.isInfinite(cN) || Double.isInfinite(q2)) {\n                double scaleFactor = 1d;\n                double lastScaleFactor = 1d;\n                final int maxPower = 5;\n                final double scale = FastMath.max(a,b);\n                if (scale <= 0) {  // Can't scale\n                    throw new ConvergenceException(LocalizedFormats.CONTINUED_FRACTION_INFINITY_DIVERGENCE, x);\n                }\n                for (int i = 0; i < maxPower; i++) {\n                    lastScaleFactor = scaleFactor;\n                    scaleFactor *= scale;\n                    if (a != 0.0 && a > b) {\n                        cN = hPrev / lastScaleFactor + (b / scaleFactor * p0);\n                        q2 = q1 / lastScaleFactor + (b / scaleFactor * dPrev);\n                    } else if (b != 0) {\n                        cN = (a / scaleFactor * hPrev) + p0 / lastScaleFactor;\n                        q2 = (a / scaleFactor * q1) + dPrev / lastScaleFactor;\n                    }\n                    if (!(Double.isInfinite(cN) || Double.isInfinite(q2))) {\n                        break;\n                    }\n                }\n            }\n\n            final double deltaN = cN / q2 / cPrev;\n            hN = cPrev * deltaN;\n\n            if (Double.isInfinite(hN)) {\n                throw new ConvergenceException(LocalizedFormats.CONTINUED_FRACTION_INFINITY_DIVERGENCE,\n                                               x);\n            }\n            if (Double.isNaN(hN)) {\n                throw new ConvergenceException(LocalizedFormats.CONTINUED_FRACTION_NAN_DIVERGENCE,\n                                               x);\n            }\n\n            if (FastMath.abs(deltaN - 1.0) < epsilon) {\n                break;\n            }\n\n            dPrev = q1;\n            cPrev = cN / q2;\n            p0 = hPrev;\n            hPrev = cN;\n            q1 = q2;\n            n++;\n        }\n\n        if (n >= maxIterations) {\n            throw new MaxCountExceededException(LocalizedFormats.NON_CONVERGENT_CONTINUED_FRACTION,\n                                                maxIterations, x);\n        }\n\n        return hN;\n    }",
+ "imports": [
+  "org.apache.commons.math3.exception.ConvergenceException",
+  "org.apache.commons.math3.exception.MaxCountExceededException",
+  "org.apache.commons.math3.exception.util.LocalizedFormats"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math3.util",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Access the n-th a coefficient of the continued fraction.  Since a can be\n     * a function of the evaluation point, x, that is passed in as well.\n     * @param n the coefficient index to retrieve.\n     * @param x the evaluation point.\n     * @return the n-th a coefficient.\n     */",
+   "name": "getA"
+  },
+  {
+   "javadoc": "/**\n     * Access the n-th b coefficient of the continued fraction.  Since b can be\n     * a function of the evaluation point, x, that is passed in as well.\n     * @param n the coefficient index to retrieve.\n     * @param x the evaluation point.\n     * @return the n-th b coefficient.\n     */",
+   "name": "getB"
+  },
+  {
+   "javadoc": "/**\n     * Evaluates the continued fraction at the value x.\n     * @param x the evaluation point.\n     * @return the value of the continued fraction evaluated at x.\n     * @throws ConvergenceException if the algorithm fails to converge.\n     */",
+   "name": "evaluate"
+  },
+  {
+   "javadoc": "/**\n     * Evaluates the continued fraction at the value x.\n     * @param x the evaluation point.\n     * @param epsilon maximum error allowed.\n     * @return the value of the continued fraction evaluated at x.\n     * @throws ConvergenceException if the algorithm fails to converge.\n     */",
+   "name": "evaluate"
+  },
+  {
+   "javadoc": "/**\n     * Evaluates the continued fraction at the value x.\n     * @param x the evaluation point.\n     * @param maxIterations maximum number of convergents\n     * @return the value of the continued fraction evaluated at x.\n     * @throws ConvergenceException if the algorithm fails to converge.\n     */",
+   "name": "evaluate"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public abstract class ContinuedFraction",
+  "constructors": [
+   "protected ContinuedFraction();"
+  ],
+  "focal_signature": "public double evaluate(double x, double epsilon, int maxIterations)",
+  "methods": [
+   "protected abstract double getA(int n, double x);",
+   "protected abstract double getB(int n, double x);",
+   "public double evaluate(double x);",
+   "public double evaluate(double x, double epsilon);",
+   "public double evaluate(double x, int maxIterations);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

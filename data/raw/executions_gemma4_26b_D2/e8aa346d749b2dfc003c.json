@@ -1,0 +1,504 @@
+{
+ "candidate_id": "e8aa346d749b2dfc003c",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testRead_WhenClosed_ThrowsIOException",
+   "testRead_WhenFinished_ReturnsMinusOne",
+   "testRead_InvalidBufferBounds_ThrowsException",
+   "testRead_NegativeStart_ThrowsException",
+   "testRead_LengthTooLarge_ThrowsException",
+   "testRead_StoredEntry_Success",
+   "testRead_DeflatedEntry_Success",
+   "testRead_TruncatedZip_ThrowsIOException"
+  ],
+  "nc_both": [],
+  "nc_one_version": [],
+  "passes": 0
+ },
+ "dataset": "D2",
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "Compress_5::org.apache.commons.compress.archivers.zip.ZipArchiveInputStream::read(byte[],int,int)#m189",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_WhenClosed_ThrowsIOException",
+   "runs_b": [
+    {
+     "duration_s": 0.111,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.109,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.121,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.121,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.116,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.114,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.ByteArrayOutputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport java.util.zip.ZipOutputStream;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_read_TriageGen2Test {\n\n    @Test(expected = IOException.class)\n    public void testRead_WhenClosed_ThrowsIOException() throws IOException {\n        ByteArrayOutputStream baos = new ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            ZipEntry entry = new ZipEntry(\"test.txt\");\n            zos.putNextEntry(entry);\n            zos.write(\"hello\".getBytes());\n            zos.closeEntry();\n        }\n        ZipArchiveInputStream zais = new ZipArchiveInputStream(new ByteArrayInputStream(baos.toByteArray()));\n        zais.getNextZipEntry();\n        zais.close();\n        \n        zais.read(new byte[10], 0, 10);\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    private long calculateCRC(byte[] data) {\n        CRC32 crc = new CRC32();\n        crc.update(data);\n        return crc.getValue();\n    }\n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_WhenFinished_ReturnsMinusOne",
+   "runs_b": [
+    {
+     "duration_s": 0.148,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.107,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.104,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.116,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.139,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.117,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.ByteArrayOutputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport java.util.zip.ZipOutputStream;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_read_TriageGen2Test {\n\n    \n\n    @Test\n    public void testRead_WhenFinished_ReturnsMinusOne() throws IOException {\n        ByteArrayOutputStream baos = new ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            ZipEntry entry = new ZipEntry(\"test.txt\");\n            zos.putNextEntry(entry);\n            zos.write(\"hello\".getBytes());\n            zos.closeEntry();\n        }\n        ZipArchiveInputStream zais = new ZipArchiveInputStream(new ByteArrayInputStream(baos.toByteArray()));\n        zais.getNextZipEntry();\n        zais.read(new byte[5], 0, 5); // read all\n        \n        // Trigger finished state\n        zais.getNextZipEntry(); \n        \n        Assert.assertEquals(-1, zais.read(new byte[5], 0, 5));\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    private long calculateCRC(byte[] data) {\n        CRC32 crc = new CRC32();\n        crc.update(data);\n        return crc.getValue();\n    }\n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_InvalidBufferBounds_ThrowsException",
+   "runs_b": [
+    {
+     "duration_s": 0.102,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.115,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.134,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.106,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.126,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.126,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.ByteArrayOutputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport java.util.zip.ZipOutputStream;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_read_TriageGen2Test {\n\n    \n\n    \n\n    @Test(expected = ArrayIndexOutOfBoundsException.class)\n    public void testRead_InvalidBufferBounds_ThrowsException() throws IOException {\n        ByteArrayOutputStream baos = new ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            zos.putNextEntry(new ZipEntry(\"test.txt\"));\n            zos.write(\"data\".getBytes());\n            zos.closeEntry();\n        }\n        ZipArchiveInputStream zais = new ZipArchiveInputStream(new ByteArrayInputStream(baos.toByteArray()));\n        zais.getNextZipEntry();\n        \n        // start > buffer.length\n        zais.read(new byte[2], 3, 1);\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    private long calculateCRC(byte[] data) {\n        CRC32 crc = new CRC32();\n        crc.update(data);\n        return crc.getValue();\n    }\n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_NegativeStart_ThrowsException",
+   "runs_b": [
+    {
+     "duration_s": 0.119,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.105,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.113,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.115,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.13,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.112,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.ByteArrayOutputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport java.util.zip.ZipOutputStream;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_read_TriageGen2Test {\n\n    \n\n    \n\n    \n\n    @Test(expected = ArrayIndexOutOfBoundsException.class)\n    public void testRead_NegativeStart_ThrowsException() throws IOException {\n        ByteArrayOutputStream baos = new ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            zos.putNextEntry(new ZipEntry(\"test.txt\"));\n            zos.write(\"data\".getBytes());\n            zos.closeEntry();\n        }\n        ZipArchiveInputStream zais = new ZipArchiveInputStream(new ByteArrayInputStream(baos.toByteArray()));\n        zais.getNextZipEntry();\n        \n        zais.read(new byte[5], -1, 1);\n    }\n\n    \n\n    \n\n    \n\n    \n\n    private long calculateCRC(byte[] data) {\n        CRC32 crc = new CRC32();\n        crc.update(data);\n        return crc.getValue();\n    }\n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_LengthTooLarge_ThrowsException",
+   "runs_b": [
+    {
+     "duration_s": 0.135,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.136,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.116,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.118,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.131,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.122,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.ByteArrayOutputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport java.util.zip.ZipOutputStream;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_read_TriageGen2Test {\n\n    \n\n    \n\n    \n\n    \n\n    @Test(expected = ArrayIndexOutOfBoundsException.class)\n    public void testRead_LengthTooLarge_ThrowsException() throws IOException {\n        ByteArrayOutputStream baos = new ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            zos.putNextEntry(new ZipEntry(\"test.txt\"));\n            zos.write(\"data\".getBytes());\n            zos.closeEntry();\n        }\n        ZipArchiveInputStream zais = new ZipArchiveInputStream(new ByteArrayInputStream(baos.toByteArray()));\n        zais.getNextZipEntry();\n        \n        // buffer.length - start < length\n        zais.read(new byte[5], 0, 10);\n    }\n\n    \n\n    \n\n    \n\n    private long calculateCRC(byte[] data) {\n        CRC32 crc = new CRC32();\n        crc.update(data);\n        return crc.getValue();\n    }\n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_StoredEntry_Success",
+   "runs_b": [
+    {
+     "duration_s": 0.137,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 58,
+     "message": "array lengths differed, expected.length=6 actual.length=5",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: array lengths differed, expected.length=6 actual.length=5\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.internal.ComparisonCriteria.assertArraysAreSameLength(ComparisonCriteria.java:76)\n\tat org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:37)\n\tat org.junit.Assert.internalArrayEquals(Assert.java:532)\n\tat org.junit.Assert.assertArrayEquals(Assert.java:341)\n\tat org.junit.Assert.assertArrayEquals(Assert.java:352)\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream_read_TriageGen2Test.testRead_StoredEntry_Success(ZipArchiveInputStream_read_TriageGen2Test.java:58)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.116,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 58,
+     "message": "array lengths differed, expected.length=6 actual.length=5",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: array lengths differed, expected.length=6 actual.length=5\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.internal.ComparisonCriteria.assertArraysAreSameLength(ComparisonCriteria.java:76)\n\tat org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:37)\n\tat org.junit.Assert.internalArrayEquals(Assert.java:532)\n\tat org.junit.Assert.assertArrayEquals(Assert.java:341)\n\tat org.junit.Assert.assertArrayEquals(Assert.java:352)\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream_read_TriageGen2Test.testRead_StoredEntry_Success(ZipArchiveInputStream_read_TriageGen2Test.java:58)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.127,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 58,
+     "message": "array lengths differed, expected.length=6 actual.length=5",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: array lengths differed, expected.length=6 actual.length=5\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.internal.ComparisonCriteria.assertArraysAreSameLength(ComparisonCriteria.java:76)\n\tat org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:37)\n\tat org.junit.Assert.internalArrayEquals(Assert.java:532)\n\tat org.junit.Assert.assertArrayEquals(Assert.java:341)\n\tat org.junit.Assert.assertArrayEquals(Assert.java:352)\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream_read_TriageGen2Test.testRead_StoredEntry_Success(ZipArchiveInputStream_read_TriageGen2Test.java:58)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.121,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 58,
+     "message": "array lengths differed, expected.length=6 actual.length=5",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: array lengths differed, expected.length=6 actual.length=5\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.internal.ComparisonCriteria.assertArraysAreSameLength(ComparisonCriteria.java:76)\n\tat org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:37)\n\tat org.junit.Assert.internalArrayEquals(Assert.java:532)\n\tat org.junit.Assert.assertArrayEquals(Assert.java:341)\n\tat org.junit.Assert.assertArrayEquals(Assert.java:352)\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream_read_TriageGen2Test.testRead_StoredEntry_Success(ZipArchiveInputStream_read_TriageGen2Test.java:58)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.113,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 58,
+     "message": "array lengths differed, expected.length=6 actual.length=5",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: array lengths differed, expected.length=6 actual.length=5\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.internal.ComparisonCriteria.assertArraysAreSameLength(ComparisonCriteria.java:76)\n\tat org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:37)\n\tat org.junit.Assert.internalArrayEquals(Assert.java:532)\n\tat org.junit.Assert.assertArrayEquals(Assert.java:341)\n\tat org.junit.Assert.assertArrayEquals(Assert.java:352)\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream_read_TriageGen2Test.testRead_StoredEntry_Success(ZipArchiveInputStream_read_TriageGen2Test.java:58)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.11,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 58,
+     "message": "array lengths differed, expected.length=6 actual.length=5",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: array lengths differed, expected.length=6 actual.length=5\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.internal.ComparisonCriteria.assertArraysAreSameLength(ComparisonCriteria.java:76)\n\tat org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:37)\n\tat org.junit.Assert.internalArrayEquals(Assert.java:532)\n\tat org.junit.Assert.assertArrayEquals(Assert.java:341)\n\tat org.junit.Assert.assertArrayEquals(Assert.java:352)\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream_read_TriageGen2Test.testRead_StoredEntry_Success(ZipArchiveInputStream_read_TriageGen2Test.java:58)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.ByteArrayOutputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport java.util.zip.ZipOutputStream;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_read_TriageGen2Test {\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testRead_StoredEntry_Success() throws IOException {\n        byte[] content = \"stored content\".getBytes();\n        ByteArrayOutputStream baos = new ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            ZipEntry entry = new ZipEntry(\"stored.txt\");\n            entry.setMethod(ZipEntry.STORED);\n            entry.setSize(content.length);\n            entry.setCrc(calculateCRC(content));\n            zos.putNextEntry(entry);\n            zos.write(content);\n            zos.closeEntry();\n        }\n\n        ZipArchiveInputStream zais = new ZipArchiveInputStream(new ByteArrayInputStream(baos.toByteArray()));\n        zais.getNextZipEntry();\n\n        byte[] buffer = new byte[5];\n        int read = zais.read(buffer, 0, 5);\n        Assert.assertEquals(5, read);\n        Assert.assertArrayEquals(\"stored\".getBytes(), buffer);\n\n        int read2 = zais.read(buffer, 0, 5);\n        Assert.assertEquals(5, read2);\n        Assert.assertArrayEquals(\" conte\".getBytes(), buffer);\n    }\n\n    \n\n    \n\n    private long calculateCRC(byte[] data) {\n        CRC32 crc = new CRC32();\n        crc.update(data);\n        return crc.getValue();\n    }\n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_DeflatedEntry_Success",
+   "runs_b": [
+    {
+     "duration_s": 0.15,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 58,
+     "message": "expected:<-1> but was:<6>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<-1> but was:<6>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream_read_TriageGen2Test.testRead_DeflatedEntry_Success(ZipArchiveInputStream_read_TriageGen2Test.java:58)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.12,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 58,
+     "message": "expected:<-1> but was:<6>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<-1> but was:<6>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream_read_TriageGen2Test.testRead_DeflatedEntry_Success(ZipArchiveInputStream_read_TriageGen2Test.java:58)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.11,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 58,
+     "message": "expected:<-1> but was:<6>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<-1> but was:<6>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream_read_TriageGen2Test.testRead_DeflatedEntry_Success(ZipArchiveInputStream_read_TriageGen2Test.java:58)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.107,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 58,
+     "message": "expected:<-1> but was:<6>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<-1> but was:<6>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream_read_TriageGen2Test.testRead_DeflatedEntry_Success(ZipArchiveInputStream_read_TriageGen2Test.java:58)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.11,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 58,
+     "message": "expected:<-1> but was:<6>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<-1> but was:<6>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream_read_TriageGen2Test.testRead_DeflatedEntry_Success(ZipArchiveInputStream_read_TriageGen2Test.java:58)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.125,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 58,
+     "message": "expected:<-1> but was:<6>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<-1> but was:<6>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream_read_TriageGen2Test.testRead_DeflatedEntry_Success(ZipArchiveInputStream_read_TriageGen2Test.java:58)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.ByteArrayOutputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport java.util.zip.ZipOutputStream;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_read_TriageGen2Test {\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testRead_DeflatedEntry_Success() throws IOException {\n        byte[] content = \"deflated content\".getBytes();\n        ByteArrayOutputStream baos = new ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            zos.putNextEntry(new ZipEntry(\"deflated.txt\"));\n            zos.write(content);\n            zos.closeEntry();\n        }\n\n        ZipArchiveInputStream zais = new ZipArchiveInputStream(new ByteArrayInputStream(baos.toByteArray()));\n        zais.getNextZipEntry();\n\n        byte[] buffer = new byte[10];\n        int read = zais.read(buffer, 0, 10);\n        Assert.assertTrue(read > 0);\n        \n        int readEnd = zais.read(buffer, 0, 10);\n        Assert.assertEquals(-1, readEnd);\n    }\n\n    \n\n    private long calculateCRC(byte[] data) {\n        CRC32 crc = new CRC32();\n        crc.update(data);\n        return crc.getValue();\n    }\n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_TruncatedZip_ThrowsIOException",
+   "runs_b": [
+    {
+     "duration_s": 0.126,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": null,
+     "message": "Expected exception: java.io.IOException",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Expected exception: java.io.IOException\n\tat org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:32)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.127,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": null,
+     "message": "Expected exception: java.io.IOException",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Expected exception: java.io.IOException\n\tat org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:32)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.128,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": null,
+     "message": "Expected exception: java.io.IOException",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Expected exception: java.io.IOException\n\tat org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:32)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.105,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": null,
+     "message": "Expected exception: java.io.IOException",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Expected exception: java.io.IOException\n\tat org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:32)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.123,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": null,
+     "message": "Expected exception: java.io.IOException",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Expected exception: java.io.IOException\n\tat org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:32)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.129,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": null,
+     "message": "Expected exception: java.io.IOException",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Expected exception: java.io.IOException\n\tat org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:32)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.ByteArrayOutputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport java.util.zip.ZipOutputStream;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_read_TriageGen2Test {\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test(expected = IOException.class)\n    public void testRead_TruncatedZip_ThrowsIOException() throws IOException {\n        // Manually construct a broken zip stream for deflated data\n        ByteArrayOutputStream baos = new ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            zos.putNextEntry(new ZipEntry(\"broken.txt\"));\n            zos.write(\"some data\".getBytes());\n            zos.closeEntry();\n        }\n        byte[] validZip = baos.toByteArray();\n        // Truncate the zip array to make it invalid\n        byte[] truncatedZip = new byte[validZip.length - 5];\n        System.arraycopy(validZip, 0, truncatedZip, 0, truncatedZip.length);\n\n        ZipArchiveInputStream zais = new ZipArchiveInputStream(new ByteArrayInputStream(truncatedZip));\n        zais.getNextZipEntry();\n        \n        byte[] buffer = new byte[100];\n        zais.read(buffer, 0, 100);\n    }\n\n    private long calculateCRC(byte[] data) {\n        CRC32 crc = new CRC32();\n        crc.update(data);\n        return crc.getValue();\n    }\n}\n"
+  }
+ ],
+ "mutant_version": "m189",
+ "source_sha256": "c113117693861fb4864e3ac65ced2b62755064ca4a04dcea0239f769d7642447",
+ "utc": "2026-11-03T00:30:38Z"
+}

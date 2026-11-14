@@ -1,0 +1,111 @@
+{
+ "bug_name": "Mockito_13",
+ "call_sites": [
+  {
+   "line": 13,
+   "lines": [
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "path": "src/org/mockito/internal/MockitoInvocationHandler.java",
+   "snippet": "\nimport org.mockito.internal.invocation.Invocation;\n\npublic interface MockitoInvocationHandler extends Serializable {\n\n    Object handle(Invocation invocation) throws Throwable;\n\n}\n"
+  },
+  {
+   "line": 47,
+   "lines": [
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52
+   ],
+   "path": "src/org/mockito/internal/creation/MethodInterceptorFilter.java",
+   "snippet": "        \n        MockitoMethod mockitoMethod = createMockitoMethod(method);\n        \n        FilteredCGLIBProxyRealMethod realMethod = new FilteredCGLIBProxyRealMethod(mockitoMethodProxy);\n        Invocation invocation = new Invocation(proxy, mockitoMethod, args, SequenceNumber.next(), realMethod);\n        return handler.handle(invocation);\n    }\n   \n    public MockitoInvocationHandler getHandler() {\n        return handler;\n    }"
+  }
+ ],
+ "class_simple": "MockHandler",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Invocation handler set on mock objects.\n * \n * @param <T>\n *            type of mock object to handle\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "InvocationContainerImpl invocationContainerImpl",
+  "MatchersBinder matchersBinder",
+  "MockingProgress mockingProgress",
+  "private final MockSettingsImpl mockSettings"
+ ],
+ "focal_class": "org.mockito.internal.MockHandler",
+ "focal_id": "Mockito_13::org.mockito.internal.MockHandler::handle(Invocation)",
+ "focal_method_name": "handle",
+ "generations": 3,
+ "impl_B": "public Object handle(Invocation invocation) throws Throwable {\n        if (invocationContainerImpl.hasAnswersForStubbing()) {\n            // stubbing voids with stubVoid() or doAnswer() style\n            InvocationMatcher invocationMatcher = matchersBinder.bindMatchers(mockingProgress\n                            .getArgumentMatcherStorage(), invocation);\n            invocationContainerImpl.setMethodForStubbing(invocationMatcher);\n            return null;\n        }\n        VerificationMode verificationMode = mockingProgress.pullVerificationMode();\n\n        InvocationMatcher invocationMatcher = matchersBinder.bindMatchers(mockingProgress.getArgumentMatcherStorage(),\n                        invocation);\n\n        mockingProgress.validateState();\n\n        //if verificationMode is not null then someone is doing verify()        \n        if (verificationMode != null) {\n            //We need to check if verification was started on the correct mock \n            // - see VerifyingWithAnExtraCallToADifferentMockTest (bug 138)\n            if (verificationMode instanceof MockAwareVerificationMode && ((MockAwareVerificationMode) verificationMode).getMock() == invocation.getMock()) {                \n                VerificationDataImpl data = new VerificationDataImpl(invocationContainerImpl, invocationMatcher);            \n                verificationMode.verify(data);\n                return null;\n                // this means there is an invocation on a different mock. Re-adding verification mode \n                // - see VerifyingWithAnExtraCallToADifferentMockTest (bug 138)\n            }\n        }\n        \n        invocationContainerImpl.setInvocationForPotentialStubbing(invocationMatcher);\n        OngoingStubbingImpl<T> ongoingStubbing = new OngoingStubbingImpl<T>(invocationContainerImpl);\n        mockingProgress.reportOngoingStubbing(ongoingStubbing);\n\n        StubbedInvocationMatcher stubbedInvocation = invocationContainerImpl.findAnswerFor(invocation);\n\n        if (stubbedInvocation != null) {\n            stubbedInvocation.captureArgumentsFrom(invocation);\n            return stubbedInvocation.answer(invocation);\n        } else {\n            Object ret = mockSettings.getDefaultAnswer().answer(invocation);\n\n            // redo setting invocation for potential stubbing in case of partial\n            // mocks / spies.\n            // Without it, the real method inside 'when' might have delegated\n            // to other self method and overwrite the intended stubbed method\n            // with a different one. The reset is required to avoid runtime exception that validates return type with stubbed method signature.\n            invocationContainerImpl.resetInvocationForPotentialStubbing(invocationMatcher);\n            return ret;\n        }\n    }",
+ "imports": [
+  "java.util.List",
+  "org.mockito.internal.creation.MockSettingsImpl",
+  "org.mockito.internal.invocation.Invocation",
+  "org.mockito.internal.invocation.InvocationMatcher",
+  "org.mockito.internal.invocation.MatchersBinder",
+  "org.mockito.internal.progress.MockingProgress",
+  "org.mockito.internal.progress.ThreadSafeMockingProgress",
+  "org.mockito.internal.stubbing.InvocationContainer",
+  "org.mockito.internal.stubbing.InvocationContainerImpl",
+  "org.mockito.internal.stubbing.OngoingStubbingImpl",
+  "org.mockito.internal.stubbing.StubbedInvocationMatcher",
+  "org.mockito.internal.stubbing.VoidMethodStubbableImpl",
+  "org.mockito.internal.verification.MockAwareVerificationMode",
+  "org.mockito.internal.verification.VerificationDataImpl",
+  "org.mockito.stubbing.Answer",
+  "org.mockito.stubbing.VoidMethodStubbable",
+  "org.mockito.verification.VerificationMode"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.mockito.internal",
+ "project": "Mockito",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "voidMethodStubbable"
+  },
+  {
+   "javadoc": "",
+   "name": "getMockSettings"
+  },
+  {
+   "javadoc": "",
+   "name": "getInvocationContainer"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class MockHandler<T> implements MockitoInvocationHandler, MockHandlerInterface<T>",
+  "constructors": [
+   "public MockHandler(MockSettingsImpl mockSettings);",
+   "public MockHandler(MockHandlerInterface<T> oldMockHandler);"
+  ],
+  "focal_signature": "public Object handle(Invocation invocation) throws Throwable",
+  "methods": [
+   "public VoidMethodStubbable<T> voidMethodStubbable(T mock);",
+   "public MockSettingsImpl getMockSettings();",
+   "public InvocationContainer getInvocationContainer();"
+  ],
+  "type_signatures": [
+   "@SuppressWarnings(\"unchecked\") public class Invocation implements PrintableInvocation, InvocationOnMock, PrintingFriendlyInvocation { public Invocation(Object mock, MockitoMethod mockitoMethod, Object[] args, int sequenceNumber, RealMethod realMethod); public Object getMock(); public Method getMethod(); public Object[] getArguments(); public boolean isVerified(); public Integer getSequenceNumber(); public boolean equals(Object o); public int hashCode(); public String toString(); protected String toString(List<Matcher> matchers, PrintSettings printSettings); protected List<Matcher> argumentsToMatchers(); public static boolean isToString(InvocationOnMock invocation); public boolean isValidException(Throwable throwable); public boolean isValidReturnType(Class clazz); public boolean isVoid(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

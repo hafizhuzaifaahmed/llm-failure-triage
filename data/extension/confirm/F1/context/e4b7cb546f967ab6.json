@@ -1,0 +1,124 @@
+{
+ "bug_name": "Lang_19",
+ "call_sites": [
+  {
+   "line": 341,
+   "lines": [
+    336,
+    337,
+    338,
+    339,
+    340,
+    341,
+    342,
+    343,
+    344,
+    345,
+    346
+   ],
+   "path": "src/main/java/org/apache/commons/lang3/StringEscapeUtils.java",
+   "snippet": "     *\n     * @param input  String to escape values in, may be null\n     * @return String with escaped values, {@code null} if null string input\n     */\n    public static final String escapeJava(String input) {\n        return ESCAPE_JAVA.translate(input);\n    }\n\n    /**\n     * <p>Escapes the characters in a {@code String} using EcmaScript String rules.</p>\n     * <p>Escapes any values it finds into their EcmaScript String form."
+  },
+  {
+   "line": 370,
+   "lines": [
+    365,
+    366,
+    367,
+    368,
+    369,
+    370,
+    371,
+    372,
+    373,
+    374,
+    375
+   ],
+   "path": "src/main/java/org/apache/commons/lang3/StringEscapeUtils.java",
+   "snippet": "     * @return String with escaped values, {@code null} if null string input\n     *\n     * @since 3.0\n     */\n    public static final String escapeEcmaScript(String input) {\n        return ESCAPE_ECMASCRIPT.translate(input);\n    }\n\n    /**\n     * <p>Unescapes any Java literals found in the {@code String}.\n     * For example, it will turn a sequence of {@code '\\'} and"
+  },
+  {
+   "line": 383,
+   "lines": [
+    378,
+    379,
+    380,
+    381,
+    382,
+    383,
+    384,
+    385,
+    386,
+    387,
+    388
+   ],
+   "path": "src/main/java/org/apache/commons/lang3/StringEscapeUtils.java",
+   "snippet": "     * \n     * @param input  the {@code String} to unescape, may be null\n     * @return a new unescaped {@code String}, {@code null} if null string input\n     */\n    public static final String unescapeJava(String input) {\n        return UNESCAPE_JAVA.translate(input);\n    }\n\n    /**\n     * <p>Unescapes any EcmaScript literals found in the {@code String}.</p>\n     *"
+  },
+  {
+   "line": 400,
+   "lines": [
+    395,
+    396,
+    397,
+    398,
+    399,
+    400,
+    401,
+    402,
+    403,
+    404,
+    405
+   ],
+   "path": "src/main/java/org/apache/commons/lang3/StringEscapeUtils.java",
+   "snippet": "     * @return A new unescaped {@code String}, {@code null} if null string input\n     *\n     * @since 3.0\n     */\n    public static final String unescapeEcmaScript(String input) {\n        return UNESCAPE_ECMASCRIPT.translate(input);\n    }\n\n    // HTML and XML\n    //--------------------------------------------------------------------------\n    /**"
+  },
+  {
+   "line": 433,
+   "lines": [
+    428,
+    429,
+    430,
+    431,
+    432,
+    433,
+    434,
+    435,
+    436,
+    437,
+    438
+   ],
+   "path": "src/main/java/org/apache/commons/lang3/StringEscapeUtils.java",
+   "snippet": "     * @see <a href=\"http://www.w3.org/TR/html401/charset.html#code-position\">HTML 4.01 Code positions</a>\n     * \n     * @since 3.0\n     */\n    public static final String escapeHtml4(String input) {\n        return ESCAPE_HTML4.translate(input);\n    }\n\n    /**\n     * <p>Escapes the characters in a {@code String} using HTML entities.</p>\n     * <p>Supports only the HTML 3.0 entities. </p>"
+  }
+ ],
+ "class_simple": "NumericEntityUnescaper",
+ "dataset": "D1C_F1",
+ "doc": {
+  "class_javadoc": "/**\n * Translate XML numeric entities of the form &#[xX]?\\d+;? to \n * the specific codepoint.\n *\n * Note that the semi-colon is optional.\n * \n * @since 3.0\n * @version $Id$\n */\npublic",
+  "method_javadoc": "/**\n     * {@inheritDoc}\n     */"
+ },
+ "fields": [],
+ "focal_class": "org.apache.commons.lang3.text.translate.NumericEntityUnescaper",
+ "focal_id": "Lang_19::org.apache.commons.lang3.text.translate.NumericEntityUnescaper::translate(CharSequence,int,Writer)",
+ "focal_method_name": "translate",
+ "generations": 6,
+ "impl_B": "@Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException {\n        int seqEnd = input.length();\n        // Uses -2 to ensure there is something after the &#\n        if(input.charAt(index) == '&' && index < seqEnd - 1 && input.charAt(index + 1) == '#') {\n            int start = index + 2;\n            boolean isHex = false;\n\n            char firstChar = input.charAt(start);\n            if(firstChar == 'x' || firstChar == 'X') {\n                start++;\n                isHex = true;\n\n                // Check there's more than just an x after the &#\n            }\n\n            int end = start;\n            // Note that this supports character codes without a ; on the end\n            while(input.charAt(end) != ';') \n            {\n                end++;\n            }\n\n            int entityValue;\n            try {\n                if(isHex) {\n                    entityValue = Integer.parseInt(input.subSequence(start, end).toString(), 16);\n                } else {\n                    entityValue = Integer.parseInt(input.subSequence(start, end).toString(), 10);\n                }\n            } catch(NumberFormatException nfe) {\n            System.err.println(\"FAIL: \" + input.subSequence(start, end) + \"[\" + start +\"][\"+ end +\"]\");\n                return 0;\n            }\n\n            if(entityValue > 0xFFFF) {\n                char[] chrs = Character.toChars(entityValue);\n                out.write(chrs[0]);\n                out.write(chrs[1]);\n            } else {\n                out.write(entityValue);\n            }\n\n\n            return 2 + (end - start) + (isHex ? 1 : 0) + 1;\n        }\n        return 0;\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.io.Writer"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.lang3.text.translate",
+ "project": "Lang",
+ "siblings": [],
+ "sig": {
+  "class_declaration": "public class NumericEntityUnescaper extends CharSequenceTranslator",
+  "constructors": [],
+  "focal_signature": "public int translate(CharSequence input, int index, Writer out) throws IOException",
+  "methods": [],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F1"
+}

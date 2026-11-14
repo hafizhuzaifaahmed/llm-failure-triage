@@ -1,0 +1,146 @@
+{
+ "bug_name": "Closure_49",
+ "call_sites": [
+  {
+   "line": 137,
+   "lines": [
+    132,
+    133,
+    134,
+    135,
+    136,
+    137,
+    138,
+    139,
+    140,
+    141,
+    142
+   ],
+   "path": "src/com/google/javascript/jscomp/CombinedCompilerPass.java",
+   "snippet": "      }\n    }\n\n    void enterScopeIfActive(NodeTraversal t) {\n      if (isActive() && scopedCallback != null) {\n        scopedCallback.enterScope(t);\n      }\n    }\n\n    void exitScopeIfActive(NodeTraversal t) {\n      if (isActive() && scopedCallback != null) {"
+  },
+  {
+   "line": 117,
+   "lines": [
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122
+   ],
+   "path": "src/com/google/javascript/jscomp/NodeTraversal.java",
+   "snippet": "\n    /**\n     * Called immediately after entering a new scope. The new scope can\n     * be accessed through t.getScope()\n     */\n    void enterScope(NodeTraversal t);\n\n    /**\n     * Called immediately before exiting a scope. The ending scope can\n     * be accessed through t.getScope()\n     */"
+  },
+  {
+   "line": 561,
+   "lines": [
+    556,
+    557,
+    558,
+    559,
+    560,
+    561,
+    562,
+    563,
+    564,
+    565,
+    566
+   ],
+   "path": "src/com/google/javascript/jscomp/NodeTraversal.java",
+   "snippet": "  private void pushScope(Node node) {\n    Preconditions.checkState(curNode != null);\n    scopeRoots.push(node);\n    cfgs.push(null);\n    if (scopeCallback != null) {\n      scopeCallback.enterScope(this);\n    }\n  }\n\n  /** Creates a new scope (e.g. when entering a function). */\n  private void pushScope(Scope s) {"
+  },
+  {
+   "line": 571,
+   "lines": [
+    566,
+    567,
+    568,
+    569,
+    570,
+    571,
+    572,
+    573,
+    574,
+    575,
+    576
+   ],
+   "path": "src/com/google/javascript/jscomp/NodeTraversal.java",
+   "snippet": "  private void pushScope(Scope s) {\n    Preconditions.checkState(curNode != null);\n    scopes.push(s);\n    cfgs.push(null);\n    if (scopeCallback != null) {\n      scopeCallback.enterScope(this);\n    }\n  }\n\n  /** Pops back to the previous scope (e.g. when leaving a function). */\n  private void popScope() {"
+  }
+ ],
+ "class_simple": "MakeDeclaredNamesUnique",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n *  Find all Functions, VARs, and Exception names and make them\n *  unique.  Specifically, it will not modify object properties.\n *  @author johnlenz@google.com (John Lenz)\n *  TODO(johnlenz): Try to merge this with the ScopeCreator.\n */",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "public static final String ARGUMENTS",
+  "private Deque<Renamer> nameStack",
+  "private final Renamer rootRenamer"
+ ],
+ "focal_class": "com.google.javascript.jscomp.MakeDeclaredNamesUnique",
+ "focal_id": "Closure_49::com.google.javascript.jscomp.MakeDeclaredNamesUnique::enterScope(NodeTraversal)",
+ "focal_method_name": "enterScope",
+ "generations": 3,
+ "impl_B": "@Override\n  public void enterScope(NodeTraversal t) {\n    Node declarationRoot = t.getScopeRoot();\n    Renamer renamer;\n    if (nameStack.isEmpty()) {\n      // If the contextual renamer is being used the starting context can not\n      // be a function.\n      Preconditions.checkState(\n          declarationRoot.getType() != Token.FUNCTION ||\n          !(rootRenamer instanceof ContextualRenamer));\n      Preconditions.checkState(t.inGlobalScope());\n      renamer = rootRenamer;\n    } else {\n      renamer = nameStack.peek().forChildScope();\n    }\n\n    if (declarationRoot.getType() == Token.FUNCTION) {\n      for (Node c = declarationRoot.getFirstChild().getNext().getFirstChild(); c != null; c = c.getNext()) {\n        String name = c.getString();\n        renamer.addDeclaredName(name);\n      }\n      Node functionBody = declarationRoot.getLastChild();\n      findDeclaredNames(functionBody, null, renamer);\n    }  else \n    if (declarationRoot.getType() != Token.FUNCTION) {\n      // Add the block declarations\n      findDeclaredNames(declarationRoot, null, renamer);\n    }\n    nameStack.push(renamer);\n  }",
+ "imports": [
+  "com.google.common.base.Preconditions",
+  "com.google.common.base.Supplier",
+  "com.google.common.collect.HashMultiset",
+  "com.google.common.collect.ImmutableSet",
+  "com.google.common.collect.Lists",
+  "com.google.common.collect.Maps",
+  "com.google.common.collect.Multiset",
+  "com.google.common.collect.Sets",
+  "com.google.javascript.jscomp.NodeTraversal.ScopedCallback",
+  "com.google.javascript.jscomp.Scope.Var",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.Token",
+  "com.google.javascript.rhino.TokenStream",
+  "java.util.ArrayDeque",
+  "java.util.Deque",
+  "java.util.Iterator",
+  "java.util.List",
+  "java.util.Map",
+  "java.util.Set"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "exitScope"
+  },
+  {
+   "javadoc": "",
+   "name": "shouldTraverse"
+  },
+  {
+   "javadoc": "",
+   "name": "visit"
+  }
+ ],
+ "sig": {
+  "class_declaration": "class MakeDeclaredNamesUnique implements NodeTraversal.ScopedCallback",
+  "constructors": [],
+  "focal_signature": "public void enterScope(NodeTraversal t)",
+  "methods": [
+   "public void exitScope(NodeTraversal t);",
+   "public boolean shouldTraverse(NodeTraversal t, Node n, Node parent);",
+   "public void visit(NodeTraversal t, Node n, Node parent);"
+  ],
+  "type_signatures": [
+   "public class NodeTraversal { public NodeTraversal(AbstractCompiler compiler, Callback cb); public NodeTraversal(AbstractCompiler compiler, Callback cb, ScopeCreator scopeCreator); public void traverse(Node root); public void traverseRoots(Node ... roots); public void traverseRoots(List<Node> roots); protected void traverseInnerNode(Node node, Node parent, Scope refinedScope); public Compiler getCompiler(); public int getLineNumber(); public String getSourceName(); public CompilerInput getInput(); public JSModule getModule(); public Node getCurrentNode(); public static void traverse( AbstractCompiler compiler, Node root, Callback cb); public static void traverseRoots( AbstractCompiler compiler, List<Node> roots, Callback cb); public Scope getScope(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

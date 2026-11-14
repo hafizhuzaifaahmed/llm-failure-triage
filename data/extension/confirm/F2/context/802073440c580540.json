@@ -1,0 +1,204 @@
+{
+ "bug_name": "JacksonDatabind_58",
+ "call_sites": [
+  {
+   "line": 375,
+   "lines": [
+    370,
+    371,
+    372,
+    373,
+    374,
+    375,
+    376,
+    377,
+    378,
+    379,
+    380
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerFactory.java",
+   "snippet": "         */\n        AnnotatedMethod am = beanDesc.findMethod(\"initCause\", INIT_CAUSE_PARAMS);\n        if (am != null) { // should never be null\n            SimpleBeanPropertyDefinition propDef = SimpleBeanPropertyDefinition.construct(ctxt.getConfig(), am,\n                    new PropertyName(\"cause\"));\n            SettableBeanProperty prop = constructSettableProperty(ctxt, beanDesc, propDef,\n                    am.getParameterType(0));\n            if (prop != null) {\n                /* 21-Aug-2011, tatus: We may actually have found 'cause' property\n                 *   to set... but let's replace it just in case,\n                 *   otherwise can end up with odd errors."
+  },
+  {
+   "line": 504,
+   "lines": [
+    499,
+    500,
+    501,
+    502,
+    503,
+    504,
+    505,
+    506,
+    507,
+    508,
+    509
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerFactory.java",
+   "snippet": "             *   we need to do linkage (as per [databind#318]), and so need to start with\n             *   other types, and only then create constructor parameter, if any.\n             */\n            if (propDef.hasSetter()) {\n                JavaType propertyType = propDef.getSetter().getParameterType(0);\n                prop = constructSettableProperty(ctxt, beanDesc, propDef, propertyType);\n            } else if (propDef.hasField()) {\n                JavaType propertyType = propDef.getField().getType();\n                prop = constructSettableProperty(ctxt, beanDesc, propDef, propertyType);\n            } else if (useGettersAsSetters && propDef.hasGetter()) {\n                /* May also need to consider getters"
+  },
+  {
+   "line": 507,
+   "lines": [
+    502,
+    503,
+    504,
+    505,
+    506,
+    507,
+    508,
+    509,
+    510,
+    511,
+    512
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerFactory.java",
+   "snippet": "            if (propDef.hasSetter()) {\n                JavaType propertyType = propDef.getSetter().getParameterType(0);\n                prop = constructSettableProperty(ctxt, beanDesc, propDef, propertyType);\n            } else if (propDef.hasField()) {\n                JavaType propertyType = propDef.getField().getType();\n                prop = constructSettableProperty(ctxt, beanDesc, propDef, propertyType);\n            } else if (useGettersAsSetters && propDef.hasGetter()) {\n                /* May also need to consider getters\n                 * for Map/Collection properties; but with lowest precedence\n                 */\n                AnnotatedMethod getter = propDef.getGetter();"
+  },
+  {
+   "line": 629,
+   "lines": [
+    624,
+    625,
+    626,
+    627,
+    628,
+    629,
+    630,
+    631,
+    632,
+    633,
+    634
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerFactory.java",
+   "snippet": "                } else {\n                    type = m.getType();\n                }\n                SimpleBeanPropertyDefinition propDef = SimpleBeanPropertyDefinition.construct(\n                \t\tctxt.getConfig(), m);\n                builder.addBackReferenceProperty(name, constructSettableProperty(\n                        ctxt, beanDesc, propDef, type));\n            }\n        }\n    }\n"
+  }
+ ],
+ "class_simple": "BeanDeserializerFactory",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Concrete deserializer factory class that adds full Bean deserializer\n * construction logic using class introspection.\n * Note that factories specifically do not implement any form of caching:\n * aside from configuration they are stateless; caching is implemented\n * by other components.\n *<p>\n * Instances of this class are fully immutable as all configuration is\n * done by using \"fluent factories\" (methods that construct new factory\n * instances with different configuration, instead of modifying instance).\n */\npublic",
+  "method_javadoc": "/**\n     * Method that will construct a regular bean property setter using\n     * the given setter method.\n     *\n     * @return Property constructed, if any; or null to indicate that\n     *   there should be no property based on given definitions.\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "private final static Class<?>[] INIT_CAUSE_PARAMS",
+  "private final static Class<?>[] NO_VIEWS",
+  "public final static BeanDeserializerFactory instance"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.deser.BeanDeserializerFactory",
+ "focal_id": "JacksonDatabind_58::com.fasterxml.jackson.databind.deser.BeanDeserializerFactory::constructSettableProperty(DeserializationContext,BeanDescription,BeanPropertyDefinition,JavaType)",
+ "focal_method_name": "constructSettableProperty",
+ "generations": 3,
+ "impl_B": "protected SettableBeanProperty constructSettableProperty(DeserializationContext ctxt,\n            BeanDescription beanDesc, BeanPropertyDefinition propDef,\n            JavaType propType0)\n        throws JsonMappingException\n    {\n        // need to ensure method is callable (for non-public)\n        AnnotatedMember mutator = propDef.getNonConstructorMutator();\n\n        if (ctxt.canOverrideAccessModifiers()) {\n            // [databind#877]: explicitly prevent forced access to `cause` of `Throwable`;\n            // never needed and attempts may cause problems on some platforms.\n            // !!! NOTE: should be handled better for 2.8 and later\n                mutator.fixAccess(ctxt.isEnabled(MapperFeature.OVERRIDE_PUBLIC_ACCESS_MODIFIERS));\n        }\n        // note: this works since we know there's exactly one argument for methods\n        BeanProperty.Std property = new BeanProperty.Std(propDef.getFullName(),\n                propType0, propDef.getWrapperName(),\n                beanDesc.getClassAnnotations(), mutator, propDef.getMetadata());\n        JavaType type = resolveType(ctxt, beanDesc, propType0, mutator);\n        // did type change?\n        if (type != propType0) {\n            property = property.withType(type);\n        }\n\n        // First: does the Method specify the deserializer to use? If so, let's use it.\n        JsonDeserializer<Object> propDeser = findDeserializerFromAnnotation(ctxt, mutator);\n        type = modifyTypeByAnnotation(ctxt, mutator, type);\n        TypeDeserializer typeDeser = type.getTypeHandler();\n        SettableBeanProperty prop;\n        if (mutator instanceof AnnotatedMethod) {\n            prop = new MethodProperty(propDef, type, typeDeser,\n                    beanDesc.getClassAnnotations(), (AnnotatedMethod) mutator);\n        } else {\n            prop = new FieldProperty(propDef, type, typeDeser,\n                    beanDesc.getClassAnnotations(), (AnnotatedField) mutator);\n        }\n        if (propDeser != null) {\n            prop = prop.withValueDeserializer(propDeser);\n        }\n        // need to retain name of managed forward references:\n        AnnotationIntrospector.ReferenceProperty ref = propDef.findReferenceType();\n        if (ref != null && ref.isManagedReference()) {\n            prop.setManagedReferenceName(ref.getName());\n        }\n        ObjectIdInfo objectIdInfo = propDef.findObjectIdInfo();\n        if(objectIdInfo != null){\n            prop.setObjectIdInfo(objectIdInfo);\n        }\n        return prop;\n    }",
+ "imports": [
+  "java.util.*",
+  "com.fasterxml.jackson.annotation.ObjectIdGenerator",
+  "com.fasterxml.jackson.annotation.ObjectIdGenerators",
+  "com.fasterxml.jackson.annotation.ObjectIdResolver",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder",
+  "com.fasterxml.jackson.databind.cfg.DeserializerFactoryConfig",
+  "com.fasterxml.jackson.databind.deser.impl.*",
+  "com.fasterxml.jackson.databind.deser.std.ThrowableDeserializer",
+  "com.fasterxml.jackson.databind.introspect.*",
+  "com.fasterxml.jackson.databind.jsontype.TypeDeserializer",
+  "com.fasterxml.jackson.databind.util.ArrayBuilders",
+  "com.fasterxml.jackson.databind.util.ClassUtil",
+  "com.fasterxml.jackson.databind.util.SimpleBeanPropertyDefinition"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.deser",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Method used by module registration functionality, to construct a new bean\n     * deserializer factory\n     * with different configuration settings.\n     */",
+   "name": "withConfig"
+  },
+  {
+   "javadoc": "/**\n     * Method that {@link DeserializerCache}s call to create a new\n     * deserializer for types other than Collections, Maps, arrays and\n     * enums.\n     */",
+   "name": "createBeanDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "createBuilderBasedDeserializer"
+  },
+  {
+   "javadoc": "/**\n     * Method called by {@link BeanDeserializerFactory} to see if there might be a standard\n     * deserializer registered for given type.\n     */",
+   "name": "findStdDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "materializeAbstractType"
+  },
+  {
+   "javadoc": "",
+   "name": "addObjectIdReader"
+  },
+  {
+   "javadoc": "/**\n     * Overridable method that constructs a {@link BeanDeserializerBuilder}\n     * which is used to accumulate information needed to create deserializer\n     * instance.\n     */",
+   "name": "constructBeanDeserializerBuilder"
+  },
+  {
+   "javadoc": "/**\n     * Method called to figure out settable properties for the\n     * bean deserializer to use.\n     *<p>\n     * Note: designed to be overridable, and effort is made to keep interface\n     * similar between versions.\n     */",
+   "name": "addBeanProps"
+  },
+  {
+   "javadoc": "/**\n     * Helper method called to filter out explicit ignored properties,\n     * as well as properties that have \"ignorable types\".\n     * Note that this will not remove properties that have no\n     * setters.\n     */",
+   "name": "filterBeanProps"
+  },
+  {
+   "javadoc": "/**\n     * Method that will find if bean has any managed- or back-reference properties,\n     * and if so add them to bean, to be linked during resolution phase.\n     */",
+   "name": "addReferenceProperties"
+  },
+  {
+   "javadoc": "/**\n     * Method called locate all members used for value injection (if any),\n     * constructor {@link com.fasterxml.jackson.databind.deser.impl.ValueInjector} instances, and add them to builder.\n     */",
+   "name": "addInjectables"
+  },
+  {
+   "javadoc": "/**\n     * Method called to construct fallback {@link SettableAnyProperty}\n     * for handling unknown bean properties, given a method that\n     * has been designated as such setter.\n     */",
+   "name": "constructAnySetter"
+  },
+  {
+   "javadoc": "/**\n     * Method that will construct a regular bean property setter using\n     * the given setter method.\n     */",
+   "name": "constructSetterlessProperty"
+  },
+  {
+   "javadoc": "/**\n     * Helper method used to skip processing for types that we know\n     * can not be (i.e. are never consider to be) beans: \n     * things like primitives, Arrays, Enums, and proxy types.\n     *<p>\n     * Note that usually we shouldn't really be getting these sort of\n     * types anyway; but better safe than sorry.\n     */",
+   "name": "isPotentialBeanType"
+  },
+  {
+   "javadoc": "/**\n     * Helper method that will check whether given raw type is marked as always ignorable\n     * (for purpose of ignoring properties with type)\n     */",
+   "name": "isIgnorableType"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class BeanDeserializerFactory extends BasicDeserializerFactory implements java.io.Serializable",
+  "constructors": [
+   "public BeanDeserializerFactory(DeserializerFactoryConfig config);"
+  ],
+  "focal_signature": "protected SettableBeanProperty constructSettableProperty(DeserializationContext ctxt, BeanDescription beanDesc, BeanPropertyDefinition propDef, JavaType propType0) throws JsonMappingException",
+  "methods": [
+   "public DeserializerFactory withConfig(DeserializerFactoryConfig config);",
+   "public JsonDeserializer<Object> createBeanDeserializer(DeserializationContext ctxt, JavaType type, BeanDescription beanDesc) throws JsonMappingException;",
+   "public JsonDeserializer<Object> createBuilderBasedDeserializer( DeserializationContext ctxt, JavaType valueType, BeanDescription beanDesc, Class<?> builderClass) throws JsonMappingException;",
+   "protected JsonDeserializer<?> findStdDeserializer(DeserializationContext ctxt, JavaType type, BeanDescription beanDesc) throws JsonMappingException;",
+   "protected JavaType materializeAbstractType(DeserializationContext ctxt, JavaType type, BeanDescription beanDesc) throws JsonMappingException;",
+   "protected void addObjectIdReader(DeserializationContext ctxt, BeanDescription beanDesc, BeanDeserializerBuilder builder) throws JsonMappingException;",
+   "protected BeanDeserializerBuilder constructBeanDeserializerBuilder(DeserializationContext ctxt, BeanDescription beanDesc);",
+   "protected void addBeanProps(DeserializationContext ctxt, BeanDescription beanDesc, BeanDeserializerBuilder builder) throws JsonMappingException;",
+   "protected List<BeanPropertyDefinition> filterBeanProps(DeserializationContext ctxt, BeanDescription beanDesc, BeanDeserializerBuilder builder, List<BeanPropertyDefinition> propDefsIn, Set<String> ignored) throws JsonMappingException;",
+   "protected void addReferenceProperties(DeserializationContext ctxt, BeanDescription beanDesc, BeanDeserializerBuilder builder) throws JsonMappingException;",
+   "protected void addInjectables(DeserializationContext ctxt, BeanDescription beanDesc, BeanDeserializerBuilder builder) throws JsonMappingException;",
+   "protected SettableAnyProperty constructAnySetter(DeserializationContext ctxt, BeanDescription beanDesc, AnnotatedMethod setter) throws JsonMappingException;",
+   "protected SettableBeanProperty constructSetterlessProperty(DeserializationContext ctxt, BeanDescription beanDesc, BeanPropertyDefinition propDef) throws JsonMappingException;",
+   "protected boolean isPotentialBeanType(Class<?> type);",
+   "protected boolean isIgnorableType(DeserializationConfig config, BeanDescription beanDesc, Class<?> type, Map<Class<?>,Boolean> ignoredTypes);"
+  ],
+  "type_signatures": [
+   "@SuppressWarnings(\"serial\") public abstract class SettableBeanProperty extends ConcreteBeanPropertyBase implements java.io.Serializable { protected SettableBeanProperty(BeanPropertyDefinition propDef, JavaType type, TypeDeserializer typeDeser, Annotations contextAnnotations); // since 2.3 protected SettableBeanProperty(String propName, JavaType type, PropertyName wrapper, TypeDeserializer typeDeser, Annotations contextAnnotations, boolean isRequired); protected SettableBeanProperty(PropertyName propName, JavaType type, PropertyName wrapper, TypeDeserializer typeDeser, Annotations contextAnnotations, PropertyMetadata metadata); protected SettableBeanProperty(PropertyName propName, JavaType type, PropertyMetadata metadata, JsonDeserializer<Object> valueDeser); protected SettableBeanProperty(SettableBeanProperty src); protected SettableBeanProperty(SettableBeanProperty src, PropertyName newName); public abstract SettableBeanProperty withValueDeserializer(JsonDeserializer<?> deser); public abstract SettableBeanProperty withName(PropertyName newName); public SettableBeanProperty withSimpleName(String simpleName); // since 2.3 -- use 'withSimpleName' instead if need be public SettableBeanProperty withName(String simpleName); public void setManagedReferenceName(String n); public void setObjectIdInfo(ObjectIdInfo objectIdInfo); public void setViews(Class<?>[] views); public void assignIndex(int index); public final String getName(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

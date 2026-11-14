@@ -1,0 +1,131 @@
+{
+ "bug_name": "Compress_29",
+ "call_sites": [
+  {
+   "line": 301,
+   "lines": [
+    296,
+    297,
+    298,
+    299,
+    300,
+    301,
+    302,
+    303,
+    304,
+    305,
+    306
+   ],
+   "patch_lines_removed": true,
+   "path": "src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java",
+   "snippet": "        if (JAR.equalsIgnoreCase(archiverName)) {\n            if (entryEncoding != null) {\n            } else {\n                return new CpioArchiveOutputStream(out);\n            }\n        }\n        if (SEVEN_Z.equalsIgnoreCase(archiverName)) {"
+  },
+  {
+   "line": 303,
+   "lines": [
+    298,
+    299,
+    300,
+    301,
+    302,
+    303,
+    304,
+    305,
+    306,
+    307,
+    308
+   ],
+   "patch_lines_removed": true,
+   "path": "src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java",
+   "snippet": "            if (entryEncoding != null) {\n            } else {\n                return new CpioArchiveOutputStream(out);\n            }\n        }\n        if (SEVEN_Z.equalsIgnoreCase(archiverName)) {\n            throw new StreamingNotSupportedException(SEVEN_Z);\n        }"
+  }
+ ],
+ "class_simple": "CpioArchiveOutputStream",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * CPIOArchiveOutputStream is a stream for writing CPIO streams. All formats of\n * CPIO are supported (old ASCII, old binary, new portable format and the new\n * portable format with CRC).\n *\n * <p>An entry can be written by creating an instance of CpioArchiveEntry and fill\n * it with the necessary values and put it into the CPIO stream. Afterwards\n * write the contents of the file into the CPIO stream. Either close the stream\n * by calling finish() or put a next entry into the cpio stream.</p>\n *\n * <pre>\n * CpioArchiveOutputStream out = new CpioArchiveOutputStream(\n *         new FileOutputStream(new File(\"test.cpio\")));\n * CpioArchiveEntry entry = new CpioArchiveEntry();\n * entry.setName(\"testfile\");\n * String contents = &quot;12345&quot;;\n * entry.setFileSize(contents.length());\n * entry.setMode(CpioConstants.C_ISREG); // regular file\n * ... set other attributes, e.g. time, number of links\n * out.putArchiveEntry(entry);\n * out.write(testContents.getBytes());\n * out.close();\n * </pre>\n *\n * <p>Note: This implementation should be compatible to cpio 2.5</p>\n * \n * <p>This class uses mutable fields and is not considered threadsafe.</p>\n * \n * <p>based on code from the jRPM project (jrpm.sourceforge.net)</p>\n */\npublic",
+  "method_javadoc": "/**\n     * Construct the cpio output stream with a specified format using\n     * ASCII as the file name encoding.\n     * \n     * @param out\n     *            The cpio stream\n     * @param format\n     *            The format of the stream\n     * @param blockSize\n     *            The block size of the archive.\n     * @param encoding\n     *            The encoding of file names to write - use null for\n     *            the platform's default.\n     * \n     * @since 1.6\n     */"
+ },
+ "fields": [
+  "private CpioArchiveEntry entry",
+  "private boolean closed",
+  "private boolean finished",
+  "private final short entryFormat",
+  "private final HashMap<String, CpioArchiveEntry> names",
+  "private long crc",
+  "private long written",
+  "private final OutputStream out",
+  "private final int blockSize",
+  "private long nextArtificalDeviceAndInode",
+  "private final ZipEncoding zipEncoding"
+ ],
+ "focal_class": "org.apache.commons.compress.archivers.cpio.CpioArchiveOutputStream",
+ "focal_id": "Compress_29::org.apache.commons.compress.archivers.cpio.CpioArchiveOutputStream::CpioArchiveOutputStream(OutputStream,short,int,String)",
+ "focal_method_name": "CpioArchiveOutputStream",
+ "generations": 3,
+ "impl_B": "public CpioArchiveOutputStream(final OutputStream out, final short format,\n                                   final int blockSize, final String encoding) {\n        this.out = out;\n        switch (format) {\n        case FORMAT_NEW:\n        case FORMAT_NEW_CRC:\n        case FORMAT_OLD_ASCII:\n        case FORMAT_OLD_BINARY:\n            break;\n        default:\n            throw new IllegalArgumentException(\"Unknown format: \"+format);\n\n        }\n        this.entryFormat = format;\n        this.blockSize = blockSize;\n        this.zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);\n    }",
+ "imports": [
+  "java.io.File",
+  "java.io.IOException",
+  "java.io.OutputStream",
+  "java.nio.ByteBuffer",
+  "java.util.HashMap",
+  "org.apache.commons.compress.archivers.ArchiveEntry",
+  "org.apache.commons.compress.archivers.ArchiveOutputStream",
+  "org.apache.commons.compress.archivers.zip.ZipEncoding",
+  "org.apache.commons.compress.archivers.zip.ZipEncodingHelper",
+  "org.apache.commons.compress.utils.ArchiveUtils",
+  "org.apache.commons.compress.utils.CharsetNames"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.compress.archivers.cpio",
+ "project": "Compress",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Begins writing a new CPIO file entry and positions the stream to the\n     * start of the entry data. Closes the current entry if still active. The\n     * current time will be used if the entry has no set modification time and\n     * the default header format will be used if no other format is specified in\n     * the entry.\n     * \n     * @param entry\n     *            the CPIO cpioEntry to be written\n     * @throws IOException\n     *             if an I/O error has occurred or if a CPIO file error has\n     *             occurred\n     * @throws ClassCastException if entry is not an instance of CpioArchiveEntry\n     */",
+   "name": "putArchiveEntry"
+  },
+  {
+   "javadoc": "",
+   "name": "closeArchiveEntry"
+  },
+  {
+   "javadoc": "/**\n     * Writes an array of bytes to the current CPIO entry data. This method will\n     * block until all the bytes are written.\n     * \n     * @param b\n     *            the data to be written\n     * @param off\n     *            the start offset in the data\n     * @param len\n     *            the number of bytes that are written\n     * @throws IOException\n     *             if an I/O error has occurred or if a CPIO file error has\n     *             occurred\n     */",
+   "name": "write"
+  },
+  {
+   "javadoc": "/**\n     * Finishes writing the contents of the CPIO output stream without closing\n     * the underlying stream. Use this method when applying multiple filters in\n     * succession to the same output stream.\n     * \n     * @throws IOException\n     *             if an I/O exception has occurred or if a CPIO file error has\n     *             occurred\n     */",
+   "name": "finish"
+  },
+  {
+   "javadoc": "/**\n     * Closes the CPIO output stream as well as the stream being filtered.\n     * \n     * @throws IOException\n     *             if an I/O error has occurred or if a CPIO file error has\n     *             occurred\n     */",
+   "name": "close"
+  },
+  {
+   "javadoc": "/**\n     * Creates a new ArchiveEntry. The entryName must be an ASCII encoded string.\n     * \n     * @see org.apache.commons.compress.archivers.ArchiveOutputStream#createArchiveEntry(java.io.File, java.lang.String)\n     */",
+   "name": "createArchiveEntry"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class CpioArchiveOutputStream extends ArchiveOutputStream implements CpioConstants",
+  "constructors": [
+   "public CpioArchiveOutputStream(final OutputStream out, final short format);",
+   "public CpioArchiveOutputStream(final OutputStream out, final short format, final int blockSize);",
+   "public CpioArchiveOutputStream(final OutputStream out, final short format, final int blockSize, final String encoding);",
+   "public CpioArchiveOutputStream(final OutputStream out);",
+   "public CpioArchiveOutputStream(final OutputStream out, String encoding);"
+  ],
+  "focal_signature": "public CpioArchiveOutputStream(final OutputStream out, final short format, final int blockSize, final String encoding)",
+  "methods": [
+   "public void putArchiveEntry(ArchiveEntry entry) throws IOException;",
+   "public void closeArchiveEntry() throws IOException;",
+   "public void write(final byte[] b, final int off, final int len) throws IOException;",
+   "public void finish() throws IOException;",
+   "public void close() throws IOException;",
+   "public ArchiveEntry createArchiveEntry(File inputFile, String entryName) throws IOException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

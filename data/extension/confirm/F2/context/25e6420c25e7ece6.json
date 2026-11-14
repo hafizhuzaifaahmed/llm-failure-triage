@@ -1,0 +1,104 @@
+{
+ "bug_name": "JacksonDatabind_95",
+ "call_sites": [
+  {
+   "line": 32,
+   "lines": [
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/type/TypeParser.java",
+   "snippet": "    }\n\n    public JavaType parse(String canonical) throws IllegalArgumentException\n    {\n        MyTokenizer tokens = new MyTokenizer(canonical.trim());\n        JavaType type = parseType(tokens);\n        // must be end, now\n        if (tokens.hasMoreTokens()) {\n            throw _problem(tokens, \"Unexpected tokens after complete type\");\n        }\n        return type;"
+  },
+  {
+   "line": 67,
+   "lines": [
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/type/TypeParser.java",
+   "snippet": "    protected List<JavaType> parseTypes(MyTokenizer tokens)\n        throws IllegalArgumentException\n    {\n        ArrayList<JavaType> types = new ArrayList<JavaType>();\n        while (tokens.hasMoreTokens()) {\n            types.add(parseType(tokens));\n            if (!tokens.hasMoreTokens()) break;\n            String token = tokens.nextToken();\n            if (\">\".equals(token)) return types;\n            if (!\",\".equals(token)) {\n                throw _problem(tokens, \"Unexpected token '\"+token+\"', expected ',' or '>')\");"
+  }
+ ],
+ "class_simple": "TypeParser",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Simple recursive-descent parser for parsing canonical {@link JavaType}\n * representations and constructing type instances.\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "protected final TypeFactory _factory"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.type.TypeParser",
+ "focal_id": "JacksonDatabind_95::com.fasterxml.jackson.databind.type.TypeParser::parseType(MyTokenizer)",
+ "focal_method_name": "parseType",
+ "generations": 3,
+ "impl_B": "protected JavaType parseType(MyTokenizer tokens)\n        throws IllegalArgumentException\n    {\n        if (!tokens.hasMoreTokens()) {\n            throw _problem(tokens, \"Unexpected end-of-string\");\n        }\n        Class<?> base = findClass(tokens.nextToken(), tokens);\n\n        // either end (ok, non generic type), or generics\n        if (tokens.hasMoreTokens()) {\n            String token = tokens.nextToken();\n            if (\"<\".equals(token)) {\n                List<JavaType> parameterTypes = parseTypes(tokens);\n                TypeBindings b = TypeBindings.create(base, parameterTypes);\n                return _factory._fromClass(null, base, b);\n            }\n            // can be comma that separates types, or closing '>'\n            tokens.pushBack(token);\n        }\n        return _factory._fromClass(null, base, null);\n    }",
+ "imports": [
+  "java.util.*",
+  "com.fasterxml.jackson.databind.JavaType"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.type",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * @since 2.6.2\n     */",
+   "name": "withFactory"
+  },
+  {
+   "javadoc": "",
+   "name": "parse"
+  },
+  {
+   "javadoc": "",
+   "name": "parseTypes"
+  },
+  {
+   "javadoc": "",
+   "name": "findClass"
+  },
+  {
+   "javadoc": "",
+   "name": "_problem"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class TypeParser implements java.io.Serializable",
+  "constructors": [
+   "public TypeParser(TypeFactory f);"
+  ],
+  "focal_signature": "protected JavaType parseType(MyTokenizer tokens) throws IllegalArgumentException",
+  "methods": [
+   "public TypeParser withFactory(TypeFactory f);",
+   "public JavaType parse(String canonical) throws IllegalArgumentException;",
+   "protected List<JavaType> parseTypes(MyTokenizer tokens) throws IllegalArgumentException;",
+   "protected Class<?> findClass(String className, MyTokenizer tokens);",
+   "protected IllegalArgumentException _problem(MyTokenizer tokens, String msg);"
+  ],
+  "type_signatures": [
+   "public abstract class JavaType extends ResolvedType implements java.io.Serializable, java.lang.reflect.Type { protected JavaType(Class<?> raw, int additionalHash, Object valueHandler, Object typeHandler, boolean asStatic); protected JavaType(JavaType base); public abstract JavaType withTypeHandler(Object h); public abstract JavaType withContentTypeHandler(Object h); public abstract JavaType withValueHandler(Object h); public abstract JavaType withContentValueHandler(Object h); public JavaType withHandlersFrom(JavaType src); public abstract JavaType withContentType(JavaType contentType); public abstract JavaType withStaticTyping(); public abstract JavaType refine(Class<?> rawType, TypeBindings bindings, JavaType superClass, JavaType[] superInterfaces); public JavaType forcedNarrowBy(Class<?> subclass); // since 2.7 protected abstract JavaType _narrow(Class<?> subclass); public final Class<?> getRawClass(); public final boolean hasRawClass(Class<?> clz); public boolean hasContentType(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

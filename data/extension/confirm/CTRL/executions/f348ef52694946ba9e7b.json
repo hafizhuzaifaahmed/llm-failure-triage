@@ -1,0 +1,502 @@
+{
+ "candidate_id": "f348ef52694946ba9e7b",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testSkip_NegativeN",
+   "testSkip_ClosedStream",
+   "testSkip_ZeroN",
+   "testSkip_SmallN",
+   "testSkip_LargeN_BelowIntMax",
+   "testSkip_NExceedsAvailable",
+   "testSkip_NIsExactlyIntMax",
+   "testSkip_VeryLargeN"
+  ],
+  "nc_both": [],
+  "nc_one_version": [],
+  "passes": 0
+ },
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "Compress_29::org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream::skip(long)",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testSkip_NegativeN",
+   "runs_b": [
+    {
+     "duration_s": 0.075,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.089,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.093,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.097,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.1,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.096,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.cpio;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.math.*;\nimport java.util.*;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream;\nimport org.apache.commons.compress.archivers.zip.ZipEncoding;\nimport org.apache.commons.compress.archivers.zip.ZipEncodingHelper;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.apache.commons.compress.utils.CharsetNames;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class CpioArchiveInputStream_skip_TriageGen0Test {\n\n    /**\n     * Helper to create a minimal valid CPIO stream simulation.\n     * Since we are testing the skip logic which relies on read(), \n     * we can mock the behavior via a custom InputStream.\n     */\n    private static class MockInputStream extends InputStream {\n        private final byte[] data;\n        private int pos = 0;\n\n        public MockInputStream(byte[] data) {\n            this.data = data;\n        }\n\n        @Override\n        public int read() {\n            if (pos >= data.length) return -1;\n            return data[pos++] & 0xFF;\n        }\n\n        @Override\n        public int read(byte[] b, int off, int len) {\n            if (pos >= data.length) return -1;\n            int available = data.length - pos;\n            int toRead = Math.min(len, available);\n            System.arraycopy(data, pos, b, off, toRead);\n            pos += toRead;\n            return toRead;\n        }\n    }\n\n    @Test(expected = IllegalArgumentException.class)\n    public void testSkip_NegativeN() throws IOException {\n        InputStream is = new ByteArrayInputStream(new byte[0]);\n        CpioArchiveInputStream input = new CpioArchiveInputStream(is);\n        input.skip(-1L);\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testSkip_ClosedStream",
+   "runs_b": [
+    {
+     "duration_s": 0.095,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.102,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": -0.501,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.094,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.089,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.113,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.cpio;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.math.*;\nimport java.util.*;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream;\nimport org.apache.commons.compress.archivers.zip.ZipEncoding;\nimport org.apache.commons.compress.archivers.zip.ZipEncodingHelper;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.apache.commons.compress.utils.CharsetNames;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class CpioArchiveInputStream_skip_TriageGen0Test {\n\n    /**\n     * Helper to create a minimal valid CPIO stream simulation.\n     * Since we are testing the skip logic which relies on read(), \n     * we can mock the behavior via a custom InputStream.\n     */\n    private static class MockInputStream extends InputStream {\n        private final byte[] data;\n        private int pos = 0;\n\n        public MockInputStream(byte[] data) {\n            this.data = data;\n        }\n\n        @Override\n        public int read() {\n            if (pos >= data.length) return -1;\n            return data[pos++] & 0xFF;\n        }\n\n        @Override\n        public int read(byte[] b, int off, int len) {\n            if (pos >= data.length) return -1;\n            int available = data.length - pos;\n            int toRead = Math.min(len, available);\n            System.arraycopy(data, pos, b, off, toRead);\n            pos += toRead;\n            return toRead;\n        }\n    }\n\n    \n\n    @Test(expected = IOException.class)\n    public void testSkip_ClosedStream() throws IOException {\n        InputStream is = new ByteArrayInputStream(new byte[10]);\n        CpioArchiveInputStream input = new CpioArchiveInputStream(is);\n        input.close();\n        input.skip(1);\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testSkip_ZeroN",
+   "runs_b": [
+    {
+     "duration_s": 0.093,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.101,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.093,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.099,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.113,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.092,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.cpio;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.math.*;\nimport java.util.*;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream;\nimport org.apache.commons.compress.archivers.zip.ZipEncoding;\nimport org.apache.commons.compress.archivers.zip.ZipEncodingHelper;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.apache.commons.compress.utils.CharsetNames;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class CpioArchiveInputStream_skip_TriageGen0Test {\n\n    /**\n     * Helper to create a minimal valid CPIO stream simulation.\n     * Since we are testing the skip logic which relies on read(), \n     * we can mock the behavior via a custom InputStream.\n     */\n    private static class MockInputStream extends InputStream {\n        private final byte[] data;\n        private int pos = 0;\n\n        public MockInputStream(byte[] data) {\n            this.data = data;\n        }\n\n        @Override\n        public int read() {\n            if (pos >= data.length) return -1;\n            return data[pos++] & 0xFF;\n        }\n\n        @Override\n        public int read(byte[] b, int off, int len) {\n            if (pos >= data.length) return -1;\n            int available = data.length - pos;\n            int toRead = Math.min(len, available);\n            System.arraycopy(data, pos, b, off, toRead);\n            pos += toRead;\n            return toRead;\n        }\n    }\n\n    \n\n    \n\n    @Test\n    public void testSkip_ZeroN() throws IOException {\n        byte[] data = new byte[10];\n        InputStream is = new MockInputStream(data);\n        CpioArchiveInputStream input = new CpioArchiveInputStream(is);\n        \n        long skipped = input.skip(0);\n        Assert.assertEquals(0, skipped);\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testSkip_SmallN",
+   "runs_b": [
+    {
+     "duration_s": 0.097,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 69,
+     "message": "expected:<5> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<5> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream_skip_TriageGen0Test.testSkip_SmallN(CpioArchiveInputStream_skip_TriageGen0Test.java:69)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.089,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 69,
+     "message": "expected:<5> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<5> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream_skip_TriageGen0Test.testSkip_SmallN(CpioArchiveInputStream_skip_TriageGen0Test.java:69)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.097,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 69,
+     "message": "expected:<5> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<5> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream_skip_TriageGen0Test.testSkip_SmallN(CpioArchiveInputStream_skip_TriageGen0Test.java:69)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.094,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 69,
+     "message": "expected:<5> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<5> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream_skip_TriageGen0Test.testSkip_SmallN(CpioArchiveInputStream_skip_TriageGen0Test.java:69)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.093,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 69,
+     "message": "expected:<5> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<5> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream_skip_TriageGen0Test.testSkip_SmallN(CpioArchiveInputStream_skip_TriageGen0Test.java:69)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.096,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 69,
+     "message": "expected:<5> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<5> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream_skip_TriageGen0Test.testSkip_SmallN(CpioArchiveInputStream_skip_TriageGen0Test.java:69)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.cpio;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.math.*;\nimport java.util.*;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream;\nimport org.apache.commons.compress.archivers.zip.ZipEncoding;\nimport org.apache.commons.compress.archivers.zip.ZipEncodingHelper;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.apache.commons.compress.utils.CharsetNames;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class CpioArchiveInputStream_skip_TriageGen0Test {\n\n    /**\n     * Helper to create a minimal valid CPIO stream simulation.\n     * Since we are testing the skip logic which relies on read(), \n     * we can mock the behavior via a custom InputStream.\n     */\n    private static class MockInputStream extends InputStream {\n        private final byte[] data;\n        private int pos = 0;\n\n        public MockInputStream(byte[] data) {\n            this.data = data;\n        }\n\n        @Override\n        public int read() {\n            if (pos >= data.length) return -1;\n            return data[pos++] & 0xFF;\n        }\n\n        @Override\n        public int read(byte[] b, int off, int len) {\n            if (pos >= data.length) return -1;\n            int available = data.length - pos;\n            int toRead = Math.min(len, available);\n            System.arraycopy(data, pos, b, off, toRead);\n            pos += toRead;\n            return toRead;\n        }\n    }\n\n    \n\n    \n\n    \n\n    @Test\n    public void testSkip_SmallN() throws IOException {\n        byte[] data = new byte[10];\n        InputStream is = new MockInputStream(data);\n        CpioArchiveInputStream input = new CpioArchiveInputStream(is);\n        \n        // n < tmpbuf.length logic\n        long skipped = input.skip(5);\n        Assert.assertEquals(5, skipped);\n    }\n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testSkip_LargeN_BelowIntMax",
+   "runs_b": [
+    {
+     "duration_s": 0.106,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 75,
+     "message": "expected:<50> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<50> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream_skip_TriageGen0Test.testSkip_LargeN_BelowIntMax(CpioArchiveInputStream_skip_TriageGen0Test.java:75)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.102,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 75,
+     "message": "expected:<50> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<50> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream_skip_TriageGen0Test.testSkip_LargeN_BelowIntMax(CpioArchiveInputStream_skip_TriageGen0Test.java:75)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.087,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 75,
+     "message": "expected:<50> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<50> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream_skip_TriageGen0Test.testSkip_LargeN_BelowIntMax(CpioArchiveInputStream_skip_TriageGen0Test.java:75)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.093,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 75,
+     "message": "expected:<50> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<50> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream_skip_TriageGen0Test.testSkip_LargeN_BelowIntMax(CpioArchiveInputStream_skip_TriageGen0Test.java:75)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.097,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 75,
+     "message": "expected:<50> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<50> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream_skip_TriageGen0Test.testSkip_LargeN_BelowIntMax(CpioArchiveInputStream_skip_TriageGen0Test.java:75)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.097,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 75,
+     "message": "expected:<50> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<50> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream_skip_TriageGen0Test.testSkip_LargeN_BelowIntMax(CpioArchiveInputStream_skip_TriageGen0Test.java:75)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.cpio;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.math.*;\nimport java.util.*;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream;\nimport org.apache.commons.compress.archivers.zip.ZipEncoding;\nimport org.apache.commons.compress.archivers.zip.ZipEncodingHelper;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.apache.commons.compress.utils.CharsetNames;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class CpioArchiveInputStream_skip_TriageGen0Test {\n\n    /**\n     * Helper to create a minimal valid CPIO stream simulation.\n     * Since we are testing the skip logic which relies on read(), \n     * we can mock the behavior via a custom InputStream.\n     */\n    private static class MockInputStream extends InputStream {\n        private final byte[] data;\n        private int pos = 0;\n\n        public MockInputStream(byte[] data) {\n            this.data = data;\n        }\n\n        @Override\n        public int read() {\n            if (pos >= data.length) return -1;\n            return data[pos++] & 0xFF;\n        }\n\n        @Override\n        public int read(byte[] b, int off, int len) {\n            if (pos >= data.length) return -1;\n            int available = data.length - pos;\n            int toRead = Math.min(len, available);\n            System.arraycopy(data, pos, b, off, toRead);\n            pos += toRead;\n            return toRead;\n        }\n    }\n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testSkip_LargeN_BelowIntMax() throws IOException {\n        // To trigger the (len > this.tmpbuf.length) branch, \n        // we need n to be larger than the internal buffer.\n        // Since we don't know the exact tmpbuf size, we use a large n.\n        byte[] data = new byte[100];\n        InputStream is = new MockInputStream(data);\n        CpioArchiveInputStream input = new CpioArchiveInputStream(is);\n        \n        // We simulate a large n. Note: the loop uses Math.min(n, Integer.MAX_VALUE)\n        // If n is larger than data, it hits the len == -1 condition.\n        long skipped = input.skip(50);\n        Assert.assertEquals(50, skipped);\n    }\n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testSkip_NExceedsAvailable",
+   "runs_b": [
+    {
+     "duration_s": 0.084,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 74,
+     "message": "expected:<10> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<10> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream_skip_TriageGen0Test.testSkip_NExceedsAvailable(CpioArchiveInputStream_skip_TriageGen0Test.java:74)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.085,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 74,
+     "message": "expected:<10> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<10> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream_skip_TriageGen0Test.testSkip_NExceedsAvailable(CpioArchiveInputStream_skip_TriageGen0Test.java:74)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.092,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 74,
+     "message": "expected:<10> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<10> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream_skip_TriageGen0Test.testSkip_NExceedsAvailable(CpioArchiveInputStream_skip_TriageGen0Test.java:74)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.107,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 74,
+     "message": "expected:<10> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<10> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream_skip_TriageGen0Test.testSkip_NExceedsAvailable(CpioArchiveInputStream_skip_TriageGen0Test.java:74)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.102,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 74,
+     "message": "expected:<10> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<10> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream_skip_TriageGen0Test.testSkip_NExceedsAvailable(CpioArchiveInputStream_skip_TriageGen0Test.java:74)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.088,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 74,
+     "message": "expected:<10> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<10> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream_skip_TriageGen0Test.testSkip_NExceedsAvailable(CpioArchiveInputStream_skip_TriageGen0Test.java:74)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.cpio;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.math.*;\nimport java.util.*;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream;\nimport org.apache.commons.compress.archivers.zip.ZipEncoding;\nimport org.apache.commons.compress.archivers.zip.ZipEncodingHelper;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.apache.commons.compress.utils.CharsetNames;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class CpioArchiveInputStream_skip_TriageGen0Test {\n\n    /**\n     * Helper to create a minimal valid CPIO stream simulation.\n     * Since we are testing the skip logic which relies on read(), \n     * we can mock the behavior via a custom InputStream.\n     */\n    private static class MockInputStream extends InputStream {\n        private final byte[] data;\n        private int pos = 0;\n\n        public MockInputStream(byte[] data) {\n            this.data = data;\n        }\n\n        @Override\n        public int read() {\n            if (pos >= data.length) return -1;\n            return data[pos++] & 0xFF;\n        }\n\n        @Override\n        public int read(byte[] b, int off, int len) {\n            if (pos >= data.length) return -1;\n            int available = data.length - pos;\n            int toRead = Math.min(len, available);\n            System.arraycopy(data, pos, b, off, toRead);\n            pos += toRead;\n            return toRead;\n        }\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testSkip_NExceedsAvailable() throws IOException {\n        byte[] data = new byte[10];\n        InputStream is = new MockInputStream(data);\n        CpioArchiveInputStream input = new CpioArchiveInputStream(is);\n        \n        // n is 20, but only 10 bytes available.\n        // Should hit len == -1 and return total (10).\n        long skipped = input.skip(20);\n        Assert.assertEquals(10, skipped);\n    }\n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testSkip_NIsExactlyIntMax",
+   "runs_b": [
+    {
+     "duration_s": 0.081,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 78,
+     "message": "expected:<100> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<100> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream_skip_TriageGen0Test.testSkip_NIsExactlyIntMax(CpioArchiveInputStream_skip_TriageGen0Test.java:78)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.086,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 78,
+     "message": "expected:<100> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<100> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream_skip_TriageGen0Test.testSkip_NIsExactlyIntMax(CpioArchiveInputStream_skip_TriageGen0Test.java:78)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.094,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 78,
+     "message": "expected:<100> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<100> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream_skip_TriageGen0Test.testSkip_NIsExactlyIntMax(CpioArchiveInputStream_skip_TriageGen0Test.java:78)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.1,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 78,
+     "message": "expected:<100> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<100> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream_skip_TriageGen0Test.testSkip_NIsExactlyIntMax(CpioArchiveInputStream_skip_TriageGen0Test.java:78)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.087,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 78,
+     "message": "expected:<100> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<100> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream_skip_TriageGen0Test.testSkip_NIsExactlyIntMax(CpioArchiveInputStream_skip_TriageGen0Test.java:78)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.092,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 78,
+     "message": "expected:<100> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<100> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream_skip_TriageGen0Test.testSkip_NIsExactlyIntMax(CpioArchiveInputStream_skip_TriageGen0Test.java:78)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.cpio;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.math.*;\nimport java.util.*;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream;\nimport org.apache.commons.compress.archivers.zip.ZipEncoding;\nimport org.apache.commons.compress.archivers.zip.ZipEncodingHelper;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.apache.commons.compress.utils.CharsetNames;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class CpioArchiveInputStream_skip_TriageGen0Test {\n\n    /**\n     * Helper to create a minimal valid CPIO stream simulation.\n     * Since we are testing the skip logic which relies on read(), \n     * we can mock the behavior via a custom InputStream.\n     */\n    private static class MockInputStream extends InputStream {\n        private final byte[] data;\n        private int pos = 0;\n\n        public MockInputStream(byte[] data) {\n            this.data = data;\n        }\n\n        @Override\n        public int read() {\n            if (pos >= data.length) return -1;\n            return data[pos++] & 0xFF;\n        }\n\n        @Override\n        public int read(byte[] b, int off, int len) {\n            if (pos >= data.length) return -1;\n            int available = data.length - pos;\n            int toRead = Math.min(len, available);\n            System.arraycopy(data, pos, b, off, toRead);\n            pos += toRead;\n            return toRead;\n        }\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testSkip_NIsExactlyIntMax() throws IOException {\n        // This tests the max = (int) Math.min(n, Integer.MAX_VALUE) boundary\n        byte[] data = new byte[100];\n        InputStream is = new MockInputStream(data);\n        CpioArchiveInputStream input = new CpioArchiveInputStream(is);\n        \n        // Use a value that is large but won't crash the test environment\n        // In a real scenario, we'd check the boundary of Integer.MAX_VALUE\n        long skipped = input.skip((long)Integer.MAX_VALUE);\n        // Since data is only 100, it should return 100\n        Assert.assertEquals(100, skipped);\n    }\n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testSkip_VeryLargeN",
+   "runs_b": [
+    {
+     "duration_s": 0.078,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 77,
+     "message": "expected:<5> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<5> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream_skip_TriageGen0Test.testSkip_VeryLargeN(CpioArchiveInputStream_skip_TriageGen0Test.java:77)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.098,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 77,
+     "message": "expected:<5> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<5> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream_skip_TriageGen0Test.testSkip_VeryLargeN(CpioArchiveInputStream_skip_TriageGen0Test.java:77)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.098,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 77,
+     "message": "expected:<5> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<5> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream_skip_TriageGen0Test.testSkip_VeryLargeN(CpioArchiveInputStream_skip_TriageGen0Test.java:77)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.088,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 77,
+     "message": "expected:<5> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<5> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream_skip_TriageGen0Test.testSkip_VeryLargeN(CpioArchiveInputStream_skip_TriageGen0Test.java:77)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.091,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 77,
+     "message": "expected:<5> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<5> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream_skip_TriageGen0Test.testSkip_VeryLargeN(CpioArchiveInputStream_skip_TriageGen0Test.java:77)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.095,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 77,
+     "message": "expected:<5> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<5> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream_skip_TriageGen0Test.testSkip_VeryLargeN(CpioArchiveInputStream_skip_TriageGen0Test.java:77)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.cpio;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.math.*;\nimport java.util.*;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream;\nimport org.apache.commons.compress.archivers.zip.ZipEncoding;\nimport org.apache.commons.compress.archivers.zip.ZipEncodingHelper;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.apache.commons.compress.utils.CharsetNames;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class CpioArchiveInputStream_skip_TriageGen0Test {\n\n    /**\n     * Helper to create a minimal valid CPIO stream simulation.\n     * Since we are testing the skip logic which relies on read(), \n     * we can mock the behavior via a custom InputStream.\n     */\n    private static class MockInputStream extends InputStream {\n        private final byte[] data;\n        private int pos = 0;\n\n        public MockInputStream(byte[] data) {\n            this.data = data;\n        }\n\n        @Override\n        public int read() {\n            if (pos >= data.length) return -1;\n            return data[pos++] & 0xFF;\n        }\n\n        @Override\n        public int read(byte[] b, int off, int len) {\n            if (pos >= data.length) return -1;\n            int available = data.length - pos;\n            int toRead = Math.min(len, available);\n            System.arraycopy(data, pos, b, off, toRead);\n            pos += toRead;\n            return toRead;\n        }\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testSkip_VeryLargeN() throws IOException {\n        byte[] data = new byte[5];\n        InputStream is = new MockInputStream(data);\n        CpioArchiveInputStream input = new CpioArchiveInputStream(is);\n        \n        // n > Integer.MAX_VALUE\n        long skipped = input.skip(Long.MAX_VALUE);\n        Assert.assertEquals(5, skipped);\n    }\n}\n"
+  }
+ ],
+ "source_sha256": "b3cc8b46ff27a278742166f60656e44616d11a5cf60b8b14edd7a6b594146b84",
+ "utc": "2026-11-13T06:51:36Z"
+}

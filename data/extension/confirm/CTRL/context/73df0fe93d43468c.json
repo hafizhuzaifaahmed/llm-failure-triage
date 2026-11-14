@@ -1,0 +1,125 @@
+{
+ "bug_name": "JacksonDatabind_16",
+ "call_sites": [
+  {
+   "line": 912,
+   "lines": [
+    907,
+    908,
+    909,
+    910,
+    911,
+    912,
+    913,
+    914,
+    915,
+    916,
+    917
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/introspect/AnnotatedClass.java",
+   "snippet": "    {\n        if (anns != null) {\n            List<Annotation> fromBundles = null;\n            for (Annotation ann : anns) { // first: direct annotations\n                // note: we will NOT filter out non-Jackson anns any more\n                boolean wasNotPresent = result.addIfNotPresent(ann);\n                if (wasNotPresent && _isAnnotationBundle(ann)) {\n                    fromBundles = _addFromBundle(ann, fromBundles);\n                }\n            }\n            if (fromBundles != null) { // and secondarily handle bundles, if any found: precedence important"
+  },
+  {
+   "line": 944,
+   "lines": [
+    939,
+    940,
+    941,
+    942,
+    943,
+    944,
+    945,
+    946,
+    947,
+    948,
+    949
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/introspect/AnnotatedClass.java",
+   "snippet": "    private void _addAnnotationsIfNotPresent(AnnotatedMember target, Annotation[] anns)\n    {\n        if (anns != null) {\n            List<Annotation> fromBundles = null;\n            for (Annotation ann : anns) { // first: direct annotations\n                boolean wasNotPresent = target.addIfNotPresent(ann);\n                if (wasNotPresent && _isAnnotationBundle(ann)) {\n                    fromBundles = _addFromBundle(ann, fromBundles);\n                }\n            }\n            if (fromBundles != null) { // and secondarily handle bundles, if any found: precedence important"
+  },
+  {
+   "line": 114,
+   "lines": [
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/introspect/AnnotatedMember.java",
+   "snippet": "     * Method called to augment annotations, by adding specified\n     * annotation if and only if it is not yet present in the\n     * annotation map we have.\n     */\n    public final boolean addIfNotPresent(Annotation a) {\n        return _annotations.addIfNotPresent(a);\n    }\n    \n    /**\n     * Method that can be called to modify access rights, by calling\n     * {@link java.lang.reflect.AccessibleObject#setAccessible} on"
+  }
+ ],
+ "class_simple": "AnnotationMap",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Simple helper class used to keep track of collection of\n * Jackson Annotations associated with annotatable things\n * (methods, constructors, classes).\n * Note that only Jackson-owned annotations are tracked (for now?).\n */\npublic final",
+  "method_javadoc": "/**\n     * Method called to add specified annotation in the Map, but\n     * only if it didn't yet exist.\n     */"
+ },
+ "fields": [
+  "protected HashMap<Class<? extends Annotation>,Annotation> _annotations"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.introspect.AnnotationMap",
+ "focal_id": "JacksonDatabind_16::com.fasterxml.jackson.databind.introspect.AnnotationMap::addIfNotPresent(Annotation)",
+ "focal_method_name": "addIfNotPresent",
+ "generations": 3,
+ "impl_B": "public boolean addIfNotPresent(Annotation ann)\n    {\n        if (_annotations == null || !_annotations.containsKey(ann.annotationType())) {\n            _add(ann);\n            return true;\n        }\n        return false;\n    }",
+ "imports": [
+  "java.lang.annotation.Annotation",
+  "java.util.*",
+  "com.fasterxml.jackson.databind.util.Annotations"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.introspect",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * @since 2.3\n     */",
+   "name": "annotations"
+  },
+  {
+   "javadoc": "",
+   "name": "merge"
+  },
+  {
+   "javadoc": "",
+   "name": "size"
+  },
+  {
+   "javadoc": "/**\n     * Method called to add specified annotation in the Map.\n     * \n     * @return True if the addition changed the contents, that is, this map did not\n     *   already have specified annotation\n     */",
+   "name": "add"
+  },
+  {
+   "javadoc": "",
+   "name": "toString"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_add"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public final class AnnotationMap implements Annotations",
+  "constructors": [
+   "public AnnotationMap();"
+  ],
+  "focal_signature": "public boolean addIfNotPresent(Annotation ann)",
+  "methods": [
+   "public Iterable<Annotation> annotations();",
+   "public static AnnotationMap merge(AnnotationMap primary, AnnotationMap secondary);",
+   "public int size();",
+   "public boolean add(Annotation ann);",
+   "public String toString();",
+   "protected final boolean _add(Annotation ann);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

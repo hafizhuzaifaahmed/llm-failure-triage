@@ -1,0 +1,150 @@
+{
+ "bug_name": "Closure_40",
+ "call_sites": [
+  {
+   "line": 677,
+   "lines": [
+    672,
+    673,
+    674,
+    675,
+    676,
+    677,
+    678,
+    679,
+    680,
+    681,
+    682
+   ],
+   "path": "src/com/google/debugging/sourcemap/SourceMapConsumerV3.java",
+   "snippet": "      return name;\n    }\n  }\n\n  public static interface EntryVisitor {\n    void visit(String sourceName,\n               String symbolName,\n               FilePosition sourceStartPosition,\n               FilePosition startPosition,\n               FilePosition endPosition);\n  }"
+  },
+  {
+   "line": 701,
+   "lines": [
+    696,
+    697,
+    698,
+    699,
+    700,
+    701,
+    702,
+    703,
+    704,
+    705,
+    706
+   ],
+   "path": "src/com/google/debugging/sourcemap/SourceMapConsumerV3.java",
+   "snippet": "        for (int j = 0; j < entryCount; j++) {\n          Entry entry = line.get(j);\n          if (pending) {\n            FilePosition endPosition = new FilePosition(\n                i, entry.getGeneratedColumn());\n            visitor.visit(\n                sourceName,\n                symbolName,\n                sourceStartPosition,\n                startPosition,\n                endPosition);"
+  },
+  {
+   "line": 506,
+   "lines": [
+    501,
+    502,
+    503,
+    504,
+    505,
+    506,
+    507,
+    508,
+    509,
+    510,
+    511
+   ],
+   "path": "src/com/google/debugging/sourcemap/SourceMapGeneratorV1.java",
+   "snippet": "     * @param col The starting column for this code segment.\n     * @param endLine The ending line\n     * @param endCol The ending column\n     * @throws IOException\n     */\n    void visit(Mapping m, int line, int col, int endLine, int endCol)\n        throws IOException;\n  }\n\n  /**\n   * Walk the mappings and visit each segment of the mappings, unmapped"
+  },
+  {
+   "line": 595,
+   "lines": [
+    590,
+    591,
+    592,
+    593,
+    594,
+    595,
+    596,
+    597,
+    598,
+    599,
+    600
+   ],
+   "path": "src/com/google/debugging/sourcemap/SourceMapGeneratorV1.java",
+   "snippet": "      int nextLine = getAdjustedLine(m.endPosition);\n      int nextCol = getAdjustedCol(m.endPosition);\n      // If this anything remaining in this mapping beyond the\n      // current line and column position, write it out now.\n      if (line < nextLine || (line == nextLine && col < nextCol)) {\n        visit(v, m, nextLine, nextCol);\n      }\n    }\n\n    /**\n     * Write any needed entries to complete the provided mapping."
+  },
+  {
+   "line": 609,
+   "lines": [
+    604,
+    605,
+    606,
+    607,
+    608,
+    609,
+    610,
+    611,
+    612,
+    613,
+    614
+   ],
+   "path": "src/com/google/debugging/sourcemap/SourceMapGeneratorV1.java",
+   "snippet": "      int nextLine = getAdjustedLine(m.startPosition);\n      int nextCol = getAdjustedCol(m.startPosition);\n      // If the previous value is null, no mapping exists.\n      Preconditions.checkState(line < nextLine || col <= nextCol);\n      if (line < nextLine || (line == nextLine && col < nextCol)) {\n        visit(v, parent, nextLine, nextCol);\n      }\n    }\n\n    /**\n     * Write any entries needed between the current position the next position"
+  }
+ ],
+ "class_simple": "FindDeclarationsAndSetters",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * This pass identifies all global names, simple (e.g. <code>a</code>) or\n * qualified (e.g. <code>a.b.c</code>), and the dependencies between them, then\n * removes code associated with unreferenced names. It starts by assuming that\n * only externally accessible names (e.g. <code>window</code>) are referenced,\n * then iteratively marks additional names as referenced (e.g. <code>Foo</code>\n * in <code>window['foo'] = new Foo();</code>). This makes it possible to\n * eliminate code containing circular references.\n *\n * <p>Qualified names can be defined using dotted or object literal syntax\n * (<code>a.b.c = x;</code> or <code>a.b = {c: x};</code>, respectively).\n *\n * <p>Removal of prototype classes is currently all or nothing. In other words,\n * prototype properties and methods are never individually removed.\n *\n * <p>Optionally generates pretty HTML output of data so that it is easy to\n * analyze dependencies.\n *\n * <p>Only operates on names defined in the global scope, but it would be easy\n * to extend the pass to names defined in local scopes.\n *\n * TODO(nicksantos): In the initial implementation of this pass, it was\n * important to understand namespaced names (e.g., that a.b is distinct from\n * a.b.c). Now that this pass comes after CollapseProperties, this is no longer\n * necessary. For now, I've changed so that {@code refernceParentNames}\n * creates a two-way reference between a.b and a.b.c, so that they're\n * effectively the same name. When someone has the time, we should completely\n * rip out all the logic that understands namespaces.\n *\n */\nfinal class NameAnalyzer implements CompilerPass {\n\n  /** Reference to the JS compiler */\n  private final AbstractCompiler compiler;\n\n  /** Map of all JS names found */\n  private final Map<String, JsName> allNames = Maps.newTreeMap();\n\n  /** Reference dependency graph */\n  private DiGraph<JsName, RefType> referenceGraph =\n      LinkedDirectedGraph.createWithoutAnnotations();\n\n  /**\n   * Map of name scopes - all children of the Node key have a dependency on the\n   * name value.\n   *\n   * If scopes.get(node).equals(name) && node2 is a child of node, then node2\n   * will not get executed unless name is referenced via a get operation\n   */\n  private final Map<Node, NameInformation> scopes = Maps.newHashMap();\n\n  /** Used to parse prototype names */\n  private static final String PROTOTYPE_SUBSTRING = \".prototype.\";\n\n  private static final int PROTOTYPE_SUBSTRING_LEN =\n      PROTOTYPE_SUBSTRING.length();\n\n  private static final int PROTOTYPE_SUFFIX_LEN = \".prototype\".length();\n\n  /** Window root */\n  private static final String WINDOW = \"window\";\n\n  /** Function class name */\n  private static final String FUNCTION = \"Function\";\n\n  /** All of these refer to global scope. These can be moved to config */\n  static final Set<String> DEFAULT_GLOBAL_NAMES = ImmutableSet.of(\n      \"window\", \"goog.global\");\n\n  /** Whether to remove unreferenced variables in main pass */\n  private final boolean removeUnreferenced;\n\n  /** Names that refer to the global scope */\n  private final Set<String> globalNames;\n\n  /** Ast change helper */\n  private final AstChangeProxy changeProxy;\n\n  /** Names that are externally defined */\n  private final Set<String> externalNames = Sets.newHashSet();\n\n  /** Name declarations or assignments, in post-order traversal order */\n  private final List<RefNode> refNodes = Lists.newArrayList();\n\n  /**\n   * When multiple names in the global scope point to the same object, we\n   * call them aliases. Store a map from each alias name to the alias set.\n   */\n  private final Map<String, AliasSet> aliases = Maps.newHashMap();\n\n  /**\n   * All the aliases in a program form a graph, where each global name is\n   * a node in the graph, and two names are connected if one directly aliases\n   * the other.\n   *\n   * An {@code AliasSet} represents a connected component in that graph. We do\n   * not explicitly track the graph--we just track the connected components.\n   */\n  private static class AliasSet {\n    Set<String> names = Sets.newHashSet();\n\n    // Every alias set starts with exactly 2 names.\n    AliasSet(String name1, String name2) {\n      names.add(name1);\n      names.add(name2);\n    }\n  }\n\n  /**\n   * Relationship between the two names.\n   * Currently only two different reference types exists:\n   * goog.inherits class relations and all other references.\n   */\n  private static enum RefType {\n    REGULAR,\n    INHERITANCE,\n  }\n\n  /**\n   * Callback that propagates reference information.\n   */\n  private static class ReferencePropagationCallback\n      implements EdgeCallback<JsName, RefType> {\n    @Override\n    public boolean traverseEdge(JsName from,\n                                RefType callSite,\n                                JsName to) {\n      if (from.referenced && !to.referenced) {\n        to.referenced = true;\n        return true;\n      } else {\n        return false;\n      }\n    }\n  }\n\n  /**\n   * Class to hold information that can be determined from a node tree about a\n   * given name\n   */\n  private static class NameInformation {\n    /** Fully qualified name */\n    String name;\n\n    /** Whether the name is guaranteed to be externally referenceable */\n    boolean isExternallyReferenceable = false;\n\n    /** Whether this name is a prototype function */\n    boolean isPrototype = false;\n\n    /** Name of the prototype class, i.e. \"a\" if name is \"a.prototype.b\" */\n    String prototypeClass = null;\n\n    /** Local name of prototype property i.e. \"b\" if name is \"a.prototype.b\" */\n    String prototypeProperty = null;\n\n    /** Name of the super class of name */\n    String superclass = null;\n\n    /** Whether this is a call that only affects the class definition */\n    boolean onlyAffectsClassDef = false;\n  }\n\n  /**\n   * Struct to hold information about a fully qualified JS name\n   */\n  private static class JsName implements Comparable<JsName> {\n    /** Fully qualified name */\n    String name;\n\n    /** Name of prototype functions attached to this name */\n    List<String> prototypeNames = Lists.newArrayList();\n\n    /** Whether this is an externally defined name */\n    boolean externallyDefined = false;\n\n    /** Whether this node is referenced */\n    boolean referenced = false;\n\n    /** Whether the name has descendants that are written to. */\n    boolean hasWrittenDescendants = false;\n\n    /** Whether the name is used in a instanceof check */\n    boolean hasInstanceOfReference = false;\n\n    /**\n     * Output the node as a string\n     *\n     * @return Node as a string\n     */\n    @Override\n    public String toString() {\n      StringBuilder out = new StringBuilder();\n      out.append(name);\n\n      if (prototypeNames.size() > 0) {\n        out.append(\" (CLASS)\\n\");\n        out.append(\" - FUNCTIONS: \");\n        Iterator<String> pIter = prototypeNames.iterator();\n        while (pIter.hasNext()) {\n          out.append(pIter.next());\n          if (pIter.hasNext()) {\n            out.append(\", \");\n          }\n        }\n      }\n\n      return out.toString();\n    }\n\n    @Override\n    public int compareTo(JsName rhs) {\n      return this.name.compareTo(rhs.name);\n    }\n  }\n\n  /**\n   * Interface to get information about and remove unreferenced names.\n   */\n  interface RefNode {\n    JsName name();\n    void remove();\n  }\n\n  /**\n   * Class for nodes that reference a fully-qualified JS name. Fully qualified\n   * names are of form A or A.B (A.B.C, etc.). References can get the value or\n   * set the value of the JS name.\n   */\n  private class JsNameRefNode implements RefNode {\n    /** JsName node for this reference */\n    JsName name;\n\n    /**\n     * Top GETPROP or NAME or STRING [objlit key] node defining the name of\n     * this node\n     */\n    @SuppressWarnings(\"unused\")\n    Node node;\n\n    /**\n     * Parent node of the name access\n     * (ASSIGN, VAR, FUNCTION, OBJECTLIT, or CALL)\n     */\n    Node parent;\n\n\n    /**\n     * Create a node that refers to a name\n     *\n     * @param name The name\n     * @param node The top node representing the name (GETPROP, NAME, STRING)\n     */\n    JsNameRefNode(JsName name, Node node) {\n      this.name = name;\n      this.node = node;\n      this.parent = node.getParent();\n    }\n\n    @Override\n    public JsName name() {\n      return name;\n    }\n\n    @Override\n    public void remove() {\n      // Setters have VAR, FUNCTION, or ASSIGN parent nodes. CALL parent\n      // nodes are global refs, and are handled later in this function.\n      Node containingNode = parent.getParent();\n      switch (parent.getType()) {\n        case Token.VAR:\n          Preconditions.checkState(parent.hasOneChild());\n          replaceWithRhs(containingNode, parent);\n          break;\n        case Token.FUNCTION:\n          replaceWithRhs(containingNode, parent);\n          break;\n        case Token.ASSIGN:\n          if (containingNode.isExprResult()) {\n            replaceWithRhs(containingNode.getParent(), containingNode);\n          } else {\n            replaceWithRhs(containingNode, parent);\n          }\n          break;\n        case Token.OBJECTLIT:\n          // TODO(nicksantos): Come up with a way to remove this.\n          // If we remove object lit keys, then we will need to also\n          // create dependency scopes for them.\n          break;\n      }\n    }\n  }\n\n\n  /**\n   * Class for nodes that set prototype properties or methods.\n   */\n  private class PrototypeSetNode extends JsNameRefNode {\n    /**\n     * Create a set node from the name & setter node\n     *\n     * @param name The name\n     * @param parent Parent node that assigns the expression (an ASSIGN)\n     */\n    PrototypeSetNode(JsName name, Node parent) {\n      super(name, parent.getFirstChild());\n\n      Preconditions.checkState(parent.isAssign());\n    }\n\n    @Override public void remove() {\n      Node gramps = parent.getParent();\n      if (gramps.isExprResult()) {\n        // name.prototype.foo = function() { ... };\n        changeProxy.removeChild(gramps.getParent(), gramps);\n      } else {\n        // ... name.prototype.foo = function() { ... } ...\n        changeProxy.replaceWith(gramps, parent,\n                                parent.getLastChild().cloneTree());\n      }\n    }\n  }\n\n  /**\n   * Base class for special reference nodes.\n   */\n  private abstract class SpecialReferenceNode implements RefNode {\n    /** JsName node for the function */\n    JsName name;\n\n    /** The CALL node */\n    Node node;\n\n    /** The parent of {@code node} */\n    Node parent;\n\n    /** The parent of {@code parent} */\n    Node gramps;\n\n    /**\n     * Create a special reference node.\n     *\n     * @param name The name\n     * @param node The CALL node\n     * @param parent The parent of {@code node}\n     * @param gramps The parent of {@code parent}\n     */\n    SpecialReferenceNode(JsName name, Node node, Node parent,\n        Node gramps) {\n      this.name = name;\n      this.node = node;\n      this.parent = parent;\n      this.gramps = gramps;\n    }\n\n    @Override\n    public JsName name() {\n      return name;\n    }\n  }\n\n\n\n  /**\n   * Class for nodes that are function calls that may change a function's\n   * prototype\n   */\n  private class ClassDefiningFunctionNode extends SpecialReferenceNode {\n    /**\n     * Create a class defining function node from the name & setter node\n     *\n     * @param name The name\n     * @param node The CALL node\n     * @param parent The parent of {@code node}\n     * @param gramps The parent of {@code parent}\n     */\n    ClassDefiningFunctionNode(JsName name, Node node, Node parent,\n        Node gramps) {\n      super(name, node, parent, gramps);\n      Preconditions.checkState(node.isCall());\n    }\n\n    @Override\n    public void remove() {\n      Preconditions.checkState(node.isCall());\n      if (parent.isExprResult()) {\n        changeProxy.removeChild(gramps, parent);\n      } else {\n        changeProxy.replaceWith(parent, node, IR.voidNode(IR.number(0)));\n      }\n    }\n  }\n\n\n\n  /**\n   * Class for nodes that check instanceof\n   */\n  private class InstanceOfCheckNode extends SpecialReferenceNode {\n    /**\n     * Create an instanceof node from the name and parent node\n     *\n     * @param name The name\n     * @param node The qualified name node\n     * @param parent The parent of {@code node}, this should be an instanceof\n     *     node.\n     * @param gramps The parent of {@code parent}.\n     */\n    InstanceOfCheckNode(JsName name, Node node, Node parent, Node gramps) {\n      super(name, node, parent, gramps);\n      Preconditions.checkState(node.isQualifiedName());\n      Preconditions.checkState(parent.isInstanceOf());\n    }\n\n    @Override\n    public void remove() {\n      changeProxy.replaceWith(gramps, parent, IR.falseNode());\n    }\n  }\n\n  /**\n   * Walk through externs and mark nodes as externally declared if declared\n   */\n  private class ProcessExternals extends AbstractPostOrderCallback {\n    @Override\n    public void visit(NodeTraversal t, Node n, Node parent) {\n      NameInformation ns = null;\n      if (NodeUtil.isVarDeclaration(n)) {\n        ns = createNameInformation(t, n, parent);\n      } else if (NodeUtil.isFunctionDeclaration(n)) {\n        ns = createNameInformation(t, n.getFirstChild(), n);\n      }\n      if (ns != null) {\n        JsName jsName = getName(ns.name, true);\n        jsName.externallyDefined = true;\n        externalNames.add(ns.name);\n      }\n    }\n  }\n\n  /**\n   * <p>Identifies all dependency scopes.\n   *\n   * <p>A dependency scope is a relationship between a node tree and a name that\n   * implies that the node tree will not execute (and thus can be eliminated) if\n   * the name is never referenced.\n   *\n   * <p>The entire parse tree is ultimately in a dependency scope relationship\n   * with <code>window</code> (or an equivalent name for the global scope), but\n   * the goal here is to find finer-grained relationships. This callback creates\n   * dependency scopes for every assignment statement, variable declaration, and\n   * function call in the global scope.\n   *\n   * <p>Note that dependency scope node trees aren't necessarily disjoint.\n   * In the following code snippet, for example, the function definition\n   * forms a dependency scope with the name <code>f</code> and the assignment\n   * inside the function forms a dependency scope with the name <code>x</code>.\n   * <pre>\n   * var x; function f() { x = 1; }\n   * </pre>\n   */\n  private class FindDependencyScopes extends AbstractPostOrderCallback {\n    @Override\n    public void visit(NodeTraversal t, Node n, Node parent) {\n      if (!t.inGlobalScope()) {\n        return;\n      }\n\n      if (n.isAssign()) {\n        Node nameNode = n.getFirstChild();\n        NameInformation ns = createNameInformation(t, nameNode, n);\n        if (ns != null) {\n          if (parent.isFor() && !NodeUtil.isForIn(parent)) {\n            // Patch for assignments that appear in the init,\n            // condition or iteration part of a FOR loop.  Without\n            // this change, all 3 of those parts try to claim the for\n            // loop as their dependency scope.  The last assignment in\n            // those three fields wins, which can result in incorrect\n            // reference edges between referenced and assigned variables.\n            //\n            // TODO(user) revisit the dependency scope calculation\n            // logic.\n            if (parent.getFirstChild().getNext() != n) {\n              recordDepScope(n, ns);\n            } else {\n              recordDepScope(nameNode, ns);\n            }\n          } else {\n            recordDepScope(n, ns);\n          }\n        }\n      } else if (NodeUtil.isVarDeclaration(n)) {\n        NameInformation ns = createNameInformation(t, n, parent);\n        recordDepScope(n, ns);\n      } else if (NodeUtil.isFunctionDeclaration(n)) {\n        NameInformation ns = createNameInformation(t, n.getFirstChild(), n);\n        recordDepScope(n, ns);\n      } else if (NodeUtil.isExprCall(n)) {\n        Node callNode = n.getFirstChild();\n        Node nameNode = callNode.getFirstChild();\n        NameInformation ns = createNameInformation(t, nameNode, callNode);\n        if (ns != null && ns.onlyAffectsClassDef) {\n          recordDepScope(n, ns);\n        }\n      }\n    }\n\n    /**\n     * Defines a dependency scope.\n     */\n    private void recordDepScope(Node node, NameInformation name) {\n      scopes.put(node, name);\n    }\n  }\n\n  /**\n   * Create JsName objects for variable and function declarations in\n   * the global scope before computing name references.  In javascript\n   * it is legal to refer to variable and function names before the\n   * actual declaration.\n   */\n  private class HoistVariableAndFunctionDeclarations\n      extends NodeTraversal.AbstractShallowCallback {\n\n    @Override\n    public void visit(NodeTraversal t, Node n, Node parent) {\n      if (NodeUtil.isVarDeclaration(n)) {\n        NameInformation ns = createNameInformation(t, n, parent);\n        Preconditions.checkNotNull(ns, \"NameInformation is null\");\n        createName(ns.name);\n      } else if (NodeUtil.isFunctionDeclaration(n)) {\n        Node nameNode = n.getFirstChild();\n        NameInformation ns = createNameInformation(t, nameNode, n);\n        Preconditions.checkNotNull(ns, \"NameInformation is null\");\n        createName(nameNode.getString());\n      }\n    }\n  }\n\n  /**\n   * Identifies all declarations of global names and setter statements\n   * affecting global symbols (assignments to global names).\n   *\n   * All declarations and setters must be gathered in a single\n   * traversal and stored in traversal order so \"removeUnreferenced\"\n   * can perform modifications in traversal order.\n   */\n  private",
+  "method_javadoc": ""
+ },
+ "fields": [],
+ "focal_class": "com.google.javascript.jscomp.NameAnalyzer.FindDeclarationsAndSetters",
+ "focal_id": "Closure_40::com.google.javascript.jscomp.NameAnalyzer$FindDeclarationsAndSetters::visit(NodeTraversal,Node,Node)",
+ "focal_method_name": "visit",
+ "generations": 3,
+ "impl_B": "@Override\n    public void visit(NodeTraversal t, Node n, Node parent) {\n\n      // Record global variable and function declarations\n      if (t.inGlobalScope()) {\n        if (NodeUtil.isVarDeclaration(n)) {\n          NameInformation ns = createNameInformation(t, n, parent);\n          Preconditions.checkNotNull(ns);\n          recordSet(ns.name, n);\n        } else if (NodeUtil.isFunctionDeclaration(n)) {\n          Node nameNode = n.getFirstChild();\n          NameInformation ns = createNameInformation(t, nameNode, n);\n          if (ns != null) {\n            JsName nameInfo = getName(nameNode.getString(), true);\n            recordSet(nameInfo.name, nameNode);\n          }\n        } else if (NodeUtil.isObjectLitKey(n, parent)) {\n          NameInformation ns = createNameInformation(t, n, parent);\n          if (ns != null) {\n            recordSet(ns.name, n);\n          }\n        }\n      }\n\n      // Record assignments and call sites\n      if (n.isAssign()) {\n        Node nameNode = n.getFirstChild();\n\n        NameInformation ns = createNameInformation(t, nameNode, n);\n        if (ns != null) {\n          if (ns.isPrototype) {\n            recordPrototypeSet(ns.prototypeClass, ns.prototypeProperty, n);\n          } else {\n            recordSet(ns.name, nameNode);\n          }\n        }\n      } else if (n.isCall()) {\n        Node nameNode = n.getFirstChild();\n        NameInformation ns = createNameInformation(t, nameNode, n);\n        if (ns != null && ns.onlyAffectsClassDef) {\n          JsName name = getName(ns.name, false);\n          if (name != null) {\n          refNodes.add(new ClassDefiningFunctionNode(\n              name, n, parent, parent.getParent()));\n          }\n        }\n      }\n    }",
+ "imports": [
+  "com.google.common.base.Preconditions",
+  "com.google.common.base.Predicate",
+  "com.google.common.collect.ImmutableSet",
+  "com.google.common.collect.Lists",
+  "com.google.common.collect.Maps",
+  "com.google.common.collect.Sets",
+  "com.google.javascript.jscomp.CodingConvention.SubclassRelationship",
+  "com.google.javascript.jscomp.GatherSideEffectSubexpressionsCallback.CopySideEffectSubexpressions",
+  "com.google.javascript.jscomp.GatherSideEffectSubexpressionsCallback.SideEffectAccumulator",
+  "com.google.javascript.jscomp.NodeTraversal.AbstractPostOrderCallback",
+  "com.google.javascript.jscomp.NodeTraversal.Callback",
+  "com.google.javascript.jscomp.Scope.Var",
+  "com.google.javascript.jscomp.graph.DiGraph",
+  "com.google.javascript.jscomp.graph.FixedPointGraphTraversal",
+  "com.google.javascript.jscomp.graph.LinkedDirectedGraph",
+  "com.google.javascript.jscomp.graph.DiGraph.DiGraphEdge",
+  "com.google.javascript.jscomp.graph.FixedPointGraphTraversal.EdgeCallback",
+  "com.google.javascript.rhino.IR",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.Token",
+  "java.util.Collections",
+  "java.util.Iterator",
+  "java.util.List",
+  "java.util.Map",
+  "java.util.Set"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [],
+ "sig": {
+  "class_declaration": "private class FindDeclarationsAndSetters extends AbstractPostOrderCallback",
+  "constructors": [],
+  "focal_signature": "public void visit(NodeTraversal t, Node n, Node parent)",
+  "methods": [],
+  "type_signatures": [
+   "public class NodeTraversal { public NodeTraversal(AbstractCompiler compiler, Callback cb); public NodeTraversal(AbstractCompiler compiler, Callback cb, ScopeCreator scopeCreator); public void traverse(Node root); public void traverseRoots(Node ... roots); public void traverseRoots(List<Node> roots); protected void traverseInnerNode(Node node, Node parent, Scope refinedScope); public Compiler getCompiler(); public int getLineNumber(); public String getSourceName(); public CompilerInput getInput(); public JSModule getModule(); public Node getCurrentNode(); public static void traverse( AbstractCompiler compiler, Node root, Callback cb); public static void traverseRoots( AbstractCompiler compiler, List<Node> roots, Callback cb); public static void traverseRoots( AbstractCompiler compiler, Callback cb, Node ... roots); }",
+   "public class Node implements Cloneable, Serializable { public Node(int nodeType); public Node(int nodeType, Node child); public Node(int nodeType, Node left, Node right); public Node(int nodeType, Node left, Node mid, Node right); public Node(int nodeType, Node left, Node mid, Node mid2, Node right); public Node(int nodeType, int lineno, int charno); public Node(int nodeType, Node child, int lineno, int charno); public Node(int nodeType, Node left, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node mid2, Node right, int lineno, int charno); public Node(int nodeType, Node[] children, int lineno, int charno); public Node(int nodeType, Node[] children); public static Node newNumber(double number); public static Node newNumber(double number, int lineno, int charno); public static Node newString(String str); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

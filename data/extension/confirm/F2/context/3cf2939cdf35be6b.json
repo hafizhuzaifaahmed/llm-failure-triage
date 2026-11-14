@@ -1,0 +1,168 @@
+{
+ "bug_name": "Closure_158",
+ "call_sites": [
+  {
+   "line": 605,
+   "lines": [
+    600,
+    601,
+    602,
+    603,
+    604,
+    605,
+    606,
+    607,
+    608,
+    609,
+    610
+   ],
+   "path": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java",
+   "snippet": "    B options = createOptions();\n\n    List<JSModule> modules = null;\n    Result result;\n\n    setRunOptions(options);\n\n    boolean writeOutputToFile = !options.jsOutputFile.isEmpty();\n    if (writeOutputToFile) {\n      out = fileNameToOutputWriter(options.jsOutputFile);\n    } else if (out instanceof OutputStream) {"
+  }
+ ],
+ "class_simple": "AbstractCommandLineRunner",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Implementations of AbstractCommandLineRunner translate flags into Java\n * API calls on the Compiler. AbstractCompiler contains common flags and logic\n * to make that happen.\n *\n * This class may be extended and used to create other Java classes\n * that behave the same as running the Compiler from the command line. Example:\n *\n * <pre>\n * class MyCommandLineRunner extends\n *     AbstractCommandLineRunner<MyCompiler, MyOptions> {\n *   MyCommandLineRunner(String[] args) {\n *     super(args);\n *   }\n *\n *   &#064;Override\n *   protected MyOptions createOptions() {\n *     MyOptions options = new MyOptions();\n *     CompilerFlagTranslator.setOptionsFromFlags(options);\n *     addMyCrazyCompilerPassThatOutputsAnExtraFile(options);\n *     return options;\n *   }\n *\n *   &#064;Override\n *   protected MyCompiler createCompiler() {\n *     return new MyCompiler();\n *   }\n *\n *   public static void main(String[] args) {\n *     (new MyCommandLineRunner(args)).run();\n *   }\n * }\n * </pre>\n *\n * @author bolinfest@google.com (Michael Bolin)\n */\nabstract",
+  "method_javadoc": "/**\n   * Sets options based on the configurations set flags API.\n   * Called during the run() run() method.\n   * If you want to ignore the flags API, or intepret flags your own way,\n   * then you should override this method.\n   */"
+ },
+ "fields": [
+  "private final CommandLineConfig config",
+  "private Appendable out",
+  "private final PrintStream err",
+  "private A compiler",
+  "private Charset inputCharset",
+  "private String outputCharset",
+  "private boolean testMode",
+  "private Supplier<List<JSSourceFile>> externsSupplierForTesting",
+  "private Supplier<List<JSSourceFile>> inputsSupplierForTesting",
+  "private Supplier<List<JSModule>> modulesSupplierForTesting",
+  "private Function<Integer, Boolean> exitCodeReceiverForTesting",
+  "private static final int NUM_RUNS_TO_DETERMINE_OPTIMAL_ORDER",
+  "private static final String OUTPUT_WRAPPER_MARKER",
+  "private final RunTimeStats runTimeStats"
+ ],
+ "focal_class": "com.google.javascript.jscomp.AbstractCommandLineRunner",
+ "focal_id": "Closure_158::com.google.javascript.jscomp.AbstractCommandLineRunner::setRunOptions(CompilerOptions)",
+ "focal_method_name": "setRunOptions",
+ "generations": 3,
+ "impl_B": "final protected void setRunOptions(CompilerOptions options)\n      throws FlagUsageException, IOException {\n    DiagnosticGroups diagnosticGroups = getDiagnosticGroups();\n\n    diagnosticGroups.setWarningLevels(\n        options, config.jscompError, CheckLevel.ERROR);\n    diagnosticGroups.setWarningLevels(\n        options, config.jscompWarning, CheckLevel.WARNING);\n    diagnosticGroups.setWarningLevels(\n        options, config.jscompOff, CheckLevel.OFF);\n\n    createDefineOrTweakReplacements(config.define, options, false);\n\n    options.setTweakProcessing(config.tweakProcessing);\n    createDefineOrTweakReplacements(config.tweak, options, true);\n\n    options.manageClosureDependencies = config.manageClosureDependencies;\n    if (config.closureEntryPoints.size() > 0) {\n      options.setManageClosureDependencies(config.closureEntryPoints);\n    }\n    options.devMode = config.jscompDevMode;\n    options.setCodingConvention(config.codingConvention);\n    options.setSummaryDetailLevel(config.summaryDetailLevel);\n\n    outputCharset = options.outputCharset = getOutputCharset();\n    inputCharset = getInputCharset();\n\n    if (config.jsOutputFile.length() > 0) {\n      options.jsOutputFile = config.jsOutputFile;\n    }\n\n    if (config.createSourceMap.length() > 0) {\n      options.sourceMapOutputPath = config.createSourceMap;\n    }\n    options.sourceMapDetailLevel = config.sourceMapDetailLevel;\n    options.sourceMapFormat = config.sourceMapFormat;\n\n    if (!config.variableMapInputFile.equals(\"\")) {\n      options.inputVariableMapSerialized =\n          VariableMap.load(config.variableMapInputFile).toBytes();\n    }\n\n    if (!config.propertyMapInputFile.equals(\"\")) {\n      options.inputPropertyMapSerialized =\n          VariableMap.load(config.propertyMapInputFile).toBytes();\n    }\n\n    if (config.languageIn.length() > 0) {\n      if (config.languageIn.equals(\"ECMASCRIPT5_STRICT\") ||\n          config.languageIn.equals(\"ES5_STRICT\")) {\n        options.setLanguageIn(CompilerOptions.LanguageMode.ECMASCRIPT5);\n      } else if (config.languageIn.equals(\"ECMASCRIPT5\") ||\n          config.languageIn.equals(\"ES5\")) {\n        options.setLanguageIn(CompilerOptions.LanguageMode.ECMASCRIPT5);\n      } else if (config.languageIn.equals(\"ECMASCRIPT3\") ||\n                 config.languageIn.equals(\"ES3\")) {\n        options.setLanguageIn(CompilerOptions.LanguageMode.ECMASCRIPT3);\n      } else {\n        throw new FlagUsageException(\"Unknown language `\" + config.languageIn +\n                                     \"' specified.\");\n      }\n    }\n\n    options.acceptConstKeyword = config.acceptConstKeyword;\n  }",
+ "imports": [
+  "com.google.common.annotations.VisibleForTesting",
+  "com.google.common.base.Charsets",
+  "com.google.common.base.Function",
+  "com.google.common.base.Joiner",
+  "com.google.common.base.Preconditions",
+  "com.google.common.base.Supplier",
+  "com.google.common.collect.ImmutableList",
+  "com.google.common.collect.Lists",
+  "com.google.common.collect.Maps",
+  "com.google.javascript.jscomp.CompilerOptions.TweakProcessing",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.TokenStream",
+  "com.google.protobuf.CodedOutputStream",
+  "java.io.BufferedWriter",
+  "java.io.Closeable",
+  "java.io.File",
+  "java.io.FileOutputStream",
+  "java.io.IOException",
+  "java.io.OutputStream",
+  "java.io.OutputStreamWriter",
+  "java.io.PrintStream",
+  "java.io.StringWriter",
+  "java.io.Writer",
+  "java.nio.charset.Charset",
+  "java.util.ArrayList",
+  "java.util.Collections",
+  "java.util.List",
+  "java.util.Map",
+  "java.util.logging.Level"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "/**\n   * Returns whether we're in test mode.\n   */",
+   "name": "isInTestMode"
+  },
+  {
+   "javadoc": "/**\n   * Get the command line config, so that it can be initialized.\n   */",
+   "name": "getCommandLineConfig"
+  },
+  {
+   "javadoc": "/**\n   * Returns the instance of the Compiler to use when {@link #run()} is\n   * called.\n   */",
+   "name": "createCompiler"
+  },
+  {
+   "javadoc": "/**\n   * Returns the instance of the Options to use when {@link #run()} is called.\n   * createCompiler() is called before createOptions(), so getCompiler()\n   * will not return null when createOptions() is called.\n   */",
+   "name": "createOptions"
+  },
+  {
+   "javadoc": "/**\n   * The warning classes that are available from the command-line.\n   */",
+   "name": "getDiagnosticGroups"
+  },
+  {
+   "javadoc": "/** No longer does anything. */",
+   "name": "initOptionsFromFlags"
+  },
+  {
+   "javadoc": "",
+   "name": "getCompiler"
+  },
+  {
+   "javadoc": "/**\n   * Runs the Compiler and calls System.exit() with the exit status of the\n   * compiler.\n   */",
+   "name": "run"
+  },
+  {
+   "javadoc": "/**\n   * Returns the PrintStream for writing errors associated with this\n   * AbstractCommandLineRunner.\n   */",
+   "name": "getErrorPrintStream"
+  },
+  {
+   "javadoc": "/**\n   * Creates inputs from a list of files.\n   *\n   * Can be overridden by subclasses who want to pull files from different\n   * places.\n   *\n   * @param files A list of filenames\n   * @param allowStdIn Whether '-' is allowed appear as a filename to represent\n   *        stdin. If true, '-' is only allowed to appear once.\n   * @return An array of inputs\n   */",
+   "name": "createInputs"
+  },
+  {
+   "javadoc": "/**\n   * Validates the module name. Can be overridden by subclasses.\n   * @param name The module name\n   * @throws FlagUsageException if the validation fails\n   */",
+   "name": "checkModuleName"
+  },
+  {
+   "javadoc": "/**\n   * Parses command-line arguments and runs the compiler.\n   *\n   * @return system exit status\n   */",
+   "name": "doRun"
+  },
+  {
+   "javadoc": "",
+   "name": "createExterns"
+  },
+  {
+   "javadoc": "/**\n   * Converts a file name into a Ouputstream.\n   * Returns null if the file name is null.\n   */",
+   "name": "filenameToOutputStream"
+  }
+ ],
+ "sig": {
+  "class_declaration": "abstract class AbstractCommandLineRunner<A extends Compiler, B extends CompilerOptions>",
+  "constructors": [],
+  "focal_signature": "final protected void setRunOptions(CompilerOptions options) throws FlagUsageException, IOException",
+  "methods": [
+   "protected boolean isInTestMode();",
+   "protected CommandLineConfig getCommandLineConfig();",
+   "protected abstract A createCompiler();",
+   "protected abstract B createOptions();",
+   "protected DiagnosticGroups getDiagnosticGroups();",
+   "protected void initOptionsFromFlags(CompilerOptions options);",
+   "final protected A getCompiler();",
+   "final public void run();",
+   "protected PrintStream getErrorPrintStream();",
+   "protected List<JSSourceFile> createInputs(List<String> files, boolean allowStdIn) throws FlagUsageException, IOException;",
+   "protected void checkModuleName(String name) throws FlagUsageException;",
+   "protected int doRun() throws FlagUsageException, IOException;",
+   "protected List<JSSourceFile> createExterns() throws FlagUsageException, IOException;",
+   "protected OutputStream filenameToOutputStream(String fileName) throws IOException;"
+  ],
+  "type_signatures": [
+   "public class CompilerOptions implements Serializable, Cloneable { public CompilerOptions(); public Map<String, Node> getDefineReplacements(); public Map<String, Node> getTweakReplacements(); public void setDefineToBooleanLiteral(String defineName, boolean value); public void setDefineToStringLiteral(String defineName, String value); public void setDefineToNumberLiteral(String defineName, int value); public void setDefineToDoubleLiteral(String defineName, double value); public void setTweakToBooleanLiteral(String tweakId, boolean value); public void setTweakToStringLiteral(String tweakId, String value); public void setTweakToNumberLiteral(String tweakId, int value); public void setTweakToDoubleLiteral(String tweakId, double value); public void skipAllCompilerPasses(); public void setWarningLevel(DiagnosticGroup type, CheckLevel level); public void addWarningsGuard(WarningsGuard guard); public void setRenamingPolicy(VariableRenamingPolicy newVariablePolicy, PropertyRenamingPolicy newPropertyPolicy); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

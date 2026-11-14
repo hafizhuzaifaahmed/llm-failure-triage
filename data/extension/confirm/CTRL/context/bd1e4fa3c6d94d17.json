@@ -1,0 +1,404 @@
+{
+ "bug_name": "JacksonCore_22",
+ "call_sites": [
+  {
+   "line": 1733,
+   "lines": [
+    1728,
+    1729,
+    1730,
+    1731,
+    1732,
+    1733,
+    1734,
+    1735,
+    1736,
+    1737,
+    1738
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/JsonGenerator.java",
+   "snippet": "            break;\n        case ID_END_ARRAY:\n            writeEndArray();\n            break;\n        case ID_FIELD_NAME:\n            writeFieldName(p.getCurrentName());\n            break;\n        case ID_STRING:\n            if (p.hasTextCharacters()) {\n                writeString(p.getTextCharacters(), p.getTextOffset(), p.getTextLength());\n            } else {"
+  },
+  {
+   "line": 1822,
+   "lines": [
+    1817,
+    1818,
+    1819,
+    1820,
+    1821,
+    1822,
+    1823,
+    1824,
+    1825,
+    1826,
+    1827
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/JsonGenerator.java",
+   "snippet": "            _reportError(\"No current event to copy\");\n        }\n        // Let's handle field-name separately first\n        int id = t.id();\n        if (id == ID_FIELD_NAME) {\n            writeFieldName(p.getCurrentName());\n            t = p.nextToken();\n            id = t.id();\n            // fall-through to copy the associated value\n        }\n        switch (id) {"
+  },
+  {
+   "line": 814,
+   "lines": [
+    809,
+    810,
+    811,
+    812,
+    813,
+    814,
+    815,
+    816,
+    817,
+    818,
+    819
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/JsonParser.java",
+   "snippet": "     * \n     * @param str Property name to compare next token to (if next token is\n     *   <code>JsonToken.FIELD_NAME</code>)\n     */\n    public boolean nextFieldName(SerializableString str) throws IOException {\n        return (nextToken() == JsonToken.FIELD_NAME) && str.getValue().equals(getCurrentName());\n    }\n\n    /**\n     * Method that fetches next token (as if calling {@link #nextToken}) and\n     * verifies whether it is {@link JsonToken#FIELD_NAME}; if it is,"
+  },
+  {
+   "line": 825,
+   "lines": [
+    820,
+    821,
+    822,
+    823,
+    824,
+    825,
+    826,
+    827,
+    828,
+    829,
+    830
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/JsonParser.java",
+   "snippet": "     * returns same as {@link #getCurrentName()}, otherwise null.\n     * \n     * @since 2.5\n     */\n    public String nextFieldName() throws IOException {\n        return (nextToken() == JsonToken.FIELD_NAME) ? getCurrentName() : null;\n    }\n\n    /**\n     * Method that fetches next token (as if calling {@link #nextToken}) and\n     * if it is {@link JsonToken#VALUE_STRING} returns contained String value;"
+  },
+  {
+   "line": 168,
+   "lines": [
+    163,
+    164,
+    165,
+    166,
+    167,
+    168,
+    169,
+    170,
+    171,
+    172,
+    173
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/JsonPointer.java",
+   "snippet": "        }\n        JsonPointer tail = null;\n\n        for (; context != null; context = context.getParent()) {\n            if (context.inObject()) {\n                String seg = context.getCurrentName();\n                if (seg == null) { // is this legal?\n                    seg = \"\";\n                }\n                tail = new JsonPointer(_fullPath(tail, seg), seg, tail);\n            } else if (context.inArray() || includeRoot) {"
+  }
+ ],
+ "class_simple": "FilteringParserDelegate",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Specialized {@link JsonParserDelegate} that allows use of\n * {@link TokenFilter} for outputting a subset of content that\n * is visible to caller\n * \n * @since 2.6\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "protected TokenFilter rootFilter",
+  "protected boolean _allowMultipleMatches",
+  "protected boolean _includePath",
+  "protected boolean _includeImmediateParent",
+  "protected JsonToken _currToken",
+  "protected JsonToken _lastClearedToken",
+  "protected TokenFilterContext _headContext",
+  "protected TokenFilterContext _exposedContext",
+  "protected TokenFilter _itemFilter",
+  "protected int _matchCount"
+ ],
+ "focal_class": "com.fasterxml.jackson.core.filter.FilteringParserDelegate",
+ "focal_id": "JacksonCore_22::com.fasterxml.jackson.core.filter.FilteringParserDelegate::getCurrentName()",
+ "focal_method_name": "getCurrentName",
+ "generations": 3,
+ "impl_B": "@Override\n    public String getCurrentName() throws IOException {\n        JsonStreamContext ctxt = _filterContext();\n        if (_currToken == JsonToken.START_OBJECT || _currToken == JsonToken.START_ARRAY) {\n            JsonStreamContext parent = ctxt.getParent();\n            return (parent == null) ? null : parent.getCurrentName();\n        }\n        return ctxt.getCurrentName();\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.io.OutputStream",
+  "java.math.BigDecimal",
+  "java.math.BigInteger",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.core.util.JsonParserDelegate",
+  "static com.fasterxml.jackson.core.JsonTokenId.*"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.core.filter",
+ "project": "JacksonCore",
+ "siblings": [
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getFilter"
+  },
+  {
+   "javadoc": "/**\n     * Accessor for finding number of matches, where specific token and sub-tree\n     * starting (if structured type) are passed.\n     */",
+   "name": "getMatchCount"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getCurrentToken"
+  },
+  {
+   "javadoc": "",
+   "name": "currentToken"
+  },
+  {
+   "javadoc": "",
+   "name": "getCurrentTokenId"
+  },
+  {
+   "javadoc": "",
+   "name": "currentTokenId"
+  },
+  {
+   "javadoc": "",
+   "name": "hasCurrentToken"
+  },
+  {
+   "javadoc": "",
+   "name": "hasTokenId"
+  },
+  {
+   "javadoc": "",
+   "name": "hasToken"
+  },
+  {
+   "javadoc": "",
+   "name": "isExpectedStartArrayToken"
+  },
+  {
+   "javadoc": "",
+   "name": "isExpectedStartObjectToken"
+  },
+  {
+   "javadoc": "",
+   "name": "getCurrentLocation"
+  },
+  {
+   "javadoc": "",
+   "name": "getParsingContext"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "clearCurrentToken"
+  },
+  {
+   "javadoc": "",
+   "name": "getLastClearedToken"
+  },
+  {
+   "javadoc": "",
+   "name": "overrideCurrentName"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "nextToken"
+  },
+  {
+   "javadoc": "/**\n     * Offlined handling for cases where there was no buffered token to\n     * return, and the token read next could not be returned as-is,\n     * at least not yet, but where we have not yet established that\n     * buffering is needed.\n     */",
+   "name": "_nextToken2"
+  },
+  {
+   "javadoc": "/**\n     * Method called when a new potentially included context is found.\n     */",
+   "name": "_nextTokenWithBuffering"
+  },
+  {
+   "javadoc": "",
+   "name": "nextValue"
+  },
+  {
+   "javadoc": "/**\n     * Need to override, re-implement similar to how method defined in\n     * {@link com.fasterxml.jackson.core.base.ParserMinimalBase}, to keep\n     * state correct here.\n     */",
+   "name": "skipChildren"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getText"
+  },
+  {
+   "javadoc": "",
+   "name": "hasTextCharacters"
+  },
+  {
+   "javadoc": "",
+   "name": "getTextCharacters"
+  },
+  {
+   "javadoc": "",
+   "name": "getTextLength"
+  },
+  {
+   "javadoc": "",
+   "name": "getTextOffset"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getBigIntegerValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getBooleanValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getByteValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getShortValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getDecimalValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getDoubleValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getFloatValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getIntValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getLongValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getNumberType"
+  },
+  {
+   "javadoc": "",
+   "name": "getNumberValue"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getValueAsInt"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueAsInt"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueAsLong"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueAsLong"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueAsDouble"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueAsDouble"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueAsBoolean"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueAsBoolean"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueAsString"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueAsString"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getEmbeddedObject"
+  },
+  {
+   "javadoc": "",
+   "name": "getBinaryValue"
+  },
+  {
+   "javadoc": "",
+   "name": "readBinaryValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getTokenLocation"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_filterContext"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class FilteringParserDelegate extends JsonParserDelegate",
+  "constructors": [
+   "public FilteringParserDelegate(JsonParser p, TokenFilter f, boolean includePath, boolean allowMultipleMatches);"
+  ],
+  "focal_signature": "public String getCurrentName() throws IOException",
+  "methods": [
+   "public TokenFilter getFilter();",
+   "public int getMatchCount();",
+   "public JsonToken getCurrentToken();",
+   "public JsonToken currentToken();",
+   "public final int getCurrentTokenId();",
+   "public final int currentTokenId();",
+   "public boolean hasCurrentToken();",
+   "public boolean hasTokenId(int id);",
+   "public final boolean hasToken(JsonToken t);",
+   "public boolean isExpectedStartArrayToken();",
+   "public boolean isExpectedStartObjectToken();",
+   "public JsonLocation getCurrentLocation();",
+   "public JsonStreamContext getParsingContext();",
+   "public void clearCurrentToken();",
+   "public JsonToken getLastClearedToken();",
+   "public void overrideCurrentName(String name);",
+   "public JsonToken nextToken() throws IOException;",
+   "protected final JsonToken _nextToken2() throws IOException;",
+   "protected final JsonToken _nextTokenWithBuffering(final TokenFilterContext buffRoot) throws IOException;",
+   "public JsonToken nextValue() throws IOException;",
+   "public JsonParser skipChildren() throws IOException;",
+   "public String getText() throws IOException;",
+   "public boolean hasTextCharacters();",
+   "public char[] getTextCharacters() throws IOException;",
+   "public int getTextLength() throws IOException;",
+   "public int getTextOffset() throws IOException;",
+   "public BigInteger getBigIntegerValue() throws IOException;",
+   "public boolean getBooleanValue() throws IOException;",
+   "public byte getByteValue() throws IOException;",
+   "public short getShortValue() throws IOException;",
+   "public BigDecimal getDecimalValue() throws IOException;",
+   "public double getDoubleValue() throws IOException;",
+   "public float getFloatValue() throws IOException;",
+   "public int getIntValue() throws IOException;",
+   "public long getLongValue() throws IOException;",
+   "public NumberType getNumberType() throws IOException;",
+   "public Number getNumberValue() throws IOException;",
+   "public int getValueAsInt() throws IOException;",
+   "public int getValueAsInt(int defaultValue) throws IOException;",
+   "public long getValueAsLong() throws IOException;",
+   "public long getValueAsLong(long defaultValue) throws IOException;",
+   "public double getValueAsDouble() throws IOException;",
+   "public double getValueAsDouble(double defaultValue) throws IOException;",
+   "public boolean getValueAsBoolean() throws IOException;",
+   "public boolean getValueAsBoolean(boolean defaultValue) throws IOException;",
+   "public String getValueAsString() throws IOException;",
+   "public String getValueAsString(String defaultValue) throws IOException;",
+   "public Object getEmbeddedObject() throws IOException;",
+   "public byte[] getBinaryValue(Base64Variant b64variant) throws IOException;",
+   "public int readBinaryValue(Base64Variant b64variant, OutputStream out) throws IOException;",
+   "public JsonLocation getTokenLocation();",
+   "protected JsonStreamContext _filterContext();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

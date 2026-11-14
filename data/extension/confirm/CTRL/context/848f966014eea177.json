@@ -1,0 +1,170 @@
+{
+ "bug_name": "Closure_142",
+ "call_sites": [
+  {
+   "line": 58,
+   "lines": [
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63
+   ],
+   "path": "src/com/google/javascript/jscomp/AliasKeywords.java",
+   "snippet": "     * Find the AliasSpecification associated with the node, and tell\n     * that AliasSpecification about the new node.\n     */\n    private void visitAliasableNode(Node n, Node parent) {\n      AliasSpecification aliasableNodes = aliasTypes.get(n.getType());\n      aliasableNodes.visit(n, parent);\n    }\n\n    /**\n     * Sanity check that our aliases are not already defined by\n     * someone else."
+  },
+  {
+   "line": 183,
+   "lines": [
+    178,
+    179,
+    180,
+    181,
+    182,
+    183,
+    184,
+    185,
+    186,
+    187,
+    188
+   ],
+   "path": "src/com/google/javascript/jscomp/ChainableReverseAbstractInterpreter.java",
+   "snippet": "   * @see #getRestrictedWithoutUndefined(JSType)\n   */\n  private final Visitor<JSType> restrictUndefinedVisitor =\n    new Visitor<JSType>() {\n      public JSType caseEnumElementType(EnumElementType enumElementType) {\n        JSType type = enumElementType.getPrimitiveType().visit(this);\n        if (type != null && enumElementType.getPrimitiveType().equals(type)) {\n          return enumElementType;\n        } else {\n          return type;\n        }"
+  },
+  {
+   "line": 248,
+   "lines": [
+    243,
+    244,
+    245,
+    246,
+    247,
+    248,
+    249,
+    250,
+    251,
+    252,
+    253
+   ],
+   "path": "src/com/google/javascript/jscomp/ChainableReverseAbstractInterpreter.java",
+   "snippet": "   * @see #getRestrictedWithoutNull(JSType)\n   */\n  private final Visitor<JSType> restrictNullVisitor =\n    new Visitor<JSType>() {\n      public JSType caseEnumElementType(EnumElementType enumElementType) {\n        JSType type = enumElementType.getPrimitiveType().visit(this);\n        if (type != null && enumElementType.getPrimitiveType().equals(type)) {\n          return enumElementType;\n        } else {\n          return type;\n        }"
+  },
+  {
+   "line": 334,
+   "lines": [
+    329,
+    330,
+    331,
+    332,
+    333,
+    334,
+    335,
+    336,
+    337,
+    338,
+    339
+   ],
+   "path": "src/com/google/javascript/jscomp/ChainableReverseAbstractInterpreter.java",
+   "snippet": "    }\n\n    public JSType caseUnionType(UnionType type) {\n      JSType restricted = null;\n      for (JSType alternate : type.getAlternates()) {\n        JSType restrictedAlternate = alternate.visit(this);\n        if (restrictedAlternate != null) {\n          if (restricted == null) {\n            restricted = restrictedAlternate;\n          } else {\n            restricted = restrictedAlternate.getLeastSupertype(restricted);"
+  },
+  {
+   "line": 360,
+   "lines": [
+    355,
+    356,
+    357,
+    358,
+    359,
+    360,
+    361,
+    362,
+    363,
+    364,
+    365
+   ],
+   "path": "src/com/google/javascript/jscomp/ChainableReverseAbstractInterpreter.java",
+   "snippet": "      // }\n      // There is no type that represents {MyEnum - string}. What we really\n      // need is a notion of \"enum subtyping\", so that we could dynamically\n      // create a subtype of MyEnum restricted by string. In any case,\n      // this should catch the common case.\n      JSType type = enumElementType.getPrimitiveType().visit(this);\n      if (type != null && enumElementType.getPrimitiveType().equals(type)) {\n        return enumElementType;\n      } else {\n        return type;\n      }"
+  }
+ ],
+ "class_simple": "CoalesceVariableNames",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Reuse variable names if possible.\n *\n * <p>For example, from <code>var x = 1; print(x); var y = 2; print(y); </code>\n * to <code>var x = 1; print(x); x = 2; print(x)</code>. The benefits are\n * slightly shorter code because of the removed <code>var<code> declaration,\n * less unique variables in hope for better renaming, and finally better gzip\n * compression.\n *\n * <p>The pass operates similar to a typical register allocator found in an\n * optimizing compiler by first computing live ranges with\n * {@link LiveVariablesAnalysis} and a variable interference graph. Then it uses\n * graph coloring in {@link GraphColoring} to determine which two variables can\n * be merge together safely.\n *\n*\n */",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private final AbstractCompiler compiler",
+  "private final Deque<GraphColoring<Var, Void>> colorings",
+  "private final boolean usePseudoNames",
+  "private static final Comparator<Var> coloringTieBreaker"
+ ],
+ "focal_class": "com.google.javascript.jscomp.CoalesceVariableNames",
+ "focal_id": "Closure_142::com.google.javascript.jscomp.CoalesceVariableNames::visit(NodeTraversal,Node,Node)",
+ "focal_method_name": "visit",
+ "generations": 3,
+ "impl_B": "@Override\n  public void visit(NodeTraversal t, Node n, Node parent) {\n    if (colorings.isEmpty() || !NodeUtil.isName(n) ||\n        NodeUtil.isFunction(parent)) {\n      // Don't rename named functions.\n      return;\n    }\n    Var var = t.getScope().getVar(n.getString());\n    GraphNode<Var, ?> vNode = colorings.peek().getGraph().getNode(var);\n    if (vNode == null) {\n      // This is not a local.\n      return;\n    }\n    Var coalescedVar = colorings.peek().getPartitionSuperNode(var);\n\n    if (!usePseudoNames) {\n      if (vNode.getValue().equals(coalescedVar)) {\n        // The coalesced name is itself, nothing to do.\n        return;\n      }\n\n      // Rename.\n      n.setString(coalescedVar.name);\n      compiler.reportCodeChange();\n\n      if (NodeUtil.isVar(parent)) {\n        removeVarDeclaration(n);\n      }\n    } else {\n      // This code block is slow but since usePseudoName is for debugging,\n      // we should not sacrifice performance for non-debugging compilation to\n      // make this fast.\n      String pseudoName = null;\n      Set<String> allMergedNames = Sets.newTreeSet();\n      for (Iterator<Var> i = t.getScope().getVars(); i.hasNext();) {\n        Var iVar = i.next();\n\n        // Look for all the variables that can be merged (in the graph by now)\n        // and it is merged with the current coalscedVar.\n        if (colorings.peek().getGraph().getNode(iVar) != null &&\n            coalescedVar.equals(colorings.peek().getPartitionSuperNode(iVar))) {\n          allMergedNames.add(iVar.name);\n        }\n      }\n\n      // Keep its original name.\n      if (allMergedNames.size() == 1) {\n        return;\n      }\n\n      pseudoName = Joiner.on(\"_\").join(allMergedNames);\n\n      while (t.getScope().isDeclared(pseudoName, true)) {\n        pseudoName += \"$\";\n      }\n\n      n.setString(pseudoName);\n      compiler.reportCodeChange();\n\n      if (!vNode.getValue().equals(coalescedVar) && NodeUtil.isVar(parent)) {\n        removeVarDeclaration(n);\n      }\n    }\n  }",
+ "imports": [
+  "com.google.common.base.Joiner",
+  "com.google.common.collect.Lists",
+  "com.google.common.collect.Sets",
+  "com.google.javascript.jscomp.ControlFlowGraph.AbstractCfgNodeTraversalCallback",
+  "com.google.javascript.jscomp.ControlFlowGraph.Branch",
+  "com.google.javascript.jscomp.DataFlowAnalysis.FlowState",
+  "com.google.javascript.jscomp.LiveVariablesAnalysis.LiveVariableLattice",
+  "com.google.javascript.jscomp.NodeTraversal.AbstractPostOrderCallback",
+  "com.google.javascript.jscomp.NodeTraversal.ScopedCallback",
+  "com.google.javascript.jscomp.Scope.Var",
+  "com.google.javascript.jscomp.graph.DiGraph.DiGraphNode",
+  "com.google.javascript.jscomp.graph.GraphColoring",
+  "com.google.javascript.jscomp.graph.GraphColoring.GreedyGraphColoring",
+  "com.google.javascript.jscomp.graph.GraphNode",
+  "com.google.javascript.jscomp.graph.LinkedUndirectedGraph",
+  "com.google.javascript.jscomp.graph.UndiGraph",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.Token",
+  "java.util.ArrayList",
+  "java.util.Comparator",
+  "java.util.Deque",
+  "java.util.Iterator",
+  "java.util.Set"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "process"
+  },
+  {
+   "javadoc": "",
+   "name": "enterScope"
+  },
+  {
+   "javadoc": "",
+   "name": "exitScope"
+  }
+ ],
+ "sig": {
+  "class_declaration": "class CoalesceVariableNames extends AbstractPostOrderCallback implements CompilerPass, ScopedCallback",
+  "constructors": [],
+  "focal_signature": "public void visit(NodeTraversal t, Node n, Node parent)",
+  "methods": [
+   "public void process(Node externs, Node root);",
+   "public void enterScope(NodeTraversal t);",
+   "public void exitScope(NodeTraversal t);"
+  ],
+  "type_signatures": [
+   "public class NodeTraversal { public NodeTraversal(AbstractCompiler compiler, Callback cb); public NodeTraversal(AbstractCompiler compiler, Callback cb, ScopeCreator scopeCreator); public void traverse(Node root); public void traverseRoots(Node ... roots); public void traverseRoots(List<Node> roots); protected void traverseInnerNode(Node node, Node parent, Scope refinedScope); public Compiler getCompiler(); public int getLineNumber(); public String getSourceName(); public CompilerInput getInput(); public JSModule getModule(); public Node getCurrentNode(); public static void traverse( AbstractCompiler compiler, Node root, Callback cb); public static void traverseRoots( AbstractCompiler compiler, List<Node> roots, Callback cb); public Scope getScope(); }",
+   "public class Node implements Cloneable, Serializable { public Node(int nodeType); public Node(int nodeType, Node child); public Node(int nodeType, Node left, Node right); public Node(int nodeType, Node left, Node mid, Node right); public Node(int nodeType, Node left, Node mid, Node mid2, Node right); public Node(int nodeType, int lineno, int charno); public Node(int nodeType, Node child, int lineno, int charno); public Node(int nodeType, Node left, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node mid2, Node right, int lineno, int charno); public Node(int nodeType, Node[] children, int lineno, int charno); public Node(int nodeType, Node[] children); public static Node newNumber(double number); public static Node newNumber(double number, int lineno, int charno); public static Node newString(String str); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

@@ -1,0 +1,225 @@
+{
+ "bug_name": "Time_24",
+ "call_sites": [
+  {
+   "line": 706,
+   "lines": [
+    701,
+    702,
+    703,
+    704,
+    705,
+    706,
+    707,
+    708,
+    709,
+    710,
+    711
+   ],
+   "path": "src/main/java/org/joda/time/format/DateTimeFormatter.java",
+   "snippet": "        chrono = selectChronology(chrono);\n        \n        DateTimeParserBucket bucket = new DateTimeParserBucket(\n            instantLocal, chrono, iLocale, iPivotYear, iDefaultYear);\n        int newPos = parser.parseInto(bucket, text, position);\n        instant.setMillis(bucket.computeMillis(false, text));\n        if (iOffsetParsed && bucket.getZone() == null) {\n            int parsedOffset = bucket.getOffset();\n            DateTimeZone parsedZone = DateTimeZone.forOffsetMillis(parsedOffset);\n            chrono = chrono.withZone(parsedZone);\n        }"
+  },
+  {
+   "line": 736,
+   "lines": [
+    731,
+    732,
+    733,
+    734,
+    735,
+    736,
+    737,
+    738,
+    739,
+    740,
+    741
+   ],
+   "path": "src/main/java/org/joda/time/format/DateTimeFormatter.java",
+   "snippet": "        Chronology chrono = selectChronology(iChrono);\n        DateTimeParserBucket bucket = new DateTimeParserBucket(0, chrono, iLocale, iPivotYear, iDefaultYear);\n        int newPos = parser.parseInto(bucket, text, 0);\n        if (newPos >= 0) {\n            if (newPos >= text.length()) {\n                return bucket.computeMillis(true, text);\n            }\n        } else {\n            newPos = ~newPos;\n        }\n        throw new IllegalArgumentException(FormatUtils.createErrorMessage(text, newPos));"
+  },
+  {
+   "line": 802,
+   "lines": [
+    797,
+    798,
+    799,
+    800,
+    801,
+    802,
+    803,
+    804,
+    805,
+    806,
+    807
+   ],
+   "path": "src/main/java/org/joda/time/format/DateTimeFormatter.java",
+   "snippet": "        Chronology chrono = selectChronology(null).withUTC();  // always use UTC, avoiding DST gaps\n        DateTimeParserBucket bucket = new DateTimeParserBucket(0, chrono, iLocale, iPivotYear, iDefaultYear);\n        int newPos = parser.parseInto(bucket, text, 0);\n        if (newPos >= 0) {\n            if (newPos >= text.length()) {\n                long millis = bucket.computeMillis(true, text);\n                if (bucket.getZone() == null) {  // treat withOffsetParsed() as being true\n                    int parsedOffset = bucket.getOffset();\n                    DateTimeZone parsedZone = DateTimeZone.forOffsetMillis(parsedOffset);\n                    chrono = chrono.withZone(parsedZone);\n                }"
+  },
+  {
+   "line": 841,
+   "lines": [
+    836,
+    837,
+    838,
+    839,
+    840,
+    841,
+    842,
+    843,
+    844,
+    845,
+    846
+   ],
+   "path": "src/main/java/org/joda/time/format/DateTimeFormatter.java",
+   "snippet": "        Chronology chrono = selectChronology(null);\n        DateTimeParserBucket bucket = new DateTimeParserBucket(0, chrono, iLocale, iPivotYear, iDefaultYear);\n        int newPos = parser.parseInto(bucket, text, 0);\n        if (newPos >= 0) {\n            if (newPos >= text.length()) {\n                long millis = bucket.computeMillis(true, text);\n                if (iOffsetParsed && bucket.getZone() == null) {\n                    int parsedOffset = bucket.getOffset();\n                    DateTimeZone parsedZone = DateTimeZone.forOffsetMillis(parsedOffset);\n                    chrono = chrono.withZone(parsedZone);\n                }"
+  },
+  {
+   "line": 880,
+   "lines": [
+    875,
+    876,
+    877,
+    878,
+    879,
+    880,
+    881,
+    882,
+    883,
+    884,
+    885
+   ],
+   "path": "src/main/java/org/joda/time/format/DateTimeFormatter.java",
+   "snippet": "        Chronology chrono = selectChronology(null);\n        DateTimeParserBucket bucket = new DateTimeParserBucket(0, chrono, iLocale, iPivotYear, iDefaultYear);\n        int newPos = parser.parseInto(bucket, text, 0);\n        if (newPos >= 0) {\n            if (newPos >= text.length()) {\n                long millis = bucket.computeMillis(true, text);\n                if (iOffsetParsed && bucket.getZone() == null) {\n                    int parsedOffset = bucket.getOffset();\n                    DateTimeZone parsedZone = DateTimeZone.forOffsetMillis(parsedOffset);\n                    chrono = chrono.withZone(parsedZone);\n                }"
+  }
+ ],
+ "class_simple": "DateTimeParserBucket",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * DateTimeParserBucket is an advanced class, intended mainly for parser\n * implementations. It can also be used during normal parsing operations to\n * capture more information about the parse.\n * <p>\n * This class allows fields to be saved in any order, but be physically set in\n * a consistent order. This is useful for parsing against formats that allow\n * field values to contradict each other.\n * <p>\n * Field values are applied in an order where the \"larger\" fields are set\n * first, making their value less likely to stick.  A field is larger than\n * another when it's range duration is longer. If both ranges are the same,\n * then the larger field has the longer duration. If it cannot be determined\n * which field is larger, then the fields are set in the order they were saved.\n * <p>\n * For example, these fields were saved in this order: dayOfWeek, monthOfYear,\n * dayOfMonth, dayOfYear. When computeMillis is called, the fields are set in\n * this order: monthOfYear, dayOfYear, dayOfMonth, dayOfWeek.\n * <p>\n * DateTimeParserBucket is mutable and not thread-safe.\n *\n * @author Brian S O'Neill\n * @author Fredrik Borgh\n * @since 1.0\n */\npublic",
+  "method_javadoc": "/**\n     * Computes the parsed datetime by setting the saved fields.\n     * This method is idempotent, but it is not thread-safe.\n     *\n     * @param resetFields false by default, but when true, unsaved field values are cleared\n     * @param text optional text being parsed, to be included in any error message\n     * @return milliseconds since 1970-01-01T00:00:00Z\n     * @throws IllegalArgumentException if any field is out of range\n     * @since 1.3\n     */"
+ },
+ "fields": [
+  "private final Chronology iChrono",
+  "private final long iMillis",
+  "private DateTimeZone iZone",
+  "private int iOffset",
+  "private Locale iLocale",
+  "private Integer iPivotYear",
+  "private int iDefaultYear",
+  "private SavedField[] iSavedFields",
+  "private int iSavedFieldsCount",
+  "private boolean iSavedFieldsShared",
+  "private Object iSavedState"
+ ],
+ "focal_class": "org.joda.time.format.DateTimeParserBucket",
+ "focal_id": "Time_24::org.joda.time.format.DateTimeParserBucket::computeMillis(boolean,String)",
+ "focal_method_name": "computeMillis",
+ "generations": 3,
+ "impl_B": "public long computeMillis(boolean resetFields, String text) {\n        SavedField[] savedFields = iSavedFields;\n        int count = iSavedFieldsCount;\n        if (iSavedFieldsShared) {\n            iSavedFields = savedFields = (SavedField[])iSavedFields.clone();\n            iSavedFieldsShared = false;\n        }\n        sort(savedFields, count);\n        if (count > 0) {\n            // alter base year for parsing if first field is month or day\n            DurationField months = DurationFieldType.months().getField(iChrono);\n            DurationField days = DurationFieldType.days().getField(iChrono);\n            DurationField first = savedFields[0].iField.getDurationField();\n            if (compareReverse(first, months) >= 0 && compareReverse(first, days) <= 0) {\n                saveField(DateTimeFieldType.year(), iDefaultYear);\n                return computeMillis(resetFields, text);\n            }\n        }\n\n        long millis = iMillis;\n        try {\n            for (int i = 0; i < count; i++) {\n                millis = savedFields[i].set(millis, resetFields);\n            }\n        } catch (IllegalFieldValueException e) {\n            if (text != null) {\n                e.prependMessage(\"Cannot parse \\\"\" + text + '\"');\n            }\n            throw e;\n        }\n        \n        if (iZone == null) {\n            millis -= iOffset;\n        } else {\n            int offset = iZone.getOffsetFromLocal(millis);\n            millis -= offset;\n            if (offset != iZone.getOffset(millis)) {\n                String message =\n                    \"Illegal instant due to time zone offset transition (\" + iZone + ')';\n                if (text != null) {\n                    message = \"Cannot parse \\\"\" + text + \"\\\": \" + message;\n                }\n                throw new IllegalArgumentException(message);\n            }\n        }\n        \n        return millis;\n    }",
+ "imports": [
+  "java.util.Arrays",
+  "java.util.Locale",
+  "org.joda.time.Chronology",
+  "org.joda.time.DateTimeField",
+  "org.joda.time.DateTimeFieldType",
+  "org.joda.time.DateTimeUtils",
+  "org.joda.time.DateTimeZone",
+  "org.joda.time.DurationField",
+  "org.joda.time.DurationFieldType",
+  "org.joda.time.IllegalFieldValueException"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.joda.time.format",
+ "project": "Time",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Gets the chronology of the bucket, which will be a local (UTC) chronology.\n     */",
+   "name": "getChronology"
+  },
+  {
+   "javadoc": "/**\n     * Returns the locale to be used during parsing.\n     * \n     * @return the locale to use\n     */",
+   "name": "getLocale"
+  },
+  {
+   "javadoc": "/**\n     * Returns the time zone used by computeMillis, or null if an offset is\n     * used instead.\n     */",
+   "name": "getZone"
+  },
+  {
+   "javadoc": "/**\n     * Set a time zone to be used when computeMillis is called, which\n     * overrides any set time zone offset.\n     *\n     * @param zone the date time zone to operate in, or null if UTC\n     */",
+   "name": "setZone"
+  },
+  {
+   "javadoc": "/**\n     * Returns the time zone offset in milliseconds used by computeMillis,\n     * unless getZone doesn't return null.\n     */",
+   "name": "getOffset"
+  },
+  {
+   "javadoc": "/**\n     * Set a time zone offset to be used when computeMillis is called, which\n     * overrides the time zone.\n     */",
+   "name": "setOffset"
+  },
+  {
+   "javadoc": "/**\n     * Returns the default year used when information is incomplete.\n     * <p>\n     * This is used for two-digit years and when the largest parsed field is\n     * months or days.\n     * <p>\n     * A null value for two-digit years means to use the value from DateTimeFormatterBuilder.\n     * A null value for month/day only parsing will cause the default of 2000 to be used.\n     *\n     * @return Integer value of the pivot year, null if not set\n     * @since 1.1\n     */",
+   "name": "getPivotYear"
+  },
+  {
+   "javadoc": "/**\n     * Sets the pivot year to use when parsing two digit years.\n     * <p>\n     * If the value is set to null, this will indicate that default\n     * behaviour should be used.\n     *\n     * @param pivotYear  the pivot year to use\n     * @since 1.1\n     */",
+   "name": "setPivotYear"
+  },
+  {
+   "javadoc": "/**\n     * Saves a datetime field value.\n     * \n     * @param field  the field, whose chronology must match that of this bucket\n     * @param value  the value\n     */",
+   "name": "saveField"
+  },
+  {
+   "javadoc": "/**\n     * Saves a datetime field value.\n     * \n     * @param fieldType  the field type\n     * @param value  the value\n     */",
+   "name": "saveField"
+  },
+  {
+   "javadoc": "/**\n     * Saves a datetime field text value.\n     * \n     * @param fieldType  the field type\n     * @param text  the text value\n     * @param locale  the locale to use\n     */",
+   "name": "saveField"
+  },
+  {
+   "javadoc": "/**\n     * Saves the state of this bucket, returning it in an opaque object. Call\n     * restoreState to undo any changes that were made since the state was\n     * saved. Calls to saveState may be nested.\n     *\n     * @return opaque saved state, which may be passed to restoreState\n     */",
+   "name": "saveState"
+  },
+  {
+   "javadoc": "/**\n     * Restores the state of this bucket from a previously saved state. The\n     * state object passed into this method is not consumed, and it can be used\n     * later to restore to that state again.\n     *\n     * @param savedState opaque saved state, returned from saveState\n     * @return true state object is valid and state restored\n     */",
+   "name": "restoreState"
+  },
+  {
+   "javadoc": "/**\n     * Computes the parsed datetime by setting the saved fields.\n     * This method is idempotent, but it is not thread-safe.\n     *\n     * @return milliseconds since 1970-01-01T00:00:00Z\n     * @throws IllegalArgumentException if any field is out of range\n     */",
+   "name": "computeMillis"
+  },
+  {
+   "javadoc": "/**\n     * Computes the parsed datetime by setting the saved fields.\n     * This method is idempotent, but it is not thread-safe.\n     *\n     * @param resetFields false by default, but when true, unsaved field values are cleared\n     * @return milliseconds since 1970-01-01T00:00:00Z\n     * @throws IllegalArgumentException if any field is out of range\n     */",
+   "name": "computeMillis"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class DateTimeParserBucket",
+  "constructors": [
+   "public DateTimeParserBucket(long instantLocal, Chronology chrono, Locale locale);",
+   "public DateTimeParserBucket(long instantLocal, Chronology chrono, Locale locale, Integer pivotYear);",
+   "public DateTimeParserBucket(long instantLocal, Chronology chrono, Locale locale, Integer pivotYear, int defaultYear);"
+  ],
+  "focal_signature": "public long computeMillis(boolean resetFields, String text)",
+  "methods": [
+   "public Chronology getChronology();",
+   "public Locale getLocale();",
+   "public DateTimeZone getZone();",
+   "public void setZone(DateTimeZone zone);",
+   "public int getOffset();",
+   "public void setOffset(int offset);",
+   "public Integer getPivotYear();",
+   "public void setPivotYear(Integer pivotYear);",
+   "public void saveField(DateTimeField field, int value);",
+   "public void saveField(DateTimeFieldType fieldType, int value);",
+   "public void saveField(DateTimeFieldType fieldType, String text, Locale locale);",
+   "public Object saveState();",
+   "public boolean restoreState(Object savedState);",
+   "public long computeMillis();",
+   "public long computeMillis(boolean resetFields);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

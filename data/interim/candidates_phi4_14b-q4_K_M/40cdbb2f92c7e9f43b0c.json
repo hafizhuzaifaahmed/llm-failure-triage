@@ -1,0 +1,12 @@
+{
+  "assembled": true,
+  "call_key": "2b0bc9114db22f65211ed18175ce0bb3cfb1df30eb4065dc01f1c1d367046c8d",
+  "candidate_id": "40cdbb2f92c7e9f43b0c",
+  "class_name": "JsonWriter_value_TriageGen2Test",
+  "focal_id": "Gson_4::com.google.gson.stream.JsonWriter::value(long)",
+  "generation": 2,
+  "model_returned": "phi4:14b-q4_K_M",
+  "n_tests": 6,
+  "package": "com.google.gson.stream",
+  "source": "package com.google.gson.stream;\n\nimport java.io.*;\nimport java.io.Closeable;\nimport java.io.Flushable;\nimport java.io.IOException;\nimport java.io.StringWriter;\nimport java.io.Writer;\nimport java.math.*;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.mockito.Mockito.*;\n\npublic class JsonWriter_value_TriageGen2Test {\n\n    private JsonWriter jsonWriter;\n    private Writer mockWriter;\n\n    @Before\n    public void setUp() {\n        mockWriter = mock(Writer.class);\n        jsonWriter = new JsonWriter(mockWriter);\n    }\n\n    @Test\n    public void testValuePositiveLong() throws IOException {\n        long value = 123456789L;\n        jsonWriter.value(value);\n        verify(mockWriter, times(1)).write(eq(\"123456789\"));\n    }\n\n    @Test\n    public void testValueNegativeLong() throws IOException {\n        long value = -987654321L;\n        jsonWriter.value(value);\n        verify(mockWriter, times(1)).write(eq(\"-987654321\"));\n    }\n\n    @Test\n    public void testValueZeroLong() throws IOException {\n        long value = 0L;\n        jsonWriter.value(value);\n        verify(mockWriter, times(1)).write(eq(\"0\"));\n    }\n\n    @Test\n    public void testValueMaxLong() throws IOException {\n        long value = Long.MAX_VALUE;\n        jsonWriter.value(value);\n        verify(mockWriter, times(1)).write(eq(\"9223372036854775807\"));\n    }\n\n    @Test\n    public void testValueMinLong() throws IOException {\n        long value = Long.MIN_VALUE;\n        jsonWriter.value(value);\n        verify(mockWriter, times(1)).write(eq(\"-9223372036854775808\"));\n    }\n\n    @Test(expected = IOException.class)\n    public void testValueThrowsIOException() throws IOException {\n        Writer writer = mock(Writer.class);\n        when(writer.write(anyString())).thenThrow(new IOException());\n        JsonWriter jsonWriter = new JsonWriter(writer);\n        jsonWriter.value(123L);\n    }\n}\n"
+}

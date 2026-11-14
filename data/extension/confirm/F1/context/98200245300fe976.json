@@ -1,0 +1,183 @@
+{
+ "bug_name": "Math_39",
+ "call_sites": [
+  {
+   "line": 76,
+   "lines": [
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79,
+    80,
+    81
+   ],
+   "path": "src/main/java/org/apache/commons/math/analysis/integration/UnivariateRealIntegrator.java",
+   "snippet": "     * or the integrator detects convergence problems otherwise\n     * @throws MathIllegalArgumentException if min > max or the endpoints do not\n     * satisfy the requirements specified by the integrator\n     * @throws NullArgumentException if {@code f} is {@code null}.\n     */\n    double integrate(int maxEval, UnivariateFunction f, double min,\n                     double max)\n        throws TooManyEvaluationsException, MaxCountExceededException,\n               MathIllegalArgumentException, NullArgumentException;\n\n    /**"
+  },
+  {
+   "line": 228,
+   "lines": [
+    223,
+    224,
+    225,
+    226,
+    227,
+    228,
+    229,
+    230,
+    231,
+    232,
+    233
+   ],
+   "path": "src/main/java/org/apache/commons/math/ode/AbstractIntegrator.java",
+   "snippet": "        final ExpandableStatefulODE expandableODE = new ExpandableStatefulODE(equations);\n        expandableODE.setTime(t0);\n        expandableODE.setPrimaryState(y0);\n\n        // perform integration\n        integrate(expandableODE, t);\n\n        // extract results back from the stateful equations\n        System.arraycopy(expandableODE.getPrimaryState(), 0, y, 0, y.length);\n        return expandableODE.getTime();\n"
+  },
+  {
+   "line": 59,
+   "lines": [
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64
+   ],
+   "path": "src/main/java/org/apache/commons/math/ode/FirstOrderIntegrator.java",
+   "snippet": "   * org.apache.commons.math.ode.events.EventHandler} stops it at some point.\n   * @throws MathIllegalStateException if the integrator cannot perform integration\n   * @throws MathIllegalArgumentException if integration parameters are wrong (typically\n   * too small integration span)\n   */\n  double integrate (FirstOrderDifferentialEquations equations,\n                    double t0, double[] y0, double t, double[] y)\n      throws MathIllegalStateException, MathIllegalArgumentException;\n\n}\n"
+  },
+  {
+   "line": 223,
+   "lines": [
+    218,
+    219,
+    220,
+    221,
+    222,
+    223,
+    224,
+    225,
+    226,
+    227,
+    228
+   ],
+   "path": "src/main/java/org/apache/commons/math/ode/MultistepIntegrator.java",
+   "snippet": "        // set up one specific step handler to extract initial Nordsieck vector\n        starter.addStepHandler(new NordsieckInitializer(nSteps, y0.length));\n\n        // start integration, expecting a InitializationCompletedMarkerException\n        try {\n            starter.integrate(new CountingDifferentialEquations(y0.length),\n                              t0, y0, t, new double[y0.length]);\n        } catch (InitializationCompletedMarkerException icme) {\n            // this is the expected nominal interruption of the start integrator\n        }\n"
+  },
+  {
+   "line": 56,
+   "lines": [
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61
+   ],
+   "path": "src/main/java/org/apache/commons/math/ode/SecondOrderIntegrator.java",
+   "snippet": "   * the state vector at time t, can be the same object as yDot0\n   * @throws MathIllegalStateException if the integrator cannot perform integration\n   * @throws MathIllegalArgumentException if integration parameters are wrong (typically\n   * too small integration span)\n   */\n  void integrate(SecondOrderDifferentialEquations equations,\n                 double t0, double[] y0, double[] yDot0,\n                 double t, double[] y, double[] yDot)\n      throws MathIllegalStateException, MathIllegalArgumentException;\n\n}"
+  }
+ ],
+ "class_simple": "EmbeddedRungeKuttaIntegrator",
+ "dataset": "D1C_F1",
+ "doc": {
+  "class_javadoc": "/**\n * This class implements the common part of all embedded Runge-Kutta\n * integrators for Ordinary Differential Equations.\n *\n * <p>These methods are embedded explicit Runge-Kutta methods with two\n * sets of coefficients allowing to estimate the error, their Butcher\n * arrays are as follows :\n * <pre>\n *    0  |\n *   c2  | a21\n *   c3  | a31  a32\n *   ... |        ...\n *   cs  | as1  as2  ...  ass-1\n *       |--------------------------\n *       |  b1   b2  ...   bs-1  bs\n *       |  b'1  b'2 ...   b's-1 b's\n * </pre>\n * </p>\n *\n * <p>In fact, we rather use the array defined by ej = bj - b'j to\n * compute directly the error rather than computing two estimates and\n * then comparing them.</p>\n *\n * <p>Some methods are qualified as <i>fsal</i> (first same as last)\n * methods. This means the last evaluation of the derivatives in one\n * step is the same as the first in the next step. Then, this\n * evaluation can be reused from one step to the next one and the cost\n * of such a method is really s-1 evaluations despite the method still\n * has s stages. This behaviour is true only for successful steps, if\n * the step is rejected after the error estimation phase, no\n * evaluation is saved. For an <i>fsal</i> method, we have cs = 1 and\n * asi = bi for all i.</p>\n *\n * @version $Id$\n * @since 1.2\n */\n\npublic abstract",
+  "method_javadoc": "/** {@inheritDoc} */"
+ },
+ "fields": [
+  "private final boolean fsal",
+  "private final double[] c",
+  "private final double[][] a",
+  "private final double[] b",
+  "private final RungeKuttaStepInterpolator prototype",
+  "private final double exp",
+  "private double safety",
+  "private double minReduction",
+  "private double maxGrowth"
+ ],
+ "focal_class": "org.apache.commons.math.ode.nonstiff.EmbeddedRungeKuttaIntegrator",
+ "focal_id": "Math_39::org.apache.commons.math.ode.nonstiff.EmbeddedRungeKuttaIntegrator::integrate(ExpandableStatefulODE,double)",
+ "focal_method_name": "integrate",
+ "generations": 6,
+ "impl_B": "@Override\n  public void integrate(final ExpandableStatefulODE equations, final double t)\n      throws MathIllegalStateException, MathIllegalArgumentException {\n\n    sanityChecks(equations, t);\n    setEquations(equations);\n    final boolean forward = t > equations.getTime();\n\n    // create some internal working arrays\n    final double[] y0  = equations.getCompleteState();\n    final double[] y = y0.clone();\n    final int stages = c.length + 1;\n    final double[][] yDotK = new double[stages][y.length];\n    final double[] yTmp    = y0.clone();\n    final double[] yDotTmp = new double[y.length];\n\n    // set up an interpolator sharing the integrator arrays\n    final RungeKuttaStepInterpolator interpolator = (RungeKuttaStepInterpolator) prototype.copy();\n    interpolator.reinitialize(this, yTmp, yDotK, forward,\n                              equations.getPrimaryMapper(), equations.getSecondaryMappers());\n    interpolator.storeTime(equations.getTime());\n\n    // set up integration control objects\n    stepStart         = equations.getTime();\n    double  hNew      = 0;\n    boolean firstTime = true;\n    initIntegration(equations.getTime(), y0, t);\n\n    // main integration loop\n    isLastStep = false;\n    do {\n\n      interpolator.shift();\n\n      // iterate over step size, ensuring local normalized error is smaller than 1\n      double error = 10;\n      while (error >= 1.0) {\n\n        if (firstTime || !fsal) {\n          // first stage\n          computeDerivatives(stepStart, y, yDotK[0]);\n        }\n\n        if (firstTime) {\n          final double[] scale = new double[mainSetDimension];\n          if (vecAbsoluteTolerance == null) {\n              for (int i = 0; i < scale.length; ++i) {\n                scale[i] = scalAbsoluteTolerance + scalRelativeTolerance * FastMath.abs(y[i]);\n              }\n          } else {\n              for (int i = 0; i < scale.length; ++i) {\n                scale[i] = vecAbsoluteTolerance[i] + vecRelativeTolerance[i] * FastMath.abs(y[i]);\n              }\n          }\n          hNew = initializeStep(forward, getOrder(), scale,\n                                stepStart, y, yDotK[0], yTmp, yDotK[1]);\n          firstTime = false;\n        }\n\n        stepSize = hNew;\n\n        // next stages\n        for (int k = 1; k < stages; ++k) {\n\n          for (int j = 0; j < y0.length; ++j) {\n            double sum = a[k-1][0] * yDotK[0][j];\n            for (int l = 1; l < k; ++l) {\n              sum += a[k-1][l] * yDotK[l][j];\n            }\n            yTmp[j] = y[j] + stepSize * sum;\n          }\n\n          computeDerivatives(stepStart + c[k-1] * stepSize, yTmp, yDotK[k]);\n\n        }\n\n        // estimate the state at the end of the step\n        for (int j = 0; j < y0.length; ++j) {\n          double sum    = b[0] * yDotK[0][j];\n          for (int l = 1; l < stages; ++l) {\n            sum    += b[l] * yDotK[l][j];\n          }\n          yTmp[j] = y[j] + stepSize * sum;\n        }\n\n        // estimate the error at the end of the step\n        error = estimateError(yDotK, y, yTmp, stepSize);\n        if (error >= 1.0) {\n          // reject the step and attempt to reduce error by stepsize control\n          final double factor =\n              FastMath.min(maxGrowth,\n                           FastMath.max(minReduction, safety * FastMath.pow(error, exp)));\n          hNew = filterStep(stepSize * factor, forward, false);\n        }\n\n      }\n\n      // local error is small enough: accept the step, trigger events and step handlers\n      interpolator.storeTime(stepStart + stepSize);\n      System.arraycopy(yTmp, 0, y, 0, y0.length);\n      System.arraycopy(yDotK[stages - 1], 0, yDotTmp, 0, y0.length);\n      stepStart = acceptStep(interpolator, y, yDotTmp, t);\n      System.arraycopy(y, 0, yTmp, 0, y.length);\n\n      if (!isLastStep) {\n\n          // prepare next step\n          interpolator.storeTime(stepStart);\n\n          if (fsal) {\n              // save the last evaluation for the next step\n              System.arraycopy(yDotTmp, 0, yDotK[0], 0, y0.length);\n          }\n\n          // stepsize control for next step\n          final double factor =\n              FastMath.min(maxGrowth, FastMath.max(minReduction, safety * FastMath.pow(error, exp)));\n          final double  scaledH    = stepSize * factor;\n          final double  nextT      = stepStart + scaledH;\n          final boolean nextIsLast = forward ? (nextT >= t) : (nextT <= t);\n          hNew = filterStep(scaledH, forward, nextIsLast);\n\n          final double  filteredNextT      = stepStart + hNew;\n          final boolean filteredNextIsLast = forward ? (filteredNextT >= t) : (filteredNextT <= t);\n          if (filteredNextIsLast) {\n              hNew = t - stepStart;\n          }\n\n      }\n\n    } while (!isLastStep);\n\n    // dispatch results\n    equations.setTime(stepStart);\n    equations.setCompleteState(y);\n\n    resetInternalState();\n\n  }",
+ "imports": [
+  "org.apache.commons.math.exception.MathIllegalArgumentException",
+  "org.apache.commons.math.exception.MathIllegalStateException",
+  "org.apache.commons.math.ode.ExpandableStatefulODE",
+  "org.apache.commons.math.util.FastMath"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math.ode.nonstiff",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/** Get the order of the method.\n   * @return order of the method\n   */",
+   "name": "getOrder"
+  },
+  {
+   "javadoc": "/** Get the safety factor for stepsize control.\n   * @return safety factor\n   */",
+   "name": "getSafety"
+  },
+  {
+   "javadoc": "/** Set the safety factor for stepsize control.\n   * @param safety safety factor\n   */",
+   "name": "setSafety"
+  },
+  {
+   "javadoc": "/** Get the minimal reduction factor for stepsize control.\n   * @return minimal reduction factor\n   */",
+   "name": "getMinReduction"
+  },
+  {
+   "javadoc": "/** Set the minimal reduction factor for stepsize control.\n   * @param minReduction minimal reduction factor\n   */",
+   "name": "setMinReduction"
+  },
+  {
+   "javadoc": "/** Get the maximal growth factor for stepsize control.\n   * @return maximal growth factor\n   */",
+   "name": "getMaxGrowth"
+  },
+  {
+   "javadoc": "/** Set the maximal growth factor for stepsize control.\n   * @param maxGrowth maximal growth factor\n   */",
+   "name": "setMaxGrowth"
+  },
+  {
+   "javadoc": "/** Compute the error ratio.\n   * @param yDotK derivatives computed during the first stages\n   * @param y0 estimate of the step at the start of the step\n   * @param y1 estimate of the step at the end of the step\n   * @param h  current step\n   * @return error ratio, greater than 1 if step should be rejected\n   */",
+   "name": "estimateError"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public abstract class EmbeddedRungeKuttaIntegrator extends AdaptiveStepsizeIntegrator",
+  "constructors": [
+   "protected EmbeddedRungeKuttaIntegrator(final String name, final boolean fsal, final double[] c, final double[][] a, final double[] b, final RungeKuttaStepInterpolator prototype, final double minStep, final double maxStep, final double scalAbsoluteTolerance, final double scalRelativeTolerance);",
+   "protected EmbeddedRungeKuttaIntegrator(final String name, final boolean fsal, final double[] c, final double[][] a, final double[] b, final RungeKuttaStepInterpolator prototype, final double minStep, final double maxStep, final double[] vecAbsoluteTolerance, final double[] vecRelativeTolerance);"
+  ],
+  "focal_signature": "public void integrate(final ExpandableStatefulODE equations, final double t) throws MathIllegalStateException, MathIllegalArgumentException",
+  "methods": [
+   "public abstract int getOrder();",
+   "public double getSafety();",
+   "public void setSafety(final double safety);",
+   "public double getMinReduction();",
+   "public void setMinReduction(final double minReduction);",
+   "public double getMaxGrowth();",
+   "public void setMaxGrowth(final double maxGrowth);",
+   "protected abstract double estimateError(double[][] yDotK, double[] y0, double[] y1, double h);"
+  ],
+  "type_signatures": [
+   "public class ExpandableStatefulODE { public ExpandableStatefulODE(final FirstOrderDifferentialEquations primary); public FirstOrderDifferentialEquations getPrimary(); public int getTotalDimension(); public void computeDerivatives(final double t, final double[] y, final double[] yDot); public int addSecondaryEquations(final SecondaryEquations secondary); public EquationsMapper getPrimaryMapper(); public EquationsMapper[] getSecondaryMappers(); public void setTime(final double time); public double getTime(); public void setPrimaryState(final double[] primaryState) throws DimensionMismatchException; public double[] getPrimaryState(); public double[] getPrimaryStateDot(); public void setSecondaryState(final int index, final double[] secondaryState) throws DimensionMismatchException; public double[] getSecondaryState(final int index); public double[] getSecondaryStateDot(final int index); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F1"
+}

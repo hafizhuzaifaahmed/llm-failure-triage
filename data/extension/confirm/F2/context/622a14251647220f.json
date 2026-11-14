@@ -1,0 +1,124 @@
+{
+ "bug_name": "Closure_91",
+ "call_sites": [
+  {
+   "line": 129,
+   "lines": [
+    124,
+    125,
+    126,
+    127,
+    128,
+    129,
+    130,
+    131,
+    132,
+    133,
+    134
+   ],
+   "path": "src/com/google/javascript/jscomp/CombinedCompilerPass.java",
+   "snippet": "        waiting = null;\n      }\n    }\n\n    void shouldTraverseIfActive(NodeTraversal t, Node n, Node parent) {\n      if (isActive() && !callback.shouldTraverse(t, n, parent)) {\n        waiting = n;\n      }\n    }\n\n    void enterScopeIfActive(NodeTraversal t) {"
+  },
+  {
+   "line": 92,
+   "lines": [
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97
+   ],
+   "path": "src/com/google/javascript/jscomp/NodeTraversal.java",
+   "snippet": "     * {@link #visit(NodeTraversal, Node, Node)} in post order.</p>\n     * <p>Implementations can have side effects (e.g. modifying the parse\n     * tree).</p>\n     * @return whether the children of this node should be visited\n     */\n    boolean shouldTraverse(NodeTraversal nodeTraversal, Node n, Node parent);\n\n    /**\n     * <p>Visits a node in post order (after its children have been visited).\n     * A node is visited only if all its parents should be traversed\n     * ({@link #shouldTraverse(NodeTraversal, Node, Node)}).</p>"
+  },
+  {
+   "line": 445,
+   "lines": [
+    440,
+    441,
+    442,
+    443,
+    444,
+    445,
+    446,
+    447,
+    448,
+    449,
+    450
+   ],
+   "path": "src/com/google/javascript/jscomp/NodeTraversal.java",
+   "snippet": "    if (type == Token.SCRIPT) {\n      sourceName = getSourceName(n);\n    }\n\n    curNode = n;\n    if (!callback.shouldTraverse(this, n, parent)) return;\n\n    switch (type) {\n      case Token.FUNCTION:\n        traverseFunction(n, parent);\n        break;"
+  },
+  {
+   "line": 403,
+   "lines": [
+    398,
+    399,
+    400,
+    401,
+    402,
+    403,
+    404,
+    405,
+    406,
+    407,
+    408
+   ],
+   "path": "src/com/google/javascript/jscomp/SpecializeModule.java",
+   "snippet": "    public void match(Node ast1, Node ast2) {\n      // Just blunder ahead and assume that the two nodes actually match\n        \n      reportMatch(ast1, ast2);\n      \n      if (shouldTraverse(ast1, ast2)) {\n        Node childOf1 = ast1.getFirstChild();\n        Node childOf2 = ast2.getFirstChild();\n        \n        while (childOf1 != null) {\n          match(childOf1, childOf2);"
+  }
+ ],
+ "class_simple": "CheckGlobalThis",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Checks for certain uses of the {@code this} keyword that are considered\n * unsafe because they are likely to reference the global {@code this} object\n * unintentionally.\n *\n * <p>A use of {@code this} is considered unsafe if it's on the left side of an\n * assignment or a property access, and not inside one of the following:\n * <ol>\n * <li>a prototype method\n * <li>a function annotated with {@code @constructor}\n * <li>a function annotated with {@code @this}.\n * <li>a function where there's no logical place to put a\n *     {@code this} annotation.\n * </ol>\n *\n * <p>Note that this check does not track assignments of {@code this} to\n * variables or objects. The code\n * <pre>\n * function evil() {\n *   var a = this;\n *   a.useful = undefined;\n * }\n * </pre>\n * will not get flagged, even though it is semantically equivalent to\n * <pre>\n * function evil() {\n *   this.useful = undefined;\n * }\n * </pre>\n * which would get flagged.\n *\n */\nfinal",
+  "method_javadoc": "/**\n   * Since this pass reports errors only when a global {@code this} keyword\n   * is encountered, there is no reason to traverse non global contexts.\n   */"
+ },
+ "fields": [
+  "static final DiagnosticType GLOBAL_THIS",
+  "private final AbstractCompiler compiler",
+  "private final CheckLevel level",
+  "private Node assignLhsChild"
+ ],
+ "focal_class": "com.google.javascript.jscomp.CheckGlobalThis",
+ "focal_id": "Closure_91::com.google.javascript.jscomp.CheckGlobalThis::shouldTraverse(NodeTraversal,Node,Node)",
+ "focal_method_name": "shouldTraverse",
+ "generations": 3,
+ "impl_B": "public boolean shouldTraverse(NodeTraversal t, Node n, Node parent) {\n\n    if (n.getType() == Token.FUNCTION) {\n      // Don't traverse functions that are constructors or have the @this\n      // or @override annotation.\n      JSDocInfo jsDoc = getFunctionJsDocInfo(n);\n      if (jsDoc != null &&\n          (jsDoc.isConstructor() ||\n           jsDoc.isInterface() ||\n           jsDoc.hasThisType() ||\n           jsDoc.isOverride())) {\n        return false;\n      }\n\n      // Don't traverse functions unless they would normally\n      // be able to have a @this annotation associated with them. e.g.,\n      // var a = function() { }; // or\n      // function a() {} // or\n      // a.x = function() {}; // or\n      // var a = {x: function() {}};\n      int pType = parent.getType();\n      if (!(pType == Token.BLOCK ||\n            pType == Token.SCRIPT ||\n            pType == Token.NAME ||\n            pType == Token.ASSIGN ||\n\n            // object literal keys\n            pType == Token.STRING ||\n            pType == Token.NUMBER)) {\n        return false;\n      }\n\n      // Don't traverse functions that are getting lent to a prototype.\n    }\n\n    if (parent != null && parent.getType() == Token.ASSIGN) {\n      Node lhs = parent.getFirstChild();\n      Node rhs = lhs.getNext();\n\n      if (n == lhs) {\n        // Always traverse the left side of the assignment. To handle\n        // nested assignments properly (e.g., (a = this).property = c;),\n        // assignLhsChild should not be overridden.\n        if (assignLhsChild == null) {\n          assignLhsChild = lhs;\n        }\n      } else {\n        // Only traverse the right side if it's not an assignment to a prototype\n        // property or subproperty.\n        if (NodeUtil.isGet(lhs)) {\n          if (lhs.getType() == Token.GETPROP &&\n              lhs.getLastChild().getString().equals(\"prototype\")) {\n            return false;\n          }\n          Node llhs = lhs.getFirstChild();\n          if (llhs.getType() == Token.GETPROP &&\n              llhs.getLastChild().getString().equals(\"prototype\")) {\n            return false;\n          }\n        }\n      }\n    }\n\n    return true;\n  }",
+ "imports": [
+  "com.google.javascript.jscomp.CheckLevel",
+  "com.google.javascript.jscomp.NodeTraversal.Callback",
+  "com.google.javascript.rhino.JSDocInfo",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.Token"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "visit"
+  }
+ ],
+ "sig": {
+  "class_declaration": "final class CheckGlobalThis implements Callback",
+  "constructors": [],
+  "focal_signature": "public boolean shouldTraverse(NodeTraversal t, Node n, Node parent)",
+  "methods": [
+   "public void visit(NodeTraversal t, Node n, Node parent);"
+  ],
+  "type_signatures": [
+   "public class NodeTraversal { public NodeTraversal(AbstractCompiler compiler, Callback cb); public NodeTraversal(AbstractCompiler compiler, Callback cb, ScopeCreator scopeCreator); public void traverse(Node root); public void traverseRoots(Node ... roots); public void traverseRoots(List<Node> roots); protected void traverseInnerNode(Node node, Node parent, Scope refinedScope); public Compiler getCompiler(); public int getLineNumber(); public String getSourceName(); public CompilerInput getInput(); public JSModule getModule(); public Node getCurrentNode(); public static void traverse( AbstractCompiler compiler, Node root, Callback cb); public static void traverseRoots( AbstractCompiler compiler, List<Node> roots, Callback cb); public Scope getScope(); }",
+   "public class Node implements Cloneable, Serializable { public Node(int nodeType); public Node(int nodeType, Node child); public Node(int nodeType, Node left, Node right); public Node(int nodeType, Node left, Node mid, Node right); public Node(int nodeType, Node left, Node mid, Node mid2, Node right); public Node(int nodeType, int lineno, int charno); public Node(int nodeType, Node child, int lineno, int charno); public Node(int nodeType, Node left, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node mid2, Node right, int lineno, int charno); public Node(int nodeType, Node[] children, int lineno, int charno); public Node(int nodeType, Node[] children); public static Node newNumber(double number); public static Node newNumber(double number, int lineno, int charno); public static Node newString(String str); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

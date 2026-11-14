@@ -1,0 +1,74 @@
+{
+ "bug_name": "JacksonDatabind_25",
+ "call_sites": [
+  {
+   "line": 214,
+   "lines": [
+    209,
+    210,
+    211,
+    212,
+    213,
+    214,
+    215,
+    216,
+    217,
+    218,
+    219
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java",
+   "snippet": "        throws JsonMappingException\n    {\n        Class<?> currClass = type.getRawClass();\n        if (_factoryConfig.hasAbstractTypeResolvers()) {\n            for (AbstractTypeResolver resolver : _factoryConfig.abstractTypeResolvers()) {\n                JavaType concrete = resolver.findTypeMapping(config, type);\n                if (concrete != null && concrete.getRawClass() != currClass) {\n                    return concrete;\n                }\n            }\n        }"
+  }
+ ],
+ "class_simple": "SimpleAbstractTypeResolver",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Simple {@link AbstractTypeResolver} implementation, which is\n * based on static mapping from abstract super types into\n * sub types (concrete or abstract), but retaining generic\n * parameterization.\n * Can be used for things like specifying which implementation of\n * {@link java.util.Collection} to use:\n *<pre>\n *  SimpleAbstractTypeResolver resolver = new SimpleAbstractTypeResolver();\n *  // To make all properties declared as Collection, List, to LinkedList\n *  resolver.addMapping(Collection.class, LinkedList.class);\n *  resolver.addMapping(List.class, LinkedList.class);\n *</pre>\n * Can also be used as an alternative to per-class annotations when defining\n * concrete implementations; however, only works with abstract types (since\n * this is only called for abstract types)\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "protected final HashMap<ClassKey,Class<?>> _mappings"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.module.SimpleAbstractTypeResolver",
+ "focal_id": "JacksonDatabind_25::com.fasterxml.jackson.databind.module.SimpleAbstractTypeResolver::findTypeMapping(DeserializationConfig,JavaType)",
+ "focal_method_name": "findTypeMapping",
+ "generations": 3,
+ "impl_B": "@Override\n    public JavaType findTypeMapping(DeserializationConfig config, JavaType type)\n    {\n        // this is the main mapping base, so let's \n        Class<?> src = type.getRawClass();\n        Class<?> dst = _mappings.get(new ClassKey(src));\n        if (dst == null) {\n            return null;\n        }\n        // 09-Aug-2015, tatu: Instead of direct call via JavaType, better use TypeFactory\n        return type.narrowBy(dst);\n    }",
+ "imports": [
+  "java.lang.reflect.Modifier",
+  "java.util.*",
+  "com.fasterxml.jackson.databind.AbstractTypeResolver",
+  "com.fasterxml.jackson.databind.DeserializationConfig",
+  "com.fasterxml.jackson.databind.JavaType",
+  "com.fasterxml.jackson.databind.type.ClassKey"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.module",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Method for adding a mapping from super type to specific subtype.\n     * Arguments will be checked by method, to ensure that <code>superType</code>\n     * is abstract (since resolver is never called for concrete classes);\n     * as well as to ensure that there is supertype/subtype relationship\n     * (to ensure there won't be cycles during resolution).\n     * \n     * @param superType Abstract type to resolve\n     * @param subType Sub-class of superType, to map superTo to\n     * \n     * @return This resolver, to allow chaining of initializations\n     */",
+   "name": "addMapping"
+  },
+  {
+   "javadoc": "",
+   "name": "resolveAbstractType"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class SimpleAbstractTypeResolver extends AbstractTypeResolver implements java.io.Serializable",
+  "constructors": [],
+  "focal_signature": "public JavaType findTypeMapping(DeserializationConfig config, JavaType type)",
+  "methods": [
+   "public <T> SimpleAbstractTypeResolver addMapping(Class<T> superType, Class<? extends T> subType);",
+   "public JavaType resolveAbstractType(DeserializationConfig config, JavaType type);"
+  ],
+  "type_signatures": [
+   "public final class DeserializationConfig extends MapperConfigBase<DeserializationFeature, DeserializationConfig> implements java.io.Serializable { public DeserializationConfig(BaseSettings base, SubtypeResolver str, SimpleMixInResolver mixins, RootNameLookup rootNames); protected DeserializationConfig(DeserializationConfig src, ContextAttributes attrs); protected DeserializationConfig(DeserializationConfig src, SimpleMixInResolver mixins); protected DeserializationConfig(DeserializationConfig src, SimpleMixInResolver mixins, RootNameLookup rootNames); protected BaseSettings getBaseSettings(); public DeserializationConfig with(MapperFeature... features); public DeserializationConfig without(MapperFeature... features); public DeserializationConfig with(MapperFeature feature, boolean state); public DeserializationConfig with(ClassIntrospector ci); public DeserializationConfig with(AnnotationIntrospector ai); public DeserializationConfig with(VisibilityChecker<?> vc); public DeserializationConfig withVisibility(PropertyAccessor forMethod, JsonAutoDetect.Visibility visibility); public DeserializationConfig with(TypeResolverBuilder<?> trb); public DeserializationConfig with(SubtypeResolver str); public DeserializationConfig with(PropertyNamingStrategy pns); }",
+   "public abstract class JavaType extends ResolvedType implements java.io.Serializable, java.lang.reflect.Type { protected JavaType(Class<?> raw, int additionalHash, Object valueHandler, Object typeHandler, boolean asStatic); public abstract JavaType withTypeHandler(Object h); public abstract JavaType withContentTypeHandler(Object h); public abstract JavaType withValueHandler(Object h); public abstract JavaType withContentValueHandler(Object h); public abstract JavaType withStaticTyping(); public JavaType narrowBy(Class<?> subclass); public JavaType forcedNarrowBy(Class<?> subclass); public JavaType widenBy(Class<?> superclass); protected abstract JavaType _narrow(Class<?> subclass); protected JavaType _widen(Class<?> superclass); public abstract JavaType narrowContentsBy(Class<?> contentClass); public abstract JavaType widenContentsBy(Class<?> contentClass); public final Class<?> getRawClass(); public final boolean hasRawClass(Class<?> clz); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

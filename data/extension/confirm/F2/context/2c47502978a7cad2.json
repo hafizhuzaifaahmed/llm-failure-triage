@@ -1,0 +1,147 @@
+{
+ "bug_name": "Closure_165",
+ "call_sites": [
+  {
+   "line": 99,
+   "lines": [
+    94,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104
+   ],
+   "path": "src/com/google/javascript/jscomp/AstChangeProxy.java",
+   "snippet": "  final void replaceWith(Node parent, Node node, List<Node> replacements) {\n    Preconditions.checkNotNull(replacements, \"\\\"replacements\\\" is null.\");\n\n    int size = replacements.size();\n\n    if ((size == 1) && node.isEquivalentTo(replacements.get(0))) {\n      // trees are equal... don't replace\n      return;\n    }\n\n    int parentType = parent.getType();"
+  },
+  {
+   "line": 987,
+   "lines": [
+    982,
+    983,
+    984,
+    985,
+    986,
+    987,
+    988,
+    989,
+    990,
+    991,
+    992
+   ],
+   "path": "src/com/google/javascript/jscomp/Compiler.java",
+   "snippet": "        options.disambiguateProperties) {\n      // The type based optimizations require that type information is preserved\n      // during other optimizations.\n      return n1.isEquivalentToTyped(n2);\n    } else {\n      return n1.isEquivalentTo(n2);\n    }\n  }\n\n  //------------------------------------------------------------------------\n  // Inputs"
+  },
+  {
+   "line": 184,
+   "lines": [
+    179,
+    180,
+    181,
+    182,
+    183,
+    184,
+    185,
+    186,
+    187,
+    188,
+    189
+   ],
+   "path": "src/com/google/javascript/jscomp/ExploitAssigns.java",
+   "snippet": "            return false;\n          }\n\n        default:\n          if (NodeUtil.isImmutableValue(next)\n              && next.isEquivalentTo(value)) {\n            // If the r-value of the expr assign is an immutable value,\n            // and the value is used again shortly, then we can exploit\n            // the assign here.\n            exprParent.removeChild(expr);\n            expr.removeChild(assign);"
+  },
+  {
+   "line": 293,
+   "lines": [
+    288,
+    289,
+    290,
+    291,
+    292,
+    293,
+    294,
+    295,
+    296,
+    297,
+    298
+   ],
+   "path": "src/com/google/javascript/jscomp/OptimizeParameters.java",
+   "snippet": "        parameters.add(p);\n      } else {\n        p = parameters.get(index);\n        if (p.shouldRemove()) {\n          Node value = p.getArg();\n          if (!cur.isEquivalentTo(value)) {\n            p.setShouldRemove(false);\n          } else {\n            anyMovable = true;\n          }\n        }"
+  },
+  {
+   "line": 269,
+   "lines": [
+    264,
+    265,
+    266,
+    267,
+    268,
+    269,
+    270,
+    271,
+    272,
+    273,
+    274
+   ],
+   "path": "src/com/google/javascript/jscomp/PeepholeFoldConstants.java",
+   "snippet": "    }\n\n    double value = result;\n\n    Node replacement = NodeUtil.numberNode(value, n);\n    if (replacement.isEquivalentTo(n)) {\n      return;\n    }\n\n    n.getParent().replaceChild(n, replacement);\n    reportCodeChange();"
+  }
+ ],
+ "class_simple": "RecordType",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * A record (structural) type.\n *\n * Subtyping: The subtyping of a record type is defined via structural\n * comparison of a record type's properties. For example, a record\n * type of the form { a : TYPE_1 } is a supertype of a record type\n * of the form { b : TYPE_2, a : TYPE_1 } because B can be assigned to\n * A and matches all constraints. Similarly, a defined type can be assigned\n * to a record type so long as that defined type matches all property\n * constraints of the record type. A record type of the form { a : A, b : B }\n * can be assigned to a record of type { a : A }.\n *\n */",
+  "method_javadoc": "/** @return Is this synthesized for internal bookkeeping? */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "private final SortedMap<String, JSType> properties",
+  "private boolean isFrozen"
+ ],
+ "focal_class": "com.google.javascript.rhino.jstype.RecordType",
+ "focal_id": "Closure_165::com.google.javascript.rhino.jstype.RecordType::isEquivalentTo(JSType)",
+ "focal_method_name": "isEquivalentTo",
+ "generations": 3,
+ "impl_B": "@Override\n  public boolean isEquivalentTo(JSType other) {\n    if (!other.isRecordType()) {\n      return false;\n    }\n\n    // Compare properties.\n    RecordType otherRecord = other.toMaybeRecordType();\n    if (otherRecord == this) {\n      return true;\n    }\n\n    Set<String> keySet = properties.keySet();\n    Map<String, JSType> otherProps = otherRecord.properties;\n    if (!otherProps.keySet().equals(keySet)) {\n      return false;\n    }\n    for (String key : keySet) {\n      if (!otherProps.get(key).isEquivalentTo(properties.get(key))) {\n        return false;\n      }\n    }\n    return true;\n  }",
+ "imports": [
+  "com.google.common.collect.Maps",
+  "com.google.javascript.rhino.ErrorReporter",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.jstype.RecordTypeBuilder.RecordProperty",
+  "java.util.Map",
+  "java.util.Set",
+  "java.util.SortedMap"
+ ],
+ "javadoc_edited_by_fix": true,
+ "package": "com.google.javascript.rhino.jstype",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "getImplicitPrototype"
+  },
+  {
+   "javadoc": "",
+   "name": "isSubtype"
+  }
+ ],
+ "sig": {
+  "class_declaration": "class RecordType extends PrototypeObjectType",
+  "constructors": [],
+  "focal_signature": "public boolean isEquivalentTo(JSType other)",
+  "methods": [
+   "public ObjectType getImplicitPrototype();",
+   "public boolean isSubtype(JSType that);"
+  ],
+  "type_signatures": [
+   "public abstract class JSType implements Serializable { public JSDocInfo getJSDocInfo(); public String getDisplayName(); public boolean hasDisplayName(); public boolean isNoType(); public boolean isNoResolvedType(); public boolean isNoObjectType(); public final boolean isEmptyType(); public boolean isNumberObjectType(); public boolean isNumberValueType(); public boolean isFunctionPrototypeType(); public boolean isStringObjectType(); public boolean isStringValueType(); public final boolean isString(); public final boolean isNumber(); public boolean isArrayType(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

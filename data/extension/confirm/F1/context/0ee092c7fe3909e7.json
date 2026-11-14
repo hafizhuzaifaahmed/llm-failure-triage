@@ -1,0 +1,171 @@
+{
+ "bug_name": "Math_103",
+ "call_sites": [
+  {
+   "line": 72,
+   "lines": [
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77
+   ],
+   "path": "src/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java",
+   "snippet": "        UnivariateRealFunction rootFindingFunction =\n            new UnivariateRealFunction() {\n\n            public double value(double x) throws FunctionEvaluationException {\n                try {\n                    return cumulativeProbability(x) - p;\n                } catch (MathException ex) {\n                    throw new FunctionEvaluationException(x, ex.getPattern(), ex.getArguments(), ex);\n                }\n            }\n        };"
+  },
+  {
+   "line": 64,
+   "lines": [
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67
+   ],
+   "path": "src/java/org/apache/commons/math/distribution/AbstractDistribution.java",
+   "snippet": "        throws MathException {\n        if (x0 > x1) {\n            throw new IllegalArgumentException\n            (\"lower endpoint must be less than or equal to upper endpoint\");\n        }\n        return cumulativeProbability(x1) - cumulativeProbability(x0);\n    }\n}\n"
+  },
+  {
+   "line": 64,
+   "lines": [
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67
+   ],
+   "path": "src/java/org/apache/commons/math/distribution/AbstractDistribution.java",
+   "snippet": "        throws MathException {\n        if (x0 > x1) {\n            throw new IllegalArgumentException\n            (\"lower endpoint must be less than or equal to upper endpoint\");\n        }\n        return cumulativeProbability(x1) - cumulativeProbability(x0);\n    }\n}\n"
+  },
+  {
+   "line": 60,
+   "lines": [
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65
+   ],
+   "path": "src/java/org/apache/commons/math/distribution/AbstractIntegerDistribution.java",
+   "snippet": "     * distribution takes a value less than or equal to <code>x</code>\n     * @throws MathException if the cumulative probability can not be\n     * computed due to convergence or other numerical errors.\n     */\n    public double cumulativeProbability(double x) throws MathException {\n        return cumulativeProbability((int) Math.floor(x));  \n    }\n    \n    /**\n     * For a random variable X whose values are distributed according\n     * to this distribution, this method returns P(X &le; x).  In other words,"
+  },
+  {
+   "line": 111,
+   "lines": [
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116
+   ],
+   "path": "src/java/org/apache/commons/math/distribution/AbstractIntegerDistribution.java",
+   "snippet": "    public double cumulativeProbability(int x0, int x1) throws MathException {\n        if (x0 > x1) {\n            throw new IllegalArgumentException\n                (\"lower endpoint must be less than or equal to upper endpoint\");\n        }\n        return cumulativeProbability(x1) - cumulativeProbability(x0 - 1);\n    }\n    \n    /**\n     * For a random variable X whose values are distributed according\n     * to this distribution, this method returns the largest x, such"
+  }
+ ],
+ "class_simple": "NormalDistributionImpl",
+ "dataset": "D1C_F1",
+ "doc": {
+  "class_javadoc": "/**\n * Default implementation of\n * {@link org.apache.commons.math.distribution.NormalDistribution}.\n *\n * @version $Revision$ $Date$\n */\npublic",
+  "method_javadoc": "/**\n     * For this disbution, X, this method returns P(X &lt; <code>x</code>).\n     * @param x the value at which the CDF is evaluated.\n     * @return CDF evaluted at <code>x</code>. \n     * @throws MathException if the algorithm fails to converge; unless\n     * x is more than 20 standard deviations from the mean, in which case the\n     * convergence exception is caught and 0 or 1 is returned.\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "private double mean",
+  "private double standardDeviation"
+ ],
+ "focal_class": "org.apache.commons.math.distribution.NormalDistributionImpl",
+ "focal_id": "Math_103::org.apache.commons.math.distribution.NormalDistributionImpl::cumulativeProbability(double)",
+ "focal_method_name": "cumulativeProbability",
+ "generations": 6,
+ "impl_B": "public double cumulativeProbability(double x) throws MathException {\n            return 0.5 * (1.0 + Erf.erf((x - mean) /\n                    (standardDeviation * Math.sqrt(2.0))));\n    }",
+ "imports": [
+  "java.io.Serializable",
+  "org.apache.commons.math.MathException",
+  "org.apache.commons.math.MaxIterationsExceededException",
+  "org.apache.commons.math.special.Erf"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math.distribution",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Access the mean.\n     * @return mean for this distribution\n     */",
+   "name": "getMean"
+  },
+  {
+   "javadoc": "/**\n     * Modify the mean.\n     * @param mean for this distribution\n     */",
+   "name": "setMean"
+  },
+  {
+   "javadoc": "/**\n     * Access the standard deviation.\n     * @return standard deviation for this distribution\n     */",
+   "name": "getStandardDeviation"
+  },
+  {
+   "javadoc": "/**\n     * Modify the standard deviation.\n     * @param sd standard deviation for this distribution\n     * @throws IllegalArgumentException if <code>sd</code> is not positive.\n     */",
+   "name": "setStandardDeviation"
+  },
+  {
+   "javadoc": "/**\n     * For this distribution, X, this method returns the critical point x, such\n     * that P(X &lt; x) = <code>p</code>.\n     * <p>\n     * Returns <code>Double.NEGATIVE_INFINITY</code> for p=0 and \n     * <code>Double.POSITIVE_INFINITY</code> for p=1.\n     *\n     * @param p the desired probability\n     * @return x, such that P(X &lt; x) = <code>p</code>\n     * @throws MathException if the inverse cumulative probability can not be\n     *         computed due to convergence or other numerical errors.\n     * @throws IllegalArgumentException if <code>p</code> is not a valid\n     *         probability.\n     */",
+   "name": "inverseCumulativeProbability"
+  },
+  {
+   "javadoc": "/**\n     * Access the domain value lower bound, based on <code>p</code>, used to\n     * bracket a CDF root.  This method is used by\n     * {@link #inverseCumulativeProbability(double)} to find critical values.\n     * \n     * @param p the desired probability for the critical value\n     * @return domain value lower bound, i.e.\n     *         P(X &lt; <i>lower bound</i>) &lt; <code>p</code> \n     */",
+   "name": "getDomainLowerBound"
+  },
+  {
+   "javadoc": "/**\n     * Access the domain value upper bound, based on <code>p</code>, used to\n     * bracket a CDF root.  This method is used by\n     * {@link #inverseCumulativeProbability(double)} to find critical values.\n     * \n     * @param p the desired probability for the critical value\n     * @return domain value upper bound, i.e.\n     *         P(X &lt; <i>upper bound</i>) &gt; <code>p</code> \n     */",
+   "name": "getDomainUpperBound"
+  },
+  {
+   "javadoc": "/**\n     * Access the initial domain value, based on <code>p</code>, used to\n     * bracket a CDF root.  This method is used by\n     * {@link #inverseCumulativeProbability(double)} to find critical values.\n     * \n     * @param p the desired probability for the critical value\n     * @return initial domain value\n     */",
+   "name": "getInitialDomain"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class NormalDistributionImpl extends AbstractContinuousDistribution implements NormalDistribution, Serializable",
+  "constructors": [
+   "public NormalDistributionImpl(double mean, double sd);",
+   "public NormalDistributionImpl();"
+  ],
+  "focal_signature": "public double cumulativeProbability(double x) throws MathException",
+  "methods": [
+   "public double getMean();",
+   "public void setMean(double mean);",
+   "public double getStandardDeviation();",
+   "public void setStandardDeviation(double sd);",
+   "public double inverseCumulativeProbability(final double p) throws MathException;",
+   "protected double getDomainLowerBound(double p);",
+   "protected double getDomainUpperBound(double p);",
+   "protected double getInitialDomain(double p);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F1"
+}

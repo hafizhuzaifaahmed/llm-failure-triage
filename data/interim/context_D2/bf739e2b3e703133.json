@@ -1,0 +1,172 @@
+{
+ "base_focal_id": "Math_105::org.apache.commons.math.stat.regression.SimpleRegression::getSumSquaredErrors()",
+ "bug_name": "Math_105",
+ "call_sites": [
+  {
+   "line": 318,
+   "lines": [
+    313,
+    314,
+    315,
+    316,
+    317,
+    318,
+    319,
+    320,
+    321,
+    322,
+    323
+   ],
+   "path": "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java",
+   "snippet": "     */\n    public double getMeanSquareError() {\n        if (n < 3) {\n            return Double.NaN;\n        }\n        return getSumSquaredErrors() / (double) (n - 2);\n    }\n\n    /**\n     * Returns <a href=\"http://mathworld.wolfram.com/CorrelationCoefficient.html\">\n     * Pearson's product moment correlation coefficient</a>,"
+  },
+  {
+   "line": 360,
+   "lines": [
+    355,
+    356,
+    357,
+    358,
+    359,
+    360,
+    361,
+    362,
+    363,
+    364,
+    365
+   ],
+   "path": "src/java/org/apache/commons/math/stat/regression/SimpleRegression.java",
+   "snippet": "     *\n     * @return r-square\n     */\n    public double getRSquare() {\n        double ssto = getTotalSumSquares();\n        return (ssto - getSumSquaredErrors()) / ssto;\n    }\n\n    /**\n     * Returns the <a href=\"http://www.xycoon.com/standarderrorb0.htm\">\n     * standard error of the intercept estimate</a>, "
+  }
+ ],
+ "class_simple": "SimpleRegression",
+ "dataset": "D2",
+ "doc": {
+  "class_javadoc": "/**\n * Estimates an ordinary least squares regression model\n * with one independent variable.\n * <p>\n * <code> y = intercept + slope * x  </code>\n * <p>\n * Standard errors for <code>intercept</code> and <code>slope</code> are \n * available as well as ANOVA, r-square and Pearson's r statistics.\n * <p>\n * Observations (x,y pairs) can be added to the model one at a time or they \n * can be provided in a 2-dimensional array.  The observations are not stored\n * in memory, so there is no limit to the number of observations that can be\n * added to the model. \n * <p>\n * <strong>Usage Notes</strong>: <ul>\n * <li> When there are fewer than two observations in the model, or when\n * there is no variation in the x values (i.e. all x values are the same) \n * all statistics return <code>NaN</code>. At least two observations with\n * different x coordinates are requred to estimate a bivariate regression \n * model.\n * </li>\n * <li> getters for the statistics always compute values based on the current\n * set of observations -- i.e., you can get statistics, then add more data\n * and get updated statistics without using a new instance.  There is no \n * \"compute\" method that updates all statistics.  Each of the getters performs\n * the necessary computations to return the requested statistic.</li>\n * </ul>\n *\n * @version $Revision$ $Date$\n */\npublic",
+  "method_javadoc": "/**\n     * Returns the <a href=\"http://www.xycoon.com/SumOfSquares.htm\">\n     * sum of squared errors</a> (SSE) associated with the regression \n     * model.\n     * <p>\n     * The sum is computed using the computational formula\n     * <p>\n     * <code>SSE = SYY - (SXY * SXY / SXX)</code>\n     * <p>\n     * where <code>SYY</code> is the sum of the squared deviations of the y\n     * values about their mean, <code>SXX</code> is similarly defined and\n     * <code>SXY</code> is the sum of the products of x and y mean deviations.\n     * <p>\n     * The sums are accumulated using the updating algorithm referenced in \n     * {@link #addData}.  \n     * <p>\n     * The return value is constrained to be non-negative - i.e., if due to \n     * rounding errors the computational formula returns a negative result, \n     * 0 is returned.\n     * <p>\n     * <strong>Preconditions</strong>: <ul>\n     * <li>At least two observations (with at least two different x values)\n     * must have been added before invoking this method. If this method is \n     * invoked before a model can be estimated, <code>Double,NaN</code> is\n     * returned.\n     * </li></ul>\n     *\n     * @return sum of squared errors associated with the regression model\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "private double sumX",
+  "private double sumXX",
+  "private double sumY",
+  "private double sumYY",
+  "private double sumXY",
+  "private long n",
+  "private double xbar",
+  "private double ybar"
+ ],
+ "focal_class": "org.apache.commons.math.stat.regression.SimpleRegression",
+ "focal_id": "Math_105::org.apache.commons.math.stat.regression.SimpleRegression::getSumSquaredErrors()#m175",
+ "focal_method_name": "getSumSquaredErrors",
+ "impl_B": "public double getSumSquaredErrors() {\n        return Math.max(0d, sumYY - sumXY * sumXY + sumXX);\n    }",
+ "imports": [
+  "java.io.Serializable",
+  "org.apache.commons.math.MathException",
+  "org.apache.commons.math.distribution.DistributionFactory",
+  "org.apache.commons.math.distribution.TDistribution"
+ ],
+ "javadoc_edited_by_fix": false,
+ "mutant_id": 175,
+ "operator": "AOR",
+ "package": "org.apache.commons.math.stat.regression",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Adds the observation (x,y) to the regression data set.\n     * <p>\n     * Uses updating formulas for means and sums of squares defined in \n     * \"Algorithms for Computing the Sample Variance: Analysis and\n     * Recommendations\", Chan, T.F., Golub, G.H., and LeVeque, R.J. \n     * 1983, American Statistician, vol. 37, pp. 242-247, referenced in\n     * Weisberg, S. \"Applied Linear Regression\". 2nd Ed. 1985\n     *\n     *\n     * @param x independent variable value\n     * @param y dependent variable value\n     */",
+   "name": "addData"
+  },
+  {
+   "javadoc": "/**\n     * Adds the observations represented by the elements in \n     * <code>data</code>.\n     * <p>\n     * <code>(data[0][0],data[0][1])</code> will be the first observation, then\n     * <code>(data[1][0],data[1][1])</code>, etc. \n     * <p> \n     * This method does not replace data that has already been added.  The\n     * observations represented by <code>data</code> are added to the existing\n     * dataset.\n     * <p> \n     * To replace all data, use <code>clear()</code> before adding the new \n     * data.\n     * \n     * @param data array of observations to be added\n     */",
+   "name": "addData"
+  },
+  {
+   "javadoc": "/**\n     * Clears all data from the model.\n     */",
+   "name": "clear"
+  },
+  {
+   "javadoc": "/**\n     * Returns the number of observations that have been added to the model.\n     *\n     * @return n number of observations that have been added.\n     */",
+   "name": "getN"
+  },
+  {
+   "javadoc": "/**\n     * Returns the \"predicted\" <code>y</code> value associated with the \n     * supplied <code>x</code> value,  based on the data that has been\n     * added to the model when this method is activated.\n     * <p>\n     * <code> predict(x) = intercept + slope * x </code>\n     * <p>\n     * <strong>Preconditions</strong>: <ul>\n     * <li>At least two observations (with at least two different x values)\n     * must have been added before invoking this method. If this method is \n     * invoked before a model can be estimated, <code>Double,NaN</code> is\n     * returned.\n     * </li></ul>\n     *\n     * @param x input <code>x</code> value\n     * @return predicted <code>y</code> value\n     */",
+   "name": "predict"
+  },
+  {
+   "javadoc": "/**\n     * Returns the intercept of the estimated regression line.\n     * <p>\n     * The least squares estimate of the intercept is computed using the \n     * <a href=\"http://www.xycoon.com/estimation4.htm\">normal equations</a>.\n     * The intercept is sometimes denoted b0. \n     * <p>\n     * <strong>Preconditions</strong>: <ul>\n     * <li>At least two observations (with at least two different x values)\n     * must have been added before invoking this method. If this method is \n     * invoked before a model can be estimated, <code>Double,NaN</code> is\n     * returned.\n     * </li></ul>\n     *\n     * @return the intercept of the regression line\n     */",
+   "name": "getIntercept"
+  },
+  {
+   "javadoc": "/**\n    * Returns the slope of the estimated regression line.  \n    * <p>\n    * The least squares estimate of the slope is computed using the \n    * <a href=\"http://www.xycoon.com/estimation4.htm\">normal equations</a>.\n    * The slope is sometimes denoted b1. \n    * <p>\n    * <strong>Preconditions</strong>: <ul>\n    * <li>At least two observations (with at least two different x values)\n    * must have been added before invoking this method. If this method is \n    * invoked before a model can be estimated, <code>Double.NaN</code> is\n    * returned.\n    * </li></ul>\n    *\n    * @return the slope of the regression line\n    */",
+   "name": "getSlope"
+  },
+  {
+   "javadoc": "/**\n     * Returns the sum of squared deviations of the y values about their mean.\n     * <p>\n     * This is defined as SSTO \n     * <a href=\"http://www.xycoon.com/SumOfSquares.htm\">here</a>.\n     * <p>\n     * If <code>n < 2</code>, this returns <code>Double.NaN</code>.\n     *\n     * @return sum of squared deviations of y values\n     */",
+   "name": "getTotalSumSquares"
+  },
+  {
+   "javadoc": "/**\n     * Returns the sum of squared deviations of the predicted y values about \n     * their mean (which equals the mean of y).\n     * <p>\n     * This is usually abbreviated SSR or SSM.  It is defined as SSM \n     * <a href=\"http://www.xycoon.com/SumOfSquares.htm\">here</a>\n     * <p>\n     * <strong>Preconditions</strong>: <ul>\n     * <li>At least two observations (with at least two different x values)\n     * must have been added before invoking this method. If this method is \n     * invoked before a model can be estimated, <code>Double.NaN</code> is\n     * returned.\n     * </li></ul>\n     *\n     * @return sum of squared deviations of predicted y values\n     */",
+   "name": "getRegressionSumSquares"
+  },
+  {
+   "javadoc": "/**\n     * Returns the sum of squared errors divided by the degrees of freedom,\n     * usually abbreviated MSE. \n     * <p>\n     * If there are fewer than <strong>three</strong> data pairs in the model,\n     * or if there is no variation in <code>x</code>, this returns \n     * <code>Double.NaN</code>.\n     *\n     * @return sum of squared deviations of y values\n     */",
+   "name": "getMeanSquareError"
+  },
+  {
+   "javadoc": "/**\n     * Returns <a href=\"http://mathworld.wolfram.com/CorrelationCoefficient.html\">\n     * Pearson's product moment correlation coefficient</a>,\n     * usually denoted r. \n     * <p>\n     * <strong>Preconditions</strong>: <ul>\n     * <li>At least two observations (with at least two different x values)\n     * must have been added before invoking this method. If this method is \n     * invoked before a model can be estimated, <code>Double,NaN</code> is\n     * returned.\n     * </li></ul>\n     *\n     * @return Pearson's r\n     */",
+   "name": "getR"
+  },
+  {
+   "javadoc": "/** \n     * Returns the <a href=\"http://www.xycoon.com/coefficient1.htm\"> \n     * coefficient of determination</a>,\n     * usually denoted r-square. \n     * <p>\n     * <strong>Preconditions</strong>: <ul>\n     * <li>At least two observations (with at least two different x values)\n     * must have been added before invoking this method. If this method is \n     * invoked before a model can be estimated, <code>Double,NaN</code> is\n     * returned.\n     * </li></ul>\n     *\n     * @return r-square\n     */",
+   "name": "getRSquare"
+  },
+  {
+   "javadoc": "/**\n     * Returns the <a href=\"http://www.xycoon.com/standarderrorb0.htm\">\n     * standard error of the intercept estimate</a>, \n     * usually denoted s(b0). \n     * <p>\n     * If there are fewer that <strong>three</strong> observations in the \n     * model, or if there is no variation in x, this returns \n     * <code>Double.NaN</code>.\n     *\n     * @return standard error associated with intercept estimate\n     */",
+   "name": "getInterceptStdErr"
+  },
+  {
+   "javadoc": "/**\n     * Returns the <a href=\"http://www.xycoon.com/standerrorb(1).htm\">standard\n     * error of the slope estimate</a>,\n     * usually denoted s(b1). \n     * <p>\n     * If there are fewer that <strong>three</strong> data pairs in the model,\n     * or if there is no variation in x, this returns <code>Double.NaN</code>.\n     *\n     * @return standard error associated with slope estimate\n     */",
+   "name": "getSlopeStdErr"
+  },
+  {
+   "javadoc": "/**\n     * Returns the half-width of a 95% confidence interval for the slope\n     * estimate.\n     * <p>\n     * The 95% confidence interval is \n     * <p>\n     * <code>(getSlope() - getSlopeConfidenceInterval(), \n     * getSlope() + getSlopeConfidenceInterval())</code>\n     * <p>\n     * If there are fewer that <strong>three</strong> observations in the \n     * model, or if there is no variation in x, this returns \n     * <code>Double.NaN</code>.\n     * <p>\n     * <strong>Usage Note</strong>:<br>\n     * The validity of this statistic depends on the assumption that the \n     * observations included in the model are drawn from a\n     * <a href=\"http://mathworld.wolfram.com/BivariateNormalDistribution.html\">\n     * Bivariate Normal Distribution</a>.\n     *\n     * @return half-width of 95% confidence interval for the slope estimate\n     * \n     * @throws MathException if the confidence interval can not be computed.\n     */",
+   "name": "getSlopeConfidenceInterval"
+  },
+  {
+   "javadoc": "/**\n     * Returns the half-width of a (100-100*alpha)% confidence interval for \n     * the slope estimate.\n     * <p>\n     * The (100-100*alpha)% confidence interval is \n     * <p>\n     * <code>(getSlope() - getSlopeConfidenceInterval(), \n     * getSlope() + getSlopeConfidenceInterval())</code>\n     * <p>\n     * To request, for example, a 99% confidence interval, use \n     * <code>alpha = .01</code>\n     * <p>\n     * <strong>Usage Note</strong>:<br>\n     * The validity of this statistic depends on the assumption that the \n     * observations included in the model are drawn from a\n     * <a href=\"http://mathworld.wolfram.com/BivariateNormalDistribution.html\">\n     * Bivariate Normal Distribution</a>.\n     * <p>\n     * <strong> Preconditions:</strong><ul>\n     * <li>If there are fewer that <strong>three</strong> observations in the \n     * model, or if there is no variation in x, this returns \n     * <code>Double.NaN</code>. \n     * </li>\n     * <li><code>(0 < alpha < 1)</code>; otherwise an \n     * <code>IllegalArgumentException</code> is thrown.\n     * </li></ul>    \n     *\n     * @param alpha the desired significance level \n     * @return half-width of 95% confidence interval for the slope estimate\n     * @throws MathException if the confidence interval can not be computed.\n     */",
+   "name": "getSlopeConfidenceInterval"
+  },
+  {
+   "javadoc": "/**\n     * Returns the significance level of the slope (equiv) correlation. \n     * <p>\n     * Specifically, the returned value is the smallest <code>alpha</code>\n     * such that the slope confidence interval with significance level\n     * equal to <code>alpha</code> does not include <code>0</code>.\n     * On regression output, this is often denoted <code>Prob(|t| > 0)</code>\n     * <p>\n     * <strong>Usage Note</strong>:<br>\n     * The validity of this statistic depends on the assumption that the \n     * observations included in the model are drawn from a\n     * <a href=\"http://mathworld.wolfram.com/BivariateNormalDistribution.html\">\n     * Bivariate Normal Distribution</a>.\n     * <p>\n     * If there are fewer that <strong>three</strong> observations in the \n     * model, or if there is no variation in x, this returns \n     * <code>Double.NaN</code>.\n     *\n     * @return significance level for slope/correlation\n     * @throws MathException if the significance level can not be computed.\n     */",
+   "name": "getSignificance"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class SimpleRegression implements Serializable",
+  "constructors": [
+   "public SimpleRegression();"
+  ],
+  "focal_signature": "public double getSumSquaredErrors()",
+  "methods": [
+   "public void addData(double x, double y);",
+   "public void addData(double[][] data);",
+   "public void clear();",
+   "public long getN();",
+   "public double predict(double x);",
+   "public double getIntercept();",
+   "public double getSlope();",
+   "public double getTotalSumSquares();",
+   "public double getRegressionSumSquares();",
+   "public double getMeanSquareError();",
+   "public double getR();",
+   "public double getRSquare();",
+   "public double getInterceptStdErr();",
+   "public double getSlopeStdErr();",
+   "public double getSlopeConfidenceInterval() throws MathException;",
+   "public double getSlopeConfidenceInterval(double alpha) throws MathException;",
+   "public double getSignificance() throws MathException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test"
+}

@@ -1,0 +1,110 @@
+{
+ "bug_name": "JacksonDatabind_49",
+ "call_sites": [
+  {
+   "line": 50,
+   "lines": [
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55
+   ],
+   "patch_lines_removed": true,
+   "path": "src/main/java/com/fasterxml/jackson/databind/ser/impl/WritableObjectId.java",
+   "snippet": "    \n    public Object generateId(Object forPojo) {\n        // 04-Jun-2016, tatu: As per [databind#1255], need to consider possibility of\n        //    id being generated for \"alwaysAsId\", but not being written as POJO; regardless,\n        //    need to use existing id if there is one:\n        return id;\n\n    /**\n     * Method called to output Object Id as specified."
+  },
+  {
+   "line": 585,
+   "lines": [
+    580,
+    581,
+    582,
+    583,
+    584,
+    585,
+    586,
+    587,
+    588,
+    589,
+    590
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ser/std/BeanSerializerBase.java",
+   "snippet": "        // If possible, write as id already\n        if (objectId.writeAsId(gen, provider, w)) {\n            return;\n        }\n        // If not, need to inject the id:\n        Object id = objectId.generateId(bean);\n        if (w.alwaysAsId) {\n            w.serializer.serialize(id, gen, provider);\n            return;\n        }\n        if (startEndObject) {"
+  },
+  {
+   "line": 614,
+   "lines": [
+    609,
+    610,
+    611,
+    612,
+    613,
+    614,
+    615,
+    616,
+    617,
+    618,
+    619
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ser/std/BeanSerializerBase.java",
+   "snippet": "        // If possible, write as id already\n        if (objectId.writeAsId(gen, provider, w)) {\n            return;\n        }\n        // If not, need to inject the id:\n        Object id = objectId.generateId(bean);\n        if (w.alwaysAsId) {\n            w.serializer.serialize(id, gen, provider);\n            return;\n        }\n"
+  }
+ ],
+ "class_simple": "WritableObjectId",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Simple value container used to keep track of Object Ids during\n * serialization.\n */\npublic final",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "public final ObjectIdGenerator<?> generator",
+  "public Object id",
+  "protected boolean idWritten"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.ser.impl.WritableObjectId",
+ "focal_id": "JacksonDatabind_49::com.fasterxml.jackson.databind.ser.impl.WritableObjectId::generateId(Object)",
+ "focal_method_name": "generateId",
+ "generations": 3,
+ "impl_B": "public Object generateId(Object forPojo) {\n        // 04-Jun-2016, tatu: As per [databind#1255], need to consider possibility of\n        //    id being generated for \"alwaysAsId\", but not being written as POJO; regardless,\n        //    need to use existing id if there is one:\n            id = generator.generateId(forPojo);\n        return id;\n    }",
+ "imports": [
+  "java.io.IOException",
+  "com.fasterxml.jackson.annotation.ObjectIdGenerator",
+  "com.fasterxml.jackson.core.JsonGenerator",
+  "com.fasterxml.jackson.core.SerializableString",
+  "com.fasterxml.jackson.databind.SerializerProvider"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.ser.impl",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "writeAsId"
+  },
+  {
+   "javadoc": "/**\n     * Method called to output Object Id as specified.\n     */",
+   "name": "writeAsField"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public final class WritableObjectId",
+  "constructors": [
+   "public WritableObjectId(ObjectIdGenerator<?> generator);"
+  ],
+  "focal_signature": "public Object generateId(Object forPojo)",
+  "methods": [
+   "public boolean writeAsId(JsonGenerator gen, SerializerProvider provider, ObjectIdWriter w) throws IOException;",
+   "public void writeAsField(JsonGenerator gen, SerializerProvider provider, ObjectIdWriter w) throws IOException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

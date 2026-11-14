@@ -1,0 +1,194 @@
+{
+ "bug_name": "Math_78",
+ "call_sites": [
+  {
+   "line": 152,
+   "lines": [
+    147,
+    148,
+    149,
+    150,
+    151,
+    152,
+    153,
+    154,
+    155,
+    156,
+    157
+   ],
+   "path": "src/main/java/org/apache/commons/math/ode/events/CombinedEventsManager.java",
+   "snippet": "            }\n\n            // check events occurrence\n            for (EventState state : states) {\n\n                if (state.evaluateStep(interpolator)) {\n                    if (first == null) {\n                        first = state;\n                    } else {\n                        if (interpolator.isForward()) {\n                            if (state.getEventTime() < first.getEventTime()) {"
+  },
+  {
+   "line": 271,
+   "lines": [
+    266,
+    267,
+    268,
+    269,
+    270,
+    271,
+    272,
+    273,
+    274,
+    275,
+    276
+   ],
+   "path": "src/main/java/org/apache/commons/math/ode/nonstiff/AdamsBashforthIntegrator.java",
+   "snippet": "                    // discrete events handling\n                    interpolatorTmp.reinitialize(stepEnd, stepSize, predictedScaled, nordsieckTmp);\n                    interpolatorTmp.storeTime(stepStart);\n                    interpolatorTmp.shift();\n                    interpolatorTmp.storeTime(stepEnd);\n                    if (manager.evaluateStep(interpolatorTmp)) {\n                        final double dt = manager.getEventTime() - stepStart;\n                        if (Math.abs(dt) <= Math.ulp(stepStart)) {\n                            // rejecting the step would lead to a too small next step, we accept it\n                            loop = false;\n                        } else {"
+  },
+  {
+   "line": 289,
+   "lines": [
+    284,
+    285,
+    286,
+    287,
+    288,
+    289,
+    290,
+    291,
+    292,
+    293,
+    294
+   ],
+   "path": "src/main/java/org/apache/commons/math/ode/nonstiff/AdamsMoultonIntegrator.java",
+   "snippet": "                    // discrete events handling\n                    interpolatorTmp.reinitialize(stepEnd, stepSize, correctedScaled, nordsieckTmp);\n                    interpolatorTmp.storeTime(stepStart);\n                    interpolatorTmp.shift();\n                    interpolatorTmp.storeTime(stepEnd);\n                    if (manager.evaluateStep(interpolatorTmp)) {\n                        final double dt = manager.getEventTime() - stepStart;\n                        if (Math.abs(dt) <= Math.ulp(stepStart)) {\n                            // rejecting the step would lead to a too small next step, we accept it\n                            loop = false;\n                        } else {"
+  },
+  {
+   "line": 291,
+   "lines": [
+    286,
+    287,
+    288,
+    289,
+    290,
+    291,
+    292,
+    293,
+    294,
+    295,
+    296
+   ],
+   "path": "src/main/java/org/apache/commons/math/ode/nonstiff/EmbeddedRungeKuttaIntegrator.java",
+   "snippet": "        error = estimateError(yDotK, y, yTmp, stepSize);\n        if (error <= 1.0) {\n\n          // discrete events handling\n          interpolator.storeTime(stepStart + stepSize);\n          if (manager.evaluateStep(interpolator)) {\n              final double dt = manager.getEventTime() - stepStart;\n              if (Math.abs(dt) <= Math.ulp(stepStart)) {\n                  // rejecting the step would lead to a too small next step, we accept it\n                  loop = false;\n              } else {"
+  },
+  {
+   "line": 885,
+   "lines": [
+    880,
+    881,
+    882,
+    883,
+    884,
+    885,
+    886,
+    887,
+    888,
+    889,
+    890
+   ],
+   "path": "src/main/java/org/apache/commons/math/ode/nonstiff/GraggBulirschStoerIntegrator.java",
+   "snippet": "          }\n\n          // Discrete events handling\n          if (!reject) {\n            interpolator.storeTime(stepStart + stepSize);\n            if (eventsHandlersManager.evaluateStep(interpolator)) {\n                final double dt = eventsHandlersManager.getEventTime() - stepStart;\n                if (Math.abs(dt) > Math.ulp(stepStart)) {\n                    // reject the step to match exactly the next switch time\n                    hNew = Math.abs(dt);\n                    reject = true;"
+  }
+ ],
+ "class_simple": "EventState",
+ "dataset": "D1C_F1",
+ "doc": {
+  "class_javadoc": "/** This class handles the state for one {@link EventHandler\n * event handler} during integration steps.\n *\n * <p>Each time the integrator proposes a step, the event handler\n * switching function should be checked. This class handles the state\n * of one handler during one integration step, with references to the\n * state at the end of the preceding step. This information is used to\n * decide if the handler should trigger an event or not during the\n * proposed step (and hence the step should be reduced to ensure the\n * event occurs at a bound rather than inside the step).</p>\n *\n * @version $Revision$ $Date$\n * @since 1.2\n */\npublic",
+  "method_javadoc": "/** Evaluate the impact of the proposed step on the event handler.\n     * @param interpolator step interpolator for the proposed step\n     * @return true if the event handler triggers an event before\n     * the end of the proposed step (this implies the step should be\n     * rejected)\n     * @exception DerivativeException if the interpolator fails to\n     * compute the switching function somewhere within the step\n     * @exception EventException if the switching function\n     * cannot be evaluated\n     * @exception ConvergenceException if an event cannot be located\n     */"
+ },
+ "fields": [
+  "private final EventHandler handler",
+  "private final double maxCheckInterval",
+  "private final double convergence",
+  "private final int maxIterationCount",
+  "private double t0",
+  "private double g0",
+  "private boolean g0Positive",
+  "private boolean pendingEvent",
+  "private double pendingEventTime",
+  "private double previousEventTime",
+  "private boolean forward",
+  "private boolean increasing",
+  "private int nextAction"
+ ],
+ "focal_class": "org.apache.commons.math.ode.events.EventState",
+ "focal_id": "Math_78::org.apache.commons.math.ode.events.EventState::evaluateStep(StepInterpolator)",
+ "focal_method_name": "evaluateStep",
+ "generations": 6,
+ "impl_B": "public boolean evaluateStep(final StepInterpolator interpolator)\n        throws DerivativeException, EventException, ConvergenceException {\n\n        try {\n\n            forward = interpolator.isForward();\n            final double t1 = interpolator.getCurrentTime();\n            final int    n  = Math.max(1, (int) Math.ceil(Math.abs(t1 - t0) / maxCheckInterval));\n            final double h  = (t1 - t0) / n;\n\n            double ta = t0;\n            double ga = g0;\n            double tb = t0 + (interpolator.isForward() ? convergence : -convergence);\n            for (int i = 0; i < n; ++i) {\n\n                // evaluate handler value at the end of the substep\n                tb += h;\n                interpolator.setInterpolatedTime(tb);\n                final double gb = handler.g(tb, interpolator.getInterpolatedState());\n\n                // check events occurrence\n                if (g0Positive ^ (gb >= 0)) {\n                    // there is a sign change: an event is expected during this step\n\n                        // this is a corner case:\n                        // - there was an event near ta,\n                        // - there is another event between ta and tb\n                        // - when ta was computed, convergence was reached on the \"wrong side\" of the interval\n                        // this implies that the real sign of ga is the same as gb, so we need to slightly\n                        // shift ta to make sure ga and gb get opposite signs and the solver won't complain\n                        // about bracketing\n                            // this should never happen\n                         \n                    // variation direction, with respect to the integration direction\n                    increasing = gb >= ga;\n\n                    final UnivariateRealFunction f = new UnivariateRealFunction() {\n                        public double value(final double t) throws FunctionEvaluationException {\n                            try {\n                                interpolator.setInterpolatedTime(t);\n                                return handler.g(t, interpolator.getInterpolatedState());\n                            } catch (DerivativeException e) {\n                                throw new FunctionEvaluationException(e, t);\n                            } catch (EventException e) {\n                                throw new FunctionEvaluationException(e, t);\n                            }\n                        }\n                    };\n                    final BrentSolver solver = new BrentSolver();\n                    solver.setAbsoluteAccuracy(convergence);\n                    solver.setMaximalIterationCount(maxIterationCount);\n                    final double root = (ta <= tb) ? solver.solve(f, ta, tb) : solver.solve(f, tb, ta);\n                    if ((Math.abs(root - ta) <= convergence) &&\n                         (Math.abs(root - previousEventTime) <= convergence)) {\n                        // we have either found nothing or found (again ?) a past event, we simply ignore it\n                        ta = tb;\n                        ga = gb;\n                    } else if (Double.isNaN(previousEventTime) ||\n                               (Math.abs(previousEventTime - root) > convergence)) {\n                        pendingEventTime = root;\n                        if (pendingEvent && (Math.abs(t1 - pendingEventTime) <= convergence)) {\n                            // we were already waiting for this event which was\n                            // found during a previous call for a step that was\n                            // rejected, this step must now be accepted since it\n                            // properly ends exactly at the event occurrence\n                            return false;\n                        }\n                        // either we were not waiting for the event or it has\n                        // moved in such a way the step cannot be accepted\n                        pendingEvent = true;\n                        return true;\n                    }\n\n                } else {\n                    // no sign change: there is no event for now\n                    ta = tb;\n                    ga = gb;\n                }\n\n            }\n\n            // no event during the whole step\n            pendingEvent     = false;\n            pendingEventTime = Double.NaN;\n            return false;\n\n        } catch (FunctionEvaluationException e) {\n            final Throwable cause = e.getCause();\n            if ((cause != null) && (cause instanceof DerivativeException)) {\n                throw (DerivativeException) cause;\n            } else if ((cause != null) && (cause instanceof EventException)) {\n                throw (EventException) cause;\n            }\n            throw new EventException(e);\n        }\n\n    }",
+ "imports": [
+  "org.apache.commons.math.ConvergenceException",
+  "org.apache.commons.math.FunctionEvaluationException",
+  "org.apache.commons.math.MathRuntimeException",
+  "org.apache.commons.math.analysis.UnivariateRealFunction",
+  "org.apache.commons.math.analysis.solvers.BrentSolver",
+  "org.apache.commons.math.ode.DerivativeException",
+  "org.apache.commons.math.ode.sampling.StepInterpolator"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math.ode.events",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/** Get the underlying event handler.\n     * @return underlying event handler\n     */",
+   "name": "getEventHandler"
+  },
+  {
+   "javadoc": "/** Get the maximal time interval between events handler checks.\n     * @return maximal time interval between events handler checks\n     */",
+   "name": "getMaxCheckInterval"
+  },
+  {
+   "javadoc": "/** Get the convergence threshold for event localization.\n     * @return convergence threshold for event localization\n     */",
+   "name": "getConvergence"
+  },
+  {
+   "javadoc": "/** Get the upper limit in the iteration count for event localization.\n     * @return upper limit in the iteration count for event localization\n     */",
+   "name": "getMaxIterationCount"
+  },
+  {
+   "javadoc": "/** Reinitialize the beginning of the step.\n     * @param tStart value of the independent <i>time</i> variable at the\n     * beginning of the step\n     * @param yStart array containing the current value of the state vector\n     * at the beginning of the step\n     * @exception EventException if the event handler\n     * value cannot be evaluated at the beginning of the step\n     */",
+   "name": "reinitializeBegin"
+  },
+  {
+   "javadoc": "/** Get the occurrence time of the event triggered in the current\n     * step.\n     * @return occurrence time of the event triggered in the current\n     * step.\n     */",
+   "name": "getEventTime"
+  },
+  {
+   "javadoc": "/** Acknowledge the fact the step has been accepted by the integrator.\n     * @param t value of the independent <i>time</i> variable at the\n     * end of the step\n     * @param y array containing the current value of the state vector\n     * at the end of the step\n     * @exception EventException if the value of the event\n     * handler cannot be evaluated\n     */",
+   "name": "stepAccepted"
+  },
+  {
+   "javadoc": "/** Check if the integration should be stopped at the end of the\n     * current step.\n     * @return true if the integration should be stopped\n     */",
+   "name": "stop"
+  },
+  {
+   "javadoc": "/** Let the event handler reset the state if it wants.\n     * @param t value of the independent <i>time</i> variable at the\n     * beginning of the next step\n     * @param y array were to put the desired state vector at the beginning\n     * of the next step\n     * @return true if the integrator should reset the derivatives too\n     * @exception EventException if the state cannot be reseted by the event\n     * handler\n     */",
+   "name": "reset"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class EventState",
+  "constructors": [
+   "public EventState(final EventHandler handler, final double maxCheckInterval, final double convergence, final int maxIterationCount);"
+  ],
+  "focal_signature": "public boolean evaluateStep(final StepInterpolator interpolator) throws DerivativeException, EventException, ConvergenceException",
+  "methods": [
+   "public EventHandler getEventHandler();",
+   "public double getMaxCheckInterval();",
+   "public double getConvergence();",
+   "public int getMaxIterationCount();",
+   "public void reinitializeBegin(final double tStart, final double[] yStart) throws EventException;",
+   "public double getEventTime();",
+   "public void stepAccepted(final double t, final double[] y) throws EventException;",
+   "public boolean stop();",
+   "public boolean reset(final double t, final double[] y) throws EventException;"
+  ],
+  "type_signatures": [
+   "public interface StepInterpolator extends Externalizable {  }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F1"
+}

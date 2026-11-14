@@ -1,0 +1,146 @@
+{
+ "bug_name": "JacksonXml_5",
+ "call_sites": [
+  {
+   "line": 93,
+   "lines": [
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/dataformat/xml/ser/XmlSerializerProvider.java",
+   "snippet": "        final boolean asArray;\n        final ToXmlGenerator xgen = _asXmlGenerator(gen);\n        if (xgen == null) { // called by convertValue()\n            asArray = false;\n        } else {\n            QName rootName = _rootNameFromConfig();\n            if (rootName == null) {\n                rootName = _rootNameLookup.findRootName(cls, _config);\n            }\n            _initWithRootName(xgen, rootName);\n            asArray = TypeUtil.isIndexedType(cls);"
+  },
+  {
+   "line": 133,
+   "lines": [
+    128,
+    129,
+    130,
+    131,
+    132,
+    133,
+    134,
+    135,
+    136,
+    137,
+    138
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/dataformat/xml/ser/XmlSerializerProvider.java",
+   "snippet": "        final boolean asArray;\n        final ToXmlGenerator xgen = _asXmlGenerator(gen);\n        if (xgen == null) { // called by convertValue()\n            asArray = false;\n        } else {\n            QName rootName = _rootNameFromConfig();\n            if (rootName == null) {\n                rootName = _rootNameLookup.findRootName(rootType, _config);\n            }\n            _initWithRootName(xgen, rootName);\n            asArray = TypeUtil.isIndexedType(rootType);"
+  },
+  {
+   "line": 162,
+   "lines": [
+    157,
+    158,
+    159,
+    160,
+    161,
+    162,
+    163,
+    164,
+    165,
+    166,
+    167
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/dataformat/xml/ser/XmlSerializerProvider.java",
+   "snippet": "\n    protected void _serializeXmlNull(JsonGenerator jgen) throws IOException\n    {\n        // 14-Nov-2016, tatu: As per [dataformat-xml#213], we may have explicitly\n        //    configured root name...\n        QName rootName = _rootNameFromConfig();\n        if (rootName == null) {\n            rootName = ROOT_NAME_FOR_NULL;\n        }\n        if (jgen instanceof ToXmlGenerator) {\n            _initWithRootName((ToXmlGenerator) jgen, rootName);"
+  }
+ ],
+ "class_simple": "XmlSerializerProvider",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * We need to override some parts of\n * {@link com.fasterxml.jackson.databind.SerializerProvider}\n * implementation to handle oddities of XML output, like \"extra\" root element.\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "protected final static QName ROOT_NAME_FOR_NULL",
+  "protected final XmlRootNameLookup _rootNameLookup"
+ ],
+ "focal_class": "com.fasterxml.jackson.dataformat.xml.ser.XmlSerializerProvider",
+ "focal_id": "JacksonXml_5::com.fasterxml.jackson.dataformat.xml.ser.XmlSerializerProvider::_rootNameFromConfig()",
+ "focal_method_name": "_rootNameFromConfig",
+ "generations": 3,
+ "impl_B": "protected QName _rootNameFromConfig()\n    {\n        PropertyName name = _config.getFullRootName();\n        if (name == null) {\n            return null;\n        }\n        String ns = name.getNamespace();\n        if (ns == null || ns.isEmpty()) {\n            return new QName(name.getSimpleName());\n        }\n        return new QName(ns, name.getSimpleName());\n    }",
+ "imports": [
+  "java.io.IOException",
+  "javax.xml.namespace.QName",
+  "javax.xml.stream.XMLStreamException",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.databind.JavaType",
+  "com.fasterxml.jackson.databind.JsonMappingException",
+  "com.fasterxml.jackson.databind.JsonSerializer",
+  "com.fasterxml.jackson.databind.PropertyName",
+  "com.fasterxml.jackson.databind.SerializationConfig",
+  "com.fasterxml.jackson.databind.ser.SerializerFactory",
+  "com.fasterxml.jackson.databind.ser.DefaultSerializerProvider",
+  "com.fasterxml.jackson.databind.util.TokenBuffer",
+  "com.fasterxml.jackson.dataformat.xml.util.StaxUtil",
+  "com.fasterxml.jackson.dataformat.xml.util.TypeUtil",
+  "com.fasterxml.jackson.dataformat.xml.util.XmlRootNameLookup"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.dataformat.xml.ser",
+ "project": "JacksonXml",
+ "siblings": [
+  {
+   "javadoc": "/**********************************************************************\n     */",
+   "name": "copy"
+  },
+  {
+   "javadoc": "",
+   "name": "createInstance"
+  },
+  {
+   "javadoc": "",
+   "name": "_serializeXmlNull"
+  },
+  {
+   "javadoc": "",
+   "name": "_startRootArray"
+  },
+  {
+   "javadoc": "",
+   "name": "_initWithRootName"
+  },
+  {
+   "javadoc": "",
+   "name": "_asXmlGenerator"
+  },
+  {
+   "javadoc": "",
+   "name": "_wrapAsIOE"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class XmlSerializerProvider extends DefaultSerializerProvider",
+  "constructors": [
+   "public XmlSerializerProvider(XmlRootNameLookup rootNames);",
+   "public XmlSerializerProvider(XmlSerializerProvider src, SerializationConfig config, SerializerFactory f);",
+   "protected XmlSerializerProvider(XmlSerializerProvider src);"
+  ],
+  "focal_signature": "protected QName _rootNameFromConfig()",
+  "methods": [
+   "public DefaultSerializerProvider copy();",
+   "public DefaultSerializerProvider createInstance(SerializationConfig config, SerializerFactory jsf);",
+   "protected void _serializeXmlNull(JsonGenerator jgen) throws IOException;",
+   "protected void _startRootArray(ToXmlGenerator xgen, QName rootName) throws IOException;",
+   "protected void _initWithRootName(ToXmlGenerator xgen, QName rootName) throws IOException;",
+   "protected ToXmlGenerator _asXmlGenerator(JsonGenerator gen) throws JsonMappingException;",
+   "protected IOException _wrapAsIOE(JsonGenerator g, Exception e);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

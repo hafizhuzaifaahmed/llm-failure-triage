@@ -1,0 +1,217 @@
+{
+ "bug_name": "JacksonDatabind_50",
+ "call_sites": [
+  {
+   "line": 769,
+   "lines": [
+    764,
+    765,
+    766,
+    767,
+    768,
+    769,
+    770,
+    771,
+    772,
+    773,
+    774
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "    public <T> T readValue(JsonParser p, JavaType type) throws IOException {\n        JsonDeserializer<Object> deser = findRootValueDeserializer(type);\n        if (deser == null) {\n            reportMappingException(\"Could not find JsonDeserializer for type %s\", type);\n        }\n        return (T) deser.deserialize(p, this);\n    }\n\n    /**\n     * Convenience method that may be used by composite or container deserializers,\n     * for reading one-off values for the composite type, taking into account"
+  },
+  {
+   "line": 796,
+   "lines": [
+    791,
+    792,
+    793,
+    794,
+    795,
+    796,
+    797,
+    798,
+    799,
+    800,
+    801
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "            String propName = (prop == null) ? \"NULL\" : (\"'\"+prop.getName()+\"'\");\n            reportMappingException(\n                    \"Could not find JsonDeserializer for type %s (via property %s)\",\n                    type, propName);\n        }\n        return (T) deser.deserialize(p, this);\n    }\n\n    /*\n    /**********************************************************\n    /* Methods for problem handling"
+  },
+  {
+   "line": 277,
+   "lines": [
+    272,
+    273,
+    274,
+    275,
+    276,
+    277,
+    278,
+    279,
+    280,
+    281,
+    282
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/MappingIterator.java",
+   "snippet": "\n        int nextState = STATE_NEED_RESYNC;\n        try {\n            T value;\n            if (_updatedValue == null) {\n                value = _deserializer.deserialize(_parser, _context);\n            } else{\n                _deserializer.deserialize(_parser, _context, _updatedValue);\n                value = _updatedValue;\n            }\n            nextState = STATE_MAY_HAVE_VALUE;"
+  },
+  {
+   "line": 279,
+   "lines": [
+    274,
+    275,
+    276,
+    277,
+    278,
+    279,
+    280,
+    281,
+    282,
+    283,
+    284
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/MappingIterator.java",
+   "snippet": "        try {\n            T value;\n            if (_updatedValue == null) {\n                value = _deserializer.deserialize(_parser, _context);\n            } else{\n                _deserializer.deserialize(_parser, _context, _updatedValue);\n                value = _updatedValue;\n            }\n            nextState = STATE_MAY_HAVE_VALUE;\n            return value;\n        } finally {"
+  },
+  {
+   "line": 3575,
+   "lines": [
+    3570,
+    3571,
+    3572,
+    3573,
+    3574,
+    3575,
+    3576,
+    3577,
+    3578,
+    3579,
+    3580
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java",
+   "snippet": "                result = null;\n            } else { // pointing to event other than null\n                DeserializationContext ctxt = createDeserializationContext(p, deserConfig);\n                JsonDeserializer<Object> deser = _findRootDeserializer(ctxt, toValueType);\n                // note: no handling of unwrapping\n                result = deser.deserialize(p, ctxt);\n            }\n            p.close();\n            return result;\n        } catch (IOException e) { // should not occur, no real i/o...\n            throw new IllegalArgumentException(e.getMessage(), e);"
+  }
+ ],
+ "class_simple": "BeanDeserializer",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Deserializer class that can deserialize instances of\n * arbitrary bean objects, usually from JSON Object structs,\n */\npublic",
+  "method_javadoc": "/**\n     * Main deserialization method for bean-based objects (POJOs).\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "protected transient Exception _nullFromCreator"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.deser.BeanDeserializer",
+ "focal_id": "JacksonDatabind_50::com.fasterxml.jackson.databind.deser.BeanDeserializer::deserialize(JsonParser,DeserializationContext)",
+ "focal_method_name": "deserialize",
+ "generations": 3,
+ "impl_B": "@Override\n    public Object deserialize(JsonParser p, DeserializationContext ctxt) throws IOException\n    {\n        // common case first\n        if (p.isExpectedStartObjectToken()) {\n            if (_vanillaProcessing) {\n                return vanillaDeserialize(p, ctxt, p.nextToken());\n            }\n            // 23-Sep-2015, tatu: This is wrong at some many levels, but for now... it is\n            //    what it is, including \"expected behavior\".\n            p.nextToken();\n            if (_objectIdReader != null) {\n                return deserializeWithObjectId(p, ctxt);\n            }\n            return deserializeFromObject(p, ctxt);\n        }\n        return _deserializeOther(p, ctxt, p.getCurrentToken());\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.util.*",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.deser.impl.*",
+  "com.fasterxml.jackson.databind.util.NameTransformer",
+  "com.fasterxml.jackson.databind.util.TokenBuffer"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.deser",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "unwrappingDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "withObjectIdReader"
+  },
+  {
+   "javadoc": "",
+   "name": "withIgnorableProperties"
+  },
+  {
+   "javadoc": "",
+   "name": "withBeanProperties"
+  },
+  {
+   "javadoc": "",
+   "name": "asArrayDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "_deserializeOther"
+  },
+  {
+   "javadoc": "",
+   "name": "_missingToken"
+  },
+  {
+   "javadoc": "/**\n     * Secondary deserialization method, called in cases where POJO\n     * instance is created as part of deserialization, potentially\n     * after collecting some or all of the properties to set.\n     */",
+   "name": "deserialize"
+  },
+  {
+   "javadoc": "/**\n     * General version used when handling needs more advanced features.\n     */",
+   "name": "deserializeFromObject"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.8\n     */",
+   "name": "_deserializeWithErrorWrapping"
+  },
+  {
+   "javadoc": "/**\n     * Helper method called for rare case of pointing to {@link JsonToken#VALUE_NULL}\n     * token. While this is most often an erroneous condition, there is one specific\n     * case with XML handling where polymorphic type with no properties is exposed\n     * as such, and should be handled same as empty Object.\n     *\n     * @since 2.7\n     */",
+   "name": "deserializeFromNull"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "deserializeWithView"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "deserializeWithExternalTypeId"
+  },
+  {
+   "javadoc": "",
+   "name": "deserializeWithExternalTypeId"
+  },
+  {
+   "javadoc": "/**\n     * Helper method for getting a lazily construct exception to be reported\n     * to {@link DeserializationContext#handleInstantiationProblem(Class, Object, Throwable)}.\n     *\n     * @since 2.8\n     */",
+   "name": "_creatorReturnedNullException"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class BeanDeserializer extends BeanDeserializerBase implements java.io.Serializable",
+  "constructors": [
+   "public BeanDeserializer(BeanDeserializerBuilder builder, BeanDescription beanDesc, BeanPropertyMap properties, Map<String, SettableBeanProperty> backRefs, HashSet<String> ignorableProps, boolean ignoreAllUnknown, boolean hasViews);",
+   "protected BeanDeserializer(BeanDeserializerBase src);",
+   "protected BeanDeserializer(BeanDeserializerBase src, boolean ignoreAllUnknown);",
+   "protected BeanDeserializer(BeanDeserializerBase src, NameTransformer unwrapper);",
+   "public BeanDeserializer(BeanDeserializerBase src, ObjectIdReader oir);",
+   "public BeanDeserializer(BeanDeserializerBase src, Set<String> ignorableProps);",
+   "public BeanDeserializer(BeanDeserializerBase src, BeanPropertyMap props);"
+  ],
+  "focal_signature": "public Object deserialize(JsonParser p, DeserializationContext ctxt) throws IOException",
+  "methods": [
+   "public JsonDeserializer<Object> unwrappingDeserializer(NameTransformer unwrapper);",
+   "public BeanDeserializer withObjectIdReader(ObjectIdReader oir);",
+   "public BeanDeserializer withIgnorableProperties(Set<String> ignorableProps);",
+   "public BeanDeserializerBase withBeanProperties(BeanPropertyMap props);",
+   "protected BeanDeserializerBase asArrayDeserializer();",
+   "protected final Object _deserializeOther(JsonParser p, DeserializationContext ctxt, JsonToken t) throws IOException;",
+   "// since 2.8; remove unless getting used protected Object _missingToken(JsonParser p, DeserializationContext ctxt) throws IOException;",
+   "public Object deserialize(JsonParser p, DeserializationContext ctxt, Object bean) throws IOException;",
+   "public Object deserializeFromObject(JsonParser p, DeserializationContext ctxt) throws IOException;",
+   "protected final Object _deserializeWithErrorWrapping(JsonParser p, DeserializationContext ctxt, SettableBeanProperty prop) throws IOException;",
+   "protected Object deserializeFromNull(JsonParser p, DeserializationContext ctxt) throws IOException;",
+   "protected final Object deserializeWithView(JsonParser p, DeserializationContext ctxt, Object bean, Class<?> activeView) throws IOException;",
+   "protected Object deserializeWithExternalTypeId(JsonParser p, DeserializationContext ctxt) throws IOException;",
+   "protected Object deserializeWithExternalTypeId(JsonParser p, DeserializationContext ctxt, Object bean) throws IOException;",
+   "protected Exception _creatorReturnedNullException();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

@@ -1,0 +1,207 @@
+{
+ "candidate_id": "bd5b72e5cb22d30af07a",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testGetCorrelationStandardErrorsWithSimpleData",
+   "testGetCorrelationStandardErrorsWithPerfectCorrelation",
+   "testGetCorrelationStandardErrorsWithIdentityMatrix"
+  ],
+  "nc_both": [],
+  "nc_one_version": [],
+  "passes": 0
+ },
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "Math_69::org.apache.commons.math.stat.correlation.PearsonsCorrelation::getCorrelationStandardErrors()",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testGetCorrelationStandardErrorsWithSimpleData",
+   "runs_b": [
+    {
+     "duration_s": 0.092,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.1,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.114,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.104,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.104,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.111,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.math.stat.correlation;\n\nimport java.io.*;\nimport java.math.*;\nimport java.util.*;\nimport org.apache.commons.math.MathException;\nimport org.apache.commons.math.MathRuntimeException;\nimport org.apache.commons.math.distribution.TDistribution;\nimport org.apache.commons.math.distribution.TDistributionImpl;\nimport org.apache.commons.math.linear.BlockRealMatrix;\nimport org.apache.commons.math.linear.MatrixUtils;\nimport org.apache.commons.math.linear.RealMatrix;\nimport org.apache.commons.math.stat.regression.SimpleRegression;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class PearsonsCorrelation_getCorrelationStandardErrors_TriageGen0Test {\n\n    private static final double EPSILON = 1e-10;\n\n    @Test\n    public void testGetCorrelationStandardErrorsWithSimpleData() {\n        // Data with 4 observations and 2 variables\n        // Variable 1: [1, 2, 3, 4]\n        // Variable 2: [2, 4, 6, 8] (Perfect correlation r=1)\n        // Variable 3: [1, 0, 1, 0] (Low correlation)\n        double[][] data = {\n            {1.0, 2.0, 1.0},\n            {2.0, 4.0, 0.0},\n            {3.0, 6.0, 1.0},\n            {4.0, 8.0, 0.0}\n        };\n\n        PearsonsCorrelation correlation = new PearsonsCorrelation(data);\n        RealMatrix correlationMatrix = correlation.getCorrelationMatrix();\n        RealMatrix seMatrix = correlation.getCorrelationStandardErrors();\n\n        int nVars = correlationMatrix.getColumnDimension();\n        int nObs = data.length;\n\n        Assert.assertEquals(nVars, seMatrix.getRowDimension());\n        Assert.assertEquals(nVars, seMatrix.getColumnDimension());\n\n        for (int i = 0; i < nVars; i++) {\n            for (int j = 0; j < nVars; j++) {\n                double r = correlationMatrix.getEntry(i, j);\n                double expectedSE = Math.sqrt((1 - r * r) / (nObs - 2));\n                Assert.assertEquals(\"SE mismatch at [\" + i + \"][\" + j + \"]\", \n                    expectedSE, seMatrix.getEntry(i, j), EPSILON);\n            }\n        }\n    }\n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testGetCorrelationStandardErrorsWithPerfectCorrelation",
+   "runs_b": [
+    {
+     "duration_s": 0.091,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.094,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.079,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.09,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.087,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.084,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.math.stat.correlation;\n\nimport java.io.*;\nimport java.math.*;\nimport java.util.*;\nimport org.apache.commons.math.MathException;\nimport org.apache.commons.math.MathRuntimeException;\nimport org.apache.commons.math.distribution.TDistribution;\nimport org.apache.commons.math.distribution.TDistributionImpl;\nimport org.apache.commons.math.linear.BlockRealMatrix;\nimport org.apache.commons.math.linear.MatrixUtils;\nimport org.apache.commons.math.linear.RealMatrix;\nimport org.apache.commons.math.stat.regression.SimpleRegression;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class PearsonsCorrelation_getCorrelationStandardErrors_TriageGen0Test {\n\n    private static final double EPSILON = 1e-10;\n\n    \n\n    @Test\n    public void testGetCorrelationStandardErrorsWithPerfectCorrelation() {\n        // Perfect correlation r = 1.0 or r = -1.0 should result in SE = 0.0\n        double[][] data = {\n            {1.0, 10.0},\n            {2.0, 20.0},\n            {3.0, 30.0}\n        };\n        PearsonsCorrelation correlation = new PearsonsCorrelation(data);\n        RealMatrix seMatrix = correlation.getCorrelationStandardErrors();\n\n        // r = 1, so (1 - 1^2) / (3-2) = 0\n        Assert.assertEquals(0.0, seMatrix.getEntry(0, 0), EPSILON);\n        Assert.assertEquals(0.0, seMatrix.getEntry(0, 1), EPSILON);\n        Assert.assertEquals(0.0, seMatrix.getEntry(1, 0), EPSILON);\n        Assert.assertEquals(0.0, seMatrix.getEntry(1, 1), EPSILON);\n    }\n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testGetCorrelationStandardErrorsWithIdentityMatrix",
+   "runs_b": [
+    {
+     "duration_s": 0.086,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.095,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.099,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.087,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.075,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.077,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.math.stat.correlation;\n\nimport java.io.*;\nimport java.math.*;\nimport java.util.*;\nimport org.apache.commons.math.MathException;\nimport org.apache.commons.math.MathRuntimeException;\nimport org.apache.commons.math.distribution.TDistribution;\nimport org.apache.commons.math.distribution.TDistributionImpl;\nimport org.apache.commons.math.linear.BlockRealMatrix;\nimport org.apache.commons.math.linear.MatrixUtils;\nimport org.apache.commons.math.linear.RealMatrix;\nimport org.apache.commons.math.stat.regression.SimpleRegression;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class PearsonsCorrelation_getCorrelationStandardErrors_TriageGen0Test {\n\n    private static final double EPSILON = 1e-10;\n\n    \n\n    \n\n    @Test\n    public void testGetCorrelationStandardErrorsWithIdentityMatrix() {\n        // If correlation matrix is identity (r=0 for i!=j, r=1 for i=j)\n        // For i=j, SE = sqrt((1-1)/(n-2)) = 0\n        // For i!=j, SE = sqrt((1-0)/(n-2)) = 1/sqrt(n-2)\n        double[][] data = {\n            {1.0, 0.0, 0.0},\n            {0.0, 1.0, 0.0},\n            {0.0, 0.0, 1.0},\n            {0.0, 0.0, 0.0}\n        };\n        // Note: Standard Pearsons on this might not produce exact identity, \n        // so we use the constructor that takes a covariance/correlation matrix approach \n        // or just verify the logic using the provided data.\n        \n        PearsonsCorrelation correlation = new PearsonsCorrelation(data);\n        RealMatrix seMatrix = correlation.getCorrelationStandardErrors();\n        RealMatrix corrMatrix = correlation.getCorrelationMatrix();\n        int nObs = 4;\n\n        for (int i = 0; i < 3; i++) {\n            for (int j = 0; j < 3; j++) {\n                double r = corrMatrix.getEntry(i, j);\n                double expected = Math.sqrt((1 - r * r) / (nObs - 2));\n                Assert.assertEquals(expected, seMatrix.getEntry(i, j), EPSILON);\n            }\n        }\n    }\n}\n"
+  }
+ ],
+ "source_sha256": "4f08d1cfd1f34244cce7a8e7bfabcd8dbf7654639c117574f5e1c0e5b3aa8cc7",
+ "utc": "2026-11-13T07:00:20Z"
+}

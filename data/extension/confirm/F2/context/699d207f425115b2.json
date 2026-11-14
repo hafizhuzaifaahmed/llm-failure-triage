@@ -1,0 +1,77 @@
+{
+ "bug_name": "Math_68",
+ "call_sites": [],
+ "class_simple": "LevenbergMarquardtOptimizer",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * This class solves a least squares problem using the Levenberg-Marquardt algorithm.\n *\n * <p>This implementation <em>should</em> work even for over-determined systems\n * (i.e. systems having more point than equations). Over-determined systems\n * are solved by ignoring the point which have the smallest impact according\n * to their jacobian column norm. Only the rank of the matrix and some loop bounds\n * are changed to implement this.</p>\n *\n * <p>The resolution engine is a simple translation of the MINPACK <a\n * href=\"http://www.netlib.org/minpack/lmder.f\">lmder</a> routine with minor\n * changes. The changes include the over-determined resolution, the use of\n * inherited convergence checker and the Q.R. decomposition which has been\n * rewritten following the algorithm described in the\n * P. Lascaux and R. Theodor book <i>Analyse num&eacute;rique matricielle\n * appliqu&eacute;e &agrave; l'art de l'ing&eacute;nieur</i>, Masson 1986.</p>\n * <p>The authors of the original fortran version are:\n * <ul>\n * <li>Argonne National Laboratory. MINPACK project. March 1980</li>\n * <li>Burton S. Garbow</li>\n * <li>Kenneth E. Hillstrom</li>\n * <li>Jorge J. More</li>\n * </ul>\n * The redistribution policy for MINPACK is available <a\n * href=\"http://www.netlib.org/minpack/disclaimer\">here</a>, for convenience, it\n * is reproduced below.</p>\n *\n * <table border=\"0\" width=\"80%\" cellpadding=\"10\" align=\"center\" bgcolor=\"#E0E0E0\">\n * <tr><td>\n *    Minpack Copyright Notice (1999) University of Chicago.\n *    All rights reserved\n * </td></tr>\n * <tr><td>\n * Redistribution and use in source and binary forms, with or without\n * modification, are permitted provided that the following conditions\n * are met:\n * <ol>\n *  <li>Redistributions of source code must retain the above copyright\n *      notice, this list of conditions and the following disclaimer.</li>\n * <li>Redistributions in binary form must reproduce the above\n *     copyright notice, this list of conditions and the following\n *     disclaimer in the documentation and/or other materials provided\n *     with the distribution.</li>\n * <li>The end-user documentation included with the redistribution, if any,\n *     must include the following acknowledgment:\n *     <code>This product includes software developed by the University of\n *           Chicago, as Operator of Argonne National Laboratory.</code>\n *     Alternately, this acknowledgment may appear in the software itself,\n *     if and wherever such third-party acknowledgments normally appear.</li>\n * <li><strong>WARRANTY DISCLAIMER. THE SOFTWARE IS SUPPLIED \"AS IS\"\n *     WITHOUT WARRANTY OF ANY KIND. THE COPYRIGHT HOLDER, THE\n *     UNITED STATES, THE UNITED STATES DEPARTMENT OF ENERGY, AND\n *     THEIR EMPLOYEES: (1) DISCLAIM ANY WARRANTIES, EXPRESS OR\n *     IMPLIED, INCLUDING BUT NOT LIMITED TO ANY IMPLIED WARRANTIES\n *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE\n *     OR NON-INFRINGEMENT, (2) DO NOT ASSUME ANY LEGAL LIABILITY\n *     OR RESPONSIBILITY FOR THE ACCURACY, COMPLETENESS, OR\n *     USEFULNESS OF THE SOFTWARE, (3) DO NOT REPRESENT THAT USE OF\n *     THE SOFTWARE WOULD NOT INFRINGE PRIVATELY OWNED RIGHTS, (4)\n *     DO NOT WARRANT THAT THE SOFTWARE WILL FUNCTION\n *     UNINTERRUPTED, THAT IT IS ERROR-FREE OR THAT ANY ERRORS WILL\n *     BE CORRECTED.</strong></li>\n * <li><strong>LIMITATION OF LIABILITY. IN NO EVENT WILL THE COPYRIGHT\n *     HOLDER, THE UNITED STATES, THE UNITED STATES DEPARTMENT OF\n *     ENERGY, OR THEIR EMPLOYEES: BE LIABLE FOR ANY INDIRECT,\n *     INCIDENTAL, CONSEQUENTIAL, SPECIAL OR PUNITIVE DAMAGES OF\n *     ANY KIND OR NATURE, INCLUDING BUT NOT LIMITED TO LOSS OF\n *     PROFITS OR LOSS OF DATA, FOR ANY REASON WHATSOEVER, WHETHER\n *     SUCH LIABILITY IS ASSERTED ON THE BASIS OF CONTRACT, TORT\n *     (INCLUDING NEGLIGENCE OR STRICT LIABILITY), OR OTHERWISE,\n *     EVEN IF ANY OF SAID PARTIES HAS BEEN WARNED OF THE\n *     POSSIBILITY OF SUCH LOSS OR DAMAGES.</strong></li>\n * <ol></td></tr>\n * </table>\n * @version $Revision$ $Date$\n * @since 2.0\n *\n */\npublic",
+  "method_javadoc": "/**\n     * Build an optimizer for least squares problems.\n     * <p>The default values for the algorithm settings are:\n     *   <ul>\n     *    <li>{@link #setConvergenceChecker vectorial convergence checker}: null</li>\n     *    <li>{@link #setInitialStepBoundFactor initial step bound factor}: 100.0</li>\n     *    <li>{@link #setMaxIterations maximal iterations}: 1000</li>\n     *    <li>{@link #setCostRelativeTolerance cost relative tolerance}: 1.0e-10</li>\n     *    <li>{@link #setParRelativeTolerance parameters relative tolerance}: 1.0e-10</li>\n     *    <li>{@link #setOrthoTolerance orthogonality tolerance}: 1.0e-10</li>\n     *   </ul>\n     * </p>\n     * <p>These default values may be overridden after construction. If the {@link\n     * #setConvergenceChecker vectorial convergence checker} is set to a non-null value, it\n     * will be used instead of the {@link #setCostRelativeTolerance cost relative tolerance}\n     * and {@link #setParRelativeTolerance parameters relative tolerance} settings.\n     */"
+ },
+ "fields": [
+  "private int solvedCols",
+  "private double[] diagR",
+  "private double[] jacNorm",
+  "private double[] beta",
+  "private int[] permutation",
+  "private int rank",
+  "private double lmPar",
+  "private double[] lmDir",
+  "private double initialStepBoundFactor",
+  "private double costRelativeTolerance",
+  "private double parRelativeTolerance",
+  "private double orthoTolerance"
+ ],
+ "focal_class": "org.apache.commons.math.optimization.general.LevenbergMarquardtOptimizer",
+ "focal_id": "Math_68::org.apache.commons.math.optimization.general.LevenbergMarquardtOptimizer::LevenbergMarquardtOptimizer()",
+ "focal_method_name": "LevenbergMarquardtOptimizer",
+ "generations": 3,
+ "impl_B": "public LevenbergMarquardtOptimizer() {\n\n        // set up the superclass with a default  max cost evaluations setting\n        setMaxIterations(1000);\n\n        // default values for the tuning parameters\n        setInitialStepBoundFactor(100.0);\n        setCostRelativeTolerance(1.0e-10);\n        setParRelativeTolerance(1.0e-10);\n        setOrthoTolerance(1.0e-10);\n\n    }",
+ "imports": [
+  "java.util.Arrays",
+  "org.apache.commons.math.FunctionEvaluationException",
+  "org.apache.commons.math.optimization.OptimizationException",
+  "org.apache.commons.math.optimization.VectorialPointValuePair"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math.optimization.general",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Set the positive input variable used in determining the initial step bound.\n     * This bound is set to the product of initialStepBoundFactor and the euclidean\n     * norm of diag*x if nonzero, or else to initialStepBoundFactor itself. In most\n     * cases factor should lie in the interval (0.1, 100.0). 100.0 is a generally\n     * recommended value.\n     *\n     * @param initialStepBoundFactor initial step bound factor\n     */",
+   "name": "setInitialStepBoundFactor"
+  },
+  {
+   "javadoc": "/**\n     * Set the desired relative error in the sum of squares.\n     * <p>This setting is used only if the {@link #setConvergenceChecker vectorial\n     * convergence checker} is set to null.</p>\n     * @param costRelativeTolerance desired relative error in the sum of squares\n     */",
+   "name": "setCostRelativeTolerance"
+  },
+  {
+   "javadoc": "/**\n     * Set the desired relative error in the approximate solution parameters.\n     * <p>This setting is used only if the {@link #setConvergenceChecker vectorial\n     * convergence checker} is set to null.</p>\n     * @param parRelativeTolerance desired relative error\n     * in the approximate solution parameters\n     */",
+   "name": "setParRelativeTolerance"
+  },
+  {
+   "javadoc": "/**\n     * Set the desired max cosine on the orthogonality.\n     * <p>This setting is always used, regardless of the {@link #setConvergenceChecker\n     * vectorial convergence checker} being null or non-null.</p>\n     * @param orthoTolerance desired max cosine on the orthogonality\n     * between the function vector and the columns of the jacobian\n     */",
+   "name": "setOrthoTolerance"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "doOptimize"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class LevenbergMarquardtOptimizer extends AbstractLeastSquaresOptimizer",
+  "constructors": [
+   "public LevenbergMarquardtOptimizer();"
+  ],
+  "focal_signature": "public LevenbergMarquardtOptimizer()",
+  "methods": [
+   "public void setInitialStepBoundFactor(double initialStepBoundFactor);",
+   "public void setCostRelativeTolerance(double costRelativeTolerance);",
+   "public void setParRelativeTolerance(double parRelativeTolerance);",
+   "public void setOrthoTolerance(double orthoTolerance);",
+   "protected VectorialPointValuePair doOptimize() throws FunctionEvaluationException, OptimizationException, IllegalArgumentException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

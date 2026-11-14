@@ -1,0 +1,145 @@
+{
+  "bug_name": "Mockito_24",
+  "call_sites": [
+    {
+      "line": 66,
+      "lines": [
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71
+      ],
+      "path": "src/org/mockito/Mock.java",
+      "snippet": "@Target(FIELD)\n@Retention(RUNTIME)\n@Documented\npublic @interface Mock {\n\n    Answers answer() default Answers.RETURNS_DEFAULTS;\n\n    String name() default \"\";\n\n    Class<?>[] extraInterfaces() default {};\n    "
+    },
+    {
+      "line": 32,
+      "lines": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36
+      ],
+      "path": "src/org/mockito/internal/configuration/MockAnnotationProcessor.java",
+      "snippet": "        if(annotation.serializable()){\n        \tmockSettings.serializable();\n        }\n\n        // see @Mock answer default value\n        mockSettings.defaultAnswer(annotation.answer().get());\n        return Mockito.mock(field.getType(), mockSettings);\n    }\n}\n"
+    },
+    {
+      "line": 91,
+      "lines": [
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96
+      ],
+      "path": "src/org/mockito/internal/handler/MockHandlerImpl.java",
+      "snippet": "        // look for existing answer for this invocation\n        StubbedInvocationMatcher stubbedInvocation = invocationContainerImpl.findAnswerFor(invocation);\n\n        if (stubbedInvocation != null) {\n            stubbedInvocation.captureArgumentsFrom(invocation);\n            return stubbedInvocation.answer(invocation);\n        } else {\n             Object ret = mockSettings.getDefaultAnswer().answer(invocation);\n\n            // redo setting invocation for potential stubbing in case of partial\n            // mocks / spies."
+    },
+    {
+      "line": 93,
+      "lines": [
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98
+      ],
+      "path": "src/org/mockito/internal/handler/MockHandlerImpl.java",
+      "snippet": "\n        if (stubbedInvocation != null) {\n            stubbedInvocation.captureArgumentsFrom(invocation);\n            return stubbedInvocation.answer(invocation);\n        } else {\n             Object ret = mockSettings.getDefaultAnswer().answer(invocation);\n\n            // redo setting invocation for potential stubbing in case of partial\n            // mocks / spies.\n            // Without it, the real method inside 'when' might have delegated\n            // to other self method and overwrite the intended stubbed method"
+    },
+    {
+      "line": 73,
+      "lines": [
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78
+      ],
+      "path": "src/org/mockito/internal/stubbing/InvocationContainerImpl.java",
+      "snippet": "            }\n        }\n    }\n\n    Object answerTo(Invocation invocation) throws Throwable {\n        return findAnswerFor(invocation).answer(invocation);\n    }\n\n    public StubbedInvocationMatcher findAnswerFor(Invocation invocation) {\n        synchronized (stubbed) {\n            for (StubbedInvocationMatcher s : stubbed) {"
+    }
+  ],
+  "class_simple": "ReturnsEmptyValues",
+  "doc": {
+    "class_javadoc": "/**\n * Default answer of every Mockito mock.\n * <ul>\n * <li>\n *  Returns appropriate primitive for primitive-returning methods\n * </li>\n * <li>\n *  Returns consistent values for primitive wrapper classes (e.g. int-returning method retuns 0 <b>and</b> Integer-returning method returns 0, too)\n * </li>\n * <li>\n *  Returns empty collection for collection-returning methods (works for most commonly used collection types)\n * </li>\n * <li>\n *  Returns description of mock for toString() method\n * </li>\n * <li>\n *  Returns zero if references are equals otherwise non-zero for Comparable#compareTo(T other) method (see issue 184)\n * </li>\n * <li>\n *  Returns null for everything else\n * </li>\n * </ul>\n */\npublic",
+    "method_javadoc": ""
+  },
+  "fields": [
+    "private static final long serialVersionUID",
+    "ObjectMethodsGuru methodsGuru",
+    "MockUtil mockUtil"
+  ],
+  "focal_class": "org.mockito.internal.stubbing.defaultanswers.ReturnsEmptyValues",
+  "focal_id": "Mockito_24::org.mockito.internal.stubbing.defaultanswers.ReturnsEmptyValues::answer(InvocationOnMock)",
+  "focal_method_name": "answer",
+  "impl_B": "public Object answer(InvocationOnMock invocation) {\n        if (methodsGuru.isToString(invocation.getMethod())) {\n            Object mock = invocation.getMock();\n            MockName name = mockUtil.getMockName(mock);\n            if (name.isDefault()) {\n                return \"Mock for \" + mockUtil.getMockSettings(mock).getTypeToMock().getSimpleName() + \", hashCode: \" + mock.hashCode();\n            } else {\n                return name.toString();\n            }\n        } else if (methodsGuru.isCompareToMethod(invocation.getMethod())) {\n            //see issue 184.\n            //mocks by default should return 0 if references are the same, otherwise some other value because they are not the same. Hence we return 1 (anything but 0 is good).\n            //Only for compareTo() method by the Comparable interface\n            return 1;\n        }\n        \n        Class<?> returnType = invocation.getMethod().getReturnType();\n        return returnValueFor(returnType);\n    }",
+  "imports": [
+    "org.mockito.internal.util.MockUtil",
+    "org.mockito.internal.util.ObjectMethodsGuru",
+    "org.mockito.internal.util.Primitives",
+    "org.mockito.invocation.InvocationOnMock",
+    "org.mockito.mock.MockName",
+    "org.mockito.stubbing.Answer",
+    "java.io.Serializable",
+    "java.util.ArrayList",
+    "java.util.Collection",
+    "java.util.HashMap",
+    "java.util.HashSet",
+    "java.util.LinkedHashMap",
+    "java.util.LinkedHashSet",
+    "java.util.LinkedList",
+    "java.util.List",
+    "java.util.Map",
+    "java.util.Set",
+    "java.util.SortedMap",
+    "java.util.SortedSet",
+    "java.util.TreeMap",
+    "java.util.TreeSet"
+  ],
+  "javadoc_edited_by_fix": false,
+  "package": "org.mockito.internal.stubbing.defaultanswers",
+  "project": "Mockito",
+  "siblings": [],
+  "sig": {
+    "class_declaration": "public class ReturnsEmptyValues implements Answer<Object>, Serializable",
+    "constructors": [],
+    "focal_signature": "public Object answer(InvocationOnMock invocation)",
+    "methods": [],
+    "type_signatures": [
+      "public interface InvocationOnMock extends Serializable {  }"
+    ]
+  },
+  "split": "test"
+}

@@ -1,0 +1,14 @@
+{
+  "assembled": true,
+  "call_key": "c9955ed033a09c8959aa10034f10ef44d35b53cc60eccea8c83bc994cde7956a",
+  "candidate_id": "db97116b6fa7bbf924ed",
+  "class_name": "MathUtils_factorialLog_TriageGen0Test",
+  "dataset": "D1C_CTRL",
+  "focal_id": "Math_92::org.apache.commons.math.util.MathUtils::factorialLog(int)",
+  "generation": 0,
+  "model_returned": "gemma4:26b",
+  "n_tests": 7,
+  "package": "org.apache.commons.math.util",
+  "source": "package org.apache.commons.math.util;\n\nimport java.io.*;\nimport java.math.*;\nimport java.math.BigDecimal;\nimport java.util.*;\nimport java.util.Arrays;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\npublic class MathUtils_factorialLog_TriageGen0Test {\n\n    private static final double DELTA = 1e-12;\n\n    @Test(expected = IllegalArgumentException.class)\n    public void testFactorialLog_NegativeN() {\n        MathUtils.factorialLog(-1);\n    }\n\n    @Test\n    public void testFactorialLog_Zero() {\n        // factorial(0) is 1, log(1) is 0.0\n        assertEquals(0.0, MathUtils.factorialLog(0), DELTA);\n    }\n\n    @Test\n    public void testFactorialLog_One() {\n        // factorial(1) is 1, log(1) is 0.0\n        assertEquals(0.0, MathUtils.factorialLog(1), DELTA);\n    }\n\n    @Test\n    public void testFactorialLog_SmallN() {\n        // n < 21 branch: uses Math.log(factorial(n))\n        // n = 5: factorial(5) = 120, log(120) approx 4.787491742782\n        double expected = Math.log(120.0);\n        assertEquals(expected, MathUtils.factorialLog(5), DELTA);\n    }\n\n    @Test\n    public void testFactorialLog_BoundarySmallN() {\n        // n = 20: boundary for the first if condition (n < 21)\n        double expected = Math.log(MathUtils.factorial(20));\n        assertEquals(expected, MathUtils.factorialLog(20), DELTA);\n    }\n\n    @Test\n    public void testFactorialLog_LargeN() {\n        // n >= 21 branch: uses loop sum of logs\n        // n = 21: log(21!) = log(1) + log(2) + ... + log(21)\n        double expectedLogSum = 0;\n        for (int i = 2; i <= 21; i++) {\n            expectedLogSum += Math.log((double) i);\n        }\n        assertEquals(expectedLogSum, MathUtils.factorialLog(21), DELTA);\n    }\n\n    @Test\n    public void testFactorialLog_VeryLargeN() {\n        // Test higher value to ensure loop works correctly\n        int n = 50;\n        double expectedLogSum = 0;\n        for (int i = 2; i <= n; i++) {\n            expectedLogSum += Math.log((double) i);\n        }\n        assertEquals(expectedLogSum, MathUtils.factorialLog(n), DELTA);\n    }\n}\n",
+  "tranche": "CTRL"
+}

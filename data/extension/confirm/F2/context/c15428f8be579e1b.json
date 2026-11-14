@@ -1,0 +1,46 @@
+{
+ "bug_name": "Mockito_30",
+ "call_sites": [],
+ "class_simple": "ThrowingInterceptor",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Optional Answer that can be used with\n * {@link Mockito#mock(Class, Answer)}\n * <p>\n * This implementation can be helpful when working with legacy code. Unstubbed\n * methods often return null. If your code uses the object returned by an\n * unstubbed call you get a NullPointerException. This implementation of\n * Answer returns SmartNulls instead of nulls.\n * SmartNull gives nicer exception message than NPE because it points out the\n * line where unstubbed method was called. You just click on the stack trace.\n * <p>\n * ReturnsSmartNulls first tries to return ordinary return values (see\n * {@link ReturnsMoreEmptyValues}) then it tries to return SmartNull. If the\n * return type is not mockable (e.g. final) then ordinary null is returned.\n * <p>\n * ReturnsSmartNulls will be probably the default return values strategy in\n * Mockito 2.0\n */\npublic class ReturnsSmartNulls implements Answer<Object>, Serializable {\n\n    private static final long serialVersionUID = 7618312406617949441L;\n\n    private final",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private final InvocationOnMock invocation",
+  "private final Location location"
+ ],
+ "focal_class": "org.mockito.internal.stubbing.defaultanswers.ReturnsSmartNulls.ThrowingInterceptor",
+ "focal_id": "Mockito_30::org.mockito.internal.stubbing.defaultanswers.ReturnsSmartNulls$ThrowingInterceptor::intercept(Object,Method,Object[],MethodProxy)",
+ "focal_method_name": "intercept",
+ "generations": 3,
+ "impl_B": "public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {\n            if (new ObjectMethodsGuru().isToString(method)) {\n                return \"SmartNull returned by unstubbed \" + formatMethodCall()  + \" method on mock\";\n            }\n\n            new Reporter().smartNullPointerException(location);\n            return null;\n        }",
+ "imports": [
+  "java.io.Serializable",
+  "java.lang.reflect.Method",
+  "java.util.Arrays",
+  "org.mockito.Mockito",
+  "org.mockito.cglib.proxy.MethodInterceptor",
+  "org.mockito.cglib.proxy.MethodProxy",
+  "org.mockito.exceptions.Reporter",
+  "org.mockito.internal.creation.jmock.ClassImposterizer",
+  "org.mockito.internal.debugging.Location",
+  "org.mockito.internal.util.ObjectMethodsGuru",
+  "org.mockito.invocation.InvocationOnMock",
+  "org.mockito.stubbing.Answer"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.mockito.internal.stubbing.defaultanswers",
+ "project": "Mockito",
+ "siblings": [],
+ "sig": {
+  "class_declaration": "private final class ThrowingInterceptor implements MethodInterceptor",
+  "constructors": [],
+  "focal_signature": "public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable",
+  "methods": [],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

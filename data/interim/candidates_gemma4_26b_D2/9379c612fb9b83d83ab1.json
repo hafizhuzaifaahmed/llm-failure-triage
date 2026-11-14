@@ -1,0 +1,13 @@
+{
+  "assembled": true,
+  "call_key": "f24de26d8bd3d969b3b66b5a17637446fad5f2c683ccda5b2959398dd734d40c",
+  "candidate_id": "9379c612fb9b83d83ab1",
+  "class_name": "TarArchiveOutputStream_finish_TriageGen0Test",
+  "dataset": "D2",
+  "focal_id": "Compress_3::org.apache.commons.compress.archivers.tar.TarArchiveOutputStream::finish()#m8",
+  "generation": 0,
+  "model_returned": "gemma4:26b",
+  "n_tests": 1,
+  "package": "org.apache.commons.compress.archivers.tar",
+  "source": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.File;\nimport java.io.IOException;\nimport java.io.OutputStream;\nimport java.math.*;\nimport java.util.*;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveOutputStream;\nimport org.apache.commons.compress.utils.BytesIOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for TarArchiveOutputStream#finish()\n */\npublic class TarArchiveOutputStream_finish_TriageGen0Test {\n\n    @Test\n    public void testFinishThrowsIOException() throws IOException {\n        // Since the provided implementation of finish() has a hardcoded 'if(true)' \n        // that throws an IOException, this test verifies that behavior.\n        \n        OutputStream os = BytesIOUtils.bufferOutputStream(new java.io.ByteArrayOutputStream());\n        TarArchiveOutputStream tarOut = new TarArchiveOutputStream(os);\n        \n        try {\n            tarOut.finish();\n            Assert.fail(\"Expected IOException to be thrown due to hardcoded if(true) condition\");\n        } catch (IOException e) {\n            Assert.assertEquals(\"This archives contains unclosed entries.\", e.getMessage());\n        } finally {\n            tarOut.close();\n        }\n    }\n\n    /**\n     * Note: Given the source code provided:\n     * if(true) {\n     *     throw new IOException(\"This archives contains unclosed entries.\");\n     * }\n     * writeEOFRecord();\n     * writeEOFRecord();\n     * \n     * The lines containing writeEOFRecord() are unreachable. \n     * Therefore, branch and line coverage for those lines cannot be achieved \n     * with the current logic. The test above covers all reachable code.\n     */\n}\n"
+}

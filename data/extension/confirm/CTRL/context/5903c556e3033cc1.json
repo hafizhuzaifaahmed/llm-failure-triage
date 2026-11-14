@@ -1,0 +1,207 @@
+{
+ "bug_name": "Time_24",
+ "call_sites": [
+  {
+   "line": 2710,
+   "lines": [
+    2705,
+    2706,
+    2707,
+    2708,
+    2709,
+    2710,
+    2711,
+    2712,
+    2713,
+    2714,
+    2715
+   ],
+   "path": "src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java",
+   "snippet": "                        if (parsePos > bestInvalidPos) {\n                            bestInvalidPos = parsePos;\n                        }\n                    }\n                }\n                bucket.restoreState(originalState);\n            }\n\n            if (bestValidPos > position || (bestValidPos == position && isOptional)) {\n                // Restore the state to the best valid parse.\n                if (bestValidState != null) {"
+  },
+  {
+   "line": 2716,
+   "lines": [
+    2711,
+    2712,
+    2713,
+    2714,
+    2715,
+    2716,
+    2717,
+    2718,
+    2719,
+    2720,
+    2721
+   ],
+   "path": "src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java",
+   "snippet": "            }\n\n            if (bestValidPos > position || (bestValidPos == position && isOptional)) {\n                // Restore the state to the best valid parse.\n                if (bestValidState != null) {\n                    bucket.restoreState(bestValidState);\n                }\n                return bestValidPos;\n            }\n\n            return ~bestInvalidPos;"
+  },
+  {
+   "line": 290,
+   "lines": [
+    285,
+    286,
+    287,
+    288,
+    289,
+    290,
+    291,
+    292,
+    293,
+    294,
+    295
+   ],
+   "path": "src/main/java/org/joda/time/format/DateTimeParserBucket.java",
+   "snippet": "     * @param savedState opaque saved state, returned from saveState\n     * @return true state object is valid and state restored\n     */\n    public boolean restoreState(Object savedState) {\n        if (savedState instanceof SavedState) {\n            if (((SavedState) savedState).restoreState(this)) {\n                iSavedState = savedState;\n                return true;\n            }\n        }\n        return false;"
+  },
+  {
+   "line": 425,
+   "lines": [
+    420,
+    421,
+    422,
+    423,
+    424,
+    425,
+    426,
+    427,
+    428,
+    429,
+    430
+   ],
+   "path": "src/main/java/org/joda/time/format/DateTimeParserBucket.java",
+   "snippet": "            this.iOffset = DateTimeParserBucket.this.iOffset;\n            this.iSavedFields = DateTimeParserBucket.this.iSavedFields;\n            this.iSavedFieldsCount = DateTimeParserBucket.this.iSavedFieldsCount;\n        }\n        \n        boolean restoreState(DateTimeParserBucket enclosing) {\n            if (enclosing != DateTimeParserBucket.this) {\n                return false;\n            }\n            enclosing.iZone = this.iZone;\n            enclosing.iOffset = this.iOffset;"
+  }
+ ],
+ "class_simple": "DateTimeParserBucket",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * DateTimeParserBucket is an advanced class, intended mainly for parser\n * implementations. It can also be used during normal parsing operations to\n * capture more information about the parse.\n * <p>\n * This class allows fields to be saved in any order, but be physically set in\n * a consistent order. This is useful for parsing against formats that allow\n * field values to contradict each other.\n * <p>\n * Field values are applied in an order where the \"larger\" fields are set\n * first, making their value less likely to stick.  A field is larger than\n * another when it's range duration is longer. If both ranges are the same,\n * then the larger field has the longer duration. If it cannot be determined\n * which field is larger, then the fields are set in the order they were saved.\n * <p>\n * For example, these fields were saved in this order: dayOfWeek, monthOfYear,\n * dayOfMonth, dayOfYear. When computeMillis is called, the fields are set in\n * this order: monthOfYear, dayOfYear, dayOfMonth, dayOfWeek.\n * <p>\n * DateTimeParserBucket is mutable and not thread-safe.\n *\n * @author Brian S O'Neill\n * @author Fredrik Borgh\n * @since 1.0\n */\npublic",
+  "method_javadoc": "/**\n     * Restores the state of this bucket from a previously saved state. The\n     * state object passed into this method is not consumed, and it can be used\n     * later to restore to that state again.\n     *\n     * @param savedState opaque saved state, returned from saveState\n     * @return true state object is valid and state restored\n     */"
+ },
+ "fields": [
+  "private final Chronology iChrono",
+  "private final long iMillis",
+  "private DateTimeZone iZone",
+  "private int iOffset",
+  "private Locale iLocale",
+  "private Integer iPivotYear",
+  "private int iDefaultYear",
+  "private SavedField[] iSavedFields",
+  "private int iSavedFieldsCount",
+  "private boolean iSavedFieldsShared",
+  "private Object iSavedState"
+ ],
+ "focal_class": "org.joda.time.format.DateTimeParserBucket",
+ "focal_id": "Time_24::org.joda.time.format.DateTimeParserBucket::restoreState(Object)",
+ "focal_method_name": "restoreState",
+ "generations": 3,
+ "impl_B": "public boolean restoreState(Object savedState) {\n        if (savedState instanceof SavedState) {\n            if (((SavedState) savedState).restoreState(this)) {\n                iSavedState = savedState;\n                return true;\n            }\n        }\n        return false;\n    }",
+ "imports": [
+  "java.util.Arrays",
+  "java.util.Locale",
+  "org.joda.time.Chronology",
+  "org.joda.time.DateTimeField",
+  "org.joda.time.DateTimeFieldType",
+  "org.joda.time.DateTimeUtils",
+  "org.joda.time.DateTimeZone",
+  "org.joda.time.DurationField",
+  "org.joda.time.DurationFieldType",
+  "org.joda.time.IllegalFieldValueException"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.joda.time.format",
+ "project": "Time",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Gets the chronology of the bucket, which will be a local (UTC) chronology.\n     */",
+   "name": "getChronology"
+  },
+  {
+   "javadoc": "/**\n     * Returns the locale to be used during parsing.\n     * \n     * @return the locale to use\n     */",
+   "name": "getLocale"
+  },
+  {
+   "javadoc": "/**\n     * Returns the time zone used by computeMillis, or null if an offset is\n     * used instead.\n     */",
+   "name": "getZone"
+  },
+  {
+   "javadoc": "/**\n     * Set a time zone to be used when computeMillis is called, which\n     * overrides any set time zone offset.\n     *\n     * @param zone the date time zone to operate in, or null if UTC\n     */",
+   "name": "setZone"
+  },
+  {
+   "javadoc": "/**\n     * Returns the time zone offset in milliseconds used by computeMillis,\n     * unless getZone doesn't return null.\n     */",
+   "name": "getOffset"
+  },
+  {
+   "javadoc": "/**\n     * Set a time zone offset to be used when computeMillis is called, which\n     * overrides the time zone.\n     */",
+   "name": "setOffset"
+  },
+  {
+   "javadoc": "/**\n     * Returns the default year used when information is incomplete.\n     * <p>\n     * This is used for two-digit years and when the largest parsed field is\n     * months or days.\n     * <p>\n     * A null value for two-digit years means to use the value from DateTimeFormatterBuilder.\n     * A null value for month/day only parsing will cause the default of 2000 to be used.\n     *\n     * @return Integer value of the pivot year, null if not set\n     * @since 1.1\n     */",
+   "name": "getPivotYear"
+  },
+  {
+   "javadoc": "/**\n     * Sets the pivot year to use when parsing two digit years.\n     * <p>\n     * If the value is set to null, this will indicate that default\n     * behaviour should be used.\n     *\n     * @param pivotYear  the pivot year to use\n     * @since 1.1\n     */",
+   "name": "setPivotYear"
+  },
+  {
+   "javadoc": "/**\n     * Saves a datetime field value.\n     * \n     * @param field  the field, whose chronology must match that of this bucket\n     * @param value  the value\n     */",
+   "name": "saveField"
+  },
+  {
+   "javadoc": "/**\n     * Saves a datetime field value.\n     * \n     * @param fieldType  the field type\n     * @param value  the value\n     */",
+   "name": "saveField"
+  },
+  {
+   "javadoc": "/**\n     * Saves a datetime field text value.\n     * \n     * @param fieldType  the field type\n     * @param text  the text value\n     * @param locale  the locale to use\n     */",
+   "name": "saveField"
+  },
+  {
+   "javadoc": "/**\n     * Saves the state of this bucket, returning it in an opaque object. Call\n     * restoreState to undo any changes that were made since the state was\n     * saved. Calls to saveState may be nested.\n     *\n     * @return opaque saved state, which may be passed to restoreState\n     */",
+   "name": "saveState"
+  },
+  {
+   "javadoc": "/**\n     * Computes the parsed datetime by setting the saved fields.\n     * This method is idempotent, but it is not thread-safe.\n     *\n     * @return milliseconds since 1970-01-01T00:00:00Z\n     * @throws IllegalArgumentException if any field is out of range\n     */",
+   "name": "computeMillis"
+  },
+  {
+   "javadoc": "/**\n     * Computes the parsed datetime by setting the saved fields.\n     * This method is idempotent, but it is not thread-safe.\n     *\n     * @param resetFields false by default, but when true, unsaved field values are cleared\n     * @return milliseconds since 1970-01-01T00:00:00Z\n     * @throws IllegalArgumentException if any field is out of range\n     */",
+   "name": "computeMillis"
+  },
+  {
+   "javadoc": "/**\n     * Computes the parsed datetime by setting the saved fields.\n     * This method is idempotent, but it is not thread-safe.\n     *\n     * @param resetFields false by default, but when true, unsaved field values are cleared\n     * @param text optional text being parsed, to be included in any error message\n     * @return milliseconds since 1970-01-01T00:00:00Z\n     * @throws IllegalArgumentException if any field is out of range\n     * @since 1.3\n     */",
+   "name": "computeMillis"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class DateTimeParserBucket",
+  "constructors": [
+   "public DateTimeParserBucket(long instantLocal, Chronology chrono, Locale locale);",
+   "public DateTimeParserBucket(long instantLocal, Chronology chrono, Locale locale, Integer pivotYear);",
+   "public DateTimeParserBucket(long instantLocal, Chronology chrono, Locale locale, Integer pivotYear, int defaultYear);"
+  ],
+  "focal_signature": "public boolean restoreState(Object savedState)",
+  "methods": [
+   "public Chronology getChronology();",
+   "public Locale getLocale();",
+   "public DateTimeZone getZone();",
+   "public void setZone(DateTimeZone zone);",
+   "public int getOffset();",
+   "public void setOffset(int offset);",
+   "public Integer getPivotYear();",
+   "public void setPivotYear(Integer pivotYear);",
+   "public void saveField(DateTimeField field, int value);",
+   "public void saveField(DateTimeFieldType fieldType, int value);",
+   "public void saveField(DateTimeFieldType fieldType, String text, Locale locale);",
+   "public Object saveState();",
+   "public long computeMillis();",
+   "public long computeMillis(boolean resetFields);",
+   "public long computeMillis(boolean resetFields, String text);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

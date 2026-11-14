@@ -1,0 +1,507 @@
+{
+ "bug_name": "JacksonDatabind_21",
+ "call_sites": [
+  {
+   "line": 1803,
+   "lines": [
+    1798,
+    1799,
+    1800,
+    1801,
+    1802,
+    1803,
+    1804,
+    1805,
+    1806,
+    1807,
+    1808
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java",
+   "snippet": "               }\n           }\n           // ... as well as deserializer for contents:\n           JavaType contentType = type.getContentType();\n           if (contentType.getValueHandler() == null) { // as with above, avoid resetting (which would trigger exception)\n               Object cdDef = intr.findContentDeserializer(a);\n                JsonDeserializer<?> cd = ctxt.deserializerInstance(a, cdDef);\n                if (cd != null) {\n                    type = (T) type.withContentValueHandler(cd);\n                }\n            }"
+  },
+  {
+   "line": 1837,
+   "lines": [
+    1832,
+    1833,
+    1834,
+    1835,
+    1836,
+    1837,
+    1838,
+    1839,
+    1840,
+    1841,
+    1842
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java",
+   "snippet": "                    type = ((MapLikeType) type).withKeyValueHandler(kd);\n                    keyType = type.getKeyType(); // just in case it's used below\n                }\n            }\n            // and all container types have content types...\n            Object cdDef = intr.findContentDeserializer(member);\n            JsonDeserializer<?> cd = ctxt.deserializerInstance(member, cdDef);\n            if (cd != null) {\n                type = type.withContentValueHandler(cd);\n            }\n            /* 04-Feb-2010, tatu: Need to figure out JAXB annotations that indicate type"
+  },
+  {
+   "line": 525,
+   "lines": [
+    520,
+    521,
+    522,
+    523,
+    524,
+    525,
+    526,
+    527,
+    528,
+    529,
+    530
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/DeserializerCache.java",
+   "snippet": "                }\n            }\n            // ... as well as deserializer for contents:\n            JavaType contentType = type.getContentType();\n            if (contentType.getValueHandler() == null) { // as with above, avoid resetting (which would trigger exception)\n                Object cdDef = intr.findContentDeserializer(a);\n                if (cdDef != null) {\n                    JsonDeserializer<?> cd = null;\n                    if (cdDef instanceof JsonDeserializer<?>) {\n                        cdDef = (JsonDeserializer<?>) cdDef;\n                    } else {"
+  },
+  {
+   "line": 552,
+   "lines": [
+    547,
+    548,
+    549,
+    550,
+    551,
+    552,
+    553,
+    554,
+    555,
+    556,
+    557
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/introspect/AnnotationIntrospectorPair.java",
+   "snippet": "                ? r : _secondary.findKeyDeserializer(am);\n    }\n\n    @Override\n    public Object findContentDeserializer(Annotated am) {\n        Object r = _primary.findContentDeserializer(am);\n        return _isExplicitClassOrOb(r, JsonDeserializer.None.class)\n                ? r : _secondary.findContentDeserializer(am);\n    }\n    \n    @Override"
+  },
+  {
+   "line": 554,
+   "lines": [
+    549,
+    550,
+    551,
+    552,
+    553,
+    554,
+    555,
+    556,
+    557,
+    558,
+    559
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/introspect/AnnotationIntrospectorPair.java",
+   "snippet": "\n    @Override\n    public Object findContentDeserializer(Annotated am) {\n        Object r = _primary.findContentDeserializer(am);\n        return _isExplicitClassOrOb(r, JsonDeserializer.None.class)\n                ? r : _secondary.findContentDeserializer(am);\n    }\n    \n    @Override\n    public Class<?> findDeserializationType(Annotated am, JavaType baseType) {\n        Class<?> r = _primary.findDeserializationType(am, baseType);"
+  }
+ ],
+ "class_simple": "JacksonAnnotationIntrospector",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * {@link AnnotationIntrospector} implementation that handles standard\n * Jackson annotations.\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector",
+ "focal_id": "JacksonDatabind_21::com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector::findContentDeserializer(Annotated)",
+ "focal_method_name": "findContentDeserializer",
+ "generations": 3,
+ "impl_B": "@Override\n    public Object findContentDeserializer(Annotated a)\n    {\n        JsonDeserialize ann = _findAnnotation(a, JsonDeserialize.class);\n        if (ann != null) {\n            @SuppressWarnings(\"rawtypes\")\n            Class<? extends JsonDeserializer> deserClass = ann.contentUsing();\n            if (deserClass != JsonDeserializer.None.class) {\n                return deserClass;\n            }\n        }\n        return null;\n    }",
+ "imports": [
+  "java.lang.annotation.Annotation",
+  "java.util.*",
+  "com.fasterxml.jackson.annotation.*",
+  "com.fasterxml.jackson.core.Version",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.annotation.*",
+  "com.fasterxml.jackson.databind.cfg.HandlerInstantiator",
+  "com.fasterxml.jackson.databind.cfg.MapperConfig",
+  "com.fasterxml.jackson.databind.jsontype.NamedType",
+  "com.fasterxml.jackson.databind.jsontype.TypeIdResolver",
+  "com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder",
+  "com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder",
+  "com.fasterxml.jackson.databind.ser.BeanPropertyWriter",
+  "com.fasterxml.jackson.databind.ser.VirtualBeanPropertyWriter",
+  "com.fasterxml.jackson.databind.ser.impl.AttributePropertyWriter",
+  "com.fasterxml.jackson.databind.ser.std.RawSerializer",
+  "com.fasterxml.jackson.databind.util.*"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.introspect",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "version"
+  },
+  {
+   "javadoc": "/**\n     * Annotations with meta-annotation {@link JacksonAnnotationsInside}\n     * are considered bundles.\n     */",
+   "name": "isAnnotationBundle"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findRootName"
+  },
+  {
+   "javadoc": "",
+   "name": "findPropertiesToIgnore"
+  },
+  {
+   "javadoc": "",
+   "name": "findPropertiesToIgnore"
+  },
+  {
+   "javadoc": "",
+   "name": "findIgnoreUnknownProperties"
+  },
+  {
+   "javadoc": "",
+   "name": "isIgnorableType"
+  },
+  {
+   "javadoc": "/**\n     * @deprecated (since 2.3) Use {@link #findFilterId(Annotated)} instead\n     */",
+   "name": "findFilterId"
+  },
+  {
+   "javadoc": "",
+   "name": "findFilterId"
+  },
+  {
+   "javadoc": "",
+   "name": "_findFilterId"
+  },
+  {
+   "javadoc": "",
+   "name": "findNamingStrategy"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findAutoDetectVisibility"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findImplicitPropertyName"
+  },
+  {
+   "javadoc": "",
+   "name": "hasIgnoreMarker"
+  },
+  {
+   "javadoc": "",
+   "name": "hasRequiredMarker"
+  },
+  {
+   "javadoc": "",
+   "name": "findPropertyAccess"
+  },
+  {
+   "javadoc": "",
+   "name": "findPropertyDescription"
+  },
+  {
+   "javadoc": "",
+   "name": "findPropertyIndex"
+  },
+  {
+   "javadoc": "",
+   "name": "findPropertyDefaultValue"
+  },
+  {
+   "javadoc": "",
+   "name": "findFormat"
+  },
+  {
+   "javadoc": "",
+   "name": "findReferenceType"
+  },
+  {
+   "javadoc": "",
+   "name": "findUnwrappingNameTransformer"
+  },
+  {
+   "javadoc": "",
+   "name": "findInjectableValueId"
+  },
+  {
+   "javadoc": "",
+   "name": "findViews"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findTypeResolver"
+  },
+  {
+   "javadoc": "",
+   "name": "findPropertyTypeResolver"
+  },
+  {
+   "javadoc": "",
+   "name": "findPropertyContentTypeResolver"
+  },
+  {
+   "javadoc": "",
+   "name": "findSubtypes"
+  },
+  {
+   "javadoc": "",
+   "name": "findTypeName"
+  },
+  {
+   "javadoc": "",
+   "name": "isTypeId"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findObjectIdInfo"
+  },
+  {
+   "javadoc": "",
+   "name": "findObjectReferenceInfo"
+  },
+  {
+   "javadoc": "/**********************************************************\n    */",
+   "name": "findSerializer"
+  },
+  {
+   "javadoc": "",
+   "name": "findKeySerializer"
+  },
+  {
+   "javadoc": "",
+   "name": "findContentSerializer"
+  },
+  {
+   "javadoc": "",
+   "name": "findNullSerializer"
+  },
+  {
+   "javadoc": "",
+   "name": "findSerializationInclusionForContent"
+  },
+  {
+   "javadoc": "",
+   "name": "findSerializationType"
+  },
+  {
+   "javadoc": "",
+   "name": "findSerializationKeyType"
+  },
+  {
+   "javadoc": "",
+   "name": "findSerializationContentType"
+  },
+  {
+   "javadoc": "",
+   "name": "findSerializationTyping"
+  },
+  {
+   "javadoc": "",
+   "name": "findSerializationConverter"
+  },
+  {
+   "javadoc": "",
+   "name": "findSerializationContentConverter"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findSerializationPropertyOrder"
+  },
+  {
+   "javadoc": "",
+   "name": "findSerializationSortAlphabetically"
+  },
+  {
+   "javadoc": "",
+   "name": "findSerializationSortAlphabetically"
+  },
+  {
+   "javadoc": "",
+   "name": "findAndAddVirtualProperties"
+  },
+  {
+   "javadoc": "",
+   "name": "_constructVirtualProperty"
+  },
+  {
+   "javadoc": "",
+   "name": "_constructVirtualProperty"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findNameForSerialization"
+  },
+  {
+   "javadoc": "",
+   "name": "hasAsValueAnnotation"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "findKeyDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "findDeserializationType"
+  },
+  {
+   "javadoc": "",
+   "name": "findDeserializationKeyType"
+  },
+  {
+   "javadoc": "",
+   "name": "findDeserializationContentType"
+  },
+  {
+   "javadoc": "",
+   "name": "findDeserializationConverter"
+  },
+  {
+   "javadoc": "",
+   "name": "findDeserializationContentConverter"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findValueInstantiator"
+  },
+  {
+   "javadoc": "",
+   "name": "findPOJOBuilder"
+  },
+  {
+   "javadoc": "",
+   "name": "findPOJOBuilderConfig"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findNameForDeserialization"
+  },
+  {
+   "javadoc": "",
+   "name": "hasAnySetterAnnotation"
+  },
+  {
+   "javadoc": "",
+   "name": "hasAnyGetterAnnotation"
+  },
+  {
+   "javadoc": "",
+   "name": "hasCreatorAnnotation"
+  },
+  {
+   "javadoc": "",
+   "name": "findCreatorBinding"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_isIgnorable"
+  },
+  {
+   "javadoc": "",
+   "name": "_classIfExplicit"
+  },
+  {
+   "javadoc": "",
+   "name": "_classIfExplicit"
+  },
+  {
+   "javadoc": "",
+   "name": "_propertyName"
+  },
+  {
+   "javadoc": "/**\n     * Helper method for constructing standard {@link TypeResolverBuilder}\n     * implementation.\n     */",
+   "name": "_constructStdTypeResolverBuilder"
+  },
+  {
+   "javadoc": "/**\n     * Helper method for dealing with \"no type info\" marker; can't be null\n     * (as it'd be replaced by default typing)\n     */",
+   "name": "_constructNoTypeResolverBuilder"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class JacksonAnnotationIntrospector extends AnnotationIntrospector implements java.io.Serializable",
+  "constructors": [
+   "public JacksonAnnotationIntrospector();"
+  ],
+  "focal_signature": "public Object findContentDeserializer(Annotated a)",
+  "methods": [
+   "public Version version();",
+   "public boolean isAnnotationBundle(Annotation ann);",
+   "public PropertyName findRootName(AnnotatedClass ac);",
+   "// since 2.6, remove from 2.7 or later public String[] findPropertiesToIgnore(Annotated ac);",
+   "// since 2.6 public String[] findPropertiesToIgnore(Annotated ac, boolean forSerialization);",
+   "public Boolean findIgnoreUnknownProperties(AnnotatedClass ac);",
+   "public Boolean isIgnorableType(AnnotatedClass ac);",
+   "public Object findFilterId(AnnotatedClass ac);",
+   "public Object findFilterId(Annotated a);",
+   "protected final Object _findFilterId(Annotated a);",
+   "public Object findNamingStrategy(AnnotatedClass ac);",
+   "public VisibilityChecker<?> findAutoDetectVisibility(AnnotatedClass ac, VisibilityChecker<?> checker);",
+   "public String findImplicitPropertyName(AnnotatedMember param);",
+   "public boolean hasIgnoreMarker(AnnotatedMember m);",
+   "public Boolean hasRequiredMarker(AnnotatedMember m);",
+   "public JsonProperty.Access findPropertyAccess(Annotated m);",
+   "public String findPropertyDescription(Annotated ann);",
+   "public Integer findPropertyIndex(Annotated ann);",
+   "public String findPropertyDefaultValue(Annotated ann);",
+   "public JsonFormat.Value findFormat(Annotated ann);",
+   "public ReferenceProperty findReferenceType(AnnotatedMember member);",
+   "public NameTransformer findUnwrappingNameTransformer(AnnotatedMember member);",
+   "public Object findInjectableValueId(AnnotatedMember m);",
+   "public Class<?>[] findViews(Annotated a);",
+   "public TypeResolverBuilder<?> findTypeResolver(MapperConfig<?> config, AnnotatedClass ac, JavaType baseType);",
+   "public TypeResolverBuilder<?> findPropertyTypeResolver(MapperConfig<?> config, AnnotatedMember am, JavaType baseType);",
+   "public TypeResolverBuilder<?> findPropertyContentTypeResolver(MapperConfig<?> config, AnnotatedMember am, JavaType containerType);",
+   "public List<NamedType> findSubtypes(Annotated a);",
+   "public String findTypeName(AnnotatedClass ac);",
+   "public Boolean isTypeId(AnnotatedMember member);",
+   "public ObjectIdInfo findObjectIdInfo(Annotated ann);",
+   "public ObjectIdInfo findObjectReferenceInfo(Annotated ann, ObjectIdInfo objectIdInfo);",
+   "public Object findSerializer(Annotated a);",
+   "public Object findKeySerializer(Annotated a);",
+   "public Object findContentSerializer(Annotated a);",
+   "public Object findNullSerializer(Annotated a);",
+   "public JsonInclude.Include findSerializationInclusionForContent(Annotated a, JsonInclude.Include defValue);",
+   "public Class<?> findSerializationType(Annotated am);",
+   "public Class<?> findSerializationKeyType(Annotated am, JavaType baseType);",
+   "public Class<?> findSerializationContentType(Annotated am, JavaType baseType);",
+   "public JsonSerialize.Typing findSerializationTyping(Annotated a);",
+   "public Object findSerializationConverter(Annotated a);",
+   "public Object findSerializationContentConverter(AnnotatedMember a);",
+   "public String[] findSerializationPropertyOrder(AnnotatedClass ac);",
+   "public Boolean findSerializationSortAlphabetically(Annotated ann);",
+   "public Boolean findSerializationSortAlphabetically(AnnotatedClass ac);",
+   "public void findAndAddVirtualProperties(MapperConfig<?> config, AnnotatedClass ac, List<BeanPropertyWriter> properties);",
+   "protected BeanPropertyWriter _constructVirtualProperty(JsonAppend.Attr attr, MapperConfig<?> config, AnnotatedClass ac, JavaType type);",
+   "protected BeanPropertyWriter _constructVirtualProperty(JsonAppend.Prop prop, MapperConfig<?> config, AnnotatedClass ac);",
+   "public PropertyName findNameForSerialization(Annotated a);",
+   "public boolean hasAsValueAnnotation(AnnotatedMethod am);",
+   "public Object findDeserializer(Annotated a);",
+   "public Object findKeyDeserializer(Annotated a);",
+   "public Class<?> findDeserializationType(Annotated am, JavaType baseType);",
+   "public Class<?> findDeserializationKeyType(Annotated am, JavaType baseKeyType);",
+   "public Class<?> findDeserializationContentType(Annotated am, JavaType baseContentType);",
+   "public Object findDeserializationConverter(Annotated a);",
+   "public Object findDeserializationContentConverter(AnnotatedMember a);",
+   "public Object findValueInstantiator(AnnotatedClass ac);",
+   "public Class<?> findPOJOBuilder(AnnotatedClass ac);",
+   "public JsonPOJOBuilder.Value findPOJOBuilderConfig(AnnotatedClass ac);",
+   "public PropertyName findNameForDeserialization(Annotated a);",
+   "public boolean hasAnySetterAnnotation(AnnotatedMethod am);",
+   "public boolean hasAnyGetterAnnotation(AnnotatedMethod am);",
+   "public boolean hasCreatorAnnotation(Annotated a);",
+   "public JsonCreator.Mode findCreatorBinding(Annotated a);",
+   "protected boolean _isIgnorable(Annotated a);",
+   "protected Class<?> _classIfExplicit(Class<?> cls);",
+   "protected Class<?> _classIfExplicit(Class<?> cls, Class<?> implicit);",
+   "protected PropertyName _propertyName(String localName, String namespace);",
+   "protected StdTypeResolverBuilder _constructStdTypeResolverBuilder();",
+   "protected StdTypeResolverBuilder _constructNoTypeResolverBuilder();"
+  ],
+  "type_signatures": [
+   "public abstract class Annotated { protected Annotated(); public abstract <A extends Annotation> A getAnnotation(Class<A> acls); public final <A extends Annotation> boolean hasAnnotation(Class<A> acls); public abstract Annotated withAnnotations(AnnotationMap fallback); public final Annotated withFallBackAnnotationsFrom(Annotated annotated); public abstract AnnotatedElement getAnnotated(); protected abstract int getModifiers(); public final boolean isPublic(); public abstract String getName(); public JavaType getType(TypeBindings context); public abstract Type getGenericType(); public abstract Class<?> getRawType(); public abstract Iterable<Annotation> annotations(); protected abstract AnnotationMap getAllAnnotations(); public abstract boolean equals(Object o); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

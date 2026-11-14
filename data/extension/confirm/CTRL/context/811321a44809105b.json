@@ -1,0 +1,235 @@
+{
+ "bug_name": "Compress_28",
+ "call_sites": [
+  {
+   "line": 298,
+   "lines": [
+    293,
+    294,
+    295,
+    296,
+    297,
+    298,
+    299,
+    300,
+    301,
+    302,
+    303
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java",
+   "snippet": "        final byte[] signature = new byte[12];\n        in.mark(signature.length);\n        try {\n            int signatureLength = IOUtils.readFully(in, signature);\n            in.reset();\n            if (ZipArchiveInputStream.matches(signature, signatureLength)) {\n                if (entryEncoding != null) {\n                    return new ZipArchiveInputStream(in, entryEncoding);\n                } else {\n                    return new ZipArchiveInputStream(in);\n                }"
+  },
+  {
+   "line": 304,
+   "lines": [
+    299,
+    300,
+    301,
+    302,
+    303,
+    304,
+    305,
+    306,
+    307,
+    308,
+    309
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java",
+   "snippet": "                if (entryEncoding != null) {\n                    return new ZipArchiveInputStream(in, entryEncoding);\n                } else {\n                    return new ZipArchiveInputStream(in);\n                }\n            } else if (JarArchiveInputStream.matches(signature, signatureLength)) {\n                return new JarArchiveInputStream(in);\n            } else if (ArArchiveInputStream.matches(signature, signatureLength)) {\n                return new ArArchiveInputStream(in);\n            } else if (CpioArchiveInputStream.matches(signature, signatureLength)) {\n                return new CpioArchiveInputStream(in);"
+  },
+  {
+   "line": 306,
+   "lines": [
+    301,
+    302,
+    303,
+    304,
+    305,
+    306,
+    307,
+    308,
+    309,
+    310,
+    311
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java",
+   "snippet": "                } else {\n                    return new ZipArchiveInputStream(in);\n                }\n            } else if (JarArchiveInputStream.matches(signature, signatureLength)) {\n                return new JarArchiveInputStream(in);\n            } else if (ArArchiveInputStream.matches(signature, signatureLength)) {\n                return new ArArchiveInputStream(in);\n            } else if (CpioArchiveInputStream.matches(signature, signatureLength)) {\n                return new CpioArchiveInputStream(in);\n            } else if (ArjArchiveInputStream.matches(signature, signatureLength)) {\n                return new ArjArchiveInputStream(in);"
+  },
+  {
+   "line": 308,
+   "lines": [
+    303,
+    304,
+    305,
+    306,
+    307,
+    308,
+    309,
+    310,
+    311,
+    312,
+    313
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java",
+   "snippet": "                }\n            } else if (JarArchiveInputStream.matches(signature, signatureLength)) {\n                return new JarArchiveInputStream(in);\n            } else if (ArArchiveInputStream.matches(signature, signatureLength)) {\n                return new ArArchiveInputStream(in);\n            } else if (CpioArchiveInputStream.matches(signature, signatureLength)) {\n                return new CpioArchiveInputStream(in);\n            } else if (ArjArchiveInputStream.matches(signature, signatureLength)) {\n                return new ArjArchiveInputStream(in);\n            } else if (SevenZFile.matches(signature, signatureLength)) {\n                throw new StreamingNotSupportedException(SEVEN_Z);"
+  },
+  {
+   "line": 310,
+   "lines": [
+    305,
+    306,
+    307,
+    308,
+    309,
+    310,
+    311,
+    312,
+    313,
+    314,
+    315
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java",
+   "snippet": "                return new JarArchiveInputStream(in);\n            } else if (ArArchiveInputStream.matches(signature, signatureLength)) {\n                return new ArArchiveInputStream(in);\n            } else if (CpioArchiveInputStream.matches(signature, signatureLength)) {\n                return new CpioArchiveInputStream(in);\n            } else if (ArjArchiveInputStream.matches(signature, signatureLength)) {\n                return new ArjArchiveInputStream(in);\n            } else if (SevenZFile.matches(signature, signatureLength)) {\n                throw new StreamingNotSupportedException(SEVEN_Z);\n            }\n"
+  }
+ ],
+ "class_simple": "TarArchiveInputStream",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * The TarInputStream reads a UNIX tar archive as an InputStream.\n * methods are provided to position at each successive entry in\n * the archive, and the read each entry as a normal input stream\n * using read().\n * @NotThreadSafe\n */\npublic",
+  "method_javadoc": "/**\n     * Checks if the signature matches what is expected for a tar file.\n     *\n     * @param signature\n     *            the bytes to check\n     * @param length\n     *            the number of bytes to check\n     * @return true, if this stream is a tar archive stream, false otherwise\n     */"
+ },
+ "fields": [
+  "private static final int SMALL_BUFFER_SIZE",
+  "private final byte[] SMALL_BUF",
+  "private final int recordSize",
+  "private final int blockSize",
+  "private boolean hasHitEOF",
+  "private long entrySize",
+  "private long entryOffset",
+  "private final InputStream is",
+  "private TarArchiveEntry currEntry",
+  "private final ZipEncoding encoding"
+ ],
+ "focal_class": "org.apache.commons.compress.archivers.tar.TarArchiveInputStream",
+ "focal_id": "Compress_28::org.apache.commons.compress.archivers.tar.TarArchiveInputStream::matches(byte[],int)",
+ "focal_method_name": "matches",
+ "generations": 3,
+ "impl_B": "public static boolean matches(byte[] signature, int length) {\n        if (length < TarConstants.VERSION_OFFSET+TarConstants.VERSIONLEN) {\n            return false;\n        }\n\n        if (ArchiveUtils.matchAsciiBuffer(TarConstants.MAGIC_POSIX,\n                signature, TarConstants.MAGIC_OFFSET, TarConstants.MAGICLEN)\n            &&\n            ArchiveUtils.matchAsciiBuffer(TarConstants.VERSION_POSIX,\n                signature, TarConstants.VERSION_OFFSET, TarConstants.VERSIONLEN)\n                ){\n            return true;\n        }\n        if (ArchiveUtils.matchAsciiBuffer(TarConstants.MAGIC_GNU,\n                signature, TarConstants.MAGIC_OFFSET, TarConstants.MAGICLEN)\n            &&\n            (\n             ArchiveUtils.matchAsciiBuffer(TarConstants.VERSION_GNU_SPACE,\n                signature, TarConstants.VERSION_OFFSET, TarConstants.VERSIONLEN)\n            ||\n            ArchiveUtils.matchAsciiBuffer(TarConstants.VERSION_GNU_ZERO,\n                signature, TarConstants.VERSION_OFFSET, TarConstants.VERSIONLEN)\n            )\n                ){\n            return true;\n        }\n        // COMPRESS-107 - recognise Ant tar files\n        if (ArchiveUtils.matchAsciiBuffer(TarConstants.MAGIC_ANT,\n                signature, TarConstants.MAGIC_OFFSET, TarConstants.MAGICLEN)\n            &&\n            ArchiveUtils.matchAsciiBuffer(TarConstants.VERSION_ANT,\n                signature, TarConstants.VERSION_OFFSET, TarConstants.VERSIONLEN)\n                ){\n            return true;\n        }\n        return false;\n    }",
+ "imports": [
+  "java.io.ByteArrayOutputStream",
+  "java.io.IOException",
+  "java.io.InputStream",
+  "java.util.HashMap",
+  "java.util.Map",
+  "java.util.Map.Entry",
+  "org.apache.commons.compress.archivers.ArchiveEntry",
+  "org.apache.commons.compress.archivers.ArchiveInputStream",
+  "org.apache.commons.compress.archivers.zip.ZipEncoding",
+  "org.apache.commons.compress.archivers.zip.ZipEncodingHelper",
+  "org.apache.commons.compress.utils.ArchiveUtils",
+  "org.apache.commons.compress.utils.CharsetNames",
+  "org.apache.commons.compress.utils.IOUtils"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.compress.archivers.tar",
+ "project": "Compress",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Closes this stream. Calls the TarBuffer's close() method.\n     * @throws IOException on error\n     */",
+   "name": "close"
+  },
+  {
+   "javadoc": "/**\n     * Get the record size being used by this stream's buffer.\n     *\n     * @return The TarBuffer record size.\n     */",
+   "name": "getRecordSize"
+  },
+  {
+   "javadoc": "/**\n     * Get the available data that can be read from the current\n     * entry in the archive. This does not indicate how much data\n     * is left in the entire archive, only in the current entry.\n     * This value is determined from the entry's size header field\n     * and the amount of data already read from the current entry.\n     * Integer.MAX_VALUE is returned in case more than Integer.MAX_VALUE\n     * bytes are left in the current entry in the archive.\n     *\n     * @return The number of available bytes for the current entry.\n     * @throws IOException for signature\n     */",
+   "name": "available"
+  },
+  {
+   "javadoc": "/**\n     * Skip bytes in the input buffer. This skips bytes in the\n     * current entry's data, not the entire archive, and will\n     * stop at the end of the current entry's data if the number\n     * to skip extends beyond that point.\n     *\n     * @param numToSkip The number of bytes to skip.\n     * @return the number actually skipped\n     * @throws IOException on error\n     */",
+   "name": "skip"
+  },
+  {
+   "javadoc": "/**\n     * Since we do not support marking just yet, we do nothing.\n     */",
+   "name": "reset"
+  },
+  {
+   "javadoc": "/**\n     * Get the next entry in this tar archive. This will skip\n     * over any remaining data in the current entry, if there\n     * is one, and place the input stream at the header of the\n     * next entry, and read the header and instantiate a new\n     * TarEntry from the header bytes and return that entry.\n     * If there are no more entries in the archive, null will\n     * be returned to indicate that the end of the archive has\n     * been reached.\n     *\n     * @return The next TarEntry in the archive, or null.\n     * @throws IOException on error\n     */",
+   "name": "getNextTarEntry"
+  },
+  {
+   "javadoc": "/**\n     * Get the next entry in this tar archive as longname data.\n     *\n     * @return The next entry in the archive as longname data, or null.\n     * @throws IOException on error\n     */",
+   "name": "getLongNameData"
+  },
+  {
+   "javadoc": "/**\n     * Determine if an archive record indicate End of Archive. End of\n     * archive is indicated by a record that consists entirely of null bytes.\n     *\n     * @param record The record data to check.\n     * @return true if the record data is an End of Archive\n     */",
+   "name": "isEOFRecord"
+  },
+  {
+   "javadoc": "/**\n     * Read a record from the input stream and return the data.\n     *\n     * @return The record data or null if EOF has been hit.\n     * @throws IOException on error\n     */",
+   "name": "readRecord"
+  },
+  {
+   "javadoc": "/**\n     * Returns the next Archive Entry in this Stream.\n     *\n     * @return the next entry,\n     *         or {@code null} if there are no more entries\n     * @throws IOException if the next entry could not be read\n     */",
+   "name": "getNextEntry"
+  },
+  {
+   "javadoc": "/**\n     * Reads bytes from the current tar archive entry.\n     *\n     * This method is aware of the boundaries of the current\n     * entry in the archive and will deal with them as if they\n     * were this stream's start and EOF.\n     *\n     * @param buf The buffer into which to place bytes read.\n     * @param offset The offset at which to place bytes read.\n     * @param numToRead The number of bytes to read.\n     * @return The number of bytes read, or -1 at EOF.\n     * @throws IOException on error\n     */",
+   "name": "read"
+  },
+  {
+   "javadoc": "/**\n     * Whether this class is able to read the given entry.\n     *\n     * <p>May return false if the current entry is a sparse file.</p>\n     */",
+   "name": "canReadEntryData"
+  },
+  {
+   "javadoc": "/**\n     * Get the current TAR Archive Entry that this input stream is processing\n     * \n     * @return The current Archive Entry\n     */",
+   "name": "getCurrentEntry"
+  },
+  {
+   "javadoc": "",
+   "name": "setCurrentEntry"
+  },
+  {
+   "javadoc": "",
+   "name": "isAtEOF"
+  },
+  {
+   "javadoc": "",
+   "name": "setAtEOF"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class TarArchiveInputStream extends ArchiveInputStream",
+  "constructors": [
+   "public TarArchiveInputStream(InputStream is);",
+   "public TarArchiveInputStream(InputStream is, String encoding);",
+   "public TarArchiveInputStream(InputStream is, int blockSize);",
+   "public TarArchiveInputStream(InputStream is, int blockSize, String encoding);",
+   "public TarArchiveInputStream(InputStream is, int blockSize, int recordSize);",
+   "public TarArchiveInputStream(InputStream is, int blockSize, int recordSize, String encoding);"
+  ],
+  "focal_signature": "public static boolean matches(byte[] signature, int length)",
+  "methods": [
+   "public void close() throws IOException;",
+   "public int getRecordSize();",
+   "public int available() throws IOException;",
+   "public long skip(long numToSkip) throws IOException;",
+   "public synchronized void reset();",
+   "public TarArchiveEntry getNextTarEntry() throws IOException;",
+   "protected byte[] getLongNameData() throws IOException;",
+   "protected boolean isEOFRecord(byte[] record);",
+   "protected byte[] readRecord() throws IOException;",
+   "public ArchiveEntry getNextEntry() throws IOException;",
+   "public int read(byte[] buf, int offset, int numToRead) throws IOException;",
+   "public boolean canReadEntryData(ArchiveEntry ae);",
+   "public TarArchiveEntry getCurrentEntry();",
+   "protected final void setCurrentEntry(TarArchiveEntry e);",
+   "protected final boolean isAtEOF();",
+   "protected final void setAtEOF(boolean b);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

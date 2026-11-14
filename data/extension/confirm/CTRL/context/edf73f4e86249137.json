@@ -1,0 +1,94 @@
+{
+ "bug_name": "Lang_6",
+ "call_sites": [
+  {
+   "line": 57,
+   "lines": [
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62
+   ],
+   "path": "src/main/java/org/apache/commons/lang3/StringEscapeUtils.java",
+   "snippet": "    public static final CharSequenceTranslator ESCAPE_JAVA = \n          new LookupTranslator(\n            new String[][] { \n              {\"\\\"\", \"\\\\\\\"\"},\n              {\"\\\\\", \"\\\\\\\\\"},\n          }).with(\n            new LookupTranslator(EntityArrays.JAVA_CTRL_CHARS_ESCAPE())\n          ).with(\n            UnicodeEscaper.outsideOf(32, 0x7f) \n        );\n"
+  },
+  {
+   "line": 59,
+   "lines": [
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64
+   ],
+   "path": "src/main/java/org/apache/commons/lang3/StringEscapeUtils.java",
+   "snippet": "            new String[][] { \n              {\"\\\"\", \"\\\\\\\"\"},\n              {\"\\\\\", \"\\\\\\\\\"},\n          }).with(\n            new LookupTranslator(EntityArrays.JAVA_CTRL_CHARS_ESCAPE())\n          ).with(\n            UnicodeEscaper.outsideOf(32, 0x7f) \n        );\n\n    /**\n     * Translator object for escaping EcmaScript/JavaScript. "
+  }
+ ],
+ "class_simple": "CharSequenceTranslator",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * An API for translating text. \n * Its core use is to escape and unescape text. Because escaping and unescaping \n * is completely contextual, the API does not present two separate signatures.\n * \n * @since 3.0\n * @version $Id$\n */\npublic abstract",
+  "method_javadoc": "/**\n     * Helper method to create a merger of this translator with another set of \n     * translators. Useful in customizing the standard functionality.\n     *\n     * @param translators CharSequenceTranslator array of translators to merge with this one\n     * @return CharSequenceTranslator merging this translator with the others\n     */"
+ },
+ "fields": [],
+ "focal_class": "org.apache.commons.lang3.text.translate.CharSequenceTranslator",
+ "focal_id": "Lang_6::org.apache.commons.lang3.text.translate.CharSequenceTranslator::with(CharSequenceTranslator...)",
+ "focal_method_name": "with",
+ "generations": 3,
+ "impl_B": "public final CharSequenceTranslator with(CharSequenceTranslator... translators) {\n        CharSequenceTranslator[] newArray = new CharSequenceTranslator[translators.length + 1];\n        newArray[0] = this;\n        System.arraycopy(translators, 0, newArray, 1, translators.length);\n        return new AggregateTranslator(newArray);\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.io.StringWriter",
+  "java.io.Writer",
+  "java.util.Locale"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.lang3.text.translate",
+ "project": "Lang",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Translate a set of codepoints, represented by an int index into a CharSequence, \n     * into another set of codepoints. The number of codepoints consumed must be returned, \n     * and the only IOExceptions thrown must be from interacting with the Writer so that \n     * the top level API may reliable ignore StringWriter IOExceptions. \n     *\n     * @param input CharSequence that is being translated\n     * @param index int representing the current point of translation\n     * @param out Writer to translate the text to\n     * @return int count of codepoints consumed\n     * @throws IOException if and only if the Writer produces an IOException\n     */",
+   "name": "translate"
+  },
+  {
+   "javadoc": "/**\n     * Helper for non-Writer usage. \n     * @param input CharSequence to be translated\n     * @return String output of translation\n     */",
+   "name": "translate"
+  },
+  {
+   "javadoc": "/**\n     * Translate an input onto a Writer. This is intentionally final as its algorithm is \n     * tightly coupled with the abstract method of this class. \n     *\n     * @param input CharSequence that is being translated\n     * @param out Writer to translate the text to\n     * @throws IOException if and only if the Writer produces an IOException\n     */",
+   "name": "translate"
+  },
+  {
+   "javadoc": "/**\n     * <p>Returns an upper case hexadecimal <code>String</code> for the given\n     * character.</p>\n     *\n     * @param codepoint The codepoint to convert.\n     * @return An upper case hexadecimal <code>String</code>\n     */",
+   "name": "hex"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public abstract class CharSequenceTranslator",
+  "constructors": [],
+  "focal_signature": "public final CharSequenceTranslator with(CharSequenceTranslator... translators)",
+  "methods": [
+   "public abstract int translate(CharSequence input, int index, Writer out) throws IOException;",
+   "public final String translate(CharSequence input);",
+   "public final void translate(CharSequence input, Writer out) throws IOException;",
+   "public static String hex(int codepoint);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

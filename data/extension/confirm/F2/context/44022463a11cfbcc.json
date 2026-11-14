@@ -1,0 +1,144 @@
+{
+ "bug_name": "Closure_163",
+ "call_sites": [
+  {
+   "line": 137,
+   "lines": [
+    132,
+    133,
+    134,
+    135,
+    136,
+    137,
+    138,
+    139,
+    140,
+    141,
+    142
+   ],
+   "path": "src/com/google/javascript/jscomp/CombinedCompilerPass.java",
+   "snippet": "      }\n    }\n\n    void enterScopeIfActive(NodeTraversal t) {\n      if (isActive() && scopedCallback != null) {\n        scopedCallback.enterScope(t);\n      }\n    }\n\n    void exitScopeIfActive(NodeTraversal t) {\n      if (isActive() && scopedCallback != null) {"
+  },
+  {
+   "line": 117,
+   "lines": [
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122
+   ],
+   "path": "src/com/google/javascript/jscomp/NodeTraversal.java",
+   "snippet": "\n    /**\n     * Called immediately after entering a new scope. The new scope can\n     * be accessed through t.getScope()\n     */\n    void enterScope(NodeTraversal t);\n\n    /**\n     * Called immediately before exiting a scope. The ending scope can\n     * be accessed through t.getScope()\n     */"
+  },
+  {
+   "line": 567,
+   "lines": [
+    562,
+    563,
+    564,
+    565,
+    566,
+    567,
+    568,
+    569,
+    570,
+    571,
+    572
+   ],
+   "path": "src/com/google/javascript/jscomp/NodeTraversal.java",
+   "snippet": "  private void pushScope(Node node) {\n    Preconditions.checkState(curNode != null);\n    scopeRoots.push(node);\n    cfgs.push(null);\n    if (scopeCallback != null) {\n      scopeCallback.enterScope(this);\n    }\n  }\n\n  /** Creates a new scope (e.g. when entering a function). */\n  private void pushScope(Scope s) {"
+  },
+  {
+   "line": 577,
+   "lines": [
+    572,
+    573,
+    574,
+    575,
+    576,
+    577,
+    578,
+    579,
+    580,
+    581,
+    582
+   ],
+   "path": "src/com/google/javascript/jscomp/NodeTraversal.java",
+   "snippet": "  private void pushScope(Scope s) {\n    Preconditions.checkState(curNode != null);\n    scopes.push(s);\n    cfgs.push(null);\n    if (scopeCallback != null) {\n      scopeCallback.enterScope(this);\n    }\n  }\n\n  /** Pops back to the previous scope (e.g. when leaving a function). */\n  private void popScope() {"
+  }
+ ],
+ "class_simple": "ProcessProperties",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Analyzes properties on prototypes.\n *\n * Uses a reference graph to analyze prototype properties. Each unique property\n * name is represented by a node in this graph. An edge from property A to\n * property B means that there's a GETPROP access of a property B on some\n * object inside of a method named A.\n *\n * Global functions are also represented by nodes in this graph, with\n * similar semantics.\n *\n */\nclass AnalyzePrototypeProperties implements CompilerPass {\n\n  // Constants for symbol types, for easier readability.\n  private final SymbolType PROPERTY = SymbolType.PROPERTY;\n  private final SymbolType VAR = SymbolType.VAR;\n\n  private final AbstractCompiler compiler;\n  private final boolean canModifyExterns;\n  private final boolean anchorUnusedVars;\n  private final JSModuleGraph moduleGraph;\n  private final JSModule firstModule;\n\n  // Properties that are implicitly used as part of the JS language.\n  private static final Set<String> IMPLICITLY_USED_PROPERTIES =\n      ImmutableSet.of(\"length\", \"toString\", \"valueOf\");\n\n  // A graph where the nodes are property names or variable names,\n  // and the edges signify the modules where the property is referenced.\n  // For example, if we had the code:\n  //\n  // Foo.prototype.bar = function(x) { x.baz(); }; // in module 2.;\n  //\n  // then this would be represented in the graph by a node representing\n  // \"bar\", a node representing \"baz\", and an edge between them representing\n  // module #2.\n  //\n  // Similarly, if we had:\n  //\n  // var scotch = function(f) { return f.age(); };\n  //\n  // then there would be a node for \"scotch\", a node for \"age\", and an edge\n  // from scotch to age.\n  private final LinkedDirectedGraph<NameInfo, JSModule> symbolGraph =\n      LinkedDirectedGraph.createWithoutAnnotations();\n\n  // A dummy node for representing global references.\n  private final NameInfo globalNode = new NameInfo(\"[global]\");\n\n  // A dummy node for representing extern references.\n  private final NameInfo externNode = new NameInfo(\"[extern]\");\n\n  // A dummy node for representing all anonymous functions with no names.\n  private final NameInfo anonymousNode = new NameInfo(\"[anonymous]\");\n\n  // All the real NameInfo for prototype properties, hashed by the name\n  // of the property that they represent.\n  private final Map<String, NameInfo> propertyNameInfo = Maps.newHashMap();\n\n  // All the NameInfo for global functions, hashed by the name of the\n  // gloval variable that it's assigned to.\n  private final Map<String, NameInfo> varNameInfo = Maps.newHashMap();\n\n  /**\n   * Creates a new pass for analyzing prototype properties.\n   * @param compiler The compiler.\n   * @param moduleGraph The graph for resolving module dependencies. May be\n   *     null if we don't care about module dependencies.\n   * @param canModifyExterns If true, then we can move prototype\n   *     properties that are declared in the externs file.\n   * @param anchorUnusedVars If true, then we must mark all vars as referenced,\n   *     even if they are never used.\n   */\n  AnalyzePrototypeProperties(AbstractCompiler compiler,\n      JSModuleGraph moduleGraph, boolean canModifyExterns,\n      boolean anchorUnusedVars) {\n    this.compiler = compiler;\n    this.moduleGraph = moduleGraph;\n    this.canModifyExterns = canModifyExterns;\n    this.anchorUnusedVars = anchorUnusedVars;\n\n    if (moduleGraph != null) {\n      firstModule = moduleGraph.getRootModule();\n    } else {\n      firstModule = null;\n    }\n\n    globalNode.markReference(null);\n    externNode.markReference(null);\n    symbolGraph.createNode(globalNode);\n    symbolGraph.createNode(externNode);\n\n    for (String property : IMPLICITLY_USED_PROPERTIES) {\n      NameInfo nameInfo = getNameInfoForName(property, PROPERTY);\n      if (moduleGraph == null) {\n        symbolGraph.connect(externNode, null, nameInfo);\n      } else {\n        for (JSModule module : moduleGraph.getAllModules()) {\n          symbolGraph.connect(externNode, module, nameInfo);\n        }\n      }\n    }\n  }\n\n  @Override\n  public void process(Node externRoot, Node root) {\n    if (!canModifyExterns) {\n      NodeTraversal.traverse(compiler, externRoot,\n          new ProcessExternProperties());\n    }\n\n    NodeTraversal.traverse(compiler, root, new ProcessProperties());\n\n    FixedPointGraphTraversal<NameInfo, JSModule> t =\n        FixedPointGraphTraversal.newTraversal(new PropagateReferences());\n    t.computeFixedPoint(symbolGraph,\n        Sets.newHashSet(externNode, globalNode));\n  }\n\n  /**\n   * Returns information on all prototype properties.\n   */\n  public Collection<NameInfo> getAllNameInfo() {\n    List<NameInfo> result = Lists.newArrayList(propertyNameInfo.values());\n    result.addAll(varNameInfo.values());\n    return result;\n  }\n\n  /**\n   * Gets the name info for the property or variable of a given name,\n   * and creates a new one if necessary.\n   *\n   * @param name The name of the symbol.\n   * @param type The type of symbol.\n   */\n  private NameInfo getNameInfoForName(String name, SymbolType type) {\n    Map<String, NameInfo> map = type == PROPERTY ?\n        propertyNameInfo : varNameInfo;\n    if (map.containsKey(name)) {\n      return map.get(name);\n    } else {\n      NameInfo nameInfo = new NameInfo(name);\n      map.put(name, nameInfo);\n      symbolGraph.createNode(nameInfo);\n      return nameInfo;\n    }\n  }\n\n  private",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private Stack<NameContext> symbolStack"
+ ],
+ "focal_class": "com.google.javascript.jscomp.AnalyzePrototypeProperties.ProcessProperties",
+ "focal_id": "Closure_163::com.google.javascript.jscomp.AnalyzePrototypeProperties$ProcessProperties::enterScope(NodeTraversal)",
+ "focal_method_name": "enterScope",
+ "generations": 3,
+ "impl_B": "@Override\n    public void enterScope(NodeTraversal t) {\n      symbolStack.peek().scope = t.getScope();\n          // NOTE(nicksantos): We use the same anonymous node for all\n          // functions that do not have reasonable names. I can't remember\n          // at the moment why we do this. I think it's because anonymous\n          // nodes can never have in-edges. They're just there as a placeholder\n          // for scope information, and do not matter in the edge propagation.\n    }",
+ "imports": [
+  "com.google.common.base.Preconditions",
+  "com.google.common.collect.ImmutableSet",
+  "com.google.common.collect.Lists",
+  "com.google.common.collect.Maps",
+  "com.google.common.collect.Sets",
+  "com.google.javascript.jscomp.NodeTraversal.AbstractPostOrderCallback",
+  "com.google.javascript.jscomp.Scope.Var",
+  "com.google.javascript.jscomp.graph.FixedPointGraphTraversal",
+  "com.google.javascript.jscomp.graph.LinkedDirectedGraph",
+  "com.google.javascript.jscomp.graph.FixedPointGraphTraversal.EdgeCallback",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.Token",
+  "java.util.ArrayDeque",
+  "java.util.Collection",
+  "java.util.Deque",
+  "java.util.List",
+  "java.util.Map",
+  "java.util.Set",
+  "java.util.Stack"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "exitScope"
+  },
+  {
+   "javadoc": "",
+   "name": "shouldTraverse"
+  },
+  {
+   "javadoc": "",
+   "name": "visit"
+  }
+ ],
+ "sig": {
+  "class_declaration": "private class ProcessProperties implements NodeTraversal.ScopedCallback",
+  "constructors": [],
+  "focal_signature": "public void enterScope(NodeTraversal t)",
+  "methods": [
+   "public void exitScope(NodeTraversal t);",
+   "public boolean shouldTraverse(NodeTraversal t, Node n, Node parent);",
+   "public void visit(NodeTraversal t, Node n, Node parent);"
+  ],
+  "type_signatures": [
+   "public class NodeTraversal { public NodeTraversal(AbstractCompiler compiler, Callback cb); public NodeTraversal(AbstractCompiler compiler, Callback cb, ScopeCreator scopeCreator); public void traverse(Node root); public void traverseRoots(Node ... roots); public void traverseRoots(List<Node> roots); protected void traverseInnerNode(Node node, Node parent, Scope refinedScope); public Compiler getCompiler(); public int getLineNumber(); public String getSourceName(); public CompilerInput getInput(); public JSModule getModule(); public Node getCurrentNode(); public static void traverse( AbstractCompiler compiler, Node root, Callback cb); public static void traverseRoots( AbstractCompiler compiler, List<Node> roots, Callback cb); public static void traverseRoots( AbstractCompiler compiler, Callback cb, Node ... roots); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

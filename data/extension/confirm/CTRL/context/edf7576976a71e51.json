@@ -1,0 +1,110 @@
+{
+ "bug_name": "Closure_131",
+ "call_sites": [
+  {
+   "line": 686,
+   "lines": [
+    681,
+    682,
+    683,
+    684,
+    685,
+    686,
+    687,
+    688,
+    689,
+    690,
+    691
+   ],
+   "path": "src/com/google/javascript/jscomp/CodeGenerator.java",
+   "snippet": "            Preconditions.checkState(c.isStringKey());\n            String key = c.getString();\n            // Object literal property names don't have to be quoted if they\n            // are not JavaScript keywords\n            if (!c.isQuotedString() &&\n                !TokenStream.isKeyword(key) &&\n                TokenStream.isJSIdentifier(key) &&\n                // do not encode literally any non-literal characters that\n                // were Unicode escaped.\n                NodeUtil.isLatin(key)) {\n              add(key);"
+  },
+  {
+   "line": 141,
+   "lines": [
+    136,
+    137,
+    138,
+    139,
+    140,
+    141,
+    142,
+    143,
+    144,
+    145,
+    146
+   ],
+   "path": "src/com/google/javascript/jscomp/NameGenerator.java",
+   "snippet": "      }\n\n      nameCount++;\n\n      // Make sure it's not a JS keyword or reserved name.\n      if (TokenStream.isKeyword(name) || reservedNames.contains(name)) {\n        continue;\n      }\n\n      return name;\n    }"
+  },
+  {
+   "line": 2445,
+   "lines": [
+    2440,
+    2441,
+    2442,
+    2443,
+    2444,
+    2445,
+    2446,
+    2447,
+    2448,
+    2449,
+    2450
+   ],
+   "path": "src/com/google/javascript/jscomp/NodeUtil.java",
+   "snippet": "  /**\n   * Determines whether the given name is a valid variable name.\n   */\n  static boolean isValidSimpleName(String name) {\n    return TokenStream.isJSIdentifier(name) &&\n        !TokenStream.isKeyword(name) &&\n        // no Unicode escaped characters - some browsers are less tolerant\n        // of Unicode characters that might be valid according to the\n        // language spec.\n        // Note that by this point, Unicode escapes have been converted\n        // to UTF-16 characters, so we're only searching for character"
+  },
+  {
+   "line": 320,
+   "lines": [
+    315,
+    316,
+    317,
+    318,
+    319,
+    320,
+    321,
+    322,
+    323,
+    324,
+    325
+   ],
+   "path": "src/com/google/javascript/rhino/ScriptRuntime.java",
+   "snippet": "            return false;\n        for (int i = 1; i != L; ++i) {\n            if (!Character.isJavaIdentifierPart(s.charAt(i)))\n                return false;\n        }\n        return !TokenStream.isKeyword(s);\n    }\n\n    /**\n     * If str is a decimal presentation of Uint32 value, return it as long.\n     * Otherwise, return -1L;"
+  }
+ ],
+ "class_simple": "TokenStream",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * This class implements the JavaScript scanner.\n *\n * It is based on the C source files jsscan.c and jsscan.h\n * in the jsref package.\n *\n */\n\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [],
+ "focal_class": "com.google.javascript.rhino.TokenStream",
+ "focal_id": "Closure_131::com.google.javascript.rhino.TokenStream::isKeyword(String)",
+ "focal_method_name": "isKeyword",
+ "generations": 3,
+ "impl_B": "public static boolean isKeyword(String name) {\n        boolean id = false;\n        String s = name;\n        complete: {\n            String X = null;\n            int c;\n            partial: switch (s.length()) {\n            case 2: c=s.charAt(1);\n                if (c=='f') {\n                  if (s.charAt(0)=='i') {id=true; break complete;}\n                } else if (c=='n') {\n                  if (s.charAt(0)=='i') {id=true; break complete;}\n                } else if (c=='o') {\n                  if (s.charAt(0)=='d') {id=true; break complete;}\n                }\n                break partial;\n            case 3: switch (s.charAt(0)) {\n                case 'f':\n                  if (s.charAt(2)=='r' && s.charAt(1)=='o') {\n                    id=true; break complete;\n                  } break partial;\n                case 'i':\n                  if (s.charAt(2)=='t' && s.charAt(1)=='n') {\n                    id=true; break complete;\n                  } break partial;\n                case 'n':\n                  if (s.charAt(2)=='w' && s.charAt(1)=='e') {\n                    id=true; break complete;\n                  } break partial;\n                case 't':\n                  if (s.charAt(2)=='y' && s.charAt(1)=='r') {\n                    id=true; break complete;\n                  } break partial;\n                case 'v':\n                  if (s.charAt(2)=='r' && s.charAt(1)=='a') {\n                    id=true; break complete;\n                  } break partial;\n                } break partial;\n            case 4: switch (s.charAt(0)) {\n                case 'b': X=\"byte\";id=true; break partial;\n                case 'c': c=s.charAt(3);\n                    if (c=='e') { if (s.charAt(2)=='s' && s.charAt(1)=='a') {\n                            id=true; break complete;} }\n                    else if (c=='r') {\n                      if (s.charAt(2)=='a' && s.charAt(1)=='h') {\n                        id=true; break complete;\n                      }\n                    }\n                    break partial;\n                case 'e': c=s.charAt(3);\n                    if (c=='e') { if (s.charAt(2)=='s' && s.charAt(1)=='l') {\n                            id=true; break complete;} }\n                    else if (c=='m') {\n                      if (s.charAt(2)=='u' && s.charAt(1)=='n') {\n                            id=true; break complete;} }\n                    break partial;\n                case 'g': X=\"goto\";id=true; break partial;\n                case 'l': X=\"long\";id=true; break partial;\n                case 'n': X=\"null\";id=true; break partial;\n                case 't': c=s.charAt(3);\n                    if (c=='e') { if (s.charAt(2)=='u' && s.charAt(1)=='r') {\n                            id=true; break complete;} }\n                    else if (c=='s') {\n                      if (s.charAt(2)=='i' && s.charAt(1)=='h') {\n                            id=true; break complete;} }\n                    break partial;\n                case 'v': X=\"void\";id=true; break partial;\n                case 'w': X=\"with\";id=true; break partial;\n                } break partial;\n            case 5: switch (s.charAt(2)) {\n                case 'a': X=\"class\";id=true; break partial;\n                case 'e': X=\"break\";id=true; break partial;\n                case 'i': X=\"while\";id=true; break partial;\n                case 'l': X=\"false\";id=true; break partial;\n                case 'n': c=s.charAt(0);\n                    if (c=='c') { X=\"const\";id=true; }\n                    else if (c=='f') { X=\"final\";id=true; }\n                    break partial;\n                case 'o': c=s.charAt(0);\n                    if (c=='f') { X=\"float\";id=true; }\n                    else if (c=='s') { X=\"short\";id=true; }\n                    break partial;\n                case 'p': X=\"super\";id=true; break partial;\n                case 'r': X=\"throw\";id=true; break partial;\n                case 't': X=\"catch\";id=true; break partial;\n                } break partial;\n            case 6: switch (s.charAt(1)) {\n                case 'a': X=\"native\";id=true; break partial;\n                case 'e': c=s.charAt(0);\n                    if (c=='d') { X=\"delete\";id=true; }\n                    else if (c=='r') { X=\"return\";id=true; }\n                    break partial;\n                case 'h': X=\"throws\";id=true; break partial;\n                case 'm': X=\"import\";id=true; break partial;\n                case 'o': X=\"double\";id=true; break partial;\n                case 't': X=\"static\";id=true; break partial;\n                case 'u': X=\"public\";id=true; break partial;\n                case 'w': X=\"switch\";id=true; break partial;\n                case 'x': X=\"export\";id=true; break partial;\n                case 'y': X=\"typeof\";id=true; break partial;\n                } break partial;\n            case 7: switch (s.charAt(1)) {\n                case 'a': X=\"package\";id=true; break partial;\n                case 'e': X=\"default\";id=true; break partial;\n                case 'i': X=\"finally\";id=true; break partial;\n                case 'o': X=\"boolean\";id=true; break partial;\n                case 'r': X=\"private\";id=true; break partial;\n                case 'x': X=\"extends\";id=true; break partial;\n                } break partial;\n            case 8: switch (s.charAt(0)) {\n                case 'a': X=\"abstract\";id=true; break partial;\n                case 'c': X=\"continue\";id=true; break partial;\n                case 'd': X=\"debugger\";id=true; break partial;\n                case 'f': X=\"function\";id=true; break partial;\n                case 'v': X=\"volatile\";id=true; break partial;\n                } break partial;\n            case 9: c=s.charAt(0);\n                if (c=='i') { X=\"interface\";id=true; }\n                else if (c=='p') { X=\"protected\";id=true; }\n                else if (c=='t') { X=\"transient\";id=true; }\n                break partial;\n            case 10: c=s.charAt(1);\n                if (c=='m') { X=\"implements\";id=true; }\n                else if (c=='n') { X=\"instanceof\";id=true; }\n                break partial;\n            case 12: X=\"synchronized\";id=true; break partial;\n            }\n            // partial match validate the entire string the one possibility\n            if (X!=null && X!=s && !X.equals(s)) return false;\n        }\n        return id;\n    }",
+ "imports": [],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.rhino",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "isJSIdentifier"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class TokenStream",
+  "constructors": [],
+  "focal_signature": "public static boolean isKeyword(String name)",
+  "methods": [
+   "public static boolean isJSIdentifier(String s);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

@@ -1,0 +1,146 @@
+{
+ "bug_name": "Mockito_23",
+ "call_sites": [
+  {
+   "line": 66,
+   "lines": [
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71
+   ],
+   "path": "src/org/mockito/Mock.java",
+   "snippet": "@Target(FIELD)\n@Retention(RUNTIME)\n@Documented\npublic @interface Mock {\n\n    Answers answer() default Answers.RETURNS_DEFAULTS;\n\n    String name() default \"\";\n\n    Class<?>[] extraInterfaces() default {};\n    "
+  },
+  {
+   "line": 32,
+   "lines": [
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36
+   ],
+   "path": "src/org/mockito/internal/configuration/MockAnnotationProcessor.java",
+   "snippet": "        if(annotation.serializable()){\n        \tmockSettings.serializable();\n        }\n\n        // see @Mock answer default value\n        mockSettings.defaultAnswer(annotation.answer().get());\n        return Mockito.mock(field.getType(), mockSettings);\n    }\n}\n"
+  },
+  {
+   "line": 91,
+   "lines": [
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96
+   ],
+   "path": "src/org/mockito/internal/handler/MockHandlerImpl.java",
+   "snippet": "        // look for existing answer for this invocation\n        StubbedInvocationMatcher stubbedInvocation = invocationContainerImpl.findAnswerFor(invocation);\n\n        if (stubbedInvocation != null) {\n            stubbedInvocation.captureArgumentsFrom(invocation);\n            return stubbedInvocation.answer(invocation);\n        } else {\n             Object ret = mockSettings.getDefaultAnswer().answer(invocation);\n\n            // redo setting invocation for potential stubbing in case of partial\n            // mocks / spies."
+  },
+  {
+   "line": 93,
+   "lines": [
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98
+   ],
+   "path": "src/org/mockito/internal/handler/MockHandlerImpl.java",
+   "snippet": "\n        if (stubbedInvocation != null) {\n            stubbedInvocation.captureArgumentsFrom(invocation);\n            return stubbedInvocation.answer(invocation);\n        } else {\n             Object ret = mockSettings.getDefaultAnswer().answer(invocation);\n\n            // redo setting invocation for potential stubbing in case of partial\n            // mocks / spies.\n            // Without it, the real method inside 'when' might have delegated\n            // to other self method and overwrite the intended stubbed method"
+  },
+  {
+   "line": 73,
+   "lines": [
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78
+   ],
+   "path": "src/org/mockito/internal/stubbing/InvocationContainerImpl.java",
+   "snippet": "            }\n        }\n    }\n\n    Object answerTo(Invocation invocation) throws Throwable {\n        return findAnswerFor(invocation).answer(invocation);\n    }\n\n    public StubbedInvocationMatcher findAnswerFor(Invocation invocation) {\n        synchronized (stubbed) {\n            for (StubbedInvocationMatcher s : stubbed) {"
+  }
+ ],
+ "class_simple": "ReturnsDeepStubs",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Returning deep stub implementation.\n *\n * Will return previously created mock if the invocation matches.\n *\n * <p>Supports nested generic information, with this answer you can write code like this :\n *\n * <pre class=\"code\"><code class=\"java\">\n *     interface GenericsNest&lt;K extends Comparable&lt;K&gt; & Cloneable&gt; extends Map&lt;K, Set&lt;Number&gt;&gt; {}\n *\n *     GenericsNest&lt;?&gt; mock = mock(GenericsNest.class, new ReturnsGenericDeepStubs());\n *     Number number = mock.entrySet().iterator().next().getValue().iterator().next();\n * </code></pre>\n * </p>\n *\n * @see org.mockito.Mockito#RETURNS_DEEP_STUBS\n * @see org.mockito.Answers#RETURNS_DEEP_STUBS\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "private MockitoCore mockitoCore",
+  "private ReturnsEmptyValues delegate"
+ ],
+ "focal_class": "org.mockito.internal.stubbing.defaultanswers.ReturnsDeepStubs",
+ "focal_id": "Mockito_23::org.mockito.internal.stubbing.defaultanswers.ReturnsDeepStubs::answer(InvocationOnMock)",
+ "focal_method_name": "answer",
+ "generations": 3,
+ "impl_B": "public Object answer(InvocationOnMock invocation) throws Throwable {\n        GenericMetadataSupport returnTypeGenericMetadata =\n                actualParameterizedType(invocation.getMock()).resolveGenericReturnType(invocation.getMethod());\n\n        Class<?> rawType = returnTypeGenericMetadata.rawType();\n        if (!mockitoCore.isTypeMockable(rawType)) {\n            return delegate.returnValueFor(rawType);\n        }\n\n        return getMock(invocation, returnTypeGenericMetadata);\n    }",
+ "imports": [
+  "static org.mockito.Mockito.*",
+  "java.io.Serializable",
+  "org.mockito.MockSettings",
+  "org.mockito.internal.InternalMockHandler",
+  "org.mockito.internal.MockitoCore",
+  "org.mockito.internal.creation.settings.CreationSettings",
+  "org.mockito.internal.stubbing.InvocationContainerImpl",
+  "org.mockito.internal.stubbing.StubbedInvocationMatcher",
+  "org.mockito.internal.util.MockUtil",
+  "org.mockito.internal.util.reflection.GenericMetadataSupport",
+  "org.mockito.invocation.InvocationOnMock",
+  "org.mockito.stubbing.Answer"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.mockito.internal.stubbing.defaultanswers",
+ "project": "Mockito",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "actualParameterizedType"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class ReturnsDeepStubs implements Answer<Object>, Serializable",
+  "constructors": [],
+  "focal_signature": "public Object answer(InvocationOnMock invocation) throws Throwable",
+  "methods": [
+   "protected GenericMetadataSupport actualParameterizedType(Object mock);"
+  ],
+  "type_signatures": [
+   "public interface InvocationOnMock extends Serializable {  }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

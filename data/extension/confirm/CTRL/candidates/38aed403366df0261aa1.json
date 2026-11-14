@@ -1,0 +1,14 @@
+{
+  "assembled": true,
+  "call_key": "46c4f2410625705fd1b64e36bbbae286fc45013dabe07bab1a4443be483d345c",
+  "candidate_id": "38aed403366df0261aa1",
+  "class_name": "ElitisticListPopulation_setElitismRate_TriageGen2Test",
+  "dataset": "D1C_CTRL",
+  "focal_id": "Math_35::org.apache.commons.math3.genetics.ElitisticListPopulation::setElitismRate(double)",
+  "generation": 2,
+  "model_returned": "gemma4:26b",
+  "n_tests": 6,
+  "package": "org.apache.commons.math3.genetics",
+  "source": "package org.apache.commons.math3.genetics;\n\nimport java.io.*;\nimport java.math.*;\nimport java.util.*;\nimport java.util.ArrayList;\nimport java.util.Collections;\nimport java.util.List;\nimport org.apache.commons.math3.exception.OutOfRangeException;\nimport org.apache.commons.math3.exception.util.LocalizedFormats;\nimport org.apache.commons.math3.util.FastMath;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ElitisticListPopulation_setElitismRate_TriageGen2Test {\n\n    private ElitisticListPopulation population;\n    private final int populationLimit = 10;\n    private final double initialElitismRate = 0.1;\n\n    @Before\n    public void setUp() {\n        population = new ElitisticListPopulation(populationLimit, initialElitismRate);\n    }\n\n    @Test\n    public void testSetElitismRate_ValidValue_LowerBound() {\n        double validRate = 0.0;\n        population.setElitismRate(validRate);\n        Assert.assertEquals(\"Elitism rate should be 0.0\", validRate, population.getElitismRate(), 1e-9);\n    }\n\n    @Test\n    public void testSetElitismRate_ValidValue_UpperBound() {\n        double validRate = 1.0;\n        population.setElitismRate(validRate);\n        Assert.assertEquals(\"Elitism rate should be 1.0\", validRate, population.getElitismRate(), 1e-9);\n    }\n\n    @Test\n    public void testSetElitismRate_ValidValue_Middle() {\n        double validRate = 0.5;\n        population.setElitismRate(validRate);\n        Assert.assertEquals(\"Elitism rate should be 0.5\", validRate, population.getElitismRate(), 1e-9);\n    }\n\n    @Test(expected = OutOfRangeException.class)\n    public void testSetElitismRate_InvalidValue_TooLow() {\n        double invalidRate = -0.00001;\n        population.setElitismRate(invalidRate);\n    }\n\n    @Test(expected = OutOfRangeException.class)\n    public void testSetElitismRate_InvalidValue_TooHigh() {\n        double invalidRate = 1.00001;\n        population.setElitismRate(invalidRate);\n    }\n\n    @Test\n    public void testConstructor_And_GetElitismRate() {\n        // Testing the constructor integration with getter to ensure state is set correctly\n        ElitisticListPopulation popWithChromosomes = new ElitisticListPopulation(new ArrayList<Chromosome>(), 5, 0.2);\n        Assert.assertEquals(0.2, popWithChromosomes.getElitismRate(), 1e-9);\n    }\n}\n",
+  "tranche": "CTRL"
+}

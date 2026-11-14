@@ -1,0 +1,14 @@
+{
+  "assembled": true,
+  "call_key": "9d69c2fdf33cac257bc5314f4a1ffef43ea6592101a3e3af79b11885c1f8d044",
+  "candidate_id": "77a9bd8b8c41307f8595",
+  "class_name": "Base64_isArrayByteBase64_TriageGen1Test",
+  "dataset": "D1C_CTRL",
+  "focal_id": "Codec_4::org.apache.commons.codec.binary.Base64::isArrayByteBase64(byte[])",
+  "generation": 1,
+  "model_returned": "gemma4:26b",
+  "n_tests": 9,
+  "package": "org.apache.commons.codec.binary",
+  "source": "package org.apache.commons.codec.binary;\n\nimport java.io.*;\nimport java.math.*;\nimport java.math.BigInteger;\nimport java.util.*;\nimport org.apache.commons.codec.BinaryDecoder;\nimport org.apache.commons.codec.BinaryEncoder;\nimport org.apache.commons.codec.DecoderException;\nimport org.apache.commons.codec.EncoderException;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for org.apache.commons.codec.binary.Base64.isArrayByteBase64\n */\npublic class Base64_isArrayByteBase64_TriageGen1Test {\n\n    @Test\n    public void testIsArrayByteBase64_EmptyArray() {\n        byte[] input = new byte[0];\n        assertTrue(\"Empty array should return true as loop doesn't execute\", Base64.isArrayByteBase64(input));\n    }\n\n    @Test\n    public void testIsArrayByteBase64_ValidBase64() {\n        // 'S' 'G' 'V' 's' '=' (Base64 chars)\n        byte[] input = \"SGVsbG8=\".getBytes();\n        assertTrue(Base64.isArrayByteBase64(input));\n    }\n\n    @Test\n    public void testIsArrayByteBase64_WithWhiteSpace() {\n        // Base64 chars with spaces and newlines\n        byte[] input = \"SGVsb G8=\\n\".getBytes();\n        assertTrue(Base64.isArrayByteBase64(input));\n    }\n\n    @Test\n    public void testIsArrayByteBase64_InvalidCharacters() {\n        // '!' is not a Base64 character nor whitespace\n        byte[] input = \"SGVsbG8!\".getBytes();\n        assertFalse(Base64.isArrayByteBase64(input));\n    }\n\n    @Test\n    public void testIsArrayByteBase64_MixedValidAndInvalid() {\n        // Starts valid, ends invalid\n        byte[] input = \"SGVsbG8=\".getBytes();\n        input[input.length - 1] = (byte) '!';\n        assertFalse(Base64.isArrayByteBase64(input));\n    }\n\n    @Test\n    public void testIsArrayByteBase64_AllWhitespace() {\n        byte[] input = \" \\n\\r\\t \".getBytes();\n        assertTrue(Base64.isArrayByteBase64(input));\n    }\n\n    @Test\n    public void testIsArrayByteBase64_SingleValidChar() {\n        byte[] input = {'A'};\n        assertTrue(Base64.isArrayByteBase64(input));\n    }\n\n    @Test\n    public void testIsArrayByteBase64_SingleInvalidChar() {\n        byte[] input = {'#'};\n        assertFalse(Base64.isArrayByteBase64(input));\n    }\n\n    @Test\n    public void testIsArrayByteBase64_SingleWhitespaceChar() {\n        byte[] input = {' '};\n        assertTrue(Base64.isArrayByteBase64(input));\n    }\n}\n",
+  "tranche": "CTRL"
+}

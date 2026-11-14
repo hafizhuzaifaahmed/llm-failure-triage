@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Research Methodology Architecture</title>
+<style>
+  :root {
+    --navy: #1F3864; --ink: #1d2433; --muted: #4a5568; --line: #8EA3C4;
+    --data: #E8EEF8; --proc: #EEF2F7; --llm: #DCE8FB; --llmb: #2F5BA8;
+    --rule: #ECF3EA; --ruleb: #4E7D45; --gt: #B3261E; --gtbg: #FBEAE8;
+    --fac: #FFF4DE; --facb: #B7791F; --ctl: #F1F3F6; --ctlb: #8A94A6;
+    --exp: #F3EEFB; --expb: #6B4FA0; --find: #E9F5F1; --findb: #2F7A63;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #ffffff; }
+  body { width: 1160px; font-family: Arial, Helvetica, sans-serif; color: var(--ink); font-size: 16.5px; line-height: 1.25; }
+  .wrap { padding: 14px 12px 12px; }
+  h1 { font-size: 23px; margin: 0 0 2px; color: var(--navy); text-align: center; }
+  .sub { text-align: center; font-size: 15.5px; color: var(--muted); margin-bottom: 10px; }
+  .grid { display: grid; grid-template-columns: 182px 22px 1fr 22px 104px; column-gap: 0; }
+  .band { border: 2px solid var(--navy); border-radius: 8px; background: #fff; display: flex; overflow: hidden; }
+  .tab { width: 118px; flex: none; background: var(--navy); color: #fff; font-weight: bold; font-size: 16px; padding: 8px 8px; display: flex; flex-direction: column; justify-content: center; text-align: left; }
+  .tab .n { font-size: 22px; line-height: 1; margin-bottom: 3px; }
+  .body { flex: 1; padding: 7px 8px; display: flex; flex-wrap: wrap; gap: 6px; align-items: stretch; align-content: center; }
+  .chip { border: 1.5px solid var(--line); background: var(--proc); border-radius: 5px; padding: 4px 7px; }
+  .chip b { color: var(--navy); }
+  .d { background: var(--data); }
+  .llm { background: var(--llm); border-color: var(--llmb); }
+  .rule { background: var(--rule); border-color: var(--ruleb); }
+  .gt { background: var(--gtbg); border: 2px solid var(--gt); }
+  .gt b { color: var(--gt); }
+  .exp { background: var(--exp); border-color: var(--expb); }
+  .exp b { color: var(--expb); }
+  .find { background: var(--find); border-color: var(--findb); }
+  .find b { color: var(--findb); }
+  .w100 { flex-basis: 100%; }
+  .conn { height: 18px; display: flex; justify-content: center; align-items: center; }
+  .down { width: 0; height: 0; border-left: 11px solid transparent; border-right: 11px solid transparent; border-top: 15px solid var(--navy); position: relative; }
+  .down::before { content: ""; position: absolute; left: -2px; top: -19px; width: 4px; height: 5px; background: var(--navy); }
+  .fac { border: 2px solid var(--facb); background: var(--fac); border-radius: 6px; padding: 5px 6px; font-size: 15px; align-self: center; }
+  .fac .k { font-size: 12.5px; font-weight: bold; letter-spacing: .04em; color: var(--facb); display: block; margin-bottom: 2px; }
+  .ctl { border: 1.5px dashed var(--ctlb); background: var(--ctl); border-radius: 6px; padding: 5px 6px; font-size: 14.5px; align-self: center; color: #2d3748; }
+  .ctl .k { font-size: 12.5px; font-weight: bold; letter-spacing: .04em; color: #5a6578; display: block; margin-bottom: 2px; }
+  .ra { align-self: center; justify-self: center; width: 0; height: 0; border-top: 8px solid transparent; border-bottom: 8px solid transparent; border-left: 13px solid var(--facb); }
+  .ra.c { border-left-color: var(--ctlb); }
+  .gtlane { border-left: 4px dashed var(--gt); margin-left: 10px; position: relative; display: flex; align-items: center; }
+  .gtlane .txt { writing-mode: vertical-rl; transform: rotate(180deg); color: var(--gt); font-weight: bold; font-size: 16px; padding: 6px 6px 6px 8px; text-align: center; line-height: 1.3; }
+  .gtin { align-self: center; height: 4px; background: var(--gt); position: relative; width: 100%; }
+  .gtin.out::after { content: ""; position: absolute; right: -2px; top: -7px; border-top: 9px solid transparent; border-bottom: 9px solid transparent; border-left: 12px solid var(--gt); }
+  .gtin.in::after { content: ""; position: absolute; left: -2px; top: -7px; border-top: 9px solid transparent; border-bottom: 9px solid transparent; border-right: 12px solid var(--gt); }
+  .flow { display: flex; align-items: center; gap: 4px; flex-wrap: nowrap; }
+  .flow .chip { font-size: 15px; }
+  .ar { color: var(--navy); font-weight: bold; font-size: 18px; }
+  .cols { display: grid; grid-template-columns: 0.82fr 1.05fr 1.5fr; gap: 7px; width: 100%; }
+  .col { border-radius: 6px; padding: 5px 6px; }
+  .col h4 { margin: 0 0 4px; font-size: 14.5px; letter-spacing: .02em; }
+  .col .chip { margin-bottom: 4px; font-size: 15px; }
+  .c1 { border: 1.5px solid var(--ruleb); background: #F7FBF6; }
+  .c1 h4 { color: var(--ruleb); }
+  .c2, .c3 { border: 1.5px solid var(--llmb); background: #F5F9FF; }
+  .c2 h4, .c3 h4 { color: var(--llmb); }
+  .c3 { border-width: 2.5px; }
+  .deb { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; font-size: 14.5px; }
+  .deb .chip { margin: 0; text-align: center; padding: 3px 4px; }
+  .deb .full { grid-column: 1 / 3; }
+  .rnd { font-size: 12.5px; font-weight: bold; color: var(--llmb); grid-column: 1 / 3; margin-top: 1px; }
+  .budget { flex-basis: 100%; border: 2px solid var(--facb); background: var(--fac); border-radius: 5px; padding: 4px 8px; font-size: 15px; }
+  .budget b { color: #8a5a12; }
+  .hidden { flex-basis: 100%; font-size: 14.5px; color: var(--gt); border: 1.5px dashed var(--gt); border-radius: 5px; padding: 3px 7px; background: #fff; }
+  .legend { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 11px; justify-content: center; font-size: 14px; color: var(--muted); }
+  .sw { display: inline-block; width: 16px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 5px; }
+  .small { font-size: 14px; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Research Methodology Architecture</h1>
+  <div class="sub">LLM-Based Failure Triage for Generated Unit Tests: Precision and Recall, Specification Availability, and Multi-Agent Debate under an Equal Computational Budget</div>
+
+  <div class="grid">
+    <!-- 1 DATA -->
+    <div class="fac" style="grid-row:1;grid-column:1"><span class="k">E5 ROBUSTNESS FACTOR</span>Dataset: D1 (primary) · D2 · D3</div>
+    <div class="ra" style="grid-row:1;grid-column:2"></div>
+    <div class="band" style="grid-row:1;grid-column:3">
+      <div class="tab"><span class="n">①</span>DATA</div>
+      <div class="body">
+        <div class="chip d" style="flex:1.25"><b>D1 Defects4J 3.0.1</b> — real faults, buggy/fixed pairs, 17 projects (frame of [12])</div>
+        <div class="chip d" style="flex:1"><b>D2 Seeded faults</b> — mutants of fixed versions</div>
+        <div class="chip d" style="flex:1"><b>D3 GitBug-Java</b> — 2023 bugs (external)</div>
+        <div class="chip w100" style="text-align:center"><b>Project-level split:</b> 3 development projects (prompts, pilot) &nbsp;|&nbsp; 14 test projects (D1-test); D3 fully held out</div>
+      </div>
+    </div>
+    <div class="conn" style="grid-row:2;grid-column:3"><div class="down"></div></div>
+
+    <!-- 2 DATA COLLECTION -->
+    <div class="ctl" style="grid-row:3;grid-column:1"><span class="k">CONTROLLED</span>Generator G (third model family), buggy-input prompt of [12], 3 generations / method</div>
+    <div class="ra c" style="grid-row:3;grid-column:2"></div>
+    <div class="band" style="grid-row:3;grid-column:3">
+      <div class="tab"><span class="n">②</span>DATA COLLECTION</div>
+      <div class="body">
+        <div class="flow w100">
+          <div class="chip">Checkout <b>B</b> &amp; <b>F</b></div><span class="ar">→</span>
+          <div class="chip">Generate tests from <b>B</b></div><span class="ar">→</span>
+          <div class="chip">Compile on B &amp; F</div><span class="ar">→</span>
+          <div class="chip">Run <b>3× on B</b>, <b>3× on F</b></div><span class="ar">→</span>
+          <div class="chip">Capture failure evidence</div>
+        </div>
+        <div class="chip gt w100"><b>Ground-truth labeller</b> (execution only): fail on B ∧ pass on F → <b>PF</b> · same failure on B and F → <b>TF</b> · otherwise excluded</div>
+      </div>
+    </div>
+    <div class="gtin out" style="grid-row:3;grid-column:4"></div>
+    <div class="gtlane" style="grid-row:3 / 14;grid-column:5"><div class="txt">GROUND-TRUTH CHANNEL<br>PF / TF labels — never shown to any judge</div></div>
+    <div class="conn" style="grid-row:4;grid-column:3"><div class="down"></div></div>
+
+    <!-- 3 PREPROCESSING -->
+    <div class="ctl" style="grid-row:5;grid-column:1"><span class="k">CONTROLLED</span>Pinned Docker image, Java 11, fixed locale and time zone</div>
+    <div class="ra c" style="grid-row:5;grid-column:2"></div>
+    <div class="band" style="grid-row:5;grid-column:3">
+      <div class="tab"><span class="n">③</span>PRE&shy;PROCESSING</div>
+      <div class="body">
+        <div class="chip">Compile filtering</div>
+        <div class="chip">Flaky / timeout exclusion</div>
+        <div class="chip">Trace normalisation</div>
+        <div class="chip">Deduplication</div>
+        <div class="chip">Leakage scrub (F, patch, dev tests, ids)</div>
+        <div class="chip">Length caps</div>
+      </div>
+    </div>
+    <div class="conn" style="grid-row:6;grid-column:3"><div class="down"></div></div>
+
+    <!-- 4 REPRESENTATION -->
+    <div class="fac" style="grid-row:7;grid-column:1"><span class="k">MANIPULATED (E2)</span>Specification level<br><b>S0</b> signature · <b>S1</b> +Javadoc · <b>S2</b> +inferred spec<br><span class="small">only judge-visible specification content changes</span></div>
+    <div class="ra" style="grid-row:7;grid-column:2"></div>
+    <div class="band" style="grid-row:7;grid-column:3">
+      <div class="tab"><span class="n">④</span>FEATURE / REPRESEN&shy;TATION</div>
+      <div class="body">
+        <div class="chip"><b>Evidence package:</b> [T] test + fixtures</div>
+        <div class="chip">[F] exception, message, trace</div>
+        <div class="chip">[Sig] signature + class interface</div>
+        <div class="chip">[Doc] Javadoc (S1, S2)</div>
+        <div class="chip">[Spec] inferred spec (S2)</div>
+        <div class="hidden">Hidden at every level: focal body · fixed version · patch · developer tests · labels</div>
+      </div>
+    </div>
+    <div class="conn" style="grid-row:8;grid-column:3"><div class="down"></div></div>
+
+    <!-- 5 METHODS -->
+    <div style="grid-row:9;grid-column:1;display:flex;flex-direction:column;gap:7px;justify-content:center">
+      <div class="fac"><span class="k">MANIPULATED (E3)</span>Architecture<br><b>J1 · SC · DEB</b> (+SC-T)</div>
+      <div class="ctl"><span class="k">CONTROLLED</span>Model M1 (M2 in E5), τ = 0.7, ≤ 512 output tokens / call; prompts frozen on dev split</div>
+    </div>
+    <div class="ra" style="grid-row:9;grid-column:2"></div>
+    <div class="band" style="grid-row:9;grid-column:3">
+      <div class="tab"><span class="n">⑤</span>BASELINES &amp; PROPOSED METHOD</div>
+      <div class="body">
+        <div class="cols">
+          <div class="col c1"><h4>NON-LLM</h4>
+            <div class="chip rule"><b>DA</b> discard-all</div>
+            <div class="chip rule"><b>KA</b> keep-all</div>
+            <div class="chip rule"><b>R0</b> rule-based</div>
+          </div>
+          <div class="col c2"><h4>SINGLE-AGENT LLM</h4>
+            <div class="chip llm"><b>J1</b> one-shot judge · 1 call</div>
+            <div class="chip llm"><b>SC</b> 5 samples → majority · 5 calls</div>
+            <div class="chip llm"><b>SC-T</b> token-matched</div>
+          </div>
+          <div class="col c3"><h4>PROPOSED: DEB DEBATE · 5 CALLS</h4>
+            <div class="deb">
+              <div class="rnd">ROUND 1 — independent</div>
+              <div class="chip llm">Advocate-P (program)</div>
+              <div class="chip llm">Advocate-T (test)</div>
+              <div class="rnd">ROUND 2 — each rebuts the other ⇅</div>
+              <div class="chip llm">Rebuttal P</div>
+              <div class="chip llm">Rebuttal T</div>
+              <div class="chip llm full"><b>Adjudicator</b> → final label</div>
+            </div>
+          </div>
+        </div>
+        <div class="budget"><b>Equal allocated budget:</b> SC = DEB = 5 calls × ≤ 512 output tokens, same model and evidence; SC-T equalises consumed tokens</div>
+      </div>
+    </div>
+    <div class="conn" style="grid-row:10;grid-column:3"><div class="down"></div></div>
+
+    <!-- 6 OUTPUT -->
+    <div class="ctl" style="grid-row:11;grid-column:1"><span class="k">CONTROLLED</span>Fixed JSON schema; invalid output scored as TF</div>
+    <div class="ra c" style="grid-row:11;grid-column:2"></div>
+    <div class="band" style="grid-row:11;grid-column:3">
+      <div class="tab"><span class="n">⑥</span>PREDICTION / OUTPUT</div>
+      <div class="body">
+        <div class="chip"><b>Label:</b> PROGRAM_FAULT | TEST_FAULT</div>
+        <div class="chip">Reason · evidence ids · summary</div>
+        <div class="chip">Confidence · agreement · cost log</div>
+      </div>
+    </div>
+    <div class="conn" style="grid-row:12;grid-column:3"><div class="down"></div></div>
+
+    <!-- 7 EVALUATION -->
+    <div class="ctl" style="grid-row:13;grid-column:1"><span class="k">CONTROLLED</span>Unit = triage instance; resampling by bug; 3 replicates averaged</div>
+    <div class="ra c" style="grid-row:13;grid-column:2"></div>
+    <div class="band" style="grid-row:13;grid-column:3;border-color:var(--gt)">
+      <div class="tab"><span class="n">⑦</span>EVALUATION</div>
+      <div class="body">
+        <div class="chip gt"><b>Predictions meet ground truth</b></div>
+        <div class="chip"><b>Precision · Recall · F1</b> (PF class)</div>
+        <div class="chip">FPR · FNR · MCC · PR-AUC (SC)</div>
+        <div class="chip">Confusion matrix · FP / FN error analysis · bug-level retention</div>
+        <div class="chip">Cluster bootstrap · Holm · GLMM · McNemar · Wilcoxon</div>
+        <div class="chip">Cost per ΔF1</div>
+      </div>
+    </div>
+    <div class="gtin in" style="grid-row:13;grid-column:4"></div>
+    <div class="conn" style="grid-row:14;grid-column:3"><div class="down"></div></div>
+
+    <!-- 8 EXPERIMENTS -->
+    <div class="ctl" style="grid-row:15;grid-column:1"><span class="k">CONFIRMATORY</span>H1, H2a, H2b, H3a, H3b on F1 (Holm family)</div>
+    <div class="ra c" style="grid-row:15;grid-column:2"></div>
+    <div class="band" style="grid-row:15;grid-column:3">
+      <div class="tab"><span class="n">⑧</span>EXPERI&shy;MENTS</div>
+      <div class="body">
+        <div class="chip exp" style="flex:1"><b>E1</b> Baseline comparison</div>
+        <div class="chip exp" style="flex:1"><b>E2</b> Specification S0/S1/S2</div>
+        <div class="chip exp" style="flex:1"><b>E3</b> Equal-budget debate</div>
+        <div class="chip exp" style="flex:1"><b>E4</b> Ablation A1–A5</div>
+        <div class="chip exp" style="flex:1.3"><b>E5</b> Robustness: D2, D3, M2, prompts</div>
+      </div>
+    </div>
+    <div class="conn" style="grid-row:16;grid-column:3"><div class="down"></div></div>
+
+    <!-- 9 FINDINGS -->
+    <div class="band" style="grid-row:17;grid-column:3">
+      <div class="tab" style="background:var(--findb)"><span class="n">⑨</span>RESEARCH FINDINGS</div>
+      <div class="body">
+        <div class="chip find" style="flex:1"><b>RQ1</b> Accuracy &amp; tests lost</div>
+        <div class="chip find" style="flex:1"><b>RQ2</b> Specification effect</div>
+        <div class="chip find" style="flex:1"><b>RQ3</b> Architecture effect</div>
+        <div class="chip find" style="flex:1">Efficiency</div>
+        <div class="chip find" style="flex:1">Limitations</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span><span class="sw" style="background:var(--fac);border:2px solid var(--facb)"></span>manipulated factor</span>
+    <span><span class="sw" style="background:var(--ctl);border:1.5px dashed var(--ctlb)"></span>controlled variable</span>
+    <span><span class="sw" style="background:var(--llm);border:1.5px solid var(--llmb)"></span>LLM component</span>
+    <span><span class="sw" style="background:var(--rule);border:1.5px solid var(--ruleb)"></span>non-LLM baseline</span>
+    <span><span class="sw" style="background:var(--gtbg);border:2px solid var(--gt)"></span>ground truth (never seen by judges)</span>
+    <span>PF = program fault (positive) · TF = test fault</span>
+  </div>
+</div>
+</body>
+</html>

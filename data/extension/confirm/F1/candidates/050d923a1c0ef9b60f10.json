@@ -1,0 +1,14 @@
+{
+  "assembled": true,
+  "call_key": "8050c11b74192287c422c7ac21791275b5f7c81c4ae201d3c20858e21f00de1a",
+  "candidate_id": "050d923a1c0ef9b60f10",
+  "class_name": "FastMath_max_TriageGen4Test",
+  "dataset": "D1C_F1",
+  "focal_id": "Math_59::org.apache.commons.math.util.FastMath::max(float,float)",
+  "generation": 4,
+  "model_returned": "gemma4:26b",
+  "n_tests": 6,
+  "package": "org.apache.commons.math.util",
+  "source": "package org.apache.commons.math.util;\n\nimport java.io.*;\nimport java.math.*;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class FastMath_max_TriageGen4Test {\n\n    @Test\n    public void testMax_aLessThanB() {\n        // Tests (a <= b) branch where a < b\n        float a = 1.0f;\n        float b = 2.0f;\n        float expected = 2.0f;\n        Assert.assertEquals(expected, FastMath.max(a, b), 0.0f);\n    }\n\n    @Test\n    public void testMax_aEqualToB() {\n        // Tests (a <= b) branch where a == b\n        float a = 5.0f;\n        float b = 5.0f;\n        float expected = 5.0f;\n        Assert.assertEquals(expected, FastMath.max(a, b), 0.0f);\n    }\n\n    @Test\n    public void testMax_aGreaterThanB_Normal() {\n        // Tests (a <= b) is false, and (Float.isNaN(a + b)) is false\n        // Note: The implementation logic: (a <= b) ? b : (Float.isNaN(a + b) ? Float.NaN : b)\n        // If a > b and a+b is not NaN, it returns b. \n        // This is a very unusual max implementation (it returns the smaller value if a > b).\n        // We test the code as written.\n        float a = 10.0f;\n        float b = 2.0f;\n        float expected = 2.0f; \n        Assert.assertEquals(expected, FastMath.max(a, b), 0.0f);\n    }\n\n    @Test\n    public void testMax_aGreaterThanB_NaNResult() {\n        // Tests (a <= b) is false, and (Float.isNaN(a + b)) is true\n        // This triggers the NaN branch.\n        // To make a + b = NaN where a > b, one must be NaN.\n        float a = Float.NaN;\n        float b = 1.0f;\n        // a <= b is false for NaN\n        // Float.isNaN(NaN + 1.0f) is true\n        Assert.assertTrue(Float.isNaN(FastMath.max(a, b)));\n    }\n\n    @Test\n    public void testMax_InfinityCases() {\n        // Test with positive infinity\n        Assert.assertEquals(2.0f, FastMath.max(1.0f, 2.0f), 0.0f);\n        Assert.assertEquals(1.0f, FastMath.max(1.0f, 1.0f), 0.0f);\n        \n        // Test with negative infinity\n        float a = Float.NEGATIVE_INFINITY;\n        float b = 0.0f;\n        // a <= b is true, returns b (0.0)\n        Assert.assertEquals(0.0f, FastMath.max(a, b), 0.0f);\n    }\n\n    @Test\n    public void testMax_BothNaN() {\n        // a <= b is false for NaN\n        // a + b is NaN\n        // returns NaN\n        float a = Float.NaN;\n        float b = Float.NaN;\n        Assert.assertTrue(Float.isNaN(FastMath.max(a, b)));\n    }\n}\n",
+  "tranche": "F1"
+}

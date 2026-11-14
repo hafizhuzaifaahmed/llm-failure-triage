@@ -1,0 +1,13 @@
+{
+  "assembled": true,
+  "call_key": "03ad79ec7f987a32af36d6d6c6bb6c360867c1c9d717a846c90237545779b0d8",
+  "candidate_id": "2f84a31caa7a5c355005",
+  "class_name": "MathUtils_factorialLog_TriageGen0Test",
+  "dataset": "D2",
+  "focal_id": "Math_93::org.apache.commons.math.util.MathUtils::factorialLog(int)#m292",
+  "generation": 0,
+  "model_returned": "gemma4:26b",
+  "n_tests": 6,
+  "package": "org.apache.commons.math.util",
+  "source": "package org.apache.commons.math.util;\n\nimport java.io.*;\nimport java.math.*;\nimport java.math.BigDecimal;\nimport java.util.*;\nimport java.util.Arrays;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\n/**\n * Unit tests for MathUtils.factorialLog\n */\npublic class MathUtils_factorialLog_TriageGen0Test {\n\n    private static final double DELTA = 1e-10;\n\n    @Test(expected = IllegalArgumentException.class)\n    public void testFactorialLog_NegativeInput() {\n        MathUtils.factorialLog(-1);\n    }\n\n    @Test\n    public void testFactorialLog_Zero() {\n        // factorial(0) = 1, log(1) = 0\n        assertEquals(0.0, MathUtils.factorialLog(0), DELTA);\n    }\n\n    @Test\n    public void testFactorialLog_One() {\n        // factorial(1) = 1, log(1) = 0\n        assertEquals(0.0, MathUtils.factorialLog(1), DELTA);\n    }\n\n    @Test\n    public void testFactorialLog_SmallN() {\n        // n < 21 path\n        // factorial(5) = 120, log(120) approx 4.78749174278\n        double expected = Math.log(120.0);\n        assertEquals(expected, MathUtils.factorialLog(5), DELTA);\n    }\n\n    @Test\n    public void testFactorialLog_BoundaryN20() {\n        // testing the upper bound of the first if block (n < 21)\n        double expected = Math.log(MathUtils.factorial(20));\n        assertEquals(expected, MathUtils.factorialLog(20), DELTA);\n    }\n\n    /**\n     * Note: Based on the provided source code, the loop for n >= 21 \n     * is currently empty (contains only a semicolon). \n     * This test verifies the current implementation behavior where \n     * for n >= 21, it returns 0.0.\n     */\n    @Test\n    public void testFactorialLog_LargeN() {\n        // n >= 21 path\n        // The provided implementation has an empty loop: for (int i = 2; i <= n; i++) { ; }\n        // Therefore, logSum remains 0.0\n        assertEquals(0.0, MathUtils.factorialLog(21), DELTA);\n        assertEquals(0.0, MathUtils.factorialLog(100), DELTA);\n    }\n}\n"
+}

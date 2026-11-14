@@ -1,0 +1,216 @@
+{
+ "bug_name": "Math_41",
+ "call_sites": [
+  {
+   "line": 168,
+   "lines": [
+    163,
+    164,
+    165,
+    166,
+    167,
+    168,
+    169,
+    170,
+    171,
+    172,
+    173
+   ],
+   "path": "src/main/java/org/apache/commons/math/filter/KalmanFilter.java",
+   "snippet": "        }\n\n        // initialize the error covariance to the process noise if it is not\n        // available from the process model\n        if (processModel.getInitialErrorCovariance() == null) {\n            errorCovariance = processNoise.copy();\n        } else {\n            errorCovariance = processModel.getInitialErrorCovariance();\n        }\n\n        // sanity checks, the control matrix B may be null"
+  },
+  {
+   "line": 246,
+   "lines": [
+    241,
+    242,
+    243,
+    244,
+    245,
+    246,
+    247,
+    248,
+    249,
+    250,
+    251
+   ],
+   "path": "src/main/java/org/apache/commons/math/filter/KalmanFilter.java",
+   "snippet": "     * Returns a copy of the current state estimation vector.\n     *\n     * @return the state estimation vector\n     */\n    public RealVector getStateEstimationVector() {\n        return stateEstimation.copy();\n    }\n\n    /**\n     * Returns the current error covariance matrix.\n     *"
+  },
+  {
+   "line": 264,
+   "lines": [
+    259,
+    260,
+    261,
+    262,
+    263,
+    264,
+    265,
+    266,
+    267,
+    268,
+    269
+   ],
+   "path": "src/main/java/org/apache/commons/math/filter/KalmanFilter.java",
+   "snippet": "     * Returns a copy of the current error covariance matrix.\n     *\n     * @return the error covariance matrix\n     */\n    public RealMatrix getErrorCovarianceMatrix() {\n        return errorCovariance.copy();\n    }\n\n    /**\n     * Predict the internal state estimation one time step ahead.\n     */"
+  },
+  {
+   "line": 284,
+   "lines": [
+    279,
+    280,
+    281,
+    282,
+    283,
+    284,
+    285,
+    286,
+    287,
+    288,
+    289
+   ],
+   "path": "src/main/java/org/apache/commons/math/linear/AbstractFieldMatrix.java",
+   "snippet": "        if (p == 0) {\n            return MatrixUtils.createFieldIdentityMatrix(this.getField(), this.getRowDimension());\n        }\n\n        if (p == 1) {\n            return this.copy();\n        }\n\n        final int power = p - 1;\n\n        /*"
+  },
+  {
+   "line": 310,
+   "lines": [
+    305,
+    306,
+    307,
+    308,
+    309,
+    310,
+    311,
+    312,
+    313,
+    314,
+    315
+   ],
+   "path": "src/main/java/org/apache/commons/math/linear/AbstractFieldMatrix.java",
+   "snippet": "        }\n\n        ArrayList<FieldMatrix<T>> results = new ArrayList<FieldMatrix<T>>(\n                binaryRepresentation.length);\n\n        results.add(0, this.copy());\n\n        for (int i = 1; i < binaryRepresentation.length; ++i) {\n            final FieldMatrix<T> s = results.get(i - 1);\n            final FieldMatrix<T> r = s.multiply(s);\n            results.add(i, r);"
+  }
+ ],
+ "class_simple": "Variance",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Computes the variance of the available values.  By default, the unbiased\n * \"sample variance\" definitional formula is used:\n * <p>\n * variance = sum((x_i - mean)^2) / (n - 1) </p>\n * <p>\n * where mean is the {@link Mean} and <code>n</code> is the number\n * of sample observations.</p>\n * <p>\n * The definitional formula does not have good numerical properties, so\n * this implementation does not compute the statistic using the definitional\n * formula. <ul>\n * <li> The <code>getResult</code> method computes the variance using\n * updating formulas based on West's algorithm, as described in\n * <a href=\"http://doi.acm.org/10.1145/359146.359152\"> Chan, T. F. and\n * J. G. Lewis 1979, <i>Communications of the ACM</i>,\n * vol. 22 no. 9, pp. 526-531.</a></li>\n * <li> The <code>evaluate</code> methods leverage the fact that they have the\n * full array of values in memory to execute a two-pass algorithm.\n * Specifically, these methods use the \"corrected two-pass algorithm\" from\n * Chan, Golub, Levesque, <i>Algorithms for Computing the Sample Variance</i>,\n * American Statistician, vol. 37, no. 3 (1983) pp. 242-247.</li></ul>\n * Note that adding values using <code>increment</code> or\n * <code>incrementAll</code> and then executing <code>getResult</code> will\n * sometimes give a different, less accurate, result than executing\n * <code>evaluate</code> with the full array of values. The former approach\n * should only be used when the full array of values is not available.</p>\n * <p>\n * The \"population variance\"  ( sum((x_i - mean)^2) / n ) can also\n * be computed using this statistic.  The <code>isBiasCorrected</code>\n * property determines whether the \"population\" or \"sample\" value is\n * returned by the <code>evaluate</code> and <code>getResult</code> methods.\n * To compute population variances, set this property to <code>false.</code>\n * </p>\n * <p>\n * <strong>Note that this implementation is not synchronized.</strong> If\n * multiple threads access an instance of this class concurrently, and at least\n * one of the threads invokes the <code>increment()</code> or\n * <code>clear()</code> method, it must be synchronized externally.</p>\n *\n * @version $Id$\n */\npublic",
+  "method_javadoc": "/**\n     * Copies source to dest.\n     * <p>Neither source nor dest can be null.</p>\n     *\n     * @param source Variance to copy\n     * @param dest Variance to copy to\n     * @throws NullArgumentException if either source or dest is null\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "protected SecondMoment moment",
+  "protected boolean incMoment",
+  "private boolean isBiasCorrected"
+ ],
+ "focal_class": "org.apache.commons.math.stat.descriptive.moment.Variance",
+ "focal_id": "Math_41::org.apache.commons.math.stat.descriptive.moment.Variance::copy(Variance,Variance)",
+ "focal_method_name": "copy",
+ "generations": 3,
+ "impl_B": "public static void copy(Variance source, Variance dest)\n        throws NullArgumentException {\n        MathUtils.checkNotNull(source);\n        MathUtils.checkNotNull(dest);\n        dest.setData(source.getDataRef());\n        dest.moment = source.moment.copy();\n        dest.isBiasCorrected = source.isBiasCorrected;\n        dest.incMoment = source.incMoment;\n    }",
+ "imports": [
+  "java.io.Serializable",
+  "org.apache.commons.math.exception.NullArgumentException",
+  "org.apache.commons.math.exception.util.LocalizedFormats",
+  "org.apache.commons.math.stat.descriptive.WeightedEvaluation",
+  "org.apache.commons.math.stat.descriptive.AbstractStorelessUnivariateStatistic",
+  "org.apache.commons.math.util.MathUtils"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math.stat.descriptive.moment",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * {@inheritDoc}\n     * <p>If all values are available, it is more accurate to use\n     * {@link #evaluate(double[])} rather than adding values one at a time\n     * using this method and then executing {@link #getResult}, since\n     * <code>evaluate</code> leverages the fact that is has the full\n     * list of values together to execute a two-pass algorithm.\n     * See {@link Variance}.</p>\n     *\n     * <p>Note also that when {@link #Variance(SecondMoment)} is used to\n     * create a Variance, this method does nothing. In that case, the\n     * SecondMoment should be incremented directly.</p>\n     */",
+   "name": "increment"
+  },
+  {
+   "javadoc": "/**\n     * {@inheritDoc}\n     */",
+   "name": "getResult"
+  },
+  {
+   "javadoc": "/**\n     * {@inheritDoc}\n     */",
+   "name": "getN"
+  },
+  {
+   "javadoc": "/**\n     * {@inheritDoc}\n     */",
+   "name": "clear"
+  },
+  {
+   "javadoc": "/**\n     * Returns the variance of the entries in the input array, or\n     * <code>Double.NaN</code> if the array is empty.\n     * <p>\n     * See {@link Variance} for details on the computing algorithm.</p>\n     * <p>\n     * Returns 0 for a single-value (i.e. length = 1) sample.</p>\n     * <p>\n     * Throws <code>IllegalArgumentException</code> if the array is null.</p>\n     * <p>\n     * Does not change the internal state of the statistic.</p>\n     *\n     * @param values the input array\n     * @return the variance of the values or Double.NaN if length = 0\n     * @throws IllegalArgumentException if the array is null\n     */",
+   "name": "evaluate"
+  },
+  {
+   "javadoc": "/**\n     * Returns the variance of the entries in the specified portion of\n     * the input array, or <code>Double.NaN</code> if the designated subarray\n     * is empty.\n     * <p>\n     * See {@link Variance} for details on the computing algorithm.</p>\n     * <p>\n     * Returns 0 for a single-value (i.e. length = 1) sample.</p>\n     * <p>\n     * Does not change the internal state of the statistic.</p>\n     * <p>\n     * Throws <code>IllegalArgumentException</code> if the array is null.</p>\n     *\n     * @param values the input array\n     * @param begin index of the first array element to include\n     * @param length the number of elements to include\n     * @return the variance of the values or Double.NaN if length = 0\n     * @throws IllegalArgumentException if the array is null or the array index\n     *  parameters are not valid\n     */",
+   "name": "evaluate"
+  },
+  {
+   "javadoc": "/**\n     * <p>Returns the weighted variance of the entries in the specified portion of\n     * the input array, or <code>Double.NaN</code> if the designated subarray\n     * is empty.</p>\n     * <p>\n     * Uses the formula <pre>\n     *   &Sigma;(weights[i]*(values[i] - weightedMean)<sup>2</sup>)/(&Sigma;(weights[i]) - 1)\n     * </pre>\n     * where weightedMean is the weighted mean</p>\n     * <p>\n     * This formula will not return the same result as the unweighted variance when all\n     * weights are equal, unless all weights are equal to 1. The formula assumes that\n     * weights are to be treated as \"expansion values,\" as will be the case if for example\n     * the weights represent frequency counts. To normalize weights so that the denominator\n     * in the variance computation equals the length of the input vector minus one, use <pre>\n     *   <code>evaluate(values, MathArrays.normalizeArray(weights, values.length)); </code>\n     * </pre>\n     * <p>\n     * Returns 0 for a single-value (i.e. length = 1) sample.</p>\n     * <p>\n     * Throws <code>IllegalArgumentException</code> if any of the following are true:\n     * <ul><li>the values array is null</li>\n     *     <li>the weights array is null</li>\n     *     <li>the weights array does not have the same length as the values array</li>\n     *     <li>the weights array contains one or more infinite values</li>\n     *     <li>the weights array contains one or more NaN values</li>\n     *     <li>the weights array contains negative values</li>\n     *     <li>the start and length arguments do not determine a valid array</li>\n     * </ul></p>\n     * <p>\n     * Does not change the internal state of the statistic.</p>\n     * <p>\n     * Throws <code>IllegalArgumentException</code> if either array is null.</p>\n     *\n     * @param values the input array\n     * @param weights the weights array\n     * @param begin index of the first array element to include\n     * @param length the number of elements to include\n     * @return the weighted variance of the values or Double.NaN if length = 0\n     * @throws IllegalArgumentException if the parameters are not valid\n     * @since 2.1\n     */",
+   "name": "evaluate"
+  },
+  {
+   "javadoc": "/**\n     * <p>\n     * Returns the weighted variance of the entries in the the input array.</p>\n     * <p>\n     * Uses the formula <pre>\n     *   &Sigma;(weights[i]*(values[i] - weightedMean)<sup>2</sup>)/(&Sigma;(weights[i]) - 1)\n     * </pre>\n     * where weightedMean is the weighted mean</p>\n     * <p>\n     * This formula will not return the same result as the unweighted variance when all\n     * weights are equal, unless all weights are equal to 1. The formula assumes that\n     * weights are to be treated as \"expansion values,\" as will be the case if for example\n     * the weights represent frequency counts. To normalize weights so that the denominator\n     * in the variance computation equals the length of the input vector minus one, use <pre>\n     *   <code>evaluate(values, MathArrays.normalizeArray(weights, values.length)); </code>\n     * </pre>\n     * <p>\n     * Returns 0 for a single-value (i.e. length = 1) sample.</p>\n     * <p>\n     * Throws <code>IllegalArgumentException</code> if any of the following are true:\n     * <ul><li>the values array is null</li>\n     *     <li>the weights array is null</li>\n     *     <li>the weights array does not have the same length as the values array</li>\n     *     <li>the weights array contains one or more infinite values</li>\n     *     <li>the weights array contains one or more NaN values</li>\n     *     <li>the weights array contains negative values</li>\n     * </ul></p>\n     * <p>\n     * Does not change the internal state of the statistic.</p>\n     * <p>\n     * Throws <code>IllegalArgumentException</code> if either array is null.</p>\n     *\n     * @param values the input array\n     * @param weights the weights array\n     * @return the weighted variance of the values\n     * @throws IllegalArgumentException if the parameters are not valid\n     * @since 2.1\n     */",
+   "name": "evaluate"
+  },
+  {
+   "javadoc": "/**\n     * Returns the variance of the entries in the specified portion of\n     * the input array, using the precomputed mean value.  Returns\n     * <code>Double.NaN</code> if the designated subarray is empty.\n     * <p>\n     * See {@link Variance} for details on the computing algorithm.</p>\n     * <p>\n     * The formula used assumes that the supplied mean value is the arithmetic\n     * mean of the sample data, not a known population parameter.  This method\n     * is supplied only to save computation when the mean has already been\n     * computed.</p>\n     * <p>\n     * Returns 0 for a single-value (i.e. length = 1) sample.</p>\n     * <p>\n     * Throws <code>IllegalArgumentException</code> if the array is null.</p>\n     * <p>\n     * Does not change the internal state of the statistic.</p>\n     *\n     * @param values the input array\n     * @param mean the precomputed mean value\n     * @param begin index of the first array element to include\n     * @param length the number of elements to include\n     * @return the variance of the values or Double.NaN if length = 0\n     * @throws IllegalArgumentException if the array is null or the array index\n     *  parameters are not valid\n     */",
+   "name": "evaluate"
+  },
+  {
+   "javadoc": "/**\n     * Returns the variance of the entries in the input array, using the\n     * precomputed mean value.  Returns <code>Double.NaN</code> if the array\n     * is empty.\n     * <p>\n     * See {@link Variance} for details on the computing algorithm.</p>\n     * <p>\n     * If <code>isBiasCorrected</code> is <code>true</code> the formula used\n     * assumes that the supplied mean value is the arithmetic mean of the\n     * sample data, not a known population parameter.  If the mean is a known\n     * population parameter, or if the \"population\" version of the variance is\n     * desired, set <code>isBiasCorrected</code> to <code>false</code> before\n     * invoking this method.</p>\n     * <p>\n     * Returns 0 for a single-value (i.e. length = 1) sample.</p>\n     * <p>\n     * Throws <code>IllegalArgumentException</code> if the array is null.</p>\n     * <p>\n     * Does not change the internal state of the statistic.</p>\n     *\n     * @param values the input array\n     * @param mean the precomputed mean value\n     * @return the variance of the values or Double.NaN if the array is empty\n     * @throws IllegalArgumentException if the array is null\n     */",
+   "name": "evaluate"
+  },
+  {
+   "javadoc": "/**\n     * Returns the weighted variance of the entries in the specified portion of\n     * the input array, using the precomputed weighted mean value.  Returns\n     * <code>Double.NaN</code> if the designated subarray is empty.\n     * <p>\n     * Uses the formula <pre>\n     *   &Sigma;(weights[i]*(values[i] - mean)<sup>2</sup>)/(&Sigma;(weights[i]) - 1)\n     * </pre></p>\n     * <p>\n     * The formula used assumes that the supplied mean value is the weighted arithmetic\n     * mean of the sample data, not a known population parameter. This method\n     * is supplied only to save computation when the mean has already been\n     * computed.</p>\n     * <p>\n     * This formula will not return the same result as the unweighted variance when all\n     * weights are equal, unless all weights are equal to 1. The formula assumes that\n     * weights are to be treated as \"expansion values,\" as will be the case if for example\n     * the weights represent frequency counts. To normalize weights so that the denominator\n     * in the variance computation equals the length of the input vector minus one, use <pre>\n     *   <code>evaluate(values, MathArrays.normalizeArray(weights, values.length), mean); </code>\n     * </pre>\n     * <p>\n     * Returns 0 for a single-value (i.e. length = 1) sample.</p>\n     * <p>\n     * Throws <code>IllegalArgumentException</code> if any of the following are true:\n     * <ul><li>the values array is null</li>\n     *     <li>the weights array is null</li>\n     *     <li>the weights array does not have the same length as the values array</li>\n     *     <li>the weights array contains one or more infinite values</li>\n     *     <li>the weights array contains one or more NaN values</li>\n     *     <li>the weights array contains negative values</li>\n     *     <li>the start and length arguments do not determine a valid array</li>\n     * </ul></p>\n     * <p>\n     * Does not change the internal state of the statistic.</p>\n     *\n     * @param values the input array\n     * @param weights the weights array\n     * @param mean the precomputed weighted mean value\n     * @param begin index of the first array element to include\n     * @param length the number of elements to include\n     * @return the variance of the values or Double.NaN if length = 0\n     * @throws IllegalArgumentException if the parameters are not valid\n     * @since 2.1\n     */",
+   "name": "evaluate"
+  },
+  {
+   "javadoc": "/**\n     * <p>Returns the weighted variance of the values in the input array, using\n     * the precomputed weighted mean value.</p>\n     * <p>\n     * Uses the formula <pre>\n     *   &Sigma;(weights[i]*(values[i] - mean)<sup>2</sup>)/(&Sigma;(weights[i]) - 1)\n     * </pre></p>\n     * <p>\n     * The formula used assumes that the supplied mean value is the weighted arithmetic\n     * mean of the sample data, not a known population parameter. This method\n     * is supplied only to save computation when the mean has already been\n     * computed.</p>\n     * <p>\n     * This formula will not return the same result as the unweighted variance when all\n     * weights are equal, unless all weights are equal to 1. The formula assumes that\n     * weights are to be treated as \"expansion values,\" as will be the case if for example\n     * the weights represent frequency counts. To normalize weights so that the denominator\n     * in the variance computation equals the length of the input vector minus one, use <pre>\n     *   <code>evaluate(values, MathArrays.normalizeArray(weights, values.length), mean); </code>\n     * </pre>\n     * <p>\n     * Returns 0 for a single-value (i.e. length = 1) sample.</p>\n     * <p>\n     * Throws <code>IllegalArgumentException</code> if any of the following are true:\n     * <ul><li>the values array is null</li>\n     *     <li>the weights array is null</li>\n     *     <li>the weights array does not have the same length as the values array</li>\n     *     <li>the weights array contains one or more infinite values</li>\n     *     <li>the weights array contains one or more NaN values</li>\n     *     <li>the weights array contains negative values</li>\n     * </ul></p>\n     * <p>\n     * Does not change the internal state of the statistic.</p>\n     *\n     * @param values the input array\n     * @param weights the weights array\n     * @param mean the precomputed weighted mean value\n     * @return the variance of the values or Double.NaN if length = 0\n     * @throws IllegalArgumentException if the parameters are not valid\n     * @since 2.1\n     */",
+   "name": "evaluate"
+  },
+  {
+   "javadoc": "/**\n     * @return Returns the isBiasCorrected.\n     */",
+   "name": "isBiasCorrected"
+  },
+  {
+   "javadoc": "/**\n     * @param biasCorrected The isBiasCorrected to set.\n     */",
+   "name": "setBiasCorrected"
+  },
+  {
+   "javadoc": "/**\n     * {@inheritDoc}\n     */",
+   "name": "copy"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class Variance extends AbstractStorelessUnivariateStatistic implements Serializable, WeightedEvaluation",
+  "constructors": [
+   "public Variance();",
+   "public Variance(final SecondMoment m2);",
+   "public Variance(boolean isBiasCorrected);",
+   "public Variance(boolean isBiasCorrected, SecondMoment m2);",
+   "public Variance(Variance original);"
+  ],
+  "focal_signature": "public static void copy(Variance source, Variance dest) throws NullArgumentException",
+  "methods": [
+   "public void increment(final double d);",
+   "public double getResult();",
+   "public long getN();",
+   "public void clear();",
+   "public double evaluate(final double[] values);",
+   "public double evaluate(final double[] values, final int begin, final int length);",
+   "public double evaluate(final double[] values, final double[] weights, final int begin, final int length);",
+   "public double evaluate(final double[] values, final double[] weights);",
+   "public double evaluate(final double[] values, final double mean, final int begin, final int length);",
+   "public double evaluate(final double[] values, final double mean);",
+   "public double evaluate(final double[] values, final double[] weights, final double mean, final int begin, final int length);",
+   "public double evaluate(final double[] values, final double[] weights, final double mean);",
+   "public boolean isBiasCorrected();",
+   "public void setBiasCorrected(boolean biasCorrected);",
+   "public Variance copy();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

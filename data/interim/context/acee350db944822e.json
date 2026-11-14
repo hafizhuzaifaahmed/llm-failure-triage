@@ -1,0 +1,292 @@
+{
+  "bug_name": "JacksonDatabind_106",
+  "call_sites": [
+    {
+      "line": 291,
+      "lines": [
+        286,
+        287,
+        288,
+        289,
+        290,
+        291,
+        292,
+        293,
+        294,
+        295,
+        296
+      ],
+      "path": "src/main/java/com/fasterxml/jackson/databind/deser/AbstractDeserializer.java",
+      "snippet": "                return p.getText();\n            }\n            break;\n        case JsonTokenId.ID_NUMBER_INT:\n            if (_acceptInt) {\n                return p.getIntValue();\n            }\n            break;\n        case JsonTokenId.ID_NUMBER_FLOAT:\n            if (_acceptDouble) {\n                return Double.valueOf(p.getDoubleValue());"
+    },
+    {
+      "line": 1324,
+      "lines": [
+        1319,
+        1320,
+        1321,
+        1322,
+        1323,
+        1324,
+        1325,
+        1326,
+        1327,
+        1328,
+        1329
+      ],
+      "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerBase.java",
+      "snippet": "                        injectValues(ctxt, bean);\n                    }\n                    return bean;\n                }\n            }\n            return _valueInstantiator.createFromInt(ctxt, p.getIntValue());\n        }\n        if (nt == NumberType.LONG) {\n            if (delegateDeser != null) {\n                if (!_valueInstantiator.canCreateFromInt()) {\n                    Object bean = _valueInstantiator.createUsingDelegate(ctxt,"
+    },
+    {
+      "line": 186,
+      "lines": [
+        181,
+        182,
+        183,
+        184,
+        185,
+        186,
+        187,
+        188,
+        189,
+        190,
+        191
+      ],
+      "path": "src/main/java/com/fasterxml/jackson/databind/deser/std/EnumDeserializer.java",
+      "snippet": "            return result;\n        }\n        // But let's consider int acceptable as well (if within ordinal range)\n        if (curr == JsonToken.VALUE_NUMBER_INT) {\n            // ... unless told not to do that\n            int index = p.getIntValue();\n            if (ctxt.isEnabled(DeserializationFeature.FAIL_ON_NUMBERS_FOR_ENUMS)) {\n                return ctxt.handleWeirdNumberValue(_enumClass(), index,\n                        \"not allowed to deserialize Enum value out of number: disable DeserializationConfig.DeserializationFeature.FAIL_ON_NUMBERS_FOR_ENUMS to allow\"\n                        );\n            }"
+    },
+    {
+      "line": 570,
+      "lines": [
+        565,
+        566,
+        567,
+        568,
+        569,
+        570,
+        571,
+        572,
+        573,
+        574,
+        575
+      ],
+      "path": "src/main/java/com/fasterxml/jackson/databind/deser/std/JsonNodeDeserializer.java",
+      "snippet": "            }\n        } else {\n            nt = p.getNumberType();\n        }\n        if (nt == JsonParser.NumberType.INT) {\n            return nodeFactory.numberNode(p.getIntValue());\n        }\n        if (nt == JsonParser.NumberType.LONG) {\n            return nodeFactory.numberNode(p.getLongValue());\n        }\n        return nodeFactory.numberNode(p.getBigIntegerValue());"
+    },
+    {
+      "line": 426,
+      "lines": [
+        421,
+        422,
+        423,
+        424,
+        425,
+        426,
+        427,
+        428,
+        429,
+        430,
+        431
+      ],
+      "path": "src/main/java/com/fasterxml/jackson/databind/deser/std/NumberDeserializers.java",
+      "snippet": "            throws IOException\n        {\n            switch (p.getCurrentTokenId()) {\n            case JsonTokenId.ID_NUMBER_INT: // ok iff ascii value\n                _verifyNumberForScalarCoercion(ctxt, p);\n                int value = p.getIntValue();\n                if (value >= 0 && value <= 0xFFFF) {\n                    return Character.valueOf((char) value);\n                }\n                break;\n            case JsonTokenId.ID_STRING: // this is the usual type"
+    }
+  ],
+  "class_simple": "TreeTraversingParser",
+  "doc": {
+    "class_javadoc": "/**\n * Facade over {@link JsonNode} that implements {@link JsonParser} to allow\n * accessing contents of JSON tree in alternate form (stream of tokens).\n * Useful when a streaming source is expected by code, such as data binding\n * functionality.\n */\npublic",
+    "method_javadoc": ""
+  },
+  "fields": [
+    "protected ObjectCodec _objectCodec",
+    "protected NodeCursor _nodeCursor",
+    "protected JsonToken _nextToken",
+    "protected boolean _startContainer",
+    "protected boolean _closed"
+  ],
+  "focal_class": "com.fasterxml.jackson.databind.node.TreeTraversingParser",
+  "focal_id": "JacksonDatabind_106::com.fasterxml.jackson.databind.node.TreeTraversingParser::getIntValue()",
+  "focal_method_name": "getIntValue",
+  "impl_B": "@Override\n    public int getIntValue() throws IOException {\n        final NumericNode node = (NumericNode) currentNumericNode();\n        return node.intValue();\n    }",
+  "imports": [
+    "java.io.IOException",
+    "java.io.OutputStream",
+    "java.math.BigDecimal",
+    "java.math.BigInteger",
+    "com.fasterxml.jackson.core.*",
+    "com.fasterxml.jackson.core.base.ParserMinimalBase",
+    "com.fasterxml.jackson.databind.JsonNode"
+  ],
+  "javadoc_edited_by_fix": false,
+  "package": "com.fasterxml.jackson.databind.node",
+  "project": "JacksonDatabind",
+  "siblings": [
+    {
+      "javadoc": "",
+      "name": "setCodec"
+    },
+    {
+      "javadoc": "",
+      "name": "getCodec"
+    },
+    {
+      "javadoc": "",
+      "name": "version"
+    },
+    {
+      "javadoc": "/**********************************************************\n     */",
+      "name": "close"
+    },
+    {
+      "javadoc": "/**********************************************************\n     */",
+      "name": "nextToken"
+    },
+    {
+      "javadoc": "",
+      "name": "skipChildren"
+    },
+    {
+      "javadoc": "",
+      "name": "isClosed"
+    },
+    {
+      "javadoc": "/**********************************************************\n     */",
+      "name": "getCurrentName"
+    },
+    {
+      "javadoc": "",
+      "name": "overrideCurrentName"
+    },
+    {
+      "javadoc": "",
+      "name": "getParsingContext"
+    },
+    {
+      "javadoc": "",
+      "name": "getTokenLocation"
+    },
+    {
+      "javadoc": "",
+      "name": "getCurrentLocation"
+    },
+    {
+      "javadoc": "/**********************************************************\n     */",
+      "name": "getText"
+    },
+    {
+      "javadoc": "",
+      "name": "getTextCharacters"
+    },
+    {
+      "javadoc": "",
+      "name": "getTextLength"
+    },
+    {
+      "javadoc": "",
+      "name": "getTextOffset"
+    },
+    {
+      "javadoc": "",
+      "name": "hasTextCharacters"
+    },
+    {
+      "javadoc": "",
+      "name": "getNumberType"
+    },
+    {
+      "javadoc": "",
+      "name": "getBigIntegerValue"
+    },
+    {
+      "javadoc": "",
+      "name": "getDecimalValue"
+    },
+    {
+      "javadoc": "",
+      "name": "getDoubleValue"
+    },
+    {
+      "javadoc": "",
+      "name": "getFloatValue"
+    },
+    {
+      "javadoc": "",
+      "name": "getLongValue"
+    },
+    {
+      "javadoc": "",
+      "name": "getNumberValue"
+    },
+    {
+      "javadoc": "",
+      "name": "getEmbeddedObject"
+    },
+    {
+      "javadoc": "",
+      "name": "isNaN"
+    },
+    {
+      "javadoc": "/**********************************************************\n     */",
+      "name": "getBinaryValue"
+    },
+    {
+      "javadoc": "",
+      "name": "readBinaryValue"
+    },
+    {
+      "javadoc": "/**********************************************************\n     */",
+      "name": "currentNode"
+    },
+    {
+      "javadoc": "",
+      "name": "currentNumericNode"
+    },
+    {
+      "javadoc": "",
+      "name": "_handleEOF"
+    }
+  ],
+  "sig": {
+    "class_declaration": "public class TreeTraversingParser extends ParserMinimalBase",
+    "constructors": [
+      "public TreeTraversingParser(JsonNode n);",
+      "public TreeTraversingParser(JsonNode n, ObjectCodec codec);"
+    ],
+    "focal_signature": "public int getIntValue() throws IOException",
+    "methods": [
+      "public void setCodec(ObjectCodec c);",
+      "public ObjectCodec getCodec();",
+      "public Version version();",
+      "public void close() throws IOException;",
+      "public JsonToken nextToken() throws IOException, JsonParseException;",
+      "public JsonParser skipChildren() throws IOException, JsonParseException;",
+      "public boolean isClosed();",
+      "public String getCurrentName();",
+      "public void overrideCurrentName(String name);",
+      "public JsonStreamContext getParsingContext();",
+      "public JsonLocation getTokenLocation();",
+      "public JsonLocation getCurrentLocation();",
+      "public String getText();",
+      "public char[] getTextCharacters() throws IOException, JsonParseException;",
+      "public int getTextLength() throws IOException, JsonParseException;",
+      "public int getTextOffset() throws IOException, JsonParseException;",
+      "public boolean hasTextCharacters();",
+      "public NumberType getNumberType() throws IOException;",
+      "public BigInteger getBigIntegerValue() throws IOException;",
+      "public BigDecimal getDecimalValue() throws IOException;",
+      "public double getDoubleValue() throws IOException;",
+      "public float getFloatValue() throws IOException;",
+      "public long getLongValue() throws IOException;",
+      "public Number getNumberValue() throws IOException;",
+      "public Object getEmbeddedObject();",
+      "public boolean isNaN();",
+      "public byte[] getBinaryValue(Base64Variant b64variant) throws IOException, JsonParseException;",
+      "public int readBinaryValue(Base64Variant b64variant, OutputStream out) throws IOException, JsonParseException;",
+      "protected JsonNode currentNode();",
+      "protected JsonNode currentNumericNode() throws JsonParseException;",
+      "protected void _handleEOF() throws JsonParseException;"
+    ],
+    "type_signatures": []
+  },
+  "split": "test"
+}

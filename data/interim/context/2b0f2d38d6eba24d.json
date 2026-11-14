@@ -1,0 +1,172 @@
+{
+  "bug_name": "Gson_12",
+  "call_sites": [
+    {
+      "line": 126,
+      "lines": [
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130,
+        131
+      ],
+      "path": "gson/src/main/java/com/google/gson/internal/Excluder.java",
+      "snippet": "      /** The delegate is lazily created because it may not be needed, and creating it may fail. */\n      private TypeAdapter<T> delegate;\n\n      @Override public T read(JsonReader in) throws IOException {\n        if (skipDeserialize) {\n          in.skipValue();\n          return null;\n        }\n        return delegate().read(in);\n      }\n"
+    },
+    {
+      "line": 218,
+      "lines": [
+        213,
+        214,
+        215,
+        216,
+        217,
+        218,
+        219,
+        220,
+        221,
+        222,
+        223
+      ],
+      "path": "gson/src/main/java/com/google/gson/internal/bind/ReflectiveTypeAdapterFactory.java",
+      "snippet": "        in.beginObject();\n        while (in.hasNext()) {\n          String name = in.nextName();\n          BoundField field = boundFields.get(name);\n          if (field == null || !field.deserialized) {\n            in.skipValue();\n          } else {\n            field.read(in, instance);\n          }\n        }\n      } catch (IllegalStateException e) {"
+    }
+  ],
+  "class_simple": "JsonTreeReader",
+  "doc": {
+    "class_javadoc": "/**\n * This reader walks the elements of a JsonElement as if it was coming from a\n * character stream.\n *\n * @author Jesse Wilson\n */\npublic final",
+    "method_javadoc": ""
+  },
+  "fields": [
+    "private static final Reader UNREADABLE_READER",
+    "private static final Object SENTINEL_CLOSED",
+    "private Object[] stack",
+    "private int stackSize",
+    "private String[] pathNames",
+    "private int[] pathIndices"
+  ],
+  "focal_class": "com.google.gson.internal.bind.JsonTreeReader",
+  "focal_id": "Gson_12::com.google.gson.internal.bind.JsonTreeReader::skipValue()",
+  "focal_method_name": "skipValue",
+  "impl_B": "@Override public void skipValue() throws IOException {\n    if (peek() == JsonToken.NAME) {\n      nextName();\n      pathNames[stackSize - 2] = \"null\";\n    } else {\n      popStack();\n        pathNames[stackSize - 1] = \"null\";\n    }\n      pathIndices[stackSize - 1]++;\n  }",
+  "imports": [
+    "com.google.gson.JsonArray",
+    "com.google.gson.JsonElement",
+    "com.google.gson.JsonNull",
+    "com.google.gson.JsonObject",
+    "com.google.gson.JsonPrimitive",
+    "com.google.gson.stream.JsonReader",
+    "com.google.gson.stream.JsonToken",
+    "java.io.IOException",
+    "java.io.Reader",
+    "java.util.Iterator",
+    "java.util.Map"
+  ],
+  "javadoc_edited_by_fix": false,
+  "package": "com.google.gson.internal.bind",
+  "project": "Gson",
+  "siblings": [
+    {
+      "javadoc": "",
+      "name": "beginArray"
+    },
+    {
+      "javadoc": "",
+      "name": "endArray"
+    },
+    {
+      "javadoc": "",
+      "name": "beginObject"
+    },
+    {
+      "javadoc": "",
+      "name": "endObject"
+    },
+    {
+      "javadoc": "",
+      "name": "hasNext"
+    },
+    {
+      "javadoc": "",
+      "name": "peek"
+    },
+    {
+      "javadoc": "",
+      "name": "nextName"
+    },
+    {
+      "javadoc": "",
+      "name": "nextString"
+    },
+    {
+      "javadoc": "",
+      "name": "nextBoolean"
+    },
+    {
+      "javadoc": "",
+      "name": "nextNull"
+    },
+    {
+      "javadoc": "",
+      "name": "nextDouble"
+    },
+    {
+      "javadoc": "",
+      "name": "nextLong"
+    },
+    {
+      "javadoc": "",
+      "name": "nextInt"
+    },
+    {
+      "javadoc": "",
+      "name": "close"
+    },
+    {
+      "javadoc": "",
+      "name": "toString"
+    },
+    {
+      "javadoc": "",
+      "name": "promoteNameToValue"
+    },
+    {
+      "javadoc": "",
+      "name": "getPath"
+    }
+  ],
+  "sig": {
+    "class_declaration": "public final class JsonTreeReader extends JsonReader",
+    "constructors": [
+      "public JsonTreeReader(JsonElement element);"
+    ],
+    "focal_signature": "public void skipValue() throws IOException",
+    "methods": [
+      "public void beginArray() throws IOException;",
+      "public void endArray() throws IOException;",
+      "public void beginObject() throws IOException;",
+      "public void endObject() throws IOException;",
+      "public boolean hasNext() throws IOException;",
+      "public JsonToken peek() throws IOException;",
+      "public String nextName() throws IOException;",
+      "public String nextString() throws IOException;",
+      "public boolean nextBoolean() throws IOException;",
+      "public void nextNull() throws IOException;",
+      "public double nextDouble() throws IOException;",
+      "public long nextLong() throws IOException;",
+      "public int nextInt() throws IOException;",
+      "public void close() throws IOException;",
+      "public String toString();",
+      "public void promoteNameToValue() throws IOException;",
+      "public String getPath();"
+    ],
+    "type_signatures": []
+  },
+  "split": "dev"
+}

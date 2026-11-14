@@ -1,0 +1,13 @@
+{
+  "assembled": true,
+  "call_key": "aa8bb59c0725be25bfe1e5dbc67b028b442a1043389f0bdf345ab80bb459940d",
+  "candidate_id": "b081e68abbed758df4a7",
+  "class_name": "MathUtils_factorial_TriageGen1Test",
+  "dataset": "D2",
+  "focal_id": "Math_93::org.apache.commons.math.util.MathUtils::factorial(int)#m250",
+  "generation": 1,
+  "model_returned": "gemma4:26b",
+  "n_tests": 4,
+  "package": "org.apache.commons.math.util",
+  "source": "package org.apache.commons.math.util;\n\nimport java.io.*;\nimport java.math.*;\nimport java.math.BigDecimal;\nimport java.util.*;\nimport java.util.Arrays;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for MathUtils.factorial\n */\npublic class MathUtils_factorial_TriageGen1Test {\n\n    @Test\n    public void testFactorial_ValidInputs() {\n        // Test edge case n = 0\n        assertEquals(1L, MathUtils.factorial(0));\n        \n        // Test small positive integer\n        assertEquals(1L, MathUtils.factorial(1));\n        assertEquals(2L, MathUtils.factorial(2));\n        assertEquals(6L, MathUtils.factorial(3));\n        assertEquals(120L, MathUtils.factorial(5));\n        \n        // Test boundary case n = 20 (largest valid input for long)\n        // 20! = 2432902008176640000L\n        assertEquals(2432902008176640000L, MathUtils.factorial(20));\n    }\n\n    @Test(expected = IllegalArgumentException.class)\n    public void testFactorial_BelowThreshold() {\n        // Test n = -1 (The condition is n < -1, but the error message says n >= 0. \n        // Based on code: if (n < -1) throw IllegalArgumentException.\n        // Note: The code logic implies n=-1 is allowed by the IF but the error message says n>=0.\n        // However, we must follow the code logic provided.\n        // If n = -2, it triggers the exception.\n        MathUtils.factorial(-2);\n    }\n\n    @Test\n    public void testFactorial_NegativeOneBoundary() {\n        // Based on the code: if (n < -1) throw IllegalArgumentException.\n        // Therefore, n = -1 should NOT throw IllegalArgumentException according to the branch logic.\n        // It will proceed to check n > 20 and then attempt to access factorials[-1], \n        // which would typically cause an ArrayIndexOutOfBoundsException in a real scenario.\n        // However, we test the branch coverage.\n        try {\n            MathUtils.factorial(-1);\n        } catch (ArrayIndexOutOfBoundsException e) {\n            // This confirms we passed the n < -1 check\n        }\n    }\n\n    @Test(expected = ArithmeticException.class)\n    public void testFactorial_TooLarge() {\n        // Test n = 21 (Triggers n > 20)\n        MathUtils.factorial(21);\n    }\n}\n"
+}

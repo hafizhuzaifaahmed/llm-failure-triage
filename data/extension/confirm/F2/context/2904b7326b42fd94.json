@@ -1,0 +1,140 @@
+{
+ "bug_name": "JacksonDatabind_28",
+ "call_sites": [
+  {
+   "line": 757,
+   "lines": [
+    752,
+    753,
+    754,
+    755,
+    756,
+    757,
+    758,
+    759,
+    760,
+    761,
+    762
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "    @SuppressWarnings(\"unchecked\")\n    public <T> T readValue(JsonParser p, JavaType type) throws IOException {\n        JsonDeserializer<Object> deser = findRootValueDeserializer(type);\n        if (deser == null) {\n        }\n        return (T) deser.deserialize(p, this);\n    }\n\n    /**\n     * Convenience method that may be used by composite or container deserializers,\n     * for reading one-off values for the composite type, taking into account"
+  },
+  {
+   "line": 781,
+   "lines": [
+    776,
+    777,
+    778,
+    779,
+    780,
+    781,
+    782,
+    783,
+    784,
+    785,
+    786
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "    public <T> T readPropertyValue(JsonParser p, BeanProperty prop, JavaType type) throws IOException {\n        JsonDeserializer<Object> deser = findContextualValueDeserializer(type, prop);\n        if (deser == null) {\n            \n        }\n        return (T) deser.deserialize(p, this);\n    }\n    \n    /*\n    /**********************************************************\n    /* Methods for problem handling, reporting"
+  },
+  {
+   "line": 277,
+   "lines": [
+    272,
+    273,
+    274,
+    275,
+    276,
+    277,
+    278,
+    279,
+    280,
+    281,
+    282
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/MappingIterator.java",
+   "snippet": "\n        int nextState = STATE_NEED_RESYNC;\n        try {\n            T value;\n            if (_updatedValue == null) {\n                value = _deserializer.deserialize(_parser, _context);\n            } else{\n                _deserializer.deserialize(_parser, _context, _updatedValue);\n                value = _updatedValue;\n            }\n            nextState = STATE_MAY_HAVE_VALUE;"
+  },
+  {
+   "line": 279,
+   "lines": [
+    274,
+    275,
+    276,
+    277,
+    278,
+    279,
+    280,
+    281,
+    282,
+    283,
+    284
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/MappingIterator.java",
+   "snippet": "        try {\n            T value;\n            if (_updatedValue == null) {\n                value = _deserializer.deserialize(_parser, _context);\n            } else{\n                _deserializer.deserialize(_parser, _context, _updatedValue);\n                value = _updatedValue;\n            }\n            nextState = STATE_MAY_HAVE_VALUE;\n            return value;\n        } finally {"
+  },
+  {
+   "line": 3449,
+   "lines": [
+    3444,
+    3445,
+    3446,
+    3447,
+    3448,
+    3449,
+    3450,
+    3451,
+    3452,
+    3453,
+    3454
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java",
+   "snippet": "                result = null;\n            } else { // pointing to event other than null\n                DeserializationContext ctxt = createDeserializationContext(jp, deserConfig);\n                JsonDeserializer<Object> deser = _findRootDeserializer(ctxt, toValueType);\n                // note: no handling of unwarpping\n                result = deser.deserialize(jp, ctxt);\n            }\n            jp.close();\n            return result;\n        } catch (IOException e) { // should not occur, no real i/o...\n            throw new IllegalArgumentException(e.getMessage(), e);"
+  }
+ ],
+ "class_simple": "ObjectDeserializer",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Deserializer that can build instances of {@link JsonNode} from any\n * JSON content, using appropriate {@link JsonNode} type.\n */\n@SuppressWarnings(\"serial\")\npublic class JsonNodeDeserializer\n    extends BaseNodeDeserializer<JsonNode>\n{\n    /**\n     * Singleton instance of generic deserializer for {@link JsonNode}.\n     * Only used for types other than JSON Object and Array.\n     */\n    private final static JsonNodeDeserializer instance = new JsonNodeDeserializer();\n\n    protected JsonNodeDeserializer() { super(JsonNode.class); }\n\n    /**\n     * Factory method for accessing deserializer for specific node type\n     */\n    public static JsonDeserializer<? extends JsonNode> getDeserializer(Class<?> nodeClass)\n    {\n        if (nodeClass == ObjectNode.class) {\n            return ObjectDeserializer.getInstance();\n        }\n        if (nodeClass == ArrayNode.class) {\n            return ArrayDeserializer.getInstance();\n        }\n        // For others, generic one works fine\n        return instance;\n    }\n    \n    /*\n    /**********************************************************\n    /* Actual deserializer implementations\n    /**********************************************************\n     */\n\n    @Override\n    public JsonNode getNullValue(DeserializationContext ctxt) {\n        return NullNode.getInstance();\n    }\n\n    @Override\n    @Deprecated // since 2.6, remove from 2.7\n    public JsonNode getNullValue() {\n        return NullNode.getInstance();\n    }\n\n    /**\n     * Implementation that will produce types of any JSON nodes; not just one\n     * deserializer is registered to handle (in case of more specialized handler).\n     * Overridden by typed sub-classes for more thorough checking\n     */\n    @Override\n    public JsonNode deserialize(JsonParser p, DeserializationContext ctxt) throws IOException\n    {\n        switch (p.getCurrentTokenId()) {\n        case JsonTokenId.ID_START_OBJECT:\n            return deserializeObject(p, ctxt, ctxt.getNodeFactory());\n        case JsonTokenId.ID_START_ARRAY:\n            return deserializeArray(p, ctxt, ctxt.getNodeFactory());\n        default:\n            return deserializeAny(p, ctxt, ctxt.getNodeFactory());\n        }\n    }\n\n    /*\n    /**********************************************************\n    /* Specific instances for more accurate types\n    /**********************************************************\n     */\n\n    final static",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "protected final static ObjectDeserializer _instance"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.deser.std.JsonNodeDeserializer.ObjectDeserializer",
+ "focal_id": "JacksonDatabind_28::com.fasterxml.jackson.databind.deser.std.JsonNodeDeserializer$ObjectDeserializer::deserialize(JsonParser,DeserializationContext)",
+ "focal_method_name": "deserialize",
+ "generations": 3,
+ "impl_B": "@Override\n        public ObjectNode deserialize(JsonParser p, DeserializationContext ctxt) throws IOException\n        {\n            if (p.getCurrentToken() == JsonToken.START_OBJECT) {\n                p.nextToken();\n                return deserializeObject(p, ctxt, ctxt.getNodeFactory());\n            }\n            // 23-Sep-2015, tatu: Ugh. We may also be given END_OBJECT (similar to FIELD_NAME),\n            //    if caller has advanced to the first token of Object, but for empty Object\n            if (p.getCurrentToken() == JsonToken.FIELD_NAME) {\n                return deserializeObject(p, ctxt, ctxt.getNodeFactory());\n            }\n            throw ctxt.mappingException(ObjectNode.class);\n         }",
+ "imports": [
+  "java.io.IOException",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.jsontype.TypeDeserializer",
+  "com.fasterxml.jackson.databind.node.*",
+  "com.fasterxml.jackson.databind.util.RawValue"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.deser.std",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "getInstance"
+  }
+ ],
+ "sig": {
+  "class_declaration": "final static class ObjectDeserializer extends BaseNodeDeserializer<ObjectNode>",
+  "constructors": [
+   "protected ObjectDeserializer();"
+  ],
+  "focal_signature": "public ObjectNode deserialize(JsonParser p, DeserializationContext ctxt) throws IOException",
+  "methods": [
+   "public static ObjectDeserializer getInstance();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

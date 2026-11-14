@@ -1,0 +1,124 @@
+{
+ "bug_name": "Lang_28",
+ "call_sites": [
+  {
+   "line": 241,
+   "lines": [
+    236,
+    237,
+    238,
+    239,
+    240,
+    241,
+    242,
+    243,
+    244,
+    245,
+    246
+   ],
+   "path": "src/main/java/org/apache/commons/lang3/StringEscapeUtils.java",
+   "snippet": "     *\n     * @param input  String to escape values in, may be null\n     * @return String with escaped values, <code>null</code> if null string input\n     */\n    public static final String escapeJava(String input) {\n        return ESCAPE_JAVA.translate(input);\n    }\n\n    /**\n     * <p>Escapes the characters in a <code>String</code> using EcmaScript String rules.</p>\n     * <p>Escapes any values it finds into their EcmaScript String form."
+  },
+  {
+   "line": 268,
+   "lines": [
+    263,
+    264,
+    265,
+    266,
+    267,
+    268,
+    269,
+    270,
+    271,
+    272,
+    273
+   ],
+   "path": "src/main/java/org/apache/commons/lang3/StringEscapeUtils.java",
+   "snippet": "     *\n     * @param input  String to escape values in, may be null\n     * @return String with escaped values, <code>null</code> if null string input\n     */\n    public static final String escapeEcmaScript(String input) {\n        return ESCAPE_ECMASCRIPT.translate(input);\n    }\n\n    /**\n     * <p>Unescapes any Java literals found in the <code>String</code>.\n     * For example, it will turn a sequence of <code>'\\'</code> and"
+  },
+  {
+   "line": 281,
+   "lines": [
+    276,
+    277,
+    278,
+    279,
+    280,
+    281,
+    282,
+    283,
+    284,
+    285,
+    286
+   ],
+   "path": "src/main/java/org/apache/commons/lang3/StringEscapeUtils.java",
+   "snippet": "     * \n     * @param input  the <code>String</code> to unescape, may be null\n     * @return a new unescaped <code>String</code>, <code>null</code> if null string input\n     */\n    public static final String unescapeJava(String input) {\n        return UNESCAPE_JAVA.translate(input);\n    }\n\n    /**\n     * <p>Unescapes any EcmaScript literals found in the <code>String</code>.</p>\n     *"
+  },
+  {
+   "line": 296,
+   "lines": [
+    291,
+    292,
+    293,
+    294,
+    295,
+    296,
+    297,
+    298,
+    299,
+    300,
+    301
+   ],
+   "path": "src/main/java/org/apache/commons/lang3/StringEscapeUtils.java",
+   "snippet": "     * @see #unescapeJava(String)\n     * @param input  the <code>String</code> to unescape, may be null\n     * @return A new unescaped <code>String</code>, <code>null</code> if null string input\n     */\n    public static final String unescapeEcmaScript(String input) {\n        return UNESCAPE_ECMASCRIPT.translate(input);\n    }\n\n    // HTML and XML\n    //--------------------------------------------------------------------------\n    /**"
+  },
+  {
+   "line": 327,
+   "lines": [
+    322,
+    323,
+    324,
+    325,
+    326,
+    327,
+    328,
+    329,
+    330,
+    331,
+    332
+   ],
+   "path": "src/main/java/org/apache/commons/lang3/StringEscapeUtils.java",
+   "snippet": "     * @see <a href=\"http://www.w3.org/TR/REC-html40/sgml/entities.html\">HTML 4.0 Character entity references</a>\n     * @see <a href=\"http://www.w3.org/TR/html401/charset.html#h-5.3\">HTML 4.01 Character References</a>\n     * @see <a href=\"http://www.w3.org/TR/html401/charset.html#code-position\">HTML 4.01 Code positions</a>\n     */\n    public static final String escapeHtml4(String input) {\n        return ESCAPE_HTML4.translate(input);\n    }\n\n    public static final String escapeHtml3(String input) {\n        return ESCAPE_HTML3.translate(input);\n    }"
+  }
+ ],
+ "class_simple": "NumericEntityUnescaper",
+ "dataset": "D1C_F1",
+ "doc": {
+  "class_javadoc": "/**\n * Translate XML numeric entities of the form &#[xX]?\\d+; to \n * the specific codepoint.\n * \n * @author Apache Software Foundation\n * @since 3.0\n */\npublic",
+  "method_javadoc": "/**\n     * {@inheritDoc}\n     */"
+ },
+ "fields": [],
+ "focal_class": "org.apache.commons.lang3.text.translate.NumericEntityUnescaper",
+ "focal_id": "Lang_28::org.apache.commons.lang3.text.translate.NumericEntityUnescaper::translate(CharSequence,int,Writer)",
+ "focal_method_name": "translate",
+ "generations": 6,
+ "impl_B": "@Override\n    public int translate(CharSequence input, int index, Writer out) throws IOException {\n        // TODO: Protect from ArrayIndexOutOfBounds\n        if(input.charAt(index) == '&' && input.charAt(index + 1) == '#') {\n            int start = index + 2;\n            boolean isHex = false;\n\n            char firstChar = input.charAt(start);\n            if(firstChar == 'x' || firstChar == 'X') {\n                start++;\n                isHex = true;\n            }\n\n            int end = start;\n            while(input.charAt(end) != ';') {\n                end++;\n            }\n\n            int entityValue;\n            try {\n                if(isHex) {\n                    entityValue = Integer.parseInt(input.subSequence(start, end).toString(), 16);\n                } else {\n                    entityValue = Integer.parseInt(input.subSequence(start, end).toString(), 10);\n                }\n            } catch(NumberFormatException nfe) {\n                return 0;\n            }\n\n                out.write(entityValue);\n            return 2 + (end - start) + (isHex ? 1 : 0) + 1;\n        }\n        return 0;\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.io.Writer"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.lang3.text.translate",
+ "project": "Lang",
+ "siblings": [],
+ "sig": {
+  "class_declaration": "public class NumericEntityUnescaper extends CharSequenceTranslator",
+  "constructors": [],
+  "focal_signature": "public int translate(CharSequence input, int index, Writer out) throws IOException",
+  "methods": [],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F1"
+}

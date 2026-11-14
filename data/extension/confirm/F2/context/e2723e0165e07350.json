@@ -1,0 +1,260 @@
+{
+ "bug_name": "JacksonDatabind_69",
+ "call_sites": [
+  {
+   "line": 427,
+   "lines": [
+    422,
+    423,
+    424,
+    425,
+    426,
+    427,
+    428,
+    429,
+    430,
+    431,
+    432
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java",
+   "snippet": "                    SettableBeanProperty[] properties = new SettableBeanProperty[1];\n                    PropertyName name = (argDef == null) ? null : argDef.getFullName();\n                    AnnotatedParameter arg = ctor.getParameter(0);\n                    properties[0] = constructCreatorProperty(ctxt, beanDesc, name, 0, arg,\n                            intr.findInjectableValueId(arg));\n                    creators.addPropertyCreator(ctor, isCreator, properties);\n                } else {\n                    /*boolean added = */ _handleSingleArgumentConstructor(ctxt, beanDesc, vchecker, intr, creators,\n                            ctor, isCreator,\n                            vchecker.isCreatorVisible(ctor));\n                    // one more thing: sever link to creator property, to avoid possible later"
+  },
+  {
+   "line": 490,
+   "lines": [
+    485,
+    486,
+    487,
+    488,
+    489,
+    490,
+    491,
+    492,
+    493,
+    494,
+    495
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java",
+   "snippet": "            final int namedCount = explicitNameCount + implicitWithCreatorCount;\n            // Ok: if named or injectable, we have more work to do\n            if (isCreator || (explicitNameCount > 0) || (injectCount > 0)) {\n                // simple case; everything covered:\n                if ((namedCount + injectCount) == argCount) {\n                    creators.addPropertyCreator(ctor, isCreator, properties);\n                    continue;\n                }\n                if ((explicitNameCount == 0) && ((injectCount + 1) == argCount)) {\n                    // Secondary: all but one injectable, one un-annotated (un-named)\n                    creators.addDelegatingCreator(ctor, isCreator, properties);"
+  },
+  {
+   "line": 570,
+   "lines": [
+    565,
+    566,
+    567,
+    568,
+    569,
+    570,
+    571,
+    572,
+    573,
+    574,
+    575
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java",
+   "snippet": "            found = ctor;\n            foundProps = properties;\n        }\n        // found one and only one visible? Ship it!\n        if (found != null) {\n            creators.addPropertyCreator(found, /*isCreator*/ false, foundProps);\n            BasicBeanDescription bbd = (BasicBeanDescription) beanDesc;\n            // Also: add properties, to keep error messages complete wrt known properties...\n            for (SettableBeanProperty prop : foundProps) {\n                PropertyName pn = prop.getFullName();\n                if (!bbd.hasProperty(pn)) {"
+  },
+  {
+   "line": 759,
+   "lines": [
+    754,
+    755,
+    756,
+    757,
+    758,
+    759,
+    760,
+    761,
+    762,
+    763,
+    764
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java",
+   "snippet": "            \n            // Ok: if named or injectable, we have more work to do\n            if (isCreator || explicitNameCount > 0 || injectCount > 0) {\n                // simple case; everything covered:\n                if ((namedCount + injectCount) == argCount) {\n                    creators.addPropertyCreator(factory, isCreator, properties);\n                } else if ((explicitNameCount == 0) && ((injectCount + 1) == argCount)) {\n                    // [712] secondary: all but one injectable, one un-annotated (un-named)\n                    creators.addDelegatingCreator(factory, isCreator, properties);\n                } else { // otherwise, epic fail\n                    throw new IllegalArgumentException(\"Argument #\"+nonAnnotatedParam.getIndex()"
+  },
+  {
+   "line": 233,
+   "lines": [
+    228,
+    229,
+    230,
+    231,
+    232,
+    233,
+    234,
+    235,
+    236,
+    237,
+    238
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/impl/CreatorCollector.java",
+   "snippet": "        addDelegatingCreator(creator, false, injectables);\n    }\n\n    @Deprecated // since 2.5\n    public void addPropertyCreator(AnnotatedWithParams creator, CreatorProperty[] properties) {\n        addPropertyCreator(creator, false, properties);\n    }\n\n    /*\n    /**********************************************************\n    /* Accessors"
+  }
+ ],
+ "class_simple": "CreatorCollector",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Container class for storing information on creators (based on annotations,\n * visibility), to be able to build actual instantiator later on.\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "protected final static int C_DEFAULT",
+  "protected final static int C_STRING",
+  "protected final static int C_INT",
+  "protected final static int C_LONG",
+  "protected final static int C_DOUBLE",
+  "protected final static int C_BOOLEAN",
+  "protected final static int C_DELEGATE",
+  "protected final static int C_PROPS",
+  "protected final static int C_ARRAY_DELEGATE",
+  "protected final static String[] TYPE_DESCS",
+  "final protected BeanDescription _beanDesc",
+  "final protected boolean _canFixAccess",
+  "final protected boolean _forceAccess",
+  "protected final AnnotatedWithParams[] _creators",
+  "protected int _explicitCreators",
+  "protected boolean _hasNonDefaultCreator",
+  "protected SettableBeanProperty[] _delegateArgs",
+  "protected SettableBeanProperty[] _arrayDelegateArgs",
+  "protected SettableBeanProperty[] _propertyBasedArgs",
+  "protected AnnotatedParameter _incompleteParameter"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.deser.impl.CreatorCollector",
+ "focal_id": "JacksonDatabind_69::com.fasterxml.jackson.databind.deser.impl.CreatorCollector::addPropertyCreator(AnnotatedWithParams,boolean,SettableBeanProperty[])",
+ "focal_method_name": "addPropertyCreator",
+ "generations": 3,
+ "impl_B": "public void addPropertyCreator(AnnotatedWithParams creator, boolean explicit,\n            SettableBeanProperty[] properties)\n    {\n        verifyNonDup(creator, C_PROPS, explicit);\n            // Better ensure we have no duplicate names either...\n            if (properties.length > 1) {\n                HashMap<String,Integer> names = new HashMap<String,Integer>();\n                for (int i = 0, len = properties.length; i < len; ++i) {\n                    String name = properties[i].getName();\n                    /* [Issue-13]: Need to consider Injectables, which may not have\n                     *   a name at all, and need to be skipped\n                     */\n                    if (name.length() == 0 && properties[i].getInjectableValueId() != null) {\n                        continue;\n                    }\n                    Integer old = names.put(name, Integer.valueOf(i));\n                    if (old != null) {\n                        throw new IllegalArgumentException(\"Duplicate creator property \\\"\"+name+\"\\\" (index \"+old+\" vs \"+i+\")\");\n                    }\n                }\n            }\n            _propertyBasedArgs = properties;\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.lang.reflect.Member",
+  "java.util.*",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.cfg.MapperConfig",
+  "com.fasterxml.jackson.databind.deser.CreatorProperty",
+  "com.fasterxml.jackson.databind.deser.SettableBeanProperty",
+  "com.fasterxml.jackson.databind.deser.ValueInstantiator",
+  "com.fasterxml.jackson.databind.deser.std.StdValueInstantiator",
+  "com.fasterxml.jackson.databind.introspect.*",
+  "com.fasterxml.jackson.databind.util.ClassUtil"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.deser.impl",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "constructValueInstantiator"
+  },
+  {
+   "javadoc": "/**\n     * Method called to indicate the default creator: no-arguments\n     * constructor or factory method that is called to instantiate\n     * a value before populating it with data. Default creator is\n     * only used if no other creators are indicated.\n     * \n     * @param creator Creator method; no-arguments constructor or static\n     *   factory method.\n     */",
+   "name": "setDefaultCreator"
+  },
+  {
+   "javadoc": "",
+   "name": "addStringCreator"
+  },
+  {
+   "javadoc": "",
+   "name": "addIntCreator"
+  },
+  {
+   "javadoc": "",
+   "name": "addLongCreator"
+  },
+  {
+   "javadoc": "",
+   "name": "addDoubleCreator"
+  },
+  {
+   "javadoc": "",
+   "name": "addBooleanCreator"
+  },
+  {
+   "javadoc": "",
+   "name": "addDelegatingCreator"
+  },
+  {
+   "javadoc": "",
+   "name": "addIncompeteParameter"
+  },
+  {
+   "javadoc": "",
+   "name": "addStringCreator"
+  },
+  {
+   "javadoc": "",
+   "name": "addIntCreator"
+  },
+  {
+   "javadoc": "",
+   "name": "addLongCreator"
+  },
+  {
+   "javadoc": "",
+   "name": "addDoubleCreator"
+  },
+  {
+   "javadoc": "",
+   "name": "addBooleanCreator"
+  },
+  {
+   "javadoc": "",
+   "name": "addDelegatingCreator"
+  },
+  {
+   "javadoc": "",
+   "name": "addPropertyCreator"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.1\n     */",
+   "name": "hasDefaultCreator"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.6\n     */",
+   "name": "hasDelegatingCreator"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.6\n     */",
+   "name": "hasPropertyBasedCreator"
+  },
+  {
+   "javadoc": "/**\n     * @return True if specified Creator is to be used\n     */",
+   "name": "verifyNonDup"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class CreatorCollector",
+  "constructors": [
+   "public CreatorCollector(BeanDescription beanDesc, MapperConfig<?> config);"
+  ],
+  "focal_signature": "public void addPropertyCreator(AnnotatedWithParams creator, boolean explicit, SettableBeanProperty[] properties)",
+  "methods": [
+   "public ValueInstantiator constructValueInstantiator(DeserializationConfig config);",
+   "public void setDefaultCreator(AnnotatedWithParams creator);",
+   "public void addStringCreator(AnnotatedWithParams creator, boolean explicit);",
+   "public void addIntCreator(AnnotatedWithParams creator, boolean explicit);",
+   "public void addLongCreator(AnnotatedWithParams creator, boolean explicit);",
+   "public void addDoubleCreator(AnnotatedWithParams creator, boolean explicit);",
+   "public void addBooleanCreator(AnnotatedWithParams creator, boolean explicit);",
+   "public void addDelegatingCreator(AnnotatedWithParams creator, boolean explicit, SettableBeanProperty[] injectables);",
+   "public void addIncompeteParameter(AnnotatedParameter parameter);",
+   "// since 2.5 public void addStringCreator(AnnotatedWithParams creator);",
+   "// since 2.5 public void addIntCreator(AnnotatedWithParams creator);",
+   "// since 2.5 public void addLongCreator(AnnotatedWithParams creator);",
+   "// since 2.5 public void addDoubleCreator(AnnotatedWithParams creator);",
+   "// since 2.5 public void addBooleanCreator(AnnotatedWithParams creator);",
+   "// since 2.5 public void addDelegatingCreator(AnnotatedWithParams creator, CreatorProperty[] injectables);",
+   "// since 2.5 public void addPropertyCreator(AnnotatedWithParams creator, CreatorProperty[] properties);",
+   "public boolean hasDefaultCreator();",
+   "public boolean hasDelegatingCreator();",
+   "public boolean hasPropertyBasedCreator();",
+   "protected void verifyNonDup(AnnotatedWithParams newOne, int typeIndex, boolean explicit);"
+  ],
+  "type_signatures": [
+   "@SuppressWarnings(\"serial\") public abstract class SettableBeanProperty extends ConcreteBeanPropertyBase implements java.io.Serializable { protected SettableBeanProperty(BeanPropertyDefinition propDef, JavaType type, TypeDeserializer typeDeser, Annotations contextAnnotations); // since 2.3 protected SettableBeanProperty(String propName, JavaType type, PropertyName wrapper, TypeDeserializer typeDeser, Annotations contextAnnotations, boolean isRequired); protected SettableBeanProperty(PropertyName propName, JavaType type, PropertyName wrapper, TypeDeserializer typeDeser, Annotations contextAnnotations, PropertyMetadata metadata); protected SettableBeanProperty(PropertyName propName, JavaType type, PropertyMetadata metadata, JsonDeserializer<Object> valueDeser); protected SettableBeanProperty(SettableBeanProperty src); protected SettableBeanProperty(SettableBeanProperty src, PropertyName newName); public abstract SettableBeanProperty withValueDeserializer(JsonDeserializer<?> deser); public abstract SettableBeanProperty withName(PropertyName newName); public SettableBeanProperty withSimpleName(String simpleName); // since 2.3 -- use 'withSimpleName' instead if need be public SettableBeanProperty withName(String simpleName); public void setManagedReferenceName(String n); public void setObjectIdInfo(ObjectIdInfo objectIdInfo); public void setViews(Class<?>[] views); public void assignIndex(int index); public final String getName(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

@@ -1,0 +1,148 @@
+{
+ "bug_name": "Lang_6",
+ "call_sites": [
+  {
+   "line": 341,
+   "lines": [
+    336,
+    337,
+    338,
+    339,
+    340,
+    341,
+    342,
+    343,
+    344,
+    345,
+    346
+   ],
+   "path": "src/main/java/org/apache/commons/lang3/StringEscapeUtils.java",
+   "snippet": "     *\n     * @param input  String to escape values in, may be null\n     * @return String with escaped values, {@code null} if null string input\n     */\n    public static final String escapeJava(String input) {\n        return ESCAPE_JAVA.translate(input);\n    }\n\n    /**\n     * <p>Escapes the characters in a {@code String} using EcmaScript String rules.</p>\n     * <p>Escapes any values it finds into their EcmaScript String form."
+  },
+  {
+   "line": 370,
+   "lines": [
+    365,
+    366,
+    367,
+    368,
+    369,
+    370,
+    371,
+    372,
+    373,
+    374,
+    375
+   ],
+   "path": "src/main/java/org/apache/commons/lang3/StringEscapeUtils.java",
+   "snippet": "     * @return String with escaped values, {@code null} if null string input\n     *\n     * @since 3.0\n     */\n    public static final String escapeEcmaScript(String input) {\n        return ESCAPE_ECMASCRIPT.translate(input);\n    }\n\n    /**\n     * <p>Unescapes any Java literals found in the {@code String}.\n     * For example, it will turn a sequence of {@code '\\'} and"
+  },
+  {
+   "line": 383,
+   "lines": [
+    378,
+    379,
+    380,
+    381,
+    382,
+    383,
+    384,
+    385,
+    386,
+    387,
+    388
+   ],
+   "path": "src/main/java/org/apache/commons/lang3/StringEscapeUtils.java",
+   "snippet": "     * \n     * @param input  the {@code String} to unescape, may be null\n     * @return a new unescaped {@code String}, {@code null} if null string input\n     */\n    public static final String unescapeJava(String input) {\n        return UNESCAPE_JAVA.translate(input);\n    }\n\n    /**\n     * <p>Unescapes any EcmaScript literals found in the {@code String}.</p>\n     *"
+  },
+  {
+   "line": 400,
+   "lines": [
+    395,
+    396,
+    397,
+    398,
+    399,
+    400,
+    401,
+    402,
+    403,
+    404,
+    405
+   ],
+   "path": "src/main/java/org/apache/commons/lang3/StringEscapeUtils.java",
+   "snippet": "     * @return A new unescaped {@code String}, {@code null} if null string input\n     *\n     * @since 3.0\n     */\n    public static final String unescapeEcmaScript(String input) {\n        return UNESCAPE_ECMASCRIPT.translate(input);\n    }\n\n    // HTML and XML\n    //--------------------------------------------------------------------------\n    /**"
+  },
+  {
+   "line": 433,
+   "lines": [
+    428,
+    429,
+    430,
+    431,
+    432,
+    433,
+    434,
+    435,
+    436,
+    437,
+    438
+   ],
+   "path": "src/main/java/org/apache/commons/lang3/StringEscapeUtils.java",
+   "snippet": "     * @see <a href=\"http://www.w3.org/TR/html401/charset.html#code-position\">HTML 4.01 Code positions</a>\n     * \n     * @since 3.0\n     */\n    public static final String escapeHtml4(String input) {\n        return ESCAPE_HTML4.translate(input);\n    }\n\n    /**\n     * <p>Escapes the characters in a {@code String} using HTML entities.</p>\n     * <p>Supports only the HTML 3.0 entities. </p>"
+  }
+ ],
+ "class_simple": "CharSequenceTranslator",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * An API for translating text. \n * Its core use is to escape and unescape text. Because escaping and unescaping \n * is completely contextual, the API does not present two separate signatures.\n * \n * @since 3.0\n * @version $Id$\n */\npublic abstract",
+  "method_javadoc": "/**\n     * Translate an input onto a Writer. This is intentionally final as its algorithm is \n     * tightly coupled with the abstract method of this class. \n     *\n     * @param input CharSequence that is being translated\n     * @param out Writer to translate the text to\n     * @throws IOException if and only if the Writer produces an IOException\n     */"
+ },
+ "fields": [],
+ "focal_class": "org.apache.commons.lang3.text.translate.CharSequenceTranslator",
+ "focal_id": "Lang_6::org.apache.commons.lang3.text.translate.CharSequenceTranslator::translate(CharSequence,Writer)",
+ "focal_method_name": "translate",
+ "generations": 3,
+ "impl_B": "public final void translate(CharSequence input, Writer out) throws IOException {\n        if (out == null) {\n            throw new IllegalArgumentException(\"The Writer must not be null\");\n        }\n        if (input == null) {\n            return;\n        }\n        int pos = 0;\n        int len = input.length();\n        while (pos < len) {\n            int consumed = translate(input, pos, out);\n            if (consumed == 0) {\n                char[] c = Character.toChars(Character.codePointAt(input, pos));\n                out.write(c);\n                pos+= c.length;\n                continue;\n            }\n//          // contract with translators is that they have to understand codepoints \n//          // and they just took care of a surrogate pair\n            for (int pt = 0; pt < consumed; pt++) {\n                pos += Character.charCount(Character.codePointAt(input, pos));\n            }\n        }\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.io.StringWriter",
+  "java.io.Writer",
+  "java.util.Locale"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.lang3.text.translate",
+ "project": "Lang",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Translate a set of codepoints, represented by an int index into a CharSequence, \n     * into another set of codepoints. The number of codepoints consumed must be returned, \n     * and the only IOExceptions thrown must be from interacting with the Writer so that \n     * the top level API may reliable ignore StringWriter IOExceptions. \n     *\n     * @param input CharSequence that is being translated\n     * @param index int representing the current point of translation\n     * @param out Writer to translate the text to\n     * @return int count of codepoints consumed\n     * @throws IOException if and only if the Writer produces an IOException\n     */",
+   "name": "translate"
+  },
+  {
+   "javadoc": "/**\n     * Helper for non-Writer usage. \n     * @param input CharSequence to be translated\n     * @return String output of translation\n     */",
+   "name": "translate"
+  },
+  {
+   "javadoc": "/**\n     * Helper method to create a merger of this translator with another set of \n     * translators. Useful in customizing the standard functionality.\n     *\n     * @param translators CharSequenceTranslator array of translators to merge with this one\n     * @return CharSequenceTranslator merging this translator with the others\n     */",
+   "name": "with"
+  },
+  {
+   "javadoc": "/**\n     * <p>Returns an upper case hexadecimal <code>String</code> for the given\n     * character.</p>\n     *\n     * @param codepoint The codepoint to convert.\n     * @return An upper case hexadecimal <code>String</code>\n     */",
+   "name": "hex"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public abstract class CharSequenceTranslator",
+  "constructors": [],
+  "focal_signature": "public final void translate(CharSequence input, Writer out) throws IOException",
+  "methods": [
+   "public abstract int translate(CharSequence input, int index, Writer out) throws IOException;",
+   "public final String translate(CharSequence input);",
+   "public final CharSequenceTranslator with(CharSequenceTranslator... translators);",
+   "public static String hex(int codepoint);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

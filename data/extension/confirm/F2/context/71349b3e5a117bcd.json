@@ -1,0 +1,165 @@
+{
+ "bug_name": "JxPath_2",
+ "call_sites": [
+  {
+   "line": 106,
+   "lines": [
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111
+   ],
+   "path": "src/java/org/apache/commons/jxpath/CompiledExpression.java",
+   "snippet": "     * Traverses the xpath and returns an Iterator of Pointers.\n     * A Pointer provides easy access to a property.\n     * If the xpath matches no properties\n     * in the graph, the Iterator be empty, but not null.\n     */\n    Iterator iteratePointers(JXPathContext context);\n\n    /**\n     * Remove the graph element described by this expression\n     */\n    void removePath(JXPathContext context);"
+  },
+  {
+   "line": 655,
+   "lines": [
+    650,
+    651,
+    652,
+    653,
+    654,
+    655,
+    656,
+    657,
+    658,
+    659,
+    660
+   ],
+   "path": "src/java/org/apache/commons/jxpath/JXPathContext.java",
+   "snippet": "     * @param xpath the xpath to be evaluated\n     * @return a list of found objects\n     */\n    public List selectNodes(String xpath) {\n    \tArrayList list = new ArrayList();\n    \tIterator iterator = iteratePointers(xpath);\n    \twhile (iterator.hasNext()) {\n\t\t\tPointer pointer = (Pointer) iterator.next();\n\t\t\tlist.add(pointer.getNode());\n\t\t}\n\t\treturn list;"
+  },
+  {
+   "line": 115,
+   "lines": [
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/JXPathCompiledExpression.java",
+   "snippet": "    /**\n     * @see CompiledExpression#iteratePointers(JXPathContext)\n     */\n    public Iterator iteratePointers(JXPathContext context) {\n        return ((JXPathContextReferenceImpl) context).\n                    iteratePointers(xpath, expression);\n    }\n\n    /**\n     * @see CompiledExpression#removePath(JXPathContext)\n     */"
+  },
+  {
+   "line": 543,
+   "lines": [
+    538,
+    539,
+    540,
+    541,
+    542,
+    543,
+    544,
+    545,
+    546,
+    547,
+    548
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/JXPathContextReferenceImpl.java",
+   "snippet": "     * A Pointer provides easy access to a property.\n     * If the xpath matches no properties\n     * in the graph, the Iterator be empty, but not null.\n     */\n    public Iterator iteratePointers(String xpath) {\n        return iteratePointers(xpath, compileExpression(xpath));\n    }\n\n    public Iterator iteratePointers(String xpath, Expression expr) {\n        return expr.iteratePointers(getEvalContext());\n    }"
+  },
+  {
+   "line": 547,
+   "lines": [
+    542,
+    543,
+    544,
+    545,
+    546,
+    547,
+    548,
+    549,
+    550,
+    551,
+    552
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/JXPathContextReferenceImpl.java",
+   "snippet": "    public Iterator iteratePointers(String xpath) {\n        return iteratePointers(xpath, compileExpression(xpath));\n    }\n\n    public Iterator iteratePointers(String xpath, Expression expr) {\n        return expr.iteratePointers(getEvalContext());\n    }\n\n    public void removePath(String xpath) {\n        removePath(xpath, compileExpression(xpath));\n    }"
+  }
+ ],
+ "class_simple": "Expression",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Common superclass for several types of nodes in the parse tree. Provides\n * APIs for optimization of evaluation of expressions.  Specifically, an\n * expression only needs to executed once during the evaluation of an xpath\n * if that expression is context-independent.  Expression.isContextDependent()\n * provides that hint.\n *\n * @author Dmitri Plotnikov\n * @version $Revision$ $Date$\n */\npublic abstract",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "protected static final Double ZERO",
+  "protected static final Double ONE",
+  "protected static final Double NOT_A_NUMBER",
+  "private boolean contextDependencyKnown",
+  "private boolean contextDependent"
+ ],
+ "focal_class": "org.apache.commons.jxpath.ri.compiler.Expression",
+ "focal_id": "JxPath_2::org.apache.commons.jxpath.ri.compiler.Expression::iteratePointers(EvalContext)",
+ "focal_method_name": "iteratePointers",
+ "generations": 3,
+ "impl_B": "public Iterator iteratePointers(EvalContext context) {\n        Object result = compute(context);\n        if (result == null) {\n            return Collections.EMPTY_LIST.iterator();\n        }\n        if (result instanceof EvalContext) {\n            return (EvalContext) result;\n        }\n        return new PointerIterator(ValueUtils.iterate(result),\n                new QName(null, \"value\"),\n                context.getRootContext().getCurrentNodePointer().getLocale());\n    }",
+ "imports": [
+  "org.apache.commons.jxpath.Pointer",
+  "org.apache.commons.jxpath.ri.EvalContext",
+  "org.apache.commons.jxpath.ri.model.NodePointer",
+  "org.apache.commons.jxpath.ri.QName",
+  "org.apache.commons.jxpath.util.ValueUtils",
+  "java.util.Collections",
+  "java.util.Iterator",
+  "java.util.Locale"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.jxpath.ri.compiler",
+ "project": "JxPath",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Returns true if this expression should be re-evaluated\n     * each time the current position in the context changes.\n     */",
+   "name": "isContextDependent"
+  },
+  {
+   "javadoc": "/**\n     * Implemented by subclasses and result is cached by isContextDependent()\n     */",
+   "name": "computeContextDependent"
+  },
+  {
+   "javadoc": "/**\n     * Evaluates the expression. If the result is a node set, returns\n     * the first element of the node set.\n     */",
+   "name": "computeValue"
+  },
+  {
+   "javadoc": "",
+   "name": "compute"
+  },
+  {
+   "javadoc": "",
+   "name": "iterate"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public abstract class Expression",
+  "constructors": [],
+  "focal_signature": "public Iterator iteratePointers(EvalContext context)",
+  "methods": [
+   "public boolean isContextDependent();",
+   "public abstract boolean computeContextDependent();",
+   "public abstract Object computeValue(EvalContext context);",
+   "public abstract Object compute(EvalContext context);",
+   "public Iterator iterate(EvalContext context);"
+  ],
+  "type_signatures": [
+   "public abstract class EvalContext implements ExpressionContext, Iterator { public EvalContext(EvalContext parentContext); public Pointer getContextNodePointer(); public JXPathContext getJXPathContext(); public int getPosition(); public int getDocumentOrder(); public boolean isChildOrderingRequired(); public boolean hasNext(); public Object next(); public void remove(); public List getContextNodeList(); public NodeSet getNodeSet(); public Object getValue(); public String toString(); public RootContext getRootContext(); public void reset(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

@@ -1,0 +1,165 @@
+{
+ "bug_name": "JacksonDatabind_42",
+ "call_sites": [
+  {
+   "line": 187,
+   "lines": [
+    182,
+    183,
+    184,
+    185,
+    186,
+    187,
+    188,
+    189,
+    190,
+    191,
+    192
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BuilderBasedDeserializer.java",
+   "snippet": "        throws IOException, JsonProcessingException\n    {\n        /* Important: we call separate method which does NOT call\n         * 'finishBuild()', to avoid problems with recursion\n         */\n        return finishBuild(ctxt, _deserialize(jp, ctxt, builder));\n    }\n    \n    /*\n    /**********************************************************\n    /* Concrete deserialization methods"
+  },
+  {
+   "line": 356,
+   "lines": [
+    351,
+    352,
+    353,
+    354,
+    355,
+    356,
+    357,
+    358,
+    359,
+    360,
+    361
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BuilderBasedDeserializer.java",
+   "snippet": "                    }\n                    if (unknown != null) { // nope, just extra unknown stuff...\n                        bean = handleUnknownProperties(ctxt, bean, unknown);\n                    }\n                    // or just clean?\n                    return _deserialize(jp, ctxt, bean);\n                }\n                continue;\n            }\n            // Object Id property?\n            if (buffer.readIdProperty(propName)) {"
+  },
+  {
+   "line": 201,
+   "lines": [
+    196,
+    197,
+    198,
+    199,
+    200,
+    201,
+    202,
+    203,
+    204,
+    205,
+    206
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/impl/ExternalTypeHandler.java",
+   "snippet": "            } else if (_tokens[i] == null) {\n                SettableBeanProperty prop = _properties[i].getProperty();\n                throw ctxt.mappingException(\"Missing property '%s' for external type id '%s'\",\n                        prop.getName(), _properties[i].getTypePropertyName());\n            }\n            values[i] = _deserialize(jp, ctxt, i, typeId);\n        }\n        // second: fill in creator properties:\n        for (int i = 0; i < len; ++i) {\n            SettableBeanProperty prop = _properties[i].getProperty();\n            if (creator.findCreatorProperty(prop.getName()) != null) {"
+  },
+  {
+   "line": 122,
+   "lines": [
+    117,
+    118,
+    119,
+    120,
+    121,
+    122,
+    123,
+    124,
+    125,
+    126,
+    127
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/std/FromStringDeserializer.java",
+   "snippet": "                // 04-Feb-2013, tatu: Usually should become null; but not always\n                return _deserializeFromEmptyString();\n            }\n            Exception cause = null;\n            try {\n                T result = _deserialize(text, ctxt);\n                if (result != null) {\n                    return result;\n                }\n            } catch (IllegalArgumentException iae) {\n                cause = iae;"
+  },
+  {
+   "line": 187,
+   "lines": [
+    182,
+    183,
+    184,
+    185,
+    186,
+    187,
+    188,
+    189,
+    190,
+    191,
+    192
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/std/StdKeyDeserializer.java",
+   "snippet": "            return Float.valueOf((float) _parseDouble(key));\n        case TYPE_DOUBLE:\n            return _parseDouble(key);\n        case TYPE_LOCALE:\n            try {\n                return _deser._deserialize(key, ctxt);\n            } catch (IOException e) {\n                throw ctxt.weirdKeyException(_keyClass, key, \"unable to parse key as locale\");\n            }\n        case TYPE_CURRENCY:\n            try {"
+  }
+ ],
+ "class_simple": "Std",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Base class for simple deserializers that only accept JSON String\n * values as the source.\n */\n@SuppressWarnings(\"serial\")\npublic abstract class FromStringDeserializer<T> extends StdScalarDeserializer<T>\n{\n    public static Class<?>[] types() {\n        return new Class<?>[] {\n            File.class,\n            URL.class,\n            URI.class,\n            Class.class,\n            JavaType.class,\n            Currency.class,\n            Pattern.class,\n            Locale.class,\n            Charset.class,\n            TimeZone.class,\n            InetAddress.class,\n            InetSocketAddress.class,\n        };\n    }\n    \n    /*\n    /**********************************************************\n    /* Deserializer implementations\n    /**********************************************************\n     */\n    \n    protected FromStringDeserializer(Class<?> vc) {\n        super(vc);\n    }\n\n    /**\n     * Factory method for trying to find a deserializer for one of supported\n     * types that have simple from-String serialization.\n     */\n    public static Std findDeserializer(Class<?> rawType)\n    {\n        int kind = 0;\n        if (rawType == File.class) {\n            kind = Std.STD_FILE;\n        } else if (rawType == URL.class) {\n            kind = Std.STD_URL;\n        } else if (rawType == URI.class) {\n            kind = Std.STD_URI;\n        } else if (rawType == Class.class) {\n            kind = Std.STD_CLASS;\n        } else if (rawType == JavaType.class) {\n            kind = Std.STD_JAVA_TYPE;\n        } else if (rawType == Currency.class) {\n            kind = Std.STD_CURRENCY;\n        } else if (rawType == Pattern.class) {\n            kind = Std.STD_PATTERN;\n        } else if (rawType == Locale.class) {\n            kind = Std.STD_LOCALE;\n        } else if (rawType == Charset.class) {\n            kind = Std.STD_CHARSET;\n        } else if (rawType == TimeZone.class) {\n            kind = Std.STD_TIME_ZONE;\n        } else if (rawType == InetAddress.class) {\n            kind = Std.STD_INET_ADDRESS;\n        } else if (rawType == InetSocketAddress.class) {\n            kind = Std.STD_INET_SOCKET_ADDRESS;\n        } else {\n            return null;\n        }\n        return new Std(rawType, kind);\n    }\n    \n    /*\n    /**********************************************************\n    /* Deserializer implementations\n    /**********************************************************\n     */\n    \n    @SuppressWarnings(\"unchecked\")\n    @Override\n    public T deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException\n    {\n        // Issue#381\n        if (jp.getCurrentToken() == JsonToken.START_ARRAY && ctxt.isEnabled(DeserializationFeature.UNWRAP_SINGLE_VALUE_ARRAYS)) {\n            jp.nextToken();\n            final T value = deserialize(jp, ctxt);\n            if (jp.nextToken() != JsonToken.END_ARRAY) {\n                throw ctxt.wrongTokenException(jp, JsonToken.END_ARRAY, \n                                \"Attempted to unwrap single value array for single '\" + _valueClass.getName() + \"' value but there was more than a single value in the array\");\n            }\n            return value;\n        }\n        // 22-Sep-2012, tatu: For 2.1, use this new method, may force coercion:\n        String text = jp.getValueAsString();\n        if (text != null) { // has String representation\n            if (text.length() == 0 || (text = text.trim()).length() == 0) {\n                // 04-Feb-2013, tatu: Usually should become null; but not always\n                return _deserializeFromEmptyString();\n            }\n            Exception cause = null;\n            try {\n                T result = _deserialize(text, ctxt);\n                if (result != null) {\n                    return result;\n                }\n            } catch (IllegalArgumentException iae) {\n                cause = iae;\n            }\n            String msg = \"not a valid textual representation\";\n            if (cause != null) {\n                String m2 = cause.getMessage();\n                if (m2 != null) {\n                    msg = msg + \", problem: \"+m2;\n                }\n            }\n            JsonMappingException e = ctxt.weirdStringException(text, _valueClass, msg);\n            if (cause != null) {\n                e.initCause(cause);\n            }\n            throw e;\n            // nothing to do here, yet? We'll fail anyway\n        }\n        if (jp.getCurrentToken() == JsonToken.VALUE_EMBEDDED_OBJECT) {\n            // Trivial cases; null to null, instance of type itself returned as is\n            Object ob = jp.getEmbeddedObject();\n            if (ob == null) {\n                return null;\n            }\n            if (_valueClass.isAssignableFrom(ob.getClass())) {\n                return (T) ob;\n            }\n            return _deserializeEmbedded(ob, ctxt);\n        }\n        throw ctxt.mappingException(_valueClass);\n    }\n        \n    protected abstract T _deserialize(String value, DeserializationContext ctxt) throws IOException;\n\n    protected T _deserializeEmbedded(Object ob, DeserializationContext ctxt) throws IOException {\n        // default impl: error out\n        throw ctxt.mappingException(\"Don't know how to convert embedded Object of type %s into %s\",\n                ob.getClass().getName(), _valueClass.getName());\n    }\n\n    protected T _deserializeFromEmptyString() throws IOException {\n        return null;\n    }\n\n    /*\n    /**********************************************************\n    /* A general-purpose implementation\n    /**********************************************************\n     */\n\n    /**\n     * \"Chameleon\" deserializer that works on simple types that are deserialized\n     * from a simple String.\n     * \n     * @since 2.4\n     */\n    public static",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "public final static int STD_FILE",
+  "public final static int STD_URL",
+  "public final static int STD_URI",
+  "public final static int STD_CLASS",
+  "public final static int STD_JAVA_TYPE",
+  "public final static int STD_CURRENCY",
+  "public final static int STD_PATTERN",
+  "public final static int STD_LOCALE",
+  "public final static int STD_CHARSET",
+  "public final static int STD_TIME_ZONE",
+  "public final static int STD_INET_ADDRESS",
+  "public final static int STD_INET_SOCKET_ADDRESS",
+  "protected final int _kind"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.deser.std.FromStringDeserializer.Std",
+ "focal_id": "JacksonDatabind_42::com.fasterxml.jackson.databind.deser.std.FromStringDeserializer$Std::_deserialize(String,DeserializationContext)",
+ "focal_method_name": "_deserialize",
+ "generations": 3,
+ "impl_B": "@Override\n        protected Object _deserialize(String value, DeserializationContext ctxt) throws IOException\n        {\n            switch (_kind) {\n            case STD_FILE:\n                return new File(value);\n            case STD_URL:\n                return new URL(value);\n            case STD_URI:\n                return URI.create(value);\n            case STD_CLASS:\n                try {\n                    return ctxt.findClass(value);\n                } catch (Exception e) {\n                    throw ctxt.instantiationException(_valueClass, ClassUtil.getRootCause(e));\n                }\n            case STD_JAVA_TYPE:\n                return ctxt.getTypeFactory().constructFromCanonical(value);\n            case STD_CURRENCY:\n                // will throw IAE if unknown:\n                return Currency.getInstance(value);\n            case STD_PATTERN:\n                // will throw IAE (or its subclass) if malformed\n                return Pattern.compile(value);\n            case STD_LOCALE:\n                {\n                    int ix = value.indexOf('_');\n                    if (ix < 0) { // single argument\n                        return new Locale(value);\n                    }\n                    String first = value.substring(0, ix);\n                    value = value.substring(ix+1);\n                    ix = value.indexOf('_');\n                    if (ix < 0) { // two pieces\n                        return new Locale(first, value);\n                    }\n                    String second = value.substring(0, ix);\n                    return new Locale(first, second, value.substring(ix+1));\n                }\n            case STD_CHARSET:\n                return Charset.forName(value);\n            case STD_TIME_ZONE:\n                return TimeZone.getTimeZone(value);\n            case STD_INET_ADDRESS:\n                return InetAddress.getByName(value);\n            case STD_INET_SOCKET_ADDRESS:\n                if (value.startsWith(\"[\")) {\n                    // bracketed IPv6 (with port number)\n\n                    int i = value.lastIndexOf(']');\n                    if (i == -1) {\n                        throw new InvalidFormatException(\"Bracketed IPv6 address must contain closing bracket\",\n                                value, InetSocketAddress.class);\n                    }\n\n                    int j = value.indexOf(':', i);\n                    int port = j > -1 ? Integer.parseInt(value.substring(j + 1)) : 0;\n                    return new InetSocketAddress(value.substring(0, i + 1), port);\n                } else {\n                    int ix = value.indexOf(':');\n                    if (ix >= 0 && value.indexOf(':', ix + 1) < 0) {\n                        // host:port\n                        int port = Integer.parseInt(value.substring(ix+1));\n                        return new InetSocketAddress(value.substring(0, ix), port);\n                    }\n                    // host or unbracketed IPv6, without port number\n                    return new InetSocketAddress(value, 0);\n                }\n            }\n            throw new IllegalArgumentException();\n        }",
+ "imports": [
+  "java.io.*",
+  "java.net.InetAddress",
+  "java.net.InetSocketAddress",
+  "java.net.URI",
+  "java.net.URL",
+  "java.nio.charset.Charset",
+  "java.util.Currency",
+  "java.util.Locale",
+  "java.util.TimeZone",
+  "java.util.regex.Pattern",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.databind.DeserializationContext",
+  "com.fasterxml.jackson.databind.DeserializationFeature",
+  "com.fasterxml.jackson.databind.JavaType",
+  "com.fasterxml.jackson.databind.JsonMappingException",
+  "com.fasterxml.jackson.databind.exc.InvalidFormatException",
+  "com.fasterxml.jackson.databind.util.ClassUtil"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.deser.std",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "_deserializeFromEmptyString"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public static class Std extends FromStringDeserializer<Object>",
+  "constructors": [
+   "protected Std(Class<?> valueType, int kind);"
+  ],
+  "focal_signature": "protected Object _deserialize(String value, DeserializationContext ctxt) throws IOException",
+  "methods": [
+   "protected Object _deserializeFromEmptyString() throws IOException;"
+  ],
+  "type_signatures": [
+   "public abstract class DeserializationContext extends DatabindContext implements java.io.Serializable { protected DeserializationContext(DeserializerFactory df); protected DeserializationContext(DeserializerFactory df, DeserializerCache cache); protected DeserializationContext(DeserializationContext src, DeserializerFactory factory); protected DeserializationContext(DeserializationContext src, DeserializationConfig config, JsonParser p, InjectableValues injectableValues); protected DeserializationContext(DeserializationContext src); public DeserializationConfig getConfig(); public final Class<?> getActiveView(); public final AnnotationIntrospector getAnnotationIntrospector(); public final TypeFactory getTypeFactory(); public Locale getLocale(); public TimeZone getTimeZone(); public Object getAttribute(Object key); public DeserializationContext setAttribute(Object key, Object value); public JavaType getContextualType(); public DeserializerFactory getFactory(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

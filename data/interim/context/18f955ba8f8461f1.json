@@ -1,0 +1,172 @@
+{
+  "bug_name": "Compress_30",
+  "call_sites": [
+    {
+      "line": 81,
+      "lines": [
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86
+      ],
+      "path": "src/main/java/org/apache/commons/compress/archivers/ArchiveInputStream.java",
+      "snippet": "     * @throws IOException\n     *             if an I/O error has occurred\n     */\n    @Override\n    public int read() throws IOException {\n        int num = read(SINGLE, 0, 1);\n        return num == -1 ? -1 : SINGLE[0] & BYTE_MASK;\n    }\n\n    /**\n     * Increments the counter of already read bytes."
+    },
+    {
+      "line": 103,
+      "lines": [
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108
+      ],
+      "path": "src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream.java",
+      "snippet": "                    throw new IOException(\"invalid header \" + ArchiveUtils.toAsciiString(realized));\n                }\n            }\n        }\n\n        if (offset % 2 != 0 && read() < 0) {\n            // hit eof\n            return null;\n        }\n\n        if (input.available() == 0) {"
+    },
+    {
+      "line": 254,
+      "lines": [
+        249,
+        250,
+        251,
+        252,
+        253,
+        254,
+        255,
+        256,
+        257,
+        258,
+        259
+      ],
+      "path": "src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream.java",
+      "snippet": "                toRead = (int) Math.min(len, entryEnd - offset);\n            } else {\n                return -1;\n            }\n        }\n        final int ret = this.input.read(b, off, toRead);\n        count(ret);\n        offset += ret > 0 ? ret : 0;\n        return ret;\n    }\n"
+    },
+    {
+      "line": 351,
+      "lines": [
+        346,
+        347,
+        348,
+        349,
+        350,
+        351,
+        352,
+        353,
+        354
+      ],
+      "path": "src/main/java/org/apache/commons/compress/archivers/arj/ArjArchiveInputStream.java",
+      "snippet": "            throw new IllegalStateException(\"No current arj entry\");\n        }\n        if (currentLocalFileHeader.method != LocalFileHeader.Methods.STORED) {\n            throw new IOException(\"Unsupported compression method \" + currentLocalFileHeader.method);\n        }\n        return currentInputStream.read(b, off, len);\n    }\n}\n"
+    },
+    {
+      "line": 450,
+      "lines": [
+        445,
+        446,
+        447,
+        448,
+        449,
+        450,
+        451,
+        452,
+        453,
+        454,
+        455
+      ],
+      "path": "src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStream.java",
+      "snippet": "\n    private String readCString(final int length) throws IOException {\n        // don't include trailing NUL in file name to decode\n        byte tmpBuffer[] = new byte[length - 1];\n        readFully(tmpBuffer, 0, tmpBuffer.length);\n        this.in.read();\n        return zipEncoding.decode(tmpBuffer);\n    }\n\n    /**\n     * Skips specified number of bytes in the current CPIO entry."
+    }
+  ],
+  "class_simple": "BZip2CompressorInputStream",
+  "doc": {
+    "class_javadoc": "/**\n * An input stream that decompresses from the BZip2 format to be read as any other stream.\n * \n * @NotThreadSafe\n */\npublic",
+    "method_javadoc": ""
+  },
+  "fields": [
+    "private int last",
+    "private int origPtr",
+    "private int blockSize100k",
+    "private boolean blockRandomised",
+    "private int bsBuff",
+    "private int bsLive",
+    "private final CRC crc",
+    "private int nInUse",
+    "private InputStream in",
+    "private final boolean decompressConcatenated",
+    "private static final int EOF",
+    "private static final int START_BLOCK_STATE",
+    "private static final int RAND_PART_A_STATE",
+    "private static final int RAND_PART_B_STATE",
+    "private static final int RAND_PART_C_STATE",
+    "private static final int NO_RAND_PART_A_STATE",
+    "private static final int NO_RAND_PART_B_STATE",
+    "private static final int NO_RAND_PART_C_STATE",
+    "private int currentState",
+    "private int storedBlockCRC, storedCombinedCRC",
+    "private int computedBlockCRC, computedCombinedCRC",
+    "private int su_count",
+    "private int su_ch2",
+    "private int su_chPrev",
+    "private int su_i2",
+    "private int su_j2",
+    "private int su_rNToGo",
+    "private int su_rTPos",
+    "private int su_tPos",
+    "private char su_z",
+    "private BZip2CompressorInputStream.Data data"
+  ],
+  "focal_class": "org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream",
+  "focal_id": "Compress_30::org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream::read(byte[],int,int)",
+  "focal_method_name": "read",
+  "impl_B": "@Override\n    public int read(final byte[] dest, final int offs, final int len)\n        throws IOException {\n        if (offs < 0) {\n            throw new IndexOutOfBoundsException(\"offs(\" + offs + \") < 0.\");\n        }\n        if (len < 0) {\n            throw new IndexOutOfBoundsException(\"len(\" + len + \") < 0.\");\n        }\n        if (offs + len > dest.length) {\n            throw new IndexOutOfBoundsException(\"offs(\" + offs + \") + len(\"\n                                                + len + \") > dest.length(\" + dest.length + \").\");\n        }\n        if (this.in == null) {\n            throw new IOException(\"stream closed\");\n        }\n\n        final int hi = offs + len;\n        int destOffs = offs;\n        int b;\n        while (destOffs < hi && ((b = read0()) >= 0)) {\n            dest[destOffs++] = (byte) b;\n            count(1);\n        }\n\n        int c = (destOffs == offs) ? -1 : (destOffs - offs);\n        return c;\n    }",
+  "imports": [
+    "java.io.IOException",
+    "java.io.InputStream",
+    "org.apache.commons.compress.compressors.CompressorInputStream"
+  ],
+  "javadoc_edited_by_fix": false,
+  "package": "org.apache.commons.compress.compressors.bzip2",
+  "project": "Compress",
+  "siblings": [
+    {
+      "javadoc": "",
+      "name": "read"
+    },
+    {
+      "javadoc": "",
+      "name": "close"
+    },
+    {
+      "javadoc": "/**\n     * Checks if the signature matches what is expected for a bzip2 file.\n     * \n     * @param signature\n     *            the bytes to check\n     * @param length\n     *            the number of bytes to check\n     * @return true, if this stream is a bzip2 compressed stream, false otherwise\n     * \n     * @since 1.1\n     */",
+      "name": "matches"
+    }
+  ],
+  "sig": {
+    "class_declaration": "public class BZip2CompressorInputStream extends CompressorInputStream implements BZip2Constants",
+    "constructors": [
+      "public BZip2CompressorInputStream(final InputStream in) throws IOException;",
+      "public BZip2CompressorInputStream(final InputStream in, final boolean decompressConcatenated) throws IOException;"
+    ],
+    "focal_signature": "public int read(final byte[] dest, final int offs, final int len) throws IOException",
+    "methods": [
+      "public int read() throws IOException;",
+      "public void close() throws IOException;",
+      "public static boolean matches(byte[] signature, int length);"
+    ],
+    "type_signatures": []
+  },
+  "split": "test"
+}

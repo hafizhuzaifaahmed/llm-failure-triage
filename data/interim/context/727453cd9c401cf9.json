@@ -1,0 +1,127 @@
+{
+  "bug_name": "Gson_8",
+  "call_sites": [
+    {
+      "line": 401,
+      "lines": [
+        396,
+        397,
+        398,
+        399,
+        400,
+        401,
+        402,
+        403,
+        404,
+        405,
+        406
+      ],
+      "path": "gson/src/main/java/com/google/gson/Gson.java",
+      "snippet": "    try {\n      FutureTypeAdapter<T> call = new FutureTypeAdapter<T>();\n      threadCalls.put(type, call);\n\n      for (TypeAdapterFactory factory : factories) {\n        TypeAdapter<T> candidate = factory.create(this, type);\n        if (candidate != null) {\n          call.setDelegate(candidate);\n          typeTokenCache.put(type, candidate);\n          return candidate;\n        }"
+    },
+    {
+      "line": 483,
+      "lines": [
+        478,
+        479,
+        480,
+        481,
+        482,
+        483,
+        484,
+        485,
+        486,
+        487,
+        488
+      ],
+      "path": "gson/src/main/java/com/google/gson/Gson.java",
+      "snippet": "          skipPastFound = true;\n        }\n        continue;\n      }\n\n      TypeAdapter<T> candidate = factory.create(this, type);\n      if (candidate != null) {\n        return candidate;\n      }\n    }\n    throw new IllegalArgumentException(\"GSON cannot serialize \" + type);"
+    },
+    {
+      "line": 169,
+      "lines": [
+        164,
+        165,
+        166,
+        167,
+        168,
+        169,
+        170,
+        171
+      ],
+      "path": "gson/src/main/java/com/google/gson/TypeAdapterFactory.java",
+      "snippet": "\n  /**\n   * Returns a type adapter for {@code type}, or null if this factory doesn't\n   * support {@code type}.\n   */\n  <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type);\n}\n"
+    },
+    {
+      "line": 219,
+      "lines": [
+        214,
+        215,
+        216,
+        217,
+        218,
+        219,
+        220,
+        221,
+        222,
+        223,
+        224
+      ],
+      "path": "gson/src/main/java/com/google/gson/internal/ConstructorConstructor.java",
+      "snippet": "  }\n\n  private <T> ObjectConstructor<T> newUnsafeAllocator(\n      final Type type, final Class<? super T> rawType) {\n    return new ObjectConstructor<T>() {\n      private final UnsafeAllocator unsafeAllocator = UnsafeAllocator.create();\n      @SuppressWarnings(\"unchecked\")\n      @Override public T construct() {\n        try {\n          Object newInstance = unsafeAllocator.newInstance(rawType);\n          return (T) newInstance;"
+    },
+    {
+      "line": 62,
+      "lines": [
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67
+      ],
+      "path": "gson/src/main/java/com/google/gson/internal/bind/JsonAdapterAnnotationTypeAdapterFactory.java",
+      "snippet": "      typeAdapter = constructorConstructor.get(TypeToken.get(typeAdapterClass)).construct();\n    } else if (TypeAdapterFactory.class.isAssignableFrom(value)) {\n      Class<TypeAdapterFactory> typeAdapterFactory = (Class<TypeAdapterFactory>) value;\n      typeAdapter = constructorConstructor.get(TypeToken.get(typeAdapterFactory))\n          .construct()\n          .create(gson, fieldType);\n    } else {\n      throw new IllegalArgumentException(\n          \"@JsonAdapter value must be TypeAdapter or TypeAdapterFactory reference.\");\n    }\n    if (typeAdapter != null) {"
+    }
+  ],
+  "class_simple": "UnsafeAllocator",
+  "doc": {
+    "class_javadoc": "/**\n * Do sneaky things to allocate objects without invoking their constructors.\n *\n * @author Joel Leitch\n * @author Jesse Wilson\n */\npublic abstract",
+    "method_javadoc": ""
+  },
+  "fields": [],
+  "focal_class": "com.google.gson.internal.UnsafeAllocator",
+  "focal_id": "Gson_8::com.google.gson.internal.UnsafeAllocator::create()",
+  "focal_method_name": "create",
+  "impl_B": "public static UnsafeAllocator create() {\n    // try JVM\n    // public class Unsafe {\n    //   public Object allocateInstance(Class<?> type);\n    // }\n    try {\n      Class<?> unsafeClass = Class.forName(\"sun.misc.Unsafe\");\n      Field f = unsafeClass.getDeclaredField(\"theUnsafe\");\n      f.setAccessible(true);\n      final Object unsafe = f.get(null);\n      final Method allocateInstance = unsafeClass.getMethod(\"allocateInstance\", Class.class);\n      return new UnsafeAllocator() {\n        @Override\n        @SuppressWarnings(\"unchecked\")\n        public <T> T newInstance(Class<T> c) throws Exception {\n          return (T) allocateInstance.invoke(unsafe, c);\n        }\n      };\n    } catch (Exception ignored) {\n    }\n\n    // try dalvikvm, post-gingerbread\n    // public class ObjectStreamClass {\n    //   private static native int getConstructorId(Class<?> c);\n    //   private static native Object newInstance(Class<?> instantiationClass, int methodId);\n    // }\n    try {\n      Method getConstructorId = ObjectStreamClass.class\n          .getDeclaredMethod(\"getConstructorId\", Class.class);\n      getConstructorId.setAccessible(true);\n      final int constructorId = (Integer) getConstructorId.invoke(null, Object.class);\n      final Method newInstance = ObjectStreamClass.class\n          .getDeclaredMethod(\"newInstance\", Class.class, int.class);\n      newInstance.setAccessible(true);\n      return new UnsafeAllocator() {\n        @Override\n        @SuppressWarnings(\"unchecked\")\n        public <T> T newInstance(Class<T> c) throws Exception {\n          return (T) newInstance.invoke(null, c, constructorId);\n        }\n      };\n    } catch (Exception ignored) {\n    }\n\n    // try dalvikvm, pre-gingerbread\n    // public class ObjectInputStream {\n    //   private static native Object newInstance(\n    //     Class<?> instantiationClass, Class<?> constructorClass);\n    // }\n    try {\n      final Method newInstance = ObjectInputStream.class\n          .getDeclaredMethod(\"newInstance\", Class.class, Class.class);\n      newInstance.setAccessible(true);\n      return new UnsafeAllocator() {\n        @Override\n        @SuppressWarnings(\"unchecked\")\n        public <T> T newInstance(Class<T> c) throws Exception {\n          return (T) newInstance.invoke(null, c, Object.class);\n        }\n      };\n    } catch (Exception ignored) {\n    }\n\n    // give up\n    return new UnsafeAllocator() {\n      @Override\n      public <T> T newInstance(Class<T> c) {\n        throw new UnsupportedOperationException(\"Cannot allocate \" + c);\n      }\n    };\n  }",
+  "imports": [
+    "java.io.ObjectInputStream",
+    "java.io.ObjectStreamClass",
+    "java.lang.reflect.Field",
+    "java.lang.reflect.Method"
+  ],
+  "javadoc_edited_by_fix": false,
+  "package": "com.google.gson.internal",
+  "project": "Gson",
+  "siblings": [
+    {
+      "javadoc": "",
+      "name": "newInstance"
+    }
+  ],
+  "sig": {
+    "class_declaration": "public abstract class UnsafeAllocator",
+    "constructors": [],
+    "focal_signature": "public static UnsafeAllocator create()",
+    "methods": [
+      "public abstract <T> T newInstance(Class<T> c) throws Exception;"
+    ],
+    "type_signatures": []
+  },
+  "split": "dev"
+}

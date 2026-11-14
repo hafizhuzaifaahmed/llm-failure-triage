@@ -1,0 +1,202 @@
+{
+ "bug_name": "Math_22",
+ "call_sites": [
+  {
+   "line": 118,
+   "lines": [
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122,
+    123
+   ],
+   "path": "src/main/java/org/apache/commons/math3/distribution/AbstractIntegerDistribution.java",
+   "snippet": "            return upper;\n        }\n\n        // use the one-sided Chebyshev inequality to narrow the bracket\n        // cf. AbstractRealDistribution.inverseCumulativeProbability(double)\n        final double mu = getNumericalMean();\n        final double sigma = FastMath.sqrt(getNumericalVariance());\n        final boolean chebyshevApplies = !(Double.isInfinite(mu) || Double.isNaN(mu) ||\n                Double.isInfinite(sigma) || Double.isNaN(sigma) || sigma == 0.0);\n        if (chebyshevApplies) {\n            double k = FastMath.sqrt((1.0 - p) / p);"
+  },
+  {
+   "line": 165,
+   "lines": [
+    160,
+    161,
+    162,
+    163,
+    164,
+    165,
+    166,
+    167,
+    168,
+    169,
+    170
+   ],
+   "path": "src/main/java/org/apache/commons/math3/distribution/AbstractRealDistribution.java",
+   "snippet": "        double upperBound = getSupportUpperBound();\n        if (p == 1.0) {\n            return upperBound;\n        }\n\n        final double mu = getNumericalMean();\n        final double sig = FastMath.sqrt(getNumericalVariance());\n        final boolean chebyshevApplies;\n        chebyshevApplies = !(Double.isInfinite(mu) || Double.isNaN(mu) ||\n                             Double.isInfinite(sig) || Double.isNaN(sig));\n"
+  },
+  {
+   "line": 88,
+   "lines": [
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93
+   ],
+   "path": "src/main/java/org/apache/commons/math3/distribution/IntegerDistribution.java",
+   "snippet": "     * Use this method to get the numerical value of the mean of this\n     * distribution.\n     *\n     * @return the mean or {@code Double.NaN} if it is not defined\n     */\n    double getNumericalMean();\n\n    /**\n     * Use this method to get the numerical value of the variance of this\n     * distribution.\n     *"
+  },
+  {
+   "line": 105,
+   "lines": [
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110
+   ],
+   "path": "src/main/java/org/apache/commons/math3/distribution/RealDistribution.java",
+   "snippet": "     * Use this method to get the numerical value of the mean of this\n     * distribution.\n     *\n     * @return the mean or {@code Double.NaN} if it is not defined\n     */\n    double getNumericalMean();\n\n    /**\n     * Use this method to get the numerical value of the variance of this\n     * distribution.\n     *"
+  },
+  {
+   "line": 256,
+   "lines": [
+    251,
+    252,
+    253,
+    254,
+    255,
+    256,
+    257,
+    258,
+    259,
+    260,
+    261
+   ],
+   "path": "src/main/java/org/apache/commons/math3/distribution/WeibullDistribution.java",
+   "snippet": "     * @return the variance of this distribution\n     */\n    protected double calculateNumericalVariance() {\n        final double sh = getShape();\n        final double sc = getScale();\n        final double mn = getNumericalMean();\n\n        return (sc * sc) * FastMath.exp(Gamma.logGamma(1 + (2 / sh))) -\n               (mn * mn);\n    }\n"
+  }
+ ],
+ "class_simple": "FDistribution",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Implementation of the F-distribution.\n *\n * @see <a href=\"http://en.wikipedia.org/wiki/F-distribution\">F-distribution (Wikipedia)</a>\n * @see <a href=\"http://mathworld.wolfram.com/F-Distribution.html\">F-distribution (MathWorld)</a>\n * @version $Id$\n */\npublic",
+  "method_javadoc": "/**\n     * {@inheritDoc}\n     *\n     * For denominator degrees of freedom parameter {@code b}, the mean is\n     * <ul>\n     *  <li>if {@code b > 2} then {@code b / (b - 2)},</li>\n     *  <li>else undefined ({@code Double.NaN}).\n     * </ul>\n     */"
+ },
+ "fields": [
+  "public static final double DEFAULT_INVERSE_ABSOLUTE_ACCURACY",
+  "private static final long serialVersionUID",
+  "private final double numeratorDegreesOfFreedom",
+  "private final double denominatorDegreesOfFreedom",
+  "private final double solverAbsoluteAccuracy",
+  "private double numericalVariance",
+  "private boolean numericalVarianceIsCalculated"
+ ],
+ "focal_class": "org.apache.commons.math3.distribution.FDistribution",
+ "focal_id": "Math_22::org.apache.commons.math3.distribution.FDistribution::getNumericalMean()",
+ "focal_method_name": "getNumericalMean",
+ "generations": 3,
+ "impl_B": "public double getNumericalMean() {\n        final double denominatorDF = getDenominatorDegreesOfFreedom();\n\n        if (denominatorDF > 2) {\n            return denominatorDF / (denominatorDF - 2);\n        }\n\n        return Double.NaN;\n    }",
+ "imports": [
+  "org.apache.commons.math3.exception.NotStrictlyPositiveException",
+  "org.apache.commons.math3.exception.util.LocalizedFormats",
+  "org.apache.commons.math3.special.Beta",
+  "org.apache.commons.math3.util.FastMath",
+  "org.apache.commons.math3.random.RandomGenerator",
+  "org.apache.commons.math3.random.Well19937c"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math3.distribution",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * {@inheritDoc}\n     *\n     * @since 2.1\n     */",
+   "name": "density"
+  },
+  {
+   "javadoc": "/**\n     * {@inheritDoc}\n     *\n     * The implementation of this method is based on\n     * <ul>\n     *  <li>\n     *   <a href=\"http://mathworld.wolfram.com/F-Distribution.html\">\n     *   F-Distribution</a>, equation (4).\n     *  </li>\n     * </ul>\n     */",
+   "name": "cumulativeProbability"
+  },
+  {
+   "javadoc": "/**\n     * Access the numerator degrees of freedom.\n     *\n     * @return the numerator degrees of freedom.\n     */",
+   "name": "getNumeratorDegreesOfFreedom"
+  },
+  {
+   "javadoc": "/**\n     * Access the denominator degrees of freedom.\n     *\n     * @return the denominator degrees of freedom.\n     */",
+   "name": "getDenominatorDegreesOfFreedom"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getSolverAbsoluteAccuracy"
+  },
+  {
+   "javadoc": "/**\n     * {@inheritDoc}\n     *\n     * For numerator degrees of freedom parameter {@code a} and denominator\n     * degrees of freedom parameter {@code b}, the variance is\n     * <ul>\n     *  <li>\n     *    if {@code b > 4} then\n     *    {@code [2 * b^2 * (a + b - 2)] / [a * (b - 2)^2 * (b - 4)]},\n     *  </li>\n     *  <li>else undefined ({@code Double.NaN}).\n     * </ul>\n     */",
+   "name": "getNumericalVariance"
+  },
+  {
+   "javadoc": "/**\n     * used by {@link #getNumericalVariance()}\n     *\n     * @return the variance of this distribution\n     */",
+   "name": "calculateNumericalVariance"
+  },
+  {
+   "javadoc": "/**\n     * {@inheritDoc}\n     *\n     * The lower bound of the support is always 0 no matter the parameters.\n     *\n     * @return lower bound of the support (always 0)\n     */",
+   "name": "getSupportLowerBound"
+  },
+  {
+   "javadoc": "/**\n     * {@inheritDoc}\n     *\n     * The upper bound of the support is always positive infinity\n     * no matter the parameters.\n     *\n     * @return upper bound of the support (always Double.POSITIVE_INFINITY)\n     */",
+   "name": "getSupportUpperBound"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "isSupportLowerBoundInclusive"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "isSupportUpperBoundInclusive"
+  },
+  {
+   "javadoc": "/**\n     * {@inheritDoc}\n     *\n     * The support of this distribution is connected.\n     *\n     * @return {@code true}\n     */",
+   "name": "isSupportConnected"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class FDistribution extends AbstractRealDistribution",
+  "constructors": [
+   "public FDistribution(double numeratorDegreesOfFreedom, double denominatorDegreesOfFreedom) throws NotStrictlyPositiveException;",
+   "public FDistribution(double numeratorDegreesOfFreedom, double denominatorDegreesOfFreedom, double inverseCumAccuracy) throws NotStrictlyPositiveException;",
+   "public FDistribution(RandomGenerator rng, double numeratorDegreesOfFreedom, double denominatorDegreesOfFreedom, double inverseCumAccuracy) throws NotStrictlyPositiveException;"
+  ],
+  "focal_signature": "public double getNumericalMean()",
+  "methods": [
+   "public double density(double x);",
+   "public double cumulativeProbability(double x);",
+   "public double getNumeratorDegreesOfFreedom();",
+   "public double getDenominatorDegreesOfFreedom();",
+   "protected double getSolverAbsoluteAccuracy();",
+   "public double getNumericalVariance();",
+   "protected double calculateNumericalVariance();",
+   "public double getSupportLowerBound();",
+   "public double getSupportUpperBound();",
+   "public boolean isSupportLowerBoundInclusive();",
+   "public boolean isSupportUpperBoundInclusive();",
+   "public boolean isSupportConnected();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

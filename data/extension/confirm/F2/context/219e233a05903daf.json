@@ -1,0 +1,464 @@
+{
+ "bug_name": "JacksonDatabind_30",
+ "call_sites": [
+  {
+   "line": 436,
+   "lines": [
+    431,
+    432,
+    433,
+    434,
+    435,
+    436,
+    437,
+    438,
+    439,
+    440,
+    441
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java",
+   "snippet": "            // Ok then, let's collect the whole field; name and value\n            if (unknown == null) {\n                unknown = new TokenBuffer(p, ctxt);\n            }\n            unknown.writeFieldName(propName);\n            unknown.copyCurrentStructure(p);\n        }\n\n        // We hit END_OBJECT, so:\n        Object bean;\n        try {"
+  },
+  {
+   "line": 560,
+   "lines": [
+    555,
+    556,
+    557,
+    558,
+    559,
+    560,
+    561,
+    562,
+    563,
+    564,
+    565
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java",
+   "snippet": "                handleIgnoredProperty(p, ctxt, bean, propName);\n                continue;\n            }\n            // but... others should be passed to unwrapped property deserializers\n            tokens.writeFieldName(propName);\n            tokens.copyCurrentStructure(p);\n            // how about any setter? We'll get copies but...\n            if (_anySetter != null) {\n                try {\n                    _anySetter.deserializeAndSet(p, ctxt, bean, propName);\n                } catch (Exception e) {"
+  },
+  {
+   "line": 609,
+   "lines": [
+    604,
+    605,
+    606,
+    607,
+    608,
+    609,
+    610,
+    611,
+    612,
+    613,
+    614
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java",
+   "snippet": "                handleIgnoredProperty(p, ctxt, bean, propName);\n                continue;\n            }\n            // but... others should be passed to unwrapped property deserializers\n            tokens.writeFieldName(propName);\n            tokens.copyCurrentStructure(p);\n            // how about any setter? We'll get copies but...\n            if (_anySetter != null) {\n                _anySetter.deserializeAndSet(p, ctxt, bean, propName);\n            }\n        }"
+  },
+  {
+   "line": 652,
+   "lines": [
+    647,
+    648,
+    649,
+    650,
+    651,
+    652,
+    653,
+    654,
+    655,
+    656,
+    657
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java",
+   "snippet": "                    // [databind#631]: Assign current value, to be accessible by custom serializers\n                    p.setCurrentValue(bean);\n                    // if so, need to copy all remaining tokens into buffer\n                    while (t == JsonToken.FIELD_NAME) {\n                        p.nextToken(); // to skip name\n                        tokens.copyCurrentStructure(p);\n                        t = p.nextToken();\n                    }\n                    tokens.writeEndObject();\n                    if (bean.getClass() != _beanType.getRawClass()) {\n                        // !!! 08-Jul-2011, tatu: Could probably support; but for now"
+  },
+  {
+   "line": 685,
+   "lines": [
+    680,
+    681,
+    682,
+    683,
+    684,
+    685,
+    686,
+    687,
+    688,
+    689,
+    690
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java",
+   "snippet": "            if (_ignorableProps != null && _ignorableProps.contains(propName)) {\n                handleIgnoredProperty(p, ctxt, handledType(), propName);\n                continue;\n            }\n            tokens.writeFieldName(propName);\n            tokens.copyCurrentStructure(p);\n            // \"any property\"?\n            if (_anySetter != null) {\n                try {\n                    buffer.bufferAnyProperty(_anySetter, propName, _anySetter.deserialize(p, ctxt));\n                } catch (Exception e) {"
+  }
+ ],
+ "class_simple": "TokenBuffer",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Utility class used for efficient storage of {@link JsonToken}\n * sequences, needed for temporary buffering.\n * Space efficient for different sequence lengths (especially so for smaller\n * ones; but not significantly less efficient for larger), highly efficient\n * for linear iteration and appending. Implemented as segmented/chunked\n * linked list of tokens; only modifications are via appends.\n *<p>\n * Note that before version 2.0, this class was located in the \"core\"\n * bundle, not data-binding; but since it was only used by data binding,\n * was moved here to reduce size of core package\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "protected final static int DEFAULT_GENERATOR_FEATURES",
+  "protected ObjectCodec _objectCodec",
+  "protected int _generatorFeatures",
+  "protected boolean _closed",
+  "protected boolean _hasNativeTypeIds",
+  "protected boolean _hasNativeObjectIds",
+  "protected boolean _mayHaveNativeIds",
+  "protected Segment _first",
+  "protected Segment _last",
+  "protected int _appendAt",
+  "protected Object _typeId",
+  "protected Object _objectId",
+  "protected boolean _hasNativeId",
+  "protected JsonWriteContext _writeContext"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.util.TokenBuffer",
+ "focal_id": "JacksonDatabind_30::com.fasterxml.jackson.databind.util.TokenBuffer::copyCurrentStructure(JsonParser)",
+ "focal_method_name": "copyCurrentStructure",
+ "generations": 3,
+ "impl_B": "@Override\n    public void copyCurrentStructure(JsonParser jp) throws IOException\n    {\n        JsonToken t = jp.getCurrentToken();\n\n        // Let's handle field-name separately first\n        if (t == JsonToken.FIELD_NAME) {\n            if (_mayHaveNativeIds) {\n                _checkNativeIds(jp);\n            }\n            writeFieldName(jp.getCurrentName());\n            t = jp.nextToken();\n            // fall-through to copy the associated value\n        }\n\n        if (_mayHaveNativeIds) {\n            _checkNativeIds(jp);\n        }\n        \n        switch (t) {\n        case START_ARRAY:\n            writeStartArray();\n            while (jp.nextToken() != JsonToken.END_ARRAY) {\n                copyCurrentStructure(jp);\n            }\n            writeEndArray();\n            break;\n        case START_OBJECT:\n            writeStartObject();\n            while (jp.nextToken() != JsonToken.END_OBJECT) {\n                copyCurrentStructure(jp);\n            }\n            writeEndObject();\n            break;\n        default: // others are simple:\n            copyCurrentEvent(jp);\n        }\n    }",
+ "imports": [
+  "java.io.*",
+  "java.math.BigDecimal",
+  "java.math.BigInteger",
+  "java.util.TreeMap",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.core.base.ParserMinimalBase",
+  "com.fasterxml.jackson.core.json.JsonReadContext",
+  "com.fasterxml.jackson.core.json.JsonWriteContext",
+  "com.fasterxml.jackson.core.util.ByteArrayBuilder",
+  "com.fasterxml.jackson.databind.*"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.util",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * @since 2.7\n     */",
+   "name": "version"
+  },
+  {
+   "javadoc": "/**\n     * Method used to create a {@link JsonParser} that can read contents\n     * stored in this buffer. Will use default <code>_objectCodec</code> for\n     * object conversions.\n     *<p>\n     * Note: instances are not synchronized, that is, they are not thread-safe\n     * if there are concurrent appends to the underlying buffer.\n     * \n     * @return Parser that can be used for reading contents stored in this buffer\n     */",
+   "name": "asParser"
+  },
+  {
+   "javadoc": "/**\n     * Method used to create a {@link JsonParser} that can read contents\n     * stored in this buffer.\n     *<p>\n     * Note: instances are not synchronized, that is, they are not thread-safe\n     * if there are concurrent appends to the underlying buffer.\n     *\n     * @param codec Object codec to use for stream-based object\n     *   conversion through parser/generator interfaces. If null,\n     *   such methods can not be used.\n     * \n     * @return Parser that can be used for reading contents stored in this buffer\n     */",
+   "name": "asParser"
+  },
+  {
+   "javadoc": "/**\n     * @param src Parser to use for accessing source information\n     *    like location, configured codec\n     */",
+   "name": "asParser"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "firstToken"
+  },
+  {
+   "javadoc": "/**\n     * Helper method that will write all contents of this buffer\n     * using given {@link JsonGenerator}.\n     *<p>\n     * Note: this method would be enough to implement\n     * <code>JsonSerializer</code>  for <code>TokenBuffer</code> type;\n     * but we can not have upwards\n     * references (from core to mapper package); and as such we also\n     * can not take second argument.\n     */",
+   "name": "serialize"
+  },
+  {
+   "javadoc": "/**\n     * Helper method used by standard deserializer.\n     * \n     * @since 2.3\n     */",
+   "name": "deserialize"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "enable"
+  },
+  {
+   "javadoc": "",
+   "name": "disable"
+  },
+  {
+   "javadoc": "",
+   "name": "isEnabled"
+  },
+  {
+   "javadoc": "",
+   "name": "getFeatureMask"
+  },
+  {
+   "javadoc": "",
+   "name": "setFeatureMask"
+  },
+  {
+   "javadoc": "",
+   "name": "useDefaultPrettyPrinter"
+  },
+  {
+   "javadoc": "",
+   "name": "setCodec"
+  },
+  {
+   "javadoc": "",
+   "name": "getCodec"
+  },
+  {
+   "javadoc": "",
+   "name": "getOutputContext"
+  },
+  {
+   "javadoc": "/**\n     * Since we can efficiently store <code>byte[]</code>, yes.\n     */",
+   "name": "canWriteBinaryNatively"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "flush"
+  },
+  {
+   "javadoc": "",
+   "name": "close"
+  },
+  {
+   "javadoc": "",
+   "name": "isClosed"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "writeStartArray"
+  },
+  {
+   "javadoc": "",
+   "name": "writeEndArray"
+  },
+  {
+   "javadoc": "",
+   "name": "writeStartObject"
+  },
+  {
+   "javadoc": "",
+   "name": "writeEndObject"
+  },
+  {
+   "javadoc": "",
+   "name": "writeFieldName"
+  },
+  {
+   "javadoc": "",
+   "name": "writeFieldName"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "writeString"
+  },
+  {
+   "javadoc": "",
+   "name": "writeString"
+  },
+  {
+   "javadoc": "",
+   "name": "writeString"
+  },
+  {
+   "javadoc": "",
+   "name": "writeRawUTF8String"
+  },
+  {
+   "javadoc": "",
+   "name": "writeUTF8String"
+  },
+  {
+   "javadoc": "",
+   "name": "writeRaw"
+  },
+  {
+   "javadoc": "",
+   "name": "writeRaw"
+  },
+  {
+   "javadoc": "",
+   "name": "writeRaw"
+  },
+  {
+   "javadoc": "",
+   "name": "writeRaw"
+  },
+  {
+   "javadoc": "",
+   "name": "writeRaw"
+  },
+  {
+   "javadoc": "",
+   "name": "writeRawValue"
+  },
+  {
+   "javadoc": "",
+   "name": "writeRawValue"
+  },
+  {
+   "javadoc": "",
+   "name": "writeRawValue"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "writeNumber"
+  },
+  {
+   "javadoc": "",
+   "name": "writeNumber"
+  },
+  {
+   "javadoc": "",
+   "name": "writeNumber"
+  },
+  {
+   "javadoc": "",
+   "name": "writeNumber"
+  },
+  {
+   "javadoc": "",
+   "name": "writeNumber"
+  },
+  {
+   "javadoc": "",
+   "name": "writeNumber"
+  },
+  {
+   "javadoc": "",
+   "name": "writeNumber"
+  },
+  {
+   "javadoc": "",
+   "name": "writeNumber"
+  },
+  {
+   "javadoc": "",
+   "name": "writeBoolean"
+  },
+  {
+   "javadoc": "",
+   "name": "writeNull"
+  },
+  {
+   "javadoc": "/***********************************************************\n     */",
+   "name": "writeObject"
+  },
+  {
+   "javadoc": "",
+   "name": "writeTree"
+  },
+  {
+   "javadoc": "/***********************************************************\n     */",
+   "name": "writeBinary"
+  },
+  {
+   "javadoc": "/**\n     * Although we could support this method, it does not necessarily make\n     * sense: we can not make good use of streaming because buffer must\n     * hold all the data. Because of this, currently this will simply\n     * throw {@link UnsupportedOperationException}\n     */",
+   "name": "writeBinary"
+  },
+  {
+   "javadoc": "/***********************************************************\n     */",
+   "name": "canWriteTypeId"
+  },
+  {
+   "javadoc": "",
+   "name": "canWriteObjectId"
+  },
+  {
+   "javadoc": "",
+   "name": "writeTypeId"
+  },
+  {
+   "javadoc": "",
+   "name": "writeObjectId"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "copyCurrentEvent"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_append"
+  },
+  {
+   "javadoc": "",
+   "name": "_append"
+  },
+  {
+   "javadoc": "",
+   "name": "_appendRaw"
+  },
+  {
+   "javadoc": "",
+   "name": "_reportUnsupportedOperation"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class TokenBuffer extends JsonGenerator",
+  "constructors": [
+   "public TokenBuffer(ObjectCodec codec);",
+   "public TokenBuffer(ObjectCodec codec, boolean hasNativeIds);",
+   "public TokenBuffer(JsonParser p);",
+   "public TokenBuffer(JsonParser p, DeserializationContext ctxt);"
+  ],
+  "focal_signature": "public void copyCurrentStructure(JsonParser jp) throws IOException",
+  "methods": [
+   "public Version version();",
+   "public JsonParser asParser();",
+   "public JsonParser asParser(ObjectCodec codec);",
+   "public JsonParser asParser(JsonParser src);",
+   "public JsonToken firstToken();",
+   "public void serialize(JsonGenerator gen) throws IOException;",
+   "public TokenBuffer deserialize(JsonParser p, DeserializationContext ctxt) throws IOException;",
+   "public JsonGenerator enable(Feature f);",
+   "public JsonGenerator disable(Feature f);",
+   "public boolean isEnabled(Feature f);",
+   "public int getFeatureMask();",
+   "public JsonGenerator setFeatureMask(int mask);",
+   "public JsonGenerator useDefaultPrettyPrinter();",
+   "public JsonGenerator setCodec(ObjectCodec oc);",
+   "public ObjectCodec getCodec();",
+   "public final JsonWriteContext getOutputContext();",
+   "public boolean canWriteBinaryNatively();",
+   "public void flush() throws IOException;",
+   "public void close() throws IOException;",
+   "public boolean isClosed();",
+   "public final void writeStartArray() throws IOException;",
+   "public final void writeEndArray() throws IOException;",
+   "public final void writeStartObject() throws IOException;",
+   "public final void writeEndObject() throws IOException;",
+   "public final void writeFieldName(String name) throws IOException;",
+   "public void writeFieldName(SerializableString name) throws IOException;",
+   "public void writeString(String text) throws IOException;",
+   "public void writeString(char[] text, int offset, int len) throws IOException;",
+   "public void writeString(SerializableString text) throws IOException;",
+   "public void writeRawUTF8String(byte[] text, int offset, int length) throws IOException;",
+   "public void writeUTF8String(byte[] text, int offset, int length) throws IOException;",
+   "public void writeRaw(String text) throws IOException;",
+   "public void writeRaw(String text, int offset, int len) throws IOException;",
+   "public void writeRaw(SerializableString text) throws IOException;",
+   "public void writeRaw(char[] text, int offset, int len) throws IOException;",
+   "public void writeRaw(char c) throws IOException;",
+   "public void writeRawValue(String text) throws IOException;",
+   "public void writeRawValue(String text, int offset, int len) throws IOException;",
+   "public void writeRawValue(char[] text, int offset, int len) throws IOException;",
+   "public void writeNumber(short i) throws IOException;",
+   "public void writeNumber(int i) throws IOException;",
+   "public void writeNumber(long l) throws IOException;",
+   "public void writeNumber(double d) throws IOException;",
+   "public void writeNumber(float f) throws IOException;",
+   "public void writeNumber(BigDecimal dec) throws IOException;",
+   "public void writeNumber(BigInteger v) throws IOException;",
+   "public void writeNumber(String encodedValue) throws IOException;",
+   "public void writeBoolean(boolean state) throws IOException;",
+   "public void writeNull() throws IOException;",
+   "public void writeObject(Object value) throws IOException;",
+   "public void writeTree(TreeNode node) throws IOException;",
+   "public void writeBinary(Base64Variant b64variant, byte[] data, int offset, int len) throws IOException;",
+   "public int writeBinary(Base64Variant b64variant, InputStream data, int dataLength);",
+   "public boolean canWriteTypeId();",
+   "public boolean canWriteObjectId();",
+   "public void writeTypeId(Object id);",
+   "public void writeObjectId(Object id);",
+   "public void copyCurrentEvent(JsonParser p) throws IOException;",
+   "protected final void _append(JsonToken type);",
+   "protected final void _append(JsonToken type, Object value);",
+   "protected final void _appendRaw(int rawType, Object value);",
+   "protected void _reportUnsupportedOperation();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

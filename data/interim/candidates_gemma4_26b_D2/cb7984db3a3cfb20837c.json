@@ -1,0 +1,13 @@
+{
+  "assembled": true,
+  "call_key": "9f7f6605019d45668b05870e6c6cb3c924334408b5bad66f8b40b596c0cf7e89",
+  "candidate_id": "cb7984db3a3cfb20837c",
+  "class_name": "ClassUtils_toClass_TriageGen2Test",
+  "dataset": "D2",
+  "focal_id": "Lang_33::org.apache.commons.lang3.ClassUtils::toClass(Object[])#m348",
+  "generation": 2,
+  "model_returned": "gemma4:26b",
+  "n_tests": 4,
+  "package": "org.apache.commons.lang3",
+  "source": "package org.apache.commons.lang3;\n\nimport java.io.*;\nimport java.lang.reflect.Method;\nimport java.lang.reflect.Modifier;\nimport java.math.*;\nimport java.util.*;\nimport java.util.ArrayList;\nimport java.util.HashMap;\nimport java.util.HashSet;\nimport java.util.LinkedHashSet;\nimport java.util.List;\nimport java.util.Map;\nimport org.apache.commons.lang3.ArrayUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ClassUtils_toClass_TriageGen2Test {\n\n    @Test\n    public void testToClass_EmptyArray() {\n        Object[] input = new Object[0];\n        Class<?>[] expected = ArrayUtils.EMPTY_CLASS_ARRAY;\n        Class<?>[] actual = ClassUtils.toClass(input);\n        Assert.assertSame(\"Should return ArrayUtils.EMPTY_CLASS_ARRAY for empty input\", expected, actual);\n    }\n\n    @Test\n    public void testToClass_WithValidObjects() {\n        Object[] input = { \"string\", 123, 45.67, Boolean.TRUE };\n        Class<?>[] expected = { String.class, Integer.class, Double.class, Boolean.class };\n        Class<?>[] actual = ClassUtils.toClass(input);\n        \n        Assert.assertNotNull(actual);\n        Assert.assertEquals(expected.length, actual.length);\n        for (int i = 0; i < expected.length; i++) {\n            Assert.assertEquals(\"Mismatch at index \" + i, expected[i], actual[i]);\n        }\n    }\n\n    @Test\n    public void testToClass_WithNullElements() {\n        Object[] input = { \"string\", null, 123 };\n        Class<?>[] expected = { String.class, null, Integer.class };\n        Class<?>[] actual = ClassUtils.toClass(input);\n\n        Assert.assertNotNull(actual);\n        Assert.assertEquals(expected.length, actual.length);\n        Assert.assertEquals(expected[0], actual[0]);\n        Assert.assertNull(\"Element at index 1 should be null\", actual[1]);\n        Assert.assertEquals(expected[2], actual[2]);\n    }\n\n    @Test\n    public void testToClass_WithMixedNullAndObjects() {\n        Object[] input = { null, null };\n        Class<?>[] actual = ClassUtils.toClass(input);\n\n        Assert.assertNotNull(actual);\n        Assert.assertEquals(2, actual.length);\n        Assert.assertNull(actual[0]);\n        Assert.assertNull(actual[1]);\n    }\n}\n"
+}

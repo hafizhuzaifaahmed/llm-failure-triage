@@ -1,0 +1,1068 @@
+{
+ "bug_name": "Closure_110",
+ "call_sites": [
+  {
+   "line": 114,
+   "lines": [
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119
+   ],
+   "path": "src/com/google/javascript/jscomp/AstChangeProxy.java",
+   "snippet": "        parentType == Token.LABEL);\n\n    if (parentType == Token.LABEL && size != 1) {\n      Node block = IR.block();\n      for (Node newChild : replacements) {\n        newChild.copyInformationFrom(node);\n        block.addChildToBack(newChild);\n      }\n      parent.replaceChild(node, block);\n    } else {\n      for (Node newChild : replacements) {"
+  },
+  {
+   "line": 120,
+   "lines": [
+    115,
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122,
+    123,
+    124,
+    125
+   ],
+   "path": "src/com/google/javascript/jscomp/AstChangeProxy.java",
+   "snippet": "        block.addChildToBack(newChild);\n      }\n      parent.replaceChild(node, block);\n    } else {\n      for (Node newChild : replacements) {\n        newChild.copyInformationFrom(node);\n        parent.addChildBefore(newChild, node);\n      }\n      parent.removeChild(node);\n    }\n    notifyOfRemoval(node);"
+  },
+  {
+   "line": 489,
+   "lines": [
+    484,
+    485,
+    486,
+    487,
+    488,
+    489,
+    490,
+    491,
+    492,
+    493,
+    494
+   ],
+   "path": "src/com/google/javascript/jscomp/CollapseProperties.java",
+   "snippet": "  private void flattenSimpleStubDeclaration(Name name, String alias) {\n    Ref ref = Iterables.getOnlyElement(name.getRefs());\n    Node nameNode = NodeUtil.newName(\n        compiler.getCodingConvention(), alias, ref.node,\n        name.getFullName());\n    Node varNode = IR.var(nameNode).copyInformationFrom(nameNode);\n\n    Preconditions.checkState(\n        ref.node.getParent().isExprResult());\n    Node parent = ref.node.getParent();\n    Node gramps = parent.getParent();"
+  },
+  {
+   "line": 744,
+   "lines": [
+    739,
+    740,
+    741,
+    742,
+    743,
+    744,
+    745,
+    746,
+    747,
+    748,
+    749
+   ],
+   "path": "src/com/google/javascript/jscomp/CollapseProperties.java",
+   "snippet": "           currentParent = currentParent.getParent()) {}\n\n      // Create a stub variable declaration right\n      // before the current statement.\n      Node stubVar = IR.var(nameNode.cloneTree())\n          .copyInformationFrom(nameNode);\n      currentParent.addChildBefore(stubVar, current);\n\n      parent.replaceChild(ref.node, nameNode);\n    }\n"
+  },
+  {
+   "line": 223,
+   "lines": [
+    218,
+    219,
+    220,
+    221,
+    222,
+    223,
+    224,
+    225,
+    226,
+    227,
+    228
+   ],
+   "path": "src/com/google/javascript/jscomp/CollapseVariableDeclarations.java",
+   "snippet": "\n  private void applyCollapses() {\n    for (Collapse collapse : collapses) {\n\n      Node var = new Node(Token.VAR);\n      var.copyInformationFrom(collapse.startNode);\n      collapse.parent.addChildBefore(var, collapse.startNode);\n\n      boolean redeclaration = false;\n      for (Node n = collapse.startNode; n != collapse.endNode;) {\n        Node next = n.getNext();"
+  }
+ ],
+ "class_simple": "Node",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * This class implements the root of the intermediate representation.\n *\n */\n\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "public static final int JSDOC_INFO_PROP",
+  "public static final int // flags for INCRDECR_PROP DECR_FLAG",
+  "int type",
+  "Node next",
+  "private Node first",
+  "private Node last",
+  "private PropListItem propListHead",
+  "public static final int COLUMN_BITS",
+  "public static final int MAX_COLUMN_NUMBER",
+  "public static final int COLUMN_MASK",
+  "private int sourcePosition",
+  "private JSType jsType",
+  "private Node parent",
+  "public static final int FLAG_GLOBAL_STATE_UNMODIFIED",
+  "public static final int FLAG_THIS_UNMODIFIED",
+  "public static final int FLAG_ARGUMENTS_UNMODIFIED",
+  "public static final int FLAG_NO_THROWS",
+  "public static final int FLAG_LOCAL_RESULTS",
+  "public static final int SIDE_EFFECTS_FLAGS_MASK",
+  "public static final int SIDE_EFFECTS_ALL",
+  "public static final int NO_SIDE_EFFECTS"
+ ],
+ "focal_class": "com.google.javascript.rhino.Node",
+ "focal_id": "Closure_110::com.google.javascript.rhino.Node::copyInformationFrom(Node)",
+ "focal_method_name": "copyInformationFrom",
+ "generations": 3,
+ "impl_B": "public Node copyInformationFrom(Node other) {\n    if (getProp(ORIGINALNAME_PROP) == null) {\n      putProp(ORIGINALNAME_PROP, other.getProp(ORIGINALNAME_PROP));\n    }\n\n    if (getProp(STATIC_SOURCE_FILE) == null) {\n      putProp(STATIC_SOURCE_FILE, other.getProp(STATIC_SOURCE_FILE));\n      sourcePosition = other.sourcePosition;\n    }\n\n    return this;\n  }",
+ "imports": [
+  "com.google.common.annotations.VisibleForTesting",
+  "com.google.common.base.Objects",
+  "com.google.common.base.Preconditions",
+  "com.google.javascript.rhino.jstype.JSType",
+  "com.google.javascript.rhino.jstype.SimpleSourceFile",
+  "com.google.javascript.rhino.jstype.StaticSourceFile",
+  "java.io.IOException",
+  "java.io.Serializable",
+  "java.util.Arrays",
+  "java.util.Collections",
+  "java.util.Iterator",
+  "java.util.NoSuchElementException",
+  "java.util.Set"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.rhino",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "newNumber"
+  },
+  {
+   "javadoc": "",
+   "name": "newNumber"
+  },
+  {
+   "javadoc": "",
+   "name": "newString"
+  },
+  {
+   "javadoc": "",
+   "name": "newString"
+  },
+  {
+   "javadoc": "",
+   "name": "newString"
+  },
+  {
+   "javadoc": "",
+   "name": "newString"
+  },
+  {
+   "javadoc": "",
+   "name": "getType"
+  },
+  {
+   "javadoc": "",
+   "name": "setType"
+  },
+  {
+   "javadoc": "",
+   "name": "hasChildren"
+  },
+  {
+   "javadoc": "",
+   "name": "getFirstChild"
+  },
+  {
+   "javadoc": "",
+   "name": "getLastChild"
+  },
+  {
+   "javadoc": "",
+   "name": "getNext"
+  },
+  {
+   "javadoc": "",
+   "name": "getChildBefore"
+  },
+  {
+   "javadoc": "",
+   "name": "getChildAtIndex"
+  },
+  {
+   "javadoc": "",
+   "name": "getIndexOfChild"
+  },
+  {
+   "javadoc": "",
+   "name": "getLastSibling"
+  },
+  {
+   "javadoc": "",
+   "name": "addChildToFront"
+  },
+  {
+   "javadoc": "",
+   "name": "addChildToBack"
+  },
+  {
+   "javadoc": "",
+   "name": "addChildrenToFront"
+  },
+  {
+   "javadoc": "",
+   "name": "addChildrenToBack"
+  },
+  {
+   "javadoc": "/**\n   * Add 'child' before 'node'.\n   */",
+   "name": "addChildBefore"
+  },
+  {
+   "javadoc": "/**\n   * Add 'child' after 'node'.\n   */",
+   "name": "addChildAfter"
+  },
+  {
+   "javadoc": "/**\n   * Add all children after 'node'.\n   */",
+   "name": "addChildrenAfter"
+  },
+  {
+   "javadoc": "/**\n   * Detach a child from its parent and siblings.\n   */",
+   "name": "removeChild"
+  },
+  {
+   "javadoc": "/**\n   * Detaches child from Node and replaces it with newChild.\n   */",
+   "name": "replaceChild"
+  },
+  {
+   "javadoc": "",
+   "name": "replaceChildAfter"
+  },
+  {
+   "javadoc": "/**\n   * Clone the properties from the provided node without copying\n   * the property object.  The receiving node may not have any\n   * existing properties.\n   * @param other The node to clone properties from.\n   * @return this node.\n   */",
+   "name": "clonePropsFrom"
+  },
+  {
+   "javadoc": "",
+   "name": "removeProp"
+  },
+  {
+   "javadoc": "",
+   "name": "getProp"
+  },
+  {
+   "javadoc": "",
+   "name": "getBooleanProp"
+  },
+  {
+   "javadoc": "/**\n   * Returns the integer value for the property, or 0 if the property\n   * is not defined.\n   */",
+   "name": "getIntProp"
+  },
+  {
+   "javadoc": "",
+   "name": "getExistingIntProp"
+  },
+  {
+   "javadoc": "",
+   "name": "putProp"
+  },
+  {
+   "javadoc": "",
+   "name": "putBooleanProp"
+  },
+  {
+   "javadoc": "",
+   "name": "putIntProp"
+  },
+  {
+   "javadoc": "/** Can only be called when <tt>getType() == TokenStream.NUMBER</tt> */",
+   "name": "getDouble"
+  },
+  {
+   "javadoc": "/**\n   * Can only be called when <tt>getType() == Token.NUMBER</tt>\n   * @param value value to set.\n   */",
+   "name": "setDouble"
+  },
+  {
+   "javadoc": "/** Can only be called when node has String context. */",
+   "name": "getString"
+  },
+  {
+   "javadoc": "/**\n   * Can only be called for a Token.STRING or Token.NAME.\n   * @param value the value to set.\n   */",
+   "name": "setString"
+  },
+  {
+   "javadoc": "",
+   "name": "toString"
+  },
+  {
+   "javadoc": "",
+   "name": "toString"
+  },
+  {
+   "javadoc": "",
+   "name": "toStringTree"
+  },
+  {
+   "javadoc": "",
+   "name": "appendStringTree"
+  },
+  {
+   "javadoc": "",
+   "name": "setStaticSourceFile"
+  },
+  {
+   "javadoc": "/** Sets the source file to a non-extern file of the given name. */",
+   "name": "setSourceFileForTesting"
+  },
+  {
+   "javadoc": "",
+   "name": "getSourceFileName"
+  },
+  {
+   "javadoc": "/** Returns the source file associated with this input. May be null */",
+   "name": "getStaticSourceFile"
+  },
+  {
+   "javadoc": "/**\n   * @param inputId\n   */",
+   "name": "setInputId"
+  },
+  {
+   "javadoc": "/**\n   * @return The Id of the CompilerInput associated with this Node.\n   */",
+   "name": "getInputId"
+  },
+  {
+   "javadoc": "",
+   "name": "isFromExterns"
+  },
+  {
+   "javadoc": "",
+   "name": "getLength"
+  },
+  {
+   "javadoc": "",
+   "name": "setLength"
+  },
+  {
+   "javadoc": "",
+   "name": "getLineno"
+  },
+  {
+   "javadoc": "",
+   "name": "getCharno"
+  },
+  {
+   "javadoc": "",
+   "name": "getSourceOffset"
+  },
+  {
+   "javadoc": "",
+   "name": "getSourcePosition"
+  },
+  {
+   "javadoc": "",
+   "name": "setLineno"
+  },
+  {
+   "javadoc": "",
+   "name": "setCharno"
+  },
+  {
+   "javadoc": "",
+   "name": "setSourceEncodedPosition"
+  },
+  {
+   "javadoc": "",
+   "name": "setSourceEncodedPositionForTree"
+  },
+  {
+   "javadoc": "/**\n   * Merges the line number and character number in one integer. The Character\n   * number takes the first 12 bits and the line number takes the rest. If\n   * the character number is greater than <code>2<sup>12</sup>-1</code> it is\n   * adjusted to <code>2<sup>12</sup>-1</code>.\n   */",
+   "name": "mergeLineCharNo"
+  },
+  {
+   "javadoc": "/**\n   * Extracts the line number and character number from a merged line char\n   * number (see {@link #mergeLineCharNo(int, int)}).\n   */",
+   "name": "extractLineno"
+  },
+  {
+   "javadoc": "/**\n   * Extracts the character number and character number from a merged line\n   * char number (see {@link #mergeLineCharNo(int, int)}).\n   */",
+   "name": "extractCharno"
+  },
+  {
+   "javadoc": "/**\n   * <p>Return an iterable object that iterates over this node's children.\n   * The iterator does not support the optional operation\n   * {@link Iterator#remove()}.</p>\n   *\n   * <p>To iterate over a node's children, one can write</p>\n   * <pre>Node n = ...;\n   * for (Node child : n.children()) { ...</pre>\n   */",
+   "name": "children"
+  },
+  {
+   "javadoc": "/**\n   * <p>Return an iterable object that iterates over this node's siblings.\n   * The iterator does not support the optional operation\n   * {@link Iterator#remove()}.</p>\n   *\n   * <p>To iterate over a node's siblings, one can write</p>\n   * <pre>Node n = ...;\n   * for (Node sibling : n.siblings()) { ...</pre>\n   */",
+   "name": "siblings"
+  },
+  {
+   "javadoc": "",
+   "name": "getParent"
+  },
+  {
+   "javadoc": "/**\n   * Gets the ancestor node relative to this.\n   *\n   * @param level 0 = this, 1 = the parent, etc.\n   */",
+   "name": "getAncestor"
+  },
+  {
+   "javadoc": "/**\n   * Iterates all of the node's ancestors excluding itself.\n   */",
+   "name": "getAncestors"
+  },
+  {
+   "javadoc": "/**\n   * Check for one child more efficiently than by iterating over all the\n   * children as is done with Node.getChildCount().\n   *\n   * @return Whether the node has exactly one child.\n   */",
+   "name": "hasOneChild"
+  },
+  {
+   "javadoc": "/**\n   * Check for more than one child more efficiently than by iterating over all\n   * the children as is done with Node.getChildCount().\n   *\n   * @return Whether the node more than one child.\n   */",
+   "name": "hasMoreThanOneChild"
+  },
+  {
+   "javadoc": "",
+   "name": "getChildCount"
+  },
+  {
+   "javadoc": "",
+   "name": "hasChild"
+  },
+  {
+   "javadoc": "/**\n   * Checks if the subtree under this node is the same as another subtree.\n   * Returns null if it's equal, or a message describing the differences.\n   */",
+   "name": "checkTreeEquals"
+  },
+  {
+   "javadoc": "/** Returns true if this node is equivalent semantically to another */",
+   "name": "isEquivalentTo"
+  },
+  {
+   "javadoc": "/** Checks equivalence without going into inner functions */",
+   "name": "isEquivalentToShallow"
+  },
+  {
+   "javadoc": "/**\n   * Returns true if this node is equivalent semantically to another and\n   * the types are equivalent.\n   */",
+   "name": "isEquivalentToTyped"
+  },
+  {
+   "javadoc": "/**\n   * This function takes a set of GETPROP nodes and produces a string that is\n   * each property separated by dots. If the node ultimately under the left\n   * sub-tree is not a simple name, this is not a valid qualified name.\n   *\n   * @return a null if this is not a qualified name, or a dot-separated string\n   *         of the name and properties.\n   */",
+   "name": "getQualifiedName"
+  },
+  {
+   "javadoc": "/**\n   * Returns whether a node corresponds to a simple or a qualified name, such as\n   * <code>x</code> or <code>a.b.c</code> or <code>this.a</code>.\n   */",
+   "name": "isQualifiedName"
+  },
+  {
+   "javadoc": "/**\n   * Returns whether a node corresponds to a simple or a qualified name without\n   * a \"this\" reference, such as <code>a.b.c</code>, but not <code>this.a</code>\n   * .\n   */",
+   "name": "isUnscopedQualifiedName"
+  },
+  {
+   "javadoc": "/**\n   * Removes this node from its parent. Equivalent to:\n   * node.getParent().removeChild();\n   */",
+   "name": "detachFromParent"
+  },
+  {
+   "javadoc": "/**\n   * Removes the first child of Node. Equivalent to:\n   * node.removeChild(node.getFirstChild());\n   *\n   * @return The removed Node.\n   */",
+   "name": "removeFirstChild"
+  },
+  {
+   "javadoc": "/**\n   * @return A Node that is the head of the list of children.\n   */",
+   "name": "removeChildren"
+  },
+  {
+   "javadoc": "/**\n   * Removes all children from this node and isolates the children from each\n   * other.\n   */",
+   "name": "detachChildren"
+  },
+  {
+   "javadoc": "",
+   "name": "removeChildAfter"
+  },
+  {
+   "javadoc": "/**\n   * @return A detached clone of the Node, specifically excluding its children.\n   */",
+   "name": "cloneNode"
+  },
+  {
+   "javadoc": "/**\n   * @return A detached clone of the Node and all its children.\n   */",
+   "name": "cloneTree"
+  },
+  {
+   "javadoc": "",
+   "name": "copyInformationFromForTree"
+  },
+  {
+   "javadoc": "/**\n   * Overwrite all the source information in this node with\n   * that of {@code other}.\n   */",
+   "name": "useSourceInfoFrom"
+  },
+  {
+   "javadoc": "",
+   "name": "srcref"
+  },
+  {
+   "javadoc": "/**\n   * Overwrite all the source information in this node and its subtree with\n   * that of {@code other}.\n   */",
+   "name": "useSourceInfoFromForTree"
+  },
+  {
+   "javadoc": "",
+   "name": "srcrefTree"
+  },
+  {
+   "javadoc": "/**\n   * Overwrite all the source information in this node with\n   * that of {@code other} iff the source info is missing.\n   */",
+   "name": "useSourceInfoIfMissingFrom"
+  },
+  {
+   "javadoc": "/**\n   * Overwrite all the source information in this node and its subtree with\n   * that of {@code other} iff the source info is missing.\n   */",
+   "name": "useSourceInfoIfMissingFromForTree"
+  },
+  {
+   "javadoc": "",
+   "name": "getJSType"
+  },
+  {
+   "javadoc": "",
+   "name": "setJSType"
+  },
+  {
+   "javadoc": "",
+   "name": "getJsDocBuilderForNode"
+  },
+  {
+   "javadoc": "/**\n   * Get the {@link JSDocInfo} attached to this node.\n   * @return the information or {@code null} if no JSDoc is attached to this\n   * node\n   */",
+   "name": "getJSDocInfo"
+  },
+  {
+   "javadoc": "/**\n   * Sets the {@link JSDocInfo} attached to this node.\n   */",
+   "name": "setJSDocInfo"
+  },
+  {
+   "javadoc": "/** This node was last changed at {@code time} */",
+   "name": "setChangeTime"
+  },
+  {
+   "javadoc": "/** Returns the time of the last change for this node */",
+   "name": "getChangeTime"
+  },
+  {
+   "javadoc": "/**\n   * Sets whether this node is a variable length argument node. This\n   * method is meaningful only on {@link Token#NAME} nodes\n   * used to define a {@link Token#FUNCTION}'s argument list.\n   */",
+   "name": "setVarArgs"
+  },
+  {
+   "javadoc": "/**\n   * Returns whether this node is a variable length argument node. This\n   * method's return value is meaningful only on {@link Token#NAME} nodes\n   * used to define a {@link Token#FUNCTION}'s argument list.\n   */",
+   "name": "isVarArgs"
+  },
+  {
+   "javadoc": "/**\n   * Sets whether this node is an optional argument node. This\n   * method is meaningful only on {@link Token#NAME} nodes\n   * used to define a {@link Token#FUNCTION}'s argument list.\n   */",
+   "name": "setOptionalArg"
+  },
+  {
+   "javadoc": "/**\n   * Returns whether this node is an optional argument node. This\n   * method's return value is meaningful only on {@link Token#NAME} nodes\n   * used to define a {@link Token#FUNCTION}'s argument list.\n   */",
+   "name": "isOptionalArg"
+  },
+  {
+   "javadoc": "/**\n   * Sets whether this is a synthetic block that should not be considered\n   * a real source block.\n   */",
+   "name": "setIsSyntheticBlock"
+  },
+  {
+   "javadoc": "/**\n   * Returns whether this is a synthetic block that should not be considered\n   * a real source block.\n   */",
+   "name": "isSyntheticBlock"
+  },
+  {
+   "javadoc": "/**\n   * Sets the ES5 directives on this node.\n   */",
+   "name": "setDirectives"
+  },
+  {
+   "javadoc": "/**\n   * Adds a warning to be suppressed. This is indistinguishable\n   * from having a {@code @suppress} tag in the code.\n   */",
+   "name": "addSuppression"
+  },
+  {
+   "javadoc": "/**\n   * Sets whether this is a synthetic block that should not be considered\n   * a real source block.\n   */",
+   "name": "setWasEmptyNode"
+  },
+  {
+   "javadoc": "/**\n   * Returns whether this is a synthetic block that should not be considered\n   * a real source block.\n   */",
+   "name": "wasEmptyNode"
+  },
+  {
+   "javadoc": "/**\n   * Marks this function or constructor call's side effect flags.\n   * This property is only meaningful for {@link Token#CALL} and\n   * {@link Token#NEW} nodes.\n   */",
+   "name": "setSideEffectFlags"
+  },
+  {
+   "javadoc": "",
+   "name": "setSideEffectFlags"
+  },
+  {
+   "javadoc": "/**\n   * Returns the side effects flags for this node.\n   */",
+   "name": "getSideEffectFlags"
+  },
+  {
+   "javadoc": "/**\n   * @return Whether the only side-effect is \"modifies this\"\n   */",
+   "name": "isOnlyModifiesThisCall"
+  },
+  {
+   "javadoc": "/**\n   * @return Whether the only side-effect is \"modifies arguments\"\n   */",
+   "name": "isOnlyModifiesArgumentsCall"
+  },
+  {
+   "javadoc": "/**\n   * Returns true if this node is a function or constructor call that\n   * has no side effects.\n   */",
+   "name": "isNoSideEffectsCall"
+  },
+  {
+   "javadoc": "/**\n   * Returns true if this node is a function or constructor call that\n   * returns a primitive or a local object (an object that has no other\n   * references).\n   */",
+   "name": "isLocalResultCall"
+  },
+  {
+   "javadoc": "/** Returns true if this is a new/call that may mutate its arguments. */",
+   "name": "mayMutateArguments"
+  },
+  {
+   "javadoc": "/** Returns true if this is a new/call that may mutate global state or throw. */",
+   "name": "mayMutateGlobalStateOrThrow"
+  },
+  {
+   "javadoc": "/**\n   * This should only be called for STRING nodes children of OBJECTLIT.\n   */",
+   "name": "isQuotedString"
+  },
+  {
+   "javadoc": "/**\n   * This should only be called for STRING nodes children of OBJECTLIT.\n   */",
+   "name": "setQuotedString"
+  },
+  {
+   "javadoc": "/*** AST type check methods ***/",
+   "name": "isAdd"
+  },
+  {
+   "javadoc": "",
+   "name": "isAnd"
+  },
+  {
+   "javadoc": "",
+   "name": "isArrayLit"
+  },
+  {
+   "javadoc": "",
+   "name": "isAssign"
+  },
+  {
+   "javadoc": "",
+   "name": "isAssignAdd"
+  },
+  {
+   "javadoc": "",
+   "name": "isBlock"
+  },
+  {
+   "javadoc": "",
+   "name": "isBreak"
+  },
+  {
+   "javadoc": "",
+   "name": "isCall"
+  },
+  {
+   "javadoc": "",
+   "name": "isCase"
+  },
+  {
+   "javadoc": "",
+   "name": "isCast"
+  },
+  {
+   "javadoc": "",
+   "name": "isCatch"
+  },
+  {
+   "javadoc": "",
+   "name": "isComma"
+  },
+  {
+   "javadoc": "",
+   "name": "isContinue"
+  },
+  {
+   "javadoc": "",
+   "name": "isDebugger"
+  },
+  {
+   "javadoc": "",
+   "name": "isDec"
+  },
+  {
+   "javadoc": "",
+   "name": "isDefaultCase"
+  },
+  {
+   "javadoc": "",
+   "name": "isDelProp"
+  },
+  {
+   "javadoc": "",
+   "name": "isDo"
+  },
+  {
+   "javadoc": "",
+   "name": "isEmpty"
+  },
+  {
+   "javadoc": "",
+   "name": "isExprResult"
+  },
+  {
+   "javadoc": "",
+   "name": "isFalse"
+  },
+  {
+   "javadoc": "",
+   "name": "isFor"
+  },
+  {
+   "javadoc": "",
+   "name": "isFunction"
+  },
+  {
+   "javadoc": "",
+   "name": "isGetterDef"
+  },
+  {
+   "javadoc": "",
+   "name": "isGetElem"
+  },
+  {
+   "javadoc": "",
+   "name": "isGetProp"
+  },
+  {
+   "javadoc": "",
+   "name": "isHook"
+  },
+  {
+   "javadoc": "",
+   "name": "isIf"
+  },
+  {
+   "javadoc": "",
+   "name": "isIn"
+  },
+  {
+   "javadoc": "",
+   "name": "isInc"
+  },
+  {
+   "javadoc": "",
+   "name": "isInstanceOf"
+  },
+  {
+   "javadoc": "",
+   "name": "isLabel"
+  },
+  {
+   "javadoc": "",
+   "name": "isLabelName"
+  },
+  {
+   "javadoc": "",
+   "name": "isName"
+  },
+  {
+   "javadoc": "",
+   "name": "isNE"
+  },
+  {
+   "javadoc": "",
+   "name": "isNew"
+  },
+  {
+   "javadoc": "",
+   "name": "isNot"
+  },
+  {
+   "javadoc": "",
+   "name": "isNull"
+  },
+  {
+   "javadoc": "",
+   "name": "isNumber"
+  },
+  {
+   "javadoc": "",
+   "name": "isObjectLit"
+  },
+  {
+   "javadoc": "",
+   "name": "isOr"
+  },
+  {
+   "javadoc": "",
+   "name": "isParamList"
+  },
+  {
+   "javadoc": "",
+   "name": "isRegExp"
+  },
+  {
+   "javadoc": "",
+   "name": "isReturn"
+  },
+  {
+   "javadoc": "",
+   "name": "isScript"
+  },
+  {
+   "javadoc": "",
+   "name": "isSetterDef"
+  },
+  {
+   "javadoc": "",
+   "name": "isString"
+  },
+  {
+   "javadoc": "",
+   "name": "isStringKey"
+  },
+  {
+   "javadoc": "",
+   "name": "isSwitch"
+  },
+  {
+   "javadoc": "",
+   "name": "isThis"
+  },
+  {
+   "javadoc": "",
+   "name": "isThrow"
+  },
+  {
+   "javadoc": "",
+   "name": "isTrue"
+  },
+  {
+   "javadoc": "",
+   "name": "isTry"
+  },
+  {
+   "javadoc": "",
+   "name": "isTypeOf"
+  },
+  {
+   "javadoc": "",
+   "name": "isVar"
+  },
+  {
+   "javadoc": "",
+   "name": "isVoid"
+  },
+  {
+   "javadoc": "",
+   "name": "isWhile"
+  },
+  {
+   "javadoc": "",
+   "name": "isWith"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class Node implements Cloneable, Serializable",
+  "constructors": [
+   "public Node(int nodeType);",
+   "public Node(int nodeType, Node child);",
+   "public Node(int nodeType, Node left, Node right);",
+   "public Node(int nodeType, Node left, Node mid, Node right);",
+   "public Node(int nodeType, Node left, Node mid, Node mid2, Node right);",
+   "public Node(int nodeType, int lineno, int charno);",
+   "public Node(int nodeType, Node child, int lineno, int charno);",
+   "public Node(int nodeType, Node left, Node right, int lineno, int charno);",
+   "public Node(int nodeType, Node left, Node mid, Node right, int lineno, int charno);",
+   "public Node(int nodeType, Node left, Node mid, Node mid2, Node right, int lineno, int charno);",
+   "public Node(int nodeType, Node[] children, int lineno, int charno);",
+   "public Node(int nodeType, Node[] children);"
+  ],
+  "focal_signature": "public Node copyInformationFrom(Node other)",
+  "methods": [
+   "public static Node newNumber(double number);",
+   "public static Node newNumber(double number, int lineno, int charno);",
+   "public static Node newString(String str);",
+   "public static Node newString(int type, String str);",
+   "public static Node newString(String str, int lineno, int charno);",
+   "public static Node newString(int type, String str, int lineno, int charno);",
+   "public int getType();",
+   "public void setType(int type);",
+   "public boolean hasChildren();",
+   "public Node getFirstChild();",
+   "public Node getLastChild();",
+   "public Node getNext();",
+   "public Node getChildBefore(Node child);",
+   "public Node getChildAtIndex(int i);",
+   "public int getIndexOfChild(Node child);",
+   "public Node getLastSibling();",
+   "public void addChildToFront(Node child);",
+   "public void addChildToBack(Node child);",
+   "public void addChildrenToFront(Node children);",
+   "public void addChildrenToBack(Node children);",
+   "public void addChildBefore(Node newChild, Node node);",
+   "public void addChildAfter(Node newChild, Node node);",
+   "public void addChildrenAfter(Node children, Node node);",
+   "public void removeChild(Node child);",
+   "public void replaceChild(Node child, Node newChild);",
+   "public void replaceChildAfter(Node prevChild, Node newChild);",
+   "public Node clonePropsFrom(Node other);",
+   "public void removeProp(int propType);",
+   "public Object getProp(int propType);",
+   "public boolean getBooleanProp(int propType);",
+   "public int getIntProp(int propType);",
+   "public int getExistingIntProp(int propType);",
+   "public void putProp(int propType, Object value);",
+   "public void putBooleanProp(int propType, boolean value);",
+   "public void putIntProp(int propType, int value);",
+   "public double getDouble() throws UnsupportedOperationException;",
+   "public void setDouble(double value) throws UnsupportedOperationException;",
+   "public String getString() throws UnsupportedOperationException;",
+   "public void setString(String value) throws UnsupportedOperationException;",
+   "public String toString();",
+   "public String toString( boolean printSource, boolean printAnnotations, boolean printType);",
+   "public String toStringTree();",
+   "public void appendStringTree(Appendable appendable) throws IOException;",
+   "public void setStaticSourceFile(StaticSourceFile file);",
+   "public void setSourceFileForTesting(String name);",
+   "public String getSourceFileName();",
+   "public StaticSourceFile getStaticSourceFile();",
+   "public void setInputId(InputId inputId);",
+   "public InputId getInputId();",
+   "public boolean isFromExterns();",
+   "public int getLength();",
+   "public void setLength(int length);",
+   "public int getLineno();",
+   "public int getCharno();",
+   "public int getSourceOffset();",
+   "public int getSourcePosition();",
+   "public void setLineno(int lineno);",
+   "public void setCharno(int charno);",
+   "public void setSourceEncodedPosition(int sourcePosition);",
+   "public void setSourceEncodedPositionForTree(int sourcePosition);",
+   "protected static int mergeLineCharNo(int lineno, int charno);",
+   "protected static int extractLineno(int lineCharNo);",
+   "protected static int extractCharno(int lineCharNo);",
+   "public Iterable<Node> children();",
+   "public Iterable<Node> siblings();",
+   "public Node getParent();",
+   "public Node getAncestor(int level);",
+   "public AncestorIterable getAncestors();",
+   "public boolean hasOneChild();",
+   "public boolean hasMoreThanOneChild();",
+   "public int getChildCount();",
+   "public boolean hasChild(Node child);",
+   "public String checkTreeEquals(Node node2);",
+   "public boolean isEquivalentTo(Node node);",
+   "public boolean isEquivalentToShallow(Node node);",
+   "public boolean isEquivalentToTyped(Node node);",
+   "public String getQualifiedName();",
+   "public boolean isQualifiedName();",
+   "public boolean isUnscopedQualifiedName();",
+   "public Node detachFromParent();",
+   "public Node removeFirstChild();",
+   "public Node removeChildren();",
+   "public void detachChildren();",
+   "public Node removeChildAfter(Node prev);",
+   "public Node cloneNode();",
+   "public Node cloneTree();",
+   "public Node copyInformationFromForTree(Node other);",
+   "public Node useSourceInfoFrom(Node other);",
+   "public Node srcref(Node other);",
+   "public Node useSourceInfoFromForTree(Node other);",
+   "public Node srcrefTree(Node other);",
+   "public Node useSourceInfoIfMissingFrom(Node other);",
+   "public Node useSourceInfoIfMissingFromForTree(Node other);",
+   "public JSType getJSType();",
+   "public void setJSType(JSType jsType);",
+   "public FileLevelJsDocBuilder getJsDocBuilderForNode();",
+   "public JSDocInfo getJSDocInfo();",
+   "public Node setJSDocInfo(JSDocInfo info);",
+   "public void setChangeTime(int time);",
+   "public int getChangeTime();",
+   "public void setVarArgs(boolean varArgs);",
+   "public boolean isVarArgs();",
+   "public void setOptionalArg(boolean optionalArg);",
+   "public boolean isOptionalArg();",
+   "public void setIsSyntheticBlock(boolean val);",
+   "public boolean isSyntheticBlock();",
+   "public void setDirectives(Set<String> val);",
+   "public void addSuppression(String warning);",
+   "public void setWasEmptyNode(boolean val);",
+   "public boolean wasEmptyNode();",
+   "public void setSideEffectFlags(int flags);",
+   "public void setSideEffectFlags(SideEffectFlags flags);",
+   "public int getSideEffectFlags();",
+   "public boolean isOnlyModifiesThisCall();",
+   "public boolean isOnlyModifiesArgumentsCall();",
+   "public boolean isNoSideEffectsCall();",
+   "public boolean isLocalResultCall();",
+   "public boolean mayMutateArguments();",
+   "public boolean mayMutateGlobalStateOrThrow();",
+   "public boolean isQuotedString();",
+   "public void setQuotedString();",
+   "public boolean isAdd();",
+   "public boolean isAnd();",
+   "public boolean isArrayLit();",
+   "public boolean isAssign();",
+   "public boolean isAssignAdd();",
+   "public boolean isBlock();",
+   "public boolean isBreak();",
+   "public boolean isCall();",
+   "public boolean isCase();",
+   "public boolean isCast();",
+   "public boolean isCatch();",
+   "public boolean isComma();",
+   "public boolean isContinue();",
+   "public boolean isDebugger();",
+   "public boolean isDec();",
+   "public boolean isDefaultCase();",
+   "public boolean isDelProp();",
+   "public boolean isDo();",
+   "public boolean isEmpty();",
+   "public boolean isExprResult();",
+   "public boolean isFalse();",
+   "public boolean isFor();",
+   "public boolean isFunction();",
+   "public boolean isGetterDef();",
+   "public boolean isGetElem();",
+   "public boolean isGetProp();",
+   "public boolean isHook();",
+   "public boolean isIf();",
+   "public boolean isIn();",
+   "public boolean isInc();",
+   "public boolean isInstanceOf();",
+   "public boolean isLabel();",
+   "public boolean isLabelName();",
+   "public boolean isName();",
+   "public boolean isNE();",
+   "public boolean isNew();",
+   "public boolean isNot();",
+   "public boolean isNull();",
+   "public boolean isNumber();",
+   "public boolean isObjectLit();",
+   "public boolean isOr();",
+   "public boolean isParamList();",
+   "public boolean isRegExp();",
+   "public boolean isReturn();",
+   "public boolean isScript();",
+   "public boolean isSetterDef();",
+   "public boolean isString();",
+   "public boolean isStringKey();",
+   "public boolean isSwitch();",
+   "public boolean isThis();",
+   "public boolean isThrow();",
+   "public boolean isTrue();",
+   "public boolean isTry();",
+   "public boolean isTypeOf();",
+   "public boolean isVar();",
+   "public boolean isVoid();",
+   "public boolean isWhile();",
+   "public boolean isWith();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

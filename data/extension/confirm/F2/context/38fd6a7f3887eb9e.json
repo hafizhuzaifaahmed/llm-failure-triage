@@ -1,0 +1,197 @@
+{
+ "bug_name": "Closure_7",
+ "call_sites": [
+  {
+   "line": 261,
+   "lines": [
+    256,
+    257,
+    258,
+    259,
+    260,
+    261,
+    262,
+    263,
+    264,
+    265,
+    266
+   ],
+   "path": "src/com/google/javascript/jscomp/type/ChainableReverseAbstractInterpreter.java",
+   "snippet": "        return null;\n      }\n\n      @Override\n      public JSType caseParameterizedType(ParameterizedType type) {\n        return caseObjectType(type);\n      }\n\n      @Override\n      public JSType caseTemplateType(TemplateType templateType) {\n        return caseObjectType(templateType);"
+  },
+  {
+   "line": 266,
+   "lines": [
+    261,
+    262,
+    263,
+    264,
+    265,
+    266,
+    267,
+    268,
+    269,
+    270,
+    271
+   ],
+   "path": "src/com/google/javascript/jscomp/type/ChainableReverseAbstractInterpreter.java",
+   "snippet": "        return caseObjectType(type);\n      }\n\n      @Override\n      public JSType caseTemplateType(TemplateType templateType) {\n        return caseObjectType(templateType);\n      }\n    };\n\n\n  /**"
+  },
+  {
+   "line": 350,
+   "lines": [
+    345,
+    346,
+    347,
+    348,
+    349,
+    350,
+    351,
+    352,
+    353,
+    354,
+    355
+   ],
+   "path": "src/com/google/javascript/jscomp/type/ChainableReverseAbstractInterpreter.java",
+   "snippet": "        return getNativeType(VOID_TYPE);\n      }\n\n      @Override\n      public JSType caseParameterizedType(ParameterizedType type) {\n        return caseObjectType(type);\n      }\n\n      @Override\n      public JSType caseTemplateType(TemplateType templateType) {\n        return caseObjectType(templateType);"
+  },
+  {
+   "line": 355,
+   "lines": [
+    350,
+    351,
+    352,
+    353,
+    354,
+    355,
+    356,
+    357,
+    358,
+    359,
+    360
+   ],
+   "path": "src/com/google/javascript/jscomp/type/ChainableReverseAbstractInterpreter.java",
+   "snippet": "        return caseObjectType(type);\n      }\n\n      @Override\n      public JSType caseTemplateType(TemplateType templateType) {\n        return caseObjectType(templateType);\n      }\n    };\n\n  /**\n   * A class common to all visitors that need to restrict the type based on"
+  },
+  {
+   "line": 429,
+   "lines": [
+    424,
+    425,
+    426,
+    427,
+    428,
+    429,
+    430,
+    431,
+    432,
+    433,
+    434
+   ],
+   "path": "src/com/google/javascript/jscomp/type/ChainableReverseAbstractInterpreter.java",
+   "snippet": "      }\n    }\n\n    @Override\n    public JSType caseParameterizedType(ParameterizedType type) {\n      return caseObjectType(type);\n    }\n\n    @Override\n    public JSType caseTemplateType(TemplateType templateType) {\n      return caseObjectType(templateType);"
+  }
+ ],
+ "class_simple": "RestrictByOneTypeOfResultVisitor",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Chainable reverse abstract interpreter providing basic functionality.\n *\n */\npublic abstract class ChainableReverseAbstractInterpreter\n    implements ReverseAbstractInterpreter {\n  protected final CodingConvention convention;\n  final JSTypeRegistry typeRegistry;\n  private ChainableReverseAbstractInterpreter firstLink;\n  private ChainableReverseAbstractInterpreter nextLink;\n\n  /**\n   * Constructs an interpreter, which is the only link in a chain. Interpreters\n   * can be appended using {@link #append}.\n   */\n  public ChainableReverseAbstractInterpreter(CodingConvention convention,\n      JSTypeRegistry typeRegistry) {\n    Preconditions.checkNotNull(convention);\n    this.convention = convention;\n    this.typeRegistry = typeRegistry;\n    firstLink = this;\n    nextLink = null;\n  }\n\n  /**\n   * Appends a link to {@code this}, returning the updated last link.\n   * <p>\n   * The pattern {@code new X().append(new Y())...append(new Z())} forms a\n   * chain starting with X, then Y, then ... Z.\n   * @param lastLink a chainable interpreter, with no next link\n   * @return the updated last link\n   */\n  public ChainableReverseAbstractInterpreter append(\n      ChainableReverseAbstractInterpreter lastLink) {\n    Preconditions.checkArgument(lastLink.nextLink == null);\n    this.nextLink = lastLink;\n    lastLink.firstLink = this.firstLink;\n    return lastLink;\n  }\n\n  /**\n   * Gets the first link of this chain.\n   */\n  public ChainableReverseAbstractInterpreter getFirst() {\n    return firstLink;\n  }\n\n  /**\n   * Calculates the preciser scope starting with the first link.\n   */\n  protected FlowScope firstPreciserScopeKnowingConditionOutcome(Node condition,\n      FlowScope blindScope, boolean outcome) {\n    return firstLink.getPreciserScopeKnowingConditionOutcome(\n        condition, blindScope, outcome);\n  }\n\n  /**\n   * Delegates the calculation of the preciser scope to the next link.\n   * If there is no next link, returns the blind scope.\n   */\n  protected FlowScope nextPreciserScopeKnowingConditionOutcome(Node condition,\n      FlowScope blindScope, boolean outcome) {\n    return nextLink != null ? nextLink.getPreciserScopeKnowingConditionOutcome(\n        condition, blindScope, outcome) : blindScope;\n  }\n\n  /**\n   * Returns the type of a node in the given scope if the node corresponds to a\n   * name whose type is capable of being refined.\n   * @return The current type of the node if it can be refined, null otherwise.\n   */\n  protected JSType getTypeIfRefinable(Node node, FlowScope scope) {\n    switch (node.getType()) {\n      case Token.NAME:\n        StaticSlot<JSType> nameVar = scope.getSlot(node.getString());\n        if (nameVar != null) {\n          JSType nameVarType = nameVar.getType();\n          if (nameVarType == null) {\n            nameVarType = node.getJSType();\n          }\n          return nameVarType;\n        }\n        return null;\n\n      case Token.GETPROP:\n        String qualifiedName = node.getQualifiedName();\n        if (qualifiedName == null) {\n          return null;\n        }\n        StaticSlot<JSType> propVar = scope.getSlot(qualifiedName);\n        JSType propVarType = null;\n        if (propVar != null) {\n          propVarType = propVar.getType();\n        }\n        if (propVarType == null) {\n          propVarType = node.getJSType();\n        }\n        if (propVarType == null) {\n          propVarType = getNativeType(UNKNOWN_TYPE);\n        }\n        return propVarType;\n    }\n    return null;\n  }\n\n  /**\n   * Declares a refined type in {@code scope} for the name represented by\n   * {@code node}. It must be possible to refine the type of the given node in\n   * the given scope, as determined by {@link #getTypeIfRefinable}.\n   */\n  protected void declareNameInScope(FlowScope scope, Node node, JSType type) {\n    switch (node.getType()) {\n      case Token.NAME:\n        scope.inferSlotType(node.getString(), type);\n        break;\n\n      case Token.GETPROP:\n        String qualifiedName = node.getQualifiedName();\n        Preconditions.checkNotNull(qualifiedName);\n\n        JSType origType = node.getJSType();\n        origType = origType == null ? getNativeType(UNKNOWN_TYPE) : origType;\n        scope.inferQualifiedSlot(node, qualifiedName, origType, type);\n        break;\n\n      case Token.THIS:\n        // \"this\" references aren't currently modeled in the CFG.\n        break;\n\n      default:\n        throw new IllegalArgumentException(\"Node cannot be refined. \\n\" +\n            node.toStringTree());\n    }\n  }\n\n  /**\n   * @see #getRestrictedWithoutUndefined(JSType)\n   */\n  private final Visitor<JSType> restrictUndefinedVisitor =\n    new Visitor<JSType>() {\n      @Override\n      public JSType caseEnumElementType(EnumElementType enumElementType) {\n        JSType type = enumElementType.getPrimitiveType().visit(this);\n        if (type != null && enumElementType.getPrimitiveType().isEquivalentTo(type)) {\n          return enumElementType;\n        } else {\n          return type;\n        }\n      }\n\n      @Override\n      public JSType caseAllType() {\n        return typeRegistry.createUnionType(OBJECT_TYPE, NUMBER_TYPE,\n            STRING_TYPE, BOOLEAN_TYPE, NULL_TYPE);\n      }\n\n      @Override\n      public JSType caseNoObjectType() {\n        return getNativeType(NO_OBJECT_TYPE);\n      }\n\n      @Override\n      public JSType caseNoType() {\n        return getNativeType(NO_TYPE);\n      }\n\n      @Override\n      public JSType caseBooleanType() {\n        return getNativeType(BOOLEAN_TYPE);\n      }\n\n      @Override\n      public JSType caseFunctionType(FunctionType type) {\n        return type;\n      }\n\n      @Override\n      public JSType caseNullType() {\n        return getNativeType(NULL_TYPE);\n      }\n\n      @Override\n      public JSType caseNumberType() {\n        return getNativeType(NUMBER_TYPE);\n      }\n\n      @Override\n      public JSType caseObjectType(ObjectType type) {\n        return type;\n      }\n\n      @Override\n      public JSType caseStringType() {\n        return getNativeType(STRING_TYPE);\n      }\n\n      @Override\n      public JSType caseUnionType(UnionType type) {\n        return type.getRestrictedUnion(getNativeType(VOID_TYPE));\n      }\n\n      @Override\n      public JSType caseUnknownType() {\n        return getNativeType(UNKNOWN_TYPE);\n      }\n\n      @Override\n      public JSType caseVoidType() {\n        return null;\n      }\n\n      @Override\n      public JSType caseParameterizedType(ParameterizedType type) {\n        return caseObjectType(type);\n      }\n\n      @Override\n      public JSType caseTemplateType(TemplateType templateType) {\n        return caseObjectType(templateType);\n      }\n    };\n\n\n  /**\n   * @see #getRestrictedWithoutNull(JSType)\n   */\n  private final Visitor<JSType> restrictNullVisitor =\n    new Visitor<JSType>() {\n      @Override\n      public JSType caseEnumElementType(EnumElementType enumElementType) {\n        JSType type = enumElementType.getPrimitiveType().visit(this);\n        if (type != null &&\n            enumElementType.getPrimitiveType().isEquivalentTo(type)) {\n          return enumElementType;\n        } else {\n          return type;\n        }\n      }\n\n      @Override\n      public JSType caseAllType() {\n        return typeRegistry.createUnionType(OBJECT_TYPE, NUMBER_TYPE,\n            STRING_TYPE, BOOLEAN_TYPE, VOID_TYPE);\n      }\n\n      @Override\n      public JSType caseNoObjectType() {\n        return getNativeType(NO_OBJECT_TYPE);\n      }\n\n      @Override\n      public JSType caseNoType() {\n        return getNativeType(NO_TYPE);\n      }\n\n      @Override\n      public JSType caseBooleanType() {\n        return getNativeType(BOOLEAN_TYPE);\n      }\n\n      @Override\n      public JSType caseFunctionType(FunctionType type) {\n        return type;\n      }\n\n      @Override\n      public JSType caseNullType() {\n        return null;\n      }\n\n      @Override\n      public JSType caseNumberType() {\n        return getNativeType(NUMBER_TYPE);\n      }\n\n      @Override\n      public JSType caseObjectType(ObjectType type) {\n        return type;\n      }\n\n      @Override\n      public JSType caseStringType() {\n        return getNativeType(STRING_TYPE);\n      }\n\n      @Override\n      public JSType caseUnionType(UnionType type) {\n        return type.getRestrictedUnion(getNativeType(NULL_TYPE));\n      }\n\n      @Override\n      public JSType caseUnknownType() {\n        return getNativeType(UNKNOWN_TYPE);\n      }\n\n      @Override\n      public JSType caseVoidType() {\n        return getNativeType(VOID_TYPE);\n      }\n\n      @Override\n      public JSType caseParameterizedType(ParameterizedType type) {\n        return caseObjectType(type);\n      }\n\n      @Override\n      public JSType caseTemplateType(TemplateType templateType) {\n        return caseObjectType(templateType);\n      }\n    };\n\n  /**\n   * A class common to all visitors that need to restrict the type based on\n   * {@code typeof}-like conditions.\n   */\n  abstract class RestrictByTypeOfResultVisitor\n      implements Visitor<JSType> {\n\n    /**\n     * Abstracts away the similarities between visiting the unknown type and the\n     * all type.\n     * @param topType {@code UNKNOWN_TYPE} or {@code ALL_TYPE}\n     * @return the restricted type\n     * @see #caseAllType\n     * @see #caseUnknownType\n     */\n    protected abstract JSType caseTopType(JSType topType);\n\n    @Override\n    public JSType caseAllType() {\n      return caseTopType(getNativeType(ALL_TYPE));\n    }\n\n    @Override\n    public JSType caseUnknownType() {\n      return caseTopType(getNativeType(CHECKED_UNKNOWN_TYPE));\n    }\n\n    @Override\n    public JSType caseUnionType(UnionType type) {\n      JSType restricted = null;\n      for (JSType alternate : type.getAlternates()) {\n        JSType restrictedAlternate = alternate.visit(this);\n        if (restrictedAlternate != null) {\n          if (restricted == null) {\n            restricted = restrictedAlternate;\n          } else {\n            restricted = restrictedAlternate.getLeastSupertype(restricted);\n          }\n        }\n      }\n      return restricted;\n    }\n\n    @Override\n    public JSType caseNoType() {\n      return getNativeType(NO_TYPE);\n    }\n\n    @Override\n    public JSType caseEnumElementType(EnumElementType enumElementType) {\n      // NOTE(nicksantos): This is a white lie. Suppose we have:\n      // /** @enum {string|number} */ var MyEnum = ...;\n      // if (goog.isNumber(myEnumInstance)) {\n      //   /* what is myEnumInstance here? */\n      // }\n      // There is no type that represents {MyEnum - string}. What we really\n      // need is a notion of \"enum subtyping\", so that we could dynamically\n      // create a subtype of MyEnum restricted by string. In any case,\n      // this should catch the common case.\n      JSType type = enumElementType.getPrimitiveType().visit(this);\n      if (type != null &&\n          enumElementType.getPrimitiveType().isEquivalentTo(type)) {\n        return enumElementType;\n      } else {\n        return type;\n      }\n    }\n\n    @Override\n    public JSType caseParameterizedType(ParameterizedType type) {\n      return caseObjectType(type);\n    }\n\n    @Override\n    public JSType caseTemplateType(TemplateType templateType) {\n      return caseObjectType(templateType);\n    }\n  }\n\n  /**\n   * A class common to all visitors that need to restrict the type based on\n   * some {@code typeof}-like condition being true. All base cases return\n   * {@code null}. It is up to the subclasses to override the appropriate ones.\n   */\n  abstract class RestrictByTrueTypeOfResultVisitor\n      extends RestrictByTypeOfResultVisitor {\n    @Override\n    public JSType caseNoObjectType() {\n      return null;\n    }\n\n    @Override\n    public JSType caseBooleanType() {\n      return null;\n    }\n\n    @Override\n    public JSType caseFunctionType(FunctionType type) {\n      return null;\n    }\n\n    @Override\n    public JSType caseNullType() {\n      return null;\n    }\n\n    @Override\n    public JSType caseNumberType() {\n      return null;\n    }\n\n    @Override\n    public JSType caseObjectType(ObjectType type) {\n      return null;\n    }\n\n    @Override\n    public JSType caseStringType() {\n      return null;\n    }\n\n    @Override\n    public JSType caseVoidType() {\n      return null;\n    }\n  }\n\n  /**\n   * A class common to all visitors that need to restrict the type based on\n   * some {@code typeof}-like condition being false. All base cases return\n   * their type. It is up to the subclasses to override the appropriate ones.\n   */\n  abstract class RestrictByFalseTypeOfResultVisitor\n      extends RestrictByTypeOfResultVisitor {\n    @Override\n    protected JSType caseTopType(JSType topType) {\n      return topType;\n    }\n\n    @Override\n    public JSType caseNoObjectType() {\n      return getNativeType(NO_OBJECT_TYPE);\n    }\n\n    @Override\n    public JSType caseBooleanType() {\n      return getNativeType(BOOLEAN_TYPE);\n    }\n\n    @Override\n    public JSType caseFunctionType(FunctionType type) {\n      return type;\n    }\n\n    @Override\n    public JSType caseNullType() {\n      return getNativeType(NULL_TYPE);\n    }\n\n    @Override\n    public JSType caseNumberType() {\n      return getNativeType(NUMBER_TYPE);\n    }\n\n    @Override\n    public JSType caseObjectType(ObjectType type) {\n      return type;\n    }\n\n    @Override\n    public JSType caseStringType() {\n      return getNativeType(STRING_TYPE);\n    }\n\n    @Override\n    public JSType caseVoidType() {\n      return getNativeType(VOID_TYPE);\n    }\n  }\n\n  /**\n   * @see ChainableReverseAbstractInterpreter#getRestrictedByTypeOfResult\n   */\n  private",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private final String value",
+  "private final boolean resultEqualsValue"
+ ],
+ "focal_class": "com.google.javascript.jscomp.type.ChainableReverseAbstractInterpreter.RestrictByOneTypeOfResultVisitor",
+ "focal_id": "Closure_7::com.google.javascript.jscomp.type.ChainableReverseAbstractInterpreter$RestrictByOneTypeOfResultVisitor::caseObjectType(ObjectType)",
+ "focal_method_name": "caseObjectType",
+ "generations": 3,
+ "impl_B": "@Override\n    public JSType caseObjectType(ObjectType type) {\n      if (value.equals(\"function\")) {\n        JSType ctorType = getNativeType(U2U_CONSTRUCTOR_TYPE);\n        return resultEqualsValue && ctorType.isSubtype(type) ? ctorType : null;\n          // Objects are restricted to \"Function\", subtypes are left\n          // Only filter out subtypes of \"function\"\n      }\n      return matchesExpectation(\"object\") ? type : null;\n    }",
+ "imports": [
+  "static com.google.javascript.rhino.jstype.JSTypeNative.ALL_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.BOOLEAN_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.CHECKED_UNKNOWN_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.NO_OBJECT_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.NO_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.NULL_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.NUMBER_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.OBJECT_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.STRING_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.U2U_CONSTRUCTOR_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.UNKNOWN_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.VOID_TYPE",
+  "com.google.common.base.Preconditions",
+  "com.google.javascript.jscomp.CodingConvention",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.Token",
+  "com.google.javascript.rhino.jstype.EnumElementType",
+  "com.google.javascript.rhino.jstype.FunctionType",
+  "com.google.javascript.rhino.jstype.JSType",
+  "com.google.javascript.rhino.jstype.JSTypeNative",
+  "com.google.javascript.rhino.jstype.JSTypeRegistry",
+  "com.google.javascript.rhino.jstype.ObjectType",
+  "com.google.javascript.rhino.jstype.ParameterizedType",
+  "com.google.javascript.rhino.jstype.StaticSlot",
+  "com.google.javascript.rhino.jstype.TemplateType",
+  "com.google.javascript.rhino.jstype.UnionType",
+  "com.google.javascript.rhino.jstype.Visitor"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp.type",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "caseTopType"
+  },
+  {
+   "javadoc": "",
+   "name": "caseNoObjectType"
+  },
+  {
+   "javadoc": "",
+   "name": "caseBooleanType"
+  },
+  {
+   "javadoc": "",
+   "name": "caseFunctionType"
+  },
+  {
+   "javadoc": "",
+   "name": "caseNullType"
+  },
+  {
+   "javadoc": "",
+   "name": "caseNumberType"
+  },
+  {
+   "javadoc": "",
+   "name": "caseStringType"
+  },
+  {
+   "javadoc": "",
+   "name": "caseVoidType"
+  }
+ ],
+ "sig": {
+  "class_declaration": "private class RestrictByOneTypeOfResultVisitor extends RestrictByTypeOfResultVisitor",
+  "constructors": [],
+  "focal_signature": "public JSType caseObjectType(ObjectType type)",
+  "methods": [
+   "protected JSType caseTopType(JSType topType);",
+   "public JSType caseNoObjectType();",
+   "public JSType caseBooleanType();",
+   "public JSType caseFunctionType(FunctionType type);",
+   "public JSType caseNullType();",
+   "public JSType caseNumberType();",
+   "public JSType caseStringType();",
+   "public JSType caseVoidType();"
+  ],
+  "type_signatures": [
+   "public abstract class ObjectType extends JSType implements StaticScope<JSType> { public Node getRootNode(); public ObjectType getParentScope(); public abstract Property getSlot(String name); public Property getOwnSlot(String name); public ObjectType getTypeOfThis(); public JSType getParameterType(); public JSType getIndexType(); public JSDocInfo getJSDocInfo(); public void setJSDocInfo(JSDocInfo info); public abstract String getReferenceName(); public String getNormalizedReferenceName(); public String getDisplayName(); public static String createDelegateSuffix(String suffix); public boolean hasReferenceName(); public TernaryValue testForEquality(JSType that); }",
+   "public abstract class JSType implements Serializable { public JSDocInfo getJSDocInfo(); public String getDisplayName(); public boolean hasDisplayName(); public boolean hasProperty(String pname); public boolean isNoType(); public boolean isNoResolvedType(); public boolean isNoObjectType(); public final boolean isEmptyType(); public boolean isNumberObjectType(); public boolean isNumberValueType(); public boolean isFunctionPrototypeType(); public boolean isStringObjectType(); public boolean isStringValueType(); public final boolean isString(); public final boolean isNumber(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

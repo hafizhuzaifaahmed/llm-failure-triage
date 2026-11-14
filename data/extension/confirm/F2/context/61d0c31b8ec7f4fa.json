@@ -1,0 +1,159 @@
+{
+ "bug_name": "Closure_137",
+ "call_sites": [
+  {
+   "line": 58,
+   "lines": [
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63
+   ],
+   "path": "src/com/google/javascript/jscomp/AliasKeywords.java",
+   "snippet": "     * Find the AliasSpecification associated with the node, and tell\n     * that AliasSpecification about the new node.\n     */\n    private void visitAliasableNode(Node n, Node parent) {\n      AliasSpecification aliasableNodes = aliasTypes.get(n.getType());\n      aliasableNodes.visit(n, parent);\n    }\n\n    /**\n     * Sanity check that our aliases are not already defined by\n     * someone else."
+  },
+  {
+   "line": 182,
+   "lines": [
+    177,
+    178,
+    179,
+    180,
+    181,
+    182,
+    183,
+    184,
+    185,
+    186,
+    187
+   ],
+   "path": "src/com/google/javascript/jscomp/ChainableReverseAbstractInterpreter.java",
+   "snippet": "   * @see #getRestrictedWithoutUndefined(JSType)\n   */\n  private final Visitor<JSType> restrictUndefinedVisitor =\n    new Visitor<JSType>() {\n      public JSType caseEnumElementType(EnumElementType enumElementType) {\n        JSType type = enumElementType.getPrimitiveType().visit(this);\n        if (type != null && enumElementType.getPrimitiveType().equals(type)) {\n          return enumElementType;\n        } else {\n          return type;\n        }"
+  },
+  {
+   "line": 247,
+   "lines": [
+    242,
+    243,
+    244,
+    245,
+    246,
+    247,
+    248,
+    249,
+    250,
+    251,
+    252
+   ],
+   "path": "src/com/google/javascript/jscomp/ChainableReverseAbstractInterpreter.java",
+   "snippet": "   * @see #getRestrictedWithoutNull(JSType)\n   */\n  private final Visitor<JSType> restrictNullVisitor =\n    new Visitor<JSType>() {\n      public JSType caseEnumElementType(EnumElementType enumElementType) {\n        JSType type = enumElementType.getPrimitiveType().visit(this);\n        if (type != null && enumElementType.getPrimitiveType().equals(type)) {\n          return enumElementType;\n        } else {\n          return type;\n        }"
+  },
+  {
+   "line": 333,
+   "lines": [
+    328,
+    329,
+    330,
+    331,
+    332,
+    333,
+    334,
+    335,
+    336,
+    337,
+    338
+   ],
+   "path": "src/com/google/javascript/jscomp/ChainableReverseAbstractInterpreter.java",
+   "snippet": "    }\n\n    public JSType caseUnionType(UnionType type) {\n      JSType restricted = null;\n      for (JSType alternate : type.getAlternates()) {\n        JSType restrictedAlternate = alternate.visit(this);\n        if (restrictedAlternate != null) {\n          if (restricted == null) {\n            restricted = restrictedAlternate;\n          } else {\n            restricted = restrictedAlternate.getLeastSupertype(restricted);"
+  },
+  {
+   "line": 359,
+   "lines": [
+    354,
+    355,
+    356,
+    357,
+    358,
+    359,
+    360,
+    361,
+    362,
+    363,
+    364
+   ],
+   "path": "src/com/google/javascript/jscomp/ChainableReverseAbstractInterpreter.java",
+   "snippet": "      // }\n      // There is no type that represents {MyEnum - string}. What we really\n      // need is a notion of \"enum subtyping\", so that we could dynamically\n      // create a subtype of MyEnum restricted by string. In any case,\n      // this should catch the common case.\n      JSType type = enumElementType.getPrimitiveType().visit(this);\n      if (type != null && enumElementType.getPrimitiveType().equals(type)) {\n        return enumElementType;\n      } else {\n        return type;\n      }"
+  }
+ ],
+ "class_simple": "ContextualRenameInverter",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n *  Find all Functions, VARs, and Exception names and make them\n *  unique.  Specifically, it will not modify object properties.\n *  @author johnlenz@google.com (John Lenz)\n *  TODO(johnlenz): Try to merge this with the ScopeCreator.\n */\nclass MakeDeclaredNamesUnique\n    implements NodeTraversal.ScopedCallback {\n\n  private Deque<Renamer> nameStack = new ArrayDeque<Renamer>();\n  private final Renamer rootRenamer;\n\n  MakeDeclaredNamesUnique() {\n    this.rootRenamer = new ContextualRenamer();\n  }\n\n  MakeDeclaredNamesUnique(Renamer renamer) {\n    this.rootRenamer = renamer;\n  }\n\n  static CompilerPass getContextualRenameInverter(AbstractCompiler compiler) {\n    return new ContextualRenameInverter(compiler);\n  }\n\n  @Override\n  public void enterScope(NodeTraversal t) {\n    Node declarationRoot = t.getScopeRoot();\n    Renamer renamer;\n    if (nameStack.isEmpty()) {\n      // If the contextual renamer is being used the starting context can not\n      // be a function.\n      Preconditions.checkState(\n          declarationRoot.getType() != Token.FUNCTION ||\n          !(rootRenamer instanceof ContextualRenamer));\n      Preconditions.checkState(t.inGlobalScope());\n      renamer = rootRenamer;\n    } else {\n      renamer = nameStack.peek().forChildScope();\n    }\n\n    if (declarationRoot.getType() == Token.FUNCTION) {\n      // Add the function parameters\n      Node fnParams = declarationRoot.getFirstChild().getNext();\n      for (Node c = fnParams.getFirstChild(); c != null; c = c.getNext()) {\n        String name = c.getString();\n        renamer.addDeclaredName(name);\n      }\n\n      // Add the function body declarations\n      Node functionBody = declarationRoot.getLastChild();\n      findDeclaredNames(functionBody, null, renamer);\n    } else {\n      // Add the block declarations\n      findDeclaredNames(declarationRoot, null, renamer);\n    }\n    nameStack.push(renamer);\n  }\n\n  @Override\n  public void exitScope(NodeTraversal t) {\n    if (!t.inGlobalScope()) {\n      nameStack.pop();\n    }\n  }\n\n  @Override\n  public boolean shouldTraverse(NodeTraversal t, Node n, Node parent) {\n\n    switch (n.getType()) {\n      case Token.FUNCTION:\n        {\n          // Add recursive function name, if needed.\n          // NOTE: \"enterScope\" is called after we need to pick up this name.\n          Renamer renamer = nameStack.peek().forChildScope();\n\n          // If needed, add the function recursive name.\n          String name = n.getFirstChild().getString();\n          if (name != null && !name.isEmpty() && parent != null\n              && !NodeUtil.isFunctionDeclaration(n)) {\n            renamer.addDeclaredName(name);\n          }\n\n          nameStack.push(renamer);\n        }\n        break;\n\n      case Token.CATCH:\n        {\n          Renamer renamer = nameStack.peek().forChildScope();\n\n          String name = n.getFirstChild().getString();\n          renamer.addDeclaredName(name);\n\n          nameStack.push(renamer);\n        }\n        break;\n    }\n\n    return true;\n  }\n\n  @Override\n  public void visit(NodeTraversal t, Node n, Node parent) {\n    switch (n.getType()) {\n      case Token.NAME:\n        String newName = getReplacementName(n.getString());\n        if (newName != null) {\n          Renamer renamer = nameStack.peek();\n          if (renamer.stripConstIfReplaced()) {\n            // TODO(johnlenz): Do we need to do anything about the javadoc?\n            n.removeProp(Node.IS_CONSTANT_NAME);\n          }\n          n.setString(newName);\n          t.getCompiler().reportCodeChange();\n        }\n        break;\n\n      case Token.FUNCTION:\n        // Remove function recursive name (if any).\n        nameStack.pop();\n        break;\n\n      case Token.CATCH:\n        // Remove catch except name from the stack of names.\n        nameStack.pop();\n        break;\n    }\n  }\n\n  /**\n   * Walks the stack of name maps and finds the replacement name for the\n   * current scope.\n   */\n  private String getReplacementName(String oldName) {\n    for (Renamer names : nameStack) {\n      String newName = names.getReplacementName(oldName);\n      if (newName != null) {\n        return newName;\n      }\n    }\n    return null;\n  }\n\n  /**\n   * Traverses the current scope and collects declared names.  Does not\n   * decent into functions or add CATCH exceptions.\n   */\n  private void findDeclaredNames(Node n, Node parent, Renamer renamer) {\n    // Do a shallow traversal, so don't traverse into function declarations,\n    // except for the name of the function itself.\n    if (parent == null\n        || parent.getType() != Token.FUNCTION\n        || n == parent.getFirstChild()) {\n      if (NodeUtil.isVarDeclaration(n)) {\n        renamer.addDeclaredName(n.getString());\n      } else if (NodeUtil.isFunctionDeclaration(n)) {\n        Node nameNode = n.getFirstChild();\n        renamer.addDeclaredName(nameNode.getString());\n      }\n\n      for (Node c = n.getFirstChild(); c != null; c = c.getNext()) {\n        findDeclaredNames(c, n, renamer);\n      }\n    }\n  }\n\n  /**\n   * Declared names renaming policy interface.\n   */\n  interface Renamer {\n\n    /**\n     * Called when a declared name is found in the local current scope.\n     */\n    void addDeclaredName(String name);\n\n    /**\n     * @return A replacement name, null if oldName is unknown or should not\n     * be replaced.\n     */\n    String getReplacementName(String oldName);\n\n    /**\n     * @return Whether the constant-ness of a name should be removed.\n     */\n    boolean stripConstIfReplaced();\n\n    /**\n     * @return A Renamer for a scope within the scope of the current Renamer.\n     */\n    Renamer forChildScope();\n  }\n\n  /**\n   * Inverts the transformation by {@link ContextualRenamer}, when possible.\n   */\n  static",
+  "method_javadoc": "/**\n     * Rename vars for the current scope, and merge any referenced \n     * names into the parent scope reference set.\n     */"
+ },
+ "fields": [
+  "private final AbstractCompiler compiler",
+  "private Map<Var, String> nameMap"
+ ],
+ "focal_class": "com.google.javascript.jscomp.MakeDeclaredNamesUnique.ContextualRenameInverter",
+ "focal_id": "Closure_137::com.google.javascript.jscomp.MakeDeclaredNamesUnique$ContextualRenameInverter::visit(NodeTraversal,Node,Node)",
+ "focal_method_name": "visit",
+ "generations": 3,
+ "impl_B": "@Override\n    public void visit(NodeTraversal t, Node node, Node parent) {\n      if (node.getType() == Token.NAME) {\n        String oldName = node.getString();\n        if (containsSeparator(oldName)) {\n          Scope scope = t.getScope();\n          Var var = t.getScope().getVar(oldName);\n          if (var == null || var.isGlobal()) {\n        return;\n      }\n\n          if (nameMap.containsKey(var)) {\n            node.setString(nameMap.get(var));\n          } else {\n            int index = indexOfSeparator(oldName);\n            String newName = getOrginalNameInternal(oldName, index);\n            String suffix = getNameSuffix(oldName, index);\n\n      // Merge any names that were referenced but not declared in the current\n      // scope.\n      // If there isn't anything left in the stack we will be going into the\n      // global scope: don't try to build a set of referenced names for the\n      // global scope.\n            boolean recurseScopes = false;\n            if (!suffix.matches(\"\\\\d+\")) {\n              recurseScopes = true;\n            }\n\n    /**\n     * For the Var declared in the current scope determine if it is possible\n     * to revert the name to its orginal form without conflicting with other\n     * values.\n     */\n        // Check if the new name is valid and if it would cause conflicts.\n            if (var.scope.isDeclared(newName, recurseScopes) ||\n                !TokenStream.isJSIdentifier(newName)) {\n              newName = oldName;\n            } else {\n              var.scope.declare(newName, var.nameNode, null, null);\n          // Adding a reference to the new name to prevent either the parent\n          // scopes or the current scope renaming another var to this new name.\n              Node parentNode = var.getParentNode();\n              if (parentNode.getType() == Token.FUNCTION &&\n                  parentNode == var.scope.getRootNode()) {\n                var.getNameNode().setString(newName);\n              }\n              node.setString(newName);\n          compiler.reportCodeChange();\n        }\n\n            nameMap.put(var, newName);\n\n      }\n\n        // Add all referenced names to the set so it is possible to check for\n        // conflicts.\n        // Store only references to candidate names in the node map.\n        }\n      }\n    }",
+ "imports": [
+  "com.google.common.base.Preconditions",
+  "com.google.common.base.Supplier",
+  "com.google.common.collect.HashMultiset",
+  "com.google.common.collect.ImmutableSet",
+  "com.google.common.collect.Lists",
+  "com.google.common.collect.Maps",
+  "com.google.common.collect.Multiset",
+  "com.google.common.collect.Sets",
+  "com.google.javascript.jscomp.NodeTraversal.AbstractPostOrderCallback",
+  "com.google.javascript.jscomp.Scope.Var",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.Token",
+  "com.google.javascript.rhino.TokenStream",
+  "java.util.ArrayDeque",
+  "java.util.Deque",
+  "java.util.Iterator",
+  "java.util.List",
+  "java.util.Map",
+  "java.util.Set"
+ ],
+ "javadoc_edited_by_fix": true,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "process"
+  },
+  {
+   "javadoc": "",
+   "name": "getOrginalName"
+  }
+ ],
+ "sig": {
+  "class_declaration": "static class ContextualRenameInverter extends AbstractPostOrderCallback implements CompilerPass",
+  "constructors": [],
+  "focal_signature": "public void visit(NodeTraversal t, Node node, Node parent)",
+  "methods": [
+   "public void process(Node externs, Node js);",
+   "public static String getOrginalName(String name);"
+  ],
+  "type_signatures": [
+   "public class NodeTraversal { public NodeTraversal(AbstractCompiler compiler, Callback cb); public NodeTraversal(AbstractCompiler compiler, Callback cb, ScopeCreator scopeCreator); public void traverse(Node root); public void traverseRoots(Node ... roots); public void traverseRoots(List<Node> roots); protected void traverseInnerNode(Node node, Node parent, Scope refinedScope); public Compiler getCompiler(); public int getLineNumber(); public String getSourceName(); public CompilerInput getInput(); public JSModule getModule(); public Node getCurrentNode(); public static void traverse( AbstractCompiler compiler, Node root, Callback cb); public static void traverseRoots( AbstractCompiler compiler, List<Node> roots, Callback cb); public Scope getScope(); }",
+   "public class Node implements Cloneable, Serializable { public Node(int nodeType); public Node(int nodeType, Node child); public Node(int nodeType, Node left, Node right); public Node(int nodeType, Node left, Node mid, Node right); public Node(int nodeType, Node left, Node mid, Node mid2, Node right); public Node(int nodeType, int lineno, int charno); public Node(int nodeType, Node child, int lineno, int charno); public Node(int nodeType, Node left, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node mid2, Node right, int lineno, int charno); public Node(int nodeType, Node[] children, int lineno, int charno); public Node(int nodeType, Node[] children); public static Node newNumber(double number); public static Node newNumber(double number, int lineno, int charno); public static Node newString(String str); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

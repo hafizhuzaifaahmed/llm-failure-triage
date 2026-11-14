@@ -1,0 +1,128 @@
+{
+  "bug_name": "Lang_4",
+  "call_sites": [
+    {
+      "line": 373,
+      "lines": [
+        368,
+        369,
+        370,
+        371,
+        372,
+        373,
+        374,
+        375,
+        376,
+        377,
+        378
+      ],
+      "path": "src/main/java/org/apache/commons/lang3/StringEscapeUtils.java",
+      "snippet": "     *\n     * @param input  String to escape values in, may be null\n     * @return String with escaped values, {@code null} if null string input\n     */\n    public static final String escapeJava(final String input) {\n        return ESCAPE_JAVA.translate(input);\n    }\n\n    /**\n     * <p>Escapes the characters in a {@code String} using EcmaScript String rules.</p>\n     * <p>Escapes any values it finds into their EcmaScript String form."
+    },
+    {
+      "line": 402,
+      "lines": [
+        397,
+        398,
+        399,
+        400,
+        401,
+        402,
+        403,
+        404,
+        405,
+        406,
+        407
+      ],
+      "path": "src/main/java/org/apache/commons/lang3/StringEscapeUtils.java",
+      "snippet": "     * @return String with escaped values, {@code null} if null string input\n     *\n     * @since 3.0\n     */\n    public static final String escapeEcmaScript(final String input) {\n        return ESCAPE_ECMASCRIPT.translate(input);\n    }\n\n    /**\n     * <p>Escapes the characters in a {@code String} using Json String rules.</p>\n     * <p>Escapes any values it finds into their Json String form."
+    },
+    {
+      "line": 431,
+      "lines": [
+        426,
+        427,
+        428,
+        429,
+        430,
+        431,
+        432,
+        433,
+        434,
+        435,
+        436
+      ],
+      "path": "src/main/java/org/apache/commons/lang3/StringEscapeUtils.java",
+      "snippet": "     * @return String with escaped values, {@code null} if null string input\n     *\n     * @since 3.2\n     */\n    public static final String escapeJson(final String input) {\n        return ESCAPE_JSON.translate(input);\n    }\n\n    /**\n     * <p>Unescapes any Java literals found in the {@code String}.\n     * For example, it will turn a sequence of {@code '\\'} and"
+    },
+    {
+      "line": 444,
+      "lines": [
+        439,
+        440,
+        441,
+        442,
+        443,
+        444,
+        445,
+        446,
+        447,
+        448,
+        449
+      ],
+      "path": "src/main/java/org/apache/commons/lang3/StringEscapeUtils.java",
+      "snippet": "     * \n     * @param input  the {@code String} to unescape, may be null\n     * @return a new unescaped {@code String}, {@code null} if null string input\n     */\n    public static final String unescapeJava(final String input) {\n        return UNESCAPE_JAVA.translate(input);\n    }\n\n    /**\n     * <p>Unescapes any EcmaScript literals found in the {@code String}.</p>\n     *"
+    },
+    {
+      "line": 461,
+      "lines": [
+        456,
+        457,
+        458,
+        459,
+        460,
+        461,
+        462,
+        463,
+        464,
+        465,
+        466
+      ],
+      "path": "src/main/java/org/apache/commons/lang3/StringEscapeUtils.java",
+      "snippet": "     * @return A new unescaped {@code String}, {@code null} if null string input\n     *\n     * @since 3.0\n     */\n    public static final String unescapeEcmaScript(final String input) {\n        return UNESCAPE_ECMASCRIPT.translate(input);\n    }\n\n    /**\n     * <p>Unescapes any Json literals found in the {@code String}.</p>\n     *"
+    }
+  ],
+  "class_simple": "LookupTranslator",
+  "doc": {
+    "class_javadoc": "/**\n * Translates a value using a lookup table.\n *\n * @since 3.0\n * @version $Id$\n */\npublic",
+    "method_javadoc": "/**\n     * {@inheritDoc}\n     */"
+  },
+  "fields": [
+    "private final HashMap<CharSequence, CharSequence> lookupMap",
+    "private final int shortest",
+    "private final int longest"
+  ],
+  "focal_class": "org.apache.commons.lang3.text.translate.LookupTranslator",
+  "focal_id": "Lang_4::org.apache.commons.lang3.text.translate.LookupTranslator::translate(CharSequence,int,Writer)",
+  "focal_method_name": "translate",
+  "impl_B": "@Override\n    public int translate(final CharSequence input, final int index, final Writer out) throws IOException {\n        int max = longest;\n        if (index + longest > input.length()) {\n            max = input.length() - index;\n        }\n        // descend so as to get a greedy algorithm\n        for (int i = max; i >= shortest; i--) {\n            final CharSequence subSeq = input.subSequence(index, index + i);\n            final CharSequence result = lookupMap.get(subSeq);\n            if (result != null) {\n                out.write(result.toString());\n                return i;\n            }\n        }\n        return 0;\n    }",
+  "imports": [
+    "java.io.IOException",
+    "java.io.Writer",
+    "java.util.HashMap"
+  ],
+  "javadoc_edited_by_fix": false,
+  "package": "org.apache.commons.lang3.text.translate",
+  "project": "Lang",
+  "siblings": [],
+  "sig": {
+    "class_declaration": "public class LookupTranslator extends CharSequenceTranslator",
+    "constructors": [
+      "public LookupTranslator(final CharSequence[]... lookup);"
+    ],
+    "focal_signature": "public int translate(final CharSequence input, final int index, final Writer out) throws IOException",
+    "methods": [],
+    "type_signatures": []
+  },
+  "split": "test"
+}

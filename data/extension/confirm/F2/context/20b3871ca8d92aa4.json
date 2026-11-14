@@ -1,0 +1,161 @@
+{
+ "bug_name": "JxPath_9",
+ "call_sites": [
+  {
+   "line": 200,
+   "lines": [
+    195,
+    196,
+    197,
+    198,
+    199,
+    200,
+    201,
+    202,
+    203,
+    204,
+    205
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/Compiler.java",
+   "snippet": "     * <i>left</i> equals to <i>right</i>\n     *\n     * @param left is an EXPRESSION object\n     * @param right is an EXPRESSION object\n     */\n    Object equal(Object left, Object right);\n\n    /**\n     * Produces an EXPRESSION object representing the comparison:\n     * <i>left</i> is not equal to <i>right</i>\n     *"
+  },
+  {
+   "line": 96,
+   "lines": [
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationCompare.java",
+   "snippet": "            return contains((Iterator) l, r);\n        }\n        if (r instanceof Iterator) {\n            return contains((Iterator) r, l);\n        }\n        return equal(l, r);\n    }\n\n    protected boolean contains(Iterator it, Object value) {\n        while (it.hasNext()) {\n            Object element = it.next();"
+  },
+  {
+   "line": 102,
+   "lines": [
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationCompare.java",
+   "snippet": "    }\n\n    protected boolean contains(Iterator it, Object value) {\n        while (it.hasNext()) {\n            Object element = it.next();\n            if (equal(element, value)) {\n                return true;\n            }\n        }\n        return false;\n    }"
+  },
+  {
+   "line": 32,
+   "lines": [
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37
+   ],
+   "patch_lines_removed": true,
+   "path": "src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationEqual.java",
+   "snippet": "    public CoreOperationEqual(Expression arg1, Expression arg2) {\n        super(arg1, arg2);\n    }\n\n        return equal(context, args[0], args[1]) ? Boolean.TRUE : Boolean.FALSE;\n    }\n    public String getSymbol() {\n        return \"=\";\n    }\n}"
+  },
+  {
+   "line": 32,
+   "lines": [
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37
+   ],
+   "patch_lines_removed": true,
+   "path": "src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationNotEqual.java",
+   "snippet": "    public CoreOperationNotEqual(Expression arg1, Expression arg2) {\n\n        return equal(context, args[0], args[1]) ? Boolean.FALSE : Boolean.TRUE;\n    }\n    public String getSymbol() {\n        return \"!=\";\n    }\n}"
+  }
+ ],
+ "class_simple": "CoreOperationCompare",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Common superclass for the implementations of Expression for the operations\n * \"=\" and \"!=\".\n *\n * @author Dmitri Plotnikov\n * @version $Revision$ $Date$\n */\npublic abstract",
+  "method_javadoc": ""
+ },
+ "fields": [],
+ "focal_class": "org.apache.commons.jxpath.ri.compiler.CoreOperationCompare",
+ "focal_id": "JxPath_9::org.apache.commons.jxpath.ri.compiler.CoreOperationCompare::equal(Object,Object)",
+ "focal_method_name": "equal",
+ "generations": 3,
+ "impl_B": "protected boolean equal(Object l, Object r) {\n        if (l instanceof Pointer && r instanceof Pointer) {\n            if (l.equals(r)) {\n                return true;\n            }\n        }\n        if (l instanceof Pointer) {\n            l = ((Pointer) l).getValue();\n        }\n\n        if (r instanceof Pointer) {\n            r = ((Pointer) r).getValue();\n        }\n\n        if (l == r) {\n            return true;\n        }\n        if (l instanceof Boolean || r instanceof Boolean) {\n            return (InfoSetUtil.booleanValue(l) == InfoSetUtil.booleanValue(r));\n            }\n            //if either side is NaN, no comparison returns true:\n        if (l instanceof Number || r instanceof Number) {\n            return (InfoSetUtil.doubleValue(l) == InfoSetUtil.doubleValue(r));\n            }\n            if (l instanceof String || r instanceof String) {\n            return (\n                InfoSetUtil.stringValue(l).equals(InfoSetUtil.stringValue(r)));\n        }\n        return l != null && l.equals(r);\n    }",
+ "imports": [
+  "java.util.Collection",
+  "java.util.HashSet",
+  "java.util.Iterator",
+  "org.apache.commons.jxpath.Pointer",
+  "org.apache.commons.jxpath.ri.EvalContext",
+  "org.apache.commons.jxpath.ri.InfoSetUtil",
+  "org.apache.commons.jxpath.ri.axes.InitialContext",
+  "org.apache.commons.jxpath.ri.axes.SelfContext"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.jxpath.ri.compiler",
+ "project": "JxPath",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "getPrecedence"
+  },
+  {
+   "javadoc": "",
+   "name": "isSymmetric"
+  },
+  {
+   "javadoc": "/**\n     * Compares two values\n     */",
+   "name": "equal"
+  },
+  {
+   "javadoc": "",
+   "name": "contains"
+  },
+  {
+   "javadoc": "",
+   "name": "findMatch"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public abstract class CoreOperationCompare extends CoreOperation",
+  "constructors": [
+   "public CoreOperationCompare(Expression arg1, Expression arg2);"
+  ],
+  "focal_signature": "protected boolean equal(Object l, Object r)",
+  "methods": [
+   "protected int getPrecedence();",
+   "protected boolean isSymmetric();",
+   "protected boolean equal( EvalContext context, Expression left, Expression right);",
+   "protected boolean contains(Iterator it, Object value);",
+   "protected boolean findMatch(Iterator lit, Iterator rit);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

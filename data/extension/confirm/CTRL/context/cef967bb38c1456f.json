@@ -1,0 +1,373 @@
+{
+ "bug_name": "Math_63",
+ "call_sites": [],
+ "class_simple": "MathUtils",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Some useful additions to the built-in functions in {@link Math}.\n * @version $Revision$ $Date$\n */\npublic final",
+  "method_javadoc": "/**\n     * Normalize an angle in a 2&pi wide interval around a center value.\n     * <p>This method has three main uses:</p>\n     * <ul>\n     *   <li>normalize an angle between 0 and 2&pi;:<br/>\n     *       <code>a = MathUtils.normalizeAngle(a, FastMath.PI);</code></li>\n     *   <li>normalize an angle between -&pi; and +&pi;<br/>\n     *       <code>a = MathUtils.normalizeAngle(a, 0.0);</code></li>\n     *   <li>compute the angle between two defining angular positions:<br>\n     *       <code>angle = MathUtils.normalizeAngle(end, start) - start;</code></li>\n     * </ul>\n     * <p>Note that due to numerical accuracy and since &pi; cannot be represented\n     * exactly, the result interval is <em>closed</em>, it cannot be half-closed\n     * as would be more satisfactory in a purely mathematical view.</p>\n     * @param a angle to normalize\n     * @param center center of the desired 2&pi; interval for the result\n     * @return a-2k&pi; with integer k and center-&pi; &lt;= a-2k&pi; &lt;= center+&pi;\n     * @since 1.2\n     */"
+ },
+ "fields": [
+  "public static final double EPSILON",
+  "public static final double SAFE_MIN",
+  "public static final double TWO_PI",
+  "private static final byte NB",
+  "private static final short NS",
+  "private static final byte PB",
+  "private static final short PS",
+  "private static final byte ZB",
+  "private static final short ZS",
+  "private static final int NAN_GAP",
+  "private static final long SGN_MASK",
+  "private static final long[] FACTORIALS"
+ ],
+ "focal_class": "org.apache.commons.math.util.MathUtils",
+ "focal_id": "Math_63::org.apache.commons.math.util.MathUtils::normalizeAngle(double,double)",
+ "focal_method_name": "normalizeAngle",
+ "generations": 3,
+ "impl_B": "public static double normalizeAngle(double a, double center) {\n         return a - TWO_PI * FastMath.floor((a + FastMath.PI - center) / TWO_PI);\n     }",
+ "imports": [
+  "java.math.BigDecimal",
+  "java.math.BigInteger",
+  "java.util.Arrays",
+  "org.apache.commons.math.MathRuntimeException",
+  "org.apache.commons.math.exception.util.Localizable",
+  "org.apache.commons.math.exception.util.LocalizedFormats",
+  "org.apache.commons.math.exception.NonMonotonousSequenceException"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math.util",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Add two integers, checking for overflow.\n     *\n     * @param x an addend\n     * @param y an addend\n     * @return the sum <code>x+y</code>\n     * @throws ArithmeticException if the result can not be represented as an\n     *         int\n     * @since 1.1\n     */",
+   "name": "addAndCheck"
+  },
+  {
+   "javadoc": "/**\n     * Add two long integers, checking for overflow.\n     *\n     * @param a an addend\n     * @param b an addend\n     * @return the sum <code>a+b</code>\n     * @throws ArithmeticException if the result can not be represented as an\n     *         long\n     * @since 1.2\n     */",
+   "name": "addAndCheck"
+  },
+  {
+   "javadoc": "/**\n     * Returns an exact representation of the <a\n     * href=\"http://mathworld.wolfram.com/BinomialCoefficient.html\"> Binomial\n     * Coefficient</a>, \"<code>n choose k</code>\", the number of\n     * <code>k</code>-element subsets that can be selected from an\n     * <code>n</code>-element set.\n     * <p>\n     * <Strong>Preconditions</strong>:\n     * <ul>\n     * <li> <code>0 <= k <= n </code> (otherwise\n     * <code>IllegalArgumentException</code> is thrown)</li>\n     * <li> The result is small enough to fit into a <code>long</code>. The\n     * largest value of <code>n</code> for which all coefficients are\n     * <code> < Long.MAX_VALUE</code> is 66. If the computed value exceeds\n     * <code>Long.MAX_VALUE</code> an <code>ArithMeticException</code> is\n     * thrown.</li>\n     * </ul></p>\n     *\n     * @param n the size of the set\n     * @param k the size of the subsets to be counted\n     * @return <code>n choose k</code>\n     * @throws IllegalArgumentException if preconditions are not met.\n     * @throws ArithmeticException if the result is too large to be represented\n     *         by a long integer.\n     */",
+   "name": "binomialCoefficient"
+  },
+  {
+   "javadoc": "/**\n     * Returns a <code>double</code> representation of the <a\n     * href=\"http://mathworld.wolfram.com/BinomialCoefficient.html\"> Binomial\n     * Coefficient</a>, \"<code>n choose k</code>\", the number of\n     * <code>k</code>-element subsets that can be selected from an\n     * <code>n</code>-element set.\n     * <p>\n     * <Strong>Preconditions</strong>:\n     * <ul>\n     * <li> <code>0 <= k <= n </code> (otherwise\n     * <code>IllegalArgumentException</code> is thrown)</li>\n     * <li> The result is small enough to fit into a <code>double</code>. The\n     * largest value of <code>n</code> for which all coefficients are <\n     * Double.MAX_VALUE is 1029. If the computed value exceeds Double.MAX_VALUE,\n     * Double.POSITIVE_INFINITY is returned</li>\n     * </ul></p>\n     *\n     * @param n the size of the set\n     * @param k the size of the subsets to be counted\n     * @return <code>n choose k</code>\n     * @throws IllegalArgumentException if preconditions are not met.\n     */",
+   "name": "binomialCoefficientDouble"
+  },
+  {
+   "javadoc": "/**\n     * Returns the natural <code>log</code> of the <a\n     * href=\"http://mathworld.wolfram.com/BinomialCoefficient.html\"> Binomial\n     * Coefficient</a>, \"<code>n choose k</code>\", the number of\n     * <code>k</code>-element subsets that can be selected from an\n     * <code>n</code>-element set.\n     * <p>\n     * <Strong>Preconditions</strong>:\n     * <ul>\n     * <li> <code>0 <= k <= n </code> (otherwise\n     * <code>IllegalArgumentException</code> is thrown)</li>\n     * </ul></p>\n     *\n     * @param n the size of the set\n     * @param k the size of the subsets to be counted\n     * @return <code>n choose k</code>\n     * @throws IllegalArgumentException if preconditions are not met.\n     */",
+   "name": "binomialCoefficientLog"
+  },
+  {
+   "javadoc": "/**\n     * Compares two numbers given some amount of allowed error.\n     *\n     * @param x the first number\n     * @param y the second number\n     * @param eps the amount of error to allow when checking for equality\n     * @return <ul><li>0 if  {@link #equals(double, double, double) equals(x, y, eps)}</li>\n     *       <li>&lt; 0 if !{@link #equals(double, double, double) equals(x, y, eps)} &amp;&amp; x &lt; y</li>\n     *       <li>> 0 if !{@link #equals(double, double, double) equals(x, y, eps)} &amp;&amp; x > y</li></ul>\n     */",
+   "name": "compareTo"
+  },
+  {
+   "javadoc": "/**\n     * Returns the <a href=\"http://mathworld.wolfram.com/HyperbolicCosine.html\">\n     * hyperbolic cosine</a> of x.\n     *\n     * @param x double value for which to find the hyperbolic cosine\n     * @return hyperbolic cosine of x\n     */",
+   "name": "cosh"
+  },
+  {
+   "javadoc": "/**\n     * Returns true iff they are equal as defined by\n     * {@link #equals(double,double,int) equals(x, y, 1)}.\n     *\n     * @param x first value\n     * @param y second value\n     * @return {@code true} if the values are equal.\n     */",
+   "name": "equals"
+  },
+  {
+   "javadoc": "/**\n     * Returns true if both arguments are NaN or neither is NaN and they are\n     * equal as defined by {@link #equals(double,double) this method}.\n     *\n     * @param x first value\n     * @param y second value\n     * @return {@code true} if the values are equal or both are NaN.\n     */",
+   "name": "equalsIncludingNaN"
+  },
+  {
+   "javadoc": "/**\n     * Returns true if both arguments are equal or within the range of allowed\n     * error (inclusive).\n     *\n     * @param x first value\n     * @param y second value\n     * @param eps the amount of absolute error to allow.\n     * @return {@code true} if the values are equal or within range of each other.\n     */",
+   "name": "equals"
+  },
+  {
+   "javadoc": "/**\n     * Returns true if both arguments are NaN or are equal or within the range\n     * of allowed error (inclusive).\n     *\n     * @param x first value\n     * @param y second value\n     * @param eps the amount of absolute error to allow.\n     * @return {@code true} if the values are equal or within range of each other,\n     * or both are NaN.\n     */",
+   "name": "equalsIncludingNaN"
+  },
+  {
+   "javadoc": "/**\n     * Returns true if both arguments are equal or within the range of allowed\n     * error (inclusive).\n     * Two float numbers are considered equal if there are {@code (maxUlps - 1)}\n     * (or less) floating point numbers between them (i.e. two adjacent floating\n     * point numbers are considered equal.\n     * Adapted from <a\n     * href=\"http://www.cygnus-software.com/papers/comparingfloats/comparingfloats.htm\">\n     * Bruce Dawson</a>\n     *\n     * @param x first value\n     * @param y second value\n     * @param maxUlps {@code (maxUlps - 1)} is the number of floating point\n     * values between {@code x} and {@code y}.\n     * @return {@code true} if there are less than {@code maxUlps} floating\n     * point values between {@code x} and {@code y}.\n     */",
+   "name": "equals"
+  },
+  {
+   "javadoc": "/**\n     * Returns true if both arguments are NaN or if they are equal as defined\n     * by {@link #equals(double,double,int) this method}.\n     *\n     * @param x first value\n     * @param y second value\n     * @param maxUlps {@code (maxUlps - 1)} is the number of floating point\n     * values between {@code x} and {@code y}.\n     * @return {@code true} if both arguments are NaN or if there are less than\n     * {@code maxUlps} floating point values between {@code x} and {@code y}.\n     */",
+   "name": "equalsIncludingNaN"
+  },
+  {
+   "javadoc": "/**\n     * Returns true iff both arguments are null or have same dimensions and all\n     * their elements are equal as defined by\n     * {@link #equals(double,double) this method}.\n     *\n     * @param x first array\n     * @param y second array\n     * @return true if the values are both null or have same dimension\n     * and equal elements.\n     */",
+   "name": "equals"
+  },
+  {
+   "javadoc": "/**\n     * Returns true iff both arguments are null or have same dimensions and all\n     * their elements are equal as defined by\n     * {@link #equalsIncludingNaN(double,double) this method}.\n     *\n     * @param x first array\n     * @param y second array\n     * @return true if the values are both null or have same dimension and\n     * equal elements\n     */",
+   "name": "equalsIncludingNaN"
+  },
+  {
+   "javadoc": "/**\n     * Returns n!. Shorthand for <code>n</code> <a\n     * href=\"http://mathworld.wolfram.com/Factorial.html\"> Factorial</a>, the\n     * product of the numbers <code>1,...,n</code>.\n     * <p>\n     * <Strong>Preconditions</strong>:\n     * <ul>\n     * <li> <code>n >= 0</code> (otherwise\n     * <code>IllegalArgumentException</code> is thrown)</li>\n     * <li> The result is small enough to fit into a <code>long</code>. The\n     * largest value of <code>n</code> for which <code>n!</code> <\n     * Long.MAX_VALUE</code> is 20. If the computed value exceeds <code>Long.MAX_VALUE</code>\n     * an <code>ArithMeticException </code> is thrown.</li>\n     * </ul>\n     * </p>\n     *\n     * @param n argument\n     * @return <code>n!</code>\n     * @throws ArithmeticException if the result is too large to be represented\n     *         by a long integer.\n     * @throws IllegalArgumentException if n < 0\n     */",
+   "name": "factorial"
+  },
+  {
+   "javadoc": "/**\n     * Returns n!. Shorthand for <code>n</code> <a\n     * href=\"http://mathworld.wolfram.com/Factorial.html\"> Factorial</a>, the\n     * product of the numbers <code>1,...,n</code> as a <code>double</code>.\n     * <p>\n     * <Strong>Preconditions</strong>:\n     * <ul>\n     * <li> <code>n >= 0</code> (otherwise\n     * <code>IllegalArgumentException</code> is thrown)</li>\n     * <li> The result is small enough to fit into a <code>double</code>. The\n     * largest value of <code>n</code> for which <code>n!</code> <\n     * Double.MAX_VALUE</code> is 170. If the computed value exceeds\n     * Double.MAX_VALUE, Double.POSITIVE_INFINITY is returned</li>\n     * </ul>\n     * </p>\n     *\n     * @param n argument\n     * @return <code>n!</code>\n     * @throws IllegalArgumentException if n < 0\n     */",
+   "name": "factorialDouble"
+  },
+  {
+   "javadoc": "/**\n     * Returns the natural logarithm of n!.\n     * <p>\n     * <Strong>Preconditions</strong>:\n     * <ul>\n     * <li> <code>n >= 0</code> (otherwise\n     * <code>IllegalArgumentException</code> is thrown)</li>\n     * </ul></p>\n     *\n     * @param n argument\n     * @return <code>n!</code>\n     * @throws IllegalArgumentException if preconditions are not met.\n     */",
+   "name": "factorialLog"
+  },
+  {
+   "javadoc": "/**\n     * <p>\n     * Gets the greatest common divisor of the absolute value of two numbers,\n     * using the \"binary gcd\" method which avoids division and modulo\n     * operations. See Knuth 4.5.2 algorithm B. This algorithm is due to Josef\n     * Stein (1961).\n     * </p>\n     * Special cases:\n     * <ul>\n     * <li>The invocations\n     * <code>gcd(Integer.MIN_VALUE, Integer.MIN_VALUE)</code>,\n     * <code>gcd(Integer.MIN_VALUE, 0)</code> and\n     * <code>gcd(0, Integer.MIN_VALUE)</code> throw an\n     * <code>ArithmeticException</code>, because the result would be 2^31, which\n     * is too large for an int value.</li>\n     * <li>The result of <code>gcd(x, x)</code>, <code>gcd(0, x)</code> and\n     * <code>gcd(x, 0)</code> is the absolute value of <code>x</code>, except\n     * for the special cases above.\n     * <li>The invocation <code>gcd(0, 0)</code> is the only one which returns\n     * <code>0</code>.</li>\n     * </ul>\n     *\n     * @param p any number\n     * @param q any number\n     * @return the greatest common divisor, never negative\n     * @throws ArithmeticException if the result cannot be represented as a\n     * nonnegative int value\n     * @since 1.1\n     */",
+   "name": "gcd"
+  },
+  {
+   "javadoc": "/**\n     * <p>\n     * Gets the greatest common divisor of the absolute value of two numbers,\n     * using the \"binary gcd\" method which avoids division and modulo\n     * operations. See Knuth 4.5.2 algorithm B. This algorithm is due to Josef\n     * Stein (1961).\n     * </p>\n     * Special cases:\n     * <ul>\n     * <li>The invocations\n     * <code>gcd(Long.MIN_VALUE, Long.MIN_VALUE)</code>,\n     * <code>gcd(Long.MIN_VALUE, 0L)</code> and\n     * <code>gcd(0L, Long.MIN_VALUE)</code> throw an\n     * <code>ArithmeticException</code>, because the result would be 2^63, which\n     * is too large for a long value.</li>\n     * <li>The result of <code>gcd(x, x)</code>, <code>gcd(0L, x)</code> and\n     * <code>gcd(x, 0L)</code> is the absolute value of <code>x</code>, except\n     * for the special cases above.\n     * <li>The invocation <code>gcd(0L, 0L)</code> is the only one which returns\n     * <code>0L</code>.</li>\n     * </ul>\n     *\n     * @param p any number\n     * @param q any number\n     * @return the greatest common divisor, never negative\n     * @throws ArithmeticException if the result cannot be represented as a nonnegative long\n     * value\n     * @since 2.1\n     */",
+   "name": "gcd"
+  },
+  {
+   "javadoc": "/**\n     * Returns an integer hash code representing the given double value.\n     *\n     * @param value the value to be hashed\n     * @return the hash code\n     */",
+   "name": "hash"
+  },
+  {
+   "javadoc": "/**\n     * Returns an integer hash code representing the given double array.\n     *\n     * @param value the value to be hashed (may be null)\n     * @return the hash code\n     * @since 1.2\n     */",
+   "name": "hash"
+  },
+  {
+   "javadoc": "/**\n     * For a byte value x, this method returns (byte)(+1) if x >= 0 and\n     * (byte)(-1) if x < 0.\n     *\n     * @param x the value, a byte\n     * @return (byte)(+1) or (byte)(-1), depending on the sign of x\n     */",
+   "name": "indicator"
+  },
+  {
+   "javadoc": "/**\n     * For a double precision value x, this method returns +1.0 if x >= 0 and\n     * -1.0 if x < 0. Returns <code>NaN</code> if <code>x</code> is\n     * <code>NaN</code>.\n     *\n     * @param x the value, a double\n     * @return +1.0 or -1.0, depending on the sign of x\n     */",
+   "name": "indicator"
+  },
+  {
+   "javadoc": "/**\n     * For a float value x, this method returns +1.0F if x >= 0 and -1.0F if x <\n     * 0. Returns <code>NaN</code> if <code>x</code> is <code>NaN</code>.\n     *\n     * @param x the value, a float\n     * @return +1.0F or -1.0F, depending on the sign of x\n     */",
+   "name": "indicator"
+  },
+  {
+   "javadoc": "/**\n     * For an int value x, this method returns +1 if x >= 0 and -1 if x < 0.\n     *\n     * @param x the value, an int\n     * @return +1 or -1, depending on the sign of x\n     */",
+   "name": "indicator"
+  },
+  {
+   "javadoc": "/**\n     * For a long value x, this method returns +1L if x >= 0 and -1L if x < 0.\n     *\n     * @param x the value, a long\n     * @return +1L or -1L, depending on the sign of x\n     */",
+   "name": "indicator"
+  },
+  {
+   "javadoc": "/**\n     * For a short value x, this method returns (short)(+1) if x >= 0 and\n     * (short)(-1) if x < 0.\n     *\n     * @param x the value, a short\n     * @return (short)(+1) or (short)(-1), depending on the sign of x\n     */",
+   "name": "indicator"
+  },
+  {
+   "javadoc": "/**\n     * <p>\n     * Returns the least common multiple of the absolute value of two numbers,\n     * using the formula <code>lcm(a,b) = (a / gcd(a,b)) * b</code>.\n     * </p>\n     * Special cases:\n     * <ul>\n     * <li>The invocations <code>lcm(Integer.MIN_VALUE, n)</code> and\n     * <code>lcm(n, Integer.MIN_VALUE)</code>, where <code>abs(n)</code> is a\n     * power of 2, throw an <code>ArithmeticException</code>, because the result\n     * would be 2^31, which is too large for an int value.</li>\n     * <li>The result of <code>lcm(0, x)</code> and <code>lcm(x, 0)</code> is\n     * <code>0</code> for any <code>x</code>.\n     * </ul>\n     *\n     * @param a any number\n     * @param b any number\n     * @return the least common multiple, never negative\n     * @throws ArithmeticException\n     *             if the result cannot be represented as a nonnegative int\n     *             value\n     * @since 1.1\n     */",
+   "name": "lcm"
+  },
+  {
+   "javadoc": "/**\n     * <p>\n     * Returns the least common multiple of the absolute value of two numbers,\n     * using the formula <code>lcm(a,b) = (a / gcd(a,b)) * b</code>.\n     * </p>\n     * Special cases:\n     * <ul>\n     * <li>The invocations <code>lcm(Long.MIN_VALUE, n)</code> and\n     * <code>lcm(n, Long.MIN_VALUE)</code>, where <code>abs(n)</code> is a\n     * power of 2, throw an <code>ArithmeticException</code>, because the result\n     * would be 2^63, which is too large for an int value.</li>\n     * <li>The result of <code>lcm(0L, x)</code> and <code>lcm(x, 0L)</code> is\n     * <code>0L</code> for any <code>x</code>.\n     * </ul>\n     *\n     * @param a any number\n     * @param b any number\n     * @return the least common multiple, never negative\n     * @throws ArithmeticException if the result cannot be represented as a nonnegative long\n     * value\n     * @since 2.1\n     */",
+   "name": "lcm"
+  },
+  {
+   "javadoc": "/**\n     * <p>Returns the\n     * <a href=\"http://mathworld.wolfram.com/Logarithm.html\">logarithm</a>\n     * for base <code>b</code> of <code>x</code>.\n     * </p>\n     * <p>Returns <code>NaN<code> if either argument is negative.  If\n     * <code>base</code> is 0 and <code>x</code> is positive, 0 is returned.\n     * If <code>base</code> is positive and <code>x</code> is 0,\n     * <code>Double.NEGATIVE_INFINITY</code> is returned.  If both arguments\n     * are 0, the result is <code>NaN</code>.</p>\n     *\n     * @param base the base of the logarithm, must be greater than 0\n     * @param x argument, must be greater than 0\n     * @return the value of the logarithm - the number y such that base^y = x.\n     * @since 1.2\n     */",
+   "name": "log"
+  },
+  {
+   "javadoc": "/**\n     * Multiply two integers, checking for overflow.\n     *\n     * @param x a factor\n     * @param y a factor\n     * @return the product <code>x*y</code>\n     * @throws ArithmeticException if the result can not be represented as an\n     *         int\n     * @since 1.1\n     */",
+   "name": "mulAndCheck"
+  },
+  {
+   "javadoc": "/**\n     * Multiply two long integers, checking for overflow.\n     *\n     * @param a first value\n     * @param b second value\n     * @return the product <code>a * b</code>\n     * @throws ArithmeticException if the result can not be represented as an\n     *         long\n     * @since 1.2\n     */",
+   "name": "mulAndCheck"
+  },
+  {
+   "javadoc": "/**\n     * Scale a number by 2<sup>scaleFactor</sup>.\n     * <p>If <code>d</code> is 0 or NaN or Infinite, it is returned unchanged.</p>\n     *\n     * @param d base number\n     * @param scaleFactor power of two by which d sould be multiplied\n     * @return d &times; 2<sup>scaleFactor</sup>\n     * @since 2.0\n     */",
+   "name": "scalb"
+  },
+  {
+   "javadoc": "/**\n      * <p>Normalizes an array to make it sum to a specified value.\n      * Returns the result of the transformation <pre>\n      *    x |-> x * normalizedSum / sum\n      * </pre>\n      * applied to each non-NaN element x of the input array, where sum is the\n      * sum of the non-NaN entries in the input array.</p>\n      *\n      * <p>Throws IllegalArgumentException if <code>normalizedSum</code> is infinite\n      * or NaN and ArithmeticException if the input array contains any infinite elements\n      * or sums to 0</p>\n      *\n      * <p>Ignores (i.e., copies unchanged to the output array) NaNs in the input array.</p>\n      *\n      * @param values input array to be normalized\n      * @param normalizedSum target sum for the normalized array\n      * @return normalized array\n      * @throws ArithmeticException if the input array contains infinite elements or sums to zero\n      * @throws IllegalArgumentException if the target sum is infinite or NaN\n      * @since 2.1\n      */",
+   "name": "normalizeArray"
+  },
+  {
+   "javadoc": "/**\n     * Round the given value to the specified number of decimal places. The\n     * value is rounded using the {@link BigDecimal#ROUND_HALF_UP} method.\n     *\n     * @param x the value to round.\n     * @param scale the number of digits to the right of the decimal point.\n     * @return the rounded value.\n     * @since 1.1\n     */",
+   "name": "round"
+  },
+  {
+   "javadoc": "/**\n     * Round the given value to the specified number of decimal places. The\n     * value is rounded using the given method which is any method defined in\n     * {@link BigDecimal}.\n     *\n     * @param x the value to round.\n     * @param scale the number of digits to the right of the decimal point.\n     * @param roundingMethod the rounding method as defined in\n     *        {@link BigDecimal}.\n     * @return the rounded value.\n     * @since 1.1\n     */",
+   "name": "round"
+  },
+  {
+   "javadoc": "/**\n     * Round the given value to the specified number of decimal places. The\n     * value is rounding using the {@link BigDecimal#ROUND_HALF_UP} method.\n     *\n     * @param x the value to round.\n     * @param scale the number of digits to the right of the decimal point.\n     * @return the rounded value.\n     * @since 1.1\n     */",
+   "name": "round"
+  },
+  {
+   "javadoc": "/**\n     * Round the given value to the specified number of decimal places. The\n     * value is rounded using the given method which is any method defined in\n     * {@link BigDecimal}.\n     *\n     * @param x the value to round.\n     * @param scale the number of digits to the right of the decimal point.\n     * @param roundingMethod the rounding method as defined in\n     *        {@link BigDecimal}.\n     * @return the rounded value.\n     * @since 1.1\n     */",
+   "name": "round"
+  },
+  {
+   "javadoc": "/**\n     * Returns the <a href=\"http://mathworld.wolfram.com/Sign.html\"> sign</a>\n     * for byte value <code>x</code>.\n     * <p>\n     * For a byte value x, this method returns (byte)(+1) if x > 0, (byte)(0) if\n     * x = 0, and (byte)(-1) if x < 0.</p>\n     *\n     * @param x the value, a byte\n     * @return (byte)(+1), (byte)(0), or (byte)(-1), depending on the sign of x\n     */",
+   "name": "sign"
+  },
+  {
+   "javadoc": "/**\n     * Returns the <a href=\"http://mathworld.wolfram.com/Sign.html\"> sign</a>\n     * for double precision <code>x</code>.\n     * <p>\n     * For a double value <code>x</code>, this method returns\n     * <code>+1.0</code> if <code>x > 0</code>, <code>0.0</code> if\n     * <code>x = 0.0</code>, and <code>-1.0</code> if <code>x < 0</code>.\n     * Returns <code>NaN</code> if <code>x</code> is <code>NaN</code>.</p>\n     *\n     * @param x the value, a double\n     * @return +1.0, 0.0, or -1.0, depending on the sign of x\n     */",
+   "name": "sign"
+  },
+  {
+   "javadoc": "/**\n     * Returns the <a href=\"http://mathworld.wolfram.com/Sign.html\"> sign</a>\n     * for float value <code>x</code>.\n     * <p>\n     * For a float value x, this method returns +1.0F if x > 0, 0.0F if x =\n     * 0.0F, and -1.0F if x < 0. Returns <code>NaN</code> if <code>x</code>\n     * is <code>NaN</code>.</p>\n     *\n     * @param x the value, a float\n     * @return +1.0F, 0.0F, or -1.0F, depending on the sign of x\n     */",
+   "name": "sign"
+  },
+  {
+   "javadoc": "/**\n     * Returns the <a href=\"http://mathworld.wolfram.com/Sign.html\"> sign</a>\n     * for int value <code>x</code>.\n     * <p>\n     * For an int value x, this method returns +1 if x > 0, 0 if x = 0, and -1\n     * if x < 0.</p>\n     *\n     * @param x the value, an int\n     * @return +1, 0, or -1, depending on the sign of x\n     */",
+   "name": "sign"
+  },
+  {
+   "javadoc": "/**\n     * Returns the <a href=\"http://mathworld.wolfram.com/Sign.html\"> sign</a>\n     * for long value <code>x</code>.\n     * <p>\n     * For a long value x, this method returns +1L if x > 0, 0L if x = 0, and\n     * -1L if x < 0.</p>\n     *\n     * @param x the value, a long\n     * @return +1L, 0L, or -1L, depending on the sign of x\n     */",
+   "name": "sign"
+  },
+  {
+   "javadoc": "/**\n     * Returns the <a href=\"http://mathworld.wolfram.com/Sign.html\"> sign</a>\n     * for short value <code>x</code>.\n     * <p>\n     * For a short value x, this method returns (short)(+1) if x > 0, (short)(0)\n     * if x = 0, and (short)(-1) if x < 0.</p>\n     *\n     * @param x the value, a short\n     * @return (short)(+1), (short)(0), or (short)(-1), depending on the sign of\n     *         x\n     */",
+   "name": "sign"
+  },
+  {
+   "javadoc": "/**\n     * Returns the <a href=\"http://mathworld.wolfram.com/HyperbolicSine.html\">\n     * hyperbolic sine</a> of x.\n     *\n     * @param x double value for which to find the hyperbolic sine\n     * @return hyperbolic sine of x\n     */",
+   "name": "sinh"
+  },
+  {
+   "javadoc": "/**\n     * Subtract two integers, checking for overflow.\n     *\n     * @param x the minuend\n     * @param y the subtrahend\n     * @return the difference <code>x-y</code>\n     * @throws ArithmeticException if the result can not be represented as an\n     *         int\n     * @since 1.1\n     */",
+   "name": "subAndCheck"
+  },
+  {
+   "javadoc": "/**\n     * Subtract two long integers, checking for overflow.\n     *\n     * @param a first value\n     * @param b second value\n     * @return the difference <code>a-b</code>\n     * @throws ArithmeticException if the result can not be represented as an\n     *         long\n     * @since 1.2\n     */",
+   "name": "subAndCheck"
+  },
+  {
+   "javadoc": "/**\n     * Raise an int to an int power.\n     * @param k number to raise\n     * @param e exponent (must be positive or null)\n     * @return k<sup>e</sup>\n     * @exception IllegalArgumentException if e is negative\n     */",
+   "name": "pow"
+  },
+  {
+   "javadoc": "/**\n     * Raise an int to a long power.\n     * @param k number to raise\n     * @param e exponent (must be positive or null)\n     * @return k<sup>e</sup>\n     * @exception IllegalArgumentException if e is negative\n     */",
+   "name": "pow"
+  },
+  {
+   "javadoc": "/**\n     * Raise a long to an int power.\n     * @param k number to raise\n     * @param e exponent (must be positive or null)\n     * @return k<sup>e</sup>\n     * @exception IllegalArgumentException if e is negative\n     */",
+   "name": "pow"
+  },
+  {
+   "javadoc": "/**\n     * Raise a long to a long power.\n     * @param k number to raise\n     * @param e exponent (must be positive or null)\n     * @return k<sup>e</sup>\n     * @exception IllegalArgumentException if e is negative\n     */",
+   "name": "pow"
+  },
+  {
+   "javadoc": "/**\n     * Raise a BigInteger to an int power.\n     * @param k number to raise\n     * @param e exponent (must be positive or null)\n     * @return k<sup>e</sup>\n     * @exception IllegalArgumentException if e is negative\n     */",
+   "name": "pow"
+  },
+  {
+   "javadoc": "/**\n     * Raise a BigInteger to a long power.\n     * @param k number to raise\n     * @param e exponent (must be positive or null)\n     * @return k<sup>e</sup>\n     * @exception IllegalArgumentException if e is negative\n     */",
+   "name": "pow"
+  },
+  {
+   "javadoc": "/**\n     * Raise a BigInteger to a BigInteger power.\n     * @param k number to raise\n     * @param e exponent (must be positive or null)\n     * @return k<sup>e</sup>\n     * @exception IllegalArgumentException if e is negative\n     */",
+   "name": "pow"
+  },
+  {
+   "javadoc": "/**\n     * Calculates the L<sub>1</sub> (sum of abs) distance between two points.\n     *\n     * @param p1 the first point\n     * @param p2 the second point\n     * @return the L<sub>1</sub> distance between the two points\n     */",
+   "name": "distance1"
+  },
+  {
+   "javadoc": "/**\n     * Calculates the L<sub>1</sub> (sum of abs) distance between two points.\n     *\n     * @param p1 the first point\n     * @param p2 the second point\n     * @return the L<sub>1</sub> distance between the two points\n     */",
+   "name": "distance1"
+  },
+  {
+   "javadoc": "/**\n     * Calculates the L<sub>2</sub> (Euclidean) distance between two points.\n     *\n     * @param p1 the first point\n     * @param p2 the second point\n     * @return the L<sub>2</sub> distance between the two points\n     */",
+   "name": "distance"
+  },
+  {
+   "javadoc": "/**\n     * Calculates the L<sub>2</sub> (Euclidean) distance between two points.\n     *\n     * @param p1 the first point\n     * @param p2 the second point\n     * @return the L<sub>2</sub> distance between the two points\n     */",
+   "name": "distance"
+  },
+  {
+   "javadoc": "/**\n     * Calculates the L<sub>&infin;</sub> (max of abs) distance between two points.\n     *\n     * @param p1 the first point\n     * @param p2 the second point\n     * @return the L<sub>&infin;</sub> distance between the two points\n     */",
+   "name": "distanceInf"
+  },
+  {
+   "javadoc": "/**\n     * Calculates the L<sub>&infin;</sub> (max of abs) distance between two points.\n     *\n     * @param p1 the first point\n     * @param p2 the second point\n     * @return the L<sub>&infin;</sub> distance between the two points\n     */",
+   "name": "distanceInf"
+  },
+  {
+   "javadoc": "/**\n     * Checks that the given array is sorted.\n     *\n     * @param val Values.\n     * @param dir Ordering direction.\n     * @param strict Whether the order should be strict.\n     * @throws NonMonotonousSequenceException if the array is not sorted.\n     */",
+   "name": "checkOrder"
+  },
+  {
+   "javadoc": "/**\n     * Checks that the given array is sorted in strictly increasing order.\n     *\n     * @param val Values.\n     * @throws NonMonotonousSequenceException if the array is not sorted.\n     */",
+   "name": "checkOrder"
+  },
+  {
+   "javadoc": "/**\n     * Returns the Cartesian norm (2-norm), handling both overflow and underflow.\n     * Translation of the minpack enorm subroutine.\n     *\n     * The redistribution policy for MINPACK is available <a\n     * href=\"http://www.netlib.org/minpack/disclaimer\">here</a>, for convenience, it\n     * is reproduced below.</p>\n     *\n     * <table border=\"0\" width=\"80%\" cellpadding=\"10\" align=\"center\" bgcolor=\"#E0E0E0\">\n     * <tr><td>\n     *    Minpack Copyright Notice (1999) University of Chicago.\n     *    All rights reserved\n     * </td></tr>\n     * <tr><td>\n     * Redistribution and use in source and binary forms, with or without\n     * modification, are permitted provided that the following conditions\n     * are met:\n     * <ol>\n     *  <li>Redistributions of source code must retain the above copyright\n     *      notice, this list of conditions and the following disclaimer.</li>\n     * <li>Redistributions in binary form must reproduce the above\n     *     copyright notice, this list of conditions and the following\n     *     disclaimer in the documentation and/or other materials provided\n     *     with the distribution.</li>\n     * <li>The end-user documentation included with the redistribution, if any,\n     *     must include the following acknowledgment:\n     *     <code>This product includes software developed by the University of\n     *           Chicago, as Operator of Argonne National Laboratory.</code>\n     *     Alternately, this acknowledgment may appear in the software itself,\n     *     if and wherever such third-party acknowledgments normally appear.</li>\n     * <li><strong>WARRANTY DISCLAIMER. THE SOFTWARE IS SUPPLIED \"AS IS\"\n     *     WITHOUT WARRANTY OF ANY KIND. THE COPYRIGHT HOLDER, THE\n     *     UNITED STATES, THE UNITED STATES DEPARTMENT OF ENERGY, AND\n     *     THEIR EMPLOYEES: (1) DISCLAIM ANY WARRANTIES, EXPRESS OR\n     *     IMPLIED, INCLUDING BUT NOT LIMITED TO ANY IMPLIED WARRANTIES\n     *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE\n     *     OR NON-INFRINGEMENT, (2) DO NOT ASSUME ANY LEGAL LIABILITY\n     *     OR RESPONSIBILITY FOR THE ACCURACY, COMPLETENESS, OR\n     *     USEFULNESS OF THE SOFTWARE, (3) DO NOT REPRESENT THAT USE OF\n     *     THE SOFTWARE WOULD NOT INFRINGE PRIVATELY OWNED RIGHTS, (4)\n     *     DO NOT WARRANT THAT THE SOFTWARE WILL FUNCTION\n     *     UNINTERRUPTED, THAT IT IS ERROR-FREE OR THAT ANY ERRORS WILL\n     *     BE CORRECTED.</strong></li>\n     * <li><strong>LIMITATION OF LIABILITY. IN NO EVENT WILL THE COPYRIGHT\n     *     HOLDER, THE UNITED STATES, THE UNITED STATES DEPARTMENT OF\n     *     ENERGY, OR THEIR EMPLOYEES: BE LIABLE FOR ANY INDIRECT,\n     *     INCIDENTAL, CONSEQUENTIAL, SPECIAL OR PUNITIVE DAMAGES OF\n     *     ANY KIND OR NATURE, INCLUDING BUT NOT LIMITED TO LOSS OF\n     *     PROFITS OR LOSS OF DATA, FOR ANY REASON WHATSOEVER, WHETHER\n     *     SUCH LIABILITY IS ASSERTED ON THE BASIS OF CONTRACT, TORT\n     *     (INCLUDING NEGLIGENCE OR STRICT LIABILITY), OR OTHERWISE,\n     *     EVEN IF ANY OF SAID PARTIES HAS BEEN WARNED OF THE\n     *     POSSIBILITY OF SUCH LOSS OR DAMAGES.</strong></li>\n     * <ol></td></tr>\n     * </table>\n     *\n     * @param v vector of doubles\n     * @return the 2-norm of the vector\n     */",
+   "name": "safeNorm"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public final class MathUtils",
+  "constructors": [],
+  "focal_signature": "public static double normalizeAngle(double a, double center)",
+  "methods": [
+   "public static int addAndCheck(int x, int y);",
+   "public static long addAndCheck(long a, long b);",
+   "public static long binomialCoefficient(final int n, final int k);",
+   "public static double binomialCoefficientDouble(final int n, final int k);",
+   "public static double binomialCoefficientLog(final int n, final int k);",
+   "public static int compareTo(double x, double y, double eps);",
+   "public static double cosh(double x);",
+   "public static boolean equals(double x, double y);",
+   "public static boolean equalsIncludingNaN(double x, double y);",
+   "public static boolean equals(double x, double y, double eps);",
+   "public static boolean equalsIncludingNaN(double x, double y, double eps);",
+   "public static boolean equals(double x, double y, int maxUlps);",
+   "public static boolean equalsIncludingNaN(double x, double y, int maxUlps);",
+   "public static boolean equals(double[] x, double[] y);",
+   "public static boolean equalsIncludingNaN(double[] x, double[] y);",
+   "public static long factorial(final int n);",
+   "public static double factorialDouble(final int n);",
+   "public static double factorialLog(final int n);",
+   "public static int gcd(final int p, final int q);",
+   "public static long gcd(final long p, final long q);",
+   "public static int hash(double value);",
+   "public static int hash(double[] value);",
+   "public static byte indicator(final byte x);",
+   "public static double indicator(final double x);",
+   "public static float indicator(final float x);",
+   "public static int indicator(final int x);",
+   "public static long indicator(final long x);",
+   "public static short indicator(final short x);",
+   "public static int lcm(int a, int b);",
+   "public static long lcm(long a, long b);",
+   "public static double log(double base, double x);",
+   "public static int mulAndCheck(int x, int y);",
+   "public static long mulAndCheck(long a, long b);",
+   "public static double scalb(final double d, final int scaleFactor);",
+   "public static double[] normalizeArray(double[] values, double normalizedSum) throws ArithmeticException, IllegalArgumentException;",
+   "public static double round(double x, int scale);",
+   "public static double round(double x, int scale, int roundingMethod);",
+   "public static float round(float x, int scale);",
+   "public static float round(float x, int scale, int roundingMethod);",
+   "public static byte sign(final byte x);",
+   "public static double sign(final double x);",
+   "public static float sign(final float x);",
+   "public static int sign(final int x);",
+   "public static long sign(final long x);",
+   "public static short sign(final short x);",
+   "public static double sinh(double x);",
+   "public static int subAndCheck(int x, int y);",
+   "public static long subAndCheck(long a, long b);",
+   "public static int pow(final int k, int e) throws IllegalArgumentException;",
+   "public static int pow(final int k, long e) throws IllegalArgumentException;",
+   "public static long pow(final long k, int e) throws IllegalArgumentException;",
+   "public static long pow(final long k, long e) throws IllegalArgumentException;",
+   "public static BigInteger pow(final BigInteger k, int e) throws IllegalArgumentException;",
+   "public static BigInteger pow(final BigInteger k, long e) throws IllegalArgumentException;",
+   "public static BigInteger pow(final BigInteger k, BigInteger e) throws IllegalArgumentException;",
+   "public static double distance1(double[] p1, double[] p2);",
+   "public static int distance1(int[] p1, int[] p2);",
+   "public static double distance(double[] p1, double[] p2);",
+   "public static double distance(int[] p1, int[] p2);",
+   "public static double distanceInf(double[] p1, double[] p2);",
+   "public static int distanceInf(int[] p1, int[] p2);",
+   "public static void checkOrder(double[] val, OrderDirection dir, boolean strict);",
+   "public static void checkOrder(double[] val);",
+   "public static double safeNorm(double[] v);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

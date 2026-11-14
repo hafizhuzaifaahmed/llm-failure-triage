@@ -1,0 +1,200 @@
+{
+ "bug_name": "Closure_66",
+ "call_sites": [
+  {
+   "line": 130,
+   "lines": [
+    125,
+    126,
+    127,
+    128,
+    129,
+    130,
+    131,
+    132,
+    133,
+    134,
+    135
+   ],
+   "path": "src/com/google/javascript/jscomp/CombinedCompilerPass.java",
+   "snippet": "        waiting = null;\n      }\n    }\n\n    void shouldTraverseIfActive(NodeTraversal t, Node n, Node parent) {\n      if (isActive() && !callback.shouldTraverse(t, n, parent)) {\n        waiting = n;\n      }\n    }\n\n    void enterScopeIfActive(NodeTraversal t) {"
+  },
+  {
+   "line": 92,
+   "lines": [
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97
+   ],
+   "path": "src/com/google/javascript/jscomp/NodeTraversal.java",
+   "snippet": "     * {@link #visit(NodeTraversal, Node, Node)} in post order.</p>\n     * <p>Implementations can have side effects (e.g. modifying the parse\n     * tree).</p>\n     * @return whether the children of this node should be visited\n     */\n    boolean shouldTraverse(NodeTraversal nodeTraversal, Node n, Node parent);\n\n    /**\n     * <p>Visits a node in post order (after its children have been visited).\n     * A node is visited only if all its parents should be traversed\n     * ({@link #shouldTraverse(NodeTraversal, Node, Node)}).</p>"
+  },
+  {
+   "line": 445,
+   "lines": [
+    440,
+    441,
+    442,
+    443,
+    444,
+    445,
+    446,
+    447,
+    448,
+    449,
+    450
+   ],
+   "path": "src/com/google/javascript/jscomp/NodeTraversal.java",
+   "snippet": "    if (type == Token.SCRIPT) {\n      sourceName = getSourceName(n);\n    }\n\n    curNode = n;\n    if (!callback.shouldTraverse(this, n, parent)) return;\n\n    switch (type) {\n      case Token.FUNCTION:\n        traverseFunction(n, parent);\n        break;"
+  },
+  {
+   "line": 403,
+   "lines": [
+    398,
+    399,
+    400,
+    401,
+    402,
+    403,
+    404,
+    405,
+    406,
+    407,
+    408
+   ],
+   "path": "src/com/google/javascript/jscomp/SpecializeModule.java",
+   "snippet": "    public void match(Node ast1, Node ast2) {\n      // Just blunder ahead and assume that the two nodes actually match\n\n      reportMatch(ast1, ast2);\n\n      if (shouldTraverse(ast1, ast2)) {\n        Node childOf1 = ast1.getFirstChild();\n        Node childOf2 = ast2.getFirstChild();\n\n        while (childOf1 != null) {\n          match(childOf1, childOf2);"
+  }
+ ],
+ "class_simple": "TypeCheck",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * <p>Checks the types of JS expressions against any declared type\n * information.</p>\n *\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "static final DiagnosticType UNEXPECTED_TOKEN",
+  "static final DiagnosticType BAD_DELETE",
+  "protected static final String OVERRIDING_PROTOTYPE_WITH_NON_OBJECT",
+  "static final DiagnosticType DETERMINISTIC_TEST",
+  "static final DiagnosticType DETERMINISTIC_TEST_NO_RESULT",
+  "static final DiagnosticType INEXISTENT_ENUM_ELEMENT",
+  "static final DiagnosticType INEXISTENT_PROPERTY",
+  "protected static final DiagnosticType NOT_A_CONSTRUCTOR",
+  "static final DiagnosticType BIT_OPERATION",
+  "static final DiagnosticType NOT_CALLABLE",
+  "static final DiagnosticType CONSTRUCTOR_NOT_CALLABLE",
+  "static final DiagnosticType FUNCTION_MASKS_VARIABLE",
+  "static final DiagnosticType MULTIPLE_VAR_DEF",
+  "static final DiagnosticType ENUM_DUP",
+  "static final DiagnosticType ENUM_NOT_CONSTANT",
+  "static final DiagnosticType INVALID_INTERFACE_MEMBER_DECLARATION",
+  "static final DiagnosticType INTERFACE_FUNCTION_NOT_EMPTY",
+  "static final DiagnosticType CONFLICTING_EXTENDED_TYPE",
+  "static final DiagnosticType CONFLICTING_IMPLEMENTED_TYPE",
+  "static final DiagnosticType BAD_IMPLEMENTED_TYPE",
+  "static final DiagnosticType HIDDEN_SUPERCLASS_PROPERTY",
+  "static final DiagnosticType HIDDEN_INTERFACE_PROPERTY",
+  "static final DiagnosticType HIDDEN_SUPERCLASS_PROPERTY_MISMATCH",
+  "static final DiagnosticType UNKNOWN_OVERRIDE",
+  "static final DiagnosticType INTERFACE_METHOD_OVERRIDE",
+  "static final DiagnosticType UNKNOWN_EXPR_TYPE",
+  "static final DiagnosticType UNRESOLVED_TYPE",
+  "static final DiagnosticType WRONG_ARGUMENT_COUNT",
+  "static final DiagnosticType ILLEGAL_IMPLICIT_CAST",
+  "static final DiagnosticType INCOMPATIBLE_EXTENDED_PROPERTY_TYPE",
+  "static final DiagnosticType EXPECTED_THIS_TYPE",
+  "static final DiagnosticGroup ALL_DIAGNOSTICS",
+  "private final AbstractCompiler compiler",
+  "private final TypeValidator validator",
+  "private final ReverseAbstractInterpreter reverseInterpreter",
+  "private final JSTypeRegistry typeRegistry",
+  "private Scope topScope",
+  "private ScopeCreator scopeCreator",
+  "private final CheckLevel reportMissingOverride",
+  "private final CheckLevel reportUnknownTypes"
+ ],
+ "focal_class": "com.google.javascript.jscomp.TypeCheck",
+ "focal_id": "Closure_66::com.google.javascript.jscomp.TypeCheck::shouldTraverse(NodeTraversal,Node,Node)",
+ "focal_method_name": "shouldTraverse",
+ "generations": 3,
+ "impl_B": "public boolean shouldTraverse(\n      NodeTraversal t, Node n, Node parent) {\n    checkNoTypeCheckSection(n, true);\n    switch (n.getType()) {\n      case Token.FUNCTION:\n        // normal type checking\n        final TypeCheck outerThis = this;\n        final Scope outerScope = t.getScope();\n        final FunctionType functionType = (FunctionType) n.getJSType();\n        final String functionPrivateName = n.getFirstChild().getString();\n        if (functionPrivateName != null && functionPrivateName.length() > 0 &&\n            outerScope.isDeclared(functionPrivateName, false) &&\n            // Ideally, we would want to check whether the type in the scope\n            // differs from the type being defined, but then the extern\n            // redeclarations of built-in types generates spurious warnings.\n            !(outerScope.getVar(\n                functionPrivateName).getType() instanceof FunctionType)) {\n          report(t, n, FUNCTION_MASKS_VARIABLE, functionPrivateName);\n        }\n\n        // TODO(user): Only traverse the function's body. The function's\n        // name and arguments are traversed by the scope creator, and ideally\n        // should not be traversed by the type checker.\n        break;\n    }\n    return true;\n  }",
+ "imports": [
+  "static com.google.javascript.rhino.jstype.JSTypeNative.ARRAY_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.BOOLEAN_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.NULL_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.NUMBER_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.OBJECT_FUNCTION_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.OBJECT_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.REGEXP_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.STRING_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.U2U_CONSTRUCTOR_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.UNKNOWN_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.VOID_TYPE",
+  "com.google.common.base.Preconditions",
+  "com.google.javascript.jscomp.CheckLevel",
+  "com.google.javascript.jscomp.Scope.Var",
+  "com.google.javascript.rhino.JSDocInfo",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.Token",
+  "com.google.javascript.rhino.jstype.EnumType",
+  "com.google.javascript.rhino.jstype.FunctionType",
+  "com.google.javascript.rhino.jstype.JSType",
+  "com.google.javascript.rhino.jstype.JSTypeNative",
+  "com.google.javascript.rhino.jstype.JSTypeRegistry",
+  "com.google.javascript.rhino.jstype.ObjectType",
+  "com.google.javascript.rhino.jstype.TernaryValue",
+  "java.util.Iterator",
+  "java.util.Set",
+  "java.util.HashMap"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "/**\n   * Main entry point for this phase of processing. This follows the pattern for\n   * JSCompiler phases.\n   *\n   * @param externsRoot The root of the externs parse tree.\n   * @param jsRoot The root of the input parse tree to be checked.\n   */",
+   "name": "process"
+  },
+  {
+   "javadoc": "/** Main entry point of this phase for testing code. */",
+   "name": "processForTesting"
+  },
+  {
+   "javadoc": "",
+   "name": "check"
+  },
+  {
+   "javadoc": "/**\n   * This is the meat of the type checking.  It is basically one big switch,\n   * with each case representing one type of parse tree node.  The individual\n   * cases are usually pretty straightforward.\n   *\n   * @param t The node traversal object that supplies context, such as the\n   * scope chain to use in name lookups as well as error reporting.\n   * @param n The node being visited.\n   * @param parent The parent of the node n.\n   */",
+   "name": "visit"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class TypeCheck implements NodeTraversal.Callback, CompilerPass",
+  "constructors": [
+   "public TypeCheck(AbstractCompiler compiler, ReverseAbstractInterpreter reverseInterpreter, JSTypeRegistry typeRegistry, Scope topScope, ScopeCreator scopeCreator, CheckLevel reportMissingOverride, CheckLevel reportUnknownTypes);",
+   "public TypeCheck(AbstractCompiler compiler, ReverseAbstractInterpreter reverseInterpreter, JSTypeRegistry typeRegistry, CheckLevel reportMissingOverride, CheckLevel reportUnknownTypes);"
+  ],
+  "focal_signature": "public boolean shouldTraverse( NodeTraversal t, Node n, Node parent)",
+  "methods": [
+   "public void process(Node externsRoot, Node jsRoot);",
+   "public Scope processForTesting(Node externsRoot, Node jsRoot);",
+   "public void check(Node node, boolean externs);",
+   "public void visit(NodeTraversal t, Node n, Node parent);"
+  ],
+  "type_signatures": [
+   "public class NodeTraversal { public NodeTraversal(AbstractCompiler compiler, Callback cb); public NodeTraversal(AbstractCompiler compiler, Callback cb, ScopeCreator scopeCreator); public void traverse(Node root); public void traverseRoots(Node ... roots); public void traverseRoots(List<Node> roots); protected void traverseInnerNode(Node node, Node parent, Scope refinedScope); public Compiler getCompiler(); public int getLineNumber(); public String getSourceName(); public CompilerInput getInput(); public JSModule getModule(); public Node getCurrentNode(); public static void traverse( AbstractCompiler compiler, Node root, Callback cb); public static void traverseRoots( AbstractCompiler compiler, List<Node> roots, Callback cb); public Scope getScope(); }",
+   "public class Node implements Cloneable, Serializable { public Node(int nodeType); public Node(int nodeType, Node child); public Node(int nodeType, Node left, Node right); public Node(int nodeType, Node left, Node mid, Node right); public Node(int nodeType, Node left, Node mid, Node mid2, Node right); public Node(int nodeType, int lineno, int charno); public Node(int nodeType, Node child, int lineno, int charno); public Node(int nodeType, Node left, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node mid2, Node right, int lineno, int charno); public Node(int nodeType, Node[] children, int lineno, int charno); public Node(int nodeType, Node[] children); public static Node newNumber(double number); public static Node newNumber(double number, int lineno, int charno); public static Node newString(String str); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

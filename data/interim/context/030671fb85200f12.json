@@ -1,0 +1,213 @@
+{
+  "bug_name": "JacksonCore_26",
+  "call_sites": [],
+  "class_simple": "NonBlockingJsonParser",
+  "doc": {
+    "class_javadoc": "",
+    "method_javadoc": ""
+  },
+  "fields": [
+    "private final static int FEAT_MASK_TRAILING_COMMA",
+    "private final static int FEAT_MASK_LEADING_ZEROS",
+    "private final static int FEAT_MASK_ALLOW_MISSING",
+    "private final static int FEAT_MASK_ALLOW_SINGLE_QUOTES",
+    "private final static int FEAT_MASK_ALLOW_UNQUOTED_NAMES",
+    "private final static int FEAT_MASK_ALLOW_JAVA_COMMENTS",
+    "private final static int FEAT_MASK_ALLOW_YAML_COMMENTS",
+    "private final static int[] _icUTF8",
+    "protected final static int[] _icLatin1",
+    "protected byte[] _inputBuffer",
+    "protected int _origBufferLen"
+  ],
+  "focal_class": "com.fasterxml.jackson.core.json.async.NonBlockingJsonParser",
+  "focal_id": "JacksonCore_26::com.fasterxml.jackson.core.json.async.NonBlockingJsonParser::feedInput(byte[],int,int)",
+  "focal_method_name": "feedInput",
+  "impl_B": "@Override\n    public void feedInput(byte[] buf, int start, int end) throws IOException\n    {\n        // Must not have remaining input\n        if (_inputPtr < _inputEnd) {\n            _reportError(\"Still have %d undecoded bytes, should not call 'feedInput'\", _inputEnd - _inputPtr);\n        }\n        if (end < start) {\n            _reportError(\"Input end (%d) may not be before start (%d)\", end, start);\n        }\n        // and shouldn't have been marked as end-of-input\n        if (_endOfInput) {\n            _reportError(\"Already closed, can not feed more input\");\n        }\n        // Time to update pointers first\n        _currInputProcessed += _origBufferLen;\n\n        // Also need to adjust row start, to work as if it extended into the past wrt new buffer\n        _currInputRowStart = start - (_inputEnd - _currInputRowStart);\n\n        // And then update buffer settings\n        _inputBuffer = buf;\n        _inputPtr = start;\n        _inputEnd = end;\n        _origBufferLen = end - start;\n    }",
+  "imports": [
+    "java.io.IOException",
+    "java.io.OutputStream",
+    "com.fasterxml.jackson.core.*",
+    "com.fasterxml.jackson.core.async.ByteArrayFeeder",
+    "com.fasterxml.jackson.core.async.NonBlockingInputFeeder",
+    "com.fasterxml.jackson.core.io.CharTypes",
+    "com.fasterxml.jackson.core.io.IOContext",
+    "com.fasterxml.jackson.core.sym.ByteQuadsCanonicalizer",
+    "com.fasterxml.jackson.core.util.VersionUtil"
+  ],
+  "javadoc_edited_by_fix": false,
+  "package": "com.fasterxml.jackson.core.json.async",
+  "project": "JacksonCore",
+  "siblings": [
+    {
+      "javadoc": "/**********************************************************************\n     */",
+      "name": "getNonBlockingInputFeeder"
+    },
+    {
+      "javadoc": "",
+      "name": "needMoreInput"
+    },
+    {
+      "javadoc": "",
+      "name": "endOfInput"
+    },
+    {
+      "javadoc": "",
+      "name": "releaseBuffered"
+    },
+    {
+      "javadoc": "",
+      "name": "_decodeEscaped"
+    },
+    {
+      "javadoc": "/**********************************************************************\n     */",
+      "name": "nextToken"
+    },
+    {
+      "javadoc": "/**\n     * Method called when decoding of a token has been started, but not yet completed due\n     * to missing input; method is to continue decoding due to at least one more byte\n     * being made available to decode.\n     */",
+      "name": "_finishToken"
+    },
+    {
+      "javadoc": "/**\n     * Method similar to {@link #_finishToken}, but called when no more input is\n     * available, and end-of-input has been detected. This is usually problem\n     * case, but not always: root-level values may be properly terminated by\n     * this, and similarly trailing white-space may have been skipped.\n     */",
+      "name": "_finishTokenWithEOF"
+    },
+    {
+      "javadoc": "",
+      "name": "_startUnexpectedValue"
+    },
+    {
+      "javadoc": "/**********************************************************************\n     */",
+      "name": "_startFalseToken"
+    },
+    {
+      "javadoc": "",
+      "name": "_startTrueToken"
+    },
+    {
+      "javadoc": "",
+      "name": "_startNullToken"
+    },
+    {
+      "javadoc": "",
+      "name": "_finishKeywordToken"
+    },
+    {
+      "javadoc": "",
+      "name": "_finishKeywordTokenWithEOF"
+    },
+    {
+      "javadoc": "",
+      "name": "_finishNonStdToken"
+    },
+    {
+      "javadoc": "",
+      "name": "_finishNonStdTokenWithEOF"
+    },
+    {
+      "javadoc": "",
+      "name": "_finishErrorToken"
+    },
+    {
+      "javadoc": "",
+      "name": "_finishErrorTokenWithEOF"
+    },
+    {
+      "javadoc": "",
+      "name": "_reportErrorToken"
+    },
+    {
+      "javadoc": "/**********************************************************************\n     */",
+      "name": "_startPositiveNumber"
+    },
+    {
+      "javadoc": "",
+      "name": "_startNegativeNumber"
+    },
+    {
+      "javadoc": "",
+      "name": "_startNumberLeadingZero"
+    },
+    {
+      "javadoc": "",
+      "name": "_finishNumberMinus"
+    },
+    {
+      "javadoc": "",
+      "name": "_finishNumberLeadingZeroes"
+    },
+    {
+      "javadoc": "",
+      "name": "_finishNumberLeadingNegZeroes"
+    },
+    {
+      "javadoc": "",
+      "name": "_finishNumberIntegralPart"
+    },
+    {
+      "javadoc": "",
+      "name": "_startFloat"
+    },
+    {
+      "javadoc": "",
+      "name": "_finishFloatFraction"
+    },
+    {
+      "javadoc": "",
+      "name": "_finishFloatExponent"
+    },
+    {
+      "javadoc": "",
+      "name": "_finishFieldWithEscape"
+    },
+    {
+      "javadoc": "/**********************************************************************\n     */",
+      "name": "_startString"
+    },
+    {
+      "javadoc": "",
+      "name": "_startAposString"
+    }
+  ],
+  "sig": {
+    "class_declaration": "public class NonBlockingJsonParser extends NonBlockingJsonParserBase implements ByteArrayFeeder",
+    "constructors": [
+      "public NonBlockingJsonParser(IOContext ctxt, int parserFeatures, ByteQuadsCanonicalizer sym);"
+    ],
+    "focal_signature": "public void feedInput(byte[] buf, int start, int end) throws IOException",
+    "methods": [
+      "public ByteArrayFeeder getNonBlockingInputFeeder();",
+      "public final boolean needMoreInput();",
+      "public void endOfInput();",
+      "public int releaseBuffered(OutputStream out) throws IOException;",
+      "protected char _decodeEscaped() throws IOException;",
+      "public JsonToken nextToken() throws IOException;",
+      "protected final JsonToken _finishToken() throws IOException;",
+      "protected final JsonToken _finishTokenWithEOF() throws IOException;",
+      "protected JsonToken _startUnexpectedValue(boolean leadingComma, int ch) throws IOException;",
+      "protected JsonToken _startFalseToken() throws IOException;",
+      "protected JsonToken _startTrueToken() throws IOException;",
+      "protected JsonToken _startNullToken() throws IOException;",
+      "protected JsonToken _finishKeywordToken(String expToken, int matched, JsonToken result) throws IOException;",
+      "protected JsonToken _finishKeywordTokenWithEOF(String expToken, int matched, JsonToken result) throws IOException;",
+      "protected JsonToken _finishNonStdToken(int type, int matched) throws IOException;",
+      "protected JsonToken _finishNonStdTokenWithEOF(int type, int matched) throws IOException;",
+      "protected JsonToken _finishErrorToken() throws IOException;",
+      "protected JsonToken _finishErrorTokenWithEOF() throws IOException;",
+      "protected JsonToken _reportErrorToken(String actualToken) throws IOException;",
+      "protected JsonToken _startPositiveNumber(int ch) throws IOException;",
+      "protected JsonToken _startNegativeNumber() throws IOException;",
+      "protected JsonToken _startNumberLeadingZero() throws IOException;",
+      "protected JsonToken _finishNumberMinus(int ch) throws IOException;",
+      "protected JsonToken _finishNumberLeadingZeroes() throws IOException;",
+      "protected JsonToken _finishNumberLeadingNegZeroes() throws IOException;",
+      "protected JsonToken _finishNumberIntegralPart(char[] outBuf, int outPtr) throws IOException;",
+      "protected JsonToken _startFloat(char[] outBuf, int outPtr, int ch) throws IOException;",
+      "protected JsonToken _finishFloatFraction() throws IOException;",
+      "protected JsonToken _finishFloatExponent(boolean checkSign, int ch) throws IOException;",
+      "protected final JsonToken _finishFieldWithEscape() throws IOException;",
+      "protected JsonToken _startString() throws IOException;",
+      "protected JsonToken _startAposString() throws IOException;"
+    ],
+    "type_signatures": []
+  },
+  "split": "test"
+}

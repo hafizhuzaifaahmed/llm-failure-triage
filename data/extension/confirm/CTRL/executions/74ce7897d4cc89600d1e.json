@@ -1,0 +1,384 @@
+{
+ "candidate_id": "74ce7897d4cc89600d1e",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testRead_EOF_ReturnsMinusOne",
+   "testRead_NumToReadExceedsEntrySize",
+   "testRead_WithExistingReadBuf_FullConsumption",
+   "testRead_WithExistingReadBuf_PartialConsumption",
+   "testRead_UnexpectedEOF",
+   "testRead_RecordLargerThanNumToRead"
+  ],
+  "nc_both": [],
+  "nc_one_version": [],
+  "passes": 0
+ },
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "Compress_12::org.apache.commons.compress.archivers.tar.TarArchiveInputStream::read(byte[],int,int)",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_EOF_ReturnsMinusOne",
+   "runs_b": [
+    {
+     "duration_s": 0.079,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.082,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.082,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.085,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.075,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.088,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.InputStreamReader;\nimport java.io.Reader;\nimport java.lang.reflect.Field;\nimport java.math.*;\nimport java.util.*;\nimport java.util.HashMap;\nimport java.util.Map.Entry;\nimport java.util.Map;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.archivers.tar.TarArchiveEntry;\nimport org.apache.commons.compress.archivers.tar.TarArchiveInputStream;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertArrayEquals;\nimport static org.junit.Assert.assertEquals;\n\n/**\n * Unit tests for TarArchiveInputStream.read(byte[] buf, int offset, int numToRead)\n */\npublic class TarArchiveInputStream_read_TriageGen0Test {\n\n    /**\n     * Helper to inject internal state via reflection since the method relies on \n     * private fields: entryOffset, entrySize, readBuf, and buffer (TarArchiveInputStream.buffer).\n     * Note: 'buffer' in TarArchiveInputStream is usually an internal object that provides readRecord().\n     * For the purpose of this test, we mock the behavior using a custom InputStream.\n     */\n    private void setInternalField(Object target, String fieldName, Object value) throws Exception {\n        Field field = target.getClass().getDeclaredField(fieldName);\n        field.setAccessible(true);\n        field.set(target, value);\n    }\n\n    // Mocking the internal 'buffer' which is likely a TarArchiveInputStream.buffer (internal class)\n    // Since we cannot easily instantiate the private inner class, we simulate the behavior \n    // by providing a stream that produces valid Tar records.\n    // However, the 'read' method calls buffer.readRecord(). \n    // To achieve high coverage, we will use a real TarArchiveInputStream with a real stream.\n\n    @Test\n    public void testRead_EOF_ReturnsMinusOne() throws Exception {\n        byte[] emptyData = new byte[0];\n        InputStream is = new ByteArrayInputStream(emptyData);\n        TarArchiveInputStream tais = new TarArchiveInputStream(is);\n        \n        // Manually force entryOffset >= entrySize\n        setInternalField(tais, \"entryOffset\", 100);\n        setInternalField(tais, \"entrySize\", 100);\n\n        byte[] buf = new byte[10];\n        int result = tais.read(buf, 0, 5);\n        assertEquals(-1, result);\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    private Object getField(Object target, String fieldName) throws Exception {\n        Field field = target.getClass().getDeclaredField(fieldName);\n        field.setAccessible(true);\n        return field.get(target);\n    }\n\n    private byte[] createMinimalTar() throws IOException {\n        // A very simple way to create a valid-ish Tar stream for testing\n        // In a real scenario, use Commons Compress to create a TarArchiveOutputStream\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        org.apache.commons.compress.archivers.tar.TarArchiveOutputStream taos = \n            new org.apache.commons.compress.archivers.tar.TarArchiveOutputStream(baos);\n        \n        byte[] content = \"Hello World\".getBytes();\n        TarArchiveEntry entry = new TarArchiveEntry(\"test.txt\");\n        entry.setSize(content.length);\n        taos.putArchiveEntry(entry);\n        taos.write(content);\n        taos.closeArchiveEntry();\n        taos.close();\n        return baos.toByteArray();\n    }\n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_NumToReadExceedsEntrySize",
+   "runs_b": [
+    {
+     "duration_s": 0.073,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.083,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.078,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.091,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.076,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.07,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.InputStreamReader;\nimport java.io.Reader;\nimport java.lang.reflect.Field;\nimport java.math.*;\nimport java.util.*;\nimport java.util.HashMap;\nimport java.util.Map.Entry;\nimport java.util.Map;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.archivers.tar.TarArchiveEntry;\nimport org.apache.commons.compress.archivers.tar.TarArchiveInputStream;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertArrayEquals;\nimport static org.junit.Assert.assertEquals;\n\n/**\n * Unit tests for TarArchiveInputStream.read(byte[] buf, int offset, int numToRead)\n */\npublic class TarArchiveInputStream_read_TriageGen0Test {\n\n    /**\n     * Helper to inject internal state via reflection since the method relies on \n     * private fields: entryOffset, entrySize, readBuf, and buffer (TarArchiveInputStream.buffer).\n     * Note: 'buffer' in TarArchiveInputStream is usually an internal object that provides readRecord().\n     * For the purpose of this test, we mock the behavior using a custom InputStream.\n     */\n    private void setInternalField(Object target, String fieldName, Object value) throws Exception {\n        Field field = target.getClass().getDeclaredField(fieldName);\n        field.setAccessible(true);\n        field.set(target, value);\n    }\n\n    // Mocking the internal 'buffer' which is likely a TarArchiveInputStream.buffer (internal class)\n    // Since we cannot easily instantiate the private inner class, we simulate the behavior \n    // by providing a stream that produces valid Tar records.\n    // However, the 'read' method calls buffer.readRecord(). \n    // To achieve high coverage, we will use a real TarArchiveInputStream with a real stream.\n\n    \n\n    @Test\n    public void testRead_NumToReadExceedsEntrySize() throws Exception {\n        // Create a minimal Tar stream\n        // Using a real TarArchiveInputStream is safer to ensure internal state is consistent\n        byte[] tarData = createMinimalTar();\n        InputStream is = new ByteArrayInputStream(tarData);\n        TarArchiveInputStream tais = new TarArchiveInputStream(is);\n        \n        tais.getNextTarEntry(); // Move to first entry\n        \n        // Force entrySize to be small\n        setInternalField(tais, \"entrySize\", 5);\n        setInternalField(tais, \"entryOffset\", 0);\n\n        byte[] buf = new byte[20];\n        int result = tais.read(buf, 0, 10); // numToRead (10) + offset (0) > entrySize (5)\n        \n        assertEquals(5, result);\n    }\n\n    \n\n    \n\n    \n\n    \n\n    private Object getField(Object target, String fieldName) throws Exception {\n        Field field = target.getClass().getDeclaredField(fieldName);\n        field.setAccessible(true);\n        return field.get(target);\n    }\n\n    private byte[] createMinimalTar() throws IOException {\n        // A very simple way to create a valid-ish Tar stream for testing\n        // In a real scenario, use Commons Compress to create a TarArchiveOutputStream\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        org.apache.commons.compress.archivers.tar.TarArchiveOutputStream taos = \n            new org.apache.commons.compress.archivers.tar.TarArchiveOutputStream(baos);\n        \n        byte[] content = \"Hello World\".getBytes();\n        TarArchiveEntry entry = new TarArchiveEntry(\"test.txt\");\n        entry.setSize(content.length);\n        taos.putArchiveEntry(entry);\n        taos.write(content);\n        taos.closeArchiveEntry();\n        taos.close();\n        return baos.toByteArray();\n    }\n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_WithExistingReadBuf_FullConsumption",
+   "runs_b": [
+    {
+     "duration_s": 0.077,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.074,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.091,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.114,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.087,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.074,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.InputStreamReader;\nimport java.io.Reader;\nimport java.lang.reflect.Field;\nimport java.math.*;\nimport java.util.*;\nimport java.util.HashMap;\nimport java.util.Map.Entry;\nimport java.util.Map;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.archivers.tar.TarArchiveEntry;\nimport org.apache.commons.compress.archivers.tar.TarArchiveInputStream;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertArrayEquals;\nimport static org.junit.Assert.assertEquals;\n\n/**\n * Unit tests for TarArchiveInputStream.read(byte[] buf, int offset, int numToRead)\n */\npublic class TarArchiveInputStream_read_TriageGen0Test {\n\n    /**\n     * Helper to inject internal state via reflection since the method relies on \n     * private fields: entryOffset, entrySize, readBuf, and buffer (TarArchiveInputStream.buffer).\n     * Note: 'buffer' in TarArchiveInputStream is usually an internal object that provides readRecord().\n     * For the purpose of this test, we mock the behavior using a custom InputStream.\n     */\n    private void setInternalField(Object target, String fieldName, Object value) throws Exception {\n        Field field = target.getClass().getDeclaredField(fieldName);\n        field.setAccessible(true);\n        field.set(target, value);\n    }\n\n    // Mocking the internal 'buffer' which is likely a TarArchiveInputStream.buffer (internal class)\n    // Since we cannot easily instantiate the private inner class, we simulate the behavior \n    // by providing a stream that produces valid Tar records.\n    // However, the 'read' method calls buffer.readRecord(). \n    // To achieve high coverage, we will use a real TarArchiveInputStream with a real stream.\n\n    \n\n    \n\n    @Test\n    public void testRead_WithExistingReadBuf_FullConsumption() throws Exception {\n        byte[] tarData = createMinimalTar();\n        InputStream is = new ByteArrayInputStream(tarData);\n        TarArchiveInputStream tais = new TarArchiveInputStream(is);\n        tais.getNextTarEntry();\n\n        byte[] existingBuf = new byte[]{1, 2, 3};\n        setInternalField(tais, \"readBuf\", existingBuf);\n        setInternalField(tais, \"entryOffset\", 0);\n        setInternalField(tais, \"entrySize\", 10);\n\n        byte[] buf = new byte[10];\n        // Request 2 bytes. sz = min(2, 3) = 2.\n        int result = tais.read(buf, 0, 2);\n\n        assertEquals(2, result);\n        assertEquals((byte)1, buf[0]);\n        assertEquals((byte)2, buf[1]);\n        \n        // Verify readBuf is updated to remaining [3]\n        byte[] remaining = (byte[]) getField(tais, \"readBuf\");\n        Assert.assertNotNull(remaining);\n        assertEquals(1, remaining.length);\n        assertEquals((byte)3, remaining[0]);\n    }\n\n    \n\n    \n\n    \n\n    private Object getField(Object target, String fieldName) throws Exception {\n        Field field = target.getClass().getDeclaredField(fieldName);\n        field.setAccessible(true);\n        return field.get(target);\n    }\n\n    private byte[] createMinimalTar() throws IOException {\n        // A very simple way to create a valid-ish Tar stream for testing\n        // In a real scenario, use Commons Compress to create a TarArchiveOutputStream\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        org.apache.commons.compress.archivers.tar.TarArchiveOutputStream taos = \n            new org.apache.commons.compress.archivers.tar.TarArchiveOutputStream(baos);\n        \n        byte[] content = \"Hello World\".getBytes();\n        TarArchiveEntry entry = new TarArchiveEntry(\"test.txt\");\n        entry.setSize(content.length);\n        taos.putArchiveEntry(entry);\n        taos.write(content);\n        taos.closeArchiveEntry();\n        taos.close();\n        return baos.toByteArray();\n    }\n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_WithExistingReadBuf_PartialConsumption",
+   "runs_b": [
+    {
+     "duration_s": 0.071,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 72,
+     "message": "expected:<3> but was:<5>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<3> but was:<5>\n\tat org.junit.Assert.fail(Assert.java:93)\n\tat org.junit.Assert.failNotEquals(Assert.java:647)\n\tat org.junit.Assert.assertEquals(Assert.java:128)\n\tat org.junit.Assert.assertEquals(Assert.java:472)\n\tat org.junit.Assert.assertEquals(Assert.java:456)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveInputStream_read_TriageGen0Test.testRead_WithExistingReadBuf_PartialConsumption(TarArchiveInputStream_read_TriageGen0Test.java:72)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:45)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:42)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:263)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:68)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:47)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:300)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.069,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 72,
+     "message": "expected:<3> but was:<5>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<3> but was:<5>\n\tat org.junit.Assert.fail(Assert.java:93)\n\tat org.junit.Assert.failNotEquals(Assert.java:647)\n\tat org.junit.Assert.assertEquals(Assert.java:128)\n\tat org.junit.Assert.assertEquals(Assert.java:472)\n\tat org.junit.Assert.assertEquals(Assert.java:456)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveInputStream_read_TriageGen0Test.testRead_WithExistingReadBuf_PartialConsumption(TarArchiveInputStream_read_TriageGen0Test.java:72)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:45)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:42)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:263)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:68)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:47)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:300)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.078,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 72,
+     "message": "expected:<3> but was:<5>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<3> but was:<5>\n\tat org.junit.Assert.fail(Assert.java:93)\n\tat org.junit.Assert.failNotEquals(Assert.java:647)\n\tat org.junit.Assert.assertEquals(Assert.java:128)\n\tat org.junit.Assert.assertEquals(Assert.java:472)\n\tat org.junit.Assert.assertEquals(Assert.java:456)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveInputStream_read_TriageGen0Test.testRead_WithExistingReadBuf_PartialConsumption(TarArchiveInputStream_read_TriageGen0Test.java:72)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:45)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:42)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:263)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:68)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:47)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:300)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.091,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 72,
+     "message": "expected:<3> but was:<5>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<3> but was:<5>\n\tat org.junit.Assert.fail(Assert.java:93)\n\tat org.junit.Assert.failNotEquals(Assert.java:647)\n\tat org.junit.Assert.assertEquals(Assert.java:128)\n\tat org.junit.Assert.assertEquals(Assert.java:472)\n\tat org.junit.Assert.assertEquals(Assert.java:456)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveInputStream_read_TriageGen0Test.testRead_WithExistingReadBuf_PartialConsumption(TarArchiveInputStream_read_TriageGen0Test.java:72)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:45)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:42)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:263)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:68)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:47)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:300)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.094,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 72,
+     "message": "expected:<3> but was:<5>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<3> but was:<5>\n\tat org.junit.Assert.fail(Assert.java:93)\n\tat org.junit.Assert.failNotEquals(Assert.java:647)\n\tat org.junit.Assert.assertEquals(Assert.java:128)\n\tat org.junit.Assert.assertEquals(Assert.java:472)\n\tat org.junit.Assert.assertEquals(Assert.java:456)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveInputStream_read_TriageGen0Test.testRead_WithExistingReadBuf_PartialConsumption(TarArchiveInputStream_read_TriageGen0Test.java:72)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:45)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:42)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:263)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:68)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:47)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:300)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.11,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 72,
+     "message": "expected:<3> but was:<5>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<3> but was:<5>\n\tat org.junit.Assert.fail(Assert.java:93)\n\tat org.junit.Assert.failNotEquals(Assert.java:647)\n\tat org.junit.Assert.assertEquals(Assert.java:128)\n\tat org.junit.Assert.assertEquals(Assert.java:472)\n\tat org.junit.Assert.assertEquals(Assert.java:456)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveInputStream_read_TriageGen0Test.testRead_WithExistingReadBuf_PartialConsumption(TarArchiveInputStream_read_TriageGen0Test.java:72)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:45)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:42)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:263)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:68)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:47)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:300)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.InputStreamReader;\nimport java.io.Reader;\nimport java.lang.reflect.Field;\nimport java.math.*;\nimport java.util.*;\nimport java.util.HashMap;\nimport java.util.Map.Entry;\nimport java.util.Map;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.archivers.tar.TarArchiveEntry;\nimport org.apache.commons.compress.archivers.tar.TarArchiveInputStream;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertArrayEquals;\nimport static org.junit.Assert.assertEquals;\n\n/**\n * Unit tests for TarArchiveInputStream.read(byte[] buf, int offset, int numToRead)\n */\npublic class TarArchiveInputStream_read_TriageGen0Test {\n\n    /**\n     * Helper to inject internal state via reflection since the method relies on \n     * private fields: entryOffset, entrySize, readBuf, and buffer (TarArchiveInputStream.buffer).\n     * Note: 'buffer' in TarArchiveInputStream is usually an internal object that provides readRecord().\n     * For the purpose of this test, we mock the behavior using a custom InputStream.\n     */\n    private void setInternalField(Object target, String fieldName, Object value) throws Exception {\n        Field field = target.getClass().getDeclaredField(fieldName);\n        field.setAccessible(true);\n        field.set(target, value);\n    }\n\n    // Mocking the internal 'buffer' which is likely a TarArchiveInputStream.buffer (internal class)\n    // Since we cannot easily instantiate the private inner class, we simulate the behavior \n    // by providing a stream that produces valid Tar records.\n    // However, the 'read' method calls buffer.readRecord(). \n    // To achieve high coverage, we will use a real TarArchiveInputStream with a real stream.\n\n    \n\n    \n\n    \n\n    @Test\n    public void testRead_WithExistingReadBuf_PartialConsumption() throws Exception {\n        byte[] tarData = createMinimalTar();\n        InputStream is = new ByteArrayInputStream(tarData);\n        TarArchiveInputStream tais = new TarArchiveInputStream(is);\n        tais.getNextTarEntry();\n\n        byte[] existingBuf = new byte[]{1, 2, 3};\n        setInternalField(tais, \"readBuf\", existingBuf);\n        setInternalField(tais, \"entryOffset\", 0);\n        setInternalField(tais, \"entrySize\", 10);\n\n        byte[] buf = new byte[10];\n        // Request 5 bytes. sz = min(5, 3) = 3.\n        int result = tais.read(buf, 0, 5);\n\n        assertEquals(3, result);\n        assertEquals((byte)1, buf[0]);\n        assertEquals((byte)3, buf[2]);\n        \n        // Verify readBuf is null because sz >= readBuf.length\n        byte[] remaining = (byte[]) getField(tais, \"readBuf\");\n        assertEquals(null, remaining);\n    }\n\n    \n\n    \n\n    private Object getField(Object target, String fieldName) throws Exception {\n        Field field = target.getClass().getDeclaredField(fieldName);\n        field.setAccessible(true);\n        return field.get(target);\n    }\n\n    private byte[] createMinimalTar() throws IOException {\n        // A very simple way to create a valid-ish Tar stream for testing\n        // In a real scenario, use Commons Compress to create a TarArchiveOutputStream\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        org.apache.commons.compress.archivers.tar.TarArchiveOutputStream taos = \n            new org.apache.commons.compress.archivers.tar.TarArchiveOutputStream(baos);\n        \n        byte[] content = \"Hello World\".getBytes();\n        TarArchiveEntry entry = new TarArchiveEntry(\"test.txt\");\n        entry.setSize(content.length);\n        taos.putArchiveEntry(entry);\n        taos.write(content);\n        taos.closeArchiveEntry();\n        taos.close();\n        return baos.toByteArray();\n    }\n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_UnexpectedEOF",
+   "runs_b": [
+    {
+     "duration_s": 0.081,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.076,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.084,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.091,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.091,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.1,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.InputStreamReader;\nimport java.io.Reader;\nimport java.lang.reflect.Field;\nimport java.math.*;\nimport java.util.*;\nimport java.util.HashMap;\nimport java.util.Map.Entry;\nimport java.util.Map;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.archivers.tar.TarArchiveEntry;\nimport org.apache.commons.compress.archivers.tar.TarArchiveInputStream;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertArrayEquals;\nimport static org.junit.Assert.assertEquals;\n\n/**\n * Unit tests for TarArchiveInputStream.read(byte[] buf, int offset, int numToRead)\n */\npublic class TarArchiveInputStream_read_TriageGen0Test {\n\n    /**\n     * Helper to inject internal state via reflection since the method relies on \n     * private fields: entryOffset, entrySize, readBuf, and buffer (TarArchiveInputStream.buffer).\n     * Note: 'buffer' in TarArchiveInputStream is usually an internal object that provides readRecord().\n     * For the purpose of this test, we mock the behavior using a custom InputStream.\n     */\n    private void setInternalField(Object target, String fieldName, Object value) throws Exception {\n        Field field = target.getClass().getDeclaredField(fieldName);\n        field.setAccessible(true);\n        field.set(target, value);\n    }\n\n    // Mocking the internal 'buffer' which is likely a TarArchiveInputStream.buffer (internal class)\n    // Since we cannot easily instantiate the private inner class, we simulate the behavior \n    // by providing a stream that produces valid Tar records.\n    // However, the 'read' method calls buffer.readRecord(). \n    // To achieve high coverage, we will use a real TarArchiveInputStream with a real stream.\n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testRead_UnexpectedEOF() throws Exception {\n        // We need to trigger buffer.readRecord() returning null\n        // We can do this by using a stream that ends prematurely\n        byte[] tarData = createMinimalTar();\n        InputStream is = new ByteArrayInputStream(tarData);\n        TarArchiveInputStream tais = new TarArchiveInputStream(is);\n        tais.getNextTarEntry();\n\n        // Force the internal buffer to be empty/null via reflection if possible, \n        // or just provide an empty stream after a header.\n        // Since we can't easily mock the private 'buffer' field, we use a stream that runs out.\n        \n        // Set entrySize to something large, but provide no data in the stream\n        setInternalField(tais, \"entrySize\", 1000);\n        setInternalField(tais, \"entryOffset\", 0);\n        setInternalField(tais, \"readBuf\", null);\n\n        // Provide a stream that is actually empty\n        // This will cause buffer.readRecord() to return null\n        InputStream emptyIs = new ByteArrayInputStream(new byte[0]);\n        // Re-instantiate to ensure it's a fresh state\n        tais = new TarArchiveInputStream(emptyIs);\n        // Force state to simulate being inside an entry\n        setInternalField(tais, \"entrySize\", 1000);\n        setInternalField(tais, \"entryOffset\", 0);\n\n        byte[] buf = new byte[10];\n        try {\n            tais.read(buf, 0, 10);\n            Assert.fail(\"Should have thrown IOException\");\n        } catch (IOException e) {\n            Assert.assertTrue(e.getMessage().contains(\"unexpected EOF\"));\n        }\n    }\n\n    \n\n    private Object getField(Object target, String fieldName) throws Exception {\n        Field field = target.getClass().getDeclaredField(fieldName);\n        field.setAccessible(true);\n        return field.get(target);\n    }\n\n    private byte[] createMinimalTar() throws IOException {\n        // A very simple way to create a valid-ish Tar stream for testing\n        // In a real scenario, use Commons Compress to create a TarArchiveOutputStream\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        org.apache.commons.compress.archivers.tar.TarArchiveOutputStream taos = \n            new org.apache.commons.compress.archivers.tar.TarArchiveOutputStream(baos);\n        \n        byte[] content = \"Hello World\".getBytes();\n        TarArchiveEntry entry = new TarArchiveEntry(\"test.txt\");\n        entry.setSize(content.length);\n        taos.putArchiveEntry(entry);\n        taos.write(content);\n        taos.closeArchiveEntry();\n        taos.close();\n        return baos.toByteArray();\n    }\n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_RecordLargerThanNumToRead",
+   "runs_b": [
+    {
+     "duration_s": 0.091,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.073,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.08,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.078,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.077,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.076,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.InputStreamReader;\nimport java.io.Reader;\nimport java.lang.reflect.Field;\nimport java.math.*;\nimport java.util.*;\nimport java.util.HashMap;\nimport java.util.Map.Entry;\nimport java.util.Map;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.archivers.tar.TarArchiveEntry;\nimport org.apache.commons.compress.archivers.tar.TarArchiveInputStream;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertArrayEquals;\nimport static org.junit.Assert.assertEquals;\n\n/**\n * Unit tests for TarArchiveInputStream.read(byte[] buf, int offset, int numToRead)\n */\npublic class TarArchiveInputStream_read_TriageGen0Test {\n\n    /**\n     * Helper to inject internal state via reflection since the method relies on \n     * private fields: entryOffset, entrySize, readBuf, and buffer (TarArchiveInputStream.buffer).\n     * Note: 'buffer' in TarArchiveInputStream is usually an internal object that provides readRecord().\n     * For the purpose of this test, we mock the behavior using a custom InputStream.\n     */\n    private void setInternalField(Object target, String fieldName, Object value) throws Exception {\n        Field field = target.getClass().getDeclaredField(fieldName);\n        field.setAccessible(true);\n        field.set(target, value);\n    }\n\n    // Mocking the internal 'buffer' which is likely a TarArchiveInputStream.buffer (internal class)\n    // Since we cannot easily instantiate the private inner class, we simulate the behavior \n    // by providing a stream that produces valid Tar records.\n    // However, the 'read' method calls buffer.readRecord(). \n    // To achieve high coverage, we will use a real TarArchiveInputStream with a real stream.\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testRead_RecordLargerThanNumToRead() throws Exception {\n        byte[] tarData = createMinimalTar(); // contains data\n        InputStream is = new ByteArrayInputStream(tarData);\n        TarArchiveInputStream tais = new TarArchiveInputStream(is);\n        tais.getNextTarEntry();\n\n        // Ensure we are reading from the buffer (the code enters the while loop)\n        setInternalField(tais, \"readBuf\", null);\n        setInternalField(tais, \"entryOffset\", 0);\n        \n        // The record in createMinimalTar is small. Let's assume it's 10 bytes.\n        // We request 2 bytes.\n        byte[] buf = new byte[10];\n        int result = tais.read(buf, 0, 2);\n\n        Assert.assertTrue(result > 0);\n        // Check that readBuf was populated with the remainder of the record\n        byte[] remaining = (byte[]) getField(tais, \"readBuf\");\n        Assert.assertNotNull(remaining);\n    }\n\n    private Object getField(Object target, String fieldName) throws Exception {\n        Field field = target.getClass().getDeclaredField(fieldName);\n        field.setAccessible(true);\n        return field.get(target);\n    }\n\n    private byte[] createMinimalTar() throws IOException {\n        // A very simple way to create a valid-ish Tar stream for testing\n        // In a real scenario, use Commons Compress to create a TarArchiveOutputStream\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        org.apache.commons.compress.archivers.tar.TarArchiveOutputStream taos = \n            new org.apache.commons.compress.archivers.tar.TarArchiveOutputStream(baos);\n        \n        byte[] content = \"Hello World\".getBytes();\n        TarArchiveEntry entry = new TarArchiveEntry(\"test.txt\");\n        entry.setSize(content.length);\n        taos.putArchiveEntry(entry);\n        taos.write(content);\n        taos.closeArchiveEntry();\n        taos.close();\n        return baos.toByteArray();\n    }\n}\n"
+  }
+ ],
+ "source_sha256": "878fbc5d53e0d5294ec446145a1fd0b5300faf94ccebb60bffaf279ea673e50b",
+ "utc": "2026-11-13T06:51:04Z"
+}

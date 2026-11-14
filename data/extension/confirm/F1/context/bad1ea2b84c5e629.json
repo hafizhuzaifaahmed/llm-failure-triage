@@ -1,0 +1,81 @@
+{
+ "bug_name": "Math_69",
+ "call_sites": [],
+ "class_simple": "PearsonsCorrelation",
+ "dataset": "D1C_F1",
+ "doc": {
+  "class_javadoc": "/**\n * Computes Pearson's product-moment correlation coefficients for pairs of arrays\n * or columns of a matrix.\n *\n * <p>The constructors that take <code>RealMatrix</code> or\n * <code>double[][]</code> arguments generate correlation matrices.  The\n * columns of the input matrices are assumed to represent variable values.\n * Correlations are given by the formula</p>\n * <code>cor(X, Y) = &Sigma;[(x<sub>i</sub> - E(X))(y<sub>i</sub> - E(Y))] / [(n - 1)s(X)s(Y)]</code>\n * where <code>E(X)</code> is the mean of <code>X</code>, <code>E(Y)</code>\n * is the mean of the <code>Y</code> values and s(X), s(Y) are standard deviations.\n *\n * @version $Revision$ $Date$\n * @since 2.0\n */\npublic",
+  "method_javadoc": "/**\n     * Returns a matrix of p-values associated with the (two-sided) null\n     * hypothesis that the corresponding correlation coefficient is zero.\n     * <p><code>getCorrelationPValues().getEntry(i,j)</code> is the probability\n     * that a random variable distributed as <code>t<sub>n-2</sub></code> takes\n     * a value with absolute value greater than or equal to <br>\n     * <code>|r|((n - 2) / (1 - r<sup>2</sup>))<sup>1/2</sup></code></p>\n     * <p>The values in the matrix are sometimes referred to as the\n     * <i>significance</i> of the corresponding correlation coefficients.</p>\n     *\n     * @return matrix of p-values\n     * @throws MathException if an error occurs estimating probabilities\n     */"
+ },
+ "fields": [
+  "private final RealMatrix correlationMatrix",
+  "private final int nObs"
+ ],
+ "focal_class": "org.apache.commons.math.stat.correlation.PearsonsCorrelation",
+ "focal_id": "Math_69::org.apache.commons.math.stat.correlation.PearsonsCorrelation::getCorrelationPValues()",
+ "focal_method_name": "getCorrelationPValues",
+ "generations": 6,
+ "impl_B": "public RealMatrix getCorrelationPValues() throws MathException {\n        TDistribution tDistribution = new TDistributionImpl(nObs - 2);\n        int nVars = correlationMatrix.getColumnDimension();\n        double[][] out = new double[nVars][nVars];\n        for (int i = 0; i < nVars; i++) {\n            for (int j = 0; j < nVars; j++) {\n                if (i == j) {\n                    out[i][j] = 0d;\n                } else {\n                    double r = correlationMatrix.getEntry(i, j);\n                    double t = Math.abs(r * Math.sqrt((nObs - 2)/(1 - r * r)));\n                    out[i][j] = 2 * (1 - tDistribution.cumulativeProbability(t));\n                }\n            }\n        }\n        return new BlockRealMatrix(out);\n    }",
+ "imports": [
+  "org.apache.commons.math.MathException",
+  "org.apache.commons.math.MathRuntimeException",
+  "org.apache.commons.math.distribution.TDistribution",
+  "org.apache.commons.math.distribution.TDistributionImpl",
+  "org.apache.commons.math.linear.RealMatrix",
+  "org.apache.commons.math.linear.BlockRealMatrix",
+  "org.apache.commons.math.stat.regression.SimpleRegression"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math.stat.correlation",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Returns the correlation matrix\n     *\n     * @return correlation matrix\n     */",
+   "name": "getCorrelationMatrix"
+  },
+  {
+   "javadoc": "/**\n     * Returns a matrix of standard errors associated with the estimates\n     * in the correlation matrix.<br/>\n     * <code>getCorrelationStandardErrors().getEntry(i,j)</code> is the standard\n     * error associated with <code>getCorrelationMatrix.getEntry(i,j)</code>\n     * <p>The formula used to compute the standard error is <br/>\n     * <code>SE<sub>r</sub> = ((1 - r<sup>2</sup>) / (n - 2))<sup>1/2</sup></code>\n     * where <code>r</code> is the estimated correlation coefficient and\n     * <code>n</code> is the number of observations in the source dataset.</p>\n     *\n     * @return matrix of correlation standard errors\n     */",
+   "name": "getCorrelationStandardErrors"
+  },
+  {
+   "javadoc": "/**\n     * Computes the correlation matrix for the columns of the\n     * input matrix.\n     *\n     * @param matrix matrix with columns representing variables to correlate\n     * @return correlation matrix\n     */",
+   "name": "computeCorrelationMatrix"
+  },
+  {
+   "javadoc": "/**\n     * Computes the correlation matrix for the columns of the\n     * input rectangular array.  The colums of the array represent values\n     * of variables to be correlated.\n     *\n     * @param data matrix with columns representing variables to correlate\n     * @return correlation matrix\n     */",
+   "name": "computeCorrelationMatrix"
+  },
+  {
+   "javadoc": "/**\n     * Computes the Pearson's product-moment correlation coefficient between the two arrays.\n     *\n     * </p>Throws IllegalArgumentException if the arrays do not have the same length\n     * or their common length is less than 2</p>\n     *\n     * @param xArray first data array\n     * @param yArray second data array\n     * @return Returns Pearson's correlation coefficient for the two arrays\n     * @throws  IllegalArgumentException if the arrays lengths do not match or\n     * there is insufficient data\n     */",
+   "name": "correlation"
+  },
+  {
+   "javadoc": "/**\n     * Derives a correlation matrix from a covariance matrix.\n     *\n     * <p>Uses the formula <br/>\n     * <code>r(X,Y) = cov(X,Y)/s(X)s(Y)</code> where\n     * <code>r(&middot,&middot;)</code> is the correlation coefficient and\n     * <code>s(&middot;)</code> means standard deviation.</p>\n     *\n     * @param covarianceMatrix the covariance matrix\n     * @return correlation matrix\n     */",
+   "name": "covarianceToCorrelation"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class PearsonsCorrelation",
+  "constructors": [
+   "public PearsonsCorrelation();",
+   "public PearsonsCorrelation(double[][] data);",
+   "public PearsonsCorrelation(RealMatrix matrix);",
+   "public PearsonsCorrelation(Covariance covariance);",
+   "public PearsonsCorrelation(RealMatrix covarianceMatrix, int numberOfObservations);"
+  ],
+  "focal_signature": "public RealMatrix getCorrelationPValues() throws MathException",
+  "methods": [
+   "public RealMatrix getCorrelationMatrix();",
+   "public RealMatrix getCorrelationStandardErrors();",
+   "public RealMatrix computeCorrelationMatrix(RealMatrix matrix);",
+   "public RealMatrix computeCorrelationMatrix(double[][] data);",
+   "public double correlation(final double[] xArray, final double[] yArray) throws IllegalArgumentException;",
+   "public RealMatrix covarianceToCorrelation(RealMatrix covarianceMatrix);"
+  ],
+  "type_signatures": [
+   "public interface RealMatrix extends AnyMatrix {  }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F1"
+}

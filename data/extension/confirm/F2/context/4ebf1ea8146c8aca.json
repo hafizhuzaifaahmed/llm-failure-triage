@@ -1,0 +1,152 @@
+{
+ "bug_name": "JxPath_18",
+ "call_sites": [
+  {
+   "line": 159,
+   "lines": [
+    154,
+    155,
+    156,
+    157,
+    158,
+    159,
+    160,
+    161,
+    162,
+    163,
+    164
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/EvalContext.java",
+   "snippet": "    /**\n     * Moves the iterator forward by one position\n     */\n    private void performIteratorStep() {\n        done = true;\n        if (position != 0 && nextNode()) {\n            done = false;\n        }\n        else {\n            while (nextSet()) {\n                if (nextNode()) {"
+  },
+  {
+   "line": 164,
+   "lines": [
+    159,
+    160,
+    161,
+    162,
+    163,
+    164,
+    165,
+    166,
+    167,
+    168,
+    169
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/EvalContext.java",
+   "snippet": "        if (position != 0 && nextNode()) {\n            done = false;\n        }\n        else {\n            while (nextSet()) {\n                if (nextNode()) {\n                    done = false;\n                    break;\n                }\n            }\n        }"
+  },
+  {
+   "line": 190,
+   "lines": [
+    185,
+    186,
+    187,
+    188,
+    189,
+    190,
+    191,
+    192,
+    193,
+    194,
+    195
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/EvalContext.java",
+   "snippet": "     */\n    private boolean constructIterator() {\n        HashSet set = new HashSet();\n        ArrayList list = new ArrayList();\n        while (nextSet()) {\n            while (nextNode()) {\n                NodePointer pointer = getCurrentNodePointer();\n                if (!set.contains(pointer)) {\n                    set.add(pointer);\n                    list.add(pointer);\n                }"
+  },
+  {
+   "line": 235,
+   "lines": [
+    230,
+    231,
+    232,
+    233,
+    234,
+    235,
+    236,
+    237,
+    238,
+    239,
+    240
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/EvalContext.java",
+   "snippet": "        int pos = position;\n        if (pos != 0) {\n            reset();\n        }\n        List list = new ArrayList();\n        while (nextNode()) {\n            list.add(getCurrentNodePointer());\n        }\n        if (pos != 0) {\n            setPosition(pos);\n        }"
+  },
+  {
+   "line": 262,
+   "lines": [
+    257,
+    258,
+    259,
+    260,
+    261,
+    262,
+    263,
+    264,
+    265,
+    266,
+    267
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/EvalContext.java",
+   "snippet": "                    + \"should not request pointer list while \"\n                    + \"iterating over an EvalContext\");\n        }\n        BasicNodeSet set = new BasicNodeSet();\n        while (nextSet()) {\n            while (nextNode()) {\n                set.add((Pointer) getCurrentNodePointer().clone());\n            }\n        }\n\n        return set;"
+  }
+ ],
+ "class_simple": "AttributeContext",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * EvalContext that walks the \"attribute::\" axis.\n *\n * @author Dmitri Plotnikov\n * @version $Revision$ $Date$\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private NodeTest nodeTest",
+  "private boolean setStarted",
+  "private NodeIterator iterator",
+  "private NodePointer currentNodePointer"
+ ],
+ "focal_class": "org.apache.commons.jxpath.ri.axes.AttributeContext",
+ "focal_id": "JxPath_18::org.apache.commons.jxpath.ri.axes.AttributeContext::nextNode()",
+ "focal_method_name": "nextNode",
+ "generations": 3,
+ "impl_B": "public boolean nextNode() {\n        super.setPosition(getCurrentPosition() + 1);\n        if (!setStarted) {\n            setStarted = true;\n            if (!(nodeTest instanceof NodeNameTest)) {\n                return false;\n            }\n            QName name = ((NodeNameTest) nodeTest).getNodeName();\n            iterator =\n                parentContext.getCurrentNodePointer().attributeIterator(name);\n        }\n        if (iterator == null) {\n            return false;\n        }\n        if (!iterator.setPosition(iterator.getPosition() + 1)) {\n            return false;\n        }\n        currentNodePointer = iterator.getNodePointer();\n        return true;\n    }",
+ "imports": [
+  "org.apache.commons.jxpath.ri.EvalContext",
+  "org.apache.commons.jxpath.ri.QName",
+  "org.apache.commons.jxpath.ri.compiler.NodeNameTest",
+  "org.apache.commons.jxpath.ri.compiler.NodeTest",
+  "org.apache.commons.jxpath.ri.model.NodeIterator",
+  "org.apache.commons.jxpath.ri.model.NodePointer"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.jxpath.ri.axes",
+ "project": "JxPath",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "getCurrentNodePointer"
+  },
+  {
+   "javadoc": "",
+   "name": "reset"
+  },
+  {
+   "javadoc": "",
+   "name": "setPosition"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class AttributeContext extends EvalContext",
+  "constructors": [
+   "public AttributeContext(EvalContext parentContext, NodeTest nodeTest);"
+  ],
+  "focal_signature": "public boolean nextNode()",
+  "methods": [
+   "public NodePointer getCurrentNodePointer();",
+   "public void reset();",
+   "public boolean setPosition(int position);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

@@ -1,0 +1,184 @@
+{
+ "bug_name": "Compress_29",
+ "call_sites": [
+  {
+   "line": 291,
+   "lines": [
+    286,
+    287,
+    288,
+    289,
+    290,
+    291,
+    292,
+    293,
+    294,
+    295,
+    296
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java",
+   "snippet": "            }\n            return zip;\n        }\n        if (TAR.equalsIgnoreCase(archiverName)) {\n            if (entryEncoding != null) {\n                return new TarArchiveOutputStream(out, entryEncoding);\n            } else {\n                return new TarArchiveOutputStream(out);\n            }\n        }\n        if (JAR.equalsIgnoreCase(archiverName)) {"
+  },
+  {
+   "line": 293,
+   "lines": [
+    288,
+    289,
+    290,
+    291,
+    292,
+    293,
+    294,
+    295,
+    296,
+    297,
+    298
+   ],
+   "patch_lines_removed": true,
+   "path": "src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java",
+   "snippet": "        }\n        if (TAR.equalsIgnoreCase(archiverName)) {\n            if (entryEncoding != null) {\n                return new TarArchiveOutputStream(out, entryEncoding);\n            } else {\n                return new TarArchiveOutputStream(out);\n            }\n        }\n        if (JAR.equalsIgnoreCase(archiverName)) {"
+  }
+ ],
+ "class_simple": "TarArchiveOutputStream",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * The TarOutputStream writes a UNIX tar archive as an OutputStream.\n * Methods are provided to put entries, and then write their contents\n * by writing to this stream using write().\n * @NotThreadSafe\n */\npublic",
+  "method_javadoc": "/**\n     * Constructor for TarInputStream.\n     * @param os the output stream to use\n     * @param blockSize the block size to use\n     * @param recordSize the record size to use\n     * @param encoding name of the encoding to use for file names\n     * @since 1.4\n     */"
+ },
+ "fields": [
+  "public static final int LONGFILE_ERROR",
+  "public static final int LONGFILE_TRUNCATE",
+  "public static final int LONGFILE_GNU",
+  "public static final int LONGFILE_POSIX",
+  "public static final int BIGNUMBER_ERROR",
+  "public static final int BIGNUMBER_STAR",
+  "public static final int BIGNUMBER_POSIX",
+  "private long currSize",
+  "private String currName",
+  "private long currBytes",
+  "private final byte[] recordBuf",
+  "private int assemLen",
+  "private final byte[] assemBuf",
+  "private int longFileMode",
+  "private int bigNumberMode",
+  "private int recordsWritten",
+  "private final int recordsPerBlock",
+  "private final int recordSize",
+  "private boolean closed",
+  "private boolean haveUnclosedEntry",
+  "private boolean finished",
+  "private final OutputStream out",
+  "private final ZipEncoding zipEncoding",
+  "private boolean addPaxHeadersForNonAsciiNames",
+  "private static final ZipEncoding ASCII"
+ ],
+ "focal_class": "org.apache.commons.compress.archivers.tar.TarArchiveOutputStream",
+ "focal_id": "Compress_29::org.apache.commons.compress.archivers.tar.TarArchiveOutputStream::TarArchiveOutputStream(OutputStream,int,int,String)",
+ "focal_method_name": "TarArchiveOutputStream",
+ "generations": 3,
+ "impl_B": "public TarArchiveOutputStream(OutputStream os, int blockSize,\n                                  int recordSize, String encoding) {\n        out = new CountingOutputStream(os);\n        this.zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);\n\n        this.assemLen = 0;\n        this.assemBuf = new byte[recordSize];\n        this.recordBuf = new byte[recordSize];\n        this.recordSize = recordSize;\n        this.recordsPerBlock = blockSize / recordSize;\n    }",
+ "imports": [
+  "java.io.File",
+  "java.io.IOException",
+  "java.io.OutputStream",
+  "java.io.StringWriter",
+  "java.nio.ByteBuffer",
+  "java.util.Arrays",
+  "java.util.Date",
+  "java.util.HashMap",
+  "java.util.Map",
+  "org.apache.commons.compress.archivers.ArchiveEntry",
+  "org.apache.commons.compress.archivers.ArchiveOutputStream",
+  "org.apache.commons.compress.archivers.zip.ZipEncoding",
+  "org.apache.commons.compress.archivers.zip.ZipEncodingHelper",
+  "org.apache.commons.compress.utils.CharsetNames",
+  "org.apache.commons.compress.utils.CountingOutputStream"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.compress.archivers.tar",
+ "project": "Compress",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Set the long file mode.\n     * This can be LONGFILE_ERROR(0), LONGFILE_TRUNCATE(1) or LONGFILE_GNU(2).\n     * This specifies the treatment of long file names (names &gt;= TarConstants.NAMELEN).\n     * Default is LONGFILE_ERROR.\n     * @param longFileMode the mode to use\n     */",
+   "name": "setLongFileMode"
+  },
+  {
+   "javadoc": "/**\n     * Set the big number mode.\n     * This can be BIGNUMBER_ERROR(0), BIGNUMBER_POSIX(1) or BIGNUMBER_STAR(2).\n     * This specifies the treatment of big files (sizes &gt; TarConstants.MAXSIZE) and other numeric values to big to fit into a traditional tar header.\n     * Default is BIGNUMBER_ERROR.\n     * @param bigNumberMode the mode to use\n     * @since 1.4\n     */",
+   "name": "setBigNumberMode"
+  },
+  {
+   "javadoc": "/**\n     * Whether to add a PAX extension header for non-ASCII file names.\n     * @since 1.4\n     */",
+   "name": "setAddPaxHeadersForNonAsciiNames"
+  },
+  {
+   "javadoc": "",
+   "name": "getCount"
+  },
+  {
+   "javadoc": "",
+   "name": "getBytesWritten"
+  },
+  {
+   "javadoc": "/**\n     * Ends the TAR archive without closing the underlying OutputStream.\n     * \n     * An archive consists of a series of file entries terminated by an\n     * end-of-archive entry, which consists of two 512 blocks of zero bytes. \n     * POSIX.1 requires two EOF records, like some other implementations.\n     * \n     * @throws IOException on error\n     */",
+   "name": "finish"
+  },
+  {
+   "javadoc": "/**\n     * Closes the underlying OutputStream.\n     * @throws IOException on error\n     */",
+   "name": "close"
+  },
+  {
+   "javadoc": "/**\n     * Get the record size being used by this stream's TarBuffer.\n     *\n     * @return The TarBuffer record size.\n     */",
+   "name": "getRecordSize"
+  },
+  {
+   "javadoc": "/**\n     * Put an entry on the output stream. This writes the entry's\n     * header record and positions the output stream for writing\n     * the contents of the entry. Once this method is called, the\n     * stream is ready for calls to write() to write the entry's\n     * contents. Once the contents are written, closeArchiveEntry()\n     * <B>MUST</B> be called to ensure that all buffered data\n     * is completely written to the output stream.\n     *\n     * @param archiveEntry The TarEntry to be written to the archive.\n     * @throws IOException on error\n     * @throws ClassCastException if archiveEntry is not an instance of TarArchiveEntry\n     */",
+   "name": "putArchiveEntry"
+  },
+  {
+   "javadoc": "/**\n     * Close an entry. This method MUST be called for all file\n     * entries that contain data. The reason is that we must\n     * buffer data written to the stream in order to satisfy\n     * the buffer's record based writes. Thus, there may be\n     * data fragments still being assembled that must be written\n     * to the output stream before this entry is closed and the\n     * next entry written.\n     * @throws IOException on error\n     */",
+   "name": "closeArchiveEntry"
+  },
+  {
+   "javadoc": "/**\n     * Writes bytes to the current tar archive entry. This method\n     * is aware of the current entry and will throw an exception if\n     * you attempt to write bytes past the length specified for the\n     * current entry. The method is also (painfully) aware of the\n     * record buffering required by TarBuffer, and manages buffers\n     * that are not a multiple of recordsize in length, including\n     * assembling records from small buffers.\n     *\n     * @param wBuf The buffer to write to the archive.\n     * @param wOffset The offset in the buffer from which to get bytes.\n     * @param numToWrite The number of bytes to write.\n     * @throws IOException on error\n     */",
+   "name": "write"
+  },
+  {
+   "javadoc": "",
+   "name": "flush"
+  },
+  {
+   "javadoc": "",
+   "name": "createArchiveEntry"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class TarArchiveOutputStream extends ArchiveOutputStream",
+  "constructors": [
+   "public TarArchiveOutputStream(OutputStream os);",
+   "public TarArchiveOutputStream(OutputStream os, String encoding);",
+   "public TarArchiveOutputStream(OutputStream os, int blockSize);",
+   "public TarArchiveOutputStream(OutputStream os, int blockSize, String encoding);",
+   "public TarArchiveOutputStream(OutputStream os, int blockSize, int recordSize);",
+   "public TarArchiveOutputStream(OutputStream os, int blockSize, int recordSize, String encoding);"
+  ],
+  "focal_signature": "public TarArchiveOutputStream(OutputStream os, int blockSize, int recordSize, String encoding)",
+  "methods": [
+   "public void setLongFileMode(int longFileMode);",
+   "public void setBigNumberMode(int bigNumberMode);",
+   "public void setAddPaxHeadersForNonAsciiNames(boolean b);",
+   "public int getCount();",
+   "public long getBytesWritten();",
+   "public void finish() throws IOException;",
+   "public void close() throws IOException;",
+   "public int getRecordSize();",
+   "public void putArchiveEntry(ArchiveEntry archiveEntry) throws IOException;",
+   "public void closeArchiveEntry() throws IOException;",
+   "public void write(byte[] wBuf, int wOffset, int numToWrite) throws IOException;",
+   "public void flush() throws IOException;",
+   "public ArchiveEntry createArchiveEntry(File inputFile, String entryName) throws IOException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

@@ -1,0 +1,502 @@
+{
+ "candidate_id": "761d03169b24fe196ced",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testTranslate_NullWriter_ThrowsException",
+   "testTranslate_NullInput_ReturnsEarly",
+   "testTranslate_NoMatches_WritesOriginalInput",
+   "testTranslate_WithMatches_WritesReplacements",
+   "testTranslate_WithSurrogatePairMatch_ConsumesTwoChars",
+   "testTranslate_MixedInput",
+   "testTranslate_ThrowsIOException",
+   "testTranslate_ComplexSurrogateHandling"
+  ],
+  "nc_both": [],
+  "nc_one_version": [],
+  "passes": 0
+ },
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "Lang_6::org.apache.commons.lang3.text.translate.CharSequenceTranslator::translate(CharSequence,Writer)",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testTranslate_NullWriter_ThrowsException",
+   "runs_b": [
+    {
+     "duration_s": 0.123,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.115,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.097,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.096,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.098,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.101,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.lang3.text.translate;\n\nimport java.io.*;\nimport java.io.IOException;\nimport java.io.StringWriter;\nimport java.io.Writer;\nimport java.math.*;\nimport java.util.*;\nimport java.util.Locale;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\npublic class CharSequenceTranslator_translate_TriageGen2Test {\n\n    /**\n     * Mock implementation of the abstract method to allow testing the final translate method.\n     */\n    private static class TestTranslator extends CharSequenceTranslator {\n        private final int consumedAmount;\n        private final String replacement;\n\n        TestTranslator(int consumedAmount, String replacement) {\n            this.consumedAmount = consumedAmount;\n            this.replacement = replacement;\n        }\n\n        @Override\n        public int translate(CharSequence input, int index, Writer out) throws IOException {\n            if (consumedAmount > 0) {\n                out.write(replacement);\n                return consumedAmount;\n            }\n            return 0;\n        }\n    }\n\n    /**\n     * Mock implementation that throws IOException to test error propagation.\n     */\n    private static class ThrowingWriter extends Writer {\n        @Override\n        public void write(char[] cbuf, int off, int len) throws IOException {\n            throw new IOException(\"Simulated IO Error\");\n        }\n\n        @Override\n        public void flush() throws IOException {}\n\n        @Override\n        public void close() throws IOException {}\n    }\n\n    @Test(expected = IllegalArgumentException.class)\n    public void testTranslate_NullWriter_ThrowsException() throws IOException {\n        CharSequenceTranslator translator = new TestTranslator(0, \"\");\n        translator.translate(\"test\", null);\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testTranslate_NullInput_ReturnsEarly",
+   "runs_b": [
+    {
+     "duration_s": 0.115,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.113,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.102,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.098,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.075,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.082,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.lang3.text.translate;\n\nimport java.io.*;\nimport java.io.IOException;\nimport java.io.StringWriter;\nimport java.io.Writer;\nimport java.math.*;\nimport java.util.*;\nimport java.util.Locale;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\npublic class CharSequenceTranslator_translate_TriageGen2Test {\n\n    /**\n     * Mock implementation of the abstract method to allow testing the final translate method.\n     */\n    private static class TestTranslator extends CharSequenceTranslator {\n        private final int consumedAmount;\n        private final String replacement;\n\n        TestTranslator(int consumedAmount, String replacement) {\n            this.consumedAmount = consumedAmount;\n            this.replacement = replacement;\n        }\n\n        @Override\n        public int translate(CharSequence input, int index, Writer out) throws IOException {\n            if (consumedAmount > 0) {\n                out.write(replacement);\n                return consumedAmount;\n            }\n            return 0;\n        }\n    }\n\n    /**\n     * Mock implementation that throws IOException to test error propagation.\n     */\n    private static class ThrowingWriter extends Writer {\n        @Override\n        public void write(char[] cbuf, int off, int len) throws IOException {\n            throw new IOException(\"Simulated IO Error\");\n        }\n\n        @Override\n        public void flush() throws IOException {}\n\n        @Override\n        public void close() throws IOException {}\n    }\n\n    \n\n    @Test\n    public void testTranslate_NullInput_ReturnsEarly() throws IOException {\n        CharSequenceTranslator translator = new TestTranslator(0, \"\");\n        StringWriter writer = new StringWriter();\n        translator.translate(null, writer);\n        assertEquals(\"\", writer.toString());\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testTranslate_NoMatches_WritesOriginalInput",
+   "runs_b": [
+    {
+     "duration_s": 0.087,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.086,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.096,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.081,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.082,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.086,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.lang3.text.translate;\n\nimport java.io.*;\nimport java.io.IOException;\nimport java.io.StringWriter;\nimport java.io.Writer;\nimport java.math.*;\nimport java.util.*;\nimport java.util.Locale;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\npublic class CharSequenceTranslator_translate_TriageGen2Test {\n\n    /**\n     * Mock implementation of the abstract method to allow testing the final translate method.\n     */\n    private static class TestTranslator extends CharSequenceTranslator {\n        private final int consumedAmount;\n        private final String replacement;\n\n        TestTranslator(int consumedAmount, String replacement) {\n            this.consumedAmount = consumedAmount;\n            this.replacement = replacement;\n        }\n\n        @Override\n        public int translate(CharSequence input, int index, Writer out) throws IOException {\n            if (consumedAmount > 0) {\n                out.write(replacement);\n                return consumedAmount;\n            }\n            return 0;\n        }\n    }\n\n    /**\n     * Mock implementation that throws IOException to test error propagation.\n     */\n    private static class ThrowingWriter extends Writer {\n        @Override\n        public void write(char[] cbuf, int off, int len) throws IOException {\n            throw new IOException(\"Simulated IO Error\");\n        }\n\n        @Override\n        public void flush() throws IOException {}\n\n        @Override\n        public void close() throws IOException {}\n    }\n\n    \n\n    \n\n    @Test\n    public void testTranslate_NoMatches_WritesOriginalInput() throws IOException {\n        CharSequenceTranslator translator = new TestTranslator(0, \"\");\n        StringWriter writer = new StringWriter();\n        String input = \"Hello World\";\n        translator.translate(input, writer);\n        assertEquals(input, writer.toString());\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testTranslate_WithMatches_WritesReplacements",
+   "runs_b": [
+    {
+     "duration_s": 0.103,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.095,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.09,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.094,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.078,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.094,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.lang3.text.translate;\n\nimport java.io.*;\nimport java.io.IOException;\nimport java.io.StringWriter;\nimport java.io.Writer;\nimport java.math.*;\nimport java.util.*;\nimport java.util.Locale;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\npublic class CharSequenceTranslator_translate_TriageGen2Test {\n\n    /**\n     * Mock implementation of the abstract method to allow testing the final translate method.\n     */\n    private static class TestTranslator extends CharSequenceTranslator {\n        private final int consumedAmount;\n        private final String replacement;\n\n        TestTranslator(int consumedAmount, String replacement) {\n            this.consumedAmount = consumedAmount;\n            this.replacement = replacement;\n        }\n\n        @Override\n        public int translate(CharSequence input, int index, Writer out) throws IOException {\n            if (consumedAmount > 0) {\n                out.write(replacement);\n                return consumedAmount;\n            }\n            return 0;\n        }\n    }\n\n    /**\n     * Mock implementation that throws IOException to test error propagation.\n     */\n    private static class ThrowingWriter extends Writer {\n        @Override\n        public void write(char[] cbuf, int off, int len) throws IOException {\n            throw new IOException(\"Simulated IO Error\");\n        }\n\n        @Override\n        public void flush() throws IOException {}\n\n        @Override\n        public void close() throws IOException {}\n    }\n\n    \n\n    \n\n    \n\n    @Test\n    public void testTranslate_WithMatches_WritesReplacements() throws IOException {\n        // Translator consumes 1 char and replaces it with \"!\"\n        CharSequenceTranslator translator = new TestTranslator(1, \"!\");\n        StringWriter writer = new StringWriter();\n        translator.translate(\"abc\", writer);\n        assertEquals(\"!!!\", writer.toString());\n    }\n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testTranslate_WithSurrogatePairMatch_ConsumesTwoChars",
+   "runs_b": [
+    {
+     "duration_s": 0.096,
+     "exception": "java.lang.StringIndexOutOfBoundsException",
+     "failing_test_line": 70,
+     "message": "index 4,length 4",
+     "outcome": "exception",
+     "trace": "java.lang.StringIndexOutOfBoundsException: index 4,length 4\n\tat java.base/java.lang.String.checkIndex(String.java:3278)\n\tat java.base/java.lang.StringUTF16.checkIndex(StringUTF16.java:1470)\n\tat java.base/java.lang.StringUTF16.charAt(StringUTF16.java:1267)\n\tat java.base/java.lang.String.charAt(String.java:695)\n\tat java.base/java.lang.Character.codePointAt(Character.java:8268)\n\tat org.apache.commons.lang3.text.translate.CharSequenceTranslator.translate(CharSequenceTranslator.java:95)\n\tat org.apache.commons.lang3.text.translate.CharSequenceTranslator_translate_TriageGen2Test.testTranslate_WithSurrogatePairMatch_ConsumesTwoChars(CharSequenceTranslator_translate_TriageGen2Test.java:70)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.084,
+     "exception": "java.lang.StringIndexOutOfBoundsException",
+     "failing_test_line": 70,
+     "message": "index 4,length 4",
+     "outcome": "exception",
+     "trace": "java.lang.StringIndexOutOfBoundsException: index 4,length 4\n\tat java.base/java.lang.String.checkIndex(String.java:3278)\n\tat java.base/java.lang.StringUTF16.checkIndex(StringUTF16.java:1470)\n\tat java.base/java.lang.StringUTF16.charAt(StringUTF16.java:1267)\n\tat java.base/java.lang.String.charAt(String.java:695)\n\tat java.base/java.lang.Character.codePointAt(Character.java:8268)\n\tat org.apache.commons.lang3.text.translate.CharSequenceTranslator.translate(CharSequenceTranslator.java:95)\n\tat org.apache.commons.lang3.text.translate.CharSequenceTranslator_translate_TriageGen2Test.testTranslate_WithSurrogatePairMatch_ConsumesTwoChars(CharSequenceTranslator_translate_TriageGen2Test.java:70)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.084,
+     "exception": "java.lang.StringIndexOutOfBoundsException",
+     "failing_test_line": 70,
+     "message": "index 4,length 4",
+     "outcome": "exception",
+     "trace": "java.lang.StringIndexOutOfBoundsException: index 4,length 4\n\tat java.base/java.lang.String.checkIndex(String.java:3278)\n\tat java.base/java.lang.StringUTF16.checkIndex(StringUTF16.java:1470)\n\tat java.base/java.lang.StringUTF16.charAt(StringUTF16.java:1267)\n\tat java.base/java.lang.String.charAt(String.java:695)\n\tat java.base/java.lang.Character.codePointAt(Character.java:8268)\n\tat org.apache.commons.lang3.text.translate.CharSequenceTranslator.translate(CharSequenceTranslator.java:95)\n\tat org.apache.commons.lang3.text.translate.CharSequenceTranslator_translate_TriageGen2Test.testTranslate_WithSurrogatePairMatch_ConsumesTwoChars(CharSequenceTranslator_translate_TriageGen2Test.java:70)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.093,
+     "exception": "org.junit.ComparisonFailure",
+     "failing_test_line": 72,
+     "message": "expected:<[AHAPPYB]> but was:<[HAPPYHAPPY]>",
+     "outcome": "assertion_failure",
+     "trace": "org.junit.ComparisonFailure: expected:<[AHAPPYB]> but was:<[HAPPYHAPPY]>\n\tat org.junit.Assert.assertEquals(Assert.java:115)\n\tat org.junit.Assert.assertEquals(Assert.java:144)\n\tat org.apache.commons.lang3.text.translate.CharSequenceTranslator_translate_TriageGen2Test.testTranslate_WithSurrogatePairMatch_ConsumesTwoChars(CharSequenceTranslator_translate_TriageGen2Test.java:72)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.105,
+     "exception": "org.junit.ComparisonFailure",
+     "failing_test_line": 72,
+     "message": "expected:<[AHAPPYB]> but was:<[HAPPYHAPPY]>",
+     "outcome": "assertion_failure",
+     "trace": "org.junit.ComparisonFailure: expected:<[AHAPPYB]> but was:<[HAPPYHAPPY]>\n\tat org.junit.Assert.assertEquals(Assert.java:115)\n\tat org.junit.Assert.assertEquals(Assert.java:144)\n\tat org.apache.commons.lang3.text.translate.CharSequenceTranslator_translate_TriageGen2Test.testTranslate_WithSurrogatePairMatch_ConsumesTwoChars(CharSequenceTranslator_translate_TriageGen2Test.java:72)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.095,
+     "exception": "org.junit.ComparisonFailure",
+     "failing_test_line": 72,
+     "message": "expected:<[AHAPPYB]> but was:<[HAPPYHAPPY]>",
+     "outcome": "assertion_failure",
+     "trace": "org.junit.ComparisonFailure: expected:<[AHAPPYB]> but was:<[HAPPYHAPPY]>\n\tat org.junit.Assert.assertEquals(Assert.java:115)\n\tat org.junit.Assert.assertEquals(Assert.java:144)\n\tat org.apache.commons.lang3.text.translate.CharSequenceTranslator_translate_TriageGen2Test.testTranslate_WithSurrogatePairMatch_ConsumesTwoChars(CharSequenceTranslator_translate_TriageGen2Test.java:72)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package org.apache.commons.lang3.text.translate;\n\nimport java.io.*;\nimport java.io.IOException;\nimport java.io.StringWriter;\nimport java.io.Writer;\nimport java.math.*;\nimport java.util.*;\nimport java.util.Locale;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\npublic class CharSequenceTranslator_translate_TriageGen2Test {\n\n    /**\n     * Mock implementation of the abstract method to allow testing the final translate method.\n     */\n    private static class TestTranslator extends CharSequenceTranslator {\n        private final int consumedAmount;\n        private final String replacement;\n\n        TestTranslator(int consumedAmount, String replacement) {\n            this.consumedAmount = consumedAmount;\n            this.replacement = replacement;\n        }\n\n        @Override\n        public int translate(CharSequence input, int index, Writer out) throws IOException {\n            if (consumedAmount > 0) {\n                out.write(replacement);\n                return consumedAmount;\n            }\n            return 0;\n        }\n    }\n\n    /**\n     * Mock implementation that throws IOException to test error propagation.\n     */\n    private static class ThrowingWriter extends Writer {\n        @Override\n        public void write(char[] cbuf, int off, int len) throws IOException {\n            throw new IOException(\"Simulated IO Error\");\n        }\n\n        @Override\n        public void flush() throws IOException {}\n\n        @Override\n        public void close() throws IOException {}\n    }\n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testTranslate_WithSurrogatePairMatch_ConsumesTwoChars() throws IOException {\n        // Surrogate pair: \\uD83D\\uDE00 (\ud83d\ude00)\n        // We simulate a translator that consumes 2 chars (one surrogate pair)\n        CharSequenceTranslator translator = new TestTranslator(2, \"HAPPY\");\n        StringWriter writer = new StringWriter();\n        String input = \"A\\uD83D\\uDE00B\"; \n        translator.translate(input, writer);\n        // A + HAPPY + B\n        assertEquals(\"AHAPPYB\", writer.toString());\n    }\n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testTranslate_MixedInput",
+   "runs_b": [
+    {
+     "duration_s": 0.125,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.094,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.084,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.09,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.099,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.09,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.lang3.text.translate;\n\nimport java.io.*;\nimport java.io.IOException;\nimport java.io.StringWriter;\nimport java.io.Writer;\nimport java.math.*;\nimport java.util.*;\nimport java.util.Locale;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\npublic class CharSequenceTranslator_translate_TriageGen2Test {\n\n    /**\n     * Mock implementation of the abstract method to allow testing the final translate method.\n     */\n    private static class TestTranslator extends CharSequenceTranslator {\n        private final int consumedAmount;\n        private final String replacement;\n\n        TestTranslator(int consumedAmount, String replacement) {\n            this.consumedAmount = consumedAmount;\n            this.replacement = replacement;\n        }\n\n        @Override\n        public int translate(CharSequence input, int index, Writer out) throws IOException {\n            if (consumedAmount > 0) {\n                out.write(replacement);\n                return consumedAmount;\n            }\n            return 0;\n        }\n    }\n\n    /**\n     * Mock implementation that throws IOException to test error propagation.\n     */\n    private static class ThrowingWriter extends Writer {\n        @Override\n        public void write(char[] cbuf, int off, int len) throws IOException {\n            throw new IOException(\"Simulated IO Error\");\n        }\n\n        @Override\n        public void flush() throws IOException {}\n\n        @Override\n        public void close() throws IOException {}\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testTranslate_MixedInput() throws IOException {\n        // Custom translator: if it sees 'x', consume 1 and write 'Y'. Otherwise consume 0.\n        CharSequenceTranslator translator = new CharSequenceTranslator() {\n            @Override\n            public int translate(CharSequence input, int index, Writer out) throws IOException {\n                if (input.charAt(index) == 'x') {\n                    out.write(\"Y\");\n                    return 1;\n                }\n                return 0;\n            }\n        };\n\n        StringWriter writer = new StringWriter();\n        translator.translate(\"axb\", writer);\n        assertEquals(\"aYb\", writer.toString());\n    }\n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testTranslate_ThrowsIOException",
+   "runs_b": [
+    {
+     "duration_s": 0.107,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.11,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.099,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.097,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.106,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.104,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.lang3.text.translate;\n\nimport java.io.*;\nimport java.io.IOException;\nimport java.io.StringWriter;\nimport java.io.Writer;\nimport java.math.*;\nimport java.util.*;\nimport java.util.Locale;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\npublic class CharSequenceTranslator_translate_TriageGen2Test {\n\n    /**\n     * Mock implementation of the abstract method to allow testing the final translate method.\n     */\n    private static class TestTranslator extends CharSequenceTranslator {\n        private final int consumedAmount;\n        private final String replacement;\n\n        TestTranslator(int consumedAmount, String replacement) {\n            this.consumedAmount = consumedAmount;\n            this.replacement = replacement;\n        }\n\n        @Override\n        public int translate(CharSequence input, int index, Writer out) throws IOException {\n            if (consumedAmount > 0) {\n                out.write(replacement);\n                return consumedAmount;\n            }\n            return 0;\n        }\n    }\n\n    /**\n     * Mock implementation that throws IOException to test error propagation.\n     */\n    private static class ThrowingWriter extends Writer {\n        @Override\n        public void write(char[] cbuf, int off, int len) throws IOException {\n            throw new IOException(\"Simulated IO Error\");\n        }\n\n        @Override\n        public void flush() throws IOException {}\n\n        @Override\n        public void close() throws IOException {}\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test(expected = IOException.class)\n    public void testTranslate_ThrowsIOException() throws IOException {\n        CharSequenceTranslator translator = new TestTranslator(1, \"!\");\n        StringWriter writer = new StringWriter();\n        // We need to wrap the StringWriter to throw exception or use a custom one\n        Writer throwingWriter = new ThrowingWriter();\n        translator.translate(\"abc\", throwingWriter);\n    }\n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testTranslate_ComplexSurrogateHandling",
+   "runs_b": [
+    {
+     "duration_s": 0.107,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.088,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.072,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.082,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.087,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.079,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.lang3.text.translate;\n\nimport java.io.*;\nimport java.io.IOException;\nimport java.io.StringWriter;\nimport java.io.Writer;\nimport java.math.*;\nimport java.util.*;\nimport java.util.Locale;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\npublic class CharSequenceTranslator_translate_TriageGen2Test {\n\n    /**\n     * Mock implementation of the abstract method to allow testing the final translate method.\n     */\n    private static class TestTranslator extends CharSequenceTranslator {\n        private final int consumedAmount;\n        private final String replacement;\n\n        TestTranslator(int consumedAmount, String replacement) {\n            this.consumedAmount = consumedAmount;\n            this.replacement = replacement;\n        }\n\n        @Override\n        public int translate(CharSequence input, int index, Writer out) throws IOException {\n            if (consumedAmount > 0) {\n                out.write(replacement);\n                return consumedAmount;\n            }\n            return 0;\n        }\n    }\n\n    /**\n     * Mock implementation that throws IOException to test error propagation.\n     */\n    private static class ThrowingWriter extends Writer {\n        @Override\n        public void write(char[] cbuf, int off, int len) throws IOException {\n            throw new IOException(\"Simulated IO Error\");\n        }\n\n        @Override\n        public void flush() throws IOException {}\n\n        @Override\n        public void close() throws IOException {}\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testTranslate_ComplexSurrogateHandling() throws IOException {\n        // Testing the loop: for (int pt = 0; pt < consumed; pt++) { pos += Character.charCount(...) }\n        // If translator returns 'consumed' count of codepoints, not chars.\n        // The implementation logic: consumed is the number of codepoints handled.\n        \n        CharSequenceTranslator translator = new CharSequenceTranslator() {\n            @Override\n            public int translate(CharSequence input, int index, Writer out) throws IOException {\n                if (input.charAt(index) == '\\uD83D') { // Start of emoji\n                    out.write(\"EMOJI\");\n                    return 1; // Consumed 1 codepoint (which is 2 chars)\n                }\n                return 0;\n            }\n        };\n\n        StringWriter writer = new StringWriter();\n        // \\uD83D\\uDE00 is one codepoint\n        translator.translate(\"\\uD83D\\uDE00\", writer);\n        assertEquals(\"EMOJI\", writer.toString());\n    }\n}\n"
+  }
+ ],
+ "source_sha256": "c62ce2acda11eb888443a313afe15de20cc25e387a28288e96040c0262522a35",
+ "utc": "2026-11-13T06:38:52Z"
+}

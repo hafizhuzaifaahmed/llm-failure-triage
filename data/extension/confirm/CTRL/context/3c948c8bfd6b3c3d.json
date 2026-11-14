@@ -1,0 +1,182 @@
+{
+ "bug_name": "JacksonDatabind_60",
+ "call_sites": [
+  {
+   "line": 3620,
+   "lines": [
+    3615,
+    3616,
+    3617,
+    3618,
+    3619,
+    3620,
+    3621,
+    3622,
+    3623,
+    3624,
+    3625
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java",
+   "snippet": "     * @since 2.1\n     */\n    public void acceptJsonFormatVisitor(Class<?> type, JsonFormatVisitorWrapper visitor)\n        throws JsonMappingException\n    {\n        acceptJsonFormatVisitor(_typeFactory.constructType(type), visitor);\n    }\n    \n    /**\n     * Method for visiting type hierarchy for given type, using specified visitor.\n     * Visitation uses <code>Serializer</code> hierarchy and related properties"
+  },
+  {
+   "line": 3641,
+   "lines": [
+    3636,
+    3637,
+    3638,
+    3639,
+    3640,
+    3641,
+    3642,
+    3643,
+    3644,
+    3645,
+    3646
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java",
+   "snippet": "        throws JsonMappingException\n    {\n        if (type == null) {\n            throw new IllegalArgumentException(\"type must be provided\");\n        }\n        _serializerProvider(getSerializationConfig()).acceptJsonFormatVisitor(type, visitor);\n    }\n    \n    /*\n    /**********************************************************\n    /* Internal methods for serialization, overridable"
+  },
+  {
+   "line": 1078,
+   "lines": [
+    1073,
+    1074,
+    1075,
+    1076,
+    1077,
+    1078,
+    1079,
+    1080,
+    1081,
+    1082,
+    1083
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectWriter.java",
+   "snippet": "    public void acceptJsonFormatVisitor(JavaType type, JsonFormatVisitorWrapper visitor) throws JsonMappingException\n    {\n        if (type == null) {\n            throw new IllegalArgumentException(\"type must be provided\");\n        }\n        _serializerProvider().acceptJsonFormatVisitor(type, visitor);\n    }\n\n    /**\n     * Since 2.6\n     */"
+  },
+  {
+   "line": 1085,
+   "lines": [
+    1080,
+    1081,
+    1082,
+    1083,
+    1084,
+    1085,
+    1086,
+    1087,
+    1088,
+    1089,
+    1090
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectWriter.java",
+   "snippet": "\n    /**\n     * Since 2.6\n     */\n    public void acceptJsonFormatVisitor(Class<?> rawType, JsonFormatVisitorWrapper visitor) throws JsonMappingException {\n        acceptJsonFormatVisitor(_config.constructType(rawType), visitor);\n    }\n\n    public boolean canSerialize(Class<?> type) {\n        return _serializerProvider().hasSerializerFor(type, null);\n    }"
+  },
+  {
+   "line": 89,
+   "lines": [
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ext/CoreXMLSerializers.java",
+   "snippet": "            _delegate.serializeWithType(_convert(value), gen, provider, typeSer);\n        }\n\n        @Override\n        public void acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint) throws JsonMappingException {\n            _delegate.acceptJsonFormatVisitor(visitor, null);\n        }\n\n        @Override\n        public JsonSerializer<?> createContextual(SerializerProvider prov, BeanProperty property)\n                throws JsonMappingException {"
+  }
+ ],
+ "class_simple": "JsonValueSerializer",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Serializer class that can serialize Object that have a\n * {@link com.fasterxml.jackson.annotation.JsonValue} annotation to\n * indicate that serialization should be done by calling the method\n * annotated, and serializing result it returns.\n *<p>\n * Implementation note: we will post-process resulting serializer\n * (much like what is done with {@link BeanSerializer})\n * to figure out actual serializers for final types.\n *  This must be done from {@link #createContextual} method, and NOT from constructor;\n * otherwise we could end up with an infinite loop.\n */\n@SuppressWarnings(\"serial\")\n@JacksonStdImpl\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "protected final AnnotatedMethod _accessorMethod",
+  "protected final JsonSerializer<Object> _valueSerializer",
+  "protected final BeanProperty _property",
+  "protected final boolean _forceTypeInformation"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.ser.std.JsonValueSerializer",
+ "focal_id": "JacksonDatabind_60::com.fasterxml.jackson.databind.ser.std.JsonValueSerializer::acceptJsonFormatVisitor(JsonFormatVisitorWrapper,JavaType)",
+ "focal_method_name": "acceptJsonFormatVisitor",
+ "generations": 3,
+ "impl_B": "@Override\n    public void acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint)\n        throws JsonMappingException\n    {\n        /* 27-Apr-2015, tatu: First things first; for JSON Schema introspection,\n         *    Enum types that use `@JsonValue` are special (but NOT necessarily\n         *    anything else that RETURNS an enum!)\n         *    So we will need to add special\n         *    handling here (see https://github.com/FasterXML/jackson-module-jsonSchema/issues/57\n         *    for details).\n         *    \n         *    Note that meaning of JsonValue, then, is very different for Enums. Sigh.\n         */\n        final JavaType type = _accessorMethod.getType();\n        Class<?> declaring = _accessorMethod.getDeclaringClass();\n        if ((declaring != null) && declaring.isEnum()) {\n            if (_acceptJsonFormatVisitorForEnum(visitor, typeHint, declaring)) {\n                return;\n            }\n        }\n        JsonSerializer<Object> ser = _valueSerializer;\n        if (ser == null) {\n            ser = visitor.getProvider().findTypedValueSerializer(type, false, _property);\n            if (ser == null) { // can this ever occur?\n                visitor.expectAnyFormat(typeHint);\n                return;\n            }\n        }\n        ser.acceptJsonFormatVisitor(visitor, null); \n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.lang.reflect.InvocationTargetException",
+  "java.lang.reflect.Type",
+  "java.util.LinkedHashSet",
+  "java.util.Set",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.annotation.JacksonStdImpl",
+  "com.fasterxml.jackson.databind.introspect.AnnotatedMethod",
+  "com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitable",
+  "com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper",
+  "com.fasterxml.jackson.databind.jsonFormatVisitors.JsonStringFormatVisitor",
+  "com.fasterxml.jackson.databind.jsonschema.SchemaAware",
+  "com.fasterxml.jackson.databind.jsontype.TypeSerializer",
+  "com.fasterxml.jackson.databind.ser.BeanSerializer",
+  "com.fasterxml.jackson.databind.ser.ContextualSerializer"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.ser.std",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "withResolved"
+  },
+  {
+   "javadoc": "/**\n     * We can try to find the actual serializer for value, if we can\n     * statically figure out what the result type must be.\n     */",
+   "name": "createContextual"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "serialize"
+  },
+  {
+   "javadoc": "",
+   "name": "serializeWithType"
+  },
+  {
+   "javadoc": "/**\n     * Overridable helper method used for special case handling of schema information for\n     * Enums.\n     * \n     * @return True if method handled callbacks; false if not; in latter case caller will\n     *   send default callbacks\n     *\n     * @since 2.6\n     */",
+   "name": "_acceptJsonFormatVisitorForEnum"
+  },
+  {
+   "javadoc": "",
+   "name": "isNaturalTypeWithStdHandling"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "toString"
+  }
+ ],
+ "sig": {
+  "class_declaration": "@SuppressWarnings(\"serial\") @JacksonStdImpl public class JsonValueSerializer extends StdSerializer<Object> implements ContextualSerializer, JsonFormatVisitable, SchemaAware",
+  "constructors": [],
+  "focal_signature": "public void acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint) throws JsonMappingException",
+  "methods": [
+   "public JsonValueSerializer withResolved(BeanProperty property, JsonSerializer<?> ser, boolean forceTypeInfo);",
+   "public JsonSerializer<?> createContextual(SerializerProvider provider, BeanProperty property) throws JsonMappingException;",
+   "public void serialize(Object bean, JsonGenerator gen, SerializerProvider prov) throws IOException;",
+   "public void serializeWithType(Object bean, JsonGenerator gen, SerializerProvider provider, TypeSerializer typeSer0) throws IOException;",
+   "protected boolean _acceptJsonFormatVisitorForEnum(JsonFormatVisitorWrapper visitor, JavaType typeHint, Class<?> enumType) throws JsonMappingException;",
+   "protected boolean isNaturalTypeWithStdHandling(Class<?> rawType, JsonSerializer<?> ser);",
+   "public String toString();"
+  ],
+  "type_signatures": [
+   "public interface JsonFormatVisitorWrapper extends JsonFormatVisitorWithSerializerProvider { public JsonObjectFormatVisitor expectObjectFormat(JavaType type) throws JsonMappingException; public JsonArrayFormatVisitor expectArrayFormat(JavaType type) throws JsonMappingException; public JsonStringFormatVisitor expectStringFormat(JavaType type) throws JsonMappingException; public JsonNumberFormatVisitor expectNumberFormat(JavaType type) throws JsonMappingException; public JsonIntegerFormatVisitor expectIntegerFormat(JavaType type) throws JsonMappingException; public JsonBooleanFormatVisitor expectBooleanFormat(JavaType type) throws JsonMappingException; public JsonNullFormatVisitor expectNullFormat(JavaType type) throws JsonMappingException; public JsonAnyFormatVisitor expectAnyFormat(JavaType type) throws JsonMappingException; public JsonMapFormatVisitor expectMapFormat(JavaType type) throws JsonMappingException; }"
+  ]
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

@@ -1,0 +1,84 @@
+{
+ "bug_name": "JacksonDatabind_110",
+ "call_sites": [
+  {
+   "line": 1374,
+   "lines": [
+    1369,
+    1370,
+    1371,
+    1372,
+    1373,
+    1374,
+    1375,
+    1376,
+    1377,
+    1378,
+    1379
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java",
+   "snippet": "                        }\n                        deser = AbstractDeserializer.constructForNonPOJO(beanDesc);\n                    }\n                } else {\n                    // 10-Jan-2017, tatu: `java.util.Collections` types need help:\n                    deser = JavaUtilCollectionsDeserializers.findForMap(ctxt, type);\n                    if (deser != null) {\n                        return deser;\n                    }\n                }\n                if (deser == null) {"
+  }
+ ],
+ "class_simple": "JavaUtilCollectionsDeserializers",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Helper class used to contain logic for deserializing \"special\" containers\n * from {@code java.util.Collections} and {@code java.util.Arrays}. This is needed\n * because they do not have usable no-arguments constructor: however, are easy enough\n * to deserialize using delegating deserializer.\n *\n * @since 2.9.4\n */\npublic abstract",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private final static int TYPE_SINGLETON_SET",
+  "private final static int TYPE_SINGLETON_LIST",
+  "private final static int TYPE_SINGLETON_MAP",
+  "private final static int TYPE_UNMODIFIABLE_SET",
+  "private final static int TYPE_UNMODIFIABLE_LIST",
+  "private final static int TYPE_UNMODIFIABLE_MAP",
+  "public final static int TYPE_AS_LIST",
+  "private final static Class<?> CLASS_AS_ARRAYS_LIST",
+  "private final static Class<?> CLASS_SINGLETON_SET",
+  "private final static Class<?> CLASS_SINGLETON_LIST",
+  "private final static Class<?> CLASS_SINGLETON_MAP",
+  "private final static Class<?> CLASS_UNMODIFIABLE_SET",
+  "private final static Class<?> CLASS_UNMODIFIABLE_LIST",
+  "private final static Class<?> CLASS_UNMODIFIABLE_MAP"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.deser.impl.JavaUtilCollectionsDeserializers",
+ "focal_id": "JacksonDatabind_110::com.fasterxml.jackson.databind.deser.impl.JavaUtilCollectionsDeserializers::findForMap(DeserializationContext,JavaType)",
+ "focal_method_name": "findForMap",
+ "generations": 3,
+ "impl_B": "public static JsonDeserializer<?> findForMap(DeserializationContext ctxt,\n            JavaType type)\n        throws JsonMappingException\n    {\n        JavaUtilCollectionsConverter conv;\n\n        // 10-Jan-2017, tatu: Some types from `java.util.Collections`/`java.util.Arrays` need bit of help...\n        if (type.hasRawClass(CLASS_SINGLETON_MAP)) {\n            conv = converter(TYPE_SINGLETON_MAP, type, Map.class);\n        } else if (type.hasRawClass(CLASS_UNMODIFIABLE_MAP)) {\n            conv = converter(TYPE_UNMODIFIABLE_MAP, type, Map.class);\n        } else {\n            return null;\n        }\n        return new StdDelegatingDeserializer<Object>(conv);\n    }",
+ "imports": [
+  "java.util.*",
+  "com.fasterxml.jackson.databind.DeserializationContext",
+  "com.fasterxml.jackson.databind.JavaType",
+  "com.fasterxml.jackson.databind.JsonDeserializer",
+  "com.fasterxml.jackson.databind.JsonMappingException",
+  "com.fasterxml.jackson.databind.deser.std.StdDelegatingDeserializer",
+  "com.fasterxml.jackson.databind.type.TypeFactory",
+  "com.fasterxml.jackson.databind.util.Converter"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.deser.impl",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "findForCollection"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public abstract class JavaUtilCollectionsDeserializers",
+  "constructors": [],
+  "focal_signature": "public static JsonDeserializer<?> findForMap(DeserializationContext ctxt, JavaType type) throws JsonMappingException",
+  "methods": [
+   "public static JsonDeserializer<?> findForCollection(DeserializationContext ctxt, JavaType type) throws JsonMappingException;"
+  ],
+  "type_signatures": [
+   "public abstract class DeserializationContext extends DatabindContext implements java.io.Serializable { protected DeserializationContext(DeserializerFactory df); protected DeserializationContext(DeserializerFactory df, DeserializerCache cache); protected DeserializationContext(DeserializationContext src, DeserializerFactory factory); protected DeserializationContext(DeserializationContext src, DeserializationConfig config, JsonParser p, InjectableValues injectableValues); protected DeserializationContext(DeserializationContext src); public DeserializationConfig getConfig(); public final Class<?> getActiveView(); public final boolean canOverrideAccessModifiers(); public final boolean isEnabled(MapperFeature feature); public final JsonFormat.Value getDefaultPropertyFormat(Class<?> baseType); public final AnnotationIntrospector getAnnotationIntrospector(); public final TypeFactory getTypeFactory(); public Locale getLocale(); public TimeZone getTimeZone(); public Object getAttribute(Object key); }",
+   "public abstract class JavaType extends ResolvedType implements java.io.Serializable, java.lang.reflect.Type { protected JavaType(Class<?> raw, int additionalHash, Object valueHandler, Object typeHandler, boolean asStatic); protected JavaType(JavaType base); public abstract JavaType withTypeHandler(Object h); public abstract JavaType withContentTypeHandler(Object h); public abstract JavaType withValueHandler(Object h); public abstract JavaType withContentValueHandler(Object h); public JavaType withHandlersFrom(JavaType src); public abstract JavaType withContentType(JavaType contentType); public abstract JavaType withStaticTyping(); public abstract JavaType refine(Class<?> rawType, TypeBindings bindings, JavaType superClass, JavaType[] superInterfaces); public JavaType forcedNarrowBy(Class<?> subclass); // since 2.7 protected abstract JavaType _narrow(Class<?> subclass); public final Class<?> getRawClass(); public final boolean hasRawClass(Class<?> clz); public boolean hasContentType(); }",
+   "public abstract class JsonDeserializer<T> implements NullValueProvider { public abstract T deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException; public T deserialize(JsonParser p, DeserializationContext ctxt, T intoValue) throws IOException; public Object deserializeWithType(JsonParser p, DeserializationContext ctxt, TypeDeserializer typeDeserializer) throws IOException; public JsonDeserializer<T> unwrappingDeserializer(NameTransformer unwrapper); public JsonDeserializer<?> replaceDelegatee(JsonDeserializer<?> delegatee); public Class<?> handledType(); public boolean isCachable(); public JsonDeserializer<?> getDelegatee(); public Collection<Object> getKnownPropertyNames(); public T getNullValue(DeserializationContext ctxt) throws JsonMappingException; public AccessPattern getNullAccessPattern(); public AccessPattern getEmptyAccessPattern(); public Object getEmptyValue(DeserializationContext ctxt) throws JsonMappingException; public ObjectIdReader getObjectIdReader(); public SettableBeanProperty findBackReference(String refName); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

@@ -1,0 +1,192 @@
+{
+ "bug_name": "JacksonDatabind_61",
+ "call_sites": [
+  {
+   "line": 965,
+   "lines": [
+    960,
+    961,
+    962,
+    963,
+    964,
+    965,
+    966,
+    967,
+    968
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationConfig.java",
+   "snippet": "            if (defaultType != null && defaultType.getRawClass() != baseType.getRawClass()) {\n                b = b.defaultImpl(defaultType.getRawClass());\n            }\n        }\n        */\n        return b.buildTypeDeserializer(this, baseType, subtypes);\n    }\n}\n"
+  },
+  {
+   "line": 210,
+   "lines": [
+    205,
+    206,
+    207,
+    208,
+    209,
+    210,
+    211,
+    212,
+    213,
+    214,
+    215
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java",
+   "snippet": "\n        @Override\n        public TypeDeserializer buildTypeDeserializer(DeserializationConfig config,\n                JavaType baseType, Collection<NamedType> subtypes)\n        {\n            return useForType(baseType) ? super.buildTypeDeserializer(config, baseType, subtypes) : null;\n        }\n\n        @Override\n        public TypeSerializer buildTypeSerializer(SerializationConfig config,\n                JavaType baseType, Collection<NamedType> subtypes)"
+  },
+  {
+   "line": 1363,
+   "lines": [
+    1358,
+    1359,
+    1360,
+    1361,
+    1362,
+    1363,
+    1364,
+    1365,
+    1366,
+    1367,
+    1368
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java",
+   "snippet": "            JavaType defaultType = mapAbstractType(config, baseType);\n            if (defaultType != null && defaultType.getRawClass() != baseType.getRawClass()) {\n                b = b.defaultImpl(defaultType.getRawClass());\n            }\n        }\n        return b.buildTypeDeserializer(config, baseType, subtypes);\n    }\n\n    /**\n     * Overridable method called after checking all other types.\n     * "
+  },
+  {
+   "line": 1503,
+   "lines": [
+    1498,
+    1499,
+    1500,
+    1501,
+    1502,
+    1503,
+    1504,
+    1505,
+    1506,
+    1507,
+    1508
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java",
+   "snippet": "            return findTypeDeserializer(config, baseType);\n        }\n        // but if annotations found, may need to resolve subtypes:\n        Collection<NamedType> subtypes = config.getSubtypeResolver().collectAndResolveSubtypesByTypeId(\n                config, annotated, baseType);\n        return b.buildTypeDeserializer(config, baseType, subtypes);\n    }\n    \n    /**\n     * Method called to find and create a type information deserializer for values of\n     * given container (list, array, map) property, if one is needed."
+  },
+  {
+   "line": 1531,
+   "lines": [
+    1526,
+    1527,
+    1528,
+    1529,
+    1530,
+    1531,
+    1532,
+    1533,
+    1534,
+    1535,
+    1536
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java",
+   "snippet": "            return findTypeDeserializer(config, contentType);\n        }\n        // but if annotations found, may need to resolve subtypes:\n        Collection<NamedType> subtypes = config.getSubtypeResolver().collectAndResolveSubtypesByTypeId(\n                config, propertyEntity, contentType);\n        return b.buildTypeDeserializer(config, contentType, subtypes);\n    }\n\n    /**\n     * Helper method called to find one of default serializers for \"well-known\"\n     * platform types: JDK-provided types, and small number of public Jackson"
+  }
+ ],
+ "class_simple": "StdTypeResolverBuilder",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Default {@link TypeResolverBuilder} implementation.\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "protected JsonTypeInfo.Id _idType",
+  "protected JsonTypeInfo.As _includeAs",
+  "protected String _typeProperty",
+  "protected boolean _typeIdVisible",
+  "protected Class<?> _defaultImpl",
+  "protected TypeIdResolver _customIdResolver"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder",
+ "focal_id": "JacksonDatabind_61::com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder::buildTypeDeserializer(DeserializationConfig,JavaType,Collection<NamedType>)",
+ "focal_method_name": "buildTypeDeserializer",
+ "generations": 3,
+ "impl_B": "@Override\n    public TypeDeserializer buildTypeDeserializer(DeserializationConfig config,\n            JavaType baseType, Collection<NamedType> subtypes)\n    {\n        if (_idType == JsonTypeInfo.Id.NONE) { return null; }\n        // 03-Oct-2016, tatu: As per [databind#1395] better prevent use for primitives,\n        //    regardless of setting\n\n        TypeIdResolver idRes = idResolver(config, baseType, subtypes, false, true);\n\n        JavaType defaultImpl;\n\n        if (_defaultImpl == null) {\n            defaultImpl = null;\n        } else {\n            // 20-Mar-2016, tatu: It is important to do specialization go through\n            //   TypeFactory to ensure proper resolution; with 2.7 and before, direct\n            //   call to JavaType was used, but that can not work reliably with 2.7\n            // 20-Mar-2016, tatu: Can finally add a check for type compatibility BUT\n            //   if so, need to add explicit checks for marker types. Not ideal, but\n            //   seems like a reasonable compromise.\n            if ((_defaultImpl == Void.class)\n                     || (_defaultImpl == NoClass.class)) {\n                defaultImpl = config.getTypeFactory().constructType(_defaultImpl);\n            } else {\n                defaultImpl = config.getTypeFactory()\n                    .constructSpecializedType(baseType, _defaultImpl);\n            }\n        }\n\n        // First, method for converting type info to type id:\n        switch (_includeAs) {\n        case WRAPPER_ARRAY:\n            return new AsArrayTypeDeserializer(baseType, idRes,\n                    _typeProperty, _typeIdVisible, defaultImpl);\n        case PROPERTY:\n        case EXISTING_PROPERTY: // as per [#528] same class as PROPERTY\n            return new AsPropertyTypeDeserializer(baseType, idRes,\n                    _typeProperty, _typeIdVisible, defaultImpl, _includeAs);\n        case WRAPPER_OBJECT:\n            return new AsWrapperTypeDeserializer(baseType, idRes,\n                    _typeProperty, _typeIdVisible, defaultImpl);\n        case EXTERNAL_PROPERTY:\n            return new AsExternalTypeDeserializer(baseType, idRes,\n                    _typeProperty, _typeIdVisible, defaultImpl);\n        }\n        throw new IllegalStateException(\"Do not know how to construct standard type serializer for inclusion type: \"+_includeAs);\n    }",
+ "imports": [
+  "java.util.Collection",
+  "com.fasterxml.jackson.annotation.JsonTypeInfo",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.annotation.NoClass",
+  "com.fasterxml.jackson.databind.cfg.MapperConfig",
+  "com.fasterxml.jackson.databind.jsontype.*"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.jsontype.impl",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "noTypeInfoBuilder"
+  },
+  {
+   "javadoc": "",
+   "name": "init"
+  },
+  {
+   "javadoc": "",
+   "name": "buildTypeSerializer"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "inclusion"
+  },
+  {
+   "javadoc": "/**\n     * Method for constructing an instance with specified type property name\n     * (property name to use for type id when using \"as-property\" inclusion).\n     */",
+   "name": "typeProperty"
+  },
+  {
+   "javadoc": "",
+   "name": "defaultImpl"
+  },
+  {
+   "javadoc": "",
+   "name": "typeIdVisibility"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getDefaultImpl"
+  },
+  {
+   "javadoc": "",
+   "name": "getTypeProperty"
+  },
+  {
+   "javadoc": "",
+   "name": "isTypeIdVisible"
+  },
+  {
+   "javadoc": "/**\n     * Helper method that will either return configured custom\n     * type id resolver, or construct a standard resolver\n     * given configuration.\n     */",
+   "name": "idResolver"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class StdTypeResolverBuilder implements TypeResolverBuilder<StdTypeResolverBuilder>",
+  "constructors": [
+   "public StdTypeResolverBuilder();"
+  ],
+  "focal_signature": "public TypeDeserializer buildTypeDeserializer(DeserializationConfig config, JavaType baseType, Collection<NamedType> subtypes)",
+  "methods": [
+   "public static StdTypeResolverBuilder noTypeInfoBuilder();",
+   "public StdTypeResolverBuilder init(JsonTypeInfo.Id idType, TypeIdResolver idRes);",
+   "public TypeSerializer buildTypeSerializer(SerializationConfig config, JavaType baseType, Collection<NamedType> subtypes);",
+   "public StdTypeResolverBuilder inclusion(JsonTypeInfo.As includeAs);",
+   "public StdTypeResolverBuilder typeProperty(String typeIdPropName);",
+   "public StdTypeResolverBuilder defaultImpl(Class<?> defaultImpl);",
+   "public StdTypeResolverBuilder typeIdVisibility(boolean isVisible);",
+   "public Class<?> getDefaultImpl();",
+   "public String getTypeProperty();",
+   "public boolean isTypeIdVisible();",
+   "protected TypeIdResolver idResolver(MapperConfig<?> config, JavaType baseType, Collection<NamedType> subtypes, boolean forSer, boolean forDeser);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

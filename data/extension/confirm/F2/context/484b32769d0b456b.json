@@ -1,0 +1,210 @@
+{
+ "bug_name": "JacksonCore_7",
+ "call_sites": [
+  {
+   "line": 323,
+   "lines": [
+    318,
+    319,
+    320,
+    321,
+    322,
+    323,
+    324,
+    325,
+    326,
+    327,
+    328
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/base/GeneratorBase.java",
+   "snippet": "             *   because that will be done when codec actually serializes\n             *   contained POJO. If we did call it it would advance state\n             *   causing exception later on\n             */\n            if (_objectCodec != null) {\n                _objectCodec.writeValue(this, value);\n                return;\n            }\n            _writeSimpleObject(value);\n        }\n    }"
+  },
+  {
+   "line": 339,
+   "lines": [
+    334,
+    335,
+    336,
+    337,
+    338,
+    339,
+    340,
+    341,
+    342,
+    343,
+    344
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/base/GeneratorBase.java",
+   "snippet": "            writeNull();\n        } else {\n            if (_objectCodec == null) {\n                throw new IllegalStateException(\"No ObjectCodec defined\");\n            }\n            _objectCodec.writeValue(this, rootNode);\n        }\n    }\n\n    /*\n    /**********************************************************"
+  },
+  {
+   "line": 964,
+   "lines": [
+    959,
+    960,
+    961,
+    962,
+    963,
+    964,
+    965,
+    966,
+    967,
+    968,
+    969
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/json/UTF8JsonGenerator.java",
+   "snippet": "     */\n\n    @Override\n    protected final void _verifyValueWrite(String typeMsg) throws IOException\n    {\n        int status = _writeContext.writeValue();\n        if (status == JsonWriteContext.STATUS_EXPECT_NAME) {\n            _reportError(\"Can not \"+typeMsg+\", expecting field name\");\n        }\n        if (_cfgPrettyPrinter == null) {\n            byte b;"
+  },
+  {
+   "line": 765,
+   "lines": [
+    760,
+    761,
+    762,
+    763,
+    764,
+    765,
+    766,
+    767,
+    768,
+    769,
+    770
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/json/WriterBasedJsonGenerator.java",
+   "snippet": "            // Otherwise, pretty printer knows what to do...\n            _verifyPrettyValueWrite(typeMsg);\n            return;\n        }\n        char c;\n        final int status = _writeContext.writeValue();\n        if (status == JsonWriteContext.STATUS_EXPECT_NAME) {\n            _reportError(\"Can not \"+typeMsg+\", expecting field name\");\n        }\n        switch (status) {\n        case JsonWriteContext.STATUS_OK_AFTER_COMMA:"
+  },
+  {
+   "line": 794,
+   "lines": [
+    789,
+    790,
+    791,
+    792,
+    793,
+    794,
+    795,
+    796,
+    797,
+    798,
+    799
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/json/WriterBasedJsonGenerator.java",
+   "snippet": "        ++_outputTail;\n    }\n\n    protected void _verifyPrettyValueWrite(String typeMsg) throws IOException\n    {\n        final int status = _writeContext.writeValue();\n        if (status == JsonWriteContext.STATUS_EXPECT_NAME) {\n            _reportError(\"Can not \"+typeMsg+\", expecting field name\");\n        }\n\n        // If we have a pretty printer, it knows what to do:"
+  }
+ ],
+ "class_simple": "JsonWriteContext",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Extension of {@link JsonStreamContext}, which implements\n * core methods needed, and also exposes\n * more complete API to generator implementation classes.\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "public final static int STATUS_OK_AS_IS",
+  "public final static int STATUS_OK_AFTER_COMMA",
+  "public final static int STATUS_OK_AFTER_COLON",
+  "public final static int STATUS_OK_AFTER_SPACE",
+  "public final static int STATUS_EXPECT_VALUE",
+  "public final static int STATUS_EXPECT_NAME",
+  "protected final JsonWriteContext _parent",
+  "protected DupDetector _dups",
+  "protected JsonWriteContext _child",
+  "protected String _currentName",
+  "protected Object _currentValue",
+  "protected boolean _gotName"
+ ],
+ "focal_class": "com.fasterxml.jackson.core.json.JsonWriteContext",
+ "focal_id": "JacksonCore_7::com.fasterxml.jackson.core.json.JsonWriteContext::writeValue()",
+ "focal_method_name": "writeValue",
+ "generations": 3,
+ "impl_B": "public int writeValue() {\n        // Most likely, object:\n        if (_type == TYPE_OBJECT) {\n            _gotName = false;\n            ++_index;\n            return STATUS_OK_AFTER_COLON;\n        }\n\n        // Ok, array?\n        if (_type == TYPE_ARRAY) {\n            int ix = _index;\n            ++_index;\n            return (ix < 0) ? STATUS_OK_AS_IS : STATUS_OK_AFTER_COMMA;\n        }\n        \n        // Nope, root context\n        // No commas within root context, but need space\n        ++_index;\n        return (_index == 0) ? STATUS_OK_AS_IS : STATUS_OK_AFTER_SPACE;\n    }",
+ "imports": [
+  "com.fasterxml.jackson.core.*"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.core.json",
+ "project": "JacksonCore",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "reset"
+  },
+  {
+   "javadoc": "",
+   "name": "withDupDetector"
+  },
+  {
+   "javadoc": "",
+   "name": "getCurrentValue"
+  },
+  {
+   "javadoc": "",
+   "name": "setCurrentValue"
+  },
+  {
+   "javadoc": "/**\n     * @deprecated Since 2.3; use method that takes argument\n     */",
+   "name": "createRootContext"
+  },
+  {
+   "javadoc": "",
+   "name": "createRootContext"
+  },
+  {
+   "javadoc": "",
+   "name": "createChildArrayContext"
+  },
+  {
+   "javadoc": "",
+   "name": "createChildObjectContext"
+  },
+  {
+   "javadoc": "",
+   "name": "getParent"
+  },
+  {
+   "javadoc": "",
+   "name": "getCurrentName"
+  },
+  {
+   "javadoc": "",
+   "name": "getDupDetector"
+  },
+  {
+   "javadoc": "/**\n     * Method that writer is to call before it writes a field name.\n     *\n     * @return Index of the field entry (0-based)\n     */",
+   "name": "writeFieldName"
+  },
+  {
+   "javadoc": "",
+   "name": "appendDesc"
+  },
+  {
+   "javadoc": "/**\n     * Overridden to provide developer writeable \"JsonPath\" representation\n     * of the context.\n     */",
+   "name": "toString"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class JsonWriteContext extends JsonStreamContext",
+  "constructors": [
+   "protected JsonWriteContext(int type, JsonWriteContext parent, DupDetector dups);"
+  ],
+  "focal_signature": "public int writeValue()",
+  "methods": [
+   "protected JsonWriteContext reset(int type);",
+   "public JsonWriteContext withDupDetector(DupDetector dups);",
+   "public Object getCurrentValue();",
+   "public void setCurrentValue(Object v);",
+   "public static JsonWriteContext createRootContext();",
+   "public static JsonWriteContext createRootContext(DupDetector dd);",
+   "public JsonWriteContext createChildArrayContext();",
+   "public JsonWriteContext createChildObjectContext();",
+   "public final JsonWriteContext getParent();",
+   "public final String getCurrentName();",
+   "public DupDetector getDupDetector();",
+   "public int writeFieldName(String name) throws JsonProcessingException;",
+   "protected void appendDesc(StringBuilder sb);",
+   "public String toString();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

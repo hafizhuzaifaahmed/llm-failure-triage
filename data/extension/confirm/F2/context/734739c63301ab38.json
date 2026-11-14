@@ -1,0 +1,238 @@
+{
+ "bug_name": "JacksonDatabind_70",
+ "call_sites": [
+  {
+   "line": 147,
+   "lines": [
+    142,
+    143,
+    144,
+    145,
+    146,
+    147,
+    148,
+    149,
+    150,
+    151,
+    152
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/cfg/ContextAttributes.java",
+   "snippet": "            } else { // if we didn't have it anyway, return as-is\n                return this;\n            }\n            // otherwise make copy, modify\n            Map<Object,Object> m = _copy(_shared);\n            m.remove(key);\n            return new Impl(m);\n        }\n\n        /*\n        /**********************************************************"
+  },
+  {
+   "line": 184,
+   "lines": [
+    179,
+    180,
+    181,
+    182,
+    183,
+    184,
+    185,
+    186,
+    187,
+    188,
+    189
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/cfg/ContextAttributes.java",
+   "snippet": "                    value = NULL_SURROGATE;\n                } else if ((_nonShared == null) || !_nonShared.containsKey(key)) {\n                    // except if non-mutable shared list has no entry, we don't care\n                    return this;\n                } else {\n                    _nonShared.remove(key);\n                    return this;\n                }\n            }\n            // a special case: create non-shared instance if need be\n            if (_nonShared == null) {"
+  },
+  {
+   "line": 534,
+   "lines": [
+    529,
+    530,
+    531,
+    532,
+    533,
+    534,
+    535,
+    536,
+    537,
+    538,
+    539
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerBase.java",
+   "snippet": "                }\n                unwrapped.addProperty(prop);\n                /* 12-Dec-2014, tatu: As per [databind#647], we will have problems if\n                 *    the original property is left in place. So let's remove it now.\n                 */\n                _beanProperties.remove(prop);\n                continue;\n            }\n            // non-static inner classes too:\n            prop = _resolveInnerClassValuedProperty(ctxt, prop);\n            if (prop != origProp) {"
+  },
+  {
+   "line": 571,
+   "lines": [
+    566,
+    567,
+    568,
+    569,
+    570,
+    571,
+    572,
+    573,
+    574,
+    575,
+    576
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerBase.java",
+   "snippet": "                    if (extTypes == null) {\n                        extTypes = new ExternalTypeHandler.Builder();\n                    }\n                    extTypes.addExternal(prop, typeDeser);\n                    // In fact, remove from list of known properties to simplify later handling\n                    _beanProperties.remove(prop);\n                    continue;\n                }\n            }\n        }\n        // \"any setter\" may also need to be resolved now"
+  },
+  {
+   "line": 193,
+   "lines": [
+    188,
+    189,
+    190,
+    191,
+    192,
+    193,
+    194,
+    195,
+    196,
+    197,
+    198
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerBuilder.java",
+   "snippet": "        //    access set early; unfortunate, but since it works....\n        prop.fixAccess(_config);\n        _backRefProperties.put(referenceName, prop);\n        // also: if we had property with same name, actually remove it\n        if (_properties != null) {\n            _properties.remove(prop.getName());\n        }\n        // ??? 23-Jul-2012, tatu: Should it be included in list of all properties?\n        //   For now, won't add, since it is inferred, not explicit...\n    }\n"
+  }
+ ],
+ "class_simple": "BeanPropertyMap",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Helper class used for storing mapping from property name to\n * {@link SettableBeanProperty} instances.\n *<p>\n * Note that this class is used instead of generic {@link java.util.HashMap}\n * for bit of performance gain (and some memory savings): although default\n * implementation is very good for generic use cases, it can be streamlined\n * a bit for specific use case we have. Even relatively small improvements\n * matter since this is directly on the critical path during deserialization,\n * as it is done for each and every POJO property deserialized.\n */\npublic",
+  "method_javadoc": "/**\n     * Specialized method for removing specified existing entry.\n     * NOTE: entry MUST exist, otherwise an exception is thrown.\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "protected final boolean _caseInsensitive",
+  "private int _hashMask",
+  "private int _size",
+  "private int _spillCount",
+  "private Object[] _hashArea",
+  "private SettableBeanProperty[] _propsInOrder"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap",
+ "focal_id": "JacksonDatabind_70::com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap::remove(SettableBeanProperty)",
+ "focal_method_name": "remove",
+ "generations": 3,
+ "impl_B": "public void remove(SettableBeanProperty propToRm)\n    {\n        ArrayList<SettableBeanProperty> props = new ArrayList<SettableBeanProperty>(_size);\n        String key = getPropertyName(propToRm);\n        boolean found = false;\n\n        for (int i = 1, end = _hashArea.length; i < end; i += 2) {\n            SettableBeanProperty prop = (SettableBeanProperty) _hashArea[i];\n            if (prop == null) {\n                continue;\n            }\n            if (!found) {\n                // 09-Jan-2017, tatu: Important: must check name slot and NOT property name,\n                //   as only former is lower-case in case-insensitive case\n                found = key.equals(prop.getName());\n                if (found) {\n                    // need to leave a hole here\n                    _propsInOrder[_findFromOrdered(prop)] = null;\n                    continue;\n                }\n            }\n            props.add(prop);\n        }\n        if (!found) {\n            throw new NoSuchElementException(\"No entry '\"+propToRm.getName()+\"' found, can't remove\");\n        }\n        init(props);\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.lang.reflect.InvocationTargetException",
+  "java.util.*",
+  "com.fasterxml.jackson.core.JsonParser",
+  "com.fasterxml.jackson.core.JsonProcessingException",
+  "com.fasterxml.jackson.databind.DeserializationContext",
+  "com.fasterxml.jackson.databind.DeserializationFeature",
+  "com.fasterxml.jackson.databind.JsonDeserializer",
+  "com.fasterxml.jackson.databind.JsonMappingException",
+  "com.fasterxml.jackson.databind.deser.SettableBeanProperty",
+  "com.fasterxml.jackson.databind.util.NameTransformer"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.deser.impl",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Mutant factory method that constructs a new instance if desired case-insensitivity\n     * state differs from the state of this instance; if states are the same, returns\n     * <code>this</code>.\n     *\n     * @since 2.8\n     */",
+   "name": "withCaseInsensitivity"
+  },
+  {
+   "javadoc": "",
+   "name": "init"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.6\n     */",
+   "name": "construct"
+  },
+  {
+   "javadoc": "/**\n     * Fluent copy method that creates a new instance that is a copy\n     * of this instance except for one additional property that is\n     * passed as the argument.\n     * Note that method does not modify this instance but constructs\n     * and returns a new one.\n     */",
+   "name": "withProperty"
+  },
+  {
+   "javadoc": "",
+   "name": "assignIndexes"
+  },
+  {
+   "javadoc": "/**\n     * Mutant factory method for constructing a map where all entries use given\n     * prefix\n     */",
+   "name": "renameAll"
+  },
+  {
+   "javadoc": "/**\n     * Mutant factory method that will use this instance as the base, and\n     * construct an instance that is otherwise same except for excluding\n     * properties with specified names.\n     *\n     * @since 2.8\n     */",
+   "name": "withoutProperties"
+  },
+  {
+   "javadoc": "/**\n     * Specialized method that can be used to replace an existing entry\n     * (note: entry MUST exist; otherwise exception is thrown) with\n     * specified replacement.\n     */",
+   "name": "replace"
+  },
+  {
+   "javadoc": "/**\n     * Accessor for traversing over all contained properties.\n     */",
+   "name": "iterator"
+  },
+  {
+   "javadoc": "/**\n     * Method that will re-create initial insertion-ordering of\n     * properties contained in this map. Note that if properties\n     * have been removed, array may contain nulls; otherwise\n     * it should be consecutive.\n     * \n     * @since 2.1\n     */",
+   "name": "getPropertiesInInsertionOrder"
+  },
+  {
+   "javadoc": "",
+   "name": "getPropertyName"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.3\n     */",
+   "name": "find"
+  },
+  {
+   "javadoc": "",
+   "name": "find"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "size"
+  },
+  {
+   "javadoc": "/**\n     * Convenience method that tries to find property with given name, and\n     * if it is found, call {@link SettableBeanProperty#deserializeAndSet}\n     * on it, and return true; or, if not found, return false.\n     * Note, too, that if deserialization is attempted, possible exceptions\n     * are wrapped if and as necessary, so caller need not handle those.\n     * \n     * @since 2.5\n     */",
+   "name": "findDeserializeAndSet"
+  },
+  {
+   "javadoc": "",
+   "name": "toString"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_rename"
+  },
+  {
+   "javadoc": "",
+   "name": "wrapAndThrow"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class BeanPropertyMap implements Iterable<SettableBeanProperty>, java.io.Serializable",
+  "constructors": [
+   "public BeanPropertyMap(boolean caseInsensitive, Collection<SettableBeanProperty> props);",
+   "protected BeanPropertyMap(BeanPropertyMap base, boolean caseInsensitive);"
+  ],
+  "focal_signature": "public void remove(SettableBeanProperty propToRm)",
+  "methods": [
+   "public BeanPropertyMap withCaseInsensitivity(boolean state);",
+   "protected void init(Collection<SettableBeanProperty> props);",
+   "public static BeanPropertyMap construct(Collection<SettableBeanProperty> props, boolean caseInsensitive);",
+   "public BeanPropertyMap withProperty(SettableBeanProperty newProp);",
+   "public BeanPropertyMap assignIndexes();",
+   "public BeanPropertyMap renameAll(NameTransformer transformer);",
+   "public BeanPropertyMap withoutProperties(Collection<String> toExclude);",
+   "public void replace(SettableBeanProperty newProp);",
+   "public Iterator<SettableBeanProperty> iterator();",
+   "public SettableBeanProperty[] getPropertiesInInsertionOrder();",
+   "protected final String getPropertyName(SettableBeanProperty prop);",
+   "public SettableBeanProperty find(int index);",
+   "public SettableBeanProperty find(String key);",
+   "public int size();",
+   "public boolean findDeserializeAndSet(JsonParser p, DeserializationContext ctxt, Object bean, String key) throws IOException;",
+   "public String toString();",
+   "protected SettableBeanProperty _rename(SettableBeanProperty prop, NameTransformer xf);",
+   "protected void wrapAndThrow(Throwable t, Object bean, String fieldName, DeserializationContext ctxt) throws IOException;"
+  ],
+  "type_signatures": [
+   "@SuppressWarnings(\"serial\") public abstract class SettableBeanProperty extends ConcreteBeanPropertyBase implements java.io.Serializable { protected SettableBeanProperty(BeanPropertyDefinition propDef, JavaType type, TypeDeserializer typeDeser, Annotations contextAnnotations); // since 2.3 protected SettableBeanProperty(String propName, JavaType type, PropertyName wrapper, TypeDeserializer typeDeser, Annotations contextAnnotations, boolean isRequired); protected SettableBeanProperty(PropertyName propName, JavaType type, PropertyName wrapper, TypeDeserializer typeDeser, Annotations contextAnnotations, PropertyMetadata metadata); protected SettableBeanProperty(PropertyName propName, JavaType type, PropertyMetadata metadata, JsonDeserializer<Object> valueDeser); protected SettableBeanProperty(SettableBeanProperty src); protected SettableBeanProperty(SettableBeanProperty src, PropertyName newName); public abstract SettableBeanProperty withValueDeserializer(JsonDeserializer<?> deser); public abstract SettableBeanProperty withName(PropertyName newName); public SettableBeanProperty withSimpleName(String simpleName); // since 2.3 -- use 'withSimpleName' instead if need be public SettableBeanProperty withName(String simpleName); public void setManagedReferenceName(String n); public void setObjectIdInfo(ObjectIdInfo objectIdInfo); public void setViews(Class<?>[] views); public void assignIndex(int index); public void fixAccess(DeserializationConfig config); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

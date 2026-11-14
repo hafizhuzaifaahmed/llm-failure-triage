@@ -1,0 +1,146 @@
+{
+ "bug_name": "Math_4",
+ "call_sites": [
+  {
+   "line": 328,
+   "lines": [
+    323,
+    324,
+    325,
+    326,
+    327,
+    328,
+    329,
+    330,
+    331,
+    332,
+    333
+   ],
+   "path": "src/main/java/org/apache/commons/math3/geometry/euclidean/threed/Plane.java",
+   "snippet": "    public Line intersection(final Plane other) {\n        final Vector3D direction = Vector3D.crossProduct(w, other.w);\n        if (direction.getNorm() < 1.0e-10) {\n            return null;\n        }\n        final Vector3D point = intersection(this, other, new Plane(direction));\n        return new Line(point, point.add(direction));\n    }\n\n    /** Get the intersection point of three planes.\n     * @param plane1 first plane1"
+  },
+  {
+   "line": 271,
+   "lines": [
+    266,
+    267,
+    268,
+    269,
+    270,
+    271,
+    272,
+    273,
+    274,
+    275,
+    276
+   ],
+   "path": "src/main/java/org/apache/commons/math3/geometry/euclidean/threed/PolyhedronsSet.java",
+   "snippet": "            return crossed;\n        }\n\n        if (!in) {\n            // search in the cut hyperplane\n            final Vector3D hit3D = plane.intersection(line);\n            if (hit3D != null) {\n                final SubHyperplane<Euclidean3D> facet = boundaryFacet(hit3D, node);\n                if (facet != null) {\n                    return facet;\n                }"
+  },
+  {
+   "line": 113,
+   "lines": [
+    108,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118
+   ],
+   "patch_lines_removed": true,
+   "path": "src/main/java/org/apache/commons/math3/geometry/euclidean/threed/SubLine.java",
+   "snippet": "     * @return the intersection point if there is one, null if the sub-lines don't intersect\n     */\n    public Vector3D intersection(final SubLine subLine, final boolean includeEndPoints) {\n\n        // compute the intersection on infinite line\n        Vector3D v1D = line.intersection(subLine.line);\n\n        // check location of point with respect to second sub-line"
+  },
+  {
+   "line": 58,
+   "lines": [
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63
+   ],
+   "path": "src/main/java/org/apache/commons/math3/geometry/euclidean/threed/SubPlane.java",
+   "snippet": "    @Override\n    public Side side(Hyperplane<Euclidean3D> hyperplane) {\n\n        final Plane otherPlane = (Plane) hyperplane;\n        final Plane thisPlane  = (Plane) getHyperplane();\n        final Line  inter      = otherPlane.intersection(thisPlane);\n\n        if (inter == null) {\n            // the hyperplanes are parallel,\n            // any point can be used to check their relative position\n            final double global = otherPlane.getOffset(thisPlane);"
+  },
+  {
+   "line": 101,
+   "lines": [
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106
+   ],
+   "path": "src/main/java/org/apache/commons/math3/geometry/euclidean/threed/SubPlane.java",
+   "snippet": "    @Override\n    public SplitSubHyperplane<Euclidean3D> split(Hyperplane<Euclidean3D> hyperplane) {\n\n        final Plane otherPlane = (Plane) hyperplane;\n        final Plane thisPlane  = (Plane) getHyperplane();\n        final Line  inter      = otherPlane.intersection(thisPlane);\n\n        if (inter == null) {\n            // the hyperplanes are parallel\n            final double global = otherPlane.getOffset(thisPlane);\n            return (global < -1.0e-10) ?"
+  }
+ ],
+ "class_simple": "SubLine",
+ "dataset": "D1C_F1",
+ "doc": {
+  "class_javadoc": "/** This class represents a subset of a {@link Line}.\n * @version $Id$\n * @since 3.0\n */\npublic",
+  "method_javadoc": "/** Get the intersection of the instance and another sub-line.\n     * <p>\n     * This method is related to the {@link Line#intersection(Line)\n     * intersection} method in the {@link Line Line} class, but in addition\n     * to compute the point along infinite lines, it also checks the point\n     * lies on both sub-line ranges.\n     * </p>\n     * @param subLine other sub-line which may intersect instance\n     * @param includeEndPoints if true, endpoints are considered to belong to\n     * instance (i.e. they are closed sets) and may be returned, otherwise endpoints\n     * are considered to not belong to instance (i.e. they are open sets) and intersection\n     * occurring on endpoints lead to null being returned\n     * @return the intersection point if there is one, null if the sub-lines don't intersect\n     */"
+ },
+ "fields": [
+  "private final Line line",
+  "private final IntervalsSet remainingRegion"
+ ],
+ "focal_class": "org.apache.commons.math3.geometry.euclidean.threed.SubLine",
+ "focal_id": "Math_4::org.apache.commons.math3.geometry.euclidean.threed.SubLine::intersection(SubLine,boolean)",
+ "focal_method_name": "intersection",
+ "generations": 6,
+ "impl_B": "public Vector3D intersection(final SubLine subLine, final boolean includeEndPoints) {\n\n        // compute the intersection on infinite line\n        Vector3D v1D = line.intersection(subLine.line);\n\n        // check location of point with respect to first sub-line\n        Location loc1 = remainingRegion.checkPoint(line.toSubSpace(v1D));\n\n        // check location of point with respect to second sub-line\n        Location loc2 = subLine.remainingRegion.checkPoint(subLine.line.toSubSpace(v1D));\n\n        if (includeEndPoints) {\n            return ((loc1 != Location.OUTSIDE) && (loc2 != Location.OUTSIDE)) ? v1D : null;\n        } else {\n            return ((loc1 == Location.INSIDE) && (loc2 == Location.INSIDE)) ? v1D : null;\n        }\n\n    }",
+ "imports": [
+  "java.util.ArrayList",
+  "java.util.List",
+  "org.apache.commons.math3.exception.MathIllegalArgumentException",
+  "org.apache.commons.math3.geometry.euclidean.oned.Interval",
+  "org.apache.commons.math3.geometry.euclidean.oned.IntervalsSet",
+  "org.apache.commons.math3.geometry.euclidean.oned.Vector1D",
+  "org.apache.commons.math3.geometry.partitioning.Region.Location"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math3.geometry.euclidean.threed",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/** Get the endpoints of the sub-line.\n     * <p>\n     * A subline may be any arbitrary number of disjoints segments, so the endpoints\n     * are provided as a list of endpoint pairs. Each element of the list represents\n     * one segment, and each segment contains a start point at index 0 and an end point\n     * at index 1. If the sub-line is unbounded in the negative infinity direction,\n     * the start point of the first segment will have infinite coordinates. If the\n     * sub-line is unbounded in the positive infinity direction, the end point of the\n     * last segment will have infinite coordinates. So a sub-line covering the whole\n     * line will contain just one row and both elements of this row will have infinite\n     * coordinates. If the sub-line is empty, the returned list will contain 0 segments.\n     * </p>\n     * @return list of segments endpoints\n     */",
+   "name": "getSegments"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class SubLine",
+  "constructors": [
+   "public SubLine(final Line line, final IntervalsSet remainingRegion);",
+   "public SubLine(final Vector3D start, final Vector3D end) throws MathIllegalArgumentException;",
+   "public SubLine(final Segment segment) throws MathIllegalArgumentException;"
+  ],
+  "focal_signature": "public Vector3D intersection(final SubLine subLine, final boolean includeEndPoints)",
+  "methods": [
+   "public List<Segment> getSegments();"
+  ],
+  "type_signatures": [
+   "public class Vector3D implements Serializable, Vector<Euclidean3D> { public Vector3D(double x, double y, double z); public Vector3D(double[] v) throws DimensionMismatchException; public Vector3D(double alpha, double delta); public Vector3D(double a, Vector3D u); public Vector3D(double a1, Vector3D u1, double a2, Vector3D u2); public Vector3D(double a1, Vector3D u1, double a2, Vector3D u2, double a3, Vector3D u3); public Vector3D(double a1, Vector3D u1, double a2, Vector3D u2, double a3, Vector3D u3, double a4, Vector3D u4); public double getX(); public double getY(); public double getZ(); public double[] toArray(); public Space getSpace(); public Vector3D getZero(); public double getNorm1(); public double getNorm(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F1"
+}

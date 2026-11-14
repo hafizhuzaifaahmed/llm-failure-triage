@@ -1,0 +1,107 @@
+{
+ "bug_name": "JacksonDatabind_63",
+ "call_sites": [
+  {
+   "line": 155,
+   "lines": [
+    150,
+    151,
+    152,
+    153,
+    154,
+    155,
+    156,
+    157,
+    158,
+    159,
+    160
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/JsonMappingException.java",
+   "snippet": "            return _desc;\n        }\n\n        @Override\n        public String toString() {\n            return getDescription();\n        }\n\n        /**\n         * May need some cleaning here, given that `from` may or may not be serializable.\n         *"
+  },
+  {
+   "line": 166,
+   "lines": [
+    161,
+    162,
+    163,
+    164,
+    165,
+    166,
+    167,
+    168,
+    169,
+    170,
+    171
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/JsonMappingException.java",
+   "snippet": "         * since 2.8\n         */\n        Object writeReplace() {\n            // as per [databind#1195], need to ensure description is not null, since\n            // `_from` is transient\n            getDescription();\n            return this;\n        }\n    }\n\n    /*"
+  }
+ ],
+ "class_simple": "Reference",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Checked exception used to signal fatal problems with mapping of\n * content, distinct from low-level I/O problems (signaled using\n * simple {@link java.io.IOException}s) or data encoding/decoding\n * problems (signaled with {@link com.fasterxml.jackson.core.JsonParseException},\n * {@link com.fasterxml.jackson.core.JsonGenerationException}).\n *<p>\n * One additional feature is the ability to denote relevant path\n * of references (during serialization/deserialization) to help in\n * troubleshooting.\n */\npublic class JsonMappingException\n    extends JsonProcessingException\n{\n    private static final long serialVersionUID = 1L;\n\n    /**\n     * Let's limit length of reference chain, to limit damage in cases\n     * of infinite recursion.\n     */\n    final static int MAX_REFS_TO_LIST = 1000;\n\n    /*\n    /**********************************************************\n    /* Helper classes\n    /**********************************************************\n     */\n\n    /**\n     * Simple bean class used to contain references. References\n     * can be added to indicate execution/reference path that\n     * lead to the problem that caused this exception to be\n     * thrown.\n     */\n    public static",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "protected transient Object _from",
+  "protected String _fieldName",
+  "protected int _index",
+  "protected String _desc"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.JsonMappingException.Reference",
+ "focal_id": "JacksonDatabind_63::com.fasterxml.jackson.databind.JsonMappingException$Reference::getDescription()",
+ "focal_method_name": "getDescription",
+ "generations": 3,
+ "impl_B": "public String getDescription() {\n            if (_desc == null) {\n                StringBuilder sb = new StringBuilder();\n\n                if (_from == null) { // can this ever occur?\n                    sb.append(\"UNKNOWN\");\n                } else {\n                    Class<?> cls = (_from instanceof Class<?>) ? (Class<?>)_from : _from.getClass();\n                    // Hmmh. Although Class.getName() is mostly ok, it does look\n                    // butt-ugly for arrays.\n                    // 06-Oct-2016, tatu: as per [databind#1403], `getSimpleName()` not so good\n                    //   as it drops enclosing class. So let's try bit different approach\n                    String pkgName = com.fasterxml.jackson.databind.util.ClassUtil.getPackageName(cls);\n                    if (pkgName != null) {\n                        sb.append(pkgName);\n                        sb.append('.');\n                    }\n                    sb.append(cls.getSimpleName());\n                }\n                sb.append('[');\n                if (_fieldName != null) {\n                    sb.append('\"');\n                    sb.append(_fieldName);\n                    sb.append('\"');\n                } else if (_index >= 0) {\n                    sb.append(_index);\n                } else {\n                    sb.append('?');\n                }\n                sb.append(']');\n                _desc = sb.toString();\n            }\n            return _desc;\n        }",
+ "imports": [
+  "java.io.Closeable",
+  "java.io.IOException",
+  "java.io.Serializable",
+  "java.util.*",
+  "com.fasterxml.jackson.annotation.JsonIgnore",
+  "com.fasterxml.jackson.core.*"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**\n         * Object through which reference was resolved. Can be either\n         * actual instance (usually the case for serialization), or\n         * Class (usually the case for deserialization).\n         *<p>\n         * Note that this value must be `transient` to allow serializability (as\n         * often such Object is NOT serializable; or, in case of `Class`, may\n         * not available at the point of deserialization). As such will return\n         * `null` if instance has been passed using JDK serialization.\n         */",
+   "name": "getFrom"
+  },
+  {
+   "javadoc": "",
+   "name": "getFieldName"
+  },
+  {
+   "javadoc": "",
+   "name": "getIndex"
+  },
+  {
+   "javadoc": "",
+   "name": "toString"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public static class Reference implements Serializable",
+  "constructors": [
+   "protected Reference();",
+   "public Reference(Object from);",
+   "public Reference(Object from, String fieldName);",
+   "public Reference(Object from, int index);"
+  ],
+  "focal_signature": "public String getDescription()",
+  "methods": [
+   "public Object getFrom();",
+   "public String getFieldName();",
+   "public int getIndex();",
+   "public String toString();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

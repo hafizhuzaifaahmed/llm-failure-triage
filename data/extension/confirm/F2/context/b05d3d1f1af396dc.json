@@ -1,0 +1,366 @@
+{
+ "bug_name": "JacksonDatabind_103",
+ "call_sites": [
+  {
+   "line": 179,
+   "lines": [
+    174,
+    175,
+    176,
+    177,
+    178,
+    179,
+    180,
+    181,
+    182,
+    183,
+    184
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/SettableAnyProperty.java",
+   "snippet": "            } else {\n                // note: cannot use 'setValue()' due to taking 2 args\n                ((AnnotatedMethod) _setter).callOnWith(instance, propName, value);\n            }\n        } catch (Exception e) {\n            _throwAsIOE(e, propName, value);\n        }\n    }\n\n    /*\n    /**********************************************************"
+  },
+  {
+   "line": 599,
+   "lines": [
+    594,
+    595,
+    596,
+    597,
+    598,
+    599,
+    600,
+    601,
+    602,
+    603,
+    604
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/SettableBeanProperty.java",
+   "snippet": "            } else {\n                msg.append(\" (no error message provided)\");\n            }\n            throw JsonMappingException.from(p, msg.toString(), e);\n        }\n        _throwAsIOE(p, e);\n    }\n    \n    /**\n     * @since 2.7\n     */"
+  },
+  {
+   "line": 616,
+   "lines": [
+    611,
+    612,
+    613,
+    614,
+    615,
+    616,
+    617,
+    618,
+    619,
+    620,
+    621
+   ],
+   "patch_lines_removed": true,
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/SettableBeanProperty.java",
+   "snippet": "\n    @Deprecated // since 2.7\n    protected IOException _throwAsIOE(Exception e) throws IOException {\n        return _throwAsIOE((JsonParser) null, e);\n    }\n\n    // 10-Oct-2015, tatu: _Should_ be deprecated, too, but its remaining\n    //   callers cannot actually provide a JsonParser\n    protected void _throwAsIOE(Exception e, Object value) throws IOException {"
+  },
+  {
+   "line": 622,
+   "lines": [
+    617,
+    618,
+    619,
+    620,
+    621,
+    622,
+    623,
+    624,
+    625,
+    626,
+    627
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/SettableBeanProperty.java",
+   "snippet": "    }\n\n    // 10-Oct-2015, tatu: _Should_ be deprecated, too, but its remaining\n    //   callers cannot actually provide a JsonParser\n    protected void _throwAsIOE(Exception e, Object value) throws IOException {\n        _throwAsIOE((JsonParser) null, e, value);\n    }\n\n    @Override public String toString() { return \"[property '\"+getName()+\"']\"; }\n\n    /*"
+  },
+  {
+   "line": 150,
+   "lines": [
+    145,
+    146,
+    147,
+    148,
+    149,
+    150,
+    151,
+    152,
+    153,
+    154,
+    155
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/impl/FieldProperty.java",
+   "snippet": "            value = _valueDeserializer.deserializeWithType(p, ctxt, _valueTypeDeserializer);\n        }\n        try {\n            _field.set(instance, value);\n        } catch (Exception e) {\n            _throwAsIOE(p, e, value);\n        }\n    }\n\n    @Override\n    public Object deserializeSetAndReturn(JsonParser p,"
+  }
+ ],
+ "class_simple": "SettableBeanProperty",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Base class for deserializable properties of a bean: contains\n * both type and name definitions, and reflection-based set functionality.\n * Concrete sub-classes implement details, so that field- and\n * setter-backed properties, as well as a few more esoteric variations,\n * can be handled.\n */\n@SuppressWarnings(\"serial\")\npublic abstract",
+  "method_javadoc": "/**\n     * @since 2.7\n     */"
+ },
+ "fields": [
+  "protected static final JsonDeserializer<Object> MISSING_VALUE_DESERIALIZER",
+  "protected final PropertyName _propName",
+  "protected final JavaType _type",
+  "protected final PropertyName _wrapperName",
+  "protected final transient Annotations _contextAnnotations",
+  "protected final JsonDeserializer<Object> _valueDeserializer",
+  "protected final TypeDeserializer _valueTypeDeserializer",
+  "protected final NullValueProvider _nullProvider",
+  "protected String _managedReferenceName",
+  "protected ObjectIdInfo _objectIdInfo",
+  "protected ViewMatcher _viewMatcher",
+  "protected int _propertyIndex"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.deser.SettableBeanProperty",
+ "focal_id": "JacksonDatabind_103::com.fasterxml.jackson.databind.deser.SettableBeanProperty::_throwAsIOE(JsonParser,Exception)",
+ "focal_method_name": "_throwAsIOE",
+ "generations": 3,
+ "impl_B": "protected IOException _throwAsIOE(JsonParser p, Exception e) throws IOException\n    {\n        ClassUtil.throwIfIOE(e);\n        ClassUtil.throwIfRTE(e);\n        // let's wrap the innermost problem\n        Throwable th = ClassUtil.getRootCause(e);\n        throw JsonMappingException.from(p, th.getMessage(), th);\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.lang.annotation.Annotation",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.deser.impl.FailingDeserializer",
+  "com.fasterxml.jackson.databind.deser.impl.NullsConstantProvider",
+  "com.fasterxml.jackson.databind.introspect.*",
+  "com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor",
+  "com.fasterxml.jackson.databind.jsontype.TypeDeserializer",
+  "com.fasterxml.jackson.databind.util.Annotations",
+  "com.fasterxml.jackson.databind.util.ClassUtil",
+  "com.fasterxml.jackson.databind.util.ViewMatcher"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.deser",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Fluent factory method for constructing and returning a new instance\n     * with specified value deserializer.\n     * Note that this method should NOT change configuration of this instance.\n     * \n     * @param deser Deserializer to assign to the new property instance\n     * \n     * @return Newly constructed instance, if value deserializer differs from the\n     *   one used for this instance; or 'this' if not.\n     */",
+   "name": "withValueDeserializer"
+  },
+  {
+   "javadoc": "/**\n     * Fluent factory method for constructing and returning a new instance\n     * with specified property name.\n     * Note that this method should NOT change configuration of this instance.\n     * \n     * @param newName Name to use for the new instance.\n     * \n     * @return Newly constructed instance, if property name differs from the\n     *   one used for this instance; or 'this' if not.\n     */",
+   "name": "withName"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.3\n     */",
+   "name": "withSimpleName"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.9\n     */",
+   "name": "withNullProvider"
+  },
+  {
+   "javadoc": "",
+   "name": "setManagedReferenceName"
+  },
+  {
+   "javadoc": "",
+   "name": "setObjectIdInfo"
+  },
+  {
+   "javadoc": "",
+   "name": "setViews"
+  },
+  {
+   "javadoc": "/**\n     * Method used to assign index for property.\n     */",
+   "name": "assignIndex"
+  },
+  {
+   "javadoc": "/**\n     * Method called to ensure that the mutator has proper access rights to\n     * be called, as per configuration. Overridden by implementations that\n     * have mutators that require access, fields and setters.\n     *\n     * @since 2.8.3\n     */",
+   "name": "fixAccess"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.9.4\n     */",
+   "name": "markAsIgnorable"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.9.4\n     */",
+   "name": "isIgnorable"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getName"
+  },
+  {
+   "javadoc": "",
+   "name": "getFullName"
+  },
+  {
+   "javadoc": "",
+   "name": "getType"
+  },
+  {
+   "javadoc": "",
+   "name": "getWrapperName"
+  },
+  {
+   "javadoc": "",
+   "name": "getMember"
+  },
+  {
+   "javadoc": "",
+   "name": "getAnnotation"
+  },
+  {
+   "javadoc": "",
+   "name": "getContextAnnotation"
+  },
+  {
+   "javadoc": "",
+   "name": "depositSchemaProperty"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getDeclaringClass"
+  },
+  {
+   "javadoc": "",
+   "name": "getManagedReferenceName"
+  },
+  {
+   "javadoc": "",
+   "name": "getObjectIdInfo"
+  },
+  {
+   "javadoc": "",
+   "name": "hasValueDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "hasValueTypeDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueTypeDeserializer"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.9\n     */",
+   "name": "getNullValueProvider"
+  },
+  {
+   "javadoc": "",
+   "name": "visibleInView"
+  },
+  {
+   "javadoc": "",
+   "name": "hasViews"
+  },
+  {
+   "javadoc": "/**\n     * Method for accessing unique index of this property; indexes are\n     * assigned once all properties of a {@link BeanDeserializer} have\n     * been collected.\n     * \n     * @return Index of this property\n     */",
+   "name": "getPropertyIndex"
+  },
+  {
+   "javadoc": "/**\n     * Method for accessing index of the creator property: for other\n     * types of properties will simply return -1.\n     * \n     * @since 2.1\n     */",
+   "name": "getCreatorIndex"
+  },
+  {
+   "javadoc": "/**\n     * Accessor for id of injectable value, if this bean property supports\n     * value injection.\n     */",
+   "name": "getInjectableValueId"
+  },
+  {
+   "javadoc": "/**\n     * Method called to deserialize appropriate value, given parser (and\n     * context), and set it using appropriate mechanism.\n     * Pre-condition is that passed parser must point to the first token\n     * that should be consumed to produce the value (the only value for\n     * scalars, multiple for Objects and Arrays).\n     */",
+   "name": "deserializeAndSet"
+  },
+  {
+   "javadoc": "/**\n\t * Alternative to {@link #deserializeAndSet} that returns\n\t * either return value of setter method called (if one is),\n\t * or null to indicate that no return value is available.\n\t * Mostly used to support Builder style deserialization.\n\t *\n\t * @since 2.0\n\t */",
+   "name": "deserializeSetAndReturn"
+  },
+  {
+   "javadoc": "/**\n     * Method called to assign given value to this property, on\n     * specified Object.\n     *<p>\n     * Note: this is an optional operation, not supported by all\n     * implementations, creator-backed properties for example do not\n     * support this method.\n     */",
+   "name": "set"
+  },
+  {
+   "javadoc": "/**\n     * Method called to assign given value to this property, on\n     * specified Object, and return whatever delegating accessor\n     * returned (if anything)\n     *<p>\n     * Note: this is an optional operation, not supported by all\n     * implementations, creator-backed properties for example do not\n     * support this method.\n     */",
+   "name": "setAndReturn"
+  },
+  {
+   "javadoc": "/**\n     * This method is needed by some specialized bean deserializers,\n     * and also called by some {@link #deserializeAndSet} implementations.\n     *<p>\n     * Pre-condition is that passed parser must point to the first token\n     * that should be consumed to produce the value (the only value for\n     * scalars, multiple for Objects and Arrays).\n     *<p> \n     * Note that this method is final for performance reasons: to override\n     * functionality you must override other methods that call this method;\n     * this method should also not be called directly unless you really know\n     * what you are doing (and probably not even then).\n     */",
+   "name": "deserialize"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.9\n     */",
+   "name": "deserializeWith"
+  },
+  {
+   "javadoc": "/**\n     * Method that takes in exception of any type, and casts or wraps it\n     * to an IOException or its subclass.\n     */",
+   "name": "_throwAsIOE"
+  },
+  {
+   "javadoc": "",
+   "name": "_throwAsIOE"
+  },
+  {
+   "javadoc": "",
+   "name": "_throwAsIOE"
+  },
+  {
+   "javadoc": "",
+   "name": "toString"
+  }
+ ],
+ "sig": {
+  "class_declaration": "@SuppressWarnings(\"serial\") public abstract class SettableBeanProperty extends ConcreteBeanPropertyBase implements java.io.Serializable",
+  "constructors": [
+   "protected SettableBeanProperty(BeanPropertyDefinition propDef, JavaType type, TypeDeserializer typeDeser, Annotations contextAnnotations);",
+   "protected SettableBeanProperty(PropertyName propName, JavaType type, PropertyName wrapper, TypeDeserializer typeDeser, Annotations contextAnnotations, PropertyMetadata metadata);",
+   "protected SettableBeanProperty(PropertyName propName, JavaType type, PropertyMetadata metadata, JsonDeserializer<Object> valueDeser);",
+   "protected SettableBeanProperty(SettableBeanProperty src);",
+   "protected SettableBeanProperty(SettableBeanProperty src, PropertyName newName);"
+  ],
+  "focal_signature": "protected IOException _throwAsIOE(JsonParser p, Exception e) throws IOException",
+  "methods": [
+   "public abstract SettableBeanProperty withValueDeserializer(JsonDeserializer<?> deser);",
+   "public abstract SettableBeanProperty withName(PropertyName newName);",
+   "public SettableBeanProperty withSimpleName(String simpleName);",
+   "public abstract SettableBeanProperty withNullProvider(NullValueProvider nva);",
+   "public void setManagedReferenceName(String n);",
+   "public void setObjectIdInfo(ObjectIdInfo objectIdInfo);",
+   "public void setViews(Class<?>[] views);",
+   "public void assignIndex(int index);",
+   "public void fixAccess(DeserializationConfig config);",
+   "public void markAsIgnorable();",
+   "public boolean isIgnorable();",
+   "public final String getName();",
+   "public PropertyName getFullName();",
+   "public JavaType getType();",
+   "public PropertyName getWrapperName();",
+   "public abstract AnnotatedMember getMember();",
+   "public abstract <A extends Annotation> A getAnnotation(Class<A> acls);",
+   "public <A extends Annotation> A getContextAnnotation(Class<A> acls);",
+   "public void depositSchemaProperty(JsonObjectFormatVisitor objectVisitor, SerializerProvider provider) throws JsonMappingException;",
+   "protected Class<?> getDeclaringClass();",
+   "public String getManagedReferenceName();",
+   "public ObjectIdInfo getObjectIdInfo();",
+   "public boolean hasValueDeserializer();",
+   "public boolean hasValueTypeDeserializer();",
+   "public JsonDeserializer<Object> getValueDeserializer();",
+   "public TypeDeserializer getValueTypeDeserializer();",
+   "public NullValueProvider getNullValueProvider();",
+   "public boolean visibleInView(Class<?> activeView);",
+   "public boolean hasViews();",
+   "public int getPropertyIndex();",
+   "public int getCreatorIndex();",
+   "public Object getInjectableValueId();",
+   "public abstract void deserializeAndSet(JsonParser p, DeserializationContext ctxt, Object instance) throws IOException;",
+   "public abstract Object deserializeSetAndReturn(JsonParser p, DeserializationContext ctxt, Object instance) throws IOException;",
+   "public abstract void set(Object instance, Object value) throws IOException;",
+   "public abstract Object setAndReturn(Object instance, Object value) throws IOException;",
+   "public final Object deserialize(JsonParser p, DeserializationContext ctxt) throws IOException;",
+   "public final Object deserializeWith(JsonParser p, DeserializationContext ctxt, Object toUpdate) throws IOException;",
+   "protected void _throwAsIOE(JsonParser p, Exception e, Object value) throws IOException;",
+   "// since 2.7 protected IOException _throwAsIOE(Exception e) throws IOException;",
+   "protected void _throwAsIOE(Exception e, Object value) throws IOException;",
+   "public String toString();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

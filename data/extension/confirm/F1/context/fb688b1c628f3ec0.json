@@ -1,0 +1,256 @@
+{
+ "bug_name": "Math_55",
+ "call_sites": [
+  {
+   "line": 372,
+   "lines": [
+    367,
+    368,
+    369,
+    370,
+    371,
+    372,
+    373,
+    374,
+    375,
+    376,
+    377
+   ],
+   "path": "src/main/java/org/apache/commons/math/geometry/Rotation.java",
+   "snippet": "             k.getZ() * (u1x * u2y - u1y * u2x);\n\n  if (c == 0) {\n    // the (q1, q2, q3) vector is in the (u1, u2) plane\n    // we try other vectors\n    Vector3D u3 = Vector3D.crossProduct(u1, u2);\n    Vector3D v3 = Vector3D.crossProduct(v1, v2);\n    double u3x  = u3.getX();\n    double u3y  = u3.getY();\n    double u3z  = u3.getZ();\n    double v3x  = v3.getX();"
+  },
+  {
+   "line": 373,
+   "lines": [
+    368,
+    369,
+    370,
+    371,
+    372,
+    373,
+    374,
+    375,
+    376,
+    377,
+    378
+   ],
+   "path": "src/main/java/org/apache/commons/math/geometry/Rotation.java",
+   "snippet": "\n  if (c == 0) {\n    // the (q1, q2, q3) vector is in the (u1, u2) plane\n    // we try other vectors\n    Vector3D u3 = Vector3D.crossProduct(u1, u2);\n    Vector3D v3 = Vector3D.crossProduct(v1, v2);\n    double u3x  = u3.getX();\n    double u3y  = u3.getY();\n    double u3z  = u3.getZ();\n    double v3x  = v3.getX();\n    double v3y  = v3.getY();"
+  },
+  {
+   "line": 346,
+   "lines": [
+    341,
+    342,
+    343,
+    344,
+    345,
+    346,
+    347,
+    348,
+    349,
+    350,
+    351
+   ],
+   "path": "src/main/java/org/apache/commons/math/geometry/Vector3D.java",
+   "snippet": "\n    double dot = dotProduct(v1, v2);\n    double threshold = normProduct * 0.9999;\n    if ((dot < -threshold) || (dot > threshold)) {\n      // the vectors are almost aligned, compute using the sine\n      Vector3D v3 = crossProduct(v1, v2);\n      if (dot >= 0) {\n        return FastMath.asin(v3.getNorm() / normProduct);\n      }\n      return FastMath.PI - FastMath.asin(v3.getNorm() / normProduct);\n    }"
+  }
+ ],
+ "class_simple": "Vector3D",
+ "dataset": "D1C_F1",
+ "doc": {
+  "class_javadoc": "/**\n * This class implements vectors in a three-dimensional space.\n * <p>Instance of this class are guaranteed to be immutable.</p>\n * @version $Revision$ $Date$\n * @since 1.2\n */\npublic",
+  "method_javadoc": "/** Compute the cross-product of two vectors.\n   * @param v1 first vector\n   * @param v2 second vector\n   * @return the cross product v1 ^ v2 as a new Vector\n   */"
+ },
+ "fields": [
+  "public static final Vector3D ZERO",
+  "public static final Vector3D PLUS_I",
+  "public static final Vector3D MINUS_I",
+  "public static final Vector3D PLUS_J",
+  "public static final Vector3D MINUS_J",
+  "public static final Vector3D PLUS_K",
+  "public static final Vector3D MINUS_K",
+  "public static final Vector3D NaN",
+  "public static final Vector3D POSITIVE_INFINITY",
+  "public static final Vector3D NEGATIVE_INFINITY",
+  "private static final Vector3DFormat DEFAULT_FORMAT",
+  "private static final long serialVersionUID",
+  "private final double x",
+  "private final double y",
+  "private final double z"
+ ],
+ "focal_class": "org.apache.commons.math.geometry.Vector3D",
+ "focal_id": "Math_55::org.apache.commons.math.geometry.Vector3D::crossProduct(Vector3D,Vector3D)",
+ "focal_method_name": "crossProduct",
+ "generations": 6,
+ "impl_B": "public static Vector3D crossProduct(final Vector3D v1, final Vector3D v2) {\n\n\n      // rescale both vectors without losing precision,\n      // to ensure their norm are the same order of magnitude\n\n      // we reduce cancellation errors by preconditioning,\n      // we replace v1 by v3 = v1 - rho v2 with rho chosen in order to compute\n      // v3 without loss of precision. See Kahan lecture\n      // \"Computing Cross-Products and Rotations in 2- and 3-Dimensional Euclidean Spaces\"\n      // available at http://www.cs.berkeley.edu/~wkahan/MathH110/Cross.pdf\n\n      // compute rho as an 8 bits approximation of v1.v2 / v2.v2\n\n\n      // compute cross product from v3 and v2 instead of v1 and v2\n      return new Vector3D(v1.y * v2.z - v1.z * v2.y, v1.z * v2.x - v1.x * v2.z, v1.x * v2.y - v1.y * v2.x);\n\n  }",
+ "imports": [
+  "java.io.Serializable",
+  "org.apache.commons.math.exception.MathArithmeticException",
+  "org.apache.commons.math.exception.util.LocalizedFormats",
+  "org.apache.commons.math.util.MathUtils",
+  "org.apache.commons.math.util.FastMath"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math.geometry",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/** Get the abscissa of the vector.\n   * @return abscissa of the vector\n   * @see #Vector3D(double, double, double)\n   */",
+   "name": "getX"
+  },
+  {
+   "javadoc": "/** Get the ordinate of the vector.\n   * @return ordinate of the vector\n   * @see #Vector3D(double, double, double)\n   */",
+   "name": "getY"
+  },
+  {
+   "javadoc": "/** Get the height of the vector.\n   * @return height of the vector\n   * @see #Vector3D(double, double, double)\n   */",
+   "name": "getZ"
+  },
+  {
+   "javadoc": "/** Get the L<sub>1</sub> norm for the vector.\n   * @return L<sub>1</sub> norm for the vector\n   */",
+   "name": "getNorm1"
+  },
+  {
+   "javadoc": "/** Get the L<sub>2</sub> norm for the vector.\n   * @return euclidian norm for the vector\n   */",
+   "name": "getNorm"
+  },
+  {
+   "javadoc": "/** Get the square of the norm for the vector.\n   * @return square of the euclidian norm for the vector\n   */",
+   "name": "getNormSq"
+  },
+  {
+   "javadoc": "/** Get the L<sub>&infin;</sub> norm for the vector.\n   * @return L<sub>&infin;</sub> norm for the vector\n   */",
+   "name": "getNormInf"
+  },
+  {
+   "javadoc": "/** Get the azimuth of the vector.\n   * @return azimuth (&alpha;) of the vector, between -&pi; and +&pi;\n   * @see #Vector3D(double, double)\n   */",
+   "name": "getAlpha"
+  },
+  {
+   "javadoc": "/** Get the elevation of the vector.\n   * @return elevation (&delta;) of the vector, between -&pi;/2 and +&pi;/2\n   * @see #Vector3D(double, double)\n   */",
+   "name": "getDelta"
+  },
+  {
+   "javadoc": "/** Add a vector to the instance.\n   * @param v vector to add\n   * @return a new vector\n   */",
+   "name": "add"
+  },
+  {
+   "javadoc": "/** Add a scaled vector to the instance.\n   * @param factor scale factor to apply to v before adding it\n   * @param v vector to add\n   * @return a new vector\n   */",
+   "name": "add"
+  },
+  {
+   "javadoc": "/** Subtract a vector from the instance.\n   * @param v vector to subtract\n   * @return a new vector\n   */",
+   "name": "subtract"
+  },
+  {
+   "javadoc": "/** Subtract a scaled vector from the instance.\n   * @param factor scale factor to apply to v before subtracting it\n   * @param v vector to subtract\n   * @return a new vector\n   */",
+   "name": "subtract"
+  },
+  {
+   "javadoc": "/** Get a normalized vector aligned with the instance.\n   * @return a new normalized vector\n   * @exception ArithmeticException if the norm is zero\n   */",
+   "name": "normalize"
+  },
+  {
+   "javadoc": "/** Get a vector orthogonal to the instance.\n   * <p>There are an infinite number of normalized vectors orthogonal\n   * to the instance. This method picks up one of them almost\n   * arbitrarily. It is useful when one needs to compute a reference\n   * frame with one of the axes in a predefined direction. The\n   * following example shows how to build a frame having the k axis\n   * aligned with the known vector u :\n   * <pre><code>\n   *   Vector3D k = u.normalize();\n   *   Vector3D i = k.orthogonal();\n   *   Vector3D j = Vector3D.crossProduct(k, i);\n   * </code></pre></p>\n   * @return a new normalized vector orthogonal to the instance\n   * @exception ArithmeticException if the norm of the instance is null\n   */",
+   "name": "orthogonal"
+  },
+  {
+   "javadoc": "/** Compute the angular separation between two vectors.\n   * <p>This method computes the angular separation between two\n   * vectors using the dot product for well separated vectors and the\n   * cross product for almost aligned vectors. This allows to have a\n   * good accuracy in all cases, even for vectors very close to each\n   * other.</p>\n   * @param v1 first vector\n   * @param v2 second vector\n   * @return angular separation between v1 and v2\n   * @exception ArithmeticException if either vector has a null norm\n   */",
+   "name": "angle"
+  },
+  {
+   "javadoc": "/** Get the opposite of the instance.\n   * @return a new vector which is opposite to the instance\n   */",
+   "name": "negate"
+  },
+  {
+   "javadoc": "/** Multiply the instance by a scalar\n   * @param a scalar\n   * @return a new vector\n   */",
+   "name": "scalarMultiply"
+  },
+  {
+   "javadoc": "/**\n   * Returns true if any coordinate of this vector is NaN; false otherwise\n   * @return  true if any coordinate of this vector is NaN; false otherwise\n   */",
+   "name": "isNaN"
+  },
+  {
+   "javadoc": "/**\n   * Returns true if any coordinate of this vector is infinite and none are NaN;\n   * false otherwise\n   * @return  true if any coordinate of this vector is infinite and none are NaN;\n   * false otherwise\n   */",
+   "name": "isInfinite"
+  },
+  {
+   "javadoc": "/**\n   * Test for the equality of two 3D vectors.\n   * <p>\n   * If all coordinates of two 3D vectors are exactly the same, and none are\n   * <code>Double.NaN</code>, the two 3D vectors are considered to be equal.\n   * </p>\n   * <p>\n   * <code>NaN</code> coordinates are considered to affect globally the vector\n   * and be equals to each other - i.e, if either (or all) coordinates of the\n   * 3D vector are equal to <code>Double.NaN</code>, the 3D vector is equal to\n   * {@link #NaN}.\n   * </p>\n   *\n   * @param other Object to test for equality to this\n   * @return true if two 3D vector objects are equal, false if\n   *         object is null, not an instance of Vector3D, or\n   *         not equal to this Vector3D instance\n   *\n   */",
+   "name": "equals"
+  },
+  {
+   "javadoc": "/**\n   * Get a hashCode for the 3D vector.\n   * <p>\n   * All NaN values have the same hash code.</p>\n   *\n   * @return a hash code value for this object\n   */",
+   "name": "hashCode"
+  },
+  {
+   "javadoc": "/** Compute the dot-product of two vectors.\n   * @param v1 first vector\n   * @param v2 second vector\n   * @return the dot product v1.v2\n   */",
+   "name": "dotProduct"
+  },
+  {
+   "javadoc": "/** Compute the distance between two vectors according to the L<sub>1</sub> norm.\n   * <p>Calling this method is equivalent to calling:\n   * <code>v1.subtract(v2).getNorm1()</code> except that no intermediate\n   * vector is built</p>\n   * @param v1 first vector\n   * @param v2 second vector\n   * @return the distance between v1 and v2 according to the L<sub>1</sub> norm\n   */",
+   "name": "distance1"
+  },
+  {
+   "javadoc": "/** Compute the distance between two vectors according to the L<sub>2</sub> norm.\n   * <p>Calling this method is equivalent to calling:\n   * <code>v1.subtract(v2).getNorm()</code> except that no intermediate\n   * vector is built</p>\n   * @param v1 first vector\n   * @param v2 second vector\n   * @return the distance between v1 and v2 according to the L<sub>2</sub> norm\n   */",
+   "name": "distance"
+  },
+  {
+   "javadoc": "/** Compute the distance between two vectors according to the L<sub>&infin;</sub> norm.\n   * <p>Calling this method is equivalent to calling:\n   * <code>v1.subtract(v2).getNormInf()</code> except that no intermediate\n   * vector is built</p>\n   * @param v1 first vector\n   * @param v2 second vector\n   * @return the distance between v1 and v2 according to the L<sub>&infin;</sub> norm\n   */",
+   "name": "distanceInf"
+  },
+  {
+   "javadoc": "/** Compute the square of the distance between two vectors.\n   * <p>Calling this method is equivalent to calling:\n   * <code>v1.subtract(v2).getNormSq()</code> except that no intermediate\n   * vector is built</p>\n   * @param v1 first vector\n   * @param v2 second vector\n   * @return the square of the distance between v1 and v2\n   */",
+   "name": "distanceSq"
+  },
+  {
+   "javadoc": "/** Get a string representation of this vector.\n   * @return a string representation of this vector\n   */",
+   "name": "toString"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class Vector3D implements Serializable",
+  "constructors": [
+   "public Vector3D(double x, double y, double z);",
+   "public Vector3D(double alpha, double delta);",
+   "public Vector3D(double a, Vector3D u);",
+   "public Vector3D(double a1, Vector3D u1, double a2, Vector3D u2);",
+   "public Vector3D(double a1, Vector3D u1, double a2, Vector3D u2, double a3, Vector3D u3);",
+   "public Vector3D(double a1, Vector3D u1, double a2, Vector3D u2, double a3, Vector3D u3, double a4, Vector3D u4);"
+  ],
+  "focal_signature": "public static Vector3D crossProduct(final Vector3D v1, final Vector3D v2)",
+  "methods": [
+   "public double getX();",
+   "public double getY();",
+   "public double getZ();",
+   "public double getNorm1();",
+   "public double getNorm();",
+   "public double getNormSq();",
+   "public double getNormInf();",
+   "public double getAlpha();",
+   "public double getDelta();",
+   "public Vector3D add(Vector3D v);",
+   "public Vector3D add(double factor, Vector3D v);",
+   "public Vector3D subtract(Vector3D v);",
+   "public Vector3D subtract(double factor, Vector3D v);",
+   "public Vector3D normalize();",
+   "public Vector3D orthogonal();",
+   "public static double angle(Vector3D v1, Vector3D v2);",
+   "public Vector3D negate();",
+   "public Vector3D scalarMultiply(double a);",
+   "public boolean isNaN();",
+   "public boolean isInfinite();",
+   "public boolean equals(Object other);",
+   "public int hashCode();",
+   "public static double dotProduct(Vector3D v1, Vector3D v2);",
+   "public static double distance1(Vector3D v1, Vector3D v2);",
+   "public static double distance(Vector3D v1, Vector3D v2);",
+   "public static double distanceInf(Vector3D v1, Vector3D v2);",
+   "public static double distanceSq(Vector3D v1, Vector3D v2);",
+   "public String toString();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F1"
+}

@@ -1,0 +1,14 @@
+{
+  "assembled": true,
+  "call_key": "b8d4b3bac16813398d12859101455615febb3b26d2d1434786c4b06e24e670e0",
+  "candidate_id": "b63da2475a146d12d929",
+  "class_name": "StopWatch_stop_TriageGen3Test",
+  "dataset": "D1C_F1",
+  "focal_id": "Lang_55::org.apache.commons.lang.time.StopWatch::stop()",
+  "generation": 3,
+  "model_returned": "gemma4:26b",
+  "n_tests": 5,
+  "package": "org.apache.commons.lang.time",
+  "source": "package org.apache.commons.lang.time;\n\nimport java.io.*;\nimport java.math.*;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class StopWatch_stop_TriageGen3Test {\n\n    @Test\n    public void testStop_WhenRunning_ShouldStopSuccessfully() {\n        StopWatch stopWatch = new StopWatch();\n        stopWatch.start();\n        \n        stopWatch.stop();\n        \n        // Verify state transition (though state field is private, \n        // we can infer success if no exception is thrown and we check timing behavior)\n        assertTrue(\"StopWatch should have recorded a stop time\", stopWatch.getTime() >= 0);\n    }\n\n    @Test\n    public void testStop_WhenSuspended_ShouldStopSuccessfully() {\n        StopWatch stopWatch = new StopWatch();\n        stopWatch.start();\n        stopWatch.suspend();\n        \n        stopWatch.stop();\n        \n        assertTrue(\"StopWatch should allow stopping from suspended state\", stopWatch.getTime() >= 0);\n    }\n\n    @Test(expected = IllegalStateException.class)\n    public void testStop_WhenNotRunning_ShouldThrowException() {\n        StopWatch stopWatch = new StopWatch();\n        // State is initially STATE_STOPPED (not running, not suspended)\n        stopWatch.stop();\n    }\n\n    @Test(expected = IllegalStateException.class)\n    public void testStop_WhenAlreadyStopped_ShouldThrowException() {\n        StopWatch stopWatch = new StopWatch();\n        stopWatch.start();\n        stopWatch.stop();\n        \n        // Second stop should trigger IllegalStateException\n        stopWatch.stop();\n    }\n\n    @Test\n    public void testStop_AfterReset_ShouldThrowException() {\n        StopWatch stopWatch = new StopWatch();\n        stopWatch.start();\n        stopWatch.reset();\n        \n        try {\n            stopWatch.stop();\n            fail(\"Expected IllegalStateException to be thrown\");\n        } catch (IllegalStateException e) {\n            assertEquals(\"Stopwatch is not running. \", e.getMessage());\n        }\n    }\n}\n",
+  "tranche": "F1"
+}

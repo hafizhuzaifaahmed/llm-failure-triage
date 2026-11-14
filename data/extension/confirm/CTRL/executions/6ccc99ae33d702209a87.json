@@ -1,0 +1,207 @@
+{
+ "candidate_id": "6ccc99ae33d702209a87",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testWriteEndArray_WithNestedContext",
+   "testWriteEndArray_AtRootLevel",
+   "testWriteEndArray_DeepNesting"
+  ],
+  "nc_both": [],
+  "nc_one_version": [],
+  "passes": 0
+ },
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "JacksonDatabind_30::com.fasterxml.jackson.databind.util.TokenBuffer::writeEndArray()",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testWriteEndArray_WithNestedContext",
+   "runs_b": [
+    {
+     "duration_s": 0.175,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.164,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.144,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.174,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.186,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.191,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.databind.util;\n\nimport com.fasterxml.jackson.core.*;\nimport com.fasterxml.jackson.core.JsonGenerator;\nimport com.fasterxml.jackson.core.JsonParser;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.core.base.ParserMinimalBase;\nimport com.fasterxml.jackson.core.json.JsonReadContext;\nimport com.fasterxml.jackson.core.json.JsonWriteContext;\nimport com.fasterxml.jackson.core.util.ByteArrayBuilder;\nimport com.fasterxml.jackson.databind.*;\nimport com.fasterxml.jackson.databind.DeserializationContext;\nimport com.fasterxml.jackson.databind.ObjectMapper;\nimport java.io.*;\nimport java.io.IOException;\nimport java.math.*;\nimport java.math.BigDecimal;\nimport java.math.BigInteger;\nimport java.util.*;\nimport java.util.TreeMap;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for TokenBuffer.writeEndArray().\n */\npublic class TokenBuffer_writeEndArray_TriageGen1Test {\n\n    private ObjectMapper mapper;\n\n    @Before\n    public void setUp() {\n        mapper = new ObjectMapper();\n    }\n\n    /**\n     * Tests that writeEndArray appends the correct token and correctly\n     * moves the write context to the parent when a nested structure exists.\n     */\n    @Test\n    public void testWriteEndArray_WithNestedContext() throws IOException {\n        TokenBuffer buffer = new TokenBuffer(mapper);\n\n        // Create a nested structure: [ \"item\" ]\n        buffer.writeStartArray();\n        buffer.writeString(\"item\");\n        \n        // Verify current context is not null and is the array context\n        JsonWriteContext contextBefore = buffer.getOutputContext();\n        Assert.assertNotNull(contextBefore);\n\n        buffer.writeEndArray();\n\n        // Verify the token appended is END_ARRAY\n        // We use a parser to verify the content produced by the buffer\n        JsonParser parser = buffer.asParser();\n        Assert.assertEquals(JsonToken.START_ARRAY, parser.nextToken());\n        Assert.assertEquals(JsonToken.VALUE_STRING, parser.nextToken());\n        Assert.assertEquals(\"item\", parser.getText());\n        Assert.assertEquals(JsonToken.END_ARRAY, parser.nextToken());\n        Assert.assertNull(parser.nextToken());\n\n        // Verify context movement: the new context should be the parent of the old one\n        JsonWriteContext contextAfter = buffer.getOutputContext();\n        Assert.assertSame(contextBefore.getParent(), contextAfter);\n    }\n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testWriteEndArray_AtRootLevel",
+   "runs_b": [
+    {
+     "duration_s": 0.167,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.166,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.174,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.167,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.167,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.149,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.databind.util;\n\nimport com.fasterxml.jackson.core.*;\nimport com.fasterxml.jackson.core.JsonGenerator;\nimport com.fasterxml.jackson.core.JsonParser;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.core.base.ParserMinimalBase;\nimport com.fasterxml.jackson.core.json.JsonReadContext;\nimport com.fasterxml.jackson.core.json.JsonWriteContext;\nimport com.fasterxml.jackson.core.util.ByteArrayBuilder;\nimport com.fasterxml.jackson.databind.*;\nimport com.fasterxml.jackson.databind.DeserializationContext;\nimport com.fasterxml.jackson.databind.ObjectMapper;\nimport java.io.*;\nimport java.io.IOException;\nimport java.math.*;\nimport java.math.BigDecimal;\nimport java.math.BigInteger;\nimport java.util.*;\nimport java.util.TreeMap;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for TokenBuffer.writeEndArray().\n */\npublic class TokenBuffer_writeEndArray_TriageGen1Test {\n\n    private ObjectMapper mapper;\n\n    @Before\n    public void setUp() {\n        mapper = new ObjectMapper();\n    }\n\n    \n\n    /**\n     * Tests that writeEndArray appends the correct token when there is no parent context\n     * (i.e., at the root level). This covers the 'if (c != null)' branch where c is null.\n     */\n    @Test\n    public void testWriteEndArray_AtRootLevel() throws IOException {\n        TokenBuffer buffer = new TokenBuffer(mapper);\n\n        // Write an array at the root level\n        buffer.writeStartArray();\n        buffer.writeEndArray();\n\n        // Verify the token\n        JsonParser parser = buffer.asParser();\n        Assert.assertEquals(JsonToken.START_ARRAY, parser.nextToken());\n        Assert.assertEquals(JsonToken.END_ARRAY, parser.nextToken());\n        Assert.assertNull(parser.nextToken());\n\n        // Verify context: since it was root, the context should remain the same (or not crash)\n        // In TokenBuffer, the root context parent is null.\n        JsonWriteContext contextAfter = buffer.getOutputContext();\n        Assert.assertNull(contextAfter.getParent());\n    }\n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testWriteEndArray_DeepNesting",
+   "runs_b": [
+    {
+     "duration_s": 0.192,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.18,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.147,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.16,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.155,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.165,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.databind.util;\n\nimport com.fasterxml.jackson.core.*;\nimport com.fasterxml.jackson.core.JsonGenerator;\nimport com.fasterxml.jackson.core.JsonParser;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.core.base.ParserMinimalBase;\nimport com.fasterxml.jackson.core.json.JsonReadContext;\nimport com.fasterxml.jackson.core.json.JsonWriteContext;\nimport com.fasterxml.jackson.core.util.ByteArrayBuilder;\nimport com.fasterxml.jackson.databind.*;\nimport com.fasterxml.jackson.databind.DeserializationContext;\nimport com.fasterxml.jackson.databind.ObjectMapper;\nimport java.io.*;\nimport java.io.IOException;\nimport java.math.*;\nimport java.math.BigDecimal;\nimport java.math.BigInteger;\nimport java.util.*;\nimport java.util.TreeMap;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for TokenBuffer.writeEndArray().\n */\npublic class TokenBuffer_writeEndArray_TriageGen1Test {\n\n    private ObjectMapper mapper;\n\n    @Before\n    public void setUp() {\n        mapper = new ObjectMapper();\n    }\n\n    \n\n    \n\n    /**\n     * Tests deep nesting to ensure the context traversal works correctly.\n     */\n    @Test\n    public void testWriteEndArray_DeepNesting() throws IOException {\n        TokenBuffer buffer = new TokenBuffer(mapper);\n\n        // Structure: [ [ [] ] ]\n        buffer.writeStartArray(); // Level 1\n        buffer.writeStartArray(); // Level 2\n        buffer.writeStartArray(); // Level 3\n        \n        JsonWriteContext ctx3 = buffer.getOutputContext();\n        JsonWriteContext ctx2 = ctx3.getParent();\n        JsonWriteContext ctx1 = ctx2.getParent();\n\n        buffer.writeEndArray(); // Close Level 3\n        Assert.assertSame(ctx2, buffer.getOutputContext());\n\n        buffer.writeEndArray(); // Close Level 2\n        Assert.assertSame(ctx1, buffer.getOutputContext());\n\n        buffer.writeEndArray(); // Close Level 1\n        \n        // Verify structure\n        JsonParser parser = buffer.asParser();\n        Assert.assertEquals(JsonToken.START_ARRAY, parser.nextToken());\n        Assert.assertEquals(JsonToken.START_ARRAY, parser.nextToken());\n        Assert.assertEquals(JsonToken.START_ARRAY, parser.nextToken());\n        Assert.assertEquals(JsonToken.END_ARRAY, parser.nextToken());\n        Assert.assertEquals(JsonToken.END_ARRAY, parser.nextToken());\n        Assert.assertEquals(JsonToken.END_ARRAY, parser.nextToken());\n    }\n}\n"
+  }
+ ],
+ "source_sha256": "4dd5e2472097befc422844dc743f907f854295b3490bbbaf39af011533ad4d8a",
+ "utc": "2026-11-13T06:53:46Z"
+}

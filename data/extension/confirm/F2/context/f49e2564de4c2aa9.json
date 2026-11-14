@@ -1,0 +1,85 @@
+{
+ "bug_name": "Math_40",
+ "call_sites": [
+  {
+   "line": 190,
+   "lines": [
+    185,
+    186,
+    187,
+    188,
+    189,
+    190,
+    191,
+    192,
+    193,
+    194,
+    195
+   ],
+   "path": "src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java",
+   "snippet": "    public double solve(int maxEval, FUNC f, double min, double max, double startValue) {\n        // Initialization.\n        setup(maxEval, f, min, max, startValue);\n\n        // Perform computation.\n        return doSolve();\n    }\n\n    /** {@inheritDoc} */\n    public double solve(int maxEval, FUNC f, double min, double max) {\n        return solve(maxEval, f, min, max, min + 0.5 * (max - min));"
+  }
+ ],
+ "class_simple": "BracketingNthOrderBrentSolver",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * This class implements a modification of the <a\n * href=\"http://mathworld.wolfram.com/BrentsMethod.html\"> Brent algorithm</a>.\n * <p>\n * The changes with respect to the original Brent algorithm are:\n * <ul>\n *   <li>the returned value is chosen in the current interval according\n *   to user specified {@link AllowedSolution},</li>\n *   <li>the maximal order for the invert polynomial root search is\n *   user-specified instead of being invert quadratic only</li>\n * </ul>\n * </p>\n * The given interval must bracket the root.\n *\n * @version $Id$\n */\npublic",
+  "method_javadoc": "/**\n     * {@inheritDoc}\n     */"
+ },
+ "fields": [
+  "private static final double DEFAULT_ABSOLUTE_ACCURACY",
+  "private static final int DEFAULT_MAXIMAL_ORDER",
+  "private static final int MAXIMAL_AGING",
+  "private static final double REDUCTION_FACTOR",
+  "private final int maximalOrder",
+  "private AllowedSolution allowed"
+ ],
+ "focal_class": "org.apache.commons.math.analysis.solvers.BracketingNthOrderBrentSolver",
+ "focal_id": "Math_40::org.apache.commons.math.analysis.solvers.BracketingNthOrderBrentSolver::doSolve()",
+ "focal_method_name": "doSolve",
+ "generations": 3,
+ "impl_B": "@Override\n    protected double doSolve() {\n\n        // prepare arrays with the first points\n        final double[] x = new double[maximalOrder + 1];\n        final double[] y = new double[maximalOrder + 1];\n        x[0] = getMin();\n        x[1] = getStartValue();\n        x[2] = getMax();\n        verifySequence(x[0], x[1], x[2]);\n\n        // evaluate initial guess\n        y[1] = computeObjectiveValue(x[1]);\n        if (Precision.equals(y[1], 0.0, 1)) {\n            // return the initial guess if it is a perfect root.\n            return x[1];\n        }\n\n        // evaluate first  endpoint\n        y[0] = computeObjectiveValue(x[0]);\n        if (Precision.equals(y[0], 0.0, 1)) {\n            // return the first endpoint if it is a perfect root.\n            return x[0];\n        }\n\n        int nbPoints;\n        int signChangeIndex;\n        if (y[0] * y[1] < 0) {\n\n            // reduce interval if it brackets the root\n            nbPoints        = 2;\n            signChangeIndex = 1;\n\n        } else {\n\n            // evaluate second endpoint\n            y[2] = computeObjectiveValue(x[2]);\n            if (Precision.equals(y[2], 0.0, 1)) {\n                // return the second endpoint if it is a perfect root.\n                return x[2];\n            }\n\n            if (y[1] * y[2] < 0) {\n                // use all computed point as a start sampling array for solving\n                nbPoints        = 3;\n                signChangeIndex = 2;\n            } else {\n                throw new NoBracketingException(x[0], x[2], y[0], y[2]);\n            }\n\n        }\n\n        // prepare a work array for inverse polynomial interpolation\n        final double[] tmpX = new double[x.length];\n\n        // current tightest bracketing of the root\n        double xA    = x[signChangeIndex - 1];\n        double yA    = y[signChangeIndex - 1];\n        double absYA = FastMath.abs(yA);\n        int agingA   = 0;\n        double xB    = x[signChangeIndex];\n        double yB    = y[signChangeIndex];\n        double absYB = FastMath.abs(yB);\n        int agingB   = 0;\n\n        // search loop\n        while (true) {\n\n            // check convergence of bracketing interval\n            final double xTol = getAbsoluteAccuracy() +\n                                getRelativeAccuracy() * FastMath.max(FastMath.abs(xA), FastMath.abs(xB));\n            if (((xB - xA) <= xTol) || (FastMath.max(absYA, absYB) < getFunctionValueAccuracy())) {\n                switch (allowed) {\n                case ANY_SIDE :\n                    return absYA < absYB ? xA : xB;\n                case LEFT_SIDE :\n                    return xA;\n                case RIGHT_SIDE :\n                    return xB;\n                case BELOW_SIDE :\n                    return (yA <= 0) ? xA : xB;\n                case ABOVE_SIDE :\n                    return (yA <  0) ? xB : xA;\n                default :\n                    // this should never happen\n                    throw new MathInternalError(null);\n                }\n            }\n\n            // target for the next evaluation point\n            double targetY;\n            if (agingA >= MAXIMAL_AGING) {\n                // we keep updating the high bracket, try to compensate this\n                targetY = -REDUCTION_FACTOR * yB;\n            } else if (agingB >= MAXIMAL_AGING) {\n                // we keep updating the low bracket, try to compensate this\n                targetY = -REDUCTION_FACTOR * yA;\n            } else {\n                // bracketing is balanced, try to find the root itself\n                targetY = 0;\n            }\n\n            // make a few attempts to guess a root,\n            double nextX;\n            int start = 0;\n            int end   = nbPoints;\n            do {\n\n                // guess a value for current target, using inverse polynomial interpolation\n                System.arraycopy(x, start, tmpX, start, end - start);\n                nextX = guessX(targetY, tmpX, y, start, end);\n\n                if (!((nextX > xA) && (nextX < xB))) {\n                    // the guessed root is not strictly inside of the tightest bracketing interval\n\n                    // the guessed root is either not strictly inside the interval or it\n                    // is a NaN (which occurs when some sampling points share the same y)\n                    // we try again with a lower interpolation order\n                    if (signChangeIndex - start >= end - signChangeIndex) {\n                        // we have more points before the sign change, drop the lowest point\n                        ++start;\n                    } else {\n                        // we have more points after sign change, drop the highest point\n                        --end;\n                    }\n\n                    // we need to do one more attempt\n                    nextX = Double.NaN;\n\n                }\n\n            } while (Double.isNaN(nextX) && (end - start > 1));\n\n            if (Double.isNaN(nextX)) {\n                // fall back to bisection\n                nextX = xA + 0.5 * (xB - xA);\n                start = signChangeIndex - 1;\n                end   = signChangeIndex;\n            }\n\n            // evaluate the function at the guessed root\n            final double nextY = computeObjectiveValue(nextX);\n            if (Precision.equals(nextY, 0.0, 1)) {\n                // we have found an exact root, since it is not an approximation\n                // we don't need to bother about the allowed solutions setting\n                return nextX;\n            }\n\n            if ((nbPoints > 2) && (end - start != nbPoints)) {\n\n                // we have been forced to ignore some points to keep bracketing,\n                // they are probably too far from the root, drop them from now on\n                nbPoints = end - start;\n                System.arraycopy(x, start, x, 0, nbPoints);\n                System.arraycopy(y, start, y, 0, nbPoints);\n                signChangeIndex -= start;\n\n            } else  if (nbPoints == x.length) {\n\n                // we have to drop one point in order to insert the new one\n                nbPoints--;\n\n                // keep the tightest bracketing interval as centered as possible\n                if (signChangeIndex >= (x.length + 1) / 2) {\n                    // we drop the lowest point, we have to shift the arrays and the index\n                    System.arraycopy(x, 1, x, 0, nbPoints);\n                    System.arraycopy(y, 1, y, 0, nbPoints);\n                    --signChangeIndex;\n                }\n\n            }\n\n            // insert the last computed point\n            //(by construction, we know it lies inside the tightest bracketing interval)\n            System.arraycopy(x, signChangeIndex, x, signChangeIndex + 1, nbPoints - signChangeIndex);\n            x[signChangeIndex] = nextX;\n            System.arraycopy(y, signChangeIndex, y, signChangeIndex + 1, nbPoints - signChangeIndex);\n            y[signChangeIndex] = nextY;\n            ++nbPoints;\n\n            // update the bracketing interval\n            if (nextY * yA <= 0) {\n                // the sign change occurs before the inserted point\n                xB = nextX;\n                yB = nextY;\n                absYB = FastMath.abs(yB);\n                ++agingA;\n                agingB = 0;\n            } else {\n                // the sign change occurs after the inserted point\n                xA = nextX;\n                yA = nextY;\n                absYA = FastMath.abs(yA);\n                agingA = 0;\n                ++agingB;\n\n                // update the sign change index\n                signChangeIndex++;\n\n            }\n\n        }\n\n    }",
+ "imports": [
+  "org.apache.commons.math.analysis.UnivariateFunction",
+  "org.apache.commons.math.exception.MathInternalError",
+  "org.apache.commons.math.exception.NoBracketingException",
+  "org.apache.commons.math.exception.NumberIsTooSmallException",
+  "org.apache.commons.math.util.FastMath",
+  "org.apache.commons.math.util.Precision"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math.analysis.solvers",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/** Get the maximal order.\n     * @return maximal order\n     */",
+   "name": "getMaximalOrder"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "solve"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "solve"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class BracketingNthOrderBrentSolver extends AbstractUnivariateRealSolver implements BracketedUnivariateRealSolver<UnivariateFunction>",
+  "constructors": [
+   "public BracketingNthOrderBrentSolver();",
+   "public BracketingNthOrderBrentSolver(final double absoluteAccuracy, final int maximalOrder) throws NumberIsTooSmallException;",
+   "public BracketingNthOrderBrentSolver(final double relativeAccuracy, final double absoluteAccuracy, final int maximalOrder) throws NumberIsTooSmallException;",
+   "public BracketingNthOrderBrentSolver(final double relativeAccuracy, final double absoluteAccuracy, final double functionValueAccuracy, final int maximalOrder) throws NumberIsTooSmallException;"
+  ],
+  "focal_signature": "protected double doSolve()",
+  "methods": [
+   "public int getMaximalOrder();",
+   "public double solve(int maxEval, UnivariateFunction f, double min, double max, AllowedSolution allowedSolution);",
+   "public double solve(int maxEval, UnivariateFunction f, double min, double max, double startValue, AllowedSolution allowedSolution);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

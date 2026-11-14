@@ -1,0 +1,168 @@
+{
+ "bug_name": "JacksonDatabind_77",
+ "call_sites": [
+  {
+   "line": 233,
+   "lines": [
+    228,
+    229,
+    230,
+    231,
+    232,
+    233,
+    234,
+    235,
+    236,
+    237,
+    238
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerFactory.java",
+   "snippet": "         // And then setters for deserializing from JSON Object\n        addBeanProps(ctxt, beanDesc, builder);\n        addObjectIdReader(ctxt, beanDesc, builder);\n\n        // managed/back reference fields/setters need special handling... first part\n        addReferenceProperties(ctxt, beanDesc, builder);\n        addInjectables(ctxt, beanDesc, builder);\n        \n        final DeserializationConfig config = ctxt.getConfig();\n        // [JACKSON-440]: update builder now that all information is in?\n        if (_factoryConfig.hasDeserializerModifiers()) {"
+  },
+  {
+   "line": 285,
+   "lines": [
+    280,
+    281,
+    282,
+    283,
+    284,
+    285,
+    286,
+    287,
+    288,
+    289,
+    290
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerFactory.java",
+   "snippet": "         // And then \"with methods\" for deserializing from JSON Object\n        addBeanProps(ctxt, builderDesc, builder);\n        addObjectIdReader(ctxt, builderDesc, builder);\n        \n        // managed/back reference fields/setters need special handling... first part\n        addReferenceProperties(ctxt, builderDesc, builder);\n        addInjectables(ctxt, builderDesc, builder);\n\n        JsonPOJOBuilder.Value builderConfig = builderDesc.findPOJOBuilderConfig();\n        final String buildMethodName = (builderConfig == null) ?\n                \"build\" : builderConfig.buildMethodName;"
+  }
+ ],
+ "class_simple": "BeanDeserializerFactory",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Concrete deserializer factory class that adds full Bean deserializer\n * construction logic using class introspection.\n * Note that factories specifically do not implement any form of caching:\n * aside from configuration they are stateless; caching is implemented\n * by other components.\n *<p>\n * Instances of this class are fully immutable as all configuration is\n * done by using \"fluent factories\" (methods that construct new factory\n * instances with different configuration, instead of modifying instance).\n */\npublic",
+  "method_javadoc": "/**\n     * Method that will find if bean has any managed- or back-reference properties,\n     * and if so add them to bean, to be linked during resolution phase.\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "private final static Class<?>[] INIT_CAUSE_PARAMS",
+  "private final static Class<?>[] NO_VIEWS",
+  "public final static BeanDeserializerFactory instance"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.deser.BeanDeserializerFactory",
+ "focal_id": "JacksonDatabind_77::com.fasterxml.jackson.databind.deser.BeanDeserializerFactory::addReferenceProperties(DeserializationContext,BeanDescription,BeanDeserializerBuilder)",
+ "focal_method_name": "addReferenceProperties",
+ "generations": 3,
+ "impl_B": "protected void addReferenceProperties(DeserializationContext ctxt,\n            BeanDescription beanDesc, BeanDeserializerBuilder builder)\n        throws JsonMappingException\n    {\n        // and then back references, not necessarily found as regular properties\n        Map<String,AnnotatedMember> refs = beanDesc.findBackReferenceProperties();\n        if (refs != null) {\n            for (Map.Entry<String, AnnotatedMember> en : refs.entrySet()) {\n                String name = en.getKey();\n                AnnotatedMember m = en.getValue();\n                JavaType type;\n                if (m instanceof AnnotatedMethod) {\n                    type = ((AnnotatedMethod) m).getParameterType(0);\n                } else {\n                    type = m.getType();\n                }\n                SimpleBeanPropertyDefinition propDef = SimpleBeanPropertyDefinition.construct(\n                \t\tctxt.getConfig(), m);\n                builder.addBackReferenceProperty(name, constructSettableProperty(\n                        ctxt, beanDesc, propDef, type));\n            }\n        }\n    }",
+ "imports": [
+  "java.util.*",
+  "com.fasterxml.jackson.annotation.ObjectIdGenerator",
+  "com.fasterxml.jackson.annotation.ObjectIdGenerators",
+  "com.fasterxml.jackson.annotation.ObjectIdResolver",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder",
+  "com.fasterxml.jackson.databind.cfg.DeserializerFactoryConfig",
+  "com.fasterxml.jackson.databind.deser.impl.*",
+  "com.fasterxml.jackson.databind.deser.std.ThrowableDeserializer",
+  "com.fasterxml.jackson.databind.introspect.*",
+  "com.fasterxml.jackson.databind.jsontype.TypeDeserializer",
+  "com.fasterxml.jackson.databind.util.ArrayBuilders",
+  "com.fasterxml.jackson.databind.util.ClassUtil",
+  "com.fasterxml.jackson.databind.util.SimpleBeanPropertyDefinition"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.deser",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Method used by module registration functionality, to construct a new bean\n     * deserializer factory\n     * with different configuration settings.\n     */",
+   "name": "withConfig"
+  },
+  {
+   "javadoc": "/**\n     * Method that {@link DeserializerCache}s call to create a new\n     * deserializer for types other than Collections, Maps, arrays and\n     * enums.\n     */",
+   "name": "createBeanDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "createBuilderBasedDeserializer"
+  },
+  {
+   "javadoc": "/**\n     * Method called by {@link BeanDeserializerFactory} to see if there might be a standard\n     * deserializer registered for given type.\n     */",
+   "name": "findStdDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "materializeAbstractType"
+  },
+  {
+   "javadoc": "",
+   "name": "addObjectIdReader"
+  },
+  {
+   "javadoc": "/**\n     * Overridable method that constructs a {@link BeanDeserializerBuilder}\n     * which is used to accumulate information needed to create deserializer\n     * instance.\n     */",
+   "name": "constructBeanDeserializerBuilder"
+  },
+  {
+   "javadoc": "/**\n     * Method called to figure out settable properties for the\n     * bean deserializer to use.\n     *<p>\n     * Note: designed to be overridable, and effort is made to keep interface\n     * similar between versions.\n     */",
+   "name": "addBeanProps"
+  },
+  {
+   "javadoc": "/**\n     * Helper method called to filter out explicit ignored properties,\n     * as well as properties that have \"ignorable types\".\n     * Note that this will not remove properties that have no\n     * setters.\n     */",
+   "name": "filterBeanProps"
+  },
+  {
+   "javadoc": "/**\n     * Method called locate all members used for value injection (if any),\n     * constructor {@link com.fasterxml.jackson.databind.deser.impl.ValueInjector} instances, and add them to builder.\n     */",
+   "name": "addInjectables"
+  },
+  {
+   "javadoc": "/**\n     * Method called to construct fallback {@link SettableAnyProperty}\n     * for handling unknown bean properties, given a method that\n     * has been designated as such setter.\n     */",
+   "name": "constructAnySetter"
+  },
+  {
+   "javadoc": "/**\n     * Method that will construct a regular bean property setter using\n     * the given setter method.\n     *\n     * @return Property constructed, if any; or null to indicate that\n     *   there should be no property based on given definitions.\n     */",
+   "name": "constructSettableProperty"
+  },
+  {
+   "javadoc": "/**\n     * Method that will construct a regular bean property setter using\n     * the given setter method.\n     */",
+   "name": "constructSetterlessProperty"
+  },
+  {
+   "javadoc": "/**\n     * Helper method used to skip processing for types that we know\n     * can not be (i.e. are never consider to be) beans: \n     * things like primitives, Arrays, Enums, and proxy types.\n     *<p>\n     * Note that usually we shouldn't really be getting these sort of\n     * types anyway; but better safe than sorry.\n     */",
+   "name": "isPotentialBeanType"
+  },
+  {
+   "javadoc": "/**\n     * Helper method that will check whether given raw type is marked as always ignorable\n     * (for purpose of ignoring properties with type)\n     */",
+   "name": "isIgnorableType"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class BeanDeserializerFactory extends BasicDeserializerFactory implements java.io.Serializable",
+  "constructors": [
+   "public BeanDeserializerFactory(DeserializerFactoryConfig config);"
+  ],
+  "focal_signature": "protected void addReferenceProperties(DeserializationContext ctxt, BeanDescription beanDesc, BeanDeserializerBuilder builder) throws JsonMappingException",
+  "methods": [
+   "public DeserializerFactory withConfig(DeserializerFactoryConfig config);",
+   "public JsonDeserializer<Object> createBeanDeserializer(DeserializationContext ctxt, JavaType type, BeanDescription beanDesc) throws JsonMappingException;",
+   "public JsonDeserializer<Object> createBuilderBasedDeserializer( DeserializationContext ctxt, JavaType valueType, BeanDescription beanDesc, Class<?> builderClass) throws JsonMappingException;",
+   "protected JsonDeserializer<?> findStdDeserializer(DeserializationContext ctxt, JavaType type, BeanDescription beanDesc) throws JsonMappingException;",
+   "protected JavaType materializeAbstractType(DeserializationContext ctxt, JavaType type, BeanDescription beanDesc) throws JsonMappingException;",
+   "protected void addObjectIdReader(DeserializationContext ctxt, BeanDescription beanDesc, BeanDeserializerBuilder builder) throws JsonMappingException;",
+   "protected BeanDeserializerBuilder constructBeanDeserializerBuilder(DeserializationContext ctxt, BeanDescription beanDesc);",
+   "protected void addBeanProps(DeserializationContext ctxt, BeanDescription beanDesc, BeanDeserializerBuilder builder) throws JsonMappingException;",
+   "protected List<BeanPropertyDefinition> filterBeanProps(DeserializationContext ctxt, BeanDescription beanDesc, BeanDeserializerBuilder builder, List<BeanPropertyDefinition> propDefsIn, Set<String> ignored) throws JsonMappingException;",
+   "protected void addInjectables(DeserializationContext ctxt, BeanDescription beanDesc, BeanDeserializerBuilder builder) throws JsonMappingException;",
+   "protected SettableAnyProperty constructAnySetter(DeserializationContext ctxt, BeanDescription beanDesc, AnnotatedMethod setter) throws JsonMappingException;",
+   "protected SettableBeanProperty constructSettableProperty(DeserializationContext ctxt, BeanDescription beanDesc, BeanPropertyDefinition propDef, JavaType propType0) throws JsonMappingException;",
+   "protected SettableBeanProperty constructSetterlessProperty(DeserializationContext ctxt, BeanDescription beanDesc, BeanPropertyDefinition propDef) throws JsonMappingException;",
+   "protected boolean isPotentialBeanType(Class<?> type);",
+   "protected boolean isIgnorableType(DeserializationConfig config, BeanDescription beanDesc, Class<?> type, Map<Class<?>,Boolean> ignoredTypes);"
+  ],
+  "type_signatures": [
+   "public class BeanDeserializerBuilder { public BeanDeserializerBuilder(BeanDescription beanDesc, DeserializationConfig config); protected BeanDeserializerBuilder(BeanDeserializerBuilder src); public void addOrReplaceProperty(SettableBeanProperty prop, boolean allowOverride); public void addProperty(SettableBeanProperty prop); public void addBackReferenceProperty(String referenceName, SettableBeanProperty prop); public void addInjectable(PropertyName propName, JavaType propType, Annotations contextAnnotations, AnnotatedMember member, Object valueId); public void addIgnorable(String propName); public void addCreatorProperty(SettableBeanProperty prop); public void setAnySetter(SettableAnyProperty s); public void setIgnoreUnknownProperties(boolean ignore); public void setValueInstantiator(ValueInstantiator inst); public void setObjectIdReader(ObjectIdReader r); public void setPOJOBuilder(AnnotatedMethod buildMethod, JsonPOJOBuilder.Value config); public Iterator<SettableBeanProperty> getProperties(); public SettableBeanProperty findProperty(PropertyName propertyName); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

@@ -1,0 +1,242 @@
+{
+ "bug_name": "Math_89",
+ "call_sites": [
+  {
+   "line": 90,
+   "lines": [
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95
+   ],
+   "path": "src/java/org/apache/commons/math/stat/Frequency.java",
+   "snippet": "            outBuffer.append('\\t');\n            outBuffer.append(getCount(value));\n            outBuffer.append('\\t');\n            outBuffer.append(nf.format(getPct(value)));\n            outBuffer.append('\\t');\n            outBuffer.append(nf.format(getCumPct(value)));\n            outBuffer.append('\\n');\n        }\n        return outBuffer.toString();\n    }\n"
+  },
+  {
+   "line": 435,
+   "lines": [
+    430,
+    431,
+    432,
+    433,
+    434,
+    435,
+    436,
+    437,
+    438,
+    439,
+    440
+   ],
+   "path": "src/java/org/apache/commons/math/stat/Frequency.java",
+   "snippet": "     * \n     * @param v the value to lookup\n     * @return the proportion of values less than or equal to v\n     */\n    public double getCumPct(int v) {\n        return getCumPct(Long.valueOf(v));       \n    }\n    \n    /**\n     * Returns the cumulative percentage of values less than or equal to v\n     * (as a proportion between 0 and 1)."
+  },
+  {
+   "line": 448,
+   "lines": [
+    443,
+    444,
+    445,
+    446,
+    447,
+    448,
+    449,
+    450,
+    451,
+    452,
+    453
+   ],
+   "path": "src/java/org/apache/commons/math/stat/Frequency.java",
+   "snippet": "     * \n     * @param v the value to lookup\n     * @return the proportion of values less than or equal to v\n     */\n    public double getCumPct(long v) {\n        return getCumPct(Long.valueOf(v));         \n    }\n    \n    /**\n     * Returns the cumulative percentage of values less than or equal to v\n     * (as a proportion between 0 and 1)."
+  },
+  {
+   "line": 461,
+   "lines": [
+    456,
+    457,
+    458,
+    459,
+    460,
+    461,
+    462,
+    463,
+    464,
+    465,
+    466
+   ],
+   "path": "src/java/org/apache/commons/math/stat/Frequency.java",
+   "snippet": "     * \n     * @param v the value to lookup\n     * @return the proportion of values less than or equal to v\n     */\n    public double getCumPct(char v) {\n        return getCumPct(Character.valueOf(v));         \n    }\n    \n    /**\n     * A Comparator that compares comparable objects using the\n     * natural order.  Copied from Commons Collections ComparableComparator."
+  }
+ ],
+ "class_simple": "Frequency",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/** \n * Maintains a frequency distribution.\n * <p>\n * Accepts int, long, char or Object values.  New values added must be \n * comparable to those that have been added, otherwise the add method will \n * throw an IllegalArgumentException.</p>\n * <p>\n * Integer values (int, long, Integer, Long) are not distinguished by type -- \n * i.e. <code>addValue(Long.valueOf(2)), addValue(2), addValue(2l)</code> all have\n * the same effect (similarly for arguments to <code>getCount,</code> etc.).</p>\n * <p>\n * char values are converted by <code>addValue</code> to Character instances.\n * As such, these values are not comparable to integral values, so attempts\n * to combine integral types with chars in a frequency distribution will fail.\n * </p>\n * <p>\n * The values are ordered using the default (natural order), unless a  \n * <code>Comparator</code> is supplied in the constructor.</p>\n *\n * @version $Revision$ $Date$\n */\npublic",
+  "method_javadoc": "/**\n     * Returns the cumulative percentage of values less than or equal to v\n     * (as a proportion between 0 and 1).\n     * <p>\n     * Returns <code>Double.NaN</code> if no values have been added.\n     * Returns 0 if at least one value has been added, but v is not comparable\n     * to the values set.</p>\n     * \n     * @param v the value to lookup\n     * @return the proportion of values less than or equal to v\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "private final TreeMap freqTable"
+ ],
+ "focal_class": "org.apache.commons.math.stat.Frequency",
+ "focal_id": "Math_89::org.apache.commons.math.stat.Frequency::getCumPct(Object)",
+ "focal_method_name": "getCumPct",
+ "generations": 3,
+ "impl_B": "public double getCumPct(Object v) {\n        final long sumFreq = getSumFreq();\n        if (sumFreq == 0) {\n            return Double.NaN;\n        }\n        return (double) getCumFreq(v) / (double) sumFreq;        \n    }",
+ "imports": [
+  "java.io.Serializable",
+  "java.text.NumberFormat",
+  "java.util.Iterator",
+  "java.util.Comparator",
+  "java.util.TreeMap"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math.stat",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Return a string representation of this frequency\n     * distribution.\n     * \n     * @return a string representation.\n     */",
+   "name": "toString"
+  },
+  {
+   "javadoc": "/**\n     * Adds 1 to the frequency count for v.\n     * <p>\n     * If other objects have already been added to this Frequency, v must\n     * be comparable to those that have already been added.\n     * </p>\n     * \n     * @param v the value to add.\n     * @throws IllegalArgumentException if <code>v</code> is not Comparable, \n     *         or is not comparable with previous entries\n     * @deprecated use {@link #addValue(Comparable)} instead\n     */",
+   "name": "addValue"
+  },
+  {
+   "javadoc": "/**\n     * Adds 1 to the frequency count for v.\n     * <p>\n     * If other objects have already been added to this Frequency, v must\n     * be comparable to those that have already been added.\n     * </p>\n     * \n     * @param v the value to add.\n     * @throws IllegalArgumentException if <code>v</code> is not comparable with previous entries\n     */",
+   "name": "addValue"
+  },
+  {
+   "javadoc": "/**\n     * Adds 1 to the frequency count for v.\n     * \n     * @param v the value to add.\n     */",
+   "name": "addValue"
+  },
+  {
+   "javadoc": "/**\n     * Adds 1 to the frequency count for v.\n     * \n     * @param v the value to add.\n     */",
+   "name": "addValue"
+  },
+  {
+   "javadoc": "/**\n     * Adds 1 to the frequency count for v.\n     * \n     * @param v the value to add.\n     */",
+   "name": "addValue"
+  },
+  {
+   "javadoc": "/**\n     * Adds 1 to the frequency count for v.\n     * \n     * @param v the value to add.\n     */",
+   "name": "addValue"
+  },
+  {
+   "javadoc": "/** Clears the frequency table */",
+   "name": "clear"
+  },
+  {
+   "javadoc": "/**\n     * Returns an Iterator over the set of values that have been added.\n     * <p>\n     * If added values are integral (i.e., integers, longs, Integers, or Longs), \n     * they are converted to Longs when they are added, so the objects returned\n     * by the Iterator will in this case be Longs.</p>\n     * \n     * @return values Iterator\n     */",
+   "name": "valuesIterator"
+  },
+  {
+   "javadoc": "/**\n     * Returns the sum of all frequencies.\n     * \n     * @return the total frequency count.\n     */",
+   "name": "getSumFreq"
+  },
+  {
+   "javadoc": "/**\n     * Returns the number of values = v.\n     * Returns 0 if the value is not comparable.\n     * \n     * @param v the value to lookup.\n     * @return the frequency of v.\n     */",
+   "name": "getCount"
+  },
+  {
+   "javadoc": "/**\n     * Returns the number of values = v.\n     * \n     * @param v the value to lookup.\n     * @return the frequency of v.\n     */",
+   "name": "getCount"
+  },
+  {
+   "javadoc": "/**\n     * Returns the number of values = v.\n     * \n     * @param v the value to lookup.\n     * @return the frequency of v.\n     */",
+   "name": "getCount"
+  },
+  {
+   "javadoc": "/**\n     * Returns the number of values = v.\n     * \n     * @param v the value to lookup.\n     * @return the frequency of v.\n     */",
+   "name": "getCount"
+  },
+  {
+   "javadoc": "/**\n      * Returns the percentage of values that are equal to v\n     * (as a proportion between 0 and 1).\n     * <p>\n     * Returns <code>Double.NaN</code> if no values have been added.</p>\n     * \n     * @param v the value to lookup\n     * @return the proportion of values equal to v\n     */",
+   "name": "getPct"
+  },
+  {
+   "javadoc": "/**\n     * Returns the percentage of values that are equal to v\n     * (as a proportion between 0 and 1).\n     * \n     * @param v the value to lookup\n     * @return the proportion of values equal to v\n     */",
+   "name": "getPct"
+  },
+  {
+   "javadoc": "/**\n     * Returns the percentage of values that are equal to v\n     * (as a proportion between 0 and 1).\n     * \n     * @param v the value to lookup\n     * @return the proportion of values equal to v\n     */",
+   "name": "getPct"
+  },
+  {
+   "javadoc": "/**\n     * Returns the percentage of values that are equal to v\n     * (as a proportion between 0 and 1).\n     * \n     * @param v the value to lookup\n     * @return the proportion of values equal to v\n     */",
+   "name": "getPct"
+  },
+  {
+   "javadoc": "/**\n     * Returns the cumulative frequency of values less than or equal to v.\n     * <p>\n     * Returns 0 if v is not comparable to the values set.</p>\n     * \n     * @param v the value to lookup.\n     * @return the proportion of values equal to v\n     */",
+   "name": "getCumFreq"
+  },
+  {
+   "javadoc": "/**\n     * Returns the cumulative frequency of values less than or equal to v.\n     * <p>\n     * Returns 0 if v is not comparable to the values set.</p>\n     * \n     * @param v the value to lookup\n     * @return the proportion of values equal to v\n     */",
+   "name": "getCumFreq"
+  },
+  {
+   "javadoc": "/**\n     * Returns the cumulative frequency of values less than or equal to v.\n     * <p>\n     * Returns 0 if v is not comparable to the values set.</p>\n     * \n     * @param v the value to lookup\n     * @return the proportion of values equal to v\n     */",
+   "name": "getCumFreq"
+  },
+  {
+   "javadoc": "/**\n     * Returns the cumulative frequency of values less than or equal to v.\n     * <p>\n     * Returns 0 if v is not comparable to the values set.</p>\n     * \n     * @param v the value to lookup\n     * @return the proportion of values equal to v\n     */",
+   "name": "getCumFreq"
+  },
+  {
+   "javadoc": "/**\n     * Returns the cumulative percentage of values less than or equal to v\n     * (as a proportion between 0 and 1).\n     * <p>\n     * Returns 0 if v is not comparable to the values set.</p>\n     * \n     * @param v the value to lookup\n     * @return the proportion of values less than or equal to v\n     */",
+   "name": "getCumPct"
+  },
+  {
+   "javadoc": "/**\n     * Returns the cumulative percentage of values less than or equal to v\n     * (as a proportion between 0 and 1).\n     * <p>\n     * Returns 0 if v is not comparable to the values set.</p>\n     * \n     * @param v the value to lookup\n     * @return the proportion of values less than or equal to v\n     */",
+   "name": "getCumPct"
+  },
+  {
+   "javadoc": "/**\n     * Returns the cumulative percentage of values less than or equal to v\n     * (as a proportion between 0 and 1).\n     * <p>\n     * Returns 0 if v is not comparable to the values set.</p>\n     * \n     * @param v the value to lookup\n     * @return the proportion of values less than or equal to v\n     */",
+   "name": "getCumPct"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class Frequency implements Serializable",
+  "constructors": [
+   "public Frequency();",
+   "public Frequency(Comparator comparator);"
+  ],
+  "focal_signature": "public double getCumPct(Object v)",
+  "methods": [
+   "public String toString();",
+   "public void addValue(Object v);",
+   "public void addValue(Comparable<?>v);",
+   "public void addValue(int v);",
+   "public void addValue(Integer v);",
+   "public void addValue(long v);",
+   "public void addValue(char v);",
+   "public void clear();",
+   "public Iterator valuesIterator();",
+   "public long getSumFreq();",
+   "public long getCount(Object v);",
+   "public long getCount(int v);",
+   "public long getCount(long v);",
+   "public long getCount(char v);",
+   "public double getPct(Object v);",
+   "public double getPct(int v);",
+   "public double getPct(long v);",
+   "public double getPct(char v);",
+   "public long getCumFreq(Object v);",
+   "public long getCumFreq(int v);",
+   "public long getCumFreq(long v);",
+   "public long getCumFreq(char v);",
+   "public double getCumPct(int v);",
+   "public double getCumPct(long v);",
+   "public double getCumPct(char v);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

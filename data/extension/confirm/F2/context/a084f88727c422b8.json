@@ -1,0 +1,362 @@
+{
+ "bug_name": "JacksonDatabind_68",
+ "call_sites": [
+  {
+   "line": 163,
+   "lines": [
+    158,
+    159,
+    160,
+    161,
+    162,
+    163,
+    164,
+    165,
+    166,
+    167,
+    168
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java",
+   "snippet": "        case VALUE_STRING:\n            return deserializeFromString(p, ctxt);\n        case VALUE_NUMBER_INT:\n            return deserializeFromNumber(p, ctxt);\n        case VALUE_NUMBER_FLOAT:\n\t    return deserializeFromDouble(p, ctxt);\n        case VALUE_EMBEDDED_OBJECT:\n            return deserializeFromEmbedded(p, ctxt);\n        case VALUE_TRUE:\n        case VALUE_FALSE:\n            return deserializeFromBoolean(p, ctxt);"
+  },
+  {
+   "line": 167,
+   "lines": [
+    162,
+    163,
+    164,
+    165,
+    166,
+    167,
+    168,
+    169,
+    170,
+    171,
+    172
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BuilderBasedDeserializer.java",
+   "snippet": "            case VALUE_STRING:\n                return finishBuild(ctxt, deserializeFromString(p, ctxt));\n            case VALUE_NUMBER_INT:\n                return finishBuild(ctxt, deserializeFromNumber(p, ctxt));\n            case VALUE_NUMBER_FLOAT:\n            \treturn finishBuild(ctxt, deserializeFromDouble(p, ctxt));\n            case VALUE_EMBEDDED_OBJECT:\n                return p.getEmbeddedObject();\n            case VALUE_TRUE:\n            case VALUE_FALSE:\n                return finishBuild(ctxt, deserializeFromBoolean(p, ctxt));"
+  }
+ ],
+ "class_simple": "BeanDeserializerBase",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Base class for <code>BeanDeserializer</code>.\n */\npublic abstract",
+  "method_javadoc": "/**\n     * Method called to deserialize POJO value from a JSON floating-point\n     * number.\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "protected final static PropertyName TEMP_PROPERTY_NAME",
+  "final private transient Annotations _classAnnotations",
+  "final protected JavaType _beanType",
+  "final protected JsonFormat.Shape _serializationShape",
+  "protected final ValueInstantiator _valueInstantiator",
+  "protected JsonDeserializer<Object> _delegateDeserializer",
+  "protected JsonDeserializer<Object> _arrayDelegateDeserializer",
+  "protected PropertyBasedCreator _propertyBasedCreator",
+  "protected boolean _nonStandardCreation",
+  "protected boolean _vanillaProcessing",
+  "final protected BeanPropertyMap _beanProperties",
+  "final protected ValueInjector[] _injectables",
+  "protected SettableAnyProperty _anySetter",
+  "final protected Set<String> _ignorableProps",
+  "final protected boolean _ignoreAllUnknown",
+  "final protected boolean _needViewProcesing",
+  "final protected Map<String, SettableBeanProperty> _backRefs",
+  "protected transient HashMap<ClassKey, JsonDeserializer<Object>> _subDeserializers",
+  "protected UnwrappedPropertyHandler _unwrappedPropertyHandler",
+  "protected ExternalTypeHandler _externalTypeIdHandler",
+  "protected final ObjectIdReader _objectIdReader"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.deser.BeanDeserializerBase",
+ "focal_id": "JacksonDatabind_68::com.fasterxml.jackson.databind.deser.BeanDeserializerBase::deserializeFromDouble(JsonParser,DeserializationContext)",
+ "focal_method_name": "deserializeFromDouble",
+ "generations": 3,
+ "impl_B": "public Object deserializeFromDouble(JsonParser p, DeserializationContext ctxt) throws IOException\n    {\n        NumberType t = p.getNumberType();\n        // no separate methods for taking float...\n        if ((t == NumberType.DOUBLE) || (t == NumberType.FLOAT)) {\n            if (_delegateDeserializer != null) {\n                if (!_valueInstantiator.canCreateFromDouble()) {\n                    Object bean = _valueInstantiator.createUsingDelegate(ctxt,\n                            _delegateDeserializer.deserialize(p, ctxt));\n                    if (_injectables != null) {\n                        injectValues(ctxt, bean);\n                    }\n                    return bean;\n                }\n            }\n            return _valueInstantiator.createFromDouble(ctxt, p.getDoubleValue());\n        }\n        // actually, could also be BigDecimal, so:\n        if (_delegateDeserializer != null) {\n            return _valueInstantiator.createUsingDelegate(ctxt,\n                    _delegateDeserializer.deserialize(p, ctxt));\n        }\n        return ctxt.handleMissingInstantiator(handledType(), p,\n                \"no suitable creator method found to deserialize from Number value (%s)\",\n                p.getNumberValue());\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.lang.reflect.Constructor",
+  "java.lang.reflect.InvocationTargetException",
+  "java.util.*",
+  "com.fasterxml.jackson.annotation.JsonFormat",
+  "com.fasterxml.jackson.annotation.JsonIgnoreProperties",
+  "com.fasterxml.jackson.annotation.JsonTypeInfo",
+  "com.fasterxml.jackson.annotation.ObjectIdGenerator",
+  "com.fasterxml.jackson.annotation.ObjectIdGenerators",
+  "com.fasterxml.jackson.annotation.ObjectIdResolver",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.core.JsonParser.NumberType",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.deser.impl.*",
+  "com.fasterxml.jackson.databind.deser.std.StdDelegatingDeserializer",
+  "com.fasterxml.jackson.databind.deser.std.StdDeserializer",
+  "com.fasterxml.jackson.databind.exc.IgnoredPropertyException",
+  "com.fasterxml.jackson.databind.introspect.*",
+  "com.fasterxml.jackson.databind.jsontype.TypeDeserializer",
+  "com.fasterxml.jackson.databind.type.ClassKey",
+  "com.fasterxml.jackson.databind.util.*"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.deser",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "unwrappingDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "withObjectIdReader"
+  },
+  {
+   "javadoc": "",
+   "name": "withIgnorableProperties"
+  },
+  {
+   "javadoc": "/**\n     * Mutant factory method that custom sub-classes must override; not left as\n     * abstract to prevent more drastic backwards compatibility problems.\n     *\n     * @since 2.8\n     */",
+   "name": "withBeanProperties"
+  },
+  {
+   "javadoc": "/**\n     * Fluent factory for creating a variant that can handle\n     * POJO output as a JSON Array. Implementations may ignore this request\n     * if no such input is possible.\n     * \n     * @since 2.1\n     */",
+   "name": "asArrayDeserializer"
+  },
+  {
+   "javadoc": "/**\n     * Method called to finalize setup of this deserializer,\n     * after deserializer itself has been registered.\n     * This is needed to handle recursive and transitive dependencies.\n     */",
+   "name": "resolve"
+  },
+  {
+   "javadoc": "/**\n     * Helper method that can be used to see if specified property is annotated\n     * to indicate use of a converter for property value (in case of container types,\n     * it is container type itself, not key or content type).\n     * \n     * @since 2.2\n     */",
+   "name": "findConvertingDeserializer"
+  },
+  {
+   "javadoc": "/**\n     * Although most of post-processing is done in resolve(), we only get\n     * access to referring property's annotations here; and this is needed\n     * to support per-property ObjectIds.\n     * We will also consider Shape transformations (read from Array) at this\n     * point, since it may come from either Class definition or property.\n     */",
+   "name": "createContextual"
+  },
+  {
+   "javadoc": "/**\n     * Helper method called to see if given property is part of 'managed' property\n     * pair (managed + back reference), and if so, handle resolution details.\n     */",
+   "name": "_resolveManagedReferenceProperty"
+  },
+  {
+   "javadoc": "/**\n     * Method that wraps given property with {@link ObjectIdReferenceProperty}\n     * in case where object id resolution is required.\n     */",
+   "name": "_resolvedObjectIdProperty"
+  },
+  {
+   "javadoc": "/**\n     * Helper method called to see if given property might be so-called unwrapped\n     * property: these require special handling.\n     */",
+   "name": "_resolveUnwrappedProperty"
+  },
+  {
+   "javadoc": "/**\n     * Helper method that will handle gruesome details of dealing with properties\n     * that have non-static inner class as value...\n     */",
+   "name": "_resolveInnerClassValuedProperty"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "isCachable"
+  },
+  {
+   "javadoc": "",
+   "name": "handledType"
+  },
+  {
+   "javadoc": "/**\n     * Overridden to return true for those instances that are\n     * handling value for which Object Identity handling is enabled\n     * (either via value type or referring property).\n     */",
+   "name": "getObjectIdReader"
+  },
+  {
+   "javadoc": "",
+   "name": "hasProperty"
+  },
+  {
+   "javadoc": "",
+   "name": "hasViews"
+  },
+  {
+   "javadoc": "/**\n     * Accessor for checking number of deserialized properties.\n     */",
+   "name": "getPropertyCount"
+  },
+  {
+   "javadoc": "",
+   "name": "getKnownPropertyNames"
+  },
+  {
+   "javadoc": "/**\n     * @deprecated Since 2.3, use {@link #handledType()} instead\n     */",
+   "name": "getBeanClass"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueType"
+  },
+  {
+   "javadoc": "/**\n     * Accessor for iterating over properties this deserializer uses; with\n     * the exception that properties passed via Creator methods\n     * (specifically, \"property-based constructor\") are not included,\n     * but can be accessed separate by calling\n     * {@link #creatorProperties}\n     */",
+   "name": "properties"
+  },
+  {
+   "javadoc": "/**\n     * Accessor for finding properties that represents values to pass\n     * through property-based creator method (constructor or\n     * factory method)\n     * \n     * @since 2.0\n     */",
+   "name": "creatorProperties"
+  },
+  {
+   "javadoc": "",
+   "name": "findProperty"
+  },
+  {
+   "javadoc": "/**\n     * Accessor for finding the property with given name, if POJO\n     * has one. Name used is the external name, i.e. name used\n     * in external data representation (JSON).\n     * \n     * @since 2.0\n     */",
+   "name": "findProperty"
+  },
+  {
+   "javadoc": "/**\n     * Alternate find method that tries to locate a property with given\n     * <code>property index</code>.\n     * Note that access by index is not necessarily faster than by name,\n     * since properties are not directly indexable; however, for most\n     * instances difference is not significant as number of properties\n     * is low.\n     * \n     * @since 2.3\n     */",
+   "name": "findProperty"
+  },
+  {
+   "javadoc": "/**\n     * Method needed by {@link BeanDeserializerFactory} to properly link\n     * managed- and back-reference pairs.\n     */",
+   "name": "findBackReference"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueInstantiator"
+  },
+  {
+   "javadoc": "/**\n     * Method that can be used to replace an existing property with\n     * a modified one.\n     *<p>\n     * NOTE: only ever use this method if you know what you are doing;\n     * incorrect usage can break deserializer.\n     *\n     * @param original Property to replace\n     * @param replacement Property to replace it with\n     * \n     * @since 2.1\n     */",
+   "name": "replaceProperty"
+  },
+  {
+   "javadoc": "/**\n     * General version used when handling needs more advanced\n     * features.\n     */",
+   "name": "deserializeFromObject"
+  },
+  {
+   "javadoc": "",
+   "name": "deserializeWithType"
+  },
+  {
+   "javadoc": "/**\n     * Offlined method called to handle \"native\" Object Id that has been read\n     * and known to be associated with given deserialized POJO.\n     *\n     * @since 2.3\n     */",
+   "name": "_handleTypedObjectId"
+  },
+  {
+   "javadoc": "/**\n     * Alternative deserialization method used when we expect to see Object Id;\n     * if so, we will need to ensure that the Id is seen before anything\n     * else, to ensure that it is available for solving references,\n     * even if JSON itself is not ordered that way. This may require\n     * buffering in some cases, but usually just a simple lookup to ensure\n     * that ordering is correct.\n     */",
+   "name": "deserializeWithObjectId"
+  },
+  {
+   "javadoc": "/**\n     * Method called in cases where it looks like we got an Object Id\n     * to parse and use as a reference.\n     */",
+   "name": "deserializeFromObjectId"
+  },
+  {
+   "javadoc": "",
+   "name": "deserializeFromObjectUsingNonDefault"
+  },
+  {
+   "javadoc": "",
+   "name": "_deserializeUsingPropertyBased"
+  },
+  {
+   "javadoc": "",
+   "name": "deserializeFromString"
+  },
+  {
+   "javadoc": "/**\n     * Method called to deserialize POJO value from a JSON boolean value (true, false)\n     */",
+   "name": "deserializeFromBoolean"
+  },
+  {
+   "javadoc": "",
+   "name": "deserializeFromArray"
+  },
+  {
+   "javadoc": "",
+   "name": "deserializeFromEmbedded"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "injectValues"
+  },
+  {
+   "javadoc": "/**\n     * Helper method called for an unknown property, when using \"vanilla\"\n     * processing.\n     */",
+   "name": "handleUnknownVanilla"
+  },
+  {
+   "javadoc": "/**\n     * Method called when a JSON property is encountered that has not matching\n     * setter, any-setter or field, and thus can not be assigned.\n     */",
+   "name": "handleUnknownProperty"
+  },
+  {
+   "javadoc": "/**\n     * Method called when an explicitly ignored property (one specified with a\n     * name to match, either by property annotation or class annotation) is encountered.\n     * \n     * @since 2.3\n     */",
+   "name": "handleIgnoredProperty"
+  },
+  {
+   "javadoc": "/**\n     * Helper method called to (try to) locate deserializer for given sub-type of\n     * type that this deserializer handles.\n     */",
+   "name": "_findSubclassDeserializer"
+  },
+  {
+   "javadoc": "/**\n     * Method that will modify caught exception (passed in as argument)\n     * as necessary to include reference information, and to ensure it\n     * is a subtype of {@link IOException}, or an unchecked exception.\n     *<p>\n     * Rules for wrapping and unwrapping are bit complicated; essentially:\n     *<ul>\n     * <li>Errors are to be passed as is (if uncovered via unwrapping)\n     * <li>\"Plain\" IOExceptions (ones that are not of type\n     *   {@link JsonMappingException} are to be passed as is\n     *</ul>\n     */",
+   "name": "wrapAndThrow"
+  },
+  {
+   "javadoc": "",
+   "name": "wrapAndThrow"
+  },
+  {
+   "javadoc": "",
+   "name": "wrapInstantiationProblem"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public abstract class BeanDeserializerBase extends StdDeserializer<Object> implements ContextualDeserializer, ResolvableDeserializer, java.io.Serializable",
+  "constructors": [
+   "protected BeanDeserializerBase(BeanDeserializerBuilder builder, BeanDescription beanDesc, BeanPropertyMap properties, Map<String, SettableBeanProperty> backRefs, Set<String> ignorableProps, boolean ignoreAllUnknown, boolean hasViews);",
+   "protected BeanDeserializerBase(BeanDeserializerBase src);",
+   "protected BeanDeserializerBase(BeanDeserializerBase src, boolean ignoreAllUnknown);",
+   "protected BeanDeserializerBase(BeanDeserializerBase src, NameTransformer unwrapper);",
+   "public BeanDeserializerBase(BeanDeserializerBase src, ObjectIdReader oir);",
+   "public BeanDeserializerBase(BeanDeserializerBase src, Set<String> ignorableProps);",
+   "protected BeanDeserializerBase(BeanDeserializerBase src, BeanPropertyMap beanProps);"
+  ],
+  "focal_signature": "public Object deserializeFromDouble(JsonParser p, DeserializationContext ctxt) throws IOException",
+  "methods": [
+   "public abstract JsonDeserializer<Object> unwrappingDeserializer(NameTransformer unwrapper);",
+   "public abstract BeanDeserializerBase withObjectIdReader(ObjectIdReader oir);",
+   "public abstract BeanDeserializerBase withIgnorableProperties(Set<String> ignorableProps);",
+   "public BeanDeserializerBase withBeanProperties(BeanPropertyMap props);",
+   "protected abstract BeanDeserializerBase asArrayDeserializer();",
+   "public void resolve(DeserializationContext ctxt) throws JsonMappingException;",
+   "protected JsonDeserializer<Object> findConvertingDeserializer(DeserializationContext ctxt, SettableBeanProperty prop) throws JsonMappingException;",
+   "public JsonDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property) throws JsonMappingException;",
+   "protected SettableBeanProperty _resolveManagedReferenceProperty(DeserializationContext ctxt, SettableBeanProperty prop);",
+   "protected SettableBeanProperty _resolvedObjectIdProperty(DeserializationContext ctxt, SettableBeanProperty prop) throws JsonMappingException;",
+   "protected SettableBeanProperty _resolveUnwrappedProperty(DeserializationContext ctxt, SettableBeanProperty prop);",
+   "protected SettableBeanProperty _resolveInnerClassValuedProperty(DeserializationContext ctxt, SettableBeanProperty prop);",
+   "public boolean isCachable();",
+   "public Class<?> handledType();",
+   "public ObjectIdReader getObjectIdReader();",
+   "public boolean hasProperty(String propertyName);",
+   "public boolean hasViews();",
+   "public int getPropertyCount();",
+   "public Collection<Object> getKnownPropertyNames();",
+   "public final Class<?> getBeanClass();",
+   "public JavaType getValueType();",
+   "public Iterator<SettableBeanProperty> properties();",
+   "public Iterator<SettableBeanProperty> creatorProperties();",
+   "public SettableBeanProperty findProperty(PropertyName propertyName);",
+   "public SettableBeanProperty findProperty(String propertyName);",
+   "public SettableBeanProperty findProperty(int propertyIndex);",
+   "public SettableBeanProperty findBackReference(String logicalName);",
+   "public ValueInstantiator getValueInstantiator();",
+   "public void replaceProperty(SettableBeanProperty original, SettableBeanProperty replacement);",
+   "public abstract Object deserializeFromObject(JsonParser p, DeserializationContext ctxt) throws IOException;",
+   "public Object deserializeWithType(JsonParser p, DeserializationContext ctxt, TypeDeserializer typeDeserializer) throws IOException;",
+   "protected Object _handleTypedObjectId(JsonParser p, DeserializationContext ctxt, Object pojo, Object rawId) throws IOException;",
+   "protected Object deserializeWithObjectId(JsonParser p, DeserializationContext ctxt) throws IOException;",
+   "protected Object deserializeFromObjectId(JsonParser p, DeserializationContext ctxt) throws IOException;",
+   "protected Object deserializeFromObjectUsingNonDefault(JsonParser p, DeserializationContext ctxt) throws IOException;",
+   "protected abstract Object _deserializeUsingPropertyBased(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException;",
+   "public Object deserializeFromString(JsonParser p, DeserializationContext ctxt) throws IOException;",
+   "public Object deserializeFromBoolean(JsonParser p, DeserializationContext ctxt) throws IOException;",
+   "public Object deserializeFromArray(JsonParser p, DeserializationContext ctxt) throws IOException;",
+   "public Object deserializeFromEmbedded(JsonParser p, DeserializationContext ctxt) throws IOException;",
+   "protected void injectValues(DeserializationContext ctxt, Object bean) throws IOException;",
+   "protected void handleUnknownVanilla(JsonParser p, DeserializationContext ctxt, Object bean, String propName) throws IOException;",
+   "protected void handleUnknownProperty(JsonParser p, DeserializationContext ctxt, Object beanOrClass, String propName) throws IOException;",
+   "protected void handleIgnoredProperty(JsonParser p, DeserializationContext ctxt, Object beanOrClass, String propName) throws IOException;",
+   "protected JsonDeserializer<Object> _findSubclassDeserializer(DeserializationContext ctxt, Object bean, TokenBuffer unknownTokens) throws IOException;",
+   "public void wrapAndThrow(Throwable t, Object bean, String fieldName, DeserializationContext ctxt) throws IOException;",
+   "// since 2.4, not used by core Jackson; only relevant for arrays/Collections public void wrapAndThrow(Throwable t, Object bean, int index, DeserializationContext ctxt) throws IOException;",
+   "protected Object wrapInstantiationProblem(Throwable t, DeserializationContext ctxt) throws IOException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

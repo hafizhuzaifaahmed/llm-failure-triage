@@ -1,0 +1,187 @@
+{
+ "bug_name": "JacksonDatabind_85",
+ "call_sites": [
+  {
+   "line": 503,
+   "lines": [
+    498,
+    499,
+    500,
+    501,
+    502,
+    503,
+    504,
+    505,
+    506,
+    507,
+    508
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "            BeanProperty prop) throws JsonMappingException {\n        KeyDeserializer kd = _cache.findKeyDeserializer(this,\n                _factory, keyType);\n        // Second: contextualize?\n        if (kd instanceof ContextualKeyDeserializer) {\n            kd = ((ContextualKeyDeserializer) kd).createContextual(this, prop);\n        }\n        return kd;\n    }\n    \n    /*"
+  },
+  {
+   "line": 650,
+   "lines": [
+    645,
+    646,
+    647,
+    648,
+    649,
+    650,
+    651,
+    652,
+    653,
+    654,
+    655
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "        throws JsonMappingException\n    {\n        if (deser instanceof ContextualDeserializer) {\n            _currentType = new LinkedNode<JavaType>(type, _currentType);\n            try {\n                deser = ((ContextualDeserializer) deser).createContextual(this, prop);\n            } finally {\n                _currentType = _currentType.next();\n            }\n        }\n        return deser;"
+  },
+  {
+   "line": 681,
+   "lines": [
+    676,
+    677,
+    678,
+    679,
+    680,
+    681,
+    682,
+    683,
+    684,
+    685,
+    686
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "        throws JsonMappingException\n    {\n        if (deser instanceof ContextualDeserializer) {\n            _currentType = new LinkedNode<JavaType>(type, _currentType);\n            try {\n                deser = ((ContextualDeserializer) deser).createContextual(this, prop);\n            } finally {\n                _currentType = _currentType.next();\n            }\n        }\n        return deser;"
+  },
+  {
+   "line": 697,
+   "lines": [
+    692,
+    693,
+    694,
+    695,
+    696,
+    697,
+    698,
+    699,
+    700,
+    701,
+    702
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "    }\n\n    @Deprecated // since 2.5; remove from 2.9\n    public JsonDeserializer<?> handleSecondaryContextualization(JsonDeserializer<?> deser, BeanProperty prop) throws JsonMappingException {\n        if (deser instanceof ContextualDeserializer) {\n            deser = ((ContextualDeserializer) deser).createContextual(this, prop);\n        }\n        return deser;\n    }\n\n    /*"
+  },
+  {
+   "line": 938,
+   "lines": [
+    933,
+    934,
+    935,
+    936,
+    937,
+    938,
+    939,
+    940,
+    941,
+    942,
+    943
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/SerializerProvider.java",
+   "snippet": "            BeanProperty property)\n        throws JsonMappingException\n    {\n        if (ser != null) {\n            if (ser instanceof ContextualSerializer) {\n                ser = ((ContextualSerializer) ser).createContextual(this, property);\n            }\n        }\n        return ser;\n    }\n"
+  }
+ ],
+ "class_simple": "DateTimeSerializerBase",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "protected final Boolean _useTimestamp",
+  "protected final DateFormat _customFormat"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.ser.std.DateTimeSerializerBase",
+ "focal_id": "JacksonDatabind_85::com.fasterxml.jackson.databind.ser.std.DateTimeSerializerBase::createContextual(SerializerProvider,BeanProperty)",
+ "focal_method_name": "createContextual",
+ "generations": 3,
+ "impl_B": "@Override\n    public JsonSerializer<?> createContextual(SerializerProvider serializers,\n            BeanProperty property) throws JsonMappingException\n    {\n        if (property == null) {\n            return this;\n        }\n        JsonFormat.Value format = findFormatOverrides(serializers, property, handledType());\n        if (format == null) {\n            return this;\n        }\n        // Simple case first: serialize as numeric timestamp?\n        JsonFormat.Shape shape = format.getShape();\n        if (shape.isNumeric()) {\n            return withFormat(Boolean.TRUE, null);\n        }\n\n        // 08-Jun-2017, tatu: With [databind#1648], this gets bit tricky..\n        // First: custom pattern will override things\n                if ((shape == JsonFormat.Shape.STRING) || format.hasPattern()\n                                || format.hasLocale() || format.hasTimeZone()) {\n                    TimeZone tz = format.getTimeZone();\n                    final String pattern = format.hasPattern()\n                                    ? format.getPattern()\n                                    : StdDateFormat.DATE_FORMAT_STR_ISO8601;\n            final Locale loc = format.hasLocale()\n                            ? format.getLocale()\n                            : serializers.getLocale();\n                    SimpleDateFormat df = new SimpleDateFormat(pattern, loc);\n                    if (tz == null) {\n                        tz = serializers.getTimeZone();\n                    }\n            df.setTimeZone(tz);\n            return withFormat(Boolean.FALSE, df);\n        }\n\n        // Otherwise, need one of these changes:\n\n\n        // Jackson's own `StdDateFormat` is quite easy to deal with...\n\n        // 08-Jun-2017, tatu: Unfortunately there's no generally usable\n        //    mechanism for changing `DateFormat` instances (or even clone()ing)\n        //    So: require it be `SimpleDateFormat`; can't config other types\n//            serializers.reportBadDefinition(handledType(), String.format(\n            // Ugh. No way to change `Locale`, create copy; must re-crete completely:\n        return this;\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.lang.reflect.Type",
+  "java.text.DateFormat",
+  "java.text.SimpleDateFormat",
+  "java.util.Locale",
+  "java.util.TimeZone",
+  "com.fasterxml.jackson.annotation.JsonFormat",
+  "com.fasterxml.jackson.core.JsonGenerator",
+  "com.fasterxml.jackson.core.JsonParser",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.jsonFormatVisitors.*",
+  "com.fasterxml.jackson.databind.ser.ContextualSerializer",
+  "com.fasterxml.jackson.databind.util.StdDateFormat"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.ser.std",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "withFormat"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "isEmpty"
+  },
+  {
+   "javadoc": "",
+   "name": "isEmpty"
+  },
+  {
+   "javadoc": "",
+   "name": "_timestamp"
+  },
+  {
+   "javadoc": "",
+   "name": "getSchema"
+  },
+  {
+   "javadoc": "",
+   "name": "acceptJsonFormatVisitor"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "serialize"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_asTimestamp"
+  },
+  {
+   "javadoc": "",
+   "name": "_acceptJsonFormatVisitor"
+  }
+ ],
+ "sig": {
+  "class_declaration": "@SuppressWarnings(\"serial\") public abstract class DateTimeSerializerBase<T> extends StdScalarSerializer<T> implements ContextualSerializer",
+  "constructors": [
+   "protected DateTimeSerializerBase(Class<T> type, Boolean useTimestamp, DateFormat customFormat);"
+  ],
+  "focal_signature": "public JsonSerializer<?> createContextual(SerializerProvider serializers, BeanProperty property) throws JsonMappingException",
+  "methods": [
+   "public abstract DateTimeSerializerBase<T> withFormat(Boolean timestamp, DateFormat customFormat);",
+   "public boolean isEmpty(T value);",
+   "public boolean isEmpty(SerializerProvider serializers, T value);",
+   "protected abstract long _timestamp(T value);",
+   "public JsonNode getSchema(SerializerProvider serializers, Type typeHint);",
+   "public void acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint) throws JsonMappingException;",
+   "public abstract void serialize(T value, JsonGenerator gen, SerializerProvider serializers) throws IOException;",
+   "protected boolean _asTimestamp(SerializerProvider serializers);",
+   "protected void _acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint, boolean asNumber) throws JsonMappingException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

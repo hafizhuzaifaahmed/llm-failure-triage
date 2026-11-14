@@ -1,0 +1,182 @@
+{
+ "bug_name": "Math_102",
+ "call_sites": [
+  {
+   "line": 86,
+   "lines": [
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91
+   ],
+   "path": "src/java/org/apache/commons/math/stat/inference/ChiSquareTest.java",
+   "snippet": "     * @param expected array of expected frequency counts\n     * @return p-value\n     * @throws IllegalArgumentException if preconditions are not met\n     * @throws MathException if an error occurs computing the p-value\n     */\n    double chiSquareTest(double[] expected, long[] observed) \n        throws IllegalArgumentException, MathException;\n    \n    /**\n     * Performs a <a href=\"http://www.itl.nist.gov/div898/handbook/eda/section3/eda35f.htm\">\n     * Chi-square goodness of fit test</a> evaluating the null hypothesis that the observed counts "
+  },
+  {
+   "line": 121,
+   "lines": [
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122,
+    123,
+    124,
+    125,
+    126
+   ],
+   "path": "src/java/org/apache/commons/math/stat/inference/ChiSquareTest.java",
+   "snippet": "     * @return true iff null hypothesis can be rejected with confidence\n     * 1 - alpha\n     * @throws IllegalArgumentException if preconditions are not met\n     * @throws MathException if an error occurs performing the test\n     */\n    boolean chiSquareTest(double[] expected, long[] observed, double alpha) \n        throws IllegalArgumentException, MathException;\n    \n    /**\n     *  Computes the Chi-Square statistic associated with a \n     * <a href=\"http://www.itl.nist.gov/div898/handbook/prc/section4/prc45.htm\">"
+  },
+  {
+   "line": 178,
+   "lines": [
+    173,
+    174,
+    175,
+    176,
+    177,
+    178,
+    179,
+    180,
+    181,
+    182,
+    183
+   ],
+   "path": "src/java/org/apache/commons/math/stat/inference/ChiSquareTest.java",
+   "snippet": "     * @param counts array representation of 2-way table\n     * @return p-value\n     * @throws IllegalArgumentException if preconditions are not met\n     * @throws MathException if an error occurs computing the p-value\n     */\n    double chiSquareTest(long[][] counts) \n    throws IllegalArgumentException, MathException;\n    \n    /**\n     * Performs a <a href=\"http://www.itl.nist.gov/div898/handbook/prc/section4/prc45.htm\">\n     * chi-square test of independence</a> evaluating the null hypothesis that the classifications "
+  },
+  {
+   "line": 214,
+   "lines": [
+    209,
+    210,
+    211,
+    212,
+    213,
+    214,
+    215,
+    216,
+    217,
+    218
+   ],
+   "path": "src/java/org/apache/commons/math/stat/inference/ChiSquareTest.java",
+   "snippet": "     * @return true iff null hypothesis can be rejected with confidence\n     * 1 - alpha\n     * @throws IllegalArgumentException if preconditions are not met\n     * @throws MathException if an error occurs performing the test\n     */\n    boolean chiSquareTest(long[][] counts, double alpha) \n    throws IllegalArgumentException, MathException;\n\n}\n"
+  },
+  {
+   "line": 122,
+   "lines": [
+    117,
+    118,
+    119,
+    120,
+    121,
+    122,
+    123,
+    124,
+    125,
+    126,
+    127
+   ],
+   "path": "src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java",
+   "snippet": "            double alpha) throws IllegalArgumentException, MathException {\n        if ((alpha <= 0) || (alpha > 0.5)) {\n            throw new IllegalArgumentException(\n                    \"bad significance level: \" + alpha);\n        }\n        return (chiSquareTest(expected, observed) < alpha);\n    }\n    \n    /**\n     * @param counts array representation of 2-way table\n     * @return chi-square test statistic"
+  }
+ ],
+ "class_simple": "ChiSquareTestImpl",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Implements Chi-Square test statistics defined in the\n * {@link UnknownDistributionChiSquareTest} interface.\n *\n * @version $Revision$ $Date$\n */\npublic",
+  "method_javadoc": "/**\n     * @param counts array representation of 2-way table\n     * @return p-value\n     * @throws IllegalArgumentException if preconditions are not met\n     * @throws MathException if an error occurs computing the p-value\n     */"
+ },
+ "fields": [
+  "private ChiSquaredDistribution distribution"
+ ],
+ "focal_class": "org.apache.commons.math.stat.inference.ChiSquareTestImpl",
+ "focal_id": "Math_102::org.apache.commons.math.stat.inference.ChiSquareTestImpl::chiSquareTest(long[][])",
+ "focal_method_name": "chiSquareTest",
+ "generations": 3,
+ "impl_B": "public double chiSquareTest(long[][] counts)\n    throws IllegalArgumentException, MathException {\n        checkArray(counts);\n        double df = ((double) counts.length -1) * ((double) counts[0].length - 1);\n        distribution.setDegreesOfFreedom(df);\n        return 1 - distribution.cumulativeProbability(chiSquare(counts));\n    }",
+ "imports": [
+  "org.apache.commons.math.MathException",
+  "org.apache.commons.math.distribution.ChiSquaredDistribution",
+  "org.apache.commons.math.distribution.ChiSquaredDistributionImpl",
+  "org.apache.commons.math.distribution.DistributionFactory"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math.stat.inference",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * {@inheritDoc}\n     * <p><strong>Note: </strong>This implementation rescales the \n     * <code>expected</code> array if necessary to ensure that the sum of the\n     * expected and observed counts are equal.</p>\n     * \n     * @param observed array of observed frequency counts\n     * @param expected array of expected frequency counts\n     * @return chi-square test statistic\n     * @throws IllegalArgumentException if preconditions are not met\n     * or length is less than 2\n     */",
+   "name": "chiSquare"
+  },
+  {
+   "javadoc": "/**\n     * {@inheritDoc}\n     * <p><strong>Note: </strong>This implementation rescales the \n     * <code>expected</code> array if necessary to ensure that the sum of the\n     * expected and observed counts are equal.</p>\n     * \n     * @param observed array of observed frequency counts\n     * @param expected array of exptected frequency counts\n     * @return p-value\n     * @throws IllegalArgumentException if preconditions are not met\n     * @throws MathException if an error occurs computing the p-value\n     */",
+   "name": "chiSquareTest"
+  },
+  {
+   "javadoc": "/**\n     * {@inheritDoc}\n     * <p><strong>Note: </strong>This implementation rescales the \n     * <code>expected</code> array if necessary to ensure that the sum of the\n     * expected and observed counts are equal.</p>\n     * \n     * @param observed array of observed frequency counts\n     * @param expected array of exptected frequency counts\n     * @param alpha significance level of the test\n     * @return true iff null hypothesis can be rejected with confidence\n     * 1 - alpha\n     * @throws IllegalArgumentException if preconditions are not met\n     * @throws MathException if an error occurs performing the test\n     */",
+   "name": "chiSquareTest"
+  },
+  {
+   "javadoc": "/**\n     * @param counts array representation of 2-way table\n     * @return chi-square test statistic\n     * @throws IllegalArgumentException if preconditions are not met\n     */",
+   "name": "chiSquare"
+  },
+  {
+   "javadoc": "/**\n     * @param counts array representation of 2-way table\n     * @param alpha significance level of the test\n     * @return true iff null hypothesis can be rejected with confidence\n     * 1 - alpha\n     * @throws IllegalArgumentException if preconditions are not met\n     * @throws MathException if an error occurs performing the test\n     */",
+   "name": "chiSquareTest"
+  },
+  {
+   "javadoc": "/**\n     * @param observed1 array of observed frequency counts of the first data set\n     * @param observed2 array of observed frequency counts of the second data set\n     * @return chi-square test statistic\n     * @throws IllegalArgumentException if preconditions are not met\n     */",
+   "name": "chiSquareDataSetsComparison"
+  },
+  {
+   "javadoc": "/**\n     * @param observed1 array of observed frequency counts of the first data set\n     * @param observed2 array of observed frequency counts of the second data set\n     * @return p-value\n     * @throws IllegalArgumentException if preconditions are not met\n     * @throws MathException if an error occurs computing the p-value\n     */",
+   "name": "chiSquareTestDataSetsComparison"
+  },
+  {
+   "javadoc": "/**\n     * @param observed1 array of observed frequency counts of the first data set\n     * @param observed2 array of observed frequency counts of the second data set\n     * @param alpha significance level of the test\n     * @return true iff null hypothesis can be rejected with confidence\n     * 1 - alpha\n     * @throws IllegalArgumentException if preconditions are not met\n     * @throws MathException if an error occurs performing the test\n     */",
+   "name": "chiSquareTestDataSetsComparison"
+  },
+  {
+   "javadoc": "/**\n     * Gets a DistributionFactory to use in creating ChiSquaredDistribution instances.\n     * @deprecated inject ChiSquaredDistribution instances directly instead of\n     *             using a factory.\n     */",
+   "name": "getDistributionFactory"
+  },
+  {
+   "javadoc": "/**\n     * Modify the distribution used to compute inference statistics.\n     * \n     * @param value\n     *            the new distribution\n     * @since 1.2\n     */",
+   "name": "setDistribution"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class ChiSquareTestImpl implements UnknownDistributionChiSquareTest",
+  "constructors": [
+   "public ChiSquareTestImpl();",
+   "public ChiSquareTestImpl(ChiSquaredDistribution x);"
+  ],
+  "focal_signature": "public double chiSquareTest(long[][] counts) throws IllegalArgumentException, MathException",
+  "methods": [
+   "public double chiSquare(double[] expected, long[] observed) throws IllegalArgumentException;",
+   "public double chiSquareTest(double[] expected, long[] observed) throws IllegalArgumentException, MathException;",
+   "public boolean chiSquareTest(double[] expected, long[] observed, double alpha) throws IllegalArgumentException, MathException;",
+   "public double chiSquare(long[][] counts) throws IllegalArgumentException;",
+   "public boolean chiSquareTest(long[][] counts, double alpha) throws IllegalArgumentException, MathException;",
+   "public double chiSquareDataSetsComparison(long[] observed1, long[] observed2) throws IllegalArgumentException;",
+   "public double chiSquareTestDataSetsComparison(long[] observed1, long[] observed2) throws IllegalArgumentException, MathException;",
+   "public boolean chiSquareTestDataSetsComparison(long[] observed1, long[] observed2, double alpha) throws IllegalArgumentException, MathException;",
+   "protected DistributionFactory getDistributionFactory();",
+   "public void setDistribution(ChiSquaredDistribution value);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

@@ -1,0 +1,128 @@
+{
+ "bug_name": "Mockito_21",
+ "call_sites": [
+  {
+   "line": 82,
+   "lines": [
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87
+   ],
+   "path": "src/org/mockito/internal/configuration/ClassPathLoader.java",
+   "snippet": "            //that's ok, it means there is no global config, using default one.\n            return null;\n        }\n\n        try {\n            return (IMockitoConfiguration) configClass.newInstance();\n        } catch (ClassCastException e) {\n            throw new MockitoConfigurationException(\"MockitoConfiguration class must implement \" + IMockitoConfiguration.class.getName() + \" interface.\", e);\n        } catch (Exception e) {\n            throw new MockitoConfigurationException(\"Unable to instantiate \" + MOCKITO_CONFIGURATION_CLASS_NAME +\" class. Does it have a safe, no-arg constructor?\", e);\n        }"
+  },
+  {
+   "line": 127,
+   "lines": [
+    122,
+    123,
+    124,
+    125,
+    126,
+    127,
+    128,
+    129,
+    130,
+    131,
+    132
+   ],
+   "path": "src/org/mockito/internal/configuration/ClassPathLoader.java",
+   "snippet": "\n        try {\n            // Default implementation. Use our own ClassLoader instead of the context\n            // ClassLoader, as the default implementation is assumed to be part of\n            // Mockito and may not be available via the context ClassLoader.\n            return pluginType.cast(Class.forName(defaultPluginClassName).newInstance());\n        } catch (Exception e) {\n            throw new MockitoException(\"Internal problem occurred, please report it. \" +\n                    \"Mockito is unable to load the default implementation of class that is a part of Mockito distribution. \" +\n                    \"Failed to load \" + pluginType, e);\n        }"
+  },
+  {
+   "line": 159,
+   "lines": [
+    154,
+    155,
+    156,
+    157,
+    158,
+    159,
+    160,
+    161,
+    162,
+    163,
+    164
+   ],
+   "path": "src/org/mockito/internal/configuration/ClassPathLoader.java",
+   "snippet": "            try {\n                in = resource.openStream();\n                for (String line : readerToLines(new InputStreamReader(in, \"UTF-8\"))) {\n                    String name = stripCommentAndWhitespace(line);\n                    if (name.length() != 0) {\n                        result.add(service.cast(loader.loadClass(name).newInstance()));\n                    }\n                }\n            } catch (Exception e) {\n                throw new MockitoConfigurationException(\n                        \"Failed to load \" + service + \" using \" + resource, e);"
+  },
+  {
+   "line": 143,
+   "lines": [
+    138,
+    139,
+    140,
+    141,
+    142,
+    143,
+    144,
+    145,
+    146,
+    147,
+    148
+   ],
+   "path": "src/org/mockito/internal/creation/cglib/ClassImposterizer.java",
+   "snippet": "    }\n    \n    private Object createProxy(Class<Factory> proxyClass, final MethodInterceptor interceptor) {\n        Factory proxy;\n        try {\n            proxy = instantiator.newInstance(proxyClass);\n        } catch (InstantationException e) {\n            throw new MockitoException(\"Unable to create mock instance of type '\" + proxyClass.getSuperclass().getSimpleName() + \"'\", e);\n        }\n        proxy.setCallbacks(new Callback[] {interceptor, SerializableNoOp.SERIALIZABLE_INSTANCE });\n        return proxy;"
+  },
+  {
+   "line": 25,
+   "lines": [
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30
+   ],
+   "patch_lines_removed": true,
+   "path": "src/org/mockito/internal/creation/instance/ConstructorInstantiator.java",
+   "snippet": "            //this is kind of overengineered because we don't need to support more params\n            //however, I know we will be needing it :)"
+  }
+ ],
+ "class_simple": "ConstructorInstantiator",
+ "dataset": "D1C_F1",
+ "doc": {
+  "class_javadoc": "",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private final Object outerClassInstance"
+ ],
+ "focal_class": "org.mockito.internal.creation.instance.ConstructorInstantiator",
+ "focal_id": "Mockito_21::org.mockito.internal.creation.instance.ConstructorInstantiator::newInstance(Class<T>)",
+ "focal_method_name": "newInstance",
+ "generations": 6,
+ "impl_B": "public <T> T newInstance(Class<T> cls) {\n        if (outerClassInstance == null) {\n            return noArgConstructor(cls);\n        }\n        return withOuterClass(cls);\n    }",
+ "imports": [
+  "java.lang.reflect.Constructor"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.mockito.internal.creation.instance",
+ "project": "Mockito",
+ "siblings": [],
+ "sig": {
+  "class_declaration": "public class ConstructorInstantiator implements Instantiator",
+  "constructors": [
+   "public ConstructorInstantiator(Object outerClassInstance);"
+  ],
+  "focal_signature": "public <T> T newInstance(Class<T> cls)",
+  "methods": [],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F1"
+}

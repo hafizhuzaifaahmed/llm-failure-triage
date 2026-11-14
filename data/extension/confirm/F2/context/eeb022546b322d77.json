@@ -1,0 +1,161 @@
+{
+ "bug_name": "JacksonDatabind_16",
+ "call_sites": [
+  {
+   "line": 77,
+   "lines": [
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79,
+    80,
+    81,
+    82
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/introspect/AnnotationMap.java",
+   "snippet": "     * only if it didn't yet exist.\n     */\n    public boolean addIfNotPresent(Annotation ann)\n    {\n        if (_annotations == null || !_annotations.containsKey(ann.annotationType())) {\n            _add(ann);\n            return true;\n        }\n        return false;\n    }\n"
+  },
+  {
+   "line": 90,
+   "lines": [
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/introspect/AnnotationMap.java",
+   "snippet": "     * \n     * @return True if the addition changed the contents, that is, this map did not\n     *   already have specified annotation\n     */\n    public boolean add(Annotation ann) {\n        return _add(ann);\n    }\n\n    @Override\n    public String toString() {\n        if (_annotations == null) {"
+  },
+  {
+   "line": 216,
+   "lines": [
+    211,
+    212,
+    213,
+    214,
+    215,
+    216,
+    217,
+    218,
+    219,
+    220,
+    221
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/node/ArrayNode.java",
+   "snippet": "    public ArrayNode add(JsonNode value)\n    {\n        if (value == null) { // let's not store 'raw' nulls but nodes\n            value = nullNode();\n        }\n        _add(value);\n        return this;\n    }\n\n    /**\n     * Method for adding all child nodes of given Array, appending to"
+  },
+  {
+   "line": 308,
+   "lines": [
+    303,
+    304,
+    305,
+    306,
+    307,
+    308,
+    309,
+    310,
+    311,
+    312,
+    313
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/node/ArrayNode.java",
+   "snippet": "     * @return Newly constructed ArrayNode\n     */\n    public ArrayNode addArray()\n    {\n        ArrayNode n  = arrayNode();\n        _add(n);\n        return n;\n    }\n\n    /**\n     * Method that will construct an ObjectNode and add it at the end"
+  },
+  {
+   "line": 321,
+   "lines": [
+    316,
+    317,
+    318,
+    319,
+    320,
+    321,
+    322,
+    323,
+    324,
+    325,
+    326
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/node/ArrayNode.java",
+   "snippet": "     * @return Newly constructed ObjectNode\n     */\n    public ObjectNode addObject()\n    {\n        ObjectNode n  = objectNode();\n        _add(n);\n        return n;\n    }\n\n    /**\n     * Method that will construct a POJONode and add it at the end"
+  }
+ ],
+ "class_simple": "AnnotationMap",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Simple helper class used to keep track of collection of\n * Jackson Annotations associated with annotatable things\n * (methods, constructors, classes).\n * Note that only Jackson-owned annotations are tracked (for now?).\n */\npublic final",
+  "method_javadoc": "/**********************************************************\n     */"
+ },
+ "fields": [
+  "protected HashMap<Class<? extends Annotation>,Annotation> _annotations"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.introspect.AnnotationMap",
+ "focal_id": "JacksonDatabind_16::com.fasterxml.jackson.databind.introspect.AnnotationMap::_add(Annotation)",
+ "focal_method_name": "_add",
+ "generations": 3,
+ "impl_B": "protected final boolean _add(Annotation ann) {\n        if (_annotations == null) {\n            _annotations = new HashMap<Class<? extends Annotation>,Annotation>();\n        }\n        Annotation previous = _annotations.put(ann.annotationType(), ann);\n        return (previous != null) && previous.equals(ann);\n    }",
+ "imports": [
+  "java.lang.annotation.Annotation",
+  "java.util.*",
+  "com.fasterxml.jackson.databind.util.Annotations"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.introspect",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * @since 2.3\n     */",
+   "name": "annotations"
+  },
+  {
+   "javadoc": "",
+   "name": "merge"
+  },
+  {
+   "javadoc": "",
+   "name": "size"
+  },
+  {
+   "javadoc": "/**\n     * Method called to add specified annotation in the Map, but\n     * only if it didn't yet exist.\n     */",
+   "name": "addIfNotPresent"
+  },
+  {
+   "javadoc": "/**\n     * Method called to add specified annotation in the Map.\n     * \n     * @return True if the addition changed the contents, that is, this map did not\n     *   already have specified annotation\n     */",
+   "name": "add"
+  },
+  {
+   "javadoc": "",
+   "name": "toString"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public final class AnnotationMap implements Annotations",
+  "constructors": [
+   "public AnnotationMap();"
+  ],
+  "focal_signature": "protected final boolean _add(Annotation ann)",
+  "methods": [
+   "public Iterable<Annotation> annotations();",
+   "public static AnnotationMap merge(AnnotationMap primary, AnnotationMap secondary);",
+   "public int size();",
+   "public boolean addIfNotPresent(Annotation ann);",
+   "public boolean add(Annotation ann);",
+   "public String toString();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

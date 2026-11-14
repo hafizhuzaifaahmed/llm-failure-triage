@@ -1,0 +1,212 @@
+{
+ "bug_name": "Time_14",
+ "call_sites": [
+  {
+   "line": 706,
+   "lines": [
+    701,
+    702,
+    703,
+    704,
+    705,
+    706,
+    707,
+    708,
+    709,
+    710,
+    711
+   ],
+   "path": "src/main/java/org/joda/time/chrono/GJChronology.java",
+   "snippet": "        public int getDifference(long minuendInstant, long subtrahendInstant) {\n            return iGregorianField.getDifference(minuendInstant, subtrahendInstant);\n        }\n\n        public long getDifferenceAsLong(long minuendInstant, long subtrahendInstant) {\n            return iGregorianField.getDifferenceAsLong(minuendInstant, subtrahendInstant);\n        }\n\n        public long set(long instant, int value) {\n            if (instant >= iCutover) {\n                instant = iGregorianField.set(instant, value);"
+  },
+  {
+   "line": 1029,
+   "lines": [
+    1024,
+    1025,
+    1026,
+    1027,
+    1028,
+    1029,
+    1030,
+    1031,
+    1032,
+    1033,
+    1034
+   ],
+   "path": "src/main/java/org/joda/time/chrono/GJChronology.java",
+   "snippet": "        }\n\n        public long getDifferenceAsLong(long minuendInstant, long subtrahendInstant) {\n            if (minuendInstant >= iCutover) {\n                if (subtrahendInstant >= iCutover) {\n                    return iGregorianField.getDifferenceAsLong(minuendInstant, subtrahendInstant);\n                }\n                // Remember, the add is being reversed. Since subtrahend is\n                // Julian, convert minuend to Julian to match.\n                minuendInstant = gregorianToJulian(minuendInstant);\n                return iJulianField.getDifferenceAsLong(minuendInstant, subtrahendInstant);"
+  },
+  {
+   "line": 1034,
+   "lines": [
+    1029,
+    1030,
+    1031,
+    1032,
+    1033,
+    1034,
+    1035,
+    1036,
+    1037,
+    1038,
+    1039
+   ],
+   "path": "src/main/java/org/joda/time/chrono/GJChronology.java",
+   "snippet": "                    return iGregorianField.getDifferenceAsLong(minuendInstant, subtrahendInstant);\n                }\n                // Remember, the add is being reversed. Since subtrahend is\n                // Julian, convert minuend to Julian to match.\n                minuendInstant = gregorianToJulian(minuendInstant);\n                return iJulianField.getDifferenceAsLong(minuendInstant, subtrahendInstant);\n            } else {\n                if (subtrahendInstant < iCutover) {\n                    return iJulianField.getDifferenceAsLong(minuendInstant, subtrahendInstant);\n                }\n                // Remember, the add is being reversed. Since subtrahend is"
+  },
+  {
+   "line": 1037,
+   "lines": [
+    1032,
+    1033,
+    1034,
+    1035,
+    1036,
+    1037,
+    1038,
+    1039,
+    1040,
+    1041,
+    1042
+   ],
+   "path": "src/main/java/org/joda/time/chrono/GJChronology.java",
+   "snippet": "                // Julian, convert minuend to Julian to match.\n                minuendInstant = gregorianToJulian(minuendInstant);\n                return iJulianField.getDifferenceAsLong(minuendInstant, subtrahendInstant);\n            } else {\n                if (subtrahendInstant < iCutover) {\n                    return iJulianField.getDifferenceAsLong(minuendInstant, subtrahendInstant);\n                }\n                // Remember, the add is being reversed. Since subtrahend is\n                // Gregorian, convert minuend to Gregorian to match.\n                minuendInstant = julianToGregorian(minuendInstant);\n                return iGregorianField.getDifferenceAsLong(minuendInstant, subtrahendInstant);"
+  },
+  {
+   "line": 1042,
+   "lines": [
+    1037,
+    1038,
+    1039,
+    1040,
+    1041,
+    1042,
+    1043,
+    1044,
+    1045,
+    1046,
+    1047
+   ],
+   "path": "src/main/java/org/joda/time/chrono/GJChronology.java",
+   "snippet": "                    return iJulianField.getDifferenceAsLong(minuendInstant, subtrahendInstant);\n                }\n                // Remember, the add is being reversed. Since subtrahend is\n                // Gregorian, convert minuend to Gregorian to match.\n                minuendInstant = julianToGregorian(minuendInstant);\n                return iGregorianField.getDifferenceAsLong(minuendInstant, subtrahendInstant);\n            }\n        }\n\n        // Since the imprecise fields have durations longer than the gap\n        // duration, keep these methods simple. The inherited implementations"
+  }
+ ],
+ "class_simple": "BasicMonthOfYearDateTimeField",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Provides time calculations for the month of the year component of time.\n *\n * @author Guy Allard\n * @author Stephen Colebourne\n * @author Brian S O'Neill\n * @since 1.2, refactored from GJMonthOfYearDateTimeField\n */",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "private static final int MIN",
+  "private final BasicChronology iChronology",
+  "private final int iMax",
+  "private final int iLeapMonth"
+ ],
+ "focal_class": "org.joda.time.chrono.BasicMonthOfYearDateTimeField",
+ "focal_id": "Time_14::org.joda.time.chrono.BasicMonthOfYearDateTimeField::getDifferenceAsLong(long,long)",
+ "focal_method_name": "getDifferenceAsLong",
+ "generations": 3,
+ "impl_B": "public long getDifferenceAsLong(long minuendInstant, long subtrahendInstant) {\n        if (minuendInstant < subtrahendInstant) {\n            return -getDifference(subtrahendInstant, minuendInstant);\n        }\n\n        int minuendYear = iChronology.getYear(minuendInstant);\n        int minuendMonth = iChronology.getMonthOfYear(minuendInstant, minuendYear);\n        int subtrahendYear = iChronology.getYear(subtrahendInstant);\n        int subtrahendMonth = iChronology.getMonthOfYear(subtrahendInstant, subtrahendYear);\n\n        long difference = (minuendYear - subtrahendYear) * ((long) iMax) + minuendMonth - subtrahendMonth;\n\n        // Before adjusting for remainder, account for special case of add\n        // where the day-of-month is forced to the nearest sane value.\n        int minuendDom = iChronology.getDayOfMonth\n            (minuendInstant, minuendYear, minuendMonth);\n        if (minuendDom == iChronology.getDaysInYearMonth(minuendYear, minuendMonth)) {\n            // Last day of the minuend month...\n            int subtrahendDom = iChronology.getDayOfMonth\n                (subtrahendInstant, subtrahendYear, subtrahendMonth);\n            if (subtrahendDom > minuendDom) {\n                // ...and day of subtrahend month is larger.\n                // Note: This works fine, but it ideally shouldn't invoke other\n                // fields from within a field.\n                subtrahendInstant = iChronology.dayOfMonth().set(subtrahendInstant, minuendDom);\n            }\n        }\n\n        // Inlined remainder method to avoid duplicate calls.\n        long minuendRem = minuendInstant\n            - iChronology.getYearMonthMillis(minuendYear, minuendMonth);\n        long subtrahendRem = subtrahendInstant\n            - iChronology.getYearMonthMillis(subtrahendYear, subtrahendMonth);\n\n        if (minuendRem < subtrahendRem) {\n            difference--;\n        }\n\n        return difference;\n    }",
+ "imports": [
+  "org.joda.time.DateTimeConstants",
+  "org.joda.time.DateTimeFieldType",
+  "org.joda.time.DateTimeUtils",
+  "org.joda.time.DurationField",
+  "org.joda.time.ReadablePartial",
+  "org.joda.time.field.FieldUtils",
+  "org.joda.time.field.ImpreciseDateTimeField"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.joda.time.chrono",
+ "project": "Time",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "isLenient"
+  },
+  {
+   "javadoc": "/**\n     * Get the Month component of the specified time instant.\n     *\n     * @see org.joda.time.DateTimeField#get(long)\n     * @see org.joda.time.ReadableDateTime#getMonthOfYear()\n     * @param instant  the time instant in millis to query.\n     * @return the month extracted from the input.\n     */",
+   "name": "get"
+  },
+  {
+   "javadoc": "/**\n     * Add the specified month to the specified time instant.\n     * The amount added may be negative.<p>\n     * If the new month has less total days than the specified\n     * day of the month, this value is coerced to the nearest\n     * sane value. e.g.<p>\n     * 07-31 - (1 month) = 06-30<p>\n     * 03-31 - (1 month) = 02-28 or 02-29 depending<p>\n     * \n     * @see org.joda.time.DateTimeField#add\n     * @see org.joda.time.ReadWritableDateTime#addMonths(int)\n     * @param instant  the time instant in millis to update.\n     * @param months  the months to add (can be negative).\n     * @return the updated time instant.\n     */",
+   "name": "add"
+  },
+  {
+   "javadoc": "",
+   "name": "add"
+  },
+  {
+   "javadoc": "",
+   "name": "add"
+  },
+  {
+   "javadoc": "/**\n     * Add to the Month component of the specified time instant\n     * wrapping around within that component if necessary.\n     * \n     * @see org.joda.time.DateTimeField#addWrapField\n     * @param instant  the time instant in millis to update.\n     * @param months  the months to add (can be negative).\n     * @return the updated time instant.\n     */",
+   "name": "addWrapField"
+  },
+  {
+   "javadoc": "/**\n     * Set the Month component of the specified time instant.<p>\n     * If the new month has less total days than the specified\n     * day of the month, this value is coerced to the nearest\n     * sane value. e.g.<p>\n     * 07-31 to month 6 = 06-30<p>\n     * 03-31 to month 2 = 02-28 or 02-29 depending<p>\n     * \n     * @param instant  the time instant in millis to update.\n     * @param month  the month (1,12) to update the time to.\n     * @return the updated time instant.\n     * @throws IllegalArgumentException  if month is invalid\n     */",
+   "name": "set"
+  },
+  {
+   "javadoc": "",
+   "name": "getRangeDurationField"
+  },
+  {
+   "javadoc": "",
+   "name": "isLeap"
+  },
+  {
+   "javadoc": "",
+   "name": "getLeapAmount"
+  },
+  {
+   "javadoc": "",
+   "name": "getLeapDurationField"
+  },
+  {
+   "javadoc": "",
+   "name": "getMinimumValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getMaximumValue"
+  },
+  {
+   "javadoc": "",
+   "name": "roundFloor"
+  },
+  {
+   "javadoc": "",
+   "name": "remainder"
+  }
+ ],
+ "sig": {
+  "class_declaration": "class BasicMonthOfYearDateTimeField extends ImpreciseDateTimeField",
+  "constructors": [],
+  "focal_signature": "public long getDifferenceAsLong(long minuendInstant, long subtrahendInstant)",
+  "methods": [
+   "public boolean isLenient();",
+   "public int get(long instant);",
+   "public long add(long instant, int months);",
+   "public long add(long instant, long months);",
+   "public int[] add(ReadablePartial partial, int fieldIndex, int[] values, int valueToAdd);",
+   "public long addWrapField(long instant, int months);",
+   "public long set(long instant, int month);",
+   "public DurationField getRangeDurationField();",
+   "public boolean isLeap(long instant);",
+   "public int getLeapAmount(long instant);",
+   "public DurationField getLeapDurationField();",
+   "public int getMinimumValue();",
+   "public int getMaximumValue();",
+   "public long roundFloor(long instant);",
+   "public long remainder(long instant);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

@@ -1,0 +1,144 @@
+{
+ "bug_name": "Closure_79",
+ "call_sites": [
+  {
+   "line": 57,
+   "lines": [
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62
+   ],
+   "path": "src/com/google/javascript/jscomp/AnalyzeNameReferences.java",
+   "snippet": "\n  @Override\n  public void process(Node externs, Node root) {\n    NameReferenceGraphConstruction gc =\n        new NameReferenceGraphConstruction(compiler);\n    gc.process(externs, root);\n    graph = gc.getNameReferenceGraph();\n    FixedPointGraphTraversal<Name, Reference> t =\n        FixedPointGraphTraversal.newTraversal(new PropagateReferences());\n    getInfo(graph.MAIN).markReference(null);\n    t.computeFixedPoint(graph, Sets.newHashSet(graph.MAIN));"
+  },
+  {
+   "line": 556,
+   "lines": [
+    551,
+    552,
+    553,
+    554,
+    555,
+    556,
+    557,
+    558,
+    559,
+    560,
+    561
+   ],
+   "path": "src/com/google/javascript/jscomp/CallGraph.java",
+   "snippet": "    if (useNameReferenceGraph) {\n      // Name reference graph is very, very slow\n      NameReferenceGraphConstruction graphConstruction\n          = new NameReferenceGraphConstruction(compiler);\n\n      graphConstruction.process(externsRoot, jsRoot);\n\n      return graphConstruction.getNameReferenceGraph();\n    } else {\n      SimpleDefinitionFinder defFinder = new SimpleDefinitionFinder(compiler);\n      defFinder.process(externsRoot, jsRoot);"
+  },
+  {
+   "line": 561,
+   "lines": [
+    556,
+    557,
+    558,
+    559,
+    560,
+    561,
+    562,
+    563,
+    564,
+    565,
+    566
+   ],
+   "path": "src/com/google/javascript/jscomp/CallGraph.java",
+   "snippet": "      graphConstruction.process(externsRoot, jsRoot);\n\n      return graphConstruction.getNameReferenceGraph();\n    } else {\n      SimpleDefinitionFinder defFinder = new SimpleDefinitionFinder(compiler);\n      defFinder.process(externsRoot, jsRoot);\n      return defFinder;\n    }\n  }\n\n  /**"
+  },
+  {
+   "line": 51,
+   "lines": [
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56
+   ],
+   "path": "src/com/google/javascript/jscomp/ChainCalls.java",
+   "snippet": "  }\n\n  @Override\n  public void process(Node externs, Node root) {\n    defFinder = new SimpleDefinitionFinder(compiler);\n    defFinder.process(externs, root);\n\n    NodeTraversal.traverse(compiler, root, new GatherCallSites());\n\n    for (CallSite callSite : callSites) {\n      callSite.parent.removeChild(callSite.n);"
+  },
+  {
+   "line": 124,
+   "lines": [
+    119,
+    120,
+    121,
+    122,
+    123,
+    124,
+    125,
+    126,
+    127,
+    128,
+    129
+   ],
+   "path": "src/com/google/javascript/jscomp/CheckPropertyOrder.java",
+   "snippet": "  private void checkConstructor(Node func, ObjectType objType,\n                                String sourceName, String funcName) {\n    Preconditions.checkArgument(NodeUtil.isFunction(func));\n\n    ControlFlowAnalysis cfa = new ControlFlowAnalysis(compiler, false, false);\n    cfa.process(null, func.getFirstChild().getNext().getNext());\n    ControlFlowGraph<Node> cfg = cfa.getCfg();\n\n    new PropertyOrdersFlowAnalysis(cfa.getCfg()).analyze();\n\n    Annotation ann = cfa.getCfg().getImplicitReturn().getAnnotation();"
+  }
+ ],
+ "class_simple": "Normalize",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private final AbstractCompiler compiler",
+  "private final boolean assertOnChange",
+  "private static final boolean CONVERT_WHILE_TO_FOR",
+  "static final boolean MAKE_LOCAL_NAMES_UNIQUE",
+  "public static final DiagnosticType CATCH_BLOCK_VAR_ERROR"
+ ],
+ "focal_class": "com.google.javascript.jscomp.Normalize",
+ "focal_id": "Closure_79::com.google.javascript.jscomp.Normalize::process(Node,Node)",
+ "focal_method_name": "process",
+ "generations": 3,
+ "impl_B": "@Override\n  public void process(Node externs, Node root) {\n    new NodeTraversal(\n        compiler, new NormalizeStatements(compiler, assertOnChange))\n        .traverse(root);\n    if (MAKE_LOCAL_NAMES_UNIQUE) {\n      MakeDeclaredNamesUnique renamer = new MakeDeclaredNamesUnique();\n      NodeTraversal t = new NodeTraversal(compiler, renamer);\n      t.traverseRoots(externs, root);\n    }\n    // It is important that removeDuplicateDeclarations runs after\n    // MakeDeclaredNamesUnique in order for catch block exception names to be\n    // handled properly. Specifically, catch block exception names are\n    // only valid within the catch block, but our currect Scope logic\n    // has no concept of this and includes it in the containing function\n    // (or global scope). MakeDeclaredNamesUnique makes the catch exception\n    // names unique so that removeDuplicateDeclarations() will properly handle\n    // cases where a function scope variable conflict with a exception name:\n    //   function f() {\n    //      try {throw 0;} catch(e) {e; /* catch scope 'e'*/}\n    //      var e = 1; // f scope 'e'\n    //   }\n    // otherwise 'var e = 1' would be rewritten as 'e = 1'.\n    // TODO(johnlenz): Introduce a seperate scope for catch nodes.\n    removeDuplicateDeclarations(externs, root);\n    new PropagateConstantAnnotationsOverVars(compiler, assertOnChange)\n        .process(externs, root);\n\n    if (!compiler.getLifeCycleStage().isNormalized()) {\n      compiler.setLifeCycleStage(LifeCycleStage.NORMALIZED);\n    }\n  }",
+ "imports": [
+  "com.google.common.base.Preconditions",
+  "com.google.common.collect.Lists",
+  "com.google.common.collect.Maps",
+  "com.google.common.collect.Sets",
+  "com.google.javascript.jscomp.AbstractCompiler.LifeCycleStage",
+  "com.google.javascript.jscomp.MakeDeclaredNamesUnique.BoilerplateRenamer",
+  "com.google.javascript.jscomp.NodeTraversal.AbstractPostOrderCallback",
+  "com.google.javascript.jscomp.NodeTraversal.Callback",
+  "com.google.javascript.jscomp.Scope.Var",
+  "com.google.javascript.rhino.JSDocInfo",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.Token",
+  "java.util.Map",
+  "java.util.Set"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [],
+ "sig": {
+  "class_declaration": "class Normalize implements CompilerPass",
+  "constructors": [],
+  "focal_signature": "public void process(Node externs, Node root)",
+  "methods": [],
+  "type_signatures": [
+   "public class Node implements Cloneable, Serializable { public Node(int nodeType); public Node(int nodeType, Node child); public Node(int nodeType, Node left, Node right); public Node(int nodeType, Node left, Node mid, Node right); public Node(int nodeType, Node left, Node mid, Node mid2, Node right); public Node(int nodeType, int lineno, int charno); public Node(int nodeType, Node child, int lineno, int charno); public Node(int nodeType, Node left, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node mid2, Node right, int lineno, int charno); public Node(int nodeType, Node[] children, int lineno, int charno); public Node(int nodeType, Node[] children); public static Node newNumber(double number); public static Node newNumber(double number, int lineno, int charno); public static Node newString(String str); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

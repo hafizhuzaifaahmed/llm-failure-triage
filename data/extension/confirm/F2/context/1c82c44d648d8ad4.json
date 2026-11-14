@@ -1,0 +1,135 @@
+{
+ "bug_name": "JacksonDatabind_98",
+ "call_sites": [
+  {
+   "line": 910,
+   "lines": [
+    905,
+    906,
+    907,
+    908,
+    909,
+    910,
+    911,
+    912,
+    913,
+    914,
+    915
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java",
+   "snippet": "            }\n            // Unknown: let's call handler method\n            handleUnknownProperty(p, ctxt, bean, propName);\n        }\n        // and when we get this far, let's try finalizing the deal:\n        return ext.complete(p, ctxt, bean);\n    }\n\n    @SuppressWarnings(\"resource\")\n    protected Object deserializeUsingPropertyBasedWithExternalTypeId(JsonParser p, DeserializationContext ctxt)\n        throws IOException"
+  },
+  {
+   "line": 960,
+   "lines": [
+    955,
+    956,
+    957,
+    958,
+    959,
+    960,
+    961,
+    962,
+    963,
+    964,
+    965
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java",
+   "snippet": "                            //   it's too complicated, so bail out\n                            return ctxt.reportBadDefinition(_beanType, String.format(\n                                    \"Cannot create polymorphic instances with external type ids (%s -> %s)\",\n                                    _beanType, bean.getClass()));\n                        }\n                        return ext.complete(p, ctxt, bean);\n                    }\n                }\n                continue;\n            }\n            // Object Id property?"
+  },
+  {
+   "line": 994,
+   "lines": [
+    989,
+    990,
+    991,
+    992,
+    993,
+    994,
+    995,
+    996,
+    997,
+    998,
+    999
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java",
+   "snippet": "        }\n        tokens.writeEndObject();\n\n        // We hit END_OBJECT; resolve the pieces:\n        try {\n            return ext.complete(p, ctxt, buffer, creator);\n        } catch (Exception e) {\n            return wrapInstantiationProblem(e, ctxt);\n        }\n    }\n"
+  },
+  {
+   "line": 748,
+   "lines": [
+    743,
+    744,
+    745,
+    746,
+    747,
+    748,
+    749,
+    750,
+    751,
+    752,
+    753
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BuilderBasedDeserializer.java",
+   "snippet": "                // Unknown: let's call handler method\n                handleUnknownProperty(p, ctxt, bean, propName);\n            }\n        }\n        // and when we get this far, let's try finalizing the deal:\n        return ext.complete(p, ctxt, bean);\n    }\n\n    protected Object deserializeUsingPropertyBasedWithExternalTypeId(JsonParser p,\n    \t\tDeserializationContext ctxt)\n        throws IOException"
+  }
+ ],
+ "class_simple": "ExternalTypeHandler",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Helper class that is used to flatten JSON structure when using\n * \"external type id\" (see {@link com.fasterxml.jackson.annotation.JsonTypeInfo.As#EXTERNAL_PROPERTY}).\n * This is needed to store temporary state and buffer tokens, as the structure is\n * rearranged a bit so that actual type deserializer can resolve type and \n * finalize deserialization.\n */\npublic",
+  "method_javadoc": "/**\n     * Variant called when creation of the POJO involves buffering of creator properties\n     * as well as property-based creator.\n     */"
+ },
+ "fields": [
+  "private final JavaType _beanType",
+  "private final ExtTypedProperty[] _properties",
+  "private final Map<String, Object> _nameToPropertyIndex",
+  "private final String[] _typeIds",
+  "private final TokenBuffer[] _tokens"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.deser.impl.ExternalTypeHandler",
+ "focal_id": "JacksonDatabind_98::com.fasterxml.jackson.databind.deser.impl.ExternalTypeHandler::complete(JsonParser,DeserializationContext,PropertyValueBuffer,PropertyBasedCreator)",
+ "focal_method_name": "complete",
+ "generations": 3,
+ "impl_B": "public Object complete(JsonParser p, DeserializationContext ctxt,\n            PropertyValueBuffer buffer, PropertyBasedCreator creator)\n        throws IOException\n    {\n        // first things first: deserialize all data buffered:\n        final int len = _properties.length;\n        Object[] values = new Object[len];\n        for (int i = 0; i < len; ++i) {\n            String typeId = _typeIds[i];\n            final ExtTypedProperty extProp = _properties[i];\n            if (typeId == null) {\n                // let's allow missing both type and property (may already have been set, too)\n                if (_tokens[i] == null) {\n                    continue;\n                }\n                // but not just one\n                // 26-Oct-2012, tatu: As per [databind#94], must allow use of 'defaultImpl'\n                if (!extProp.hasDefaultType()) {\n                    ctxt.reportInputMismatch(_beanType,\n                            \"Missing external type id property '%s'\",\n                            extProp.getTypePropertyName());\n                } else {\n                    typeId = extProp.getDefaultTypeId();\n                }\n            } else if (_tokens[i] == null) {\n                SettableBeanProperty prop = extProp.getProperty();\n                ctxt.reportInputMismatch(_beanType,\n                        \"Missing property '%s' for external type id '%s'\",\n                        prop.getName(), _properties[i].getTypePropertyName());\n            }\n            values[i] = _deserialize(p, ctxt, i, typeId);\n\n            final SettableBeanProperty prop = extProp.getProperty();\n            // also: if it's creator prop, fill in\n            if (prop.getCreatorIndex() >= 0) {\n                buffer.assignParameter(prop, values[i]);\n\n                // [databind#999] And maybe there's creator property for type id too?\n                SettableBeanProperty typeProp = extProp.getTypeProperty();\n                // for now, should only be needed for creator properties, too\n                if ((typeProp != null) && (typeProp.getCreatorIndex() >= 0)) {\n                    // 31-May-2018, tatu: [databind#1328] if id is NOT plain `String`, need to\n                    //    apply deserializer... fun fun.\n                    buffer.assignParameter(typeProp, typeId);\n                }\n            }\n        }\n        Object bean = creator.build(ctxt, buffer);\n        // third: assign non-creator properties\n        for (int i = 0; i < len; ++i) {\n            SettableBeanProperty prop = _properties[i].getProperty();\n            if (prop.getCreatorIndex() < 0) {\n                prop.set(bean, values[i]);\n            }\n        }\n        return bean;\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.util.*",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.deser.SettableBeanProperty",
+  "com.fasterxml.jackson.databind.jsontype.TypeDeserializer",
+  "com.fasterxml.jackson.databind.util.TokenBuffer"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.deser.impl",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * @since 2.9\n     */",
+   "name": "builder"
+  },
+  {
+   "javadoc": "/**\n     * Method called to start collection process by creating non-blueprint\n     * instances.\n     */",
+   "name": "start"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class ExternalTypeHandler",
+  "constructors": [
+   "protected ExternalTypeHandler(JavaType beanType, ExtTypedProperty[] properties, Map<String, Object> nameToPropertyIndex, String[] typeIds, TokenBuffer[] tokens);",
+   "protected ExternalTypeHandler(ExternalTypeHandler h);"
+  ],
+  "focal_signature": "public Object complete(JsonParser p, DeserializationContext ctxt, PropertyValueBuffer buffer, PropertyBasedCreator creator) throws IOException",
+  "methods": [
+   "public static Builder builder(JavaType beanType);",
+   "public ExternalTypeHandler start();"
+  ],
+  "type_signatures": [
+   "public class PropertyValueBuffer { public PropertyValueBuffer(JsonParser p, DeserializationContext ctxt, int paramCount, ObjectIdReader oir); public final boolean hasParameter(SettableBeanProperty prop); public Object getParameter(SettableBeanProperty prop) throws JsonMappingException; public Object[] getParameters(SettableBeanProperty[] props) throws JsonMappingException; protected Object _findMissing(SettableBeanProperty prop) throws JsonMappingException; public boolean readIdProperty(String propName) throws IOException; public Object handleIdValue(final DeserializationContext ctxt, Object bean) throws IOException; protected PropertyValue buffered(); public boolean isComplete(); public boolean assignParameter(SettableBeanProperty prop, Object value); public void bufferProperty(SettableBeanProperty prop, Object value); public void bufferAnyProperty(SettableAnyProperty prop, String propName, Object value); public void bufferMapProperty(Object key, Object value); }",
+   "public final class PropertyBasedCreator { protected PropertyBasedCreator(DeserializationContext ctxt, ValueInstantiator valueInstantiator, SettableBeanProperty[] creatorProps, boolean caseInsensitive, boolean addAliases); public static PropertyBasedCreator construct(DeserializationContext ctxt, ValueInstantiator valueInstantiator, SettableBeanProperty[] srcCreatorProps, BeanPropertyMap allProperties) throws JsonMappingException; public static PropertyBasedCreator construct(DeserializationContext ctxt, ValueInstantiator valueInstantiator, SettableBeanProperty[] srcCreatorProps, boolean caseInsensitive) throws JsonMappingException; // since 2.9 public static PropertyBasedCreator construct(DeserializationContext ctxt, ValueInstantiator valueInstantiator, SettableBeanProperty[] srcCreatorProps) throws JsonMappingException; public Collection<SettableBeanProperty> properties(); public SettableBeanProperty findCreatorProperty(String name); public SettableBeanProperty findCreatorProperty(int propertyIndex); public PropertyValueBuffer startBuilding(JsonParser p, DeserializationContext ctxt, ObjectIdReader oir); public Object build(DeserializationContext ctxt, PropertyValueBuffer buffer) throws IOException; }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

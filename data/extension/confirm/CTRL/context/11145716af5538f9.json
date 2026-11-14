@@ -1,0 +1,536 @@
+{
+ "bug_name": "JacksonDatabind_79",
+ "call_sites": [
+  {
+   "line": 635,
+   "lines": [
+    630,
+    631,
+    632,
+    633,
+    634,
+    635,
+    636,
+    637,
+    638,
+    639,
+    640
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerBase.java",
+   "snippet": "        // First: may have an override for Object Id:\n        final AnnotationIntrospector intr = ctxt.getAnnotationIntrospector();\n        final AnnotatedMember accessor = (property == null || intr == null)\n                ? null : property.getMember();\n        if (accessor != null && intr != null) {\n            ObjectIdInfo objectIdInfo = intr.findObjectIdInfo(accessor);\n            if (objectIdInfo != null) { // some code duplication here as well (from BeanDeserializerFactory)\n                // 2.1: allow modifications by \"id ref\" annotations as well:\n                objectIdInfo = intr.findObjectReferenceInfo(accessor, objectIdInfo);\n                \n                Class<?> implClass = objectIdInfo.getGeneratorType();"
+  },
+  {
+   "line": 780,
+   "lines": [
+    775,
+    776,
+    777,
+    778,
+    779,
+    780,
+    781,
+    782,
+    783,
+    784,
+    785
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerFactory.java",
+   "snippet": "        // need to retain name of managed forward references:\n        AnnotationIntrospector.ReferenceProperty ref = propDef.findReferenceType();\n        if (ref != null && ref.isManagedReference()) {\n            prop.setManagedReferenceName(ref.getName());\n        }\n        ObjectIdInfo objectIdInfo = propDef.findObjectIdInfo();\n        if(objectIdInfo != null){\n            prop.setObjectIdInfo(objectIdInfo);\n        }\n        return prop;\n    }"
+  },
+  {
+   "line": 396,
+   "lines": [
+    391,
+    392,
+    393,
+    394,
+    395,
+    396,
+    397,
+    398,
+    399,
+    400,
+    401
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/introspect/AnnotationIntrospectorPair.java",
+   "snippet": "        return (b == null) ? _secondary.isTypeId(member) : b;\n    }\n\n    @Override\n    public ObjectIdInfo findObjectIdInfo(Annotated ann) {\n        ObjectIdInfo r = _primary.findObjectIdInfo(ann);\n        return (r == null) ? _secondary.findObjectIdInfo(ann) : r;\n    }\n\n    @Override\n    public ObjectIdInfo findObjectReferenceInfo(Annotated ann, ObjectIdInfo objectIdInfo) {"
+  },
+  {
+   "line": 397,
+   "lines": [
+    392,
+    393,
+    394,
+    395,
+    396,
+    397,
+    398,
+    399,
+    400,
+    401,
+    402
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/introspect/AnnotationIntrospectorPair.java",
+   "snippet": "    }\n\n    @Override\n    public ObjectIdInfo findObjectIdInfo(Annotated ann) {\n        ObjectIdInfo r = _primary.findObjectIdInfo(ann);\n        return (r == null) ? _secondary.findObjectIdInfo(ann) : r;\n    }\n\n    @Override\n    public ObjectIdInfo findObjectReferenceInfo(Annotated ann, ObjectIdInfo objectIdInfo) {\n        // to give precedence for primary, must start with secondary:"
+  },
+  {
+   "line": 230,
+   "lines": [
+    225,
+    226,
+    227,
+    228,
+    229,
+    230,
+    231,
+    232,
+    233,
+    234,
+    235
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/introspect/POJOPropertiesCollector.java",
+   "snippet": "    public ObjectIdInfo getObjectIdInfo()\n    {\n        if (_annotationIntrospector == null) {\n            return null;\n        }\n        ObjectIdInfo info = _annotationIntrospector.findObjectIdInfo(_classDef);\n        if (info != null) { // 2.1: may also have different defaults for refs:\n            info = _annotationIntrospector.findObjectReferenceInfo(_classDef, info);\n        }\n        return info;\n    }"
+  }
+ ],
+ "class_simple": "JacksonAnnotationIntrospector",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * {@link AnnotationIntrospector} implementation that handles standard\n * Jackson annotations.\n */\npublic",
+  "method_javadoc": "/**********************************************************\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "private final static Class<? extends Annotation>[] ANNOTATIONS_TO_INFER_SER",
+  "private final static Class<? extends Annotation>[] ANNOTATIONS_TO_INFER_DESER",
+  "private static final Java7Support _jdk7Helper",
+  "protected transient LRUMap<Class<?>,Boolean> _annotationsInside",
+  "protected boolean _cfgConstructorPropertiesImpliesCreator"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector",
+ "focal_id": "JacksonDatabind_79::com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector::findObjectIdInfo(Annotated)",
+ "focal_method_name": "findObjectIdInfo",
+ "generations": 3,
+ "impl_B": "@Override\n    public ObjectIdInfo findObjectIdInfo(Annotated ann) {\n        JsonIdentityInfo info = _findAnnotation(ann, JsonIdentityInfo.class);\n        if (info == null || info.generator() == ObjectIdGenerators.None.class) {\n            return null;\n        }\n        // In future may need to allow passing namespace?\n        PropertyName name = PropertyName.construct(info.property());\n        return new ObjectIdInfo(name, info.scope(), info.generator(), info.resolver());\n    }",
+ "imports": [
+  "java.beans.ConstructorProperties",
+  "java.beans.Transient",
+  "java.lang.annotation.Annotation",
+  "java.lang.reflect.Field",
+  "java.util.*",
+  "com.fasterxml.jackson.annotation.*",
+  "com.fasterxml.jackson.core.Version",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.annotation.*",
+  "com.fasterxml.jackson.databind.cfg.HandlerInstantiator",
+  "com.fasterxml.jackson.databind.cfg.MapperConfig",
+  "com.fasterxml.jackson.databind.jsontype.NamedType",
+  "com.fasterxml.jackson.databind.jsontype.TypeIdResolver",
+  "com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder",
+  "com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder",
+  "com.fasterxml.jackson.databind.ser.BeanPropertyWriter",
+  "com.fasterxml.jackson.databind.ser.VirtualBeanPropertyWriter",
+  "com.fasterxml.jackson.databind.ser.impl.AttributePropertyWriter",
+  "com.fasterxml.jackson.databind.ser.std.RawSerializer",
+  "com.fasterxml.jackson.databind.util.*"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.introspect",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "version"
+  },
+  {
+   "javadoc": "",
+   "name": "readResolve"
+  },
+  {
+   "javadoc": "/**\n     * Method for changing behavior of {@link java.beans.ConstructorProperties}:\n     * if set to `true`, existence DOES indicate that the given constructor should\n     * be considered a creator; `false` that it should NOT be considered a creator\n     * without explicit use of <code>JsonCreator</code> annotation.\n     *<p>\n     * Default setting is `true`\n     *\n     * @since 2.7.4\n     */",
+   "name": "setConstructorPropertiesImpliesCreator"
+  },
+  {
+   "javadoc": "/**\n     * Annotations with meta-annotation {@link JacksonAnnotationsInside}\n     * are considered bundles.\n     */",
+   "name": "isAnnotationBundle"
+  },
+  {
+   "javadoc": "/**\n     * Since 2.6, we have supported use of {@link JsonProperty} for specifying\n     * explicit serialized name\n     */",
+   "name": "findEnumValue"
+  },
+  {
+   "javadoc": "",
+   "name": "findEnumValues"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findRootName"
+  },
+  {
+   "javadoc": "",
+   "name": "findPropertiesToIgnore"
+  },
+  {
+   "javadoc": "",
+   "name": "findPropertiesToIgnore"
+  },
+  {
+   "javadoc": "",
+   "name": "findIgnoreUnknownProperties"
+  },
+  {
+   "javadoc": "",
+   "name": "isIgnorableType"
+  },
+  {
+   "javadoc": "",
+   "name": "findFilterId"
+  },
+  {
+   "javadoc": "",
+   "name": "findNamingStrategy"
+  },
+  {
+   "javadoc": "",
+   "name": "findClassDescription"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findAutoDetectVisibility"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findImplicitPropertyName"
+  },
+  {
+   "javadoc": "",
+   "name": "hasIgnoreMarker"
+  },
+  {
+   "javadoc": "",
+   "name": "hasRequiredMarker"
+  },
+  {
+   "javadoc": "",
+   "name": "findPropertyAccess"
+  },
+  {
+   "javadoc": "",
+   "name": "findPropertyDescription"
+  },
+  {
+   "javadoc": "",
+   "name": "findPropertyIndex"
+  },
+  {
+   "javadoc": "",
+   "name": "findPropertyDefaultValue"
+  },
+  {
+   "javadoc": "",
+   "name": "findFormat"
+  },
+  {
+   "javadoc": "",
+   "name": "findReferenceType"
+  },
+  {
+   "javadoc": "",
+   "name": "findUnwrappingNameTransformer"
+  },
+  {
+   "javadoc": "",
+   "name": "findInjectableValueId"
+  },
+  {
+   "javadoc": "",
+   "name": "findViews"
+  },
+  {
+   "javadoc": "",
+   "name": "resolveSetterConflict"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findTypeResolver"
+  },
+  {
+   "javadoc": "",
+   "name": "findPropertyTypeResolver"
+  },
+  {
+   "javadoc": "",
+   "name": "findPropertyContentTypeResolver"
+  },
+  {
+   "javadoc": "",
+   "name": "findSubtypes"
+  },
+  {
+   "javadoc": "",
+   "name": "findTypeName"
+  },
+  {
+   "javadoc": "",
+   "name": "isTypeId"
+  },
+  {
+   "javadoc": "",
+   "name": "findObjectReferenceInfo"
+  },
+  {
+   "javadoc": "/**********************************************************\n    */",
+   "name": "findSerializer"
+  },
+  {
+   "javadoc": "",
+   "name": "findKeySerializer"
+  },
+  {
+   "javadoc": "",
+   "name": "findContentSerializer"
+  },
+  {
+   "javadoc": "",
+   "name": "findNullSerializer"
+  },
+  {
+   "javadoc": "",
+   "name": "findSerializationInclusionForContent"
+  },
+  {
+   "javadoc": "",
+   "name": "findSerializationType"
+  },
+  {
+   "javadoc": "",
+   "name": "findSerializationKeyType"
+  },
+  {
+   "javadoc": "",
+   "name": "findSerializationContentType"
+  },
+  {
+   "javadoc": "",
+   "name": "findSerializationTyping"
+  },
+  {
+   "javadoc": "",
+   "name": "findSerializationConverter"
+  },
+  {
+   "javadoc": "",
+   "name": "findSerializationContentConverter"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findSerializationPropertyOrder"
+  },
+  {
+   "javadoc": "",
+   "name": "findSerializationSortAlphabetically"
+  },
+  {
+   "javadoc": "",
+   "name": "findAndAddVirtualProperties"
+  },
+  {
+   "javadoc": "",
+   "name": "_constructVirtualProperty"
+  },
+  {
+   "javadoc": "",
+   "name": "_constructVirtualProperty"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findNameForSerialization"
+  },
+  {
+   "javadoc": "",
+   "name": "hasAsValueAnnotation"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "findKeyDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "findContentDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "findDeserializationConverter"
+  },
+  {
+   "javadoc": "",
+   "name": "findDeserializationContentConverter"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findDeserializationContentType"
+  },
+  {
+   "javadoc": "",
+   "name": "findDeserializationType"
+  },
+  {
+   "javadoc": "",
+   "name": "findDeserializationKeyType"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findValueInstantiator"
+  },
+  {
+   "javadoc": "",
+   "name": "findPOJOBuilder"
+  },
+  {
+   "javadoc": "",
+   "name": "findPOJOBuilderConfig"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findNameForDeserialization"
+  },
+  {
+   "javadoc": "",
+   "name": "hasAnySetterAnnotation"
+  },
+  {
+   "javadoc": "",
+   "name": "hasAnyGetterAnnotation"
+  },
+  {
+   "javadoc": "",
+   "name": "hasCreatorAnnotation"
+  },
+  {
+   "javadoc": "",
+   "name": "findCreatorBinding"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_isIgnorable"
+  },
+  {
+   "javadoc": "",
+   "name": "_classIfExplicit"
+  },
+  {
+   "javadoc": "",
+   "name": "_classIfExplicit"
+  },
+  {
+   "javadoc": "",
+   "name": "_propertyName"
+  },
+  {
+   "javadoc": "",
+   "name": "_findConstructorName"
+  },
+  {
+   "javadoc": "/**\n     * Helper method for constructing standard {@link TypeResolverBuilder}\n     * implementation.\n     */",
+   "name": "_constructStdTypeResolverBuilder"
+  },
+  {
+   "javadoc": "/**\n     * Helper method for dealing with \"no type info\" marker; can't be null\n     * (as it'd be replaced by default typing)\n     */",
+   "name": "_constructNoTypeResolverBuilder"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class JacksonAnnotationIntrospector extends AnnotationIntrospector implements java.io.Serializable",
+  "constructors": [
+   "public JacksonAnnotationIntrospector();"
+  ],
+  "focal_signature": "public ObjectIdInfo findObjectIdInfo(Annotated ann)",
+  "methods": [
+   "public Version version();",
+   "protected Object readResolve();",
+   "public JacksonAnnotationIntrospector setConstructorPropertiesImpliesCreator(boolean b);",
+   "public boolean isAnnotationBundle(Annotation ann);",
+   "public String findEnumValue(Enum<?> value);",
+   "// since 2.7 public String[] findEnumValues(Class<?> enumType, Enum<?>[] enumValues, String[] names);",
+   "public PropertyName findRootName(AnnotatedClass ac);",
+   "// since 2.6, remove from 2.7 or later public String[] findPropertiesToIgnore(Annotated ac);",
+   "// since 2.6 public String[] findPropertiesToIgnore(Annotated ac, boolean forSerialization);",
+   "public Boolean findIgnoreUnknownProperties(AnnotatedClass ac);",
+   "public Boolean isIgnorableType(AnnotatedClass ac);",
+   "public Object findFilterId(Annotated a);",
+   "public Object findNamingStrategy(AnnotatedClass ac);",
+   "public String findClassDescription(AnnotatedClass ac);",
+   "public VisibilityChecker<?> findAutoDetectVisibility(AnnotatedClass ac, VisibilityChecker<?> checker);",
+   "public String findImplicitPropertyName(AnnotatedMember m);",
+   "public boolean hasIgnoreMarker(AnnotatedMember m);",
+   "public Boolean hasRequiredMarker(AnnotatedMember m);",
+   "public JsonProperty.Access findPropertyAccess(Annotated m);",
+   "public String findPropertyDescription(Annotated ann);",
+   "public Integer findPropertyIndex(Annotated ann);",
+   "public String findPropertyDefaultValue(Annotated ann);",
+   "public JsonFormat.Value findFormat(Annotated ann);",
+   "public ReferenceProperty findReferenceType(AnnotatedMember member);",
+   "public NameTransformer findUnwrappingNameTransformer(AnnotatedMember member);",
+   "public Object findInjectableValueId(AnnotatedMember m);",
+   "public Class<?>[] findViews(Annotated a);",
+   "// since 2.7 public AnnotatedMethod resolveSetterConflict(MapperConfig<?> config, AnnotatedMethod setter1, AnnotatedMethod setter2);",
+   "public TypeResolverBuilder<?> findTypeResolver(MapperConfig<?> config, AnnotatedClass ac, JavaType baseType);",
+   "public TypeResolverBuilder<?> findPropertyTypeResolver(MapperConfig<?> config, AnnotatedMember am, JavaType baseType);",
+   "public TypeResolverBuilder<?> findPropertyContentTypeResolver(MapperConfig<?> config, AnnotatedMember am, JavaType containerType);",
+   "public List<NamedType> findSubtypes(Annotated a);",
+   "public String findTypeName(AnnotatedClass ac);",
+   "public Boolean isTypeId(AnnotatedMember member);",
+   "public ObjectIdInfo findObjectReferenceInfo(Annotated ann, ObjectIdInfo objectIdInfo);",
+   "public Object findSerializer(Annotated a);",
+   "public Object findKeySerializer(Annotated a);",
+   "public Object findContentSerializer(Annotated a);",
+   "public Object findNullSerializer(Annotated a);",
+   "public JsonInclude.Include findSerializationInclusionForContent(Annotated a, JsonInclude.Include defValue);",
+   "public Class<?> findSerializationType(Annotated am);",
+   "public Class<?> findSerializationKeyType(Annotated am, JavaType baseType);",
+   "public Class<?> findSerializationContentType(Annotated am, JavaType baseType);",
+   "public JsonSerialize.Typing findSerializationTyping(Annotated a);",
+   "public Object findSerializationConverter(Annotated a);",
+   "public Object findSerializationContentConverter(AnnotatedMember a);",
+   "public String[] findSerializationPropertyOrder(AnnotatedClass ac);",
+   "public Boolean findSerializationSortAlphabetically(Annotated ann);",
+   "public void findAndAddVirtualProperties(MapperConfig<?> config, AnnotatedClass ac, List<BeanPropertyWriter> properties);",
+   "protected BeanPropertyWriter _constructVirtualProperty(JsonAppend.Attr attr, MapperConfig<?> config, AnnotatedClass ac, JavaType type);",
+   "protected BeanPropertyWriter _constructVirtualProperty(JsonAppend.Prop prop, MapperConfig<?> config, AnnotatedClass ac);",
+   "public PropertyName findNameForSerialization(Annotated a);",
+   "public boolean hasAsValueAnnotation(AnnotatedMethod am);",
+   "public Object findDeserializer(Annotated a);",
+   "public Object findKeyDeserializer(Annotated a);",
+   "public Object findContentDeserializer(Annotated a);",
+   "public Object findDeserializationConverter(Annotated a);",
+   "public Object findDeserializationContentConverter(AnnotatedMember a);",
+   "public Class<?> findDeserializationContentType(Annotated am, JavaType baseContentType);",
+   "public Class<?> findDeserializationType(Annotated am, JavaType baseType);",
+   "public Class<?> findDeserializationKeyType(Annotated am, JavaType baseKeyType);",
+   "public Object findValueInstantiator(AnnotatedClass ac);",
+   "public Class<?> findPOJOBuilder(AnnotatedClass ac);",
+   "public JsonPOJOBuilder.Value findPOJOBuilderConfig(AnnotatedClass ac);",
+   "public PropertyName findNameForDeserialization(Annotated a);",
+   "public boolean hasAnySetterAnnotation(AnnotatedMethod am);",
+   "public boolean hasAnyGetterAnnotation(AnnotatedMethod am);",
+   "public boolean hasCreatorAnnotation(Annotated a);",
+   "public JsonCreator.Mode findCreatorBinding(Annotated a);",
+   "protected boolean _isIgnorable(Annotated a);",
+   "protected Class<?> _classIfExplicit(Class<?> cls);",
+   "protected Class<?> _classIfExplicit(Class<?> cls, Class<?> implicit);",
+   "protected PropertyName _propertyName(String localName, String namespace);",
+   "protected PropertyName _findConstructorName(Annotated a);",
+   "protected StdTypeResolverBuilder _constructStdTypeResolverBuilder();",
+   "protected StdTypeResolverBuilder _constructNoTypeResolverBuilder();"
+  ],
+  "type_signatures": [
+   "public abstract class Annotated { protected Annotated(); public abstract <A extends Annotation> A getAnnotation(Class<A> acls); public abstract boolean hasAnnotation(Class<?> acls); public abstract boolean hasOneOf(Class<? extends Annotation>[] annoClasses); public abstract Annotated withAnnotations(AnnotationMap fallback); public final Annotated withFallBackAnnotationsFrom(Annotated annotated); public abstract AnnotatedElement getAnnotated(); protected abstract int getModifiers(); public final boolean isPublic(); public abstract String getName(); public abstract JavaType getType(); public final JavaType getType(TypeBindings bogus); public Type getGenericType(); public abstract Class<?> getRawType(); public abstract Iterable<Annotation> annotations(); }",
+   "public class ObjectIdInfo { public ObjectIdInfo(PropertyName name, Class<?> scope, Class<? extends ObjectIdGenerator<?>> gen, Class<? extends ObjectIdResolver> resolver); // since 2.4 public ObjectIdInfo(PropertyName name, Class<?> scope, Class<? extends ObjectIdGenerator<?>> gen); // since 2.3 public ObjectIdInfo(String name, Class<?> scope, Class<? extends ObjectIdGenerator<?>> gen); protected ObjectIdInfo(PropertyName prop, Class<?> scope, Class<? extends ObjectIdGenerator<?>> gen, boolean alwaysAsId); protected ObjectIdInfo(PropertyName prop, Class<?> scope, Class<? extends ObjectIdGenerator<?>> gen, boolean alwaysAsId, Class<? extends ObjectIdResolver> resolver); public ObjectIdInfo withAlwaysAsId(boolean state); public PropertyName getPropertyName(); public Class<?> getScope(); public Class<? extends ObjectIdGenerator<?>> getGeneratorType(); public Class<? extends ObjectIdResolver> getResolverType(); public boolean getAlwaysAsId(); public String toString(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

@@ -1,0 +1,145 @@
+{
+ "bug_name": "Closure_139",
+ "call_sites": [
+  {
+   "line": 58,
+   "lines": [
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63
+   ],
+   "path": "src/com/google/javascript/jscomp/AliasKeywords.java",
+   "snippet": "     * Find the AliasSpecification associated with the node, and tell\n     * that AliasSpecification about the new node.\n     */\n    private void visitAliasableNode(Node n, Node parent) {\n      AliasSpecification aliasableNodes = aliasTypes.get(n.getType());\n      aliasableNodes.visit(n, parent);\n    }\n\n    /**\n     * Sanity check that our aliases are not already defined by\n     * someone else."
+  },
+  {
+   "line": 183,
+   "lines": [
+    178,
+    179,
+    180,
+    181,
+    182,
+    183,
+    184,
+    185,
+    186,
+    187,
+    188
+   ],
+   "path": "src/com/google/javascript/jscomp/ChainableReverseAbstractInterpreter.java",
+   "snippet": "   * @see #getRestrictedWithoutUndefined(JSType)\n   */\n  private final Visitor<JSType> restrictUndefinedVisitor =\n    new Visitor<JSType>() {\n      public JSType caseEnumElementType(EnumElementType enumElementType) {\n        JSType type = enumElementType.getPrimitiveType().visit(this);\n        if (type != null && enumElementType.getPrimitiveType().equals(type)) {\n          return enumElementType;\n        } else {\n          return type;\n        }"
+  },
+  {
+   "line": 248,
+   "lines": [
+    243,
+    244,
+    245,
+    246,
+    247,
+    248,
+    249,
+    250,
+    251,
+    252,
+    253
+   ],
+   "path": "src/com/google/javascript/jscomp/ChainableReverseAbstractInterpreter.java",
+   "snippet": "   * @see #getRestrictedWithoutNull(JSType)\n   */\n  private final Visitor<JSType> restrictNullVisitor =\n    new Visitor<JSType>() {\n      public JSType caseEnumElementType(EnumElementType enumElementType) {\n        JSType type = enumElementType.getPrimitiveType().visit(this);\n        if (type != null && enumElementType.getPrimitiveType().equals(type)) {\n          return enumElementType;\n        } else {\n          return type;\n        }"
+  },
+  {
+   "line": 334,
+   "lines": [
+    329,
+    330,
+    331,
+    332,
+    333,
+    334,
+    335,
+    336,
+    337,
+    338,
+    339
+   ],
+   "path": "src/com/google/javascript/jscomp/ChainableReverseAbstractInterpreter.java",
+   "snippet": "    }\n\n    public JSType caseUnionType(UnionType type) {\n      JSType restricted = null;\n      for (JSType alternate : type.getAlternates()) {\n        JSType restrictedAlternate = alternate.visit(this);\n        if (restrictedAlternate != null) {\n          if (restricted == null) {\n            restricted = restrictedAlternate;\n          } else {\n            restricted = restrictedAlternate.getLeastSupertype(restricted);"
+  },
+  {
+   "line": 360,
+   "lines": [
+    355,
+    356,
+    357,
+    358,
+    359,
+    360,
+    361,
+    362,
+    363,
+    364,
+    365
+   ],
+   "path": "src/com/google/javascript/jscomp/ChainableReverseAbstractInterpreter.java",
+   "snippet": "      // }\n      // There is no type that represents {MyEnum - string}. What we really\n      // need is a notion of \"enum subtyping\", so that we could dynamically\n      // create a subtype of MyEnum restricted by string. In any case,\n      // this should catch the common case.\n      JSType type = enumElementType.getPrimitiveType().visit(this);\n      if (type != null && enumElementType.getPrimitiveType().equals(type)) {\n        return enumElementType;\n      } else {\n        return type;\n      }"
+  }
+ ],
+ "class_simple": "NormalizeStatements",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * The goal with this pass is to simplify the other passes,\n * by making less complex statements.\n *\n * Starting with statements like:\n *   var a = 0, b = foo();\n *\n * Which become:\n *   var a = 0;\n *   var b = foo();\n *\n * The key here is only to break down things that help the other passes\n * and can be put back together in a form that is at least as small when\n * all is said and done.\n *\n * This pass currently does the following:\n * 1) Simplifies the AST by splitting var statements, moving initializiers\n *    out of for loops, and converting whiles to fors.\n * 2) Moves hoisted functions to the top of function scopes.\n * 3) Rewrites unhoisted named function declarations to be var declarations.\n * 4) Makes all variable names globally unique (extern or otherwise) so that\n *    no value is ever shadowed (note: \"arguments\" may require special\n *    handling).\n * 5) Removes duplicate variable declarations.\n * 6) Marks constants with the IS_CONSTANT_NAME annotation.\n *\n * @author johnlenz@google.com (johnlenz)\n */\n// public for ReplaceDebugStringsTest\nclass Normalize implements CompilerPass {\n\n  private final AbstractCompiler compiler;\n  private final boolean assertOnChange;\n  private static final boolean CONVERT_WHILE_TO_FOR = true;\n  static final boolean MAKE_LOCAL_NAMES_UNIQUE = true;\n\n  Normalize(AbstractCompiler compiler, boolean assertOnChange) {\n    this.compiler = compiler;\n    this.assertOnChange = assertOnChange;\n  }\n\n  private void reportCodeChange(String changeDescription) {\n    if (assertOnChange) {\n      throw new IllegalStateException(\n          \"Normalize constraints violated:\\n\" + changeDescription);\n    }\n    compiler.reportCodeChange();\n  }\n\n  @Override\n  public void process(Node externs, Node root) {\n    NodeTraversal.traverse(compiler, root,\n        new NormalizeStatements(compiler, assertOnChange));\n    if (MAKE_LOCAL_NAMES_UNIQUE) {\n      MakeDeclaredNamesUnique renamer = new MakeDeclaredNamesUnique();\n      NodeTraversal t = new NodeTraversal(compiler, renamer);\n      t.traverseRoots(externs, root);\n    }\n    // It is important that removeDuplicateDeclarations runs after\n    // MakeDeclaredNamesUnique in order for catch block exception names to be\n    // handled properly. Specifically, catch block exception names are\n    // only valid within the catch block, but our currect Scope logic\n    // has no concept of this and includes it in the containing function\n    // (or global scope). MakeDeclaredNamesUnique makes the catch exception\n    // names unique so that removeDuplicateDeclarations() will properly handle\n    // cases where a function scope variable conflict with a exception name:\n    //   function f() {\n    //      try {throw 0;} catch(e) {e; /* catch scope 'e'*/}\n    //      var e = 1; // f scope 'e'\n    //   }\n    // otherwise 'var e = 1' would be rewritten as 'e = 1'.\n    // TODO(johnlenz): Introduce a seperate scope for catch nodes.\n    removeDuplicateDeclarations(root);\n    new PropogateConstantAnnotations(compiler, assertOnChange)\n        .process(externs, root);\n  }\n\n  public static class PropogateConstantAnnotations\n      extends AbstractPostOrderCallback\n      implements CompilerPass {\n    private final AbstractCompiler compiler;\n    private final boolean assertOnChange;\n\n    public PropogateConstantAnnotations(\n        AbstractCompiler compiler, boolean forbidChanges) {\n      this.compiler = compiler;\n      this.assertOnChange = forbidChanges;\n    }\n\n    @Override\n    public void process(Node externs, Node root) {\n      new NodeTraversal(compiler, this).traverseRoots(externs, root);\n    }\n\n    @Override\n    public void visit(NodeTraversal t, Node n, Node parent) {\n      // Note: Constant properties annotations are not propagated.\n      if (n.getType() == Token.NAME) {\n        if (n.getString().isEmpty()) {\n          return;\n        }\n\n        JSDocInfo info = null;\n        // Find the JSDocInfo for a top level variable.\n        Var var = t.getScope().getVar(n.getString());\n        if (var != null) {\n          info = var.getJSDocInfo();\n        }\n\n        if ((info != null && info.isConstant()) &&\n            !n.getBooleanProp(Node.IS_CONSTANT_NAME)) {\n          n.putBooleanProp(Node.IS_CONSTANT_NAME, true);\n          if (assertOnChange) {\n            String name = n.getString();\n            throw new IllegalStateException(\n                \"Unexpected const change.\\n\" +\n                \"  name: \"+ name + \"\\n\" +\n                \"  gramps:\" + n.getParent().getParent().toStringTree());\n          }\n          // Even though the AST has changed (an annotation was added),\n          // the annotations are not compared so don't report the change.\n          // reportCodeChange(\"constant annotation\");\n        }\n      }\n    }\n  }\n\n  /**\n   * Walk the AST tree and verify that constant names are used consistently.\n   */\n  static class VerifyConstants extends AbstractPostOrderCallback\n      implements CompilerPass {\n\n    final private AbstractCompiler compiler;\n    final private boolean checkUserDeclarations;\n\n    VerifyConstants(AbstractCompiler compiler, boolean checkUserDeclarations) {\n      this.compiler = compiler;\n      this.checkUserDeclarations = checkUserDeclarations;\n    }\n\n    @Override\n    public void process(Node externs, Node root) {\n      Node externsAndJs = root.getParent();\n      Preconditions.checkState(externsAndJs != null);\n      Preconditions.checkState(externsAndJs.hasChild(externs));\n\n      NodeTraversal.traverseRoots(\n          compiler, Lists.newArrayList(externs, root), this);\n    }\n\n    private Map<String,Boolean> constantMap = Maps.newHashMap();\n\n    @Override\n    public void visit(NodeTraversal t, Node n, Node parent) {\n      if (n.getType() == Token.NAME) {\n        String name = n.getString();\n        if (n.getString().isEmpty()) {\n          return;\n        }\n\n        boolean isConst = n.getBooleanProp(Node.IS_CONSTANT_NAME);\n        if (checkUserDeclarations) {\n          boolean expectedConst = false;\n          if (NodeUtil.isConstantName(n)\n              || compiler.getCodingConvention().isConstant(n.getString())) {\n            expectedConst = true;\n          } else {\n            expectedConst = false;\n\n            JSDocInfo info = null;\n            Var var = t.getScope().getVar(n.getString());\n            if (var != null) {\n              info = var.getJSDocInfo();\n            }\n\n            if (info != null && info.isConstant()) {\n              expectedConst = true;\n            } else {\n              expectedConst = false;\n            }\n          }\n\n          if (expectedConst) {\n            Preconditions.checkState(expectedConst == isConst,\n                \"The name \" + name + \" is not annotated as constant.\");\n          } else {\n            Preconditions.checkState(expectedConst == isConst,\n                \"The name \" + name + \" should not be annotated as constant.\");\n          }\n        }\n\n        Boolean value = constantMap.get(name);\n        if (value == null) {\n          constantMap.put(name, isConst);\n        } else {\n          Preconditions.checkState(value.booleanValue() == isConst,\n              \"The name \" + name + \" is not consistently annotated as \" +\n              \"constant.\");\n        }\n      }\n    }\n  }\n\n  /**\n   * Simplify the AST:\n   *   - VAR declarations split, so they represent exactly one child\n   *     declaration.\n   *   - WHILEs are converted to FORs\n   *   - FOR loop are initializers are moved out of the FOR structure\n   *   - LABEL node of children other than LABEL, BLOCK, WHILE, FOR, or DO are\n   *     moved into a block.\n   */\n  static",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private final AbstractCompiler compiler",
+  "private final boolean assertOnChange"
+ ],
+ "focal_class": "com.google.javascript.jscomp.Normalize.NormalizeStatements",
+ "focal_id": "Closure_139::com.google.javascript.jscomp.Normalize$NormalizeStatements::visit(NodeTraversal,Node,Node)",
+ "focal_method_name": "visit",
+ "generations": 3,
+ "impl_B": "@Override\n    public void visit(NodeTraversal t, Node n, Node parent) {\n      switch (n.getType()) {\n        case Token.WHILE:\n          if (CONVERT_WHILE_TO_FOR) {\n            Node expr = n.getFirstChild();\n            n.setType(Token.FOR);\n            n.addChildBefore(new Node(Token.EMPTY), expr);\n            n.addChildAfter(new Node(Token.EMPTY), expr);\n            reportCodeChange(\"WHILE node\");\n          }\n          break;\n\n      }\n    }",
+ "imports": [
+  "com.google.common.base.Preconditions",
+  "com.google.common.collect.Lists",
+  "com.google.common.collect.Maps",
+  "com.google.javascript.jscomp.NodeTraversal.AbstractPostOrderCallback",
+  "com.google.javascript.jscomp.NodeTraversal.Callback",
+  "com.google.javascript.jscomp.Scope.Var",
+  "com.google.javascript.rhino.JSDocInfo",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.Token",
+  "java.util.Map"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "shouldTraverse"
+  }
+ ],
+ "sig": {
+  "class_declaration": "static class NormalizeStatements implements Callback",
+  "constructors": [],
+  "focal_signature": "public void visit(NodeTraversal t, Node n, Node parent)",
+  "methods": [
+   "public boolean shouldTraverse(NodeTraversal t, Node n, Node parent);"
+  ],
+  "type_signatures": [
+   "public class NodeTraversal { public NodeTraversal(AbstractCompiler compiler, Callback cb); public NodeTraversal(AbstractCompiler compiler, Callback cb, ScopeCreator scopeCreator); public void traverse(Node root); public void traverseRoots(Node ... roots); public void traverseRoots(List<Node> roots); protected void traverseInnerNode(Node node, Node parent, Scope refinedScope); public Compiler getCompiler(); public int getLineNumber(); public String getSourceName(); public CompilerInput getInput(); public JSModule getModule(); public Node getCurrentNode(); public static void traverse( AbstractCompiler compiler, Node root, Callback cb); public static void traverseRoots( AbstractCompiler compiler, List<Node> roots, Callback cb); public Scope getScope(); }",
+   "public class Node implements Cloneable, Serializable { public Node(int nodeType); public Node(int nodeType, Node child); public Node(int nodeType, Node left, Node right); public Node(int nodeType, Node left, Node mid, Node right); public Node(int nodeType, Node left, Node mid, Node mid2, Node right); public Node(int nodeType, int lineno, int charno); public Node(int nodeType, Node child, int lineno, int charno); public Node(int nodeType, Node left, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node mid2, Node right, int lineno, int charno); public Node(int nodeType, Node[] children, int lineno, int charno); public Node(int nodeType, Node[] children); public static Node newNumber(double number); public static Node newNumber(double number, int lineno, int charno); public static Node newString(String str); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

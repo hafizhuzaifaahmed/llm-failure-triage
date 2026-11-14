@@ -1,0 +1,148 @@
+{
+  "bug_name": "Mockito_3",
+  "call_sites": [
+    {
+      "line": 94,
+      "lines": [
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99
+      ],
+      "path": "src/org/mockito/internal/handler/MockHandlerImpl.java",
+      "snippet": "\n        // look for existing answer for this invocation\n        StubbedInvocationMatcher stubbedInvocation = invocationContainerImpl.findAnswerFor(invocation);\n\n        if (stubbedInvocation != null) {\n            stubbedInvocation.captureArgumentsFrom(invocation);\n            return stubbedInvocation.answer(invocation);\n        } else {\n            Object ret = mockSettings.getDefaultAnswer().answer(invocation);\n            new AnswersValidator().validateDefaultAnswerReturnedValue(invocation, ret);\n"
+    },
+    {
+      "line": 12,
+      "lines": [
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "path": "src/org/mockito/internal/invocation/CapturesArgumensFromInvocation.java",
+      "snippet": "\nimport org.mockito.invocation.Invocation;\n\npublic interface CapturesArgumensFromInvocation {\n    \n    void captureArgumentsFrom(Invocation i);\n    \n}\n"
+    },
+    {
+      "line": 22,
+      "lines": [
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27
+      ],
+      "path": "src/org/mockito/internal/invocation/InvocationMarker.java",
+      "snippet": "        }\n    }\n\n    public void markVerified(Invocation invocation, CapturesArgumensFromInvocation wanted) {\n        invocation.markVerified();\n        wanted.captureArgumentsFrom(invocation);\n    }\n\n    public void markVerifiedInOrder(List<Invocation> chunk, CapturesArgumensFromInvocation wanted, InOrderContext context) {\n        markVerified(chunk, wanted);\n        "
+    }
+  ],
+  "class_simple": "InvocationMatcher",
+  "doc": {
+    "class_javadoc": "",
+    "method_javadoc": ""
+  },
+  "fields": [
+    "private static final long serialVersionUID",
+    "private final Invocation invocation",
+    "private final List<Matcher> matchers"
+  ],
+  "focal_class": "org.mockito.internal.invocation.InvocationMatcher",
+  "focal_id": "Mockito_3::org.mockito.internal.invocation.InvocationMatcher::captureArgumentsFrom(Invocation)",
+  "focal_method_name": "captureArgumentsFrom",
+  "impl_B": "public void captureArgumentsFrom(Invocation invocation) {\n        if (invocation.getMethod().isVarArgs()) {\n            int indexOfVararg = invocation.getRawArguments().length - 1;\n            for (int position = 0; position < indexOfVararg; position++) {\n                Matcher m = matchers.get(position);\n                if (m instanceof CapturesArguments) {\n                    ((CapturesArguments) m).captureFrom(invocation.getArgumentAt(position, Object.class));\n                }\n            }\n            for (int position = indexOfVararg; position < matchers.size(); position++) {\n                Matcher m = matchers.get(position);\n                if (m instanceof CapturesArguments) {\n                    ((CapturesArguments) m).captureFrom(invocation.getRawArguments()[position - indexOfVararg]);\n                }\n            }\n        } else {\n            for (int position = 0; position < matchers.size(); position++) {\n                Matcher m = matchers.get(position);\n                if (m instanceof CapturesArguments) {\n                    ((CapturesArguments) m).captureFrom(invocation.getArgumentAt(position, Object.class));\n                }\n            }\n        }\n    }",
+  "imports": [
+    "java.io.Serializable",
+    "java.lang.reflect.Array",
+    "java.lang.reflect.Method",
+    "java.util.*",
+    "org.hamcrest.Matcher",
+    "org.mockito.internal.matchers.CapturesArguments",
+    "org.mockito.internal.matchers.MatcherDecorator",
+    "org.mockito.internal.reporting.PrintSettings",
+    "org.mockito.invocation.DescribedInvocation",
+    "org.mockito.invocation.Invocation",
+    "org.mockito.invocation.Location"
+  ],
+  "javadoc_edited_by_fix": false,
+  "package": "org.mockito.internal.invocation",
+  "project": "Mockito",
+  "siblings": [
+    {
+      "javadoc": "",
+      "name": "getMethod"
+    },
+    {
+      "javadoc": "",
+      "name": "getInvocation"
+    },
+    {
+      "javadoc": "",
+      "name": "getMatchers"
+    },
+    {
+      "javadoc": "",
+      "name": "toString"
+    },
+    {
+      "javadoc": "",
+      "name": "matches"
+    },
+    {
+      "javadoc": "/**\n     * similar means the same method name, same mock, unverified \n     * and: if arguments are the same cannot be overloaded\n     */",
+      "name": "hasSimilarMethod"
+    },
+    {
+      "javadoc": "",
+      "name": "hasSameMethod"
+    },
+    {
+      "javadoc": "",
+      "name": "getLocation"
+    },
+    {
+      "javadoc": "",
+      "name": "createFrom"
+    }
+  ],
+  "sig": {
+    "class_declaration": "@SuppressWarnings(\"unchecked\") public class InvocationMatcher implements DescribedInvocation, CapturesArgumensFromInvocation, Serializable",
+    "constructors": [
+      "public InvocationMatcher(Invocation invocation, List<Matcher> matchers);",
+      "public InvocationMatcher(Invocation invocation);"
+    ],
+    "focal_signature": "public void captureArgumentsFrom(Invocation invocation)",
+    "methods": [
+      "public Method getMethod();",
+      "public Invocation getInvocation();",
+      "public List<Matcher> getMatchers();",
+      "public String toString();",
+      "public boolean matches(Invocation actual);",
+      "public boolean hasSimilarMethod(Invocation candidate);",
+      "public boolean hasSameMethod(Invocation candidate);",
+      "public Location getLocation();",
+      "public static List<InvocationMatcher> createFrom(List<Invocation> invocations);"
+    ],
+    "type_signatures": [
+      "public interface Invocation extends InvocationOnMock, DescribedInvocation {  }"
+    ]
+  },
+  "split": "test"
+}

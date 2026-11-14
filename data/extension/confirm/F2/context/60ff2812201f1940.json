@@ -1,0 +1,564 @@
+{
+ "bug_name": "JacksonDatabind_81",
+ "call_sites": [
+  {
+   "line": 529,
+   "lines": [
+    524,
+    525,
+    526,
+    527,
+    528,
+    529,
+    530,
+    531,
+    532,
+    533,
+    534
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/introspect/AnnotationIntrospectorPair.java",
+   "snippet": "\n    @Override // since 2.7\n    public JavaType refineSerializationType(MapperConfig<?> config,\n            Annotated a, JavaType baseType) throws JsonMappingException\n    {\n        JavaType t = _secondary.refineSerializationType(config, a, baseType);\n        return _primary.refineSerializationType(config, a, t);\n    }\n    \n    @Override\n    @Deprecated"
+  },
+  {
+   "line": 530,
+   "lines": [
+    525,
+    526,
+    527,
+    528,
+    529,
+    530,
+    531,
+    532,
+    533,
+    534,
+    535
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/introspect/AnnotationIntrospectorPair.java",
+   "snippet": "    @Override // since 2.7\n    public JavaType refineSerializationType(MapperConfig<?> config,\n            Annotated a, JavaType baseType) throws JsonMappingException\n    {\n        JavaType t = _secondary.refineSerializationType(config, a, baseType);\n        return _primary.refineSerializationType(config, a, t);\n    }\n    \n    @Override\n    @Deprecated\n    public Class<?> findSerializationType(Annotated a) {"
+  },
+  {
+   "line": 154,
+   "lines": [
+    149,
+    150,
+    151,
+    152,
+    153,
+    154,
+    155,
+    156,
+    157,
+    158,
+    159
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ser/BeanSerializerFactory.java",
+   "snippet": "\n        if (intr == null) {\n            type = origType;\n        } else {\n            try {\n                type = intr.refineSerializationType(config, beanDesc.getClassInfo(), origType);\n            } catch (JsonMappingException e) {\n                return prov.reportBadTypeDefinition(beanDesc, e.getMessage());\n            }\n        }\n        if (type == origType) { // no changes, won't force static typing"
+  },
+  {
+   "line": 250,
+   "lines": [
+    245,
+    246,
+    247,
+    248,
+    249,
+    250,
+    251,
+    252,
+    253,
+    254,
+    255
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ser/PropertyBuilder.java",
+   "snippet": "     * If neither can be used (no annotations, dynamic typing), returns null.\n     */\n    protected JavaType findSerializationType(Annotated a, boolean useStaticTyping, JavaType declaredType)\n        throws JsonMappingException\n    {\n        JavaType secondary = _annotationIntrospector.refineSerializationType(_config, a, declaredType);\n\n        // 11-Oct-2015, tatu: As of 2.7, not 100% sure following checks are needed. But keeping\n        //    for now, just in case\n        if (secondary != declaredType) {\n            Class<?> serClass = secondary.getRawClass();"
+  }
+ ],
+ "class_simple": "JacksonAnnotationIntrospector",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * {@link AnnotationIntrospector} implementation that handles standard\n * Jackson annotations.\n */\npublic",
+  "method_javadoc": "/**********************************************************\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "private final static Class<? extends Annotation>[] ANNOTATIONS_TO_INFER_SER",
+  "private final static Class<? extends Annotation>[] ANNOTATIONS_TO_INFER_DESER",
+  "private static final Java7Support _java7Helper",
+  "protected transient LRUMap<Class<?>,Boolean> _annotationsInside",
+  "protected boolean _cfgConstructorPropertiesImpliesCreator"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector",
+ "focal_id": "JacksonDatabind_81::com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector::refineSerializationType(MapperConfig<?>,Annotated,JavaType)",
+ "focal_method_name": "refineSerializationType",
+ "generations": 3,
+ "impl_B": "@Override\n    public JavaType refineSerializationType(final MapperConfig<?> config,\n            final Annotated a, final JavaType baseType) throws JsonMappingException\n    {\n        JavaType type = baseType;\n        final TypeFactory tf = config.getTypeFactory();\n\n        final JsonSerialize jsonSer = _findAnnotation(a, JsonSerialize.class);\n        \n        // Ok: start by refining the main type itself; common to all types\n\n        final Class<?> serClass = (jsonSer == null) ? null : _classIfExplicit(jsonSer.as());\n        if (serClass != null) {\n            if (type.hasRawClass(serClass)) {\n                // 30-Nov-2015, tatu: As per [databind#1023], need to allow forcing of\n                //    static typing this way\n                type = type.withStaticTyping();\n            } else {\n                Class<?> currRaw = type.getRawClass();\n                try {\n                    // 11-Oct-2015, tatu: For deser, we call `TypeFactory.constructSpecializedType()`,\n                    //   may be needed here too in future?\n                    if (serClass.isAssignableFrom(currRaw)) { // common case\n                        type = tf.constructGeneralizedType(type, serClass);\n                    } else if (currRaw.isAssignableFrom(serClass)) { // specialization, ok as well\n                        type = tf.constructSpecializedType(type, serClass);\n                        // 27-Apr-2017, tatu: [databind#1592] ignore primitive<->wrapper refinements\n                    } else {\n                        throw new JsonMappingException(null,\n                                String.format(\"Can not refine serialization type %s into %s; types not related\",\n                                        type, serClass.getName()));\n                    }\n                } catch (IllegalArgumentException iae) {\n                    throw new JsonMappingException(null,\n                            String.format(\"Failed to widen type %s with annotation (value %s), from '%s': %s\",\n                                    type, serClass.getName(), a.getName(), iae.getMessage()),\n                                    iae);\n                }\n            }\n        }\n        // Then further processing for container types\n\n        // First, key type (for Maps, Map-like types):\n        if (type.isMapLikeType()) {\n            JavaType keyType = type.getKeyType();\n            final Class<?> keyClass = (jsonSer == null) ? null : _classIfExplicit(jsonSer.keyAs());\n            if (keyClass != null) {\n                if (keyType.hasRawClass(keyClass)) {\n                    keyType = keyType.withStaticTyping();\n                } else {\n                    Class<?> currRaw = keyType.getRawClass();\n                    try {\n                        // 19-May-2016, tatu: As per [databind#1231], [databind#1178] may need to actually\n                        //   specialize (narrow) type sometimes, even if more commonly opposite\n                        //   is needed.\n                        if (keyClass.isAssignableFrom(currRaw)) { // common case\n                            keyType = tf.constructGeneralizedType(keyType, keyClass);\n                        } else if (currRaw.isAssignableFrom(keyClass)) { // specialization, ok as well\n                            keyType = tf.constructSpecializedType(keyType, keyClass);\n                            // 27-Apr-2017, tatu: [databind#1592] ignore primitive<->wrapper refinements\n                        } else {\n                            throw new JsonMappingException(null,\n                                    String.format(\"Can not refine serialization key type %s into %s; types not related\",\n                                            keyType, keyClass.getName()));\n                        }\n                    } catch (IllegalArgumentException iae) {\n                        throw new JsonMappingException(null,\n                                String.format(\"Failed to widen key type of %s with concrete-type annotation (value %s), from '%s': %s\",\n                                        type, keyClass.getName(), a.getName(), iae.getMessage()),\n                                        iae);\n                    }\n                }\n                type = ((MapLikeType) type).withKeyType(keyType);\n            }\n        }\n\n        JavaType contentType = type.getContentType();\n        if (contentType != null) { // collection[like], map[like], array, reference\n            // And then value types for all containers:\n           final Class<?> contentClass = (jsonSer == null) ? null : _classIfExplicit(jsonSer.contentAs());\n           if (contentClass != null) {\n               if (contentType.hasRawClass(contentClass)) {\n                   contentType = contentType.withStaticTyping();\n               } else {\n                   // 03-Apr-2016, tatu: As per [databind#1178], may need to actually\n                   //   specialize (narrow) type sometimes, even if more commonly opposite\n                   //   is needed.\n                   Class<?> currRaw = contentType.getRawClass();\n                   try {\n                       if (contentClass.isAssignableFrom(currRaw)) { // common case\n                           contentType = tf.constructGeneralizedType(contentType, contentClass);\n                       } else if (currRaw.isAssignableFrom(contentClass)) { // specialization, ok as well\n                           contentType = tf.constructSpecializedType(contentType, contentClass);\n                           // 27-Apr-2017, tatu: [databind#1592] ignore primitive<->wrapper refinements\n                       } else {\n                           throw new JsonMappingException(null,\n                                   String.format(\"Can not refine serialization content type %s into %s; types not related\",\n                                           contentType, contentClass.getName()));\n                       }\n                   } catch (IllegalArgumentException iae) { // shouldn't really happen\n                       throw new JsonMappingException(null,\n                               String.format(\"Internal error: failed to refine value type of %s with concrete-type annotation (value %s), from '%s': %s\",\n                                       type, contentClass.getName(), a.getName(), iae.getMessage()),\n                                       iae);\n                   }\n               }\n               type = type.withContentType(contentType);\n           }\n        }\n        return type;\n    }",
+ "imports": [
+  "java.lang.annotation.Annotation",
+  "java.lang.reflect.Field",
+  "java.util.*",
+  "com.fasterxml.jackson.annotation.*",
+  "com.fasterxml.jackson.core.Version",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.annotation.*",
+  "com.fasterxml.jackson.databind.cfg.HandlerInstantiator",
+  "com.fasterxml.jackson.databind.cfg.MapperConfig",
+  "com.fasterxml.jackson.databind.ext.Java7Support",
+  "com.fasterxml.jackson.databind.jsontype.NamedType",
+  "com.fasterxml.jackson.databind.jsontype.TypeIdResolver",
+  "com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder",
+  "com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder",
+  "com.fasterxml.jackson.databind.ser.BeanPropertyWriter",
+  "com.fasterxml.jackson.databind.ser.VirtualBeanPropertyWriter",
+  "com.fasterxml.jackson.databind.ser.impl.AttributePropertyWriter",
+  "com.fasterxml.jackson.databind.ser.std.RawSerializer",
+  "com.fasterxml.jackson.databind.type.MapLikeType",
+  "com.fasterxml.jackson.databind.type.TypeFactory",
+  "com.fasterxml.jackson.databind.util.*"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.introspect",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "version"
+  },
+  {
+   "javadoc": "",
+   "name": "readResolve"
+  },
+  {
+   "javadoc": "/**\n     * Method for changing behavior of {@link java.beans.ConstructorProperties}:\n     * if set to `true`, existence DOES indicate that the given constructor should\n     * be considered a creator; `false` that it should NOT be considered a creator\n     * without explicit use of <code>JsonCreator</code> annotation.\n     *<p>\n     * Default setting is `true`\n     *\n     * @since 2.7.4\n     */",
+   "name": "setConstructorPropertiesImpliesCreator"
+  },
+  {
+   "javadoc": "/**\n     * Annotations with meta-annotation {@link JacksonAnnotationsInside}\n     * are considered bundles.\n     */",
+   "name": "isAnnotationBundle"
+  },
+  {
+   "javadoc": "/**\n     * Since 2.6, we have supported use of {@link JsonProperty} for specifying\n     * explicit serialized name\n     */",
+   "name": "findEnumValue"
+  },
+  {
+   "javadoc": "",
+   "name": "findEnumValues"
+  },
+  {
+   "javadoc": "/**\n     * Finds the Enum value that should be considered the default value, if possible.\n     * <p>\n     * This implementation relies on {@link JsonEnumDefaultValue} annotation to determine the default value if present.\n     *\n     * @param enumCls The Enum class to scan for the default value.\n     * @return null if none found or it's not possible to determine one.\n     * @since 2.8\n     */",
+   "name": "findDefaultEnumValue"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findRootName"
+  },
+  {
+   "javadoc": "",
+   "name": "findPropertyIgnorals"
+  },
+  {
+   "javadoc": "",
+   "name": "isIgnorableType"
+  },
+  {
+   "javadoc": "",
+   "name": "findFilterId"
+  },
+  {
+   "javadoc": "",
+   "name": "findNamingStrategy"
+  },
+  {
+   "javadoc": "",
+   "name": "findClassDescription"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findAutoDetectVisibility"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findImplicitPropertyName"
+  },
+  {
+   "javadoc": "",
+   "name": "findPropertyAliases"
+  },
+  {
+   "javadoc": "",
+   "name": "hasIgnoreMarker"
+  },
+  {
+   "javadoc": "",
+   "name": "hasRequiredMarker"
+  },
+  {
+   "javadoc": "",
+   "name": "findPropertyAccess"
+  },
+  {
+   "javadoc": "",
+   "name": "findPropertyDescription"
+  },
+  {
+   "javadoc": "",
+   "name": "findPropertyIndex"
+  },
+  {
+   "javadoc": "",
+   "name": "findPropertyDefaultValue"
+  },
+  {
+   "javadoc": "",
+   "name": "findFormat"
+  },
+  {
+   "javadoc": "",
+   "name": "findReferenceType"
+  },
+  {
+   "javadoc": "",
+   "name": "findUnwrappingNameTransformer"
+  },
+  {
+   "javadoc": "",
+   "name": "findInjectableValue"
+  },
+  {
+   "javadoc": "",
+   "name": "findInjectableValueId"
+  },
+  {
+   "javadoc": "",
+   "name": "findViews"
+  },
+  {
+   "javadoc": "",
+   "name": "resolveSetterConflict"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findTypeResolver"
+  },
+  {
+   "javadoc": "",
+   "name": "findPropertyTypeResolver"
+  },
+  {
+   "javadoc": "",
+   "name": "findPropertyContentTypeResolver"
+  },
+  {
+   "javadoc": "",
+   "name": "findSubtypes"
+  },
+  {
+   "javadoc": "",
+   "name": "findTypeName"
+  },
+  {
+   "javadoc": "",
+   "name": "isTypeId"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findObjectIdInfo"
+  },
+  {
+   "javadoc": "",
+   "name": "findObjectReferenceInfo"
+  },
+  {
+   "javadoc": "/**********************************************************\n    */",
+   "name": "findSerializer"
+  },
+  {
+   "javadoc": "",
+   "name": "findKeySerializer"
+  },
+  {
+   "javadoc": "",
+   "name": "findContentSerializer"
+  },
+  {
+   "javadoc": "",
+   "name": "findNullSerializer"
+  },
+  {
+   "javadoc": "",
+   "name": "findPropertyInclusion"
+  },
+  {
+   "javadoc": "",
+   "name": "findSerializationTyping"
+  },
+  {
+   "javadoc": "",
+   "name": "findSerializationConverter"
+  },
+  {
+   "javadoc": "",
+   "name": "findSerializationContentConverter"
+  },
+  {
+   "javadoc": "",
+   "name": "findSerializationType"
+  },
+  {
+   "javadoc": "",
+   "name": "findSerializationKeyType"
+  },
+  {
+   "javadoc": "",
+   "name": "findSerializationContentType"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findSerializationPropertyOrder"
+  },
+  {
+   "javadoc": "",
+   "name": "findSerializationSortAlphabetically"
+  },
+  {
+   "javadoc": "",
+   "name": "findAndAddVirtualProperties"
+  },
+  {
+   "javadoc": "",
+   "name": "_constructVirtualProperty"
+  },
+  {
+   "javadoc": "",
+   "name": "_constructVirtualProperty"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findNameForSerialization"
+  },
+  {
+   "javadoc": "",
+   "name": "hasAsValue"
+  },
+  {
+   "javadoc": "",
+   "name": "hasAnyGetter"
+  },
+  {
+   "javadoc": "",
+   "name": "hasAnyGetterAnnotation"
+  },
+  {
+   "javadoc": "",
+   "name": "hasAsValueAnnotation"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "findKeyDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "findContentDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "findDeserializationConverter"
+  },
+  {
+   "javadoc": "",
+   "name": "findDeserializationContentConverter"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "refineDeserializationType"
+  },
+  {
+   "javadoc": "",
+   "name": "findDeserializationContentType"
+  },
+  {
+   "javadoc": "",
+   "name": "findDeserializationType"
+  },
+  {
+   "javadoc": "",
+   "name": "findDeserializationKeyType"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findValueInstantiator"
+  },
+  {
+   "javadoc": "",
+   "name": "findPOJOBuilder"
+  },
+  {
+   "javadoc": "",
+   "name": "findPOJOBuilderConfig"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findNameForDeserialization"
+  },
+  {
+   "javadoc": "",
+   "name": "hasAnySetter"
+  },
+  {
+   "javadoc": "",
+   "name": "findSetterInfo"
+  },
+  {
+   "javadoc": "",
+   "name": "findMergeInfo"
+  },
+  {
+   "javadoc": "",
+   "name": "hasAnySetterAnnotation"
+  },
+  {
+   "javadoc": "",
+   "name": "hasCreatorAnnotation"
+  },
+  {
+   "javadoc": "",
+   "name": "findCreatorBinding"
+  },
+  {
+   "javadoc": "",
+   "name": "findCreatorAnnotation"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_isIgnorable"
+  },
+  {
+   "javadoc": "",
+   "name": "_classIfExplicit"
+  },
+  {
+   "javadoc": "",
+   "name": "_classIfExplicit"
+  },
+  {
+   "javadoc": "",
+   "name": "_propertyName"
+  },
+  {
+   "javadoc": "",
+   "name": "_findConstructorName"
+  },
+  {
+   "javadoc": "/**\n     * Helper method for constructing standard {@link TypeResolverBuilder}\n     * implementation.\n     */",
+   "name": "_constructStdTypeResolverBuilder"
+  },
+  {
+   "javadoc": "/**\n     * Helper method for dealing with \"no type info\" marker; can't be null\n     * (as it'd be replaced by default typing)\n     */",
+   "name": "_constructNoTypeResolverBuilder"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class JacksonAnnotationIntrospector extends AnnotationIntrospector implements java.io.Serializable",
+  "constructors": [
+   "public JacksonAnnotationIntrospector();"
+  ],
+  "focal_signature": "public JavaType refineSerializationType(final MapperConfig<?> config, final Annotated a, final JavaType baseType) throws JsonMappingException",
+  "methods": [
+   "public Version version();",
+   "protected Object readResolve();",
+   "public JacksonAnnotationIntrospector setConstructorPropertiesImpliesCreator(boolean b);",
+   "public boolean isAnnotationBundle(Annotation ann);",
+   "// since 2.8 public String findEnumValue(Enum<?> value);",
+   "// since 2.7 public String[] findEnumValues(Class<?> enumType, Enum<?>[] enumValues, String[] names);",
+   "public Enum<?> findDefaultEnumValue(Class<Enum<?>> enumCls);",
+   "public PropertyName findRootName(AnnotatedClass ac);",
+   "// since 2.8 public JsonIgnoreProperties.Value findPropertyIgnorals(Annotated a);",
+   "public Boolean isIgnorableType(AnnotatedClass ac);",
+   "public Object findFilterId(Annotated a);",
+   "public Object findNamingStrategy(AnnotatedClass ac);",
+   "public String findClassDescription(AnnotatedClass ac);",
+   "public VisibilityChecker<?> findAutoDetectVisibility(AnnotatedClass ac, VisibilityChecker<?> checker);",
+   "public String findImplicitPropertyName(AnnotatedMember m);",
+   "public List<PropertyName> findPropertyAliases(Annotated m);",
+   "public boolean hasIgnoreMarker(AnnotatedMember m);",
+   "public Boolean hasRequiredMarker(AnnotatedMember m);",
+   "public JsonProperty.Access findPropertyAccess(Annotated m);",
+   "public String findPropertyDescription(Annotated ann);",
+   "public Integer findPropertyIndex(Annotated ann);",
+   "public String findPropertyDefaultValue(Annotated ann);",
+   "public JsonFormat.Value findFormat(Annotated ann);",
+   "public ReferenceProperty findReferenceType(AnnotatedMember member);",
+   "public NameTransformer findUnwrappingNameTransformer(AnnotatedMember member);",
+   "// since 2.9 public JacksonInject.Value findInjectableValue(AnnotatedMember m);",
+   "// since 2.9 public Object findInjectableValueId(AnnotatedMember m);",
+   "public Class<?>[] findViews(Annotated a);",
+   "// since 2.7 public AnnotatedMethod resolveSetterConflict(MapperConfig<?> config, AnnotatedMethod setter1, AnnotatedMethod setter2);",
+   "public TypeResolverBuilder<?> findTypeResolver(MapperConfig<?> config, AnnotatedClass ac, JavaType baseType);",
+   "public TypeResolverBuilder<?> findPropertyTypeResolver(MapperConfig<?> config, AnnotatedMember am, JavaType baseType);",
+   "public TypeResolverBuilder<?> findPropertyContentTypeResolver(MapperConfig<?> config, AnnotatedMember am, JavaType containerType);",
+   "public List<NamedType> findSubtypes(Annotated a);",
+   "public String findTypeName(AnnotatedClass ac);",
+   "public Boolean isTypeId(AnnotatedMember member);",
+   "public ObjectIdInfo findObjectIdInfo(Annotated ann);",
+   "public ObjectIdInfo findObjectReferenceInfo(Annotated ann, ObjectIdInfo objectIdInfo);",
+   "public Object findSerializer(Annotated a);",
+   "public Object findKeySerializer(Annotated a);",
+   "public Object findContentSerializer(Annotated a);",
+   "public Object findNullSerializer(Annotated a);",
+   "public JsonInclude.Value findPropertyInclusion(Annotated a);",
+   "public JsonSerialize.Typing findSerializationTyping(Annotated a);",
+   "public Object findSerializationConverter(Annotated a);",
+   "public Object findSerializationContentConverter(AnnotatedMember a);",
+   "// since 2.7 public Class<?> findSerializationType(Annotated am);",
+   "// since 2.7 public Class<?> findSerializationKeyType(Annotated am, JavaType baseType);",
+   "// since 2.7 public Class<?> findSerializationContentType(Annotated am, JavaType baseType);",
+   "public String[] findSerializationPropertyOrder(AnnotatedClass ac);",
+   "public Boolean findSerializationSortAlphabetically(Annotated ann);",
+   "public void findAndAddVirtualProperties(MapperConfig<?> config, AnnotatedClass ac, List<BeanPropertyWriter> properties);",
+   "protected BeanPropertyWriter _constructVirtualProperty(JsonAppend.Attr attr, MapperConfig<?> config, AnnotatedClass ac, JavaType type);",
+   "protected BeanPropertyWriter _constructVirtualProperty(JsonAppend.Prop prop, MapperConfig<?> config, AnnotatedClass ac);",
+   "public PropertyName findNameForSerialization(Annotated a);",
+   "// since 2.9 public Boolean hasAsValue(Annotated a);",
+   "// since 2.9 public Boolean hasAnyGetter(Annotated a);",
+   "// since 2.9 public boolean hasAnyGetterAnnotation(AnnotatedMethod am);",
+   "// since 2.9 public boolean hasAsValueAnnotation(AnnotatedMethod am);",
+   "public Object findDeserializer(Annotated a);",
+   "public Object findKeyDeserializer(Annotated a);",
+   "public Object findContentDeserializer(Annotated a);",
+   "public Object findDeserializationConverter(Annotated a);",
+   "public Object findDeserializationContentConverter(AnnotatedMember a);",
+   "public JavaType refineDeserializationType(final MapperConfig<?> config, final Annotated a, final JavaType baseType) throws JsonMappingException;",
+   "// since 2.7 public Class<?> findDeserializationContentType(Annotated am, JavaType baseContentType);",
+   "// since 2.7 public Class<?> findDeserializationType(Annotated am, JavaType baseType);",
+   "// since 2.7 public Class<?> findDeserializationKeyType(Annotated am, JavaType baseKeyType);",
+   "public Object findValueInstantiator(AnnotatedClass ac);",
+   "public Class<?> findPOJOBuilder(AnnotatedClass ac);",
+   "public JsonPOJOBuilder.Value findPOJOBuilderConfig(AnnotatedClass ac);",
+   "public PropertyName findNameForDeserialization(Annotated a);",
+   "public Boolean hasAnySetter(Annotated a);",
+   "public JsonSetter.Value findSetterInfo(Annotated a);",
+   "// since 2.9 public Boolean findMergeInfo(Annotated a);",
+   "// since 2.9 public boolean hasAnySetterAnnotation(AnnotatedMethod am);",
+   "// since 2.9 public boolean hasCreatorAnnotation(Annotated a);",
+   "// since 2.9 public JsonCreator.Mode findCreatorBinding(Annotated a);",
+   "public JsonCreator.Mode findCreatorAnnotation(MapperConfig<?> config, Annotated a);",
+   "protected boolean _isIgnorable(Annotated a);",
+   "protected Class<?> _classIfExplicit(Class<?> cls);",
+   "protected Class<?> _classIfExplicit(Class<?> cls, Class<?> implicit);",
+   "protected PropertyName _propertyName(String localName, String namespace);",
+   "protected PropertyName _findConstructorName(Annotated a);",
+   "protected StdTypeResolverBuilder _constructStdTypeResolverBuilder();",
+   "protected StdTypeResolverBuilder _constructNoTypeResolverBuilder();"
+  ],
+  "type_signatures": [
+   "public abstract class MapperConfig<T extends MapperConfig<T>> implements ClassIntrospector.MixInResolver, java.io.Serializable { protected MapperConfig(BaseSettings base, int mapperFeatures); protected MapperConfig(MapperConfig<T> src, int mapperFeatures); protected MapperConfig(MapperConfig<T> src, BaseSettings base); protected MapperConfig(MapperConfig<T> src); public static <F extends Enum<F> & ConfigFeature> int collectFeatureDefaults(Class<F> enumClass); public abstract T with(MapperFeature... features); public abstract T without(MapperFeature... features); public abstract T with(MapperFeature feature, boolean state); public final boolean isEnabled(MapperFeature f); public final boolean hasMapperFeatures(int featureMask); public final boolean isAnnotationProcessingEnabled(); public final boolean canOverrideAccessModifiers(); public final boolean shouldSortPropertiesAlphabetically(); public abstract boolean useRootWrapping(); public SerializableString compileString(String src); }",
+   "public abstract class Annotated { protected Annotated(); public abstract <A extends Annotation> A getAnnotation(Class<A> acls); public abstract boolean hasAnnotation(Class<?> acls); public abstract boolean hasOneOf(Class<? extends Annotation>[] annoClasses); public abstract AnnotatedElement getAnnotated(); protected abstract int getModifiers(); public boolean isPublic(); public abstract String getName(); public abstract JavaType getType(); public final JavaType getType(TypeBindings bogus); public Type getGenericType(); public abstract Class<?> getRawType(); public abstract boolean equals(Object o); public abstract int hashCode(); public abstract String toString(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

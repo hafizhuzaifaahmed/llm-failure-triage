@@ -1,0 +1,80 @@
+{
+ "bug_name": "JacksonDatabind_3",
+ "call_sites": [
+  {
+   "line": 51,
+   "lines": [
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/std/StringArrayDeserializer.java",
+   "snippet": "        // Ok: must point to START_ARRAY (or equivalent)\n        if (!jp.isExpectedStartArrayToken()) {\n            return handleNonArray(jp, ctxt);\n        }\n        if (_elementDeserializer != null) {\n            return _deserializeCustom(jp, ctxt);\n        }\n\n        final ObjectBuffer buffer = ctxt.leaseObjectBuffer();\n        Object[] chunk = buffer.resetAndStart();\n        "
+  }
+ ],
+ "class_simple": "StringArrayDeserializer",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Separate implementation for serializing String arrays (instead of\n * using {@link ObjectArrayDeserializer}.\n * Used if (and only if) no custom value deserializers are used.\n */\n@JacksonStdImpl\npublic final",
+  "method_javadoc": "/**\n     * Offlined version used when we do not use the default deserialization method.\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "public final static StringArrayDeserializer instance",
+  "protected JsonDeserializer<String> _elementDeserializer"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.deser.std.StringArrayDeserializer",
+ "focal_id": "JacksonDatabind_3::com.fasterxml.jackson.databind.deser.std.StringArrayDeserializer::_deserializeCustom(JsonParser,DeserializationContext)",
+ "focal_method_name": "_deserializeCustom",
+ "generations": 3,
+ "impl_B": "protected final String[] _deserializeCustom(JsonParser jp, DeserializationContext ctxt) throws IOException\n    {\n        final ObjectBuffer buffer = ctxt.leaseObjectBuffer();\n        Object[] chunk = buffer.resetAndStart();\n        final JsonDeserializer<String> deser = _elementDeserializer;\n        \n        int ix = 0;\n        JsonToken t;\n        \n        while ((t = jp.nextToken()) != JsonToken.END_ARRAY) {\n            // Ok: no need to convert Strings, but must recognize nulls\n            String value = (t == JsonToken.VALUE_NULL) ? null : deser.deserialize(jp, ctxt);\n            if (ix >= chunk.length) {\n                chunk = buffer.appendCompletedChunk(chunk);\n                ix = 0;\n            }\n            chunk[ix++] = value;\n        }\n        String[] result = buffer.completeAndClearBuffer(chunk, ix, String.class);\n        ctxt.returnObjectBuffer(buffer);\n        return result;\n    }",
+ "imports": [
+  "java.io.IOException",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.annotation.JacksonStdImpl",
+  "com.fasterxml.jackson.databind.deser.ContextualDeserializer",
+  "com.fasterxml.jackson.databind.jsontype.TypeDeserializer",
+  "com.fasterxml.jackson.databind.util.ObjectBuffer"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.deser.std",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "deserialize"
+  },
+  {
+   "javadoc": "",
+   "name": "deserializeWithType"
+  },
+  {
+   "javadoc": "/**\n     * Contextualization is needed to see whether we can \"inline\" deserialization\n     * of String values, or if we have to use separate value deserializer.\n     */",
+   "name": "createContextual"
+  }
+ ],
+ "sig": {
+  "class_declaration": "@JacksonStdImpl public final class StringArrayDeserializer extends StdDeserializer<String[]> implements ContextualDeserializer",
+  "constructors": [
+   "public StringArrayDeserializer();"
+  ],
+  "focal_signature": "protected final String[] _deserializeCustom(JsonParser jp, DeserializationContext ctxt) throws IOException",
+  "methods": [
+   "public String[] deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException;",
+   "public Object deserializeWithType(JsonParser jp, DeserializationContext ctxt, TypeDeserializer typeDeserializer) throws IOException;",
+   "public JsonDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property) throws JsonMappingException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

@@ -1,0 +1,13 @@
+{
+  "assembled": true,
+  "call_key": "dec08acde34702bf21287198080eef6a10ec75d85704f100d53aee38e74e27ee",
+  "candidate_id": "86ca93ecb3dec8d77f62",
+  "class_name": "MathUtils_factorialDouble_TriageGen1Test",
+  "dataset": "D2",
+  "focal_id": "Math_93::org.apache.commons.math.util.MathUtils::factorialDouble(int)#m265",
+  "generation": 1,
+  "model_returned": "gemma4:26b",
+  "n_tests": 4,
+  "package": "org.apache.commons.math.util",
+  "source": "package org.apache.commons.math.util;\n\nimport java.io.*;\nimport java.math.*;\nimport java.math.BigDecimal;\nimport java.util.*;\nimport java.util.Arrays;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\n/**\n * Unit tests for MathUtils.factorialDouble\n */\npublic class MathUtils_factorialDouble_TriageGen1Test {\n\n    private static final double DELTA = 1e-10;\n\n    @Test(expected = IllegalArgumentException.class)\n    public void testFactorialDouble_NegativeInput() {\n        // Tests the branch: if (n < 0) { throw new IllegalArgumentException(...) }\n        MathUtils.factorialDouble(-1);\n    }\n\n    @Test\n    public void testFactorialDouble_Zero() {\n        // Tests the branch: n >= 0 and return Math.floor(Math.exp(factorialLog(n)) + 0.5)\n        // 0! = 1\n        assertEquals(1.0, MathUtils.factorialDouble(0), DELTA);\n    }\n\n    @Test\n    public void testFactorialDouble_SmallPositive() {\n        // Tests the branch: n >= 0 and return Math.floor(Math.exp(factorialLog(n)) + 0.5)\n        // 5! = 120\n        assertEquals(120.0, MathUtils.factorialDouble(5), DELTA);\n    }\n\n    @Test\n    public void testFactorialDouble_LargePositive() {\n        // Tests higher range calculations\n        // 10! = 3628800\n        assertEquals(3628800.0, MathUtils.factorialDouble(10), DELTA);\n    }\n\n    /**\n     * Note: The provided source code contains a logical contradiction/dead code:\n     * if (n < 0) { throw ... }\n     * if (n < -21) { return factorial(n); }\n     * \n     * Since the first condition catches all n < 0, the second condition (n < -21) \n     * is unreachable in standard execution. However, to aim for maximum coverage \n     * in a coverage tool, we must acknowledge that the branch n < -21 \n     * cannot be hit if the first check is present.\n     * \n     * If this were a real-world scenario where the code was meant to be \n     * 'if (n < 0 && n < -21)', we would test it. Given the current implementation,\n     * we test the exception for negative values.\n     */\n}\n"
+}

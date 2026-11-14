@@ -1,0 +1,348 @@
+{
+ "bug_name": "JacksonDatabind_67",
+ "call_sites": [
+  {
+   "line": 166,
+   "lines": [
+    161,
+    162,
+    163,
+    164,
+    165,
+    166,
+    167,
+    168,
+    169,
+    170,
+    171
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/DeserializerCache.java",
+   "snippet": "     */\n    public KeyDeserializer findKeyDeserializer(DeserializationContext ctxt,\n            DeserializerFactory factory, JavaType type)\n        throws JsonMappingException\n    {\n        KeyDeserializer kd = factory.createKeyDeserializer(ctxt, type);\n        if (kd == null) { // if none found, need to use a placeholder that'll fail\n            return _handleUnknownKeyDeserializer(ctxt, type);\n        }\n        // First: need to resolve?\n        if (kd instanceof ResolvableDeserializer) {"
+  }
+ ],
+ "class_simple": "BasicDeserializerFactory",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Abstract factory base class that can provide deserializers for standard\n * JDK classes, including collection classes and simple heuristics for\n * \"upcasting\" common collection interface types\n * (such as {@link java.util.Collection}).\n *<p>\n * Since all simple deserializers are eagerly instantiated, and there is\n * no additional introspection or customizability of these types,\n * this factory is stateless.\n */\n@SuppressWarnings(\"serial\")\npublic abstract",
+  "method_javadoc": "/**********************************************************\n     */"
+ },
+ "fields": [
+  "private final static Class<?> CLASS_OBJECT",
+  "private final static Class<?> CLASS_STRING",
+  "private final static Class<?> CLASS_CHAR_BUFFER",
+  "private final static Class<?> CLASS_ITERABLE",
+  "private final static Class<?> CLASS_MAP_ENTRY",
+  "protected final static PropertyName UNWRAPPED_CREATOR_PARAM_NAME",
+  "final static HashMap<String, Class<? extends Map>> _mapFallbacks",
+  "final static HashMap<String, Class<? extends Collection>> _collectionFallbacks",
+  "protected final DeserializerFactoryConfig _factoryConfig"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.deser.BasicDeserializerFactory",
+ "focal_id": "JacksonDatabind_67::com.fasterxml.jackson.databind.deser.BasicDeserializerFactory::createKeyDeserializer(DeserializationContext,JavaType)",
+ "focal_method_name": "createKeyDeserializer",
+ "generations": 3,
+ "impl_B": "@Override\n    public KeyDeserializer createKeyDeserializer(DeserializationContext ctxt,\n            JavaType type)\n        throws JsonMappingException\n    {\n        final DeserializationConfig config = ctxt.getConfig();\n        KeyDeserializer deser = null;\n        if (_factoryConfig.hasKeyDeserializers()) {\n            BeanDescription beanDesc = config.introspectClassAnnotations(type.getRawClass());\n            for (KeyDeserializers d  : _factoryConfig.keyDeserializers()) {\n                deser = d.findKeyDeserializer(type, config, beanDesc);\n                if (deser != null) {\n                    break;\n                }\n            }\n        }\n        // the only non-standard thing is this:\n        if (deser == null) {\n            if (type.isEnumType()) {\n                return _createEnumKeyDeserializer(ctxt, type);\n            }\n            deser = StdKeyDeserializers.findStringBasedKeyDeserializer(config, type);\n        }\n        // and then post-processing\n        if (deser != null) {\n            if (_factoryConfig.hasDeserializerModifiers()) {\n                for (BeanDeserializerModifier mod : _factoryConfig.deserializerModifiers()) {\n                    deser = mod.modifyKeyDeserializer(config, type, deser);\n                }\n            }\n        }\n        return deser;\n    }",
+ "imports": [
+  "java.lang.reflect.Method",
+  "java.util.*",
+  "java.util.concurrent.*",
+  "java.util.concurrent.atomic.AtomicReference",
+  "com.fasterxml.jackson.annotation.JsonCreator",
+  "com.fasterxml.jackson.annotation.JsonIgnoreProperties",
+  "com.fasterxml.jackson.core.JsonLocation",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.cfg.DeserializerFactoryConfig",
+  "com.fasterxml.jackson.databind.cfg.HandlerInstantiator",
+  "com.fasterxml.jackson.databind.deser.impl.CreatorCollector",
+  "com.fasterxml.jackson.databind.deser.std.*",
+  "com.fasterxml.jackson.databind.ext.OptionalHandlerFactory",
+  "com.fasterxml.jackson.databind.introspect.*",
+  "com.fasterxml.jackson.databind.jsontype.NamedType",
+  "com.fasterxml.jackson.databind.jsontype.TypeDeserializer",
+  "com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder",
+  "com.fasterxml.jackson.databind.type.*",
+  "com.fasterxml.jackson.databind.util.*"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.deser",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Method for getting current {@link DeserializerFactoryConfig}.\n      *<p>\n     * Note that since instances are immutable, you can NOT change settings\n     * by accessing an instance and calling methods: this will simply create\n     * new instance of config object.\n     */",
+   "name": "getFactoryConfig"
+  },
+  {
+   "javadoc": "",
+   "name": "withConfig"
+  },
+  {
+   "javadoc": "/**\n     * Convenience method for creating a new factory instance with additional deserializer\n     * provider.\n     */",
+   "name": "withAdditionalDeserializers"
+  },
+  {
+   "javadoc": "/**\n     * Convenience method for creating a new factory instance with additional\n     * {@link KeyDeserializers}.\n     */",
+   "name": "withAdditionalKeyDeserializers"
+  },
+  {
+   "javadoc": "/**\n     * Convenience method for creating a new factory instance with additional\n     * {@link BeanDeserializerModifier}.\n     */",
+   "name": "withDeserializerModifier"
+  },
+  {
+   "javadoc": "/**\n     * Convenience method for creating a new factory instance with additional\n     * {@link AbstractTypeResolver}.\n     */",
+   "name": "withAbstractTypeResolver"
+  },
+  {
+   "javadoc": "/**\n     * Convenience method for creating a new factory instance with additional\n     * {@link ValueInstantiators}.\n     */",
+   "name": "withValueInstantiators"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "mapAbstractType"
+  },
+  {
+   "javadoc": "/**\n     * Value instantiator is created both based on creator annotations,\n     * and on optional externally provided instantiators (registered through\n     * module interface).\n     */",
+   "name": "findValueInstantiator"
+  },
+  {
+   "javadoc": "/**\n     * Method that will construct standard default {@link ValueInstantiator}\n     * using annotations (like @JsonCreator) and visibility rules\n     */",
+   "name": "_constructDefaultValueInstantiator"
+  },
+  {
+   "javadoc": "",
+   "name": "_findCreatorsFromProperties"
+  },
+  {
+   "javadoc": "",
+   "name": "_valueInstantiatorInstance"
+  },
+  {
+   "javadoc": "",
+   "name": "_addDeserializerConstructors"
+  },
+  {
+   "javadoc": "",
+   "name": "_checkImplicitlyNamedConstructors"
+  },
+  {
+   "javadoc": "",
+   "name": "_checkIfCreatorPropertyBased"
+  },
+  {
+   "javadoc": "",
+   "name": "_handleSingleArgumentConstructor"
+  },
+  {
+   "javadoc": "",
+   "name": "_addDeserializerFactoryMethods"
+  },
+  {
+   "javadoc": "",
+   "name": "_handleSingleArgumentFactory"
+  },
+  {
+   "javadoc": "/**\n     * Method that will construct a property object that represents\n     * a logical property passed via Creator (constructor or static\n     * factory method)\n     */",
+   "name": "constructCreatorProperty"
+  },
+  {
+   "javadoc": "",
+   "name": "_findParamName"
+  },
+  {
+   "javadoc": "",
+   "name": "_findImplicitParamName"
+  },
+  {
+   "javadoc": "",
+   "name": "_findExplicitParamName"
+  },
+  {
+   "javadoc": "",
+   "name": "_hasExplicitParamName"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "createArrayDeserializer"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "createCollectionDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "_mapAbstractCollectionType"
+  },
+  {
+   "javadoc": "",
+   "name": "createCollectionLikeDeserializer"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "createMapDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "createMapLikeDeserializer"
+  },
+  {
+   "javadoc": "/**\n     * Factory method for constructing serializers of {@link Enum} types.\n     */",
+   "name": "createEnumDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "createTreeDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "createReferenceDeserializer"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findTypeDeserializer"
+  },
+  {
+   "javadoc": "/**\n     * Overridable method called after checking all other types.\n     * \n     * @since 2.2\n     */",
+   "name": "findOptionalStdDeserializer"
+  },
+  {
+   "javadoc": "/**\n     * Method called to create a type information deserializer for values of\n     * given non-container property, if one is needed.\n     * If not needed (no polymorphic handling configured for property), should return null.\n     *<p>\n     * Note that this method is only called for non-container bean properties,\n     * and not for values in container types or root values (or container properties)\n     *\n     * @param baseType Declared base type of the value to deserializer (actual\n     *    deserializer type will be this type or its subtype)\n     * \n     * @return Type deserializer to use for given base type, if one is needed; null if not.\n     */",
+   "name": "findPropertyTypeDeserializer"
+  },
+  {
+   "javadoc": "/**\n     * Method called to find and create a type information deserializer for values of\n     * given container (list, array, map) property, if one is needed.\n     * If not needed (no polymorphic handling configured for property), should return null.\n     *<p>\n     * Note that this method is only called for container bean properties,\n     * and not for values in container types or root values (or non-container properties)\n     * \n     * @param containerType Type of property; must be a container type\n     * @param propertyEntity Field or method that contains container property\n     */",
+   "name": "findPropertyContentTypeDeserializer"
+  },
+  {
+   "javadoc": "/**\n     * Helper method called to find one of default serializers for \"well-known\"\n     * platform types: JDK-provided types, and small number of public Jackson\n     * API types.\n     * \n     * @since 2.2\n     */",
+   "name": "findDefaultDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "_findRemappedType"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_findCustomTreeNodeDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "_findCustomReferenceDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "_findCustomArrayDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "_findCustomCollectionDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "_findCustomCollectionLikeDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "_findCustomEnumDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "_findCustomMapDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "_findCustomMapLikeDeserializer"
+  },
+  {
+   "javadoc": "/**\n     * Helper method called to check if a class or method\n     * has annotation that tells which class to use for deserialization; and if\n     * so, to instantiate, that deserializer to use.\n     * Note that deserializer will NOT yet be contextualized so caller needs to\n     * take care to call contextualization appropriately.\n     * Returns null if no such annotation found.\n     */",
+   "name": "findDeserializerFromAnnotation"
+  },
+  {
+   "javadoc": "/**\n     * Helper method called to check if a class or method\n     * has annotation that tells which class to use for deserialization.\n     * Returns null if no such annotation found.\n     */",
+   "name": "findKeyDeserializerFromAnnotation"
+  },
+  {
+   "javadoc": "/**\n     * Helper method used to resolve additional type-related annotation information\n     * like type overrides, or handler (serializer, deserializer) overrides,\n     * so that from declared field, property or constructor parameter type\n     * is used as the base and modified based on annotations, if any.\n     * \n     * @since 2.8 Combines functionality of <code>modifyTypeByAnnotation</code>\n     *     and <code>resolveType</code>\n     */",
+   "name": "resolveMemberAndTypeAnnotations"
+  },
+  {
+   "javadoc": "",
+   "name": "constructEnumResolver"
+  },
+  {
+   "javadoc": "/**\n     * Method called to see if given method has annotations that indicate\n     * a more specific type than what the argument specifies.\n     *\n     * @deprecated Since 2.8; call {@link #resolveMemberAndTypeAnnotations} instead\n     */",
+   "name": "modifyTypeByAnnotation"
+  },
+  {
+   "javadoc": "/**\n     * @deprecated since 2.8 call {@link #resolveMemberAndTypeAnnotations} instead.\n     */",
+   "name": "resolveType"
+  },
+  {
+   "javadoc": "/**\n     * @deprecated since 2.8 call <code>findJsonValueMethod</code> on {@link BeanDescription} instead\n     */",
+   "name": "_findJsonValueFor"
+  }
+ ],
+ "sig": {
+  "class_declaration": "@SuppressWarnings(\"serial\") public abstract class BasicDeserializerFactory extends DeserializerFactory implements java.io.Serializable",
+  "constructors": [
+   "protected BasicDeserializerFactory(DeserializerFactoryConfig config);"
+  ],
+  "focal_signature": "public KeyDeserializer createKeyDeserializer(DeserializationContext ctxt, JavaType type) throws JsonMappingException",
+  "methods": [
+   "public DeserializerFactoryConfig getFactoryConfig();",
+   "protected abstract DeserializerFactory withConfig(DeserializerFactoryConfig config);",
+   "public final DeserializerFactory withAdditionalDeserializers(Deserializers additional);",
+   "public final DeserializerFactory withAdditionalKeyDeserializers(KeyDeserializers additional);",
+   "public final DeserializerFactory withDeserializerModifier(BeanDeserializerModifier modifier);",
+   "public final DeserializerFactory withAbstractTypeResolver(AbstractTypeResolver resolver);",
+   "public final DeserializerFactory withValueInstantiators(ValueInstantiators instantiators);",
+   "public JavaType mapAbstractType(DeserializationConfig config, JavaType type) throws JsonMappingException;",
+   "public ValueInstantiator findValueInstantiator(DeserializationContext ctxt, BeanDescription beanDesc) throws JsonMappingException;",
+   "protected ValueInstantiator _constructDefaultValueInstantiator(DeserializationContext ctxt, BeanDescription beanDesc) throws JsonMappingException;",
+   "protected Map<AnnotatedWithParams,BeanPropertyDefinition[]> _findCreatorsFromProperties(DeserializationContext ctxt, BeanDescription beanDesc) throws JsonMappingException;",
+   "public ValueInstantiator _valueInstantiatorInstance(DeserializationConfig config, Annotated annotated, Object instDef) throws JsonMappingException;",
+   "protected void _addDeserializerConstructors (DeserializationContext ctxt, BeanDescription beanDesc, VisibilityChecker<?> vchecker, AnnotationIntrospector intr, CreatorCollector creators, Map<AnnotatedWithParams,BeanPropertyDefinition[]> creatorParams) throws JsonMappingException;",
+   "protected void _checkImplicitlyNamedConstructors(DeserializationContext ctxt, BeanDescription beanDesc, VisibilityChecker<?> vchecker, AnnotationIntrospector intr, CreatorCollector creators, List<AnnotatedConstructor> implicitCtors) throws JsonMappingException;",
+   "protected boolean _checkIfCreatorPropertyBased(AnnotationIntrospector intr, AnnotatedWithParams creator, BeanPropertyDefinition propDef);",
+   "protected boolean _handleSingleArgumentConstructor(DeserializationContext ctxt, BeanDescription beanDesc, VisibilityChecker<?> vchecker, AnnotationIntrospector intr, CreatorCollector creators, AnnotatedConstructor ctor, boolean isCreator, boolean isVisible) throws JsonMappingException;",
+   "protected void _addDeserializerFactoryMethods (DeserializationContext ctxt, BeanDescription beanDesc, VisibilityChecker<?> vchecker, AnnotationIntrospector intr, CreatorCollector creators, Map<AnnotatedWithParams,BeanPropertyDefinition[]> creatorParams) throws JsonMappingException;",
+   "protected boolean _handleSingleArgumentFactory(DeserializationConfig config, BeanDescription beanDesc, VisibilityChecker<?> vchecker, AnnotationIntrospector intr, CreatorCollector creators, AnnotatedMethod factory, boolean isCreator) throws JsonMappingException;",
+   "protected SettableBeanProperty constructCreatorProperty(DeserializationContext ctxt, BeanDescription beanDesc, PropertyName name, int index, AnnotatedParameter param, Object injectableValueId) throws JsonMappingException;",
+   "protected PropertyName _findParamName(AnnotatedParameter param, AnnotationIntrospector intr);",
+   "protected PropertyName _findImplicitParamName(AnnotatedParameter param, AnnotationIntrospector intr);",
+   "// in 2.6, remove from 2.7 protected PropertyName _findExplicitParamName(AnnotatedParameter param, AnnotationIntrospector intr);",
+   "// in 2.6, remove from 2.7 protected boolean _hasExplicitParamName(AnnotatedParameter param, AnnotationIntrospector intr);",
+   "public JsonDeserializer<?> createArrayDeserializer(DeserializationContext ctxt, ArrayType type, final BeanDescription beanDesc) throws JsonMappingException;",
+   "public JsonDeserializer<?> createCollectionDeserializer(DeserializationContext ctxt, CollectionType type, BeanDescription beanDesc) throws JsonMappingException;",
+   "protected CollectionType _mapAbstractCollectionType(JavaType type, DeserializationConfig config);",
+   "public JsonDeserializer<?> createCollectionLikeDeserializer(DeserializationContext ctxt, CollectionLikeType type, final BeanDescription beanDesc) throws JsonMappingException;",
+   "public JsonDeserializer<?> createMapDeserializer(DeserializationContext ctxt, MapType type, BeanDescription beanDesc) throws JsonMappingException;",
+   "public JsonDeserializer<?> createMapLikeDeserializer(DeserializationContext ctxt, MapLikeType type, final BeanDescription beanDesc) throws JsonMappingException;",
+   "public JsonDeserializer<?> createEnumDeserializer(DeserializationContext ctxt, JavaType type, BeanDescription beanDesc) throws JsonMappingException;",
+   "public JsonDeserializer<?> createTreeDeserializer(DeserializationConfig config, JavaType nodeType, BeanDescription beanDesc) throws JsonMappingException;",
+   "public JsonDeserializer<?> createReferenceDeserializer(DeserializationContext ctxt, ReferenceType type, BeanDescription beanDesc) throws JsonMappingException;",
+   "public TypeDeserializer findTypeDeserializer(DeserializationConfig config, JavaType baseType) throws JsonMappingException;",
+   "protected JsonDeserializer<?> findOptionalStdDeserializer(DeserializationContext ctxt, JavaType type, BeanDescription beanDesc) throws JsonMappingException;",
+   "public TypeDeserializer findPropertyTypeDeserializer(DeserializationConfig config, JavaType baseType, AnnotatedMember annotated) throws JsonMappingException;",
+   "public TypeDeserializer findPropertyContentTypeDeserializer(DeserializationConfig config, JavaType containerType, AnnotatedMember propertyEntity) throws JsonMappingException;",
+   "public JsonDeserializer<?> findDefaultDeserializer(DeserializationContext ctxt, JavaType type, BeanDescription beanDesc) throws JsonMappingException;",
+   "protected JavaType _findRemappedType(DeserializationConfig config, Class<?> rawType) throws JsonMappingException;",
+   "protected JsonDeserializer<?> _findCustomTreeNodeDeserializer(Class<? extends JsonNode> type, DeserializationConfig config, BeanDescription beanDesc) throws JsonMappingException;",
+   "protected JsonDeserializer<?> _findCustomReferenceDeserializer(ReferenceType type, DeserializationConfig config, BeanDescription beanDesc, TypeDeserializer contentTypeDeserializer, JsonDeserializer<?> contentDeserializer) throws JsonMappingException;",
+   "protected JsonDeserializer<?> _findCustomArrayDeserializer(ArrayType type, DeserializationConfig config, BeanDescription beanDesc, TypeDeserializer elementTypeDeserializer, JsonDeserializer<?> elementDeserializer) throws JsonMappingException;",
+   "protected JsonDeserializer<?> _findCustomCollectionDeserializer(CollectionType type, DeserializationConfig config, BeanDescription beanDesc, TypeDeserializer elementTypeDeserializer, JsonDeserializer<?> elementDeserializer) throws JsonMappingException;",
+   "protected JsonDeserializer<?> _findCustomCollectionLikeDeserializer(CollectionLikeType type, DeserializationConfig config, BeanDescription beanDesc, TypeDeserializer elementTypeDeserializer, JsonDeserializer<?> elementDeserializer) throws JsonMappingException;",
+   "protected JsonDeserializer<?> _findCustomEnumDeserializer(Class<?> type, DeserializationConfig config, BeanDescription beanDesc) throws JsonMappingException;",
+   "protected JsonDeserializer<?> _findCustomMapDeserializer(MapType type, DeserializationConfig config, BeanDescription beanDesc, KeyDeserializer keyDeserializer, TypeDeserializer elementTypeDeserializer, JsonDeserializer<?> elementDeserializer) throws JsonMappingException;",
+   "protected JsonDeserializer<?> _findCustomMapLikeDeserializer(MapLikeType type, DeserializationConfig config, BeanDescription beanDesc, KeyDeserializer keyDeserializer, TypeDeserializer elementTypeDeserializer, JsonDeserializer<?> elementDeserializer) throws JsonMappingException;",
+   "protected JsonDeserializer<Object> findDeserializerFromAnnotation(DeserializationContext ctxt, Annotated ann) throws JsonMappingException;",
+   "protected KeyDeserializer findKeyDeserializerFromAnnotation(DeserializationContext ctxt, Annotated ann) throws JsonMappingException;",
+   "protected JavaType resolveMemberAndTypeAnnotations(DeserializationContext ctxt, AnnotatedMember member, JavaType type) throws JsonMappingException;",
+   "protected EnumResolver constructEnumResolver(Class<?> enumClass, DeserializationConfig config, AnnotatedMethod jsonValueMethod);",
+   "protected JavaType modifyTypeByAnnotation(DeserializationContext ctxt, Annotated a, JavaType type) throws JsonMappingException;",
+   "// since 2.8 protected JavaType resolveType(DeserializationContext ctxt, BeanDescription beanDesc, JavaType type, AnnotatedMember member) throws JsonMappingException;",
+   "// not used, possibly remove as early as 2.9 protected AnnotatedMethod _findJsonValueFor(DeserializationConfig config, JavaType enumType);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

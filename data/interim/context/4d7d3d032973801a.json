@@ -1,0 +1,449 @@
+{
+  "bug_name": "JacksonDatabind_41",
+  "call_sites": [
+    {
+      "line": 138,
+      "lines": [
+        133,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140,
+        141,
+        142,
+        143
+      ],
+      "path": "src/main/java/com/fasterxml/jackson/databind/DatabindContext.java",
+      "snippet": "    /**\n     * Convenience method for constructing {@link JavaType} for given JDK\n     * type (usually {@link java.lang.Class})\n     */\n    public JavaType constructType(Type type) {\n         return getTypeFactory().constructType(type);\n    }\n\n    /**\n     * Convenience method for constructing subtypes, retaining generic\n     * type parameter (if any)"
+    },
+    {
+      "line": 546,
+      "lines": [
+        541,
+        542,
+        543,
+        544,
+        545,
+        546,
+        547,
+        548,
+        549,
+        550,
+        551
+      ],
+      "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+      "snippet": "     *<pre>\n     *  getConfig().constructType(cls);\n     * </pre>\n     */\n    public final JavaType constructType(Class<?> cls) {\n        return _config.constructType(cls);\n    }\n\n    /**\n     * Helper method that is to be used when resolving basic class name into\n     * Class instance, the reason being that it may be necessary to work around"
+    },
+    {
+      "line": 762,
+      "lines": [
+        757,
+        758,
+        759,
+        760,
+        761,
+        762,
+        763,
+        764,
+        765,
+        766,
+        767
+      ],
+      "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+      "snippet": "     * this method does not allow use of contextual annotations.\n     * \n     * @since 2.4\n     */\n    public <T> T readValue(JsonParser p, Class<T> type) throws IOException {\n        return readValue(p, getTypeFactory().constructType(type));\n    }\n\n    /**\n     * @since 2.4\n     */"
+    },
+    {
+      "line": 786,
+      "lines": [
+        781,
+        782,
+        783,
+        784,
+        785,
+        786,
+        787,
+        788,
+        789,
+        790,
+        791
+      ],
+      "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+      "snippet": "     * has custom serializer that called this method) has.\n     * \n     * @since 2.4\n     */\n    public <T> T readPropertyValue(JsonParser p, BeanProperty prop, Class<T> type) throws IOException {\n        return readPropertyValue(p, prop, getTypeFactory().constructType(type));\n    }\n\n    /**\n     * @since 2.4\n     */"
+    },
+    {
+      "line": 1486,
+      "lines": [
+        1481,
+        1482,
+        1483,
+        1484,
+        1485,
+        1486,
+        1487,
+        1488,
+        1489,
+        1490,
+        1491
+      ],
+      "path": "src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java",
+      "snippet": "     * Convenience method for constructing {@link JavaType} out of given\n     * type (typically <code>java.lang.Class</code>), but without explicit\n     * context.\n     */\n    public JavaType constructType(Type t) {\n        return _typeFactory.constructType(t);\n    }\n    \n    /*\n    /**********************************************************\n    /* Configuration, deserialization"
+    }
+  ],
+  "class_simple": "TypeFactory",
+  "doc": {
+    "class_javadoc": "/**\n * Class used for creating concrete {@link JavaType} instances,\n * given various inputs.\n *<p>\n * Instances of this class are accessible using {@link com.fasterxml.jackson.databind.ObjectMapper}\n * as well as many objects it constructs (like\n* {@link com.fasterxml.jackson.databind.DeserializationConfig} and\n * {@link com.fasterxml.jackson.databind.SerializationConfig})),\n * but usually those objects also \n * expose convenience methods (<code>constructType</code>).\n * So, you can do for example:\n *<pre>\n *   JavaType stringType = mapper.constructType(String.class);\n *</pre>\n * However, more advanced methods are only exposed by factory so that you\n * may need to use:\n *<pre>\n *   JavaType stringCollection = mapper.getTypeFactory().constructCollectionType(List.class, String.class);\n *</pre>\n */\n@SuppressWarnings({\"rawtypes\" })\npublic final",
+    "method_javadoc": "/**\n     * @deprecated Since 2.7 (accidentally removed in 2.7.0; added back in 2.7.1)\n     */"
+  },
+  "fields": [
+    "private static final long serialVersionUID",
+    "private final static JavaType[] NO_TYPES",
+    "protected final static TypeFactory instance",
+    "protected final static TypeBindings EMPTY_BINDINGS",
+    "private final static Class<?> CLS_STRING",
+    "private final static Class<?> CLS_OBJECT",
+    "private final static Class<?> CLS_COMPARABLE",
+    "private final static Class<?> CLS_CLASS",
+    "private final static Class<?> CLS_ENUM",
+    "private final static Class<?> CLS_BOOL",
+    "private final static Class<?> CLS_INT",
+    "private final static Class<?> CLS_LONG",
+    "protected final static SimpleType CORE_TYPE_BOOL",
+    "protected final static SimpleType CORE_TYPE_INT",
+    "protected final static SimpleType CORE_TYPE_LONG",
+    "protected final static SimpleType CORE_TYPE_STRING",
+    "protected final static SimpleType CORE_TYPE_OBJECT",
+    "protected final static SimpleType CORE_TYPE_COMPARABLE",
+    "protected final static SimpleType CORE_TYPE_ENUM",
+    "protected final static SimpleType CORE_TYPE_CLASS",
+    "protected final LRUMap<Class<?>, JavaType> _typeCache",
+    "protected final TypeModifier[] _modifiers",
+    "protected final TypeParser _parser",
+    "protected final ClassLoader _classLoader"
+  ],
+  "focal_class": "com.fasterxml.jackson.databind.type.TypeFactory",
+  "focal_id": "JacksonDatabind_41::com.fasterxml.jackson.databind.type.TypeFactory::constructType(Type,Class<?>)",
+  "focal_method_name": "constructType",
+  "impl_B": "@Deprecated\n    public JavaType constructType(Type type, Class<?> contextClass) {\n        return constructType(type, constructType(contextClass));\n    }",
+  "imports": [
+    "java.util.*",
+    "java.util.concurrent.atomic.AtomicReference",
+    "java.lang.reflect.*",
+    "com.fasterxml.jackson.core.type.TypeReference",
+    "com.fasterxml.jackson.databind.JavaType",
+    "com.fasterxml.jackson.databind.util.ArrayBuilders",
+    "com.fasterxml.jackson.databind.util.ClassUtil",
+    "com.fasterxml.jackson.databind.util.LRUMap"
+  ],
+  "javadoc_edited_by_fix": false,
+  "package": "com.fasterxml.jackson.databind.type",
+  "project": "JacksonDatabind",
+  "siblings": [
+    {
+      "javadoc": "",
+      "name": "withModifier"
+    },
+    {
+      "javadoc": "",
+      "name": "withClassLoader"
+    },
+    {
+      "javadoc": "/**\n     * Method used to access the globally shared instance, which has\n     * no custom configuration. Used by <code>ObjectMapper</code> to\n     * get the default factory when constructed.\n     */",
+      "name": "defaultInstance"
+    },
+    {
+      "javadoc": "/**\n     * Method that will clear up any cached type definitions that may\n     * be cached by this {@link TypeFactory} instance.\n     * This method should not be commonly used, that is, only use it\n     * if you know there is a problem with retention of type definitions;\n     * the most likely (and currently only known) problem is retention\n     * of {@link Class} instances via {@link JavaType} reference.\n     * \n     * @since 2.4.1\n     */",
+      "name": "clearCache"
+    },
+    {
+      "javadoc": "",
+      "name": "getClassLoader"
+    },
+    {
+      "javadoc": "/**\n     * Method for constructing a marker type that indicates missing generic\n     * type information, which is handled same as simple type for\n     * <code>java.lang.Object</code>.\n     */",
+      "name": "unknownType"
+    },
+    {
+      "javadoc": "/**\n     * Static helper method that can be called to figure out type-erased\n     * call for given JDK type. It can be called statically since type resolution\n     * process can never change actual type-erased class; thereby static\n     * default instance is used for determination.\n     */",
+      "name": "rawClass"
+    },
+    {
+      "javadoc": "/**\n     * Low-level lookup method moved from {@link com.fasterxml.jackson.databind.util.ClassUtil},\n     * to allow for overriding of lookup functionality in environments like OSGi.\n     *\n     * @since 2.6\n     */",
+      "name": "findClass"
+    },
+    {
+      "javadoc": "",
+      "name": "classForName"
+    },
+    {
+      "javadoc": "",
+      "name": "classForName"
+    },
+    {
+      "javadoc": "",
+      "name": "_findPrimitive"
+    },
+    {
+      "javadoc": "/**\n     * Factory method for creating a subtype of given base type, as defined\n     * by specified subclass; but retaining generic type information if any.\n     * Can be used, for example, to get equivalent of \"HashMap&lt;String,Integer&gt;\"\n     * from \"Map&lt;String,Integer&gt;\" by giving <code>HashMap.class</code>\n     * as subclass.\n     */",
+      "name": "constructSpecializedType"
+    },
+    {
+      "javadoc": "/**\n     * Method similar to {@link #constructSpecializedType}, but that creates a\n     * less-specific type of given type. Usually this is as simple as simply\n     * finding super-type with type erasure of <code>superClass</code>, but\n     * there may be need for some additional work-arounds.\n     *\n     * @param superClass\n     *\n     * @since 2.7\n     */",
+      "name": "constructGeneralizedType"
+    },
+    {
+      "javadoc": "/**\n     * Factory method for constructing a {@link JavaType} out of its canonical\n     * representation (see {@link JavaType#toCanonical()}).\n     * \n     * @param canonical Canonical string representation of a type\n     * \n     * @throws IllegalArgumentException If canonical representation is malformed,\n     *   or class that type represents (including its generic parameters) is\n     *   not found\n     */",
+      "name": "constructFromCanonical"
+    },
+    {
+      "javadoc": "/**\n     * Method that is to figure out actual type parameters that given\n     * class binds to generic types defined by given (generic)\n     * interface or class.\n     * This could mean, for example, trying to figure out\n     * key and value types for Map implementations.\n     * \n     * @param type Sub-type (leaf type) that implements <code>expType</code>\n     */",
+      "name": "findTypeParameters"
+    },
+    {
+      "javadoc": "/**\n     * @deprecated Since 2.7 resolve raw type first, then find type parameters\n     */",
+      "name": "findTypeParameters"
+    },
+    {
+      "javadoc": "/**\n     * @deprecated Since 2.7 resolve raw type first, then find type parameters\n     */",
+      "name": "findTypeParameters"
+    },
+    {
+      "javadoc": "/**\n     * Method that can be called to figure out more specific of two\n     * types (if they are related; that is, one implements or extends the\n     * other); or if not related, return the primary type.\n     * \n     * @param type1 Primary type to consider\n     * @param type2 Secondary type to consider\n     * \n     * @since 2.2\n     */",
+      "name": "moreSpecificType"
+    },
+    {
+      "javadoc": "/**********************************************************\n     */",
+      "name": "constructType"
+    },
+    {
+      "javadoc": "",
+      "name": "constructType"
+    },
+    {
+      "javadoc": "",
+      "name": "constructType"
+    },
+    {
+      "javadoc": "/**\n     * @deprecated Since 2.7 (accidentally removed in 2.7.0; added back in 2.7.1)\n     */",
+      "name": "constructType"
+    },
+    {
+      "javadoc": "/**\n     * Method for constructing an {@link ArrayType}.\n     *<p>\n     * NOTE: type modifiers are NOT called on array type itself; but are called\n     * for element type (and other contained types)\n     */",
+      "name": "constructArrayType"
+    },
+    {
+      "javadoc": "/**\n     * Method for constructing an {@link ArrayType}.\n     *<p>\n     * NOTE: type modifiers are NOT called on array type itself; but are called\n     * for contained types.\n     */",
+      "name": "constructArrayType"
+    },
+    {
+      "javadoc": "/**\n     * Method for constructing a {@link CollectionType}.\n     *<p>\n     * NOTE: type modifiers are NOT called on Collection type itself; but are called\n     * for contained types.\n     */",
+      "name": "constructCollectionType"
+    },
+    {
+      "javadoc": "/**\n     * Method for constructing a {@link CollectionType}.\n     *<p>\n     * NOTE: type modifiers are NOT called on Collection type itself; but are called\n     * for contained types.\n     */",
+      "name": "constructCollectionType"
+    },
+    {
+      "javadoc": "/**\n     * Method for constructing a {@link CollectionLikeType}.\n     *<p>\n     * NOTE: type modifiers are NOT called on constructed type itself; but are called\n     * for contained types.\n     */",
+      "name": "constructCollectionLikeType"
+    },
+    {
+      "javadoc": "/**\n     * Method for constructing a {@link CollectionLikeType}.\n     *<p>\n     * NOTE: type modifiers are NOT called on constructed type itself; but are called\n     * for contained types.\n     */",
+      "name": "constructCollectionLikeType"
+    },
+    {
+      "javadoc": "/**\n     * Method for constructing a {@link MapType} instance\n     *<p>\n     * NOTE: type modifiers are NOT called on constructed type itself; but are called\n     * for contained types.\n     */",
+      "name": "constructMapType"
+    },
+    {
+      "javadoc": "/**\n     * Method for constructing a {@link MapType} instance\n     *<p>\n     * NOTE: type modifiers are NOT called on constructed type itself; but are called\n     * for contained types.\n     */",
+      "name": "constructMapType"
+    },
+    {
+      "javadoc": "/**\n     * Method for constructing a {@link MapLikeType} instance\n     *<p>\n     * NOTE: type modifiers are NOT called on constructed type itself; but are called\n     * for contained types.\n     */",
+      "name": "constructMapLikeType"
+    },
+    {
+      "javadoc": "/**\n     * Method for constructing a {@link MapLikeType} instance\n     *<p>\n     * NOTE: type modifiers are NOT called on constructed type itself; but are called\n     * for contained types.\n     */",
+      "name": "constructMapLikeType"
+    },
+    {
+      "javadoc": "/**\n     * Method for constructing a type instance with specified parameterization.\n     *<p>\n     * NOTE: was briefly deprecated for 2.6.\n     */",
+      "name": "constructSimpleType"
+    },
+    {
+      "javadoc": "/**\n     * Method for constructing a type instance with specified parameterization.\n     *\n     * @since 2.6\n     *\n     * @deprecated Since 2.7\n     */",
+      "name": "constructSimpleType"
+    },
+    {
+      "javadoc": "/**\n     * @since 2.6\n     */",
+      "name": "constructReferenceType"
+    },
+    {
+      "javadoc": "/**\n     * Method that will force construction of a simple type, without trying to\n     * check for more specialized types.\n     *<p> \n     * NOTE: no type modifiers are called on type either, so calling this method\n     * should only be used if caller really knows what it's doing...\n     */",
+      "name": "uncheckedSimpleType"
+    },
+    {
+      "javadoc": "/**\n     * Factory method for constructing {@link JavaType} that\n     * represents a parameterized type. For example, to represent\n     * type <code>List&lt;Set&lt;Integer>></code>, you could\n     * call\n     *<pre>\n     *  JavaType inner = TypeFactory.constructParametrizedType(Set.class, Set.class, Integer.class);\n     *  return TypeFactory.constructParametrizedType(ArrayList.class, List.class, inner);\n     *</pre>\n     *<p>\n     * The reason for first two arguments to be separate is that parameterization may\n     * apply to a super-type. For example, if generic type was instead to be\n     * constructed for <code>ArrayList&lt;Integer></code>, the usual call would be:\n     *<pre>\n     *  TypeFactory.constructParametrizedType(ArrayList.class, List.class, Integer.class);\n     *</pre>\n     * since parameterization is applied to {@link java.util.List}.\n     * In most cases distinction does not matter, but there are types where it does;\n     * one such example is parameterization of types that implement {@link java.util.Iterator}.\n     *<p>\n     * NOTE: type modifiers are NOT called on constructed type.\n     * \n     * @param parametrized Actual full type\n     * @param parameterClasses Type parameters to apply\n     *\n     * @since 2.5 NOTE: was briefly deprecated for 2.6\n     */",
+      "name": "constructParametricType"
+    },
+    {
+      "javadoc": "/**\n     * Factory method for constructing {@link JavaType} that\n     * represents a parameterized type. For example, to represent\n     * type <code>List&lt;Set&lt;Integer>></code>, you could\n     * call\n     *<pre>\n     *  JavaType inner = TypeFactory.constructParametrizedType(Set.class, Set.class, Integer.class);\n     *  return TypeFactory.constructParametrizedType(ArrayList.class, List.class, inner);\n     *</pre>\n     *<p>\n     * The reason for first two arguments to be separate is that parameterization may\n     * apply to a super-type. For example, if generic type was instead to be\n     * constructed for <code>ArrayList&lt;Integer></code>, the usual call would be:\n     *<pre>\n     *  TypeFactory.constructParametrizedType(ArrayList.class, List.class, Integer.class);\n     *</pre>\n     * since parameterization is applied to {@link java.util.List}.\n     * In most cases distinction does not matter, but there are types where it does;\n     * one such example is parameterization of types that implement {@link java.util.Iterator}.\n     *<p>\n     * NOTE: type modifiers are NOT called on constructed type.\n     * \n     * @param rawType Actual type-erased type\n     * @param parameterTypes Type parameters to apply\n     * \n     * @since 2.5 NOTE: was briefly deprecated for 2.6\n     */",
+      "name": "constructParametricType"
+    },
+    {
+      "javadoc": "/**\n     * @since 2.5 -- but will probably deprecated in 2.7 or 2.8 (not needed with 2.7)\n     */",
+      "name": "constructParametrizedType"
+    },
+    {
+      "javadoc": "/**\n     * @since 2.5 -- but will probably deprecated in 2.7 or 2.8 (not needed with 2.7)\n     */",
+      "name": "constructParametrizedType"
+    },
+    {
+      "javadoc": "/**\n     * Method that can be used to construct \"raw\" Collection type; meaning that its\n     * parameterization is unknown.\n     * This is similar to using <code>Object.class</code> parameterization,\n     * and is equivalent to calling:\n     *<pre>\n     *  typeFactory.constructCollectionType(collectionClass, typeFactory.unknownType());\n     *</pre>\n     *<p>\n     * This method should only be used if parameterization is completely unavailable.\n     */",
+      "name": "constructRawCollectionType"
+    },
+    {
+      "javadoc": "/**\n     * Method that can be used to construct \"raw\" Collection-like type; meaning that its\n     * parameterization is unknown.\n     * This is similar to using <code>Object.class</code> parameterization,\n     * and is equivalent to calling:\n     *<pre>\n     *  typeFactory.constructCollectionLikeType(collectionClass, typeFactory.unknownType());\n     *</pre>\n     *<p>\n     * This method should only be used if parameterization is completely unavailable.\n     */",
+      "name": "constructRawCollectionLikeType"
+    },
+    {
+      "javadoc": "/**\n     * Method that can be used to construct \"raw\" Map type; meaning that its\n     * parameterization is unknown.\n     * This is similar to using <code>Object.class</code> parameterization,\n     * and is equivalent to calling:\n     *<pre>\n     *  typeFactory.constructMapType(collectionClass, typeFactory.unknownType(), typeFactory.unknownType());\n     *</pre>\n     *<p>\n     * This method should only be used if parameterization is completely unavailable.\n     */",
+      "name": "constructRawMapType"
+    },
+    {
+      "javadoc": "/**\n     * Method that can be used to construct \"raw\" Map-like type; meaning that its\n     * parameterization is unknown.\n     * This is similar to using <code>Object.class</code> parameterization,\n     * and is equivalent to calling:\n     *<pre>\n     *  typeFactory.constructMapLikeType(collectionClass, typeFactory.unknownType(), typeFactory.unknownType());\n     *</pre>\n     *<p>\n     * This method should only be used if parameterization is completely unavailable.\n     */",
+      "name": "constructRawMapLikeType"
+    },
+    {
+      "javadoc": "/**\n     * Factory method to call when no special {@link JavaType} is needed,\n     * no generic parameters are passed. Default implementation may check\n     * pre-constructed values for \"well-known\" types, but if none found\n     * will simply call {@link #_newSimpleType}\n     *\n     * @since 2.7\n     */",
+      "name": "_constructSimple"
+    },
+    {
+      "javadoc": "/**\n     * Factory method that is to create a new {@link SimpleType} with no\n     * checks whatsoever. Default implementation calls the single argument\n     * constructor of {@link SimpleType}.\n     *\n     * @since 2.7\n     */",
+      "name": "_newSimpleType"
+    },
+    {
+      "javadoc": "",
+      "name": "_unknownType"
+    },
+    {
+      "javadoc": "/**\n     * Helper method called to see if requested, non-generic-parameterized\n     * type is one of common, \"well-known\" types, instances of which are\n     * pre-constructed and do not need dynamic caching.\n     *\n     * @since 2.7\n     */",
+      "name": "_findWellKnownSimple"
+    },
+    {
+      "javadoc": "/**\n     * Factory method that can be used if type information is passed\n     * as Java typing returned from <code>getGenericXxx</code> methods\n     * (usually for a return or argument type).\n     */",
+      "name": "_fromAny"
+    },
+    {
+      "javadoc": "/**\n     * @param bindings Mapping of formal parameter declarations (for generic\n     *   types) into actual types\n     */",
+      "name": "_fromClass"
+    },
+    {
+      "javadoc": "",
+      "name": "_resolveSuperClass"
+    },
+    {
+      "javadoc": "",
+      "name": "_resolveSuperInterfaces"
+    },
+    {
+      "javadoc": "/**\n     * Helper class used to check whether exact class for which type is being constructed\n     * is one of well-known base interfaces or classes that indicates alternate\n     * {@link JavaType} implementation.\n     */",
+      "name": "_fromWellKnownClass"
+    },
+    {
+      "javadoc": "",
+      "name": "_fromWellKnownInterface"
+    },
+    {
+      "javadoc": "/**\n     * This method deals with parameterized types, that is,\n     * first class generic classes.\n     */",
+      "name": "_fromParamType"
+    },
+    {
+      "javadoc": "",
+      "name": "_fromArrayType"
+    },
+    {
+      "javadoc": "",
+      "name": "_fromVariable"
+    },
+    {
+      "javadoc": "",
+      "name": "_fromWildcard"
+    }
+  ],
+  "sig": {
+    "class_declaration": ") public final class TypeFactory implements java.io.Serializable",
+    "constructors": [
+      "protected TypeFactory(TypeParser p, TypeModifier[] mods);",
+      "protected TypeFactory(TypeParser p, TypeModifier[] mods, ClassLoader classLoader);"
+    ],
+    "focal_signature": "public JavaType constructType(Type type, Class<?> contextClass)",
+    "methods": [
+      "public TypeFactory withModifier(TypeModifier mod);",
+      "public TypeFactory withClassLoader(ClassLoader classLoader);",
+      "public static TypeFactory defaultInstance();",
+      "public void clearCache();",
+      "public ClassLoader getClassLoader();",
+      "public static JavaType unknownType();",
+      "public static Class<?> rawClass(Type t);",
+      "public Class<?> findClass(String className) throws ClassNotFoundException;",
+      "protected Class<?> classForName(String name, boolean initialize, ClassLoader loader) throws ClassNotFoundException;",
+      "protected Class<?> classForName(String name) throws ClassNotFoundException;",
+      "protected Class<?> _findPrimitive(String className);",
+      "public JavaType constructSpecializedType(JavaType baseType, Class<?> subclass);",
+      "public JavaType constructGeneralizedType(JavaType baseType, Class<?> superClass);",
+      "public JavaType constructFromCanonical(String canonical) throws IllegalArgumentException;",
+      "public JavaType[] findTypeParameters(JavaType type, Class<?> expType);",
+      "// since 2.7 public JavaType[] findTypeParameters(Class<?> clz, Class<?> expType, TypeBindings bindings);",
+      "// since 2.7 public JavaType[] findTypeParameters(Class<?> clz, Class<?> expType);",
+      "public JavaType moreSpecificType(JavaType type1, JavaType type2);",
+      "public JavaType constructType(Type type);",
+      "public JavaType constructType(Type type, TypeBindings bindings);",
+      "public JavaType constructType(TypeReference<?> typeRef);",
+      "public JavaType constructType(Type type, JavaType contextType);",
+      "public ArrayType constructArrayType(Class<?> elementType);",
+      "public ArrayType constructArrayType(JavaType elementType);",
+      "public CollectionType constructCollectionType(Class<? extends Collection> collectionClass, Class<?> elementClass);",
+      "public CollectionType constructCollectionType(Class<? extends Collection> collectionClass, JavaType elementType);",
+      "public CollectionLikeType constructCollectionLikeType(Class<?> collectionClass, Class<?> elementClass);",
+      "public CollectionLikeType constructCollectionLikeType(Class<?> collectionClass, JavaType elementType);",
+      "public MapType constructMapType(Class<? extends Map> mapClass, Class<?> keyClass, Class<?> valueClass);",
+      "public MapType constructMapType(Class<? extends Map> mapClass, JavaType keyType, JavaType valueType);",
+      "public MapLikeType constructMapLikeType(Class<?> mapClass, Class<?> keyClass, Class<?> valueClass);",
+      "public MapLikeType constructMapLikeType(Class<?> mapClass, JavaType keyType, JavaType valueType);",
+      "public JavaType constructSimpleType(Class<?> rawType, JavaType[] parameterTypes);",
+      "public JavaType constructSimpleType(Class<?> rawType, Class<?> parameterTarget, JavaType[] parameterTypes);",
+      "public JavaType constructReferenceType(Class<?> rawType, JavaType referredType);",
+      "public JavaType uncheckedSimpleType(Class<?> cls);",
+      "public JavaType constructParametricType(Class<?> parametrized, Class<?>... parameterClasses);",
+      "public JavaType constructParametricType(Class<?> rawType, JavaType... parameterTypes);",
+      "public JavaType constructParametrizedType(Class<?> parametrized, Class<?> parametersFor, JavaType... parameterTypes);",
+      "public JavaType constructParametrizedType(Class<?> parametrized, Class<?> parametersFor, Class<?>... parameterClasses);",
+      "public CollectionType constructRawCollectionType(Class<? extends Collection> collectionClass);",
+      "public CollectionLikeType constructRawCollectionLikeType(Class<?> collectionClass);",
+      "public MapType constructRawMapType(Class<? extends Map> mapClass);",
+      "public MapLikeType constructRawMapLikeType(Class<?> mapClass);",
+      "protected JavaType _constructSimple(Class<?> raw, TypeBindings bindings, JavaType superClass, JavaType[] superInterfaces);",
+      "protected JavaType _newSimpleType(Class<?> raw, TypeBindings bindings, JavaType superClass, JavaType[] superInterfaces);",
+      "protected JavaType _unknownType();",
+      "protected JavaType _findWellKnownSimple(Class<?> clz);",
+      "protected JavaType _fromAny(ClassStack context, Type type, TypeBindings bindings);",
+      "protected JavaType _fromClass(ClassStack context, Class<?> rawType, TypeBindings bindings);",
+      "protected JavaType _resolveSuperClass(ClassStack context, Class<?> rawType, TypeBindings parentBindings);",
+      "protected JavaType[] _resolveSuperInterfaces(ClassStack context, Class<?> rawType, TypeBindings parentBindings);",
+      "protected JavaType _fromWellKnownClass(ClassStack context, Class<?> rawType, TypeBindings bindings, JavaType superClass, JavaType[] superInterfaces);",
+      "protected JavaType _fromWellKnownInterface(ClassStack context, Class<?> rawType, TypeBindings bindings, JavaType superClass, JavaType[] superInterfaces);",
+      "protected JavaType _fromParamType(ClassStack context, ParameterizedType ptype, TypeBindings parentBindings);",
+      "protected JavaType _fromArrayType(ClassStack context, GenericArrayType type, TypeBindings bindings);",
+      "protected JavaType _fromVariable(ClassStack context, TypeVariable<?> var, TypeBindings bindings);",
+      "protected JavaType _fromWildcard(ClassStack context, WildcardType type, TypeBindings bindings);"
+    ],
+    "type_signatures": [
+      "public abstract class JavaType extends ResolvedType implements java.io.Serializable, java.lang.reflect.Type { protected JavaType(Class<?> raw, int additionalHash, Object valueHandler, Object typeHandler, boolean asStatic); protected JavaType(JavaType base); public abstract JavaType withTypeHandler(Object h); public abstract JavaType withContentTypeHandler(Object h); public abstract JavaType withValueHandler(Object h); public abstract JavaType withContentValueHandler(Object h); public abstract JavaType withContentType(JavaType contentType); public abstract JavaType withStaticTyping(); public abstract JavaType refine(Class<?> rawType, TypeBindings bindings, JavaType superClass, JavaType[] superInterfaces); public JavaType forcedNarrowBy(Class<?> subclass); // since 2.7 protected abstract JavaType _narrow(Class<?> subclass); public final Class<?> getRawClass(); public final boolean hasRawClass(Class<?> clz); public final boolean isTypeOrSubTypeOf(Class<?> clz); public boolean isAbstract(); }"
+    ]
+  },
+  "split": "test"
+}

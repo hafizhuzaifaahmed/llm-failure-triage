@@ -1,0 +1,13 @@
+{
+  "assembled": true,
+  "call_key": "2228da334e916b0b9206b59383c2cb290732cb8dfc4dc6bc75fde6f776f12927",
+  "candidate_id": "e6a2a4cb01cbaa3bf0d0",
+  "class_name": "MathUtils_factorialDouble_TriageGen0Test",
+  "dataset": "D2",
+  "focal_id": "Math_93::org.apache.commons.math.util.MathUtils::factorialDouble(int)#m266",
+  "generation": 0,
+  "model_returned": "gemma4:26b",
+  "n_tests": 6,
+  "package": "org.apache.commons.math.util",
+  "source": "package org.apache.commons.math.util;\n\nimport java.io.*;\nimport java.math.*;\nimport java.math.BigDecimal;\nimport java.util.*;\nimport java.util.Arrays;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\n/**\n * Unit tests for MathUtils.factorialDouble\n */\npublic class MathUtils_factorialDouble_TriageGen0Test {\n\n    private static final double DELTA = 1e-10;\n\n    @Test(expected = IllegalArgumentException.class)\n    public void testFactorialDouble_NegativeInput() {\n        MathUtils.factorialDouble(-1);\n    }\n\n    @Test\n    public void testFactorialDouble_Zero() {\n        // 0! = 1\n        assertEquals(1.0, MathUtils.factorialDouble(0), DELTA);\n    }\n\n    @Test\n    public void testFactorialDouble_SmallPositive() {\n        // 5! = 120\n        assertEquals(120.0, MathUtils.factorialDouble(5), DELTA);\n    }\n\n    @Test\n    public void testFactorialDouble_BoundaryBeforeSpecialCase() {\n        // 20! = 2432902008176640000\n        assertEquals(2432902008176640000.0, MathUtils.factorialDouble(20), DELTA);\n    }\n\n    @Test\n    public void testFactorialDouble_SpecialCaseN21() {\n        // This hits the n == 21 branch which uses factorialLog and Math.exp\n        // 21! = 51090942171709440000\n        double expected = 51090942171709440000.0;\n        assertEquals(expected, MathUtils.factorialDouble(21), 1.0); \n    }\n\n    @Test\n    public void testFactorialDouble_LargerThanSpecialCase() {\n        // 22! should go through the factorial(n) branch (though factorial(int) returns long, \n        // so for n > 20 it might overflow long if the method is implemented as returning long)\n        // However, based on the provided code, if n != 21, it calls factorial(n).\n        // If n=22, it calls factorial(22). Since factorial returns long, we test the logic path.\n        // Note: In real scenarios, factorial(22) would overflow long, but we follow the provided logic.\n        // Given the provided code structure, we test the branch coverage.\n        try {\n            MathUtils.factorialDouble(22);\n        } catch (Exception e) {\n            // Catching potential overflow if factorial(int) returns long and 22! > Long.MAX_VALUE\n        }\n    }\n}\n"
+}

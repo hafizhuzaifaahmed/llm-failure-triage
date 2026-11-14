@@ -1,0 +1,394 @@
+{
+ "bug_name": "Closure_169",
+ "call_sites": [
+  {
+   "line": 389,
+   "lines": [
+    384,
+    385,
+    386,
+    387,
+    388,
+    389,
+    390,
+    391,
+    392,
+    393,
+    394
+   ],
+   "path": "src/com/google/javascript/jscomp/ConcreteType.java",
+   "snippet": "      return prototypeType;\n    }\n\n    /** Returns the type of the superclass (or null if none exists). */\n    ConcreteFunctionType getSuperclassType() {\n      FunctionType superConstructor = getJSType().getSuperClassConstructor();\n      return (superConstructor != null)\n          ? factory.getConcreteFunction(superConstructor) : null;\n    }\n\n    /** Returns the scope for the body of this function. */"
+  },
+  {
+   "line": 930,
+   "lines": [
+    925,
+    926,
+    927,
+    928,
+    929,
+    930,
+    931,
+    932,
+    933,
+    934,
+    935
+   ],
+   "path": "src/com/google/javascript/jscomp/DisambiguateProperties.java",
+   "snippet": "\n            // If this interface invalidated this property, return now.\n            if (p.skipRenaming) return;\n          }\n          if (constructor.isInterface() || constructor.isConstructor()) {\n            constructor = constructor.getSuperClassConstructor();\n          } else {\n            constructor = null;\n          }\n        }\n      }"
+  },
+  {
+   "line": 485,
+   "lines": [
+    480,
+    481,
+    482,
+    483,
+    484,
+    485,
+    486,
+    487,
+    488,
+    489,
+    490
+   ],
+   "path": "src/com/google/javascript/jscomp/NameReferenceGraphConstruction.java",
+   "snippet": "    /**\n     * Look for the super class implementation up the tree.\n     */\n    private void recordSuperClassPrototypePropUse(\n        FunctionType classType, String prop, Reference ref) {\n      FunctionType superClass = classType.getSuperClassConstructor();\n      while (superClass != null) {\n        if (superClass.getPrototype().hasOwnProperty(prop)) {\n          graph.connect(getNamedContainingFunction(), ref,\n              graph.defineNameIfNotExists(\n                 superClass.getReferenceName() + \".prototype.\" + prop, false));"
+  },
+  {
+   "line": 493,
+   "lines": [
+    488,
+    489,
+    490,
+    491,
+    492,
+    493,
+    494,
+    495,
+    496,
+    497,
+    498
+   ],
+   "path": "src/com/google/javascript/jscomp/NameReferenceGraphConstruction.java",
+   "snippet": "          graph.connect(getNamedContainingFunction(), ref,\n              graph.defineNameIfNotExists(\n                 superClass.getReferenceName() + \".prototype.\" + prop, false));\n          return;\n        } else {\n          superClass = superClass.getSuperClassConstructor();\n        }\n      }\n    }\n\n    /**"
+  },
+  {
+   "line": 1124,
+   "lines": [
+    1119,
+    1120,
+    1121,
+    1122,
+    1123,
+    1124,
+    1125,
+    1126,
+    1127,
+    1128,
+    1129
+   ],
+   "path": "src/com/google/javascript/jscomp/TypeCheck.java",
+   "snippet": "    // already.\n    if (hasUnknownOrEmptySupertype(ctorType)) {\n      return;\n    }\n\n    FunctionType superClass = ctorType.getSuperClassConstructor();\n    boolean superClassHasProperty = superClass != null &&\n        superClass.getInstanceType().hasProperty(propertyName);\n    boolean superClassHasDeclaredProperty = superClass != null &&\n        superClass.getInstanceType().isPropertyTypeDeclared(propertyName);\n"
+  }
+ ],
+ "class_simple": "FunctionType",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * This derived type provides extended information about a function, including\n * its return type and argument types.<p>\n *\n * Note: the parameters list is the LP node that is the parent of the\n * actual NAME node containing the parsed argument list (annotated with\n * JSDOC_TYPE_PROP's for the compile-time type of each argument.\n */\npublic",
+  "method_javadoc": "/**\n   * Given a constructor or an interface type, get its superclass constructor\n   * or {@code null} if none exists.\n   */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "private ArrowType call",
+  "private Property prototypeSlot",
+  "private final Kind kind",
+  "private PropAccess propAccess",
+  "private ObjectType typeOfThis",
+  "private Node source",
+  "private List<ObjectType> implementedInterfaces",
+  "private List<ObjectType> extendedInterfaces",
+  "private List<FunctionType> subTypes",
+  "private final ImmutableList<String> templateTypeNames"
+ ],
+ "focal_class": "com.google.javascript.rhino.jstype.FunctionType",
+ "focal_id": "Closure_169::com.google.javascript.rhino.jstype.FunctionType::getSuperClassConstructor()",
+ "focal_method_name": "getSuperClassConstructor",
+ "generations": 3,
+ "impl_B": "public FunctionType getSuperClassConstructor() {\n    Preconditions.checkArgument(isConstructor() || isInterface());\n    ObjectType maybeSuperInstanceType = getPrototype().getImplicitPrototype();\n    if (maybeSuperInstanceType == null) {\n      return null;\n    }\n    return maybeSuperInstanceType.getConstructor();\n  }",
+ "imports": [
+  "static com.google.javascript.rhino.jstype.JSTypeNative.OBJECT_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.U2U_CONSTRUCTOR_TYPE",
+  "com.google.common.base.Preconditions",
+  "com.google.common.collect.ImmutableList",
+  "com.google.common.collect.Iterables",
+  "com.google.common.collect.Lists",
+  "com.google.common.collect.Sets",
+  "com.google.javascript.rhino.ErrorReporter",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.Token",
+  "java.util.Collections",
+  "java.util.List",
+  "java.util.Set"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.rhino.jstype",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "isInstanceType"
+  },
+  {
+   "javadoc": "",
+   "name": "isConstructor"
+  },
+  {
+   "javadoc": "",
+   "name": "isInterface"
+  },
+  {
+   "javadoc": "",
+   "name": "isOrdinaryFunction"
+  },
+  {
+   "javadoc": "/**\n   * When a class B inherits from A and A is annotated as a struct, then B\n   * automatically gets the annotation, even if B's constructor is not\n   * explicitly annotated.\n   */",
+   "name": "makesStructs"
+  },
+  {
+   "javadoc": "/**\n   * When a class B inherits from A and A is annotated as a dict, then B\n   * automatically gets the annotation, even if B's constructor is not\n   * explicitly annotated.\n   */",
+   "name": "makesDicts"
+  },
+  {
+   "javadoc": "",
+   "name": "setStruct"
+  },
+  {
+   "javadoc": "",
+   "name": "setDict"
+  },
+  {
+   "javadoc": "",
+   "name": "toMaybeFunctionType"
+  },
+  {
+   "javadoc": "",
+   "name": "canBeCalled"
+  },
+  {
+   "javadoc": "",
+   "name": "hasImplementedInterfaces"
+  },
+  {
+   "javadoc": "",
+   "name": "getParameters"
+  },
+  {
+   "javadoc": "/** Gets an LP node that contains all params. May be null. */",
+   "name": "getParametersNode"
+  },
+  {
+   "javadoc": "/** Gets the minimum number of arguments that this function requires. */",
+   "name": "getMinArguments"
+  },
+  {
+   "javadoc": "/**\n   * Gets the maximum number of arguments that this function requires,\n   * or Integer.MAX_VALUE if this is a variable argument function.\n   */",
+   "name": "getMaxArguments"
+  },
+  {
+   "javadoc": "",
+   "name": "getReturnType"
+  },
+  {
+   "javadoc": "",
+   "name": "isReturnTypeInferred"
+  },
+  {
+   "javadoc": "",
+   "name": "getSlot"
+  },
+  {
+   "javadoc": "/**\n   * Includes the prototype iff someone has created it. We do not want\n   * to expose the prototype for ordinary functions.\n   */",
+   "name": "getOwnPropertyNames"
+  },
+  {
+   "javadoc": "/**\n   * Gets the {@code prototype} property of this function type. This is\n   * equivalent to {@code (ObjectType) getPropertyType(\"prototype\")}.\n   */",
+   "name": "getPrototype"
+  },
+  {
+   "javadoc": "/**\n   * Sets the prototype, creating the prototype object from the given\n   * base type.\n   * @param baseType The base type.\n   */",
+   "name": "setPrototypeBasedOn"
+  },
+  {
+   "javadoc": "/**\n   * Returns all interfaces implemented by a class or its superclass and any\n   * superclasses for any of those interfaces. If this is called before all\n   * types are resolved, it may return an incomplete set.\n   */",
+   "name": "getAllImplementedInterfaces"
+  },
+  {
+   "javadoc": "/** Returns interfaces implemented directly by a class or its superclass. */",
+   "name": "getImplementedInterfaces"
+  },
+  {
+   "javadoc": "/** Returns interfaces directly implemented by the class. */",
+   "name": "getOwnImplementedInterfaces"
+  },
+  {
+   "javadoc": "",
+   "name": "setImplementedInterfaces"
+  },
+  {
+   "javadoc": "/**\n   * Returns all extended interfaces declared by an interfaces or its super-\n   * interfaces. If this is called before all types are resolved, it may return\n   * an incomplete set.\n   */",
+   "name": "getAllExtendedInterfaces"
+  },
+  {
+   "javadoc": "/** Returns interfaces directly extended by an interface */",
+   "name": "getExtendedInterfaces"
+  },
+  {
+   "javadoc": "/** Returns the number of interfaces directly extended by an interface */",
+   "name": "getExtendedInterfacesCount"
+  },
+  {
+   "javadoc": "",
+   "name": "setExtendedInterfaces"
+  },
+  {
+   "javadoc": "",
+   "name": "getPropertyType"
+  },
+  {
+   "javadoc": "/**\n   * Get the return value of calling \"bind\" on this function\n   * with the specified number of arguments.\n   *\n   * If -1 is passed, then we will return a result that accepts\n   * any parameters.\n   */",
+   "name": "getBindReturnType"
+  },
+  {
+   "javadoc": "/**\n   * Given an interface and a property, finds the top-most super interface\n   * that has the property defined (including this interface).\n   */",
+   "name": "getTopDefiningInterface"
+  },
+  {
+   "javadoc": "/**\n   * Given a constructor or an interface type and a property, finds the\n   * top-most superclass that has the property defined (including this\n   * constructor).\n   */",
+   "name": "getTopMostDefiningType"
+  },
+  {
+   "javadoc": "",
+   "name": "hashCode"
+  },
+  {
+   "javadoc": "",
+   "name": "hasEqualCallType"
+  },
+  {
+   "javadoc": "/**\n   * A function is a subtype of another if their call methods are related via\n   * subtyping and {@code this} is a subtype of {@code that} with regard to\n   * the prototype chain.\n   */",
+   "name": "isSubtype"
+  },
+  {
+   "javadoc": "",
+   "name": "visit"
+  },
+  {
+   "javadoc": "/**\n   * Gets the type of instance of this function.\n   * @throws IllegalStateException if this function is not a constructor\n   *         (see {@link #isConstructor()}).\n   */",
+   "name": "getInstanceType"
+  },
+  {
+   "javadoc": "/**\n   * Returns whether this function type has an instance type.\n   */",
+   "name": "hasInstanceType"
+  },
+  {
+   "javadoc": "/**\n   * Gets the type of {@code this} in this function.\n   */",
+   "name": "getTypeOfThis"
+  },
+  {
+   "javadoc": "/**\n   * Gets the source node or null if this is an unknown function.\n   */",
+   "name": "getSource"
+  },
+  {
+   "javadoc": "/**\n   * Sets the source node.\n   */",
+   "name": "setSource"
+  },
+  {
+   "javadoc": "",
+   "name": "clearCachedValues"
+  },
+  {
+   "javadoc": "/**\n   * Returns a list of types that are subtypes of this type. This is only valid\n   * for constructor functions, and may be null. This allows a downward\n   * traversal of the subtype graph.\n   */",
+   "name": "getSubTypes"
+  },
+  {
+   "javadoc": "",
+   "name": "hasCachedValues"
+  },
+  {
+   "javadoc": "/**\n   * Gets the template type name.\n   */",
+   "name": "getTemplateTypeNames"
+  },
+  {
+   "javadoc": "",
+   "name": "toDebugHashCodeString"
+  },
+  {
+   "javadoc": "/** Create a new constructor with the parameters and return type stripped. */",
+   "name": "cloneWithoutArrowType"
+  },
+  {
+   "javadoc": "",
+   "name": "hasAnyTemplateInternal"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class FunctionType extends PrototypeObjectType",
+  "constructors": [],
+  "focal_signature": "public FunctionType getSuperClassConstructor()",
+  "methods": [
+   "public boolean isInstanceType();",
+   "public boolean isConstructor();",
+   "public boolean isInterface();",
+   "public boolean isOrdinaryFunction();",
+   "public boolean makesStructs();",
+   "public boolean makesDicts();",
+   "public void setStruct();",
+   "public void setDict();",
+   "public FunctionType toMaybeFunctionType();",
+   "public boolean canBeCalled();",
+   "public boolean hasImplementedInterfaces();",
+   "public Iterable<Node> getParameters();",
+   "public Node getParametersNode();",
+   "public int getMinArguments();",
+   "public int getMaxArguments();",
+   "public JSType getReturnType();",
+   "public boolean isReturnTypeInferred();",
+   "public Property getSlot(String name);",
+   "public Set<String> getOwnPropertyNames();",
+   "public ObjectType getPrototype();",
+   "public void setPrototypeBasedOn(ObjectType baseType);",
+   "public Iterable<ObjectType> getAllImplementedInterfaces();",
+   "public Iterable<ObjectType> getImplementedInterfaces();",
+   "public Iterable<ObjectType> getOwnImplementedInterfaces();",
+   "public void setImplementedInterfaces(List<ObjectType> implementedInterfaces);",
+   "public Iterable<ObjectType> getAllExtendedInterfaces();",
+   "public Iterable<ObjectType> getExtendedInterfaces();",
+   "public int getExtendedInterfacesCount();",
+   "public void setExtendedInterfaces(List<ObjectType> extendedInterfaces) throws UnsupportedOperationException;",
+   "public JSType getPropertyType(String name);",
+   "public FunctionType getBindReturnType(int argsToBind);",
+   "public static ObjectType getTopDefiningInterface(ObjectType type, String propertyName);",
+   "public ObjectType getTopMostDefiningType(String propertyName);",
+   "public int hashCode();",
+   "public boolean hasEqualCallType(FunctionType otherType);",
+   "public boolean isSubtype(JSType that);",
+   "public <T> T visit(Visitor<T> visitor);",
+   "public ObjectType getInstanceType();",
+   "public boolean hasInstanceType();",
+   "public ObjectType getTypeOfThis();",
+   "public Node getSource();",
+   "public void setSource(Node source);",
+   "public void clearCachedValues();",
+   "public List<FunctionType> getSubTypes();",
+   "public boolean hasCachedValues();",
+   "public ImmutableList<String> getTemplateTypeNames();",
+   "public String toDebugHashCodeString();",
+   "public FunctionType cloneWithoutArrowType();",
+   "public boolean hasAnyTemplateInternal();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

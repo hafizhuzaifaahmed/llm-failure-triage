@@ -1,0 +1,251 @@
+{
+ "bug_name": "JacksonDatabind_22",
+ "call_sites": [
+  {
+   "line": 777,
+   "lines": [
+    772,
+    773,
+    774,
+    775,
+    776,
+    777,
+    778,
+    779,
+    780,
+    781,
+    782
+   ],
+   "patch_lines_removed": true,
+   "path": "src/main/java/com/fasterxml/jackson/databind/ser/BasicSerializerFactory.java",
+   "snippet": "                AnnotationIntrospector ai = config.getAnnotationIntrospector();\n                MapSerializer mapSer = MapSerializer.construct(ai.findPropertiesToIgnore(beanDesc.getClassInfo(), true),\n                        type, staticTyping, elementTypeSerializer,\n                        keySerializer, elementValueSerializer, filterId);\n                Object suppressableValue = findSuppressableContentValue(config,\n                        type.getContentType(), beanDesc);\n                if (suppressableValue != null) {\n                    mapSer = mapSer.withContentInclusion(suppressableValue);\n                }\n                ser = mapSer;"
+  }
+ ],
+ "class_simple": "BasicSerializerFactory",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Factory class that can provide serializers for standard JDK classes,\n * as well as custom classes that extend standard classes or implement\n * one of \"well-known\" interfaces (such as {@link java.util.Collection}).\n *<p>\n * Since all the serializers are eagerly instantiated, and there is\n * no additional introspection or customizability of these types,\n * this factory is essentially stateless.\n */\n@SuppressWarnings(\"serial\")\npublic abstract",
+  "method_javadoc": "/**\n     *<p>\n     * NOTE: although return type is left opaque, it really needs to be\n     * <code>JsonInclude.Include</code> for things to work as expected.\n     *\n     * @since 2.5\n     */"
+ },
+ "fields": [
+  "protected final static HashMap<String, JsonSerializer<?>> _concrete",
+  "protected final static HashMap<String, Class<? extends JsonSerializer<?>>> _concreteLazy",
+  "protected final SerializerFactoryConfig _factoryConfig"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.ser.BasicSerializerFactory",
+ "focal_id": "JacksonDatabind_22::com.fasterxml.jackson.databind.ser.BasicSerializerFactory::findSuppressableContentValue(SerializationConfig,JavaType,BeanDescription)",
+ "focal_method_name": "findSuppressableContentValue",
+ "generations": 3,
+ "impl_B": "protected Object findSuppressableContentValue(SerializationConfig config,\n            JavaType contentType, BeanDescription beanDesc)\n        throws JsonMappingException\n    {\n        JsonInclude.Include incl = beanDesc.findSerializationInclusionForContent(null);\n\n        if (incl != null) {\n            switch (incl) {\n            case NON_DEFAULT:\n                // 19-Oct-2014, tatu: Not sure what this'd mean; so take it to mean \"NON_EMPTY\"...\n                incl = JsonInclude.Include.NON_EMPTY;\n                break;\n            default:\n                // all other modes actually good as is, unless we'll find better ways\n                break;\n            }\n            return incl;\n        }\n        return null;\n    }",
+ "imports": [
+  "java.lang.reflect.Method",
+  "java.math.BigDecimal",
+  "java.math.BigInteger",
+  "java.net.InetAddress",
+  "java.net.InetSocketAddress",
+  "java.nio.ByteBuffer",
+  "java.util.*",
+  "java.util.concurrent.atomic.AtomicReference",
+  "com.fasterxml.jackson.annotation.JsonFormat",
+  "com.fasterxml.jackson.annotation.JsonInclude",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.annotation.JsonSerialize",
+  "com.fasterxml.jackson.databind.cfg.SerializerFactoryConfig",
+  "com.fasterxml.jackson.databind.ext.OptionalHandlerFactory",
+  "com.fasterxml.jackson.databind.introspect.*",
+  "com.fasterxml.jackson.databind.jsontype.NamedType",
+  "com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder",
+  "com.fasterxml.jackson.databind.jsontype.TypeSerializer",
+  "com.fasterxml.jackson.databind.ser.impl.*",
+  "com.fasterxml.jackson.databind.ser.std.*",
+  "com.fasterxml.jackson.databind.type.*",
+  "com.fasterxml.jackson.databind.util.*"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.ser",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Method for getting current {@link SerializerFactoryConfig}.\n      *<p>\n     * Note that since instances are immutable, you can NOT change settings\n     * by accessing an instance and calling methods: this will simply create\n     * new instance of config object.\n     */",
+   "name": "getFactoryConfig"
+  },
+  {
+   "javadoc": "/**\n     * Method used for creating a new instance of this factory, but with different\n     * configuration. Reason for specifying factory method (instead of plain constructor)\n     * is to allow proper sub-classing of factories.\n     *<p>\n     * Note that custom sub-classes generally <b>must override</b> implementation\n     * of this method, as it usually requires instantiating a new instance of\n     * factory type. Check out javadocs for\n     * {@link com.fasterxml.jackson.databind.ser.BeanSerializerFactory} for more details.\n     */",
+   "name": "withConfig"
+  },
+  {
+   "javadoc": "/**\n     * Convenience method for creating a new factory instance with an additional\n     * serializer provider.\n     */",
+   "name": "withAdditionalSerializers"
+  },
+  {
+   "javadoc": "/**\n     * Convenience method for creating a new factory instance with an additional\n     * key serializer provider.\n     */",
+   "name": "withAdditionalKeySerializers"
+  },
+  {
+   "javadoc": "/**\n     * Convenience method for creating a new factory instance with additional bean\n     * serializer modifier.\n     */",
+   "name": "withSerializerModifier"
+  },
+  {
+   "javadoc": "",
+   "name": "createSerializer"
+  },
+  {
+   "javadoc": "/**\n     * Method called to construct a type serializer for values with given declared\n     * base type. This is called for values other than those of bean property\n     * types.\n     */",
+   "name": "createTypeSerializer"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "customSerializers"
+  },
+  {
+   "javadoc": "/**\n     * Method that will use fast lookup (and identity comparison) methods to\n     * see if we know serializer to use for given type.\n     */",
+   "name": "findSerializerByLookup"
+  },
+  {
+   "javadoc": "/**\n     * Method called to see if one of primary per-class annotations\n     * (or related, like implementing of {@link JsonSerializable})\n     * determines the serializer to use.\n     *<p>\n     * Currently handles things like:\n     *<ul>\n     * <li>If type implements {@link JsonSerializable}, use that\n     *  </li>\n     * <li>If type has {@link com.fasterxml.jackson.annotation.JsonValue} annotation (or equivalent), build serializer\n     *    based on that property\n     *  </li>\n     *</ul>\n     *\n     * @since 2.0\n     */",
+   "name": "findSerializerByAnnotations"
+  },
+  {
+   "javadoc": "/**\n     * Method for checking if we can determine serializer to use based on set of\n     * known primary types, checking for set of known base types (exact matches\n     * having been compared against with <code>findSerializerByLookup</code>).\n     * This does not include \"secondary\" interfaces, but\n     * mostly concrete or abstract base classes.\n     */",
+   "name": "findSerializerByPrimaryType"
+  },
+  {
+   "javadoc": "/**\n     * Overridable method called after checking all other types.\n     * \n     * @since 2.2\n     */",
+   "name": "findOptionalStdSerializer"
+  },
+  {
+   "javadoc": "/**\n     * Reflection-based serialized find method, which checks if\n     * given class implements one of recognized \"add-on\" interfaces.\n     * Add-on here means a role that is usually or can be a secondary\n     * trait: for example,\n     * bean classes may implement {@link Iterable}, but their main\n     * function is usually something else. The reason for\n     */",
+   "name": "findSerializerByAddonType"
+  },
+  {
+   "javadoc": "/**\n     * Helper method that will check whether given annotated entity (usually class,\n     * but may also be a property accessor) indicates that a {@link Converter} is to\n     * be used; and if so, to construct and return suitable serializer for it.\n     * If not, will simply return given serializer as is.\n     */",
+   "name": "findConvertingSerializer"
+  },
+  {
+   "javadoc": "",
+   "name": "findConverter"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.1\n     */",
+   "name": "buildContainerSerializer"
+  },
+  {
+   "javadoc": "/**\n     * Helper method that handles configuration details when constructing serializers for\n     * {@link java.util.List} types that support efficient by-index access\n     * \n     * @since 2.1\n     */",
+   "name": "buildCollectionSerializer"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "isIndexedList"
+  },
+  {
+   "javadoc": "",
+   "name": "buildIndexedListSerializer"
+  },
+  {
+   "javadoc": "",
+   "name": "buildCollectionSerializer"
+  },
+  {
+   "javadoc": "",
+   "name": "buildEnumSetSerializer"
+  },
+  {
+   "javadoc": "/**\n     * Helper method that handles configuration details when constructing serializers for\n     * {@link java.util.Map} types.\n     */",
+   "name": "buildMapSerializer"
+  },
+  {
+   "javadoc": "/**\n     * Helper method that handles configuration details when constructing serializers for\n     * <code>Object[]</code> (and subtypes, except for String).\n     */",
+   "name": "buildArraySerializer"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.5\n     */",
+   "name": "buildIteratorSerializer"
+  },
+  {
+   "javadoc": "",
+   "name": "buildIteratorSerializer"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.5\n     */",
+   "name": "buildIterableSerializer"
+  },
+  {
+   "javadoc": "",
+   "name": "buildIterableSerializer"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.5\n     */",
+   "name": "buildMapEntrySerializer"
+  },
+  {
+   "javadoc": "",
+   "name": "buildEnumSerializer"
+  },
+  {
+   "javadoc": "/**\n     * Helper method called to try to find whether there is an annotation in the\n     * class that indicates key serializer to use.\n     * If so, will try to instantiate key serializer and return it; otherwise returns null.\n     */",
+   "name": "_findKeySerializer"
+  },
+  {
+   "javadoc": "/**\n     * Helper method called to try to find whether there is an annotation in the\n     * class that indicates content (\"value\") serializer to use.\n     * If so, will try to instantiate key serializer and return it; otherwise returns null.\n     */",
+   "name": "_findContentSerializer"
+  },
+  {
+   "javadoc": "/**\n     * Method called to find filter that is configured to be used with bean\n     * serializer being built, if any.\n     */",
+   "name": "findFilterId"
+  },
+  {
+   "javadoc": "/**\n     * Helper method to check whether global settings and/or class\n     * annotations for the bean class indicate that static typing\n     * (declared types)  should be used for properties.\n     * (instead of dynamic runtime types).\n     * \n     * @since 2.1 (earlier had variant with additional 'property' parameter)\n     */",
+   "name": "usesStaticTyping"
+  },
+  {
+   "javadoc": "",
+   "name": "_verifyAsClass"
+  }
+ ],
+ "sig": {
+  "class_declaration": "@SuppressWarnings(\"serial\") public abstract class BasicSerializerFactory extends SerializerFactory implements java.io.Serializable",
+  "constructors": [
+   "protected BasicSerializerFactory(SerializerFactoryConfig config);"
+  ],
+  "focal_signature": "protected Object findSuppressableContentValue(SerializationConfig config, JavaType contentType, BeanDescription beanDesc) throws JsonMappingException",
+  "methods": [
+   "public SerializerFactoryConfig getFactoryConfig();",
+   "public abstract SerializerFactory withConfig(SerializerFactoryConfig config);",
+   "public final SerializerFactory withAdditionalSerializers(Serializers additional);",
+   "public final SerializerFactory withAdditionalKeySerializers(Serializers additional);",
+   "public final SerializerFactory withSerializerModifier(BeanSerializerModifier modifier);",
+   "public abstract JsonSerializer<Object> createSerializer(SerializerProvider prov, JavaType type) throws JsonMappingException;",
+   "public TypeSerializer createTypeSerializer(SerializationConfig config, JavaType baseType);",
+   "protected abstract Iterable<Serializers> customSerializers();",
+   "protected final JsonSerializer<?> findSerializerByLookup(JavaType type, SerializationConfig config, BeanDescription beanDesc, boolean staticTyping);",
+   "protected final JsonSerializer<?> findSerializerByAnnotations(SerializerProvider prov, JavaType type, BeanDescription beanDesc) throws JsonMappingException;",
+   "protected final JsonSerializer<?> findSerializerByPrimaryType(SerializerProvider prov, JavaType type, BeanDescription beanDesc, boolean staticTyping) throws JsonMappingException;",
+   "protected JsonSerializer<?> findOptionalStdSerializer(SerializerProvider prov, JavaType type, BeanDescription beanDesc, boolean staticTyping) throws JsonMappingException;",
+   "protected final JsonSerializer<?> findSerializerByAddonType(SerializationConfig config, JavaType javaType, BeanDescription beanDesc, boolean staticTyping) throws JsonMappingException;",
+   "protected JsonSerializer<?> findConvertingSerializer(SerializerProvider prov, Annotated a, JsonSerializer<?> ser) throws JsonMappingException;",
+   "protected Converter<Object,Object> findConverter(SerializerProvider prov, Annotated a) throws JsonMappingException;",
+   "protected JsonSerializer<?> buildContainerSerializer(SerializerProvider prov, JavaType type, BeanDescription beanDesc, boolean staticTyping) throws JsonMappingException;",
+   "protected JsonSerializer<?> buildCollectionSerializer(SerializationConfig config, CollectionType type, BeanDescription beanDesc, boolean staticTyping, TypeSerializer elementTypeSerializer, JsonSerializer<Object> elementValueSerializer) throws JsonMappingException;",
+   "protected boolean isIndexedList(Class<?> cls);",
+   "public ContainerSerializer<?> buildIndexedListSerializer(JavaType elemType, boolean staticTyping, TypeSerializer vts, JsonSerializer<Object> valueSerializer);",
+   "public ContainerSerializer<?> buildCollectionSerializer(JavaType elemType, boolean staticTyping, TypeSerializer vts, JsonSerializer<Object> valueSerializer);",
+   "public JsonSerializer<?> buildEnumSetSerializer(JavaType enumType);",
+   "protected JsonSerializer<?> buildMapSerializer(SerializationConfig config, MapType type, BeanDescription beanDesc, boolean staticTyping, JsonSerializer<Object> keySerializer, TypeSerializer elementTypeSerializer, JsonSerializer<Object> elementValueSerializer) throws JsonMappingException;",
+   "protected JsonSerializer<?> buildArraySerializer(SerializationConfig config, ArrayType type, BeanDescription beanDesc, boolean staticTyping, TypeSerializer elementTypeSerializer, JsonSerializer<Object> elementValueSerializer) throws JsonMappingException;",
+   "protected JsonSerializer<?> buildIteratorSerializer(SerializationConfig config, JavaType type, BeanDescription beanDesc, boolean staticTyping, JavaType valueType) throws JsonMappingException;",
+   "// since 2.5 protected JsonSerializer<?> buildIteratorSerializer(SerializationConfig config, JavaType type, BeanDescription beanDesc, boolean staticTyping) throws JsonMappingException;",
+   "protected JsonSerializer<?> buildIterableSerializer(SerializationConfig config, JavaType type, BeanDescription beanDesc, boolean staticTyping, JavaType valueType) throws JsonMappingException;",
+   "// since 2.5 protected JsonSerializer<?> buildIterableSerializer(SerializationConfig config, JavaType type, BeanDescription beanDesc, boolean staticTyping) throws JsonMappingException;",
+   "protected JsonSerializer<?> buildMapEntrySerializer(SerializationConfig config, JavaType type, BeanDescription beanDesc, boolean staticTyping, JavaType keyType, JavaType valueType) throws JsonMappingException;",
+   "protected JsonSerializer<?> buildEnumSerializer(SerializationConfig config, JavaType type, BeanDescription beanDesc) throws JsonMappingException;",
+   "protected JsonSerializer<Object> _findKeySerializer(SerializerProvider prov, Annotated a) throws JsonMappingException;",
+   "protected JsonSerializer<Object> _findContentSerializer(SerializerProvider prov, Annotated a) throws JsonMappingException;",
+   "protected Object findFilterId(SerializationConfig config, BeanDescription beanDesc);",
+   "protected boolean usesStaticTyping(SerializationConfig config, BeanDescription beanDesc, TypeSerializer typeSer);",
+   "protected Class<?> _verifyAsClass(Object src, String methodName, Class<?> noneClass);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

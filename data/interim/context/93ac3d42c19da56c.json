@@ -1,0 +1,341 @@
+{
+  "bug_name": "Jsoup_22",
+  "call_sites": [
+    {
+      "line": 256,
+      "lines": [
+        251,
+        252,
+        253,
+        254,
+        255,
+        256,
+        257,
+        258,
+        259,
+        260,
+        261
+      ],
+      "path": "src/main/java/org/jsoup/nodes/Node.java",
+      "snippet": "     * @param html HTML to add before this node\n     * @return this node, for chaining\n     * @see #after(String)\n     */\n    public Node before(String html) {\n        addSiblingHtml(siblingIndex(), html);\n        return this;\n    }\n\n    /**\n     * Insert the specified node into the DOM before this node (i.e. as a preceeding sibling)."
+    },
+    {
+      "line": 270,
+      "lines": [
+        265,
+        266,
+        267,
+        268,
+        269,
+        270,
+        271,
+        272,
+        273,
+        274,
+        275
+      ],
+      "path": "src/main/java/org/jsoup/nodes/Node.java",
+      "snippet": "     */\n    public Node before(Node node) {\n        Validate.notNull(node);\n        Validate.notNull(parentNode);\n\n        parentNode.addChildren(siblingIndex(), node);\n        return this;\n    }\n\n    /**\n     * Insert the specified HTML into the DOM after this node (i.e. as a following sibling)."
+    },
+    {
+      "line": 281,
+      "lines": [
+        276,
+        277,
+        278,
+        279,
+        280,
+        281,
+        282,
+        283,
+        284,
+        285,
+        286
+      ],
+      "path": "src/main/java/org/jsoup/nodes/Node.java",
+      "snippet": "     * @param html HTML to add after this node\n     * @return this node, for chaining\n     * @see #before(String)\n     */\n    public Node after(String html) {\n        addSiblingHtml(siblingIndex()+1, html);\n        return this;\n    }\n\n    /**\n     * Insert the specified node into the DOM after this node (i.e. as a following sibling)."
+    },
+    {
+      "line": 295,
+      "lines": [
+        290,
+        291,
+        292,
+        293,
+        294,
+        295,
+        296,
+        297,
+        298,
+        299,
+        300
+      ],
+      "path": "src/main/java/org/jsoup/nodes/Node.java",
+      "snippet": "     */\n    public Node after(Node node) {\n        Validate.notNull(node);\n        Validate.notNull(parentNode);\n\n        parentNode.addChildren(siblingIndex()+1, node);\n        return this;\n    }\n\n    private void addSiblingHtml(int index, String html) {\n        Validate.notNull(html);"
+    },
+    {
+      "line": 392,
+      "lines": [
+        387,
+        388,
+        389,
+        390,
+        391,
+        392,
+        393,
+        394,
+        395,
+        396,
+        397
+      ],
+      "path": "src/main/java/org/jsoup/nodes/Node.java",
+      "snippet": "        Validate.isTrue(out.parentNode == this);\n        Validate.notNull(in);\n        if (in.parentNode != null)\n            in.parentNode.removeChild(in);\n        \n        Integer index = out.siblingIndex();\n        childNodes.set(index, in);\n        in.parentNode = this;\n        in.setSiblingIndex(index);\n        out.parentNode = null;\n    }"
+    }
+  ],
+  "class_simple": "Node",
+  "doc": {
+    "class_javadoc": "/**\n The base, abstract Node model. Elements, Documents, Comments etc are all Node instances.\n\n @author Jonathan Hedley, jonathan@hedley.net */\npublic abstract",
+    "method_javadoc": "/**\n     * Get the list index of this node in its node sibling list. I.e. if this is the first node\n     * sibling, returns 0.\n     * @return position in node sibling list\n     * @see org.jsoup.nodes.Element#elementSiblingIndex()\n     */"
+  },
+  "fields": [
+    "Node parentNode",
+    "List<Node> childNodes",
+    "Attributes attributes",
+    "String baseUri",
+    "int siblingIndex"
+  ],
+  "focal_class": "org.jsoup.nodes.Node",
+  "focal_id": "Jsoup_22::org.jsoup.nodes.Node::siblingIndex()",
+  "focal_method_name": "siblingIndex",
+  "impl_B": "public int siblingIndex() {\n        return siblingIndex;\n    }",
+  "imports": [
+    "org.jsoup.helper.StringUtil",
+    "org.jsoup.helper.Validate",
+    "org.jsoup.parser.Parser",
+    "org.jsoup.select.NodeTraversor",
+    "org.jsoup.select.NodeVisitor",
+    "java.net.MalformedURLException",
+    "java.net.URL",
+    "java.util.ArrayList",
+    "java.util.Collections",
+    "java.util.List"
+  ],
+  "javadoc_edited_by_fix": false,
+  "package": "org.jsoup.nodes",
+  "project": "Jsoup",
+  "siblings": [
+    {
+      "javadoc": "/**\n     Get the node name of this node. Use for debugging purposes and not logic switching (for that, use instanceof).\n     @return node name\n     */",
+      "name": "nodeName"
+    },
+    {
+      "javadoc": "/**\n     * Get an attribute's value by its key.\n     * <p/>\n     * To get an absolute URL from an attribute that may be a relative URL, prefix the key with <code><b>abs</b></code>,\n     * which is a shortcut to the {@link #absUrl} method.\n     * E.g.: <blockquote><code>String url = a.attr(\"abs:href\");</code></blockquote>\n     * @param attributeKey The attribute key.\n     * @return The attribute, or empty string if not present (to avoid nulls).\n     * @see #attributes()\n     * @see #hasAttr(String)\n     * @see #absUrl(String)\n     */",
+      "name": "attr"
+    },
+    {
+      "javadoc": "/**\n     * Get all of the element's attributes.\n     * @return attributes (which implements iterable, in same order as presented in original HTML).\n     */",
+      "name": "attributes"
+    },
+    {
+      "javadoc": "/**\n     * Set an attribute (key=value). If the attribute already exists, it is replaced.\n     * @param attributeKey The attribute key.\n     * @param attributeValue The attribute value.\n     * @return this (for chaining)\n     */",
+      "name": "attr"
+    },
+    {
+      "javadoc": "/**\n     * Test if this element has an attribute.\n     * @param attributeKey The attribute key to check.\n     * @return true if the attribute exists, false if not.\n     */",
+      "name": "hasAttr"
+    },
+    {
+      "javadoc": "/**\n     * Remove an attribute from this element.\n     * @param attributeKey The attribute to remove.\n     * @return this (for chaining)\n     */",
+      "name": "removeAttr"
+    },
+    {
+      "javadoc": "/**\n     Get the base URI of this node.\n     @return base URI\n     */",
+      "name": "baseUri"
+    },
+    {
+      "javadoc": "/**\n     Update the base URI of this node and all of its descendants.\n     @param baseUri base URI to set\n     */",
+      "name": "setBaseUri"
+    },
+    {
+      "javadoc": "/**\n     * Get an absolute URL from a URL attribute that may be relative (i.e. an <code>&lt;a href></code> or\n     * <code>&lt;img src></code>).\n     * <p/>\n     * E.g.: <code>String absUrl = linkEl.absUrl(\"href\");</code>\n     * <p/>\n     * If the attribute value is already absolute (i.e. it starts with a protocol, like\n     * <code>http://</code> or <code>https://</code> etc), and it successfully parses as a URL, the attribute is\n     * returned directly. Otherwise, it is treated as a URL relative to the element's {@link #baseUri}, and made\n     * absolute using that.\n     * <p/>\n     * As an alternate, you can use the {@link #attr} method with the <code>abs:</code> prefix, e.g.:\n     * <code>String absUrl = linkEl.attr(\"abs:href\");</code>\n     *\n     * @param attributeKey The attribute key\n     * @return An absolute URL if one could be made, or an empty string (not null) if the attribute was missing or\n     * could not be made successfully into a URL.\n     * @see #attr\n     * @see java.net.URL#URL(java.net.URL, String)\n     */",
+      "name": "absUrl"
+    },
+    {
+      "javadoc": "/**\n     Get a child node by index\n     @param index index of child node\n     @return the child node at this index.\n     */",
+      "name": "childNode"
+    },
+    {
+      "javadoc": "/**\n     Get this node's children. Presented as an unmodifiable list: new children can not be added, but the child nodes\n     themselves can be manipulated.\n     @return list of children. If no children, returns an empty list.\n     */",
+      "name": "childNodes"
+    },
+    {
+      "javadoc": "",
+      "name": "childNodesAsArray"
+    },
+    {
+      "javadoc": "/**\n     Gets this node's parent node.\n     @return parent node; or null if no parent.\n     */",
+      "name": "parent"
+    },
+    {
+      "javadoc": "/**\n     * Gets the Document associated with this Node. \n     * @return the Document associated with this Node, or null if there is no such Document.\n     */",
+      "name": "ownerDocument"
+    },
+    {
+      "javadoc": "/**\n     * Remove (delete) this node from the DOM tree. If this node has children, they are also removed.\n     */",
+      "name": "remove"
+    },
+    {
+      "javadoc": "/**\n     * Insert the specified HTML into the DOM before this node (i.e. as a preceeding sibling).\n     * @param html HTML to add before this node\n     * @return this node, for chaining\n     * @see #after(String)\n     */",
+      "name": "before"
+    },
+    {
+      "javadoc": "/**\n     * Insert the specified node into the DOM before this node (i.e. as a preceeding sibling).\n     * @param node to add before this node\n     * @return this node, for chaining\n     * @see #after(Node)\n     */",
+      "name": "before"
+    },
+    {
+      "javadoc": "/**\n     * Insert the specified HTML into the DOM after this node (i.e. as a following sibling).\n     * @param html HTML to add after this node\n     * @return this node, for chaining\n     * @see #before(String)\n     */",
+      "name": "after"
+    },
+    {
+      "javadoc": "/**\n     * Insert the specified node into the DOM after this node (i.e. as a following sibling).\n     * @param node to add after this node\n     * @return this node, for chaining\n     * @see #before(Node)\n     */",
+      "name": "after"
+    },
+    {
+      "javadoc": "/**\n     Wrap the supplied HTML around this node.\n     @param html HTML to wrap around this element, e.g. {@code <div class=\"head\"></div>}. Can be arbitrarily deep.\n     @return this node, for chaining.\n     */",
+      "name": "wrap"
+    },
+    {
+      "javadoc": "/**\n     * Removes this node from the DOM, and moves its children up into the node's parent. This has the effect of dropping\n     * the node but keeping its children.\n     * <p/>\n     * For example, with the input html:<br/>\n     * {@code <div>One <span>Two <b>Three</b></span></div>}<br/>\n     * Calling {@code element.unwrap()} on the {@code span} element will result in the html:<br/>\n     * {@code <div>One Two <b>Three</b></div>}<br/>\n     * and the {@code \"Two \"} {@link TextNode} being returned.\n     * @return the first child of this node, after the node has been unwrapped. Null if the node had no children.\n     * @see #remove()\n     * @see #wrap(String)\n     */",
+      "name": "unwrap"
+    },
+    {
+      "javadoc": "/**\n     * Replace this node in the DOM with the supplied node.\n     * @param in the node that will will replace the existing node.\n     */",
+      "name": "replaceWith"
+    },
+    {
+      "javadoc": "",
+      "name": "setParentNode"
+    },
+    {
+      "javadoc": "",
+      "name": "replaceChild"
+    },
+    {
+      "javadoc": "",
+      "name": "removeChild"
+    },
+    {
+      "javadoc": "",
+      "name": "addChildren"
+    },
+    {
+      "javadoc": "",
+      "name": "addChildren"
+    },
+    {
+      "javadoc": "/**\n     Retrieves this node's sibling nodes. Similar to {@link #childNodes()  node.parent.childNodes()}, but does not\n     include this node (a node is not a sibling of itself).\n     @return node siblings. If the node has no parent, returns an empty list.\n     */",
+      "name": "siblingNodes"
+    },
+    {
+      "javadoc": "/**\n     Get this node's next sibling.\n     @return next sibling, or null if this is the last sibling\n     */",
+      "name": "nextSibling"
+    },
+    {
+      "javadoc": "/**\n     Get this node's previous sibling.\n     @return the previous sibling, or null if this is the first sibling\n     */",
+      "name": "previousSibling"
+    },
+    {
+      "javadoc": "",
+      "name": "setSiblingIndex"
+    },
+    {
+      "javadoc": "/**\n     * Perform a depth-first traversal through this node and its descendants.\n     * @param nodeVisitor the visitor callbacks to perform on each node\n     * @return this node, for chaining\n     */",
+      "name": "traverse"
+    },
+    {
+      "javadoc": "/**\n     Get the outer HTML of this node.\n     @return HTML\n     */",
+      "name": "outerHtml"
+    },
+    {
+      "javadoc": "",
+      "name": "outerHtml"
+    },
+    {
+      "javadoc": "",
+      "name": "toString"
+    },
+    {
+      "javadoc": "",
+      "name": "indent"
+    },
+    {
+      "javadoc": "",
+      "name": "equals"
+    },
+    {
+      "javadoc": "",
+      "name": "hashCode"
+    },
+    {
+      "javadoc": "/**\n     * Create a stand-alone, deep copy of this node, and all of its children. The cloned node will have no siblings or\n     * parent node. As a stand-alone object, any changes made to the clone or any of its children will not impact the\n     * original node.\n     * <p>\n     * The cloned node may be adopted into another Document or node structure using {@link Element#appendChild(Node)}.\n     * @return stand-alone cloned node\n     */",
+      "name": "clone"
+    },
+    {
+      "javadoc": "",
+      "name": "doClone"
+    }
+  ],
+  "sig": {
+    "class_declaration": "public abstract class Node implements Cloneable",
+    "constructors": [
+      "protected Node(String baseUri, Attributes attributes);",
+      "protected Node(String baseUri);",
+      "protected Node();"
+    ],
+    "focal_signature": "public int siblingIndex()",
+    "methods": [
+      "public abstract String nodeName();",
+      "public String attr(String attributeKey);",
+      "public Attributes attributes();",
+      "public Node attr(String attributeKey, String attributeValue);",
+      "public boolean hasAttr(String attributeKey);",
+      "public Node removeAttr(String attributeKey);",
+      "public String baseUri();",
+      "public void setBaseUri(final String baseUri);",
+      "public String absUrl(String attributeKey);",
+      "public Node childNode(int index);",
+      "public List<Node> childNodes();",
+      "protected Node[] childNodesAsArray();",
+      "public Node parent();",
+      "public Document ownerDocument();",
+      "public void remove();",
+      "public Node before(String html);",
+      "public Node before(Node node);",
+      "public Node after(String html);",
+      "public Node after(Node node);",
+      "public Node wrap(String html);",
+      "public Node unwrap();",
+      "public void replaceWith(Node in);",
+      "protected void setParentNode(Node parentNode);",
+      "protected void replaceChild(Node out, Node in);",
+      "protected void removeChild(Node out);",
+      "protected void addChildren(Node... children);",
+      "protected void addChildren(int index, Node... children);",
+      "public List<Node> siblingNodes();",
+      "public Node nextSibling();",
+      "public Node previousSibling();",
+      "protected void setSiblingIndex(int siblingIndex);",
+      "public Node traverse(NodeVisitor nodeVisitor);",
+      "public String outerHtml();",
+      "protected void outerHtml(StringBuilder accum);",
+      "public String toString();",
+      "protected void indent(StringBuilder accum, int depth, Document.OutputSettings out);",
+      "public boolean equals(Object o);",
+      "public int hashCode();",
+      "public Node clone();",
+      "protected Node doClone(Node parent);"
+    ],
+    "type_signatures": []
+  },
+  "split": "dev"
+}

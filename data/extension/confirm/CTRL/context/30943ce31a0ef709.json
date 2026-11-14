@@ -1,0 +1,123 @@
+{
+ "bug_name": "JacksonDatabind_71",
+ "call_sites": [
+  {
+   "line": 126,
+   "lines": [
+    121,
+    122,
+    123,
+    124,
+    125,
+    126,
+    127,
+    128,
+    129,
+    130,
+    131
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/std/StdKeyDeserializer.java",
+   "snippet": "    {\n        if (key == null) { // is this even legal call?\n            return null;\n        }\n        try {\n            Object result = _parse(key, ctxt);\n            if (result != null) {\n                return result;\n            }\n        } catch (Exception re) {\n            throw ctxt.weirdKeyException(_keyClass, key, \"not a valid representation: \"+re.getMessage());"
+  }
+ ],
+ "class_simple": "StdKeyDeserializer",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Default {@link KeyDeserializer} implementation used for most {@link java.util.Map}\n * types Jackson supports.\n * Implemented as \"chameleon\" (or swiss pocket knife) class; not particularly elegant,\n * but helps reduce number of classes and jar size (class metadata adds significant\n * per-class overhead; much more than bytecode).\n */\n@JacksonStdImpl\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "public final static int TYPE_BOOLEAN",
+  "public final static int TYPE_BYTE",
+  "public final static int TYPE_SHORT",
+  "public final static int TYPE_CHAR",
+  "public final static int TYPE_INT",
+  "public final static int TYPE_LONG",
+  "public final static int TYPE_FLOAT",
+  "public final static int TYPE_DOUBLE",
+  "public final static int TYPE_LOCALE",
+  "public final static int TYPE_DATE",
+  "public final static int TYPE_CALENDAR",
+  "public final static int TYPE_UUID",
+  "public final static int TYPE_URI",
+  "public final static int TYPE_URL",
+  "public final static int TYPE_CLASS",
+  "public final static int TYPE_CURRENCY",
+  "final protected int _kind",
+  "final protected Class<?> _keyClass",
+  "protected final FromStringDeserializer<?> _deser"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.deser.std.StdKeyDeserializer",
+ "focal_id": "JacksonDatabind_71::com.fasterxml.jackson.databind.deser.std.StdKeyDeserializer::_parse(String,DeserializationContext)",
+ "focal_method_name": "_parse",
+ "generations": 3,
+ "impl_B": "protected Object _parse(String key, DeserializationContext ctxt) throws Exception\n    {\n        switch (_kind) {\n        case TYPE_BOOLEAN:\n            if (\"true\".equals(key)) {\n                return Boolean.TRUE;\n            }\n            if (\"false\".equals(key)) {\n                return Boolean.FALSE;\n            }\n            throw ctxt.weirdKeyException(_keyClass, key, \"value not 'true' or 'false'\");\n        case TYPE_BYTE:\n            {\n                int value = _parseInt(key);\n                // as per [JACKSON-804], allow range up to 255, inclusive\n                if (value < Byte.MIN_VALUE || value > 255) {\n                    throw ctxt.weirdKeyException(_keyClass, key, \"overflow, value can not be represented as 8-bit value\");\n                }\n                return Byte.valueOf((byte) value);\n            }\n        case TYPE_SHORT:\n            {\n                int value = _parseInt(key);\n                if (value < Short.MIN_VALUE || value > Short.MAX_VALUE) {\n                    throw ctxt.weirdKeyException(_keyClass, key, \"overflow, value can not be represented as 16-bit value\");\n                }\n                return Short.valueOf((short) value);\n            }\n        case TYPE_CHAR:\n            if (key.length() == 1) {\n                return Character.valueOf(key.charAt(0));\n            }\n            throw ctxt.weirdKeyException(_keyClass, key, \"can only convert 1-character Strings\");\n        case TYPE_INT:\n            return _parseInt(key);\n\n        case TYPE_LONG:\n            return _parseLong(key);\n\n        case TYPE_FLOAT:\n            // Bounds/range checks would be tricky here, so let's not bother even trying...\n            return Float.valueOf((float) _parseDouble(key));\n        case TYPE_DOUBLE:\n            return _parseDouble(key);\n        case TYPE_LOCALE:\n            try {\n                return _deser._deserialize(key, ctxt);\n            } catch (IOException e) {\n                throw ctxt.weirdKeyException(_keyClass, key, \"unable to parse key as locale\");\n            }\n        case TYPE_CURRENCY:\n            try {\n                return _deser._deserialize(key, ctxt);\n            } catch (IOException e) {\n                throw ctxt.weirdKeyException(_keyClass, key, \"unable to parse key as currency\");\n            }\n        case TYPE_DATE:\n            return ctxt.parseDate(key);\n        case TYPE_CALENDAR:\n            java.util.Date date = ctxt.parseDate(key);\n            return (date == null)  ? null : ctxt.constructCalendar(date);\n        case TYPE_UUID:\n            return UUID.fromString(key);\n        case TYPE_URI:\n            return URI.create(key);\n        case TYPE_URL:\n            return new URL(key);\n        case TYPE_CLASS:\n            try {\n                return ctxt.findClass(key);\n            } catch (Exception e) {\n                throw ctxt.weirdKeyException(_keyClass, key, \"unable to parse key as Class\");\n            }\n        }\n        return null;\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.lang.reflect.Constructor",
+  "java.lang.reflect.Method",
+  "java.net.URI",
+  "java.net.URL",
+  "java.util.Calendar",
+  "java.util.Currency",
+  "java.util.Date",
+  "java.util.Locale",
+  "java.util.UUID",
+  "com.fasterxml.jackson.core.JsonProcessingException",
+  "com.fasterxml.jackson.core.io.NumberInput",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.annotation.JacksonStdImpl",
+  "com.fasterxml.jackson.databind.introspect.AnnotatedMethod",
+  "com.fasterxml.jackson.databind.util.ClassUtil",
+  "com.fasterxml.jackson.databind.util.EnumResolver"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.deser.std",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "forType"
+  },
+  {
+   "javadoc": "",
+   "name": "deserializeKey"
+  },
+  {
+   "javadoc": "",
+   "name": "getKeyClass"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_parseInt"
+  },
+  {
+   "javadoc": "",
+   "name": "_parseLong"
+  },
+  {
+   "javadoc": "",
+   "name": "_parseDouble"
+  }
+ ],
+ "sig": {
+  "class_declaration": "@JacksonStdImpl public class StdKeyDeserializer extends KeyDeserializer implements java.io.Serializable",
+  "constructors": [
+   "protected StdKeyDeserializer(int kind, Class<?> cls);",
+   "protected StdKeyDeserializer(int kind, Class<?> cls, FromStringDeserializer<?> deser);"
+  ],
+  "focal_signature": "protected Object _parse(String key, DeserializationContext ctxt) throws Exception",
+  "methods": [
+   "public static StdKeyDeserializer forType(Class<?> raw);",
+   "public Object deserializeKey(String key, DeserializationContext ctxt) throws IOException;",
+   "public Class<?> getKeyClass();",
+   "protected int _parseInt(String key) throws IllegalArgumentException;",
+   "protected long _parseLong(String key) throws IllegalArgumentException;",
+   "protected double _parseDouble(String key) throws IllegalArgumentException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

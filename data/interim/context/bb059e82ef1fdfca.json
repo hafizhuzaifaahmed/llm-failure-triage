@@ -1,0 +1,692 @@
+{
+  "bug_name": "Lang_47",
+  "call_sites": [
+    {
+      "line": 1212,
+      "lines": [
+        1207,
+        1208,
+        1209,
+        1210,
+        1211,
+        1212,
+        1213,
+        1214,
+        1215,
+        1216,
+        1217
+      ],
+      "path": "src/java/org/apache/commons/lang/text/StrBuilder.java",
+      "snippet": "     * @param width  the fixed field width, zero or negative has no effect\n     * @param padChar  the pad character to use\n     * @return this, to enable chaining\n     */\n    public StrBuilder appendFixedWidthPadLeft(int value, int width, char padChar) {\n        return appendFixedWidthPadLeft(String.valueOf(value), width, padChar);\n    }\n\n    /**\n     * Appends an object to the builder padding on the right to a fixed length.\n     * The <code>toString</code> of the object is used."
+    }
+  ],
+  "class_simple": "StrBuilder",
+  "doc": {
+    "class_javadoc": "/**\n * Builds a string from constituent parts providing a more flexible and powerful API\n * than StringBuffer.\n * <p>\n * The main differences from StringBuffer/StringBuilder are:\n * <ul>\n * <li>Not synchronized</li>\n * <li>Not final</li>\n * <li>Subclasses have direct access to character array</li>\n * <li>Additional methods\n *  <ul>\n *   <li>appendWithSeparators - adds an array of values, with a separator</li>\n *   <li>appendPadding - adds a length padding characters</li>\n *   <li>appendFixedLength - adds a fixed width field to the builder</li>\n *   <li>toCharArray/getChars - simpler ways to get a range of the character array</li>\n *   <li>delete - delete char or string</li>\n *   <li>replace - search and replace for a char or string</li>\n *   <li>leftString/rightString/midString - substring without exceptions</li>\n *   <li>contains - whether the builder contains a char or string</li>\n *   <li>size/clear/isEmpty - collections style API methods</li>\n *  </ul>\n * </li>\n * </ul>\n * <li>Views\n *  <ul>\n *   <li>asTokenizer - uses the internal buffer as the source of a StrTokenizer</li>\n *   <li>asReader - uses the internal buffer as the source of a Reader</li>\n *   <li>asWriter - allows a Writer to write directly to the internal buffer</li>\n *  </ul>\n * </li>\n * </ul>\n * <p>\n * The aim has been to provide an API that mimics very closely what StringBuffer\n * provides, but with additional methods. It should be noted that some edge cases,\n * with invalid indices or null input, have been altered - see individual methods.\n * The biggest of these changes is that by default, null will not output the text\n * 'null'. This can be controlled by a property, {@link #setNullText(String)}.\n *\n * @author Stephen Colebourne\n * @since 2.2\n * @version $Id$\n */\npublic",
+    "method_javadoc": "/**\n     * Appends an object to the builder padding on the left to a fixed width.\n     * The <code>toString</code> of the object is used.\n     * If the object is larger than the length, the left hand side is lost.\n     * If the object is null, the null text value is used.\n     * \n     * @param obj  the object to append, null uses null text\n     * @param width  the fixed field width, zero or negative has no effect\n     * @param padChar  the pad character to use\n     * @return this, to enable chaining\n     */"
+  },
+  "fields": [
+    "static final int CAPACITY",
+    "private static final long serialVersionUID",
+    "protected char[] buffer",
+    "protected int size",
+    "private String newLine",
+    "private String nullText"
+  ],
+  "focal_class": "org.apache.commons.lang.text.StrBuilder",
+  "focal_id": "Lang_47::org.apache.commons.lang.text.StrBuilder::appendFixedWidthPadLeft(Object,int,char)",
+  "focal_method_name": "appendFixedWidthPadLeft",
+  "impl_B": "public StrBuilder appendFixedWidthPadLeft(Object obj, int width, char padChar) {\n        if (width > 0) {\n            ensureCapacity(size + width);\n            String str = (obj == null ? getNullText() : obj.toString());\n            int strLen = str.length();\n            if (strLen >= width) {\n                str.getChars(strLen - width, strLen, buffer, size);\n            } else {\n                int padLen = width - strLen;\n                for (int i = 0; i < padLen; i++) {\n                    buffer[size + i] = padChar;\n                }\n                str.getChars(0, strLen, buffer, size + padLen);\n            }\n            size += width;\n        }\n        return this;\n    }",
+  "imports": [
+    "java.io.Reader",
+    "java.io.Writer",
+    "java.util.Collection",
+    "java.util.Iterator",
+    "java.util.List",
+    "org.apache.commons.lang.ArrayUtils",
+    "org.apache.commons.lang.SystemUtils"
+  ],
+  "javadoc_edited_by_fix": false,
+  "package": "org.apache.commons.lang.text",
+  "project": "Lang",
+  "siblings": [
+    {
+      "javadoc": "/**\n     * Gets the text to be appended when a new line is added.\n     *\n     * @return the new line text, null means use system default\n     */",
+      "name": "getNewLineText"
+    },
+    {
+      "javadoc": "/**\n     * Sets the text to be appended when a new line is added.\n     *\n     * @param newLine  the new line text, null means use system default\n     * @return this, to enable chaining\n     */",
+      "name": "setNewLineText"
+    },
+    {
+      "javadoc": "/**\n     * Gets the text to be appended when null is added.\n     *\n     * @return the null text, null means no append\n     */",
+      "name": "getNullText"
+    },
+    {
+      "javadoc": "/**\n     * Sets the text to be appended when null is added.\n     *\n     * @param nullText  the null text, null means no append\n     * @return this, to enable chaining\n     */",
+      "name": "setNullText"
+    },
+    {
+      "javadoc": "/**\n     * Gets the length of the string builder.\n     *\n     * @return the length\n     */",
+      "name": "length"
+    },
+    {
+      "javadoc": "/**\n     * Updates the length of the builder by either dropping the last characters\n     * or adding filler of unicode zero.\n     *\n     * @param length  the length to set to, must be zero or positive\n     * @return this, to enable chaining\n     * @throws IndexOutOfBoundsException if the length is negative\n     */",
+      "name": "setLength"
+    },
+    {
+      "javadoc": "/**\n     * Gets the current size of the internal character array buffer.\n     *\n     * @return the capacity\n     */",
+      "name": "capacity"
+    },
+    {
+      "javadoc": "/**\n     * Checks the capacity and ensures that it is at least the size specified.\n     *\n     * @param capacity  the capacity to ensure\n     * @return this, to enable chaining\n     */",
+      "name": "ensureCapacity"
+    },
+    {
+      "javadoc": "/**\n     * Minimizes the capacity to the actual length of the string.\n     *\n     * @return this, to enable chaining\n     */",
+      "name": "minimizeCapacity"
+    },
+    {
+      "javadoc": "/**\n     * Gets the length of the string builder.\n     * <p>\n     * This method is the same as {@link #length()} and is provided to match the\n     * API of Collections.\n     *\n     * @return the length\n     */",
+      "name": "size"
+    },
+    {
+      "javadoc": "/**\n     * Checks is the string builder is empty (convenience Collections API style method).\n     * <p>\n     * This method is the same as checking {@link #length()} and is provided to match the\n     * API of Collections.\n     *\n     * @return <code>true</code> if the size is <code>0</code>.\n     */",
+      "name": "isEmpty"
+    },
+    {
+      "javadoc": "/**\n     * Clears the string builder (convenience Collections API style method).\n     * <p>\n     * This method does not reduce the size of the internal character buffer.\n     * To do that, call <code>clear()</code> followed by {@link #minimizeCapacity()}.\n     * <p>\n     * This method is the same as {@link #setLength(int)} called with zero\n     * and is provided to match the API of Collections.\n     *\n     * @return this, to enable chaining\n     */",
+      "name": "clear"
+    },
+    {
+      "javadoc": "/**\n     * Gets the character at the specified index.\n     *\n     * @see #setCharAt(int, char)\n     * @see #deleteCharAt(int)\n     * @param index  the index to retrieve, must be valid\n     * @return the character at the index\n     * @throws IndexOutOfBoundsException if the index is invalid\n     */",
+      "name": "charAt"
+    },
+    {
+      "javadoc": "/**\n     * Sets the character at the specified index.\n     *\n     * @see #charAt(int)\n     * @see #deleteCharAt(int)\n     * @param index  the index to set\n     * @param ch  the new character\n     * @return this, to enable chaining\n     * @throws IndexOutOfBoundsException if the index is invalid\n     */",
+      "name": "setCharAt"
+    },
+    {
+      "javadoc": "/**\n     * Deletes the character at the specified index.\n     *\n     * @see #charAt(int)\n     * @see #setCharAt(int, char)\n     * @param index  the index to delete\n     * @return this, to enable chaining\n     * @throws IndexOutOfBoundsException if the index is invalid\n     */",
+      "name": "deleteCharAt"
+    },
+    {
+      "javadoc": "/**\n     * Copies the builder's character array into a new character array.\n     * \n     * @return a new array that represents the contents of the builder\n     */",
+      "name": "toCharArray"
+    },
+    {
+      "javadoc": "/**\n     * Copies part of the builder's character array into a new character array.\n     * \n     * @param startIndex  the start index, inclusive, must be valid\n     * @param endIndex  the end index, exclusive, must be valid except that\n     *  if too large it is treated as end of string\n     * @return a new array that holds part of the contents of the builder\n     * @throws IndexOutOfBoundsException if startIndex is invalid,\n     *  or if endIndex is invalid (but endIndex greater than size is valid)\n     */",
+      "name": "toCharArray"
+    },
+    {
+      "javadoc": "/**\n     * Copies the character array into the specified array.\n     * \n     * @param destination  the destination array, null will cause an array to be created\n     * @return the input array, unless that was null or too small\n     */",
+      "name": "getChars"
+    },
+    {
+      "javadoc": "/**\n     * Copies the character array into the specified array.\n     *\n     * @param startIndex  first index to copy, inclusive, must be valid\n     * @param endIndex  last index, exclusive, must be valid\n     * @param destination  the destination array, must not be null or too small\n     * @param destinationIndex  the index to start copying in destination\n     * @throws NullPointerException if the array is null\n     * @throws IndexOutOfBoundsException if any index is invalid\n     */",
+      "name": "getChars"
+    },
+    {
+      "javadoc": "/**\n     * Appends the new line string to this string builder.\n     * <p>\n     * The new line string can be altered using {@link #setNewLineText(String)}.\n     * This might be used to force the output to always use Unix line endings\n     * even when on Windows.\n     *\n     * @return this, to enable chaining\n     */",
+      "name": "appendNewLine"
+    },
+    {
+      "javadoc": "/**\n     * Appends the text representing <code>null</code> to this string builder.\n     *\n     * @return this, to enable chaining\n     */",
+      "name": "appendNull"
+    },
+    {
+      "javadoc": "/**\n     * Appends an object to this string builder.\n     * Appending null will call {@link #appendNull()}.\n     *\n     * @param obj  the object to append\n     * @return this, to enable chaining\n     */",
+      "name": "append"
+    },
+    {
+      "javadoc": "/**\n     * Appends a string to this string builder.\n     * Appending null will call {@link #appendNull()}.\n     *\n     * @param str  the string to append\n     * @return this, to enable chaining\n     */",
+      "name": "append"
+    },
+    {
+      "javadoc": "/**\n     * Appends part of a string to this string builder.\n     * Appending null will call {@link #appendNull()}.\n     *\n     * @param str  the string to append\n     * @param startIndex  the start index, inclusive, must be valid\n     * @param length  the length to append, must be valid\n     * @return this, to enable chaining\n     */",
+      "name": "append"
+    },
+    {
+      "javadoc": "/**\n     * Appends a string buffer to this string builder.\n     * Appending null will call {@link #appendNull()}.\n     *\n     * @param str  the string buffer to append\n     * @return this, to enable chaining\n     */",
+      "name": "append"
+    },
+    {
+      "javadoc": "/**\n     * Appends part of a string buffer to this string builder.\n     * Appending null will call {@link #appendNull()}.\n     *\n     * @param str  the string to append\n     * @param startIndex  the start index, inclusive, must be valid\n     * @param length  the length to append, must be valid\n     * @return this, to enable chaining\n     */",
+      "name": "append"
+    },
+    {
+      "javadoc": "/**\n     * Appends another string builder to this string builder.\n     * Appending null will call {@link #appendNull()}.\n     *\n     * @param str  the string builder to append\n     * @return this, to enable chaining\n     */",
+      "name": "append"
+    },
+    {
+      "javadoc": "/**\n     * Appends part of a string builder to this string builder.\n     * Appending null will call {@link #appendNull()}.\n     *\n     * @param str  the string to append\n     * @param startIndex  the start index, inclusive, must be valid\n     * @param length  the length to append, must be valid\n     * @return this, to enable chaining\n     */",
+      "name": "append"
+    },
+    {
+      "javadoc": "/**\n     * Appends a char array to the string builder.\n     * Appending null will call {@link #appendNull()}.\n     *\n     * @param chars  the char array to append\n     * @return this, to enable chaining\n     */",
+      "name": "append"
+    },
+    {
+      "javadoc": "/**\n     * Appends a char array to the string builder.\n     * Appending null will call {@link #appendNull()}.\n     *\n     * @param chars  the char array to append\n     * @param startIndex  the start index, inclusive, must be valid\n     * @param length  the length to append, must be valid\n     * @return this, to enable chaining\n     */",
+      "name": "append"
+    },
+    {
+      "javadoc": "/**\n     * Appends a boolean value to the string builder.\n     *\n     * @param value  the value to append\n     * @return this, to enable chaining\n     */",
+      "name": "append"
+    },
+    {
+      "javadoc": "/**\n     * Appends a char value to the string builder.\n     *\n     * @param ch  the value to append\n     * @return this, to enable chaining\n     */",
+      "name": "append"
+    },
+    {
+      "javadoc": "/**\n     * Appends an int value to the string builder using <code>String.valueOf</code>.\n     *\n     * @param value  the value to append\n     * @return this, to enable chaining\n     */",
+      "name": "append"
+    },
+    {
+      "javadoc": "/**\n     * Appends a long value to the string builder using <code>String.valueOf</code>.\n     *\n     * @param value  the value to append\n     * @return this, to enable chaining\n     */",
+      "name": "append"
+    },
+    {
+      "javadoc": "/**\n     * Appends a float value to the string builder using <code>String.valueOf</code>.\n     *\n     * @param value  the value to append\n     * @return this, to enable chaining\n     */",
+      "name": "append"
+    },
+    {
+      "javadoc": "/**\n     * Appends a double value to the string builder using <code>String.valueOf</code>.\n     *\n     * @param value  the value to append\n     * @return this, to enable chaining\n     */",
+      "name": "append"
+    },
+    {
+      "javadoc": "/**\n     * Appends an object followed by a new line to this string builder.\n     * Appending null will call {@link #appendNull()}.\n     *\n     * @param obj  the object to append\n     * @return this, to enable chaining\n     * @since 2.3\n     */",
+      "name": "appendln"
+    },
+    {
+      "javadoc": "/**\n     * Appends a string followed by a new line to this string builder.\n     * Appending null will call {@link #appendNull()}.\n     *\n     * @param str  the string to append\n     * @return this, to enable chaining\n     * @since 2.3\n     */",
+      "name": "appendln"
+    },
+    {
+      "javadoc": "/**\n     * Appends part of a string followed by a new line to this string builder.\n     * Appending null will call {@link #appendNull()}.\n     *\n     * @param str  the string to append\n     * @param startIndex  the start index, inclusive, must be valid\n     * @param length  the length to append, must be valid\n     * @return this, to enable chaining\n     * @since 2.3\n     */",
+      "name": "appendln"
+    },
+    {
+      "javadoc": "/**\n     * Appends a string buffer followed by a new line to this string builder.\n     * Appending null will call {@link #appendNull()}.\n     *\n     * @param str  the string buffer to append\n     * @return this, to enable chaining\n     * @since 2.3\n     */",
+      "name": "appendln"
+    },
+    {
+      "javadoc": "/**\n     * Appends part of a string buffer followed by a new line to this string builder.\n     * Appending null will call {@link #appendNull()}.\n     *\n     * @param str  the string to append\n     * @param startIndex  the start index, inclusive, must be valid\n     * @param length  the length to append, must be valid\n     * @return this, to enable chaining\n     * @since 2.3\n     */",
+      "name": "appendln"
+    },
+    {
+      "javadoc": "/**\n     * Appends another string builder followed by a new line to this string builder.\n     * Appending null will call {@link #appendNull()}.\n     *\n     * @param str  the string builder to append\n     * @return this, to enable chaining\n     * @since 2.3\n     */",
+      "name": "appendln"
+    },
+    {
+      "javadoc": "/**\n     * Appends part of a string builder followed by a new line to this string builder.\n     * Appending null will call {@link #appendNull()}.\n     *\n     * @param str  the string to append\n     * @param startIndex  the start index, inclusive, must be valid\n     * @param length  the length to append, must be valid\n     * @return this, to enable chaining\n     * @since 2.3\n     */",
+      "name": "appendln"
+    },
+    {
+      "javadoc": "/**\n     * Appends a char array followed by a new line to the string builder.\n     * Appending null will call {@link #appendNull()}.\n     *\n     * @param chars  the char array to append\n     * @return this, to enable chaining\n     * @since 2.3\n     */",
+      "name": "appendln"
+    },
+    {
+      "javadoc": "/**\n     * Appends a char array followed by a new line to the string builder.\n     * Appending null will call {@link #appendNull()}.\n     *\n     * @param chars  the char array to append\n     * @param startIndex  the start index, inclusive, must be valid\n     * @param length  the length to append, must be valid\n     * @return this, to enable chaining\n     * @since 2.3\n     */",
+      "name": "appendln"
+    },
+    {
+      "javadoc": "/**\n     * Appends a boolean value followed by a new line to the string builder.\n     *\n     * @param value  the value to append\n     * @return this, to enable chaining\n     * @since 2.3\n     */",
+      "name": "appendln"
+    },
+    {
+      "javadoc": "/**\n     * Appends a char value followed by a new line to the string builder.\n     *\n     * @param ch  the value to append\n     * @return this, to enable chaining\n     * @since 2.3\n     */",
+      "name": "appendln"
+    },
+    {
+      "javadoc": "/**\n     * Appends an int value followed by a new line to the string builder using <code>String.valueOf</code>.\n     *\n     * @param value  the value to append\n     * @return this, to enable chaining\n     * @since 2.3\n     */",
+      "name": "appendln"
+    },
+    {
+      "javadoc": "/**\n     * Appends a long value followed by a new line to the string builder using <code>String.valueOf</code>.\n     *\n     * @param value  the value to append\n     * @return this, to enable chaining\n     * @since 2.3\n     */",
+      "name": "appendln"
+    },
+    {
+      "javadoc": "/**\n     * Appends a float value followed by a new line to the string builder using <code>String.valueOf</code>.\n     *\n     * @param value  the value to append\n     * @return this, to enable chaining\n     * @since 2.3\n     */",
+      "name": "appendln"
+    },
+    {
+      "javadoc": "/**\n     * Appends a double value followed by a new line to the string builder using <code>String.valueOf</code>.\n     *\n     * @param value  the value to append\n     * @return this, to enable chaining\n     * @since 2.3\n     */",
+      "name": "appendln"
+    },
+    {
+      "javadoc": "/**\n     * Appends each item in an array to the builder without any separators.\n     * Appending a null array will have no effect.\n     * Each object is appended using {@link #append(Object)}.\n     *\n     * @param array  the array to append\n     * @return this, to enable chaining\n     * @since 2.3\n     */",
+      "name": "appendAll"
+    },
+    {
+      "javadoc": "/**\n     * Appends each item in a collection to the builder without any separators.\n     * Appending a null collection will have no effect.\n     * Each object is appended using {@link #append(Object)}.\n     *\n     * @param coll  the collection to append\n     * @return this, to enable chaining\n     * @since 2.3\n     */",
+      "name": "appendAll"
+    },
+    {
+      "javadoc": "/**\n     * Appends each item in an iterator to the builder without any separators.\n     * Appending a null iterator will have no effect.\n     * Each object is appended using {@link #append(Object)}.\n     *\n     * @param it  the iterator to append\n     * @return this, to enable chaining\n     * @since 2.3\n     */",
+      "name": "appendAll"
+    },
+    {
+      "javadoc": "/**\n     * Appends an array placing separators between each value, but\n     * not before the first or after the last.\n     * Appending a null array will have no effect.\n     * Each object is appended using {@link #append(Object)}.\n     *\n     * @param array  the array to append\n     * @param separator  the separator to use, null means no separator\n     * @return this, to enable chaining\n     */",
+      "name": "appendWithSeparators"
+    },
+    {
+      "javadoc": "/**\n     * Appends a collection placing separators between each value, but\n     * not before the first or after the last.\n     * Appending a null collection will have no effect.\n     * Each object is appended using {@link #append(Object)}.\n     *\n     * @param coll  the collection to append\n     * @param separator  the separator to use, null means no separator\n     * @return this, to enable chaining\n     */",
+      "name": "appendWithSeparators"
+    },
+    {
+      "javadoc": "/**\n     * Appends an iterator placing separators between each value, but\n     * not before the first or after the last.\n     * Appending a null iterator will have no effect.\n     * Each object is appended using {@link #append(Object)}.\n     *\n     * @param it  the iterator to append\n     * @param separator  the separator to use, null means no separator\n     * @return this, to enable chaining\n     */",
+      "name": "appendWithSeparators"
+    },
+    {
+      "javadoc": "/**\n     * Appends a separator if the builder is currently non-empty.\n     * Appending a null separator will have no effect.\n     * The separator is appended using {@link #append(String)}.\n     * <p>\n     * This method is useful for adding a separator each time around the\n     * loop except the first.\n     * <pre>\n     * for (Iterator it = list.iterator(); it.hasNext(); ) {\n     *   appendSeparator(\",\");\n     *   append(it.next());\n     * }\n     * </pre>\n     * Note that for this simple example, you should use\n     * {@link #appendWithSeparators(Collection, String)}.\n     * \n     * @param separator  the separator to use, null means no separator\n     * @return this, to enable chaining\n     * @since 2.3\n     */",
+      "name": "appendSeparator"
+    },
+    {
+      "javadoc": "/**\n     * Appends a separator if the builder is currently non-empty.\n     * The separator is appended using {@link #append(char)}.\n     * <p>\n     * This method is useful for adding a separator each time around the\n     * loop except the first.\n     * <pre>\n     * for (Iterator it = list.iterator(); it.hasNext(); ) {\n     *   appendSeparator(',');\n     *   append(it.next());\n     * }\n     * </pre>\n     * Note that for this simple example, you should use\n     * {@link #appendWithSeparators(Collection, String)}.\n     * \n     * @param separator  the separator to use\n     * @return this, to enable chaining\n     * @since 2.3\n     */",
+      "name": "appendSeparator"
+    },
+    {
+      "javadoc": "/**\n     * Appends a separator to the builder if the loop index is greater than zero.\n     * Appending a null separator will have no effect.\n     * The separator is appended using {@link #append(String)}.\n     * <p>\n     * This method is useful for adding a separator each time around the\n     * loop except the first.\n     * <pre>\n     * for (int i = 0; i < list.size(); i++) {\n     *   appendSeparator(\",\", i);\n     *   append(list.get(i));\n     * }\n     * </pre>\n     * Note that for this simple example, you should use\n     * {@link #appendWithSeparators(Collection, String)}.\n     * \n     * @param separator  the separator to use, null means no separator\n     * @param loopIndex  the loop index\n     * @return this, to enable chaining\n     * @since 2.3\n     */",
+      "name": "appendSeparator"
+    },
+    {
+      "javadoc": "/**\n     * Appends a separator to the builder if the loop index is greater than zero.\n     * The separator is appended using {@link #append(char)}.\n     * <p>\n     * This method is useful for adding a separator each time around the\n     * loop except the first.\n     * <pre>\n     * for (int i = 0; i < list.size(); i++) {\n     *   appendSeparator(\",\", i);\n     *   append(list.get(i));\n     * }\n     * </pre>\n     * Note that for this simple example, you should use\n     * {@link #appendWithSeparators(Collection, String)}.\n     * \n     * @param separator  the separator to use\n     * @param loopIndex  the loop index\n     * @return this, to enable chaining\n     * @since 2.3\n     */",
+      "name": "appendSeparator"
+    },
+    {
+      "javadoc": "/**\n     * Appends the pad character to the builder the specified number of times.\n     * \n     * @param length  the length to append, negative means no append\n     * @param padChar  the character to append\n     * @return this, to enable chaining\n     */",
+      "name": "appendPadding"
+    },
+    {
+      "javadoc": "/**\n     * Appends an object to the builder padding on the left to a fixed width.\n     * The <code>String.valueOf</code> of the <code>int</code> value is used.\n     * If the formatted value is larger than the length, the left hand side is lost.\n     * \n     * @param value  the value to append\n     * @param width  the fixed field width, zero or negative has no effect\n     * @param padChar  the pad character to use\n     * @return this, to enable chaining\n     */",
+      "name": "appendFixedWidthPadLeft"
+    },
+    {
+      "javadoc": "/**\n     * Appends an object to the builder padding on the right to a fixed length.\n     * The <code>toString</code> of the object is used.\n     * If the object is larger than the length, the right hand side is lost.\n     * If the object is null, null text value is used.\n     * \n     * @param obj  the object to append, null uses null text\n     * @param width  the fixed field width, zero or negative has no effect\n     * @param padChar  the pad character to use\n     * @return this, to enable chaining\n     */",
+      "name": "appendFixedWidthPadRight"
+    },
+    {
+      "javadoc": "/**\n     * Appends an object to the builder padding on the right to a fixed length.\n     * The <code>String.valueOf</code> of the <code>int</code> value is used.\n     * If the object is larger than the length, the right hand side is lost.\n     * \n     * @param value  the value to append\n     * @param width  the fixed field width, zero or negative has no effect\n     * @param padChar  the pad character to use\n     * @return this, to enable chaining\n     */",
+      "name": "appendFixedWidthPadRight"
+    },
+    {
+      "javadoc": "/**\n     * Inserts the string representation of an object into this builder.\n     * Inserting null will use the stored null text value.\n     *\n     * @param index  the index to add at, must be valid\n     * @param obj  the object to insert\n     * @return this, to enable chaining\n     * @throws IndexOutOfBoundsException if the index is invalid\n     */",
+      "name": "insert"
+    },
+    {
+      "javadoc": "/**\n     * Inserts the string into this builder.\n     * Inserting null will use the stored null text value.\n     *\n     * @param index  the index to add at, must be valid\n     * @param str  the string to insert\n     * @return this, to enable chaining\n     * @throws IndexOutOfBoundsException if the index is invalid\n     */",
+      "name": "insert"
+    },
+    {
+      "javadoc": "/**\n     * Inserts the character array into this builder.\n     * Inserting null will use the stored null text value.\n     *\n     * @param index  the index to add at, must be valid\n     * @param chars  the char array to insert\n     * @return this, to enable chaining\n     * @throws IndexOutOfBoundsException if the index is invalid\n     */",
+      "name": "insert"
+    },
+    {
+      "javadoc": "/**\n     * Inserts part of the character array into this builder.\n     * Inserting null will use the stored null text value.\n     *\n     * @param index  the index to add at, must be valid\n     * @param chars  the char array to insert\n     * @param offset  the offset into the character array to start at, must be valid\n     * @param length  the length of the character array part to copy, must be positive\n     * @return this, to enable chaining\n     * @throws IndexOutOfBoundsException if any index is invalid\n     */",
+      "name": "insert"
+    },
+    {
+      "javadoc": "/**\n     * Inserts the value into this builder.\n     *\n     * @param index  the index to add at, must be valid\n     * @param value  the value to insert\n     * @return this, to enable chaining\n     * @throws IndexOutOfBoundsException if the index is invalid\n     */",
+      "name": "insert"
+    },
+    {
+      "javadoc": "/**\n     * Inserts the value into this builder.\n     *\n     * @param index  the index to add at, must be valid\n     * @param value  the value to insert\n     * @return this, to enable chaining\n     * @throws IndexOutOfBoundsException if the index is invalid\n     */",
+      "name": "insert"
+    },
+    {
+      "javadoc": "/**\n     * Inserts the value into this builder.\n     *\n     * @param index  the index to add at, must be valid\n     * @param value  the value to insert\n     * @return this, to enable chaining\n     * @throws IndexOutOfBoundsException if the index is invalid\n     */",
+      "name": "insert"
+    },
+    {
+      "javadoc": "/**\n     * Inserts the value into this builder.\n     *\n     * @param index  the index to add at, must be valid\n     * @param value  the value to insert\n     * @return this, to enable chaining\n     * @throws IndexOutOfBoundsException if the index is invalid\n     */",
+      "name": "insert"
+    },
+    {
+      "javadoc": "/**\n     * Inserts the value into this builder.\n     *\n     * @param index  the index to add at, must be valid\n     * @param value  the value to insert\n     * @return this, to enable chaining\n     * @throws IndexOutOfBoundsException if the index is invalid\n     */",
+      "name": "insert"
+    },
+    {
+      "javadoc": "/**\n     * Inserts the value into this builder.\n     *\n     * @param index  the index to add at, must be valid\n     * @param value  the value to insert\n     * @return this, to enable chaining\n     * @throws IndexOutOfBoundsException if the index is invalid\n     */",
+      "name": "insert"
+    },
+    {
+      "javadoc": "/**\n     * Deletes the characters between the two specified indices.\n     *\n     * @param startIndex  the start index, inclusive, must be valid\n     * @param endIndex  the end index, exclusive, must be valid except\n     *  that if too large it is treated as end of string\n     * @return this, to enable chaining\n     * @throws IndexOutOfBoundsException if the index is invalid\n     */",
+      "name": "delete"
+    },
+    {
+      "javadoc": "/**\n     * Deletes the character wherever it occurs in the builder.\n     *\n     * @param ch  the character to delete\n     * @return this, to enable chaining\n     */",
+      "name": "deleteAll"
+    },
+    {
+      "javadoc": "/**\n     * Deletes the character wherever it occurs in the builder.\n     *\n     * @param ch  the character to delete\n     * @return this, to enable chaining\n     */",
+      "name": "deleteFirst"
+    },
+    {
+      "javadoc": "/**\n     * Deletes the string wherever it occurs in the builder.\n     *\n     * @param str  the string to delete, null causes no action\n     * @return this, to enable chaining\n     */",
+      "name": "deleteAll"
+    },
+    {
+      "javadoc": "/**\n     * Deletes the string wherever it occurs in the builder.\n     *\n     * @param str  the string to delete, null causes no action\n     * @return this, to enable chaining\n     */",
+      "name": "deleteFirst"
+    },
+    {
+      "javadoc": "/**\n     * Deletes all parts of the builder that the matcher matches.\n     * <p>\n     * Matchers can be used to perform advanced deletion behaviour.\n     * For example you could write a matcher to delete all occurances\n     * where the character 'a' is followed by a number.\n     *\n     * @param matcher  the matcher to use to find the deletion, null causes no action\n     * @return this, to enable chaining\n     */",
+      "name": "deleteAll"
+    },
+    {
+      "javadoc": "/**\n     * Deletes the first match within the builder using the specified matcher.\n     * <p>\n     * Matchers can be used to perform advanced deletion behaviour.\n     * For example you could write a matcher to delete\n     * where the character 'a' is followed by a number.\n     *\n     * @param matcher  the matcher to use to find the deletion, null causes no action\n     * @return this, to enable chaining\n     */",
+      "name": "deleteFirst"
+    },
+    {
+      "javadoc": "/**\n     * Replaces a portion of the string builder with another string.\n     * The length of the inserted string does not have to match the removed length.\n     *\n     * @param startIndex  the start index, inclusive, must be valid\n     * @param endIndex  the end index, exclusive, must be valid except\n     *  that if too large it is treated as end of string\n     * @param replaceStr  the string to replace with, null means delete range\n     * @return this, to enable chaining\n     * @throws IndexOutOfBoundsException if the index is invalid\n     */",
+      "name": "replace"
+    },
+    {
+      "javadoc": "/**\n     * Replaces the search character with the replace character\n     * throughout the builder.\n     *\n     * @param search  the search character\n     * @param replace  the replace character\n     * @return this, to enable chaining\n     */",
+      "name": "replaceAll"
+    },
+    {
+      "javadoc": "/**\n     * Replaces the first instance of the search character with the\n     * replace character in the builder.\n     *\n     * @param search  the search character\n     * @param replace  the replace character\n     * @return this, to enable chaining\n     */",
+      "name": "replaceFirst"
+    },
+    {
+      "javadoc": "/**\n     * Replaces the search string with the replace string throughout the builder.\n     *\n     * @param searchStr  the search string, null causes no action to occur\n     * @param replaceStr  the replace string, null is equivalent to an empty string\n     * @return this, to enable chaining\n     */",
+      "name": "replaceAll"
+    },
+    {
+      "javadoc": "/**\n     * Replaces the first instance of the search string with the replace string.\n     *\n     * @param searchStr  the search string, null causes no action to occur\n     * @param replaceStr  the replace string, null is equivalent to an empty string\n     * @return this, to enable chaining\n     */",
+      "name": "replaceFirst"
+    },
+    {
+      "javadoc": "/**\n     * Replaces all matches within the builder with the replace string.\n     * <p>\n     * Matchers can be used to perform advanced replace behaviour.\n     * For example you could write a matcher to replace all occurances\n     * where the character 'a' is followed by a number.\n     *\n     * @param matcher  the matcher to use to find the deletion, null causes no action\n     * @param replaceStr  the replace string, null is equivalent to an empty string\n     * @return this, to enable chaining\n     */",
+      "name": "replaceAll"
+    },
+    {
+      "javadoc": "/**\n     * Replaces the first match within the builder with the replace string.\n     * <p>\n     * Matchers can be used to perform advanced replace behaviour.\n     * For example you could write a matcher to replace\n     * where the character 'a' is followed by a number.\n     *\n     * @param matcher  the matcher to use to find the deletion, null causes no action\n     * @param replaceStr  the replace string, null is equivalent to an empty string\n     * @return this, to enable chaining\n     */",
+      "name": "replaceFirst"
+    },
+    {
+      "javadoc": "/**\n     * Advanced search and replaces within the builder using a matcher.\n     * <p>\n     * Matchers can be used to perform advanced behaviour.\n     * For example you could write a matcher to delete all occurances\n     * where the character 'a' is followed by a number.\n     *\n     * @param matcher  the matcher to use to find the deletion, null causes no action\n     * @param replaceStr  the string to replace the match with, null is a delete\n     * @param startIndex  the start index, inclusive, must be valid\n     * @param endIndex  the end index, exclusive, must be valid except\n     *  that if too large it is treated as end of string\n     * @param replaceCount  the number of times to replace, -1 for replace all\n     * @return this, to enable chaining\n     * @throws IndexOutOfBoundsException if start index is invalid\n     */",
+      "name": "replace"
+    },
+    {
+      "javadoc": "/**\n     * Reverses the string builder placing each character in the opposite index.\n     * \n     * @return this, to enable chaining\n     */",
+      "name": "reverse"
+    },
+    {
+      "javadoc": "/**\n     * Trims the builder by removing characters less than or equal to a space\n     * from the beginning and end.\n     *\n     * @return this, to enable chaining\n     */",
+      "name": "trim"
+    },
+    {
+      "javadoc": "/**\n     * Checks whether this builder starts with the specified string.\n     * <p>\n     * Note that this method handles null input quietly, unlike String.\n     * \n     * @param str  the string to search for, null returns false\n     * @return true if the builder starts with the string\n     */",
+      "name": "startsWith"
+    },
+    {
+      "javadoc": "/**\n     * Checks whether this builder ends with the specified string.\n     * <p>\n     * Note that this method handles null input quietly, unlike String.\n     * \n     * @param str  the string to search for, null returns false\n     * @return true if the builder ends with the string\n     */",
+      "name": "endsWith"
+    },
+    {
+      "javadoc": "/**\n     * Extracts a portion of this string builder as a string.\n     * \n     * @param start  the start index, inclusive, must be valid\n     * @return the new string\n     * @throws IndexOutOfBoundsException if the index is invalid\n     */",
+      "name": "substring"
+    },
+    {
+      "javadoc": "/**\n     * Extracts a portion of this string builder as a string.\n     * <p>\n     * Note: This method treats an endIndex greater than the length of the\n     * builder as equal to the length of the builder, and continues\n     * without error, unlike StringBuffer or String.\n     * \n     * @param startIndex  the start index, inclusive, must be valid\n     * @param endIndex  the end index, exclusive, must be valid except\n     *  that if too large it is treated as end of string\n     * @return the new string\n     * @throws IndexOutOfBoundsException if the index is invalid\n     */",
+      "name": "substring"
+    },
+    {
+      "javadoc": "/**\n     * Extracts the leftmost characters from the string builder without\n     * throwing an exception.\n     * <p>\n     * This method extracts the left <code>length</code> characters from\n     * the builder. If this many characters are not available, the whole\n     * builder is returned. Thus the returned string may be shorter than the\n     * length requested.\n     * \n     * @param length  the number of characters to extract, negative returns empty string\n     * @return the new string\n     */",
+      "name": "leftString"
+    },
+    {
+      "javadoc": "/**\n     * Extracts the rightmost characters from the string builder without\n     * throwing an exception.\n     * <p>\n     * This method extracts the right <code>length</code> characters from\n     * the builder. If this many characters are not available, the whole\n     * builder is returned. Thus the returned string may be shorter than the\n     * length requested.\n     * \n     * @param length  the number of characters to extract, negative returns empty string\n     * @return the new string\n     */",
+      "name": "rightString"
+    },
+    {
+      "javadoc": "/**\n     * Extracts some characters from the middle of the string builder without\n     * throwing an exception.\n     * <p>\n     * This method extracts <code>length</code> characters from the builder\n     * at the specified index.\n     * If the index is negative it is treated as zero.\n     * If the index is greater than the builder size, it is treated as the builder size.\n     * If the length is negative, the empty string is returned.\n     * If insufficient characters are available in the builder, as much as possible is returned.\n     * Thus the returned string may be shorter than the length requested.\n     * \n     * @param index  the index to start at, negative means zero\n     * @param length  the number of characters to extract, negative returns empty string\n     * @return the new string\n     */",
+      "name": "midString"
+    },
+    {
+      "javadoc": "/**\n     * Checks if the string builder contains the specified char.\n     *\n     * @param ch  the character to find\n     * @return true if the builder contains the character\n     */",
+      "name": "contains"
+    },
+    {
+      "javadoc": "/**\n     * Checks if the string builder contains the specified string.\n     *\n     * @param str  the string to find\n     * @return true if the builder contains the string\n     */",
+      "name": "contains"
+    },
+    {
+      "javadoc": "/**\n     * Checks if the string builder contains a string matched using the\n     * specified matcher.\n     * <p>\n     * Matchers can be used to perform advanced searching behaviour.\n     * For example you could write a matcher to search for the character\n     * 'a' followed by a number.\n     *\n     * @param matcher  the matcher to use, null returns -1\n     * @return true if the matcher finds a match in the builder\n     */",
+      "name": "contains"
+    },
+    {
+      "javadoc": "/**\n     * Searches the string builder to find the first reference to the specified char.\n     * \n     * @param ch  the character to find\n     * @return the first index of the character, or -1 if not found\n     */",
+      "name": "indexOf"
+    },
+    {
+      "javadoc": "/**\n     * Searches the string builder to find the first reference to the specified char.\n     * \n     * @param ch  the character to find\n     * @param startIndex  the index to start at, invalid index rounded to edge\n     * @return the first index of the character, or -1 if not found\n     */",
+      "name": "indexOf"
+    },
+    {
+      "javadoc": "/**\n     * Searches the string builder to find the first reference to the specified string.\n     * <p>\n     * Note that a null input string will return -1, whereas the JDK throws an exception.\n     * \n     * @param str  the string to find, null returns -1\n     * @return the first index of the string, or -1 if not found\n     */",
+      "name": "indexOf"
+    },
+    {
+      "javadoc": "/**\n     * Searches the string builder to find the first reference to the specified\n     * string starting searching from the given index.\n     * <p>\n     * Note that a null input string will return -1, whereas the JDK throws an exception.\n     * \n     * @param str  the string to find, null returns -1\n     * @param startIndex  the index to start at, invalid index rounded to edge\n     * @return the first index of the string, or -1 if not found\n     */",
+      "name": "indexOf"
+    },
+    {
+      "javadoc": "/**\n     * Searches the string builder using the matcher to find the first match.\n     * <p>\n     * Matchers can be used to perform advanced searching behaviour.\n     * For example you could write a matcher to find the character 'a'\n     * followed by a number.\n     *\n     * @param matcher  the matcher to use, null returns -1\n     * @return the first index matched, or -1 if not found\n     */",
+      "name": "indexOf"
+    },
+    {
+      "javadoc": "/**\n     * Searches the string builder using the matcher to find the first\n     * match searching from the given index.\n     * <p>\n     * Matchers can be used to perform advanced searching behaviour.\n     * For example you could write a matcher to find the character 'a'\n     * followed by a number.\n     *\n     * @param matcher  the matcher to use, null returns -1\n     * @param startIndex  the index to start at, invalid index rounded to edge\n     * @return the first index matched, or -1 if not found\n     */",
+      "name": "indexOf"
+    },
+    {
+      "javadoc": "/**\n     * Searches the string builder to find the last reference to the specified char.\n     * \n     * @param ch  the character to find\n     * @return the last index of the character, or -1 if not found\n     */",
+      "name": "lastIndexOf"
+    },
+    {
+      "javadoc": "/**\n     * Searches the string builder to find the last reference to the specified char.\n     * \n     * @param ch  the character to find\n     * @param startIndex  the index to start at, invalid index rounded to edge\n     * @return the last index of the character, or -1 if not found\n     */",
+      "name": "lastIndexOf"
+    },
+    {
+      "javadoc": "/**\n     * Searches the string builder to find the last reference to the specified string.\n     * <p>\n     * Note that a null input string will return -1, whereas the JDK throws an exception.\n     * \n     * @param str  the string to find, null returns -1\n     * @return the last index of the string, or -1 if not found\n     */",
+      "name": "lastIndexOf"
+    },
+    {
+      "javadoc": "/**\n     * Searches the string builder to find the last reference to the specified\n     * string starting searching from the given index.\n     * <p>\n     * Note that a null input string will return -1, whereas the JDK throws an exception.\n     * \n     * @param str  the string to find, null returns -1\n     * @param startIndex  the index to start at, invalid index rounded to edge\n     * @return the last index of the string, or -1 if not found\n     */",
+      "name": "lastIndexOf"
+    },
+    {
+      "javadoc": "/**\n     * Searches the string builder using the matcher to find the last match.\n     * <p>\n     * Matchers can be used to perform advanced searching behaviour.\n     * For example you could write a matcher to find the character 'a'\n     * followed by a number.\n     *\n     * @param matcher  the matcher to use, null returns -1\n     * @return the last index matched, or -1 if not found\n     */",
+      "name": "lastIndexOf"
+    },
+    {
+      "javadoc": "/**\n     * Searches the string builder using the matcher to find the last\n     * match searching from the given index.\n     * <p>\n     * Matchers can be used to perform advanced searching behaviour.\n     * For example you could write a matcher to find the character 'a'\n     * followed by a number.\n     *\n     * @param matcher  the matcher to use, null returns -1\n     * @param startIndex  the index to start at, invalid index rounded to edge\n     * @return the last index matched, or -1 if not found\n     */",
+      "name": "lastIndexOf"
+    },
+    {
+      "javadoc": "/**\n     * Creates a tokenizer that can tokenize the contents of this builder.\n     * <p>\n     * This method allows the contents of this builder to be tokenized.\n     * The tokenizer will be setup by default to tokenize on space, tab,\n     * newline and formfeed (as per StringTokenizer). These values can be\n     * changed on the tokenizer class, before retrieving the tokens.\n     * <p>\n     * The returned tokenizer is linked to this builder. You may intermix\n     * calls to the buider and tokenizer within certain limits, however\n     * there is no synchronization. Once the tokenizer has been used once,\n     * it must be {@link StrTokenizer#reset() reset} to pickup the latest\n     * changes in the builder. For example:\n     * <pre>\n     * StrBuilder b = new StrBuilder();\n     * b.append(\"a b \");\n     * StrTokenizer t = b.asTokenizer();\n     * String[] tokens1 = t.getTokenArray();  // returns a,b\n     * b.append(\"c d \");\n     * String[] tokens2 = t.getTokenArray();  // returns a,b (c and d ignored)\n     * t.reset();              // reset causes builder changes to be picked up\n     * String[] tokens3 = t.getTokenArray();  // returns a,b,c,d\n     * </pre>\n     * In addition to simply intermixing appends and tokenization, you can also\n     * call the set methods on the tokenizer to alter how it tokenizes. Just\n     * remember to call reset when you want to pickup builder changes.\n     * <p>\n     * Calling {@link StrTokenizer#reset(String)} or {@link StrTokenizer#reset(char[])}\n     * with a non-null value will break the link with the builder.\n     *\n     * @return a tokenizer that is linked to this builder\n     */",
+      "name": "asTokenizer"
+    },
+    {
+      "javadoc": "/**\n     * Gets the contents of this builder as a Reader.\n     * <p>\n     * This method allows the contents of the builder to be read\n     * using any standard method that expects a Reader.\n     * <p>\n     * To use, simply create a <code>StrBuilder</code>, populate it with\n     * data, call <code>asReader</code>, and then read away.\n     * <p>\n     * The internal character array is shared between the builder and the reader.\n     * This allows you to append to the builder after creating the reader,\n     * and the changes will be picked up.\n     * Note however, that no synchronization occurs, so you must perform\n     * all operations with the builder and the reader in one thread.\n     * <p>\n     * The returned reader supports marking, and ignores the flush method.\n     *\n     * @return a reader that reads from this builder\n     */",
+      "name": "asReader"
+    },
+    {
+      "javadoc": "/**\n     * Gets this builder as a Writer that can be written to.\n     * <p>\n     * This method allows you to populate the contents of the builder\n     * using any standard method that takes a Writer.\n     * <p>\n     * To use, simply create a <code>StrBuilder</code>,\n     * call <code>asWriter</code>, and populate away. The data is available\n     * at any time using the methods of the <code>StrBuilder</code>.\n     * <p>\n     * The internal character array is shared between the builder and the writer.\n     * This allows you to intermix calls that append to the builder and\n     * write using the writer and the changes will be occur correctly.\n     * Note however, that no synchronization occurs, so you must perform\n     * all operations with the builder and the writer in one thread.\n     * <p>\n     * The returned writer ignores the close and flush methods.\n     *\n     * @return a writer that populates this builder\n     */",
+      "name": "asWriter"
+    },
+    {
+      "javadoc": "/**\n     * Checks the contents of this builder against another to see if they\n     * contain the same character content ignoring case.\n     *\n     * @param other  the object to check, null returns false\n     * @return true if the builders contain the same characters in the same order\n     */",
+      "name": "equalsIgnoreCase"
+    },
+    {
+      "javadoc": "/**\n     * Checks the contents of this builder against another to see if they\n     * contain the same character content.\n     *\n     * @param other  the object to check, null returns false\n     * @return true if the builders contain the same characters in the same order\n     */",
+      "name": "equals"
+    },
+    {
+      "javadoc": "/**\n     * Checks the contents of this builder against another to see if they\n     * contain the same character content.\n     *\n     * @param obj  the object to check, null returns false\n     * @return true if the builders contain the same characters in the same order\n     */",
+      "name": "equals"
+    },
+    {
+      "javadoc": "/**\n     * Gets a suitable hash code for this builder.\n     *\n     * @return a hash code\n     */",
+      "name": "hashCode"
+    },
+    {
+      "javadoc": "/**\n     * Gets a String version of the string builder, creating a new instance\n     * each time the method is called.\n     * <p>\n     * Note that unlike StringBuffer, the string version returned is\n     * independent of the string builder.\n     *\n     * @return the builder as a String\n     */",
+      "name": "toString"
+    },
+    {
+      "javadoc": "/**\n     * Gets a StringBuffer version of the string builder, creating a\n     * new instance each time the method is called.\n     *\n     * @return the builder as a StringBuffer\n     */",
+      "name": "toStringBuffer"
+    },
+    {
+      "javadoc": "/**\n     * Validates parameters defining a range of the builder.\n     * \n     * @param startIndex  the start index, inclusive, must be valid\n     * @param endIndex  the end index, exclusive, must be valid except\n     *  that if too large it is treated as end of string\n     * @return the new string\n     * @throws IndexOutOfBoundsException if the index is invalid\n     */",
+      "name": "validateRange"
+    },
+    {
+      "javadoc": "/**\n     * Validates parameters defining a single index in the builder.\n     * \n     * @param index  the index, must be valid\n     * @throws IndexOutOfBoundsException if the index is invalid\n     */",
+      "name": "validateIndex"
+    }
+  ],
+  "sig": {
+    "class_declaration": "public class StrBuilder implements Cloneable",
+    "constructors": [
+      "public StrBuilder();",
+      "public StrBuilder(int initialCapacity);",
+      "public StrBuilder(String str);"
+    ],
+    "focal_signature": "public StrBuilder appendFixedWidthPadLeft(Object obj, int width, char padChar)",
+    "methods": [
+      "public String getNewLineText();",
+      "public StrBuilder setNewLineText(String newLine);",
+      "public String getNullText();",
+      "public StrBuilder setNullText(String nullText);",
+      "public int length();",
+      "public StrBuilder setLength(int length);",
+      "public int capacity();",
+      "public StrBuilder ensureCapacity(int capacity);",
+      "public StrBuilder minimizeCapacity();",
+      "public int size();",
+      "public boolean isEmpty();",
+      "public StrBuilder clear();",
+      "public char charAt(int index);",
+      "public StrBuilder setCharAt(int index, char ch);",
+      "public StrBuilder deleteCharAt(int index);",
+      "public char[] toCharArray();",
+      "public char[] toCharArray(int startIndex, int endIndex);",
+      "public char[] getChars(char[] destination);",
+      "public void getChars(int startIndex, int endIndex, char destination[], int destinationIndex);",
+      "public StrBuilder appendNewLine();",
+      "public StrBuilder appendNull();",
+      "public StrBuilder append(Object obj);",
+      "public StrBuilder append(String str);",
+      "public StrBuilder append(String str, int startIndex, int length);",
+      "public StrBuilder append(StringBuffer str);",
+      "public StrBuilder append(StringBuffer str, int startIndex, int length);",
+      "public StrBuilder append(StrBuilder str);",
+      "public StrBuilder append(StrBuilder str, int startIndex, int length);",
+      "public StrBuilder append(char[] chars);",
+      "public StrBuilder append(char[] chars, int startIndex, int length);",
+      "public StrBuilder append(boolean value);",
+      "public StrBuilder append(char ch);",
+      "public StrBuilder append(int value);",
+      "public StrBuilder append(long value);",
+      "public StrBuilder append(float value);",
+      "public StrBuilder append(double value);",
+      "public StrBuilder appendln(Object obj);",
+      "public StrBuilder appendln(String str);",
+      "public StrBuilder appendln(String str, int startIndex, int length);",
+      "public StrBuilder appendln(StringBuffer str);",
+      "public StrBuilder appendln(StringBuffer str, int startIndex, int length);",
+      "public StrBuilder appendln(StrBuilder str);",
+      "public StrBuilder appendln(StrBuilder str, int startIndex, int length);",
+      "public StrBuilder appendln(char[] chars);",
+      "public StrBuilder appendln(char[] chars, int startIndex, int length);",
+      "public StrBuilder appendln(boolean value);",
+      "public StrBuilder appendln(char ch);",
+      "public StrBuilder appendln(int value);",
+      "public StrBuilder appendln(long value);",
+      "public StrBuilder appendln(float value);",
+      "public StrBuilder appendln(double value);",
+      "public StrBuilder appendAll(Object[] array);",
+      "public StrBuilder appendAll(Collection coll);",
+      "public StrBuilder appendAll(Iterator it);",
+      "public StrBuilder appendWithSeparators(Object[] array, String separator);",
+      "public StrBuilder appendWithSeparators(Collection coll, String separator);",
+      "public StrBuilder appendWithSeparators(Iterator it, String separator);",
+      "public StrBuilder appendSeparator(String separator);",
+      "public StrBuilder appendSeparator(char separator);",
+      "public StrBuilder appendSeparator(String separator, int loopIndex);",
+      "public StrBuilder appendSeparator(char separator, int loopIndex);",
+      "public StrBuilder appendPadding(int length, char padChar);",
+      "public StrBuilder appendFixedWidthPadLeft(int value, int width, char padChar);",
+      "public StrBuilder appendFixedWidthPadRight(Object obj, int width, char padChar);",
+      "public StrBuilder appendFixedWidthPadRight(int value, int width, char padChar);",
+      "public StrBuilder insert(int index, Object obj);",
+      "public StrBuilder insert(int index, String str);",
+      "public StrBuilder insert(int index, char chars[]);",
+      "public StrBuilder insert(int index, char chars[], int offset, int length);",
+      "public StrBuilder insert(int index, boolean value);",
+      "public StrBuilder insert(int index, char value);",
+      "public StrBuilder insert(int index, int value);",
+      "public StrBuilder insert(int index, long value);",
+      "public StrBuilder insert(int index, float value);",
+      "public StrBuilder insert(int index, double value);",
+      "public StrBuilder delete(int startIndex, int endIndex);",
+      "public StrBuilder deleteAll(char ch);",
+      "public StrBuilder deleteFirst(char ch);",
+      "public StrBuilder deleteAll(String str);",
+      "public StrBuilder deleteFirst(String str);",
+      "public StrBuilder deleteAll(StrMatcher matcher);",
+      "public StrBuilder deleteFirst(StrMatcher matcher);",
+      "public StrBuilder replace(int startIndex, int endIndex, String replaceStr);",
+      "public StrBuilder replaceAll(char search, char replace);",
+      "public StrBuilder replaceFirst(char search, char replace);",
+      "public StrBuilder replaceAll(String searchStr, String replaceStr);",
+      "public StrBuilder replaceFirst(String searchStr, String replaceStr);",
+      "public StrBuilder replaceAll(StrMatcher matcher, String replaceStr);",
+      "public StrBuilder replaceFirst(StrMatcher matcher, String replaceStr);",
+      "public StrBuilder replace( StrMatcher matcher, String replaceStr, int startIndex, int endIndex, int replaceCount);",
+      "public StrBuilder reverse();",
+      "public StrBuilder trim();",
+      "public boolean startsWith(String str);",
+      "public boolean endsWith(String str);",
+      "public String substring(int start);",
+      "public String substring(int startIndex, int endIndex);",
+      "public String leftString(int length);",
+      "public String rightString(int length);",
+      "public String midString(int index, int length);",
+      "public boolean contains(char ch);",
+      "public boolean contains(String str);",
+      "public boolean contains(StrMatcher matcher);",
+      "public int indexOf(char ch);",
+      "public int indexOf(char ch, int startIndex);",
+      "public int indexOf(String str);",
+      "public int indexOf(String str, int startIndex);",
+      "public int indexOf(StrMatcher matcher);",
+      "public int indexOf(StrMatcher matcher, int startIndex);",
+      "public int lastIndexOf(char ch);",
+      "public int lastIndexOf(char ch, int startIndex);",
+      "public int lastIndexOf(String str);",
+      "public int lastIndexOf(String str, int startIndex);",
+      "public int lastIndexOf(StrMatcher matcher);",
+      "public int lastIndexOf(StrMatcher matcher, int startIndex);",
+      "public StrTokenizer asTokenizer();",
+      "public Reader asReader();",
+      "public Writer asWriter();",
+      "public boolean equalsIgnoreCase(StrBuilder other);",
+      "public boolean equals(StrBuilder other);",
+      "public boolean equals(Object obj);",
+      "public int hashCode();",
+      "public String toString();",
+      "public StringBuffer toStringBuffer();",
+      "protected int validateRange(int startIndex, int endIndex);",
+      "protected void validateIndex(int index);"
+    ],
+    "type_signatures": []
+  },
+  "split": "test"
+}

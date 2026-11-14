@@ -1,0 +1,173 @@
+{
+ "bug_name": "JacksonDatabind_13",
+ "call_sites": [
+  {
+   "line": 224,
+   "lines": [
+    219,
+    220,
+    221,
+    222,
+    223,
+    224,
+    225,
+    226,
+    227,
+    228,
+    229
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BuilderBasedDeserializer.java",
+   "snippet": "            jp.nextToken();\n            SettableBeanProperty prop = _beanProperties.find(propName);\n            \n            if (prop != null) { // normal case\n                try {\n                    builder = prop.deserializeSetAndReturn(jp, ctxt, builder);\n                } catch (Exception e) {\n                    wrapAndThrow(e, builder, propName, ctxt);\n                }\n                continue;\n            }"
+  },
+  {
+   "line": 251,
+   "lines": [
+    246,
+    247,
+    248,
+    249,
+    250,
+    251,
+    252,
+    253,
+    254,
+    255,
+    256
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BuilderBasedDeserializer.java",
+   "snippet": "            // Skip field name:\n            jp.nextToken();\n            SettableBeanProperty prop = _beanProperties.find(propName);\n            if (prop != null) { // normal case\n                try {\n                    bean = prop.deserializeSetAndReturn(jp, ctxt, bean);\n                } catch (Exception e) {\n                    wrapAndThrow(e, bean, propName, ctxt);\n                }\n            } else {\n                handleUnknownVanilla(jp, ctxt, bean, propName);"
+  },
+  {
+   "line": 296,
+   "lines": [
+    291,
+    292,
+    293,
+    294,
+    295,
+    296,
+    297,
+    298,
+    299,
+    300,
+    301
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BuilderBasedDeserializer.java",
+   "snippet": "            // Skip field name:\n            jp.nextToken();\n            SettableBeanProperty prop = _beanProperties.find(propName);\n            if (prop != null) { // normal case\n                try {\n                    bean = prop.deserializeSetAndReturn(jp, ctxt, bean);\n                } catch (Exception e) {\n                    wrapAndThrow(e, bean, propName, ctxt);\n                }\n                continue;\n            }"
+  },
+  {
+   "line": 427,
+   "lines": [
+    422,
+    423,
+    424,
+    425,
+    426,
+    427,
+    428,
+    429,
+    430,
+    431,
+    432
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BuilderBasedDeserializer.java",
+   "snippet": "                if (!prop.visibleInView(activeView)) {\n                    jp.skipChildren();\n                    continue;\n                }\n                try {\n                    bean = prop.deserializeSetAndReturn(jp, ctxt, bean);\n                } catch (Exception e) {\n                    wrapAndThrow(e, bean, propName, ctxt);\n                }\n                continue;\n            }"
+  },
+  {
+   "line": 478,
+   "lines": [
+    473,
+    474,
+    475,
+    476,
+    477,
+    478,
+    479,
+    480,
+    481,
+    482,
+    483
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BuilderBasedDeserializer.java",
+   "snippet": "                if (activeView != null && !prop.visibleInView(activeView)) {\n                    jp.skipChildren();\n                    continue;\n                }\n                try {\n                    bean = prop.deserializeSetAndReturn(jp, ctxt, bean);\n                } catch (Exception e) {\n                    wrapAndThrow(e, bean, propName, ctxt);\n                }\n                continue;\n            }"
+  }
+ ],
+ "class_simple": "ObjectIdValueProperty",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Specialized {@link SettableBeanProperty} implementation used\n * for virtual property that represents Object Id that is used\n * for some POJO types (or properties).\n */\npublic final",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "protected final ObjectIdReader _objectIdReader"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.deser.impl.ObjectIdValueProperty",
+ "focal_id": "JacksonDatabind_13::com.fasterxml.jackson.databind.deser.impl.ObjectIdValueProperty::deserializeSetAndReturn(JsonParser,DeserializationContext,Object)",
+ "focal_method_name": "deserializeSetAndReturn",
+ "generations": 3,
+ "impl_B": "@Override\n    public Object deserializeSetAndReturn(JsonParser jp,\n    \t\tDeserializationContext ctxt, Object instance) throws IOException\n    {\n        // note: no null checks (unlike usually); deserializer should fail if one found\n        Object id = _valueDeserializer.deserialize(jp, ctxt);\n\n        /* 02-Apr-2015, tatu: Actually, as per [databind#742], let it be;\n         *  missing or null id is needed for some cases, such as cases where id\n         *  will be generated externally, at a later point, and is not available\n         *  quite yet. Typical use case is with DB inserts.\n         */\n        \n        ReadableObjectId roid = ctxt.findObjectId(id, _objectIdReader.generator, _objectIdReader.resolver);\n        roid.bindItem(instance);\n        // also: may need to set a property value as well\n        SettableBeanProperty idProp = _objectIdReader.idProperty;\n        if (idProp != null) {\n            return idProp.setAndReturn(instance, id);\n        }\n        return instance;\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.lang.annotation.Annotation",
+  "com.fasterxml.jackson.core.JsonParser",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.deser.*",
+  "com.fasterxml.jackson.databind.introspect.AnnotatedMember"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.deser.impl",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "withName"
+  },
+  {
+   "javadoc": "",
+   "name": "withValueDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "getAnnotation"
+  },
+  {
+   "javadoc": "",
+   "name": "getMember"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "deserializeAndSet"
+  },
+  {
+   "javadoc": "",
+   "name": "set"
+  },
+  {
+   "javadoc": "",
+   "name": "setAndReturn"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public final class ObjectIdValueProperty extends SettableBeanProperty",
+  "constructors": [
+   "public ObjectIdValueProperty(ObjectIdReader objectIdReader, PropertyMetadata metadata);",
+   "protected ObjectIdValueProperty(ObjectIdValueProperty src, JsonDeserializer<?> deser);",
+   "// since 2.3 protected ObjectIdValueProperty(ObjectIdValueProperty src, PropertyName newName);",
+   "// since 2.3 protected ObjectIdValueProperty(ObjectIdValueProperty src, String newName);"
+  ],
+  "focal_signature": "public Object deserializeSetAndReturn(JsonParser jp, DeserializationContext ctxt, Object instance) throws IOException",
+  "methods": [
+   "public ObjectIdValueProperty withName(PropertyName newName);",
+   "public ObjectIdValueProperty withValueDeserializer(JsonDeserializer<?> deser);",
+   "public <A extends Annotation> A getAnnotation(Class<A> acls);",
+   "public AnnotatedMember getMember();",
+   "public void deserializeAndSet(JsonParser jp, DeserializationContext ctxt, Object instance) throws IOException;",
+   "public void set(Object instance, Object value) throws IOException;",
+   "public Object setAndReturn(Object instance, Object value) throws IOException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

@@ -1,0 +1,142 @@
+{
+ "bug_name": "Csv_1",
+ "call_sites": [
+  {
+   "line": 51,
+   "lines": [
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56
+   ],
+   "path": "src/main/java/org/apache/commons/csv/CSVLexer.java",
+   "snippet": "        //  read the next char and set eol\n        /* note: unfortunately isEndOfLine may consumes a character silently.\n        *       this has no effect outside of the method. so a simple workaround\n        *       is to call 'readAgain' on the stream...\n        */\n        int c = in.read();\n        boolean eol = isEndOfLine(c);\n        c = in.readAgain();\n\n        //  empty line detection: eol AND (last char was EOL or beginning)\n        if (emptyLinesIgnored) {"
+  },
+  {
+   "line": 62,
+   "lines": [
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67
+   ],
+   "path": "src/main/java/org/apache/commons/csv/CSVLexer.java",
+   "snippet": "            while (eol\n                    && (lastChar == '\\n' || lastChar == '\\r' || lastChar == ExtendedBufferedReader.UNDEFINED)\n                    && !isEndOfFile(lastChar)) {\n                // go on char ahead ...\n                lastChar = c;\n                c = in.read();\n                eol = isEndOfLine(c);\n                c = in.readAgain();\n                // reached end of file without any content (empty line at the end)\n                if (isEndOfFile(c)) {\n                    tkn.type = EOF;"
+  },
+  {
+   "line": 86,
+   "lines": [
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91
+   ],
+   "path": "src/main/java/org/apache/commons/csv/CSVLexer.java",
+   "snippet": "        //  important: make sure a new char gets consumed in each iteration\n        while (tkn.type == INVALID) {\n            // ignore whitespaces at beginning of a token\n            if (surroundingSpacesIgnored) {\n                while (isWhitespace(c) && !eol) {\n                    c = in.read();\n                    eol = isEndOfLine(c);\n                }\n            }\n            \n            // ok, start of token reached: comment, encapsulated, or token"
+  },
+  {
+   "line": 158,
+   "lines": [
+    153,
+    154,
+    155,
+    156,
+    157,
+    158,
+    159,
+    160,
+    161,
+    162,
+    163
+   ],
+   "path": "src/main/java/org/apache/commons/csv/CSVLexer.java",
+   "snippet": "                tkn.content.append((char) readEscape(c));\n            } else {\n                tkn.content.append((char) c);\n            }\n\n            c = in.read();\n        }\n\n        if (surroundingSpacesIgnored) {\n            trimTrailingSpaces(tkn.content);\n        }"
+  },
+  {
+   "line": 187,
+   "lines": [
+    182,
+    183,
+    184,
+    185,
+    186,
+    187,
+    188,
+    189,
+    190,
+    191,
+    192
+   ],
+   "path": "src/main/java/org/apache/commons/csv/CSVLexer.java",
+   "snippet": "        // save current line\n        int startLineNumber = getLineNumber();\n        // ignore the given delimiter\n        // assert c == delimiter;\n        while (true) {\n            c = in.read();\n            \n            if (isEscape(c)) {\n                tkn.content.append((char) readEscape(c));\n            } else if (isEncapsulator(c)) {\n                if (isEncapsulator(in.lookAhead())) {"
+  }
+ ],
+ "class_simple": "ExtendedBufferedReader",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * ExtendedBufferedReader\n *\n * A special reader decorator which supports more\n * sophisticated access to the underlying reader object.\n *\n * In particular the reader supports a look-ahead option,\n * which allows you to see the next char returned by\n * next().\n */",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "static final int END_OF_STREAM",
+  "static final int UNDEFINED",
+  "private int lastChar",
+  "private int lineCounter"
+ ],
+ "focal_class": "org.apache.commons.csv.ExtendedBufferedReader",
+ "focal_id": "Csv_1::org.apache.commons.csv.ExtendedBufferedReader::read()",
+ "focal_method_name": "read",
+ "generations": 3,
+ "impl_B": "@Override\n    public int read() throws IOException {\n        int current = super.read();\n        if (current == '\\n') {\n            lineCounter++;\n        }\n        lastChar = current;\n        return lastChar;\n    }",
+ "imports": [
+  "java.io.BufferedReader",
+  "java.io.IOException",
+  "java.io.Reader"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.csv",
+ "project": "Csv",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "read"
+  },
+  {
+   "javadoc": "/**\n     * Calls {@link BufferedReader#readLine()} which drops the line terminator(s).\n     * This method should only be called when processing a comment, otherwise\n     * information can be lost.\n     * <p>\n     * Increments  {@link #lineCounter}\n     * <p>\n     * Sets {@link #lastChar} to {@link #END_OF_STREAM} at EOF, \n     * otherwise to last character on the line (won't be CR or LF) \n     * \n     * @return the line that was read, or null if reached EOF.\n     */",
+   "name": "readLine"
+  }
+ ],
+ "sig": {
+  "class_declaration": "class ExtendedBufferedReader extends BufferedReader",
+  "constructors": [],
+  "focal_signature": "public int read() throws IOException",
+  "methods": [
+   "public int read(char[] buf, int offset, int length) throws IOException;",
+   "public String readLine() throws IOException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

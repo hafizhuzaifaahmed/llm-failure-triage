@@ -1,0 +1,87 @@
+{
+ "_status": "D-142: copy of configs/e6b.json for the CFP confirmation votes only; model, digest, server settings, safety rule and selection are unchanged; only the experiments served and the log locations differ. The deadline field is not used by the confirmation driver.",
+ "kind": "e6b",
+ "experiments": [
+  "LOCAL_CONF_VOTE_E6B_F1",
+  "LOCAL_CONF_VOTE_E6B_F2"
+ ],
+ "candidate_order": [
+  "ministral-3:14b-instruct-2512-q4_K_M",
+  "phi4:14b-q4_K_M",
+  "mistral-nemo:12b-instruct-2407-q4_K_M",
+  "llama3.1:8b-instruct-q4_K_M"
+ ],
+ "model_tag": "ministral-3:14b-instruct-2512-q4_K_M",
+ "model_spec": {
+  "family": "mistral3",
+  "digest": "4760c35aeb9d9e9c6174c2492562c0b999e80a222804fd96b1915ab72bbcdcf7",
+  "size_bytes": 9082537546,
+  "quantization": "Q4_K_M",
+  "parameter_size": "13.9B",
+  "format": "gguf",
+  "ollama_family": "mistral3",
+  "capabilities": [
+   "completion",
+   "vision",
+   "tools"
+  ],
+  "modelfile_parameters": {
+   "temperature": [
+    "0.15"
+   ]
+  },
+  "num_ctx": 8192,
+  "think": null,
+  "keep_alive": "30m",
+  "top_k": 40,
+  "min_p": 0.0,
+  "require_gpu_resident": true
+ },
+ "server_env_overrides": {
+  "OLLAMA_HOST": "127.0.0.1:11436"
+ },
+ "base_url": "http://127.0.0.1:11436",
+ "server_log_dir": "logs/ollama_server_e6b",
+ "call_log_dir": "data/extension/confirm/llm_calls_votes_e6b",
+ "session_log": "data/extension/confirm/sessions_e6b.jsonl",
+ "feasibility_dir": "results/e6b/feasibility",
+ "arm_passes": [
+  "J1",
+  "SC",
+  "DEB"
+ ],
+ "deadline_local": "2026-11-12T23:59:00",
+ "first_response_timeout_s": 900,
+ "label": "E6b third-family judge (D-82): robustness check, not confirmatory",
+ "differences_from_M1": [
+  "a different model family (neither Qwen nor Gemma) and size",
+  "the same frozen server settings, prompts, decoding and evidence packages; its own server port and logs"
+ ],
+ "decisions": [
+  "D-82",
+  "D-83",
+  "D-85",
+  "D-90",
+  "D-95",
+  "D-109"
+ ],
+ "safety": {
+  "decision": "D-82",
+  "min_available_gib": 4.0,
+  "ram_check_every_calls": 25,
+  "latency_window_calls": 50,
+  "max_median_latency_s": 10.146,
+  "max_median_latency_rule": "3 x the candidate's Step 1 median wall time, written by `e6b.py feasibility` before any dev or test call",
+  "abort_on_server_crash_or_hang": true,
+  "on_abort": "no retry, no setting change; report what completed"
+ },
+ "safety_events": "data/extension/confirm/safety_events_e6b.jsonl",
+ "selection_gated": {
+  "decision": "D-87",
+  "experiments": [
+   "LOCAL_CONF_VOTE_E6B_F1",
+   "LOCAL_CONF_VOTE_E6B_F2"
+  ],
+  "selection_file": "results/e6b/selection.json"
+ }
+}

@@ -1,0 +1,232 @@
+{
+ "bug_name": "JacksonDatabind_111",
+ "call_sites": [
+  {
+   "line": 1093,
+   "lines": [
+    1088,
+    1089,
+    1090,
+    1091,
+    1092,
+    1093,
+    1094,
+    1095,
+    1096,
+    1097,
+    1098
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java",
+   "snippet": "            deser = type.getValueHandler();\n        }\n        if (deser != null) {\n            // As per [databind#462] need to ensure we contextualize deserializer before passing it on\n            deser = ctxt.handlePrimaryContextualization(deser, prop, type);\n            prop = prop.withValueDeserializer(deser);\n        }\n        return prop;\n    }\n\n    private PropertyName _findParamName(AnnotatedParameter param, AnnotationIntrospector intr)"
+  },
+  {
+   "line": 475,
+   "lines": [
+    470,
+    471,
+    472,
+    473,
+    474,
+    475,
+    476,
+    477,
+    478,
+    479,
+    480
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerBase.java",
+   "snippet": "                // [databind#125]: allow use of converters\n                JsonDeserializer<?> deser = findConvertingDeserializer(ctxt, prop);\n                if (deser == null) {\n                    deser = ctxt.findNonContextualValueDeserializer(prop.getType());\n                }\n                SettableBeanProperty newProp = prop.withValueDeserializer(deser);\n                _replaceProperty(_beanProperties, creatorProps, prop, newProp);\n            }\n        }\n\n        // Second loop: contextualize, find other pieces"
+  },
+  {
+   "line": 485,
+   "lines": [
+    480,
+    481,
+    482,
+    483,
+    484,
+    485,
+    486,
+    487,
+    488,
+    489,
+    490
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerBase.java",
+   "snippet": "        // Second loop: contextualize, find other pieces\n        for (SettableBeanProperty origProp : _beanProperties) {\n            SettableBeanProperty prop = origProp;\n            JsonDeserializer<?> deser = prop.getValueDeserializer();\n            deser = ctxt.handlePrimaryContextualization(deser, prop, prop.getType());\n            prop = prop.withValueDeserializer(deser);\n            // Need to link managed references with matching back references\n            prop = _resolveManagedReferenceProperty(ctxt, prop);\n\n            // [databind#351]: need to wrap properties that require object id resolution.\n            if (!(prop instanceof ManagedReferenceProperty)) {"
+  },
+  {
+   "line": 499,
+   "lines": [
+    494,
+    495,
+    496,
+    497,
+    498,
+    499,
+    500,
+    501,
+    502,
+    503,
+    504
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerBase.java",
+   "snippet": "            NameTransformer xform = _findPropertyUnwrapper(ctxt, prop);\n            if (xform != null) {\n                JsonDeserializer<Object> orig = prop.getValueDeserializer();\n                JsonDeserializer<Object> unwrapping = orig.unwrappingDeserializer(xform);\n                if (unwrapping != orig && unwrapping != null) {\n                    prop = prop.withValueDeserializer(unwrapping);\n                    if (unwrapped == null) {\n                        unwrapped = new UnwrappedPropertyHandler();\n                    }\n                    unwrapped.addProperty(prop);\n                    // 12-Dec-2014, tatu: As per [databind#647], we will have problems if"
+  },
+  {
+   "line": 541,
+   "lines": [
+    536,
+    537,
+    538,
+    539,
+    540,
+    541,
+    542,
+    543,
+    544,
+    545,
+    546
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerBase.java",
+   "snippet": "                }\n            }\n        }\n        // \"any setter\" may also need to be resolved now\n        if ((_anySetter != null) && !_anySetter.hasValueDeserializer()) {\n            _anySetter = _anySetter.withValueDeserializer(findDeserializer(ctxt,\n                    _anySetter.getType(), _anySetter.getProperty()));\n        }\n        // as well as delegate-based constructor:\n        if (_valueInstantiator.canCreateUsingDelegate()) {\n            JavaType delegateType = _valueInstantiator.getDelegateType(ctxt.getConfig());"
+  }
+ ],
+ "class_simple": "CreatorProperty",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * This concrete sub-class implements property that is passed\n * via Creator (constructor or static factory method).\n * It is not a full-featured implementation in that its set method\n * should usually not be called for primary mutation -- instead, value must separately passed --\n * but some aspects are still needed (specifically, injection).\n *<p>\n * Note on injectable values: unlike with other mutators, where\n * deserializer and injecting are separate, here we treat the two as related\n * things. This is necessary to add proper priority, as well as to simplify\n * coordination.\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "protected final AnnotatedParameter _annotated",
+  "protected final Object _injectableValueId",
+  "protected SettableBeanProperty _fallbackSetter",
+  "protected final int _creatorIndex",
+  "protected boolean _ignorable"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.deser.CreatorProperty",
+ "focal_id": "JacksonDatabind_111::com.fasterxml.jackson.databind.deser.CreatorProperty::withValueDeserializer(JsonDeserializer<?>)",
+ "focal_method_name": "withValueDeserializer",
+ "generations": 3,
+ "impl_B": "@Override\n    public SettableBeanProperty withValueDeserializer(JsonDeserializer<?> deser) {\n        if (_valueDeserializer == deser) {\n            return this;\n        }\n        // 07-May-2019, tatu: As per [databind#2303], must keep VD/NVP in-sync if they were\n        return new CreatorProperty(this, deser, _nullProvider);\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.lang.annotation.Annotation",
+  "com.fasterxml.jackson.core.JsonParser",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.exc.InvalidDefinitionException",
+  "com.fasterxml.jackson.databind.introspect.AnnotatedMember",
+  "com.fasterxml.jackson.databind.introspect.AnnotatedParameter",
+  "com.fasterxml.jackson.databind.jsontype.TypeDeserializer",
+  "com.fasterxml.jackson.databind.util.Annotations",
+  "com.fasterxml.jackson.databind.util.ClassUtil"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.deser",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "withName"
+  },
+  {
+   "javadoc": "",
+   "name": "withNullProvider"
+  },
+  {
+   "javadoc": "",
+   "name": "fixAccess"
+  },
+  {
+   "javadoc": "/**\n     * NOTE: one exception to immutability, due to problems with CreatorProperty instances\n     * being shared between Bean, separate PropertyBasedCreator\n     * \n     * @since 2.6\n     */",
+   "name": "setFallbackSetter"
+  },
+  {
+   "javadoc": "",
+   "name": "markAsIgnorable"
+  },
+  {
+   "javadoc": "",
+   "name": "isIgnorable"
+  },
+  {
+   "javadoc": "/**\n     * Method that can be called to locate value to be injected for this\n     * property, if it is configured for this.\n     */",
+   "name": "findInjectableValue"
+  },
+  {
+   "javadoc": "/**\n     * Method to find value to inject, and inject it to this property.\n     */",
+   "name": "inject"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getAnnotation"
+  },
+  {
+   "javadoc": "",
+   "name": "getMember"
+  },
+  {
+   "javadoc": "",
+   "name": "getCreatorIndex"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "deserializeAndSet"
+  },
+  {
+   "javadoc": "",
+   "name": "deserializeSetAndReturn"
+  },
+  {
+   "javadoc": "",
+   "name": "set"
+  },
+  {
+   "javadoc": "",
+   "name": "setAndReturn"
+  },
+  {
+   "javadoc": "",
+   "name": "getInjectableValueId"
+  },
+  {
+   "javadoc": "",
+   "name": "toString"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class CreatorProperty extends SettableBeanProperty",
+  "constructors": [
+   "public CreatorProperty(PropertyName name, JavaType type, PropertyName wrapperName, TypeDeserializer typeDeser, Annotations contextAnnotations, AnnotatedParameter param, int index, Object injectableValueId, PropertyMetadata metadata);",
+   "protected CreatorProperty(CreatorProperty src, PropertyName newName);",
+   "protected CreatorProperty(CreatorProperty src, JsonDeserializer<?> deser, NullValueProvider nva);"
+  ],
+  "focal_signature": "public SettableBeanProperty withValueDeserializer(JsonDeserializer<?> deser)",
+  "methods": [
+   "public SettableBeanProperty withName(PropertyName newName);",
+   "public SettableBeanProperty withNullProvider(NullValueProvider nva);",
+   "public void fixAccess(DeserializationConfig config);",
+   "public void setFallbackSetter(SettableBeanProperty fallbackSetter);",
+   "public void markAsIgnorable();",
+   "public boolean isIgnorable();",
+   "public Object findInjectableValue(DeserializationContext context, Object beanInstance) throws JsonMappingException;",
+   "public void inject(DeserializationContext context, Object beanInstance) throws IOException;",
+   "public <A extends Annotation> A getAnnotation(Class<A> acls);",
+   "public AnnotatedMember getMember();",
+   "public int getCreatorIndex();",
+   "public void deserializeAndSet(JsonParser p, DeserializationContext ctxt, Object instance) throws IOException;",
+   "public Object deserializeSetAndReturn(JsonParser p, DeserializationContext ctxt, Object instance) throws IOException;",
+   "public void set(Object instance, Object value) throws IOException;",
+   "public Object setAndReturn(Object instance, Object value) throws IOException;",
+   "public Object getInjectableValueId();",
+   "public String toString();"
+  ],
+  "type_signatures": [
+   "@SuppressWarnings(\"serial\") public abstract class SettableBeanProperty extends ConcreteBeanPropertyBase implements java.io.Serializable { protected SettableBeanProperty(BeanPropertyDefinition propDef, JavaType type, TypeDeserializer typeDeser, Annotations contextAnnotations); protected SettableBeanProperty(PropertyName propName, JavaType type, PropertyName wrapper, TypeDeserializer typeDeser, Annotations contextAnnotations, PropertyMetadata metadata); protected SettableBeanProperty(PropertyName propName, JavaType type, PropertyMetadata metadata, JsonDeserializer<Object> valueDeser); protected SettableBeanProperty(SettableBeanProperty src); protected SettableBeanProperty(SettableBeanProperty src, PropertyName newName); public abstract SettableBeanProperty withValueDeserializer(JsonDeserializer<?> deser); public abstract SettableBeanProperty withName(PropertyName newName); public SettableBeanProperty withSimpleName(String simpleName); public abstract SettableBeanProperty withNullProvider(NullValueProvider nva); public void setManagedReferenceName(String n); public void setObjectIdInfo(ObjectIdInfo objectIdInfo); public void setViews(Class<?>[] views); public void assignIndex(int index); public void fixAccess(DeserializationConfig config); public void markAsIgnorable(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

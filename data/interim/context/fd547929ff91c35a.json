@@ -1,0 +1,208 @@
+{
+  "bug_name": "JacksonCore_4",
+  "call_sites": [
+    {
+      "line": 2111,
+      "lines": [
+        2106,
+        2107,
+        2108,
+        2109,
+        2110,
+        2111,
+        2112,
+        2113,
+        2114,
+        2115,
+        2116
+      ],
+      "path": "src/main/java/com/fasterxml/jackson/core/json/UTF8StreamJsonParser.java",
+      "snippet": "                    }\n                }\n                if (needed > 2) { // surrogate pair? once again, let's output one here, one later on\n                    ch -= 0x10000; // to normalize it starting with 0x0\n                    if (cix >= cbuf.length) {\n                        cbuf = _textBuffer.expandCurrentSegment();\n                    }\n                    cbuf[cix++] = (char) (0xD800 + (ch >> 10));\n                    ch = 0xDC00 | (ch & 0x03FF);\n                }\n            }"
+    },
+    {
+      "line": 2118,
+      "lines": [
+        2113,
+        2114,
+        2115,
+        2116,
+        2117,
+        2118,
+        2119,
+        2120,
+        2121,
+        2122,
+        2123
+      ],
+      "path": "src/main/java/com/fasterxml/jackson/core/json/UTF8StreamJsonParser.java",
+      "snippet": "                    cbuf[cix++] = (char) (0xD800 + (ch >> 10));\n                    ch = 0xDC00 | (ch & 0x03FF);\n                }\n            }\n            if (cix >= cbuf.length) {\n                cbuf = _textBuffer.expandCurrentSegment();\n            }\n            cbuf[cix++] = (char) ch;\n        }\n\n        // Ok. Now we have the character array, and can construct the String"
+    }
+  ],
+  "class_simple": "TextBuffer",
+  "doc": {
+    "class_javadoc": "/**\n * TextBuffer is a class similar to {@link StringBuffer}, with\n * following differences:\n *<ul>\n *  <li>TextBuffer uses segments character arrays, to avoid having\n *     to do additional array copies when array is not big enough.\n *     This means that only reallocating that is necessary is done only once:\n *     if and when caller\n *     wants to access contents in a linear array (char[], String).\n *    </li>\n*  <li>TextBuffer can also be initialized in \"shared mode\", in which\n*     it will just act as a wrapper to a single char array managed\n*     by another object (like parser that owns it)\n *    </li>\n *  <li>TextBuffer is not synchronized.\n *    </li>\n * </ul>\n */\npublic final",
+    "method_javadoc": "/**\n     * Method called to expand size of the current segment, to\n     * accommodate for more contiguous content. Usually only\n     * used when parsing tokens like names if even then.\n     */"
+  },
+  "fields": [
+    "final static char[] NO_CHARS",
+    "final static int MIN_SEGMENT_LEN",
+    "final static int MAX_SEGMENT_LEN",
+    "private final BufferRecycler _allocator",
+    "private char[] _inputBuffer",
+    "private int _inputStart",
+    "private int _inputLen",
+    "private ArrayList<char[]> _segments",
+    "private boolean _hasSegments",
+    "private int _segmentSize",
+    "private char[] _currentSegment",
+    "private int _currentSize",
+    "private String _resultString",
+    "private char[] _resultArray"
+  ],
+  "focal_class": "com.fasterxml.jackson.core.util.TextBuffer",
+  "focal_id": "JacksonCore_4::com.fasterxml.jackson.core.util.TextBuffer::expandCurrentSegment()",
+  "focal_method_name": "expandCurrentSegment",
+  "impl_B": "public char[] expandCurrentSegment()\n    {\n        final char[] curr = _currentSegment;\n        // Let's grow by 50% by default\n        final int len = curr.length;\n        // but above intended maximum, slow to increase by 25%\n        int newLen = (len == MAX_SEGMENT_LEN) ? (MAX_SEGMENT_LEN+1) : Math.min(MAX_SEGMENT_LEN, len + (len >> 1));\n        return (_currentSegment = Arrays.copyOf(curr, newLen));\n    }",
+  "imports": [
+    "java.math.BigDecimal",
+    "java.util.ArrayList",
+    "java.util.Arrays",
+    "com.fasterxml.jackson.core.io.NumberInput"
+  ],
+  "javadoc_edited_by_fix": false,
+  "package": "com.fasterxml.jackson.core.util",
+  "project": "JacksonCore",
+  "siblings": [
+    {
+      "javadoc": "/**\n     * Method called to indicate that the underlying buffers should now\n     * be recycled if they haven't yet been recycled. Although caller\n     * can still use this text buffer, it is not advisable to call this\n     * method if that is likely, since next time a buffer is needed,\n     * buffers need to reallocated.\n     * Note: calling this method automatically also clears contents\n     * of the buffer.\n     */",
+      "name": "releaseBuffers"
+    },
+    {
+      "javadoc": "/**\n     * Method called to clear out any content text buffer may have, and\n     * initializes buffer to use non-shared data.\n     */",
+      "name": "resetWithEmpty"
+    },
+    {
+      "javadoc": "/**\n     * Method called to initialize the buffer with a shared copy of data;\n     * this means that buffer will just have pointers to actual data. It\n     * also means that if anything is to be appended to the buffer, it\n     * will first have to unshare it (make a local copy).\n     */",
+      "name": "resetWithShared"
+    },
+    {
+      "javadoc": "",
+      "name": "resetWithCopy"
+    },
+    {
+      "javadoc": "",
+      "name": "resetWithString"
+    },
+    {
+      "javadoc": "/**\n     * @return Number of characters currently stored by this collector\n     */",
+      "name": "size"
+    },
+    {
+      "javadoc": "",
+      "name": "getTextOffset"
+    },
+    {
+      "javadoc": "/**\n     * Method that can be used to check whether textual contents can\n     * be efficiently accessed using {@link #getTextBuffer}.\n     */",
+      "name": "hasTextAsCharacters"
+    },
+    {
+      "javadoc": "",
+      "name": "getTextBuffer"
+    },
+    {
+      "javadoc": "/**********************************************************\n     */",
+      "name": "contentsAsString"
+    },
+    {
+      "javadoc": "",
+      "name": "contentsAsArray"
+    },
+    {
+      "javadoc": "/**\n     * Convenience method for converting contents of the buffer\n     * into a {@link BigDecimal}.\n     */",
+      "name": "contentsAsDecimal"
+    },
+    {
+      "javadoc": "/**\n     * Convenience method for converting contents of the buffer\n     * into a Double value.\n     */",
+      "name": "contentsAsDouble"
+    },
+    {
+      "javadoc": "/**\n     * Method called to make sure that buffer is not using shared input\n     * buffer; if it is, it will copy such contents to private buffer.\n     */",
+      "name": "ensureNotShared"
+    },
+    {
+      "javadoc": "",
+      "name": "append"
+    },
+    {
+      "javadoc": "",
+      "name": "append"
+    },
+    {
+      "javadoc": "",
+      "name": "append"
+    },
+    {
+      "javadoc": "/**********************************************************\n     */",
+      "name": "getCurrentSegment"
+    },
+    {
+      "javadoc": "",
+      "name": "emptyAndGetCurrentSegment"
+    },
+    {
+      "javadoc": "",
+      "name": "getCurrentSegmentSize"
+    },
+    {
+      "javadoc": "",
+      "name": "setCurrentLength"
+    },
+    {
+      "javadoc": "",
+      "name": "finishCurrentSegment"
+    },
+    {
+      "javadoc": "/**\n     * Method called to expand size of the current segment, to\n     * accommodate for more contiguous content. Usually only\n     * used when parsing tokens like names if even then.\n     * \n     * @param minSize Required minimum strength of the current segment\n     *\n     * @since 2.4.0\n     */",
+      "name": "expandCurrentSegment"
+    },
+    {
+      "javadoc": "/**\n     * Note: calling this method may not be as efficient as calling\n     * {@link #contentsAsString}, since it's not guaranteed that resulting\n     * String is cached.\n     */",
+      "name": "toString"
+    }
+  ],
+  "sig": {
+    "class_declaration": "public final class TextBuffer",
+    "constructors": [
+      "public TextBuffer(BufferRecycler allocator);"
+    ],
+    "focal_signature": "public char[] expandCurrentSegment()",
+    "methods": [
+      "public void releaseBuffers();",
+      "public void resetWithEmpty();",
+      "public void resetWithShared(char[] buf, int start, int len);",
+      "public void resetWithCopy(char[] buf, int start, int len);",
+      "public void resetWithString(String value);",
+      "public int size();",
+      "public int getTextOffset();",
+      "public boolean hasTextAsCharacters();",
+      "public char[] getTextBuffer();",
+      "public String contentsAsString();",
+      "public char[] contentsAsArray();",
+      "public BigDecimal contentsAsDecimal() throws NumberFormatException;",
+      "public double contentsAsDouble() throws NumberFormatException;",
+      "public void ensureNotShared();",
+      "public void append(char c);",
+      "public void append(char[] c, int start, int len);",
+      "public void append(String str, int offset, int len);",
+      "public char[] getCurrentSegment();",
+      "public char[] emptyAndGetCurrentSegment();",
+      "public int getCurrentSegmentSize();",
+      "public void setCurrentLength(int len);",
+      "public char[] finishCurrentSegment();",
+      "public char[] expandCurrentSegment(int minSize);",
+      "public String toString();"
+    ],
+    "type_signatures": []
+  },
+  "split": "test"
+}

@@ -1,0 +1,147 @@
+{
+ "bug_name": "Closure_49",
+ "call_sites": [
+  {
+   "line": 130,
+   "lines": [
+    125,
+    126,
+    127,
+    128,
+    129,
+    130,
+    131,
+    132,
+    133,
+    134,
+    135
+   ],
+   "path": "src/com/google/javascript/jscomp/CombinedCompilerPass.java",
+   "snippet": "        waiting = null;\n      }\n    }\n\n    void shouldTraverseIfActive(NodeTraversal t, Node n, Node parent) {\n      if (isActive() && !callback.shouldTraverse(t, n, parent)) {\n        waiting = n;\n      }\n    }\n\n    void enterScopeIfActive(NodeTraversal t) {"
+  },
+  {
+   "line": 96,
+   "lines": [
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101
+   ],
+   "path": "src/com/google/javascript/jscomp/NodeTraversal.java",
+   "snippet": "     * {@link #visit(NodeTraversal, Node, Node)} in post order.</p>\n     * <p>Implementations can have side effects (e.g. modifying the parse\n     * tree).</p>\n     * @return whether the children of this node should be visited\n     */\n    boolean shouldTraverse(NodeTraversal nodeTraversal, Node n, Node parent);\n\n    /**\n     * <p>Visits a node in post order (after its children have been visited).\n     * A node is visited only if all its parents should be traversed\n     * ({@link #shouldTraverse(NodeTraversal, Node, Node)}).</p>"
+  },
+  {
+   "line": 479,
+   "lines": [
+    474,
+    475,
+    476,
+    477,
+    478,
+    479,
+    480,
+    481,
+    482,
+    483,
+    484
+   ],
+   "path": "src/com/google/javascript/jscomp/NodeTraversal.java",
+   "snippet": "      inputId = n.getInputId();\n      sourceName = getSourceName(n);\n    }\n\n    curNode = n;\n    if (!callback.shouldTraverse(this, n, parent)) return;\n\n    switch (type) {\n      case Token.FUNCTION:\n        traverseFunction(n, parent);\n        break;"
+  },
+  {
+   "line": 403,
+   "lines": [
+    398,
+    399,
+    400,
+    401,
+    402,
+    403,
+    404,
+    405,
+    406,
+    407,
+    408
+   ],
+   "path": "src/com/google/javascript/jscomp/SpecializeModule.java",
+   "snippet": "    public void match(Node ast1, Node ast2) {\n      // Just blunder ahead and assume that the two nodes actually match\n\n      reportMatch(ast1, ast2);\n\n      if (shouldTraverse(ast1, ast2)) {\n        Node childOf1 = ast1.getFirstChild();\n        Node childOf2 = ast2.getFirstChild();\n\n        while (childOf1 != null) {\n          match(childOf1, childOf2);"
+  }
+ ],
+ "class_simple": "MakeDeclaredNamesUnique",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n *  Find all Functions, VARs, and Exception names and make them\n *  unique.  Specifically, it will not modify object properties.\n *  @author johnlenz@google.com (John Lenz)\n *  TODO(johnlenz): Try to merge this with the ScopeCreator.\n */",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "public static final String ARGUMENTS",
+  "private Deque<Renamer> nameStack",
+  "private final Renamer rootRenamer"
+ ],
+ "focal_class": "com.google.javascript.jscomp.MakeDeclaredNamesUnique",
+ "focal_id": "Closure_49::com.google.javascript.jscomp.MakeDeclaredNamesUnique::shouldTraverse(NodeTraversal,Node,Node)",
+ "focal_method_name": "shouldTraverse",
+ "generations": 3,
+ "impl_B": "@Override\n  public boolean shouldTraverse(NodeTraversal t, Node n, Node parent) {\n\n    switch (n.getType()) {\n      case Token.FUNCTION:\n        {\n          // Add recursive function name, if needed.\n          // NOTE: \"enterScope\" is called after we need to pick up this name.\n          Renamer renamer = nameStack.peek().forChildScope();\n\n          // If needed, add the function recursive name.\n          String name = n.getFirstChild().getString();\n          if (name != null && !name.isEmpty() && parent != null\n              && !NodeUtil.isFunctionDeclaration(n)) {\n            renamer.addDeclaredName(name);\n          }\n\n\n\n          // Add the function parameters\n\n          // Add the function body declarations\n\n          nameStack.push(renamer);\n        }\n        break;\n\n      case Token.CATCH:\n        {\n          Renamer renamer = nameStack.peek().forChildScope();\n\n          String name = n.getFirstChild().getString();\n          renamer.addDeclaredName(name);\n\n          nameStack.push(renamer);\n        }\n        break;\n    }\n\n    return true;\n  }",
+ "imports": [
+  "com.google.common.base.Preconditions",
+  "com.google.common.base.Supplier",
+  "com.google.common.collect.HashMultiset",
+  "com.google.common.collect.ImmutableSet",
+  "com.google.common.collect.Lists",
+  "com.google.common.collect.Maps",
+  "com.google.common.collect.Multiset",
+  "com.google.common.collect.Sets",
+  "com.google.javascript.jscomp.NodeTraversal.ScopedCallback",
+  "com.google.javascript.jscomp.Scope.Var",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.Token",
+  "com.google.javascript.rhino.TokenStream",
+  "java.util.ArrayDeque",
+  "java.util.Deque",
+  "java.util.Iterator",
+  "java.util.List",
+  "java.util.Map",
+  "java.util.Set"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "enterScope"
+  },
+  {
+   "javadoc": "",
+   "name": "exitScope"
+  },
+  {
+   "javadoc": "",
+   "name": "visit"
+  }
+ ],
+ "sig": {
+  "class_declaration": "class MakeDeclaredNamesUnique implements NodeTraversal.ScopedCallback",
+  "constructors": [],
+  "focal_signature": "public boolean shouldTraverse(NodeTraversal t, Node n, Node parent)",
+  "methods": [
+   "public void enterScope(NodeTraversal t);",
+   "public void exitScope(NodeTraversal t);",
+   "public void visit(NodeTraversal t, Node n, Node parent);"
+  ],
+  "type_signatures": [
+   "public class NodeTraversal { public NodeTraversal(AbstractCompiler compiler, Callback cb); public NodeTraversal(AbstractCompiler compiler, Callback cb, ScopeCreator scopeCreator); public void traverse(Node root); public void traverseRoots(Node ... roots); public void traverseRoots(List<Node> roots); protected void traverseInnerNode(Node node, Node parent, Scope refinedScope); public Compiler getCompiler(); public int getLineNumber(); public String getSourceName(); public CompilerInput getInput(); public JSModule getModule(); public Node getCurrentNode(); public static void traverse( AbstractCompiler compiler, Node root, Callback cb); public static void traverseRoots( AbstractCompiler compiler, List<Node> roots, Callback cb); public Scope getScope(); }",
+   "public class Node implements Cloneable, Serializable { public Node(int nodeType); public Node(int nodeType, Node child); public Node(int nodeType, Node left, Node right); public Node(int nodeType, Node left, Node mid, Node right); public Node(int nodeType, Node left, Node mid, Node mid2, Node right); public Node(int nodeType, int lineno, int charno); public Node(int nodeType, Node child, int lineno, int charno); public Node(int nodeType, Node left, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node mid2, Node right, int lineno, int charno); public Node(int nodeType, Node[] children, int lineno, int charno); public Node(int nodeType, Node[] children); public static Node newNumber(double number); public static Node newNumber(double number, int lineno, int charno); public static Node newString(String str); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

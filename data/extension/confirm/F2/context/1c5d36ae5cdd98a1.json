@@ -1,0 +1,255 @@
+{
+ "bug_name": "JacksonCore_14",
+ "call_sites": [
+  {
+   "line": 211,
+   "lines": [
+    206,
+    207,
+    208,
+    209,
+    210,
+    211,
+    212,
+    213,
+    214,
+    215,
+    216
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/io/IOContext.java",
+   "snippet": "    public void releaseReadIOBuffer(byte[] buf) {\n        if (buf != null) {\n            /* Let's do sanity checks to ensure once-and-only-once release,\n             * as well as avoiding trying to release buffers not owned\n             */\n            _verifyRelease(buf, _readIOBuffer);\n            _readIOBuffer = null;\n            _bufferRecycler.releaseByteBuffer(BufferRecycler.BYTE_READ_IO_BUFFER, buf);\n        }\n    }\n"
+  },
+  {
+   "line": 222,
+   "lines": [
+    217,
+    218,
+    219,
+    220,
+    221,
+    222,
+    223,
+    224,
+    225,
+    226,
+    227
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/io/IOContext.java",
+   "snippet": "    public void releaseWriteEncodingBuffer(byte[] buf) {\n        if (buf != null) {\n            /* Let's do sanity checks to ensure once-and-only-once release,\n             * as well as avoiding trying to release buffers not owned\n             */\n            _verifyRelease(buf, _writeEncodingBuffer);\n            _writeEncodingBuffer = null;\n            _bufferRecycler.releaseByteBuffer(BufferRecycler.BYTE_WRITE_ENCODING_BUFFER, buf);\n        }\n    }\n"
+  },
+  {
+   "line": 230,
+   "lines": [
+    225,
+    226,
+    227,
+    228,
+    229,
+    230,
+    231,
+    232,
+    233,
+    234,
+    235
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/io/IOContext.java",
+   "snippet": "        }\n    }\n\n    public void releaseBase64Buffer(byte[] buf) {\n        if (buf != null) { // sanity checks, release once-and-only-once, must be one owned\n            _verifyRelease(buf, _base64Buffer);\n            _base64Buffer = null;\n            _bufferRecycler.releaseByteBuffer(BufferRecycler.BYTE_BASE64_CODEC_BUFFER, buf);\n        }\n    }\n    "
+  },
+  {
+   "line": 238,
+   "lines": [
+    233,
+    234,
+    235,
+    236,
+    237,
+    238,
+    239,
+    240,
+    241,
+    242,
+    243
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/io/IOContext.java",
+   "snippet": "        }\n    }\n    \n    public void releaseTokenBuffer(char[] buf) {\n        if (buf != null) {\n            _verifyRelease(buf, _tokenCBuffer);\n            _tokenCBuffer = null;\n            _bufferRecycler.releaseCharBuffer(BufferRecycler.CHAR_TOKEN_BUFFER, buf);\n        }\n    }\n"
+  },
+  {
+   "line": 247,
+   "lines": [
+    242,
+    243,
+    244,
+    245,
+    246,
+    247,
+    248,
+    249,
+    250,
+    251,
+    252
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/io/IOContext.java",
+   "snippet": "    }\n\n    public void releaseConcatBuffer(char[] buf) {\n        if (buf != null) {\n            // 14-Jan-2014, tatu: Let's actually allow upgrade of the original buffer.\n            _verifyRelease(buf, _concatCBuffer);\n            _concatCBuffer = null;\n            _bufferRecycler.releaseCharBuffer(BufferRecycler.CHAR_CONCAT_BUFFER, buf);\n        }\n    }\n"
+  }
+ ],
+ "class_simple": "IOContext",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * To limit number of configuration and state objects to pass, all\n * contextual objects that need to be passed by the factory to\n * readers and writers are combined under this object. One instance\n * is created for each reader and writer.\n *<p>\n * NOTE: non-final since 2.4, to allow sub-classing.\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "protected final Object _sourceRef",
+  "protected JsonEncoding _encoding",
+  "protected final boolean _managedResource",
+  "protected final BufferRecycler _bufferRecycler",
+  "protected byte[] _readIOBuffer",
+  "protected byte[] _writeEncodingBuffer",
+  "protected byte[] _base64Buffer",
+  "protected char[] _tokenCBuffer",
+  "protected char[] _concatCBuffer",
+  "protected char[] _nameCopyBuffer"
+ ],
+ "focal_class": "com.fasterxml.jackson.core.io.IOContext",
+ "focal_id": "JacksonCore_14::com.fasterxml.jackson.core.io.IOContext::_verifyRelease(byte[],byte[])",
+ "focal_method_name": "_verifyRelease",
+ "generations": 3,
+ "impl_B": "protected final void _verifyRelease(byte[] toRelease, byte[] src) {\n        // 07-Mar-2016, tatu: As per [core#255], only prevent shrinking of buffer\n        if ((toRelease != src) && (toRelease.length <= src.length)) { throw wrongBuf(); }\n    }",
+ "imports": [
+  "com.fasterxml.jackson.core.JsonEncoding",
+  "com.fasterxml.jackson.core.util.BufferRecycler",
+  "com.fasterxml.jackson.core.util.TextBuffer"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.core.io",
+ "project": "JacksonCore",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "setEncoding"
+  },
+  {
+   "javadoc": "/**\n     * @since 1.6\n     */",
+   "name": "withEncoding"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getSourceReference"
+  },
+  {
+   "javadoc": "",
+   "name": "getEncoding"
+  },
+  {
+   "javadoc": "",
+   "name": "isResourceManaged"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "constructTextBuffer"
+  },
+  {
+   "javadoc": "/**\n     *<p>\n     * Note: the method can only be called once during its life cycle.\n     * This is to protect against accidental sharing.\n     */",
+   "name": "allocReadIOBuffer"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.4\n     */",
+   "name": "allocReadIOBuffer"
+  },
+  {
+   "javadoc": "",
+   "name": "allocWriteEncodingBuffer"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.4\n     */",
+   "name": "allocWriteEncodingBuffer"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.1\n     */",
+   "name": "allocBase64Buffer"
+  },
+  {
+   "javadoc": "",
+   "name": "allocTokenBuffer"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.4\n     */",
+   "name": "allocTokenBuffer"
+  },
+  {
+   "javadoc": "",
+   "name": "allocConcatBuffer"
+  },
+  {
+   "javadoc": "",
+   "name": "allocNameCopyBuffer"
+  },
+  {
+   "javadoc": "/**\n     * Method to call when all the processing buffers can be safely\n     * recycled.\n     */",
+   "name": "releaseReadIOBuffer"
+  },
+  {
+   "javadoc": "",
+   "name": "releaseWriteEncodingBuffer"
+  },
+  {
+   "javadoc": "",
+   "name": "releaseBase64Buffer"
+  },
+  {
+   "javadoc": "",
+   "name": "releaseTokenBuffer"
+  },
+  {
+   "javadoc": "",
+   "name": "releaseConcatBuffer"
+  },
+  {
+   "javadoc": "",
+   "name": "releaseNameCopyBuffer"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_verifyAlloc"
+  },
+  {
+   "javadoc": "",
+   "name": "_verifyRelease"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class IOContext",
+  "constructors": [
+   "public IOContext(BufferRecycler br, Object sourceRef, boolean managedResource);"
+  ],
+  "focal_signature": "protected final void _verifyRelease(byte[] toRelease, byte[] src)",
+  "methods": [
+   "public void setEncoding(JsonEncoding enc);",
+   "public IOContext withEncoding(JsonEncoding enc);",
+   "public Object getSourceReference();",
+   "public JsonEncoding getEncoding();",
+   "public boolean isResourceManaged();",
+   "public TextBuffer constructTextBuffer();",
+   "public byte[] allocReadIOBuffer();",
+   "public byte[] allocReadIOBuffer(int minSize);",
+   "public byte[] allocWriteEncodingBuffer();",
+   "public byte[] allocWriteEncodingBuffer(int minSize);",
+   "public byte[] allocBase64Buffer();",
+   "public char[] allocTokenBuffer();",
+   "public char[] allocTokenBuffer(int minSize);",
+   "public char[] allocConcatBuffer();",
+   "public char[] allocNameCopyBuffer(int minSize);",
+   "public void releaseReadIOBuffer(byte[] buf);",
+   "public void releaseWriteEncodingBuffer(byte[] buf);",
+   "public void releaseBase64Buffer(byte[] buf);",
+   "public void releaseTokenBuffer(char[] buf);",
+   "public void releaseConcatBuffer(char[] buf);",
+   "public void releaseNameCopyBuffer(char[] buf);",
+   "protected final void _verifyAlloc(Object buffer);",
+   "protected final void _verifyRelease(char[] toRelease, char[] src);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

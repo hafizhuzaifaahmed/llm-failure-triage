@@ -1,0 +1,125 @@
+{
+ "bug_name": "Math_32",
+ "call_sites": [
+  {
+   "line": 71,
+   "lines": [
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76
+   ],
+   "path": "src/main/java/org/apache/commons/math3/geometry/euclidean/threed/OutlineExtractor.java",
+   "snippet": "        final BoundaryProjector projector = new BoundaryProjector();\n        polyhedronsSet.getTree(true).visit(projector);\n        final PolygonsSet projected = projector.getProjected();\n\n        // Remove the spurious intermediate vertices from the outline\n        final Vector2D[][] outline = projected.getVertices();\n        for (int i = 0; i < outline.length; ++i) {\n            final Vector2D[] rawLoop = outline[i];\n            int end = rawLoop.length;\n            int j = 0;\n            while (j < end) {"
+  },
+  {
+   "line": 170,
+   "lines": [
+    165,
+    166,
+    167,
+    168,
+    169,
+    170,
+    171,
+    172,
+    173,
+    174,
+    175
+   ],
+   "path": "src/main/java/org/apache/commons/math3/geometry/euclidean/threed/OutlineExtractor.java",
+   "snippet": "            final Plane plane    = (Plane) facet.getHyperplane();\n\n            final double scal = plane.getNormal().dotProduct(w);\n            if (FastMath.abs(scal) > 1.0e-3) {\n                Vector2D[][] vertices =\n                    ((PolygonsSet) absFacet.getRemainingRegion()).getVertices();\n\n                if ((scal < 0) ^ reversed) {\n                    // the facet is seen from the inside,\n                    // we need to invert its boundary orientation\n                    final Vector2D[][] newVertices = new Vector2D[vertices.length][];"
+  },
+  {
+   "line": 132,
+   "lines": [
+    127,
+    128,
+    129,
+    130,
+    131,
+    132,
+    133,
+    134,
+    135,
+    136,
+    137
+   ],
+   "patch_lines_removed": true,
+   "path": "src/main/java/org/apache/commons/math3/geometry/euclidean/twod/PolygonsSet.java",
+   "snippet": "\n    /** {@inheritDoc} */\n    @Override\n    protected void computeGeometricalProperties() {\n\n        final Vector2D[][] v = getVertices();\n\n        if (v.length == 0) {\n            final BSPTree<Euclidean2D> tree = getTree(false);"
+  }
+ ],
+ "class_simple": "PolygonsSet",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/** This class represents a 2D region: a set of polygons.\n * @version $Id$\n * @since 3.0\n */\npublic",
+  "method_javadoc": "/** Get the vertices of the polygon.\n     * <p>The polygon boundary can be represented as an array of loops,\n     * each loop being itself an array of vertices.</p>\n     * <p>In order to identify open loops which start and end by\n     * infinite edges, the open loops arrays start with a null point. In\n     * this case, the first non null point and the last point of the\n     * array do not represent real vertices, they are dummy points\n     * intended only to get the direction of the first and last edge. An\n     * open loop consisting of a single infinite line will therefore be\n     * represented by a three elements array with one null point\n     * followed by two dummy points. The open loops are always the first\n     * ones in the loops array.</p>\n     * <p>If the polygon has no boundary at all, a zero length loop\n     * array will be returned.</p>\n     * <p>All line segments in the various loops have the inside of the\n     * region on their left side and the outside on their right side\n     * when moving in the underlying line direction. This means that\n     * closed loops surrounding finite areas obey the direct\n     * trigonometric orientation.</p>\n     * @return vertices of the polygon, organized as oriented boundary\n     * loops with the open loops first (the returned value is guaranteed\n     * to be non-null)\n     */"
+ },
+ "fields": [
+  "private Vector2D[][] vertices"
+ ],
+ "focal_class": "org.apache.commons.math3.geometry.euclidean.twod.PolygonsSet",
+ "focal_id": "Math_32::org.apache.commons.math3.geometry.euclidean.twod.PolygonsSet::getVertices()",
+ "focal_method_name": "getVertices",
+ "generations": 3,
+ "impl_B": "public Vector2D[][] getVertices() {\n        if (vertices == null) {\n            if (getTree(false).getCut() == null) {\n                vertices = new Vector2D[0][];\n            } else {\n\n                // sort the segments according to their start point\n                final SegmentsBuilder visitor = new SegmentsBuilder();\n                getTree(true).visit(visitor);\n                final AVLTree<ComparableSegment> sorted = visitor.getSorted();\n\n                // identify the loops, starting from the open ones\n                // (their start segments are naturally at the sorted set beginning)\n                final ArrayList<List<ComparableSegment>> loops = new ArrayList<List<ComparableSegment>>();\n                while (!sorted.isEmpty()) {\n                    final AVLTree<ComparableSegment>.Node node = sorted.getSmallest();\n                    final List<ComparableSegment> loop = followLoop(node, sorted);\n                    if (loop != null) {\n                        loops.add(loop);\n                    }\n                }\n\n                // tranform the loops in an array of arrays of points\n                vertices = new Vector2D[loops.size()][];\n                int i = 0;\n\n                for (final List<ComparableSegment> loop : loops) {\n                    if (loop.size() < 2) {\n                        // single infinite line\n                        final Line line = loop.get(0).getLine();\n                        vertices[i++] = new Vector2D[] {\n                            null,\n                            line.toSpace(new Vector1D(-Float.MAX_VALUE)),\n                            line.toSpace(new Vector1D(+Float.MAX_VALUE))\n                        };\n                    } else if (loop.get(0).getStart() == null) {\n                        // open loop with at least one real point\n                        final Vector2D[] array = new Vector2D[loop.size() + 2];\n                        int j = 0;\n                        for (Segment segment : loop) {\n\n                            if (j == 0) {\n                                // null point and first dummy point\n                                double x = segment.getLine().toSubSpace(segment.getEnd()).getX();\n                                x -= FastMath.max(1.0, FastMath.abs(x / 2));\n                                array[j++] = null;\n                                array[j++] = segment.getLine().toSpace(new Vector1D(x));\n                            }\n\n                            if (j < (array.length - 1)) {\n                                // current point\n                                array[j++] = segment.getEnd();\n                            }\n\n                            if (j == (array.length - 1)) {\n                                // last dummy point\n                                double x = segment.getLine().toSubSpace(segment.getStart()).getX();\n                                x += FastMath.max(1.0, FastMath.abs(x / 2));\n                                array[j++] = segment.getLine().toSpace(new Vector1D(x));\n                            }\n\n                        }\n                        vertices[i++] = array;\n                    } else {\n                        final Vector2D[] array = new Vector2D[loop.size()];\n                        int j = 0;\n                        for (Segment segment : loop) {\n                            array[j++] = segment.getStart();\n                        }\n                        vertices[i++] = array;\n                    }\n                }\n\n            }\n        }\n\n        return vertices.clone();\n\n    }",
+ "imports": [
+  "java.util.ArrayList",
+  "java.util.Collection",
+  "java.util.List",
+  "org.apache.commons.math3.exception.MathInternalError",
+  "org.apache.commons.math3.geometry.euclidean.oned.Euclidean1D",
+  "org.apache.commons.math3.geometry.euclidean.oned.Interval",
+  "org.apache.commons.math3.geometry.euclidean.oned.IntervalsSet",
+  "org.apache.commons.math3.geometry.euclidean.oned.Vector1D",
+  "org.apache.commons.math3.geometry.partitioning.AbstractSubHyperplane",
+  "org.apache.commons.math3.geometry.partitioning.BSPTree",
+  "org.apache.commons.math3.geometry.partitioning.BSPTreeVisitor",
+  "org.apache.commons.math3.geometry.partitioning.BoundaryAttribute",
+  "org.apache.commons.math3.geometry.partitioning.SubHyperplane",
+  "org.apache.commons.math3.geometry.partitioning.AbstractRegion",
+  "org.apache.commons.math3.geometry.partitioning.utilities.AVLTree",
+  "org.apache.commons.math3.geometry.partitioning.utilities.OrderedTuple",
+  "org.apache.commons.math3.util.FastMath"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math3.geometry.euclidean.twod",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "buildNew"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "computeGeometricalProperties"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class PolygonsSet extends AbstractRegion<Euclidean2D, Euclidean1D>",
+  "constructors": [
+   "public PolygonsSet();",
+   "public PolygonsSet(final BSPTree<Euclidean2D> tree);",
+   "public PolygonsSet(final Collection<SubHyperplane<Euclidean2D>> boundary);",
+   "public PolygonsSet(final double xMin, final double xMax, final double yMin, final double yMax);"
+  ],
+  "focal_signature": "public Vector2D[][] getVertices()",
+  "methods": [
+   "public PolygonsSet buildNew(final BSPTree<Euclidean2D> tree);",
+   "protected void computeGeometricalProperties();"
+  ],
+  "type_signatures": [
+   "public class Vector2D implements Vector<Euclidean2D> { public Vector2D(double x, double y); public Vector2D(double[] v) throws DimensionMismatchException; public Vector2D(double a, Vector2D u); public Vector2D(double a1, Vector2D u1, double a2, Vector2D u2); public Vector2D(double a1, Vector2D u1, double a2, Vector2D u2, double a3, Vector2D u3); public Vector2D(double a1, Vector2D u1, double a2, Vector2D u2, double a3, Vector2D u3, double a4, Vector2D u4); public double getX(); public double getY(); public double[] toArray(); public Space getSpace(); public Vector2D getZero(); public double getNorm1(); public double getNorm(); public double getNormSq(); public double getNormInf(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

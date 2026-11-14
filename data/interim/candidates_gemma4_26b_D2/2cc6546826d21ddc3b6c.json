@@ -1,0 +1,13 @@
+{
+  "assembled": true,
+  "call_key": "5e110bf1d03aca27ff611675310c2718334b2579d628ce21ee6ab4d223eb48cb",
+  "candidate_id": "2cc6546826d21ddc3b6c",
+  "class_name": "FieldUtils_safeMultiply_TriageGen1Test",
+  "dataset": "D2",
+  "focal_id": "Time_15::org.joda.time.field.FieldUtils::safeMultiply(long,int)#m100",
+  "generation": 1,
+  "model_returned": "gemma4:26b",
+  "n_tests": 5,
+  "package": "org.joda.time.field",
+  "source": "package org.joda.time.field;\n\nimport java.io.*;\nimport java.math.*;\nimport java.util.*;\nimport org.joda.time.DateTimeField;\nimport org.joda.time.DateTimeFieldType;\nimport org.joda.time.IllegalFieldValueException;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class FieldUtils_safeMultiply_TriageGen1Test {\n\n    @Test\n    public void testSafeMultiply_CaseMinusOne_Normal() {\n        // Tests case -1 where val1 is not Long.MIN_VALUE\n        assertEquals(10L, FieldUtils.safeMultiply(10L, -1));\n        assertEquals(-5L, FieldUtils.safeMultiply(5L, -1));\n        assertEquals(0L, FieldUtils.safeMultiply(0L, -1));\n    }\n\n    @Test(expected = ArithmeticException.class)\n    public void testSafeMultiply_CaseMinusOne_Overflow() {\n        // Tests case -1 where val1 is Long.MIN_VALUE (overflows when negated)\n        FieldUtils.safeMultiply(Long.MIN_VALUE, -1);\n    }\n\n    @Test\n    public void testSafeMultiply_CaseZero() {\n        // Tests case 0\n        assertEquals(0L, FieldUtils.safeMultiply(100L, 0));\n        assertEquals(0L, FieldUtils.safeMultiply(-100L, 0));\n        assertEquals(0L, FieldUtils.safeMultiply(0L, 0));\n    }\n\n    @Test\n    public void testSafeMultiply_CaseOne() {\n        // Tests case 1\n        assertEquals(100L, FieldUtils.safeMultiply(100L, 1));\n        assertEquals(-100L, FieldUtils.safeMultiply(-100L, 1));\n        assertEquals(0L, FieldUtils.safeMultiply(0L, 1));\n    }\n\n    @Test(expected = ArithmeticException.class)\n    public void testSafeMultiply_DefaultCase_ThrowsException() {\n        // Tests the default case (val2 not in -1, 0, 1)\n        // Due to the 'if (true)' block in the provided code, this will always throw\n        FieldUtils.safeMultiply(10L, 2);\n    }\n}\n"
+}

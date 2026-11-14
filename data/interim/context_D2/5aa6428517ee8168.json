@@ -1,0 +1,334 @@
+{
+ "base_focal_id": "Compress_15::org.apache.commons.compress.archivers.zip.ZipArchiveEntry::equals(Object)",
+ "bug_name": "Compress_15",
+ "call_sites": [
+  {
+   "line": 184,
+   "lines": [
+    179,
+    180,
+    181,
+    182,
+    183,
+    184,
+    185,
+    186,
+    187,
+    188,
+    189
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveEntry.java",
+   "snippet": "        ArArchiveEntry other = (ArArchiveEntry) obj;\n        if (name == null) {\n            if (other.name != null) {\n                return false;\n            }\n        } else if (!name.equals(other.name)) {\n            return false;\n        }\n        return true;\n    }\n}"
+  },
+  {
+   "line": 385,
+   "lines": [
+    380,
+    381,
+    382,
+    383,
+    384,
+    385,
+    386,
+    387,
+    388,
+    389,
+    390
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream.java",
+   "snippet": "     * long filenames, each separated by one or more LF\n     * characters. Note that the decimal offsets are number of\n     * characters, not line or string number within the \"//\" file.</p>\n     */\n    private static boolean isGNUStringTable(String name) {\n        return GNU_STRING_TABLE_NAME.equals(name);\n    }\n\n    /**\n     * Reads the GNU archive String Table.\n     *"
+  },
+  {
+   "line": 509,
+   "lines": [
+    504,
+    505,
+    506,
+    507,
+    508,
+    509,
+    510,
+    511,
+    512,
+    513,
+    514
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveEntry.java",
+   "snippet": "     * Get the mode of this entry (e.g. directory, regular file).\n     * \n     * @return Returns the mode.\n     */\n    public long getMode() {\n        return mode == 0 && !CPIO_TRAILER.equals(name) ? C_ISREG : mode;\n    }\n\n    /**\n     * Get the name.\n     * "
+  },
+  {
+   "line": 885,
+   "lines": [
+    880,
+    881,
+    882,
+    883,
+    884,
+    885,
+    886,
+    887,
+    888,
+    889,
+    890
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveEntry.java",
+   "snippet": "        CpioArchiveEntry other = (CpioArchiveEntry) obj;\n        if (name == null) {\n            if (other.name != null) {\n                return false;\n            }\n        } else if (!name.equals(other.name)) {\n            return false;\n        }\n        return true;\n    }\n}"
+  },
+  {
+   "line": 182,
+   "lines": [
+    177,
+    178,
+    179,
+    180,
+    181,
+    182,
+    183,
+    184,
+    185,
+    186,
+    187
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStream.java",
+   "snippet": "            byte tmp[] = new byte[6];\n            System.arraycopy(magic, 0, tmp, 0, magic.length);\n            System.arraycopy(more_magic, 0, tmp, magic.length,\n                    more_magic.length);\n            String magicString = ArchiveUtils.toAsciiString(tmp);\n            if (magicString.equals(MAGIC_NEW)) {\n                this.entry = readNewEntry(false);\n            } else if (magicString.equals(MAGIC_NEW_CRC)) {\n                this.entry = readNewEntry(true);\n            } else if (magicString.equals(MAGIC_OLD_ASCII)) {\n                this.entry = readOldAsciiEntry();"
+  }
+ ],
+ "class_simple": "ZipArchiveEntry",
+ "dataset": "D2",
+ "doc": {
+  "class_javadoc": "/**\n * Extension that adds better handling of extra fields and provides\n * access to the internal and external file attributes.\n *\n * <p>The extra data is expected to follow the recommendation of\n * {@link <a href=\"http://www.pkware.com/documents/casestudies/APPNOTE.TXT\">\n * APPNOTE.txt</a>}:</p>\n * <ul>\n *   <li>the extra byte array consists of a sequence of extra fields</li>\n *   <li>each extra fields starts by a two byte header id followed by\n *   a two byte sequence holding the length of the remainder of\n *   data.</li>\n * </ul>\n *\n * <p>Any extra data that cannot be parsed by the rules above will be\n * consumed as \"unparseable\" extra data and treated differently by the\n * methods of this class.  Versions prior to Apache Commons Compress\n * 1.1 would have thrown an exception if any attempt was made to read\n * or write extra data not conforming to the recommendation.</p>\n *\n * @NotThreadSafe\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "public static final int PLATFORM_UNIX",
+  "public static final int PLATFORM_FAT",
+  "private static final int SHORT_MASK",
+  "private static final int SHORT_SHIFT",
+  "private int method",
+  "private long size",
+  "private int internalAttributes",
+  "private int platform",
+  "private long externalAttributes",
+  "private LinkedHashMap<ZipShort, ZipExtraField> extraFields",
+  "private UnparseableExtraFieldData unparseableExtra",
+  "private String name",
+  "private byte[] rawName",
+  "private GeneralPurposeBit gpb"
+ ],
+ "focal_class": "org.apache.commons.compress.archivers.zip.ZipArchiveEntry",
+ "focal_id": "Compress_15::org.apache.commons.compress.archivers.zip.ZipArchiveEntry::equals(Object)#m256",
+ "focal_method_name": "equals",
+ "impl_B": "@Override\n    public boolean equals(Object obj) {\n        if (this == obj) {\n            return true;\n        }\n        if (obj == null || getClass() != obj.getClass()) {\n            return false;\n        }\n        ZipArchiveEntry other = (ZipArchiveEntry) obj;\n        String myName = getName();\n        String otherName = other.getName();\n        if (myName == null) {\n            if (otherName != null) {\n                return false;\n            }\n        } else if (!myName.equals(otherName)) {\n            return false;\n        }\n        String myComment = getComment();\n        String otherComment = other.getComment();\n        if (myComment == null) {\n            myComment = \"\";\n        }\n        if (otherComment == null) {\n            otherComment = \"\";\n        }\n        return Arrays.equals(getLocalFileDataExtra(), other.getLocalFileDataExtra())\n            && gpb.equals(other.gpb);\n    }",
+ "imports": [
+  "java.io.File",
+  "java.util.ArrayList",
+  "java.util.Arrays",
+  "java.util.Date",
+  "java.util.LinkedHashMap",
+  "java.util.List",
+  "java.util.zip.ZipException",
+  "org.apache.commons.compress.archivers.ArchiveEntry"
+ ],
+ "javadoc_edited_by_fix": false,
+ "mutant_id": 256,
+ "operator": "COR",
+ "package": "org.apache.commons.compress.archivers.zip",
+ "project": "Compress",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Overwrite clone.\n     * @return a cloned copy of this ZipArchiveEntry\n     */",
+   "name": "clone"
+  },
+  {
+   "javadoc": "/**\n     * Returns the compression method of this entry, or -1 if the\n     * compression method has not been specified.\n     *\n     * @return compression method\n     *\n     * @since 1.1\n     */",
+   "name": "getMethod"
+  },
+  {
+   "javadoc": "/**\n     * Sets the compression method of this entry.\n     *\n     * @param method compression method\n     *\n     * @since 1.1\n     */",
+   "name": "setMethod"
+  },
+  {
+   "javadoc": "/**\n     * Retrieves the internal file attributes.\n     *\n     * @return the internal file attributes\n     */",
+   "name": "getInternalAttributes"
+  },
+  {
+   "javadoc": "/**\n     * Sets the internal file attributes.\n     * @param value an <code>int</code> value\n     */",
+   "name": "setInternalAttributes"
+  },
+  {
+   "javadoc": "/**\n     * Retrieves the external file attributes.\n     * @return the external file attributes\n     */",
+   "name": "getExternalAttributes"
+  },
+  {
+   "javadoc": "/**\n     * Sets the external file attributes.\n     * @param value an <code>long</code> value\n     */",
+   "name": "setExternalAttributes"
+  },
+  {
+   "javadoc": "/**\n     * Sets Unix permissions in a way that is understood by Info-Zip's\n     * unzip command.\n     * @param mode an <code>int</code> value\n     */",
+   "name": "setUnixMode"
+  },
+  {
+   "javadoc": "/**\n     * Unix permission.\n     * @return the unix permissions\n     */",
+   "name": "getUnixMode"
+  },
+  {
+   "javadoc": "/**\n     * Platform specification to put into the &quot;version made\n     * by&quot; part of the central file header.\n     *\n     * @return PLATFORM_FAT unless {@link #setUnixMode setUnixMode}\n     * has been called, in which case PLATORM_UNIX will be returned.\n     */",
+   "name": "getPlatform"
+  },
+  {
+   "javadoc": "/**\n     * Set the platform (UNIX or FAT).\n     * @param platform an <code>int</code> value - 0 is FAT, 3 is UNIX\n     */",
+   "name": "setPlatform"
+  },
+  {
+   "javadoc": "/**\n     * Replaces all currently attached extra fields with the new array.\n     * @param fields an array of extra fields\n     */",
+   "name": "setExtraFields"
+  },
+  {
+   "javadoc": "/**\n     * Retrieves all extra fields that have been parsed successfully.\n     * @return an array of the extra fields\n     */",
+   "name": "getExtraFields"
+  },
+  {
+   "javadoc": "/**\n     * Retrieves extra fields.\n     * @param includeUnparseable whether to also return unparseable\n     * extra fields as {@link UnparseableExtraFieldData} if such data\n     * exists.\n     * @return an array of the extra fields\n     *\n     * @since 1.1\n     */",
+   "name": "getExtraFields"
+  },
+  {
+   "javadoc": "/**\n     * Adds an extra field - replacing an already present extra field\n     * of the same type.\n     *\n     * <p>If no extra field of the same type exists, the field will be\n     * added as last field.</p>\n     * @param ze an extra field\n     */",
+   "name": "addExtraField"
+  },
+  {
+   "javadoc": "/**\n     * Adds an extra field - replacing an already present extra field\n     * of the same type.\n     *\n     * <p>The new extra field will be the first one.</p>\n     * @param ze an extra field\n     */",
+   "name": "addAsFirstExtraField"
+  },
+  {
+   "javadoc": "/**\n     * Remove an extra field.\n     * @param type the type of extra field to remove\n     */",
+   "name": "removeExtraField"
+  },
+  {
+   "javadoc": "/**\n     * Removes unparseable extra field data.\n     *\n     * @since 1.1\n     */",
+   "name": "removeUnparseableExtraFieldData"
+  },
+  {
+   "javadoc": "/**\n     * Looks up an extra field by its header id.\n     *\n     * @return null if no such field exists.\n     */",
+   "name": "getExtraField"
+  },
+  {
+   "javadoc": "/**\n     * Looks up extra field data that couldn't be parsed correctly.\n     *\n     * @return null if no such field exists.\n     *\n     * @since 1.1\n     */",
+   "name": "getUnparseableExtraFieldData"
+  },
+  {
+   "javadoc": "/**\n     * Parses the given bytes as extra field data and consumes any\n     * unparseable data as an {@link UnparseableExtraFieldData}\n     * instance.\n     * @param extra an array of bytes to be parsed into extra fields\n     * @throws RuntimeException if the bytes cannot be parsed\n     * @throws RuntimeException on error\n     */",
+   "name": "setExtra"
+  },
+  {
+   "javadoc": "/**\n     * Unfortunately {@link java.util.zip.ZipOutputStream\n     * java.util.zip.ZipOutputStream} seems to access the extra data\n     * directly, so overriding getExtra doesn't help - we need to\n     * modify super's data directly.\n     */",
+   "name": "setExtra"
+  },
+  {
+   "javadoc": "/**\n     * Sets the central directory part of extra fields.\n     */",
+   "name": "setCentralDirectoryExtra"
+  },
+  {
+   "javadoc": "/**\n     * Retrieves the extra data for the local file data.\n     * @return the extra data for local file\n     */",
+   "name": "getLocalFileDataExtra"
+  },
+  {
+   "javadoc": "/**\n     * Retrieves the extra data for the central directory.\n     * @return the central directory extra data\n     */",
+   "name": "getCentralDirectoryExtra"
+  },
+  {
+   "javadoc": "/**\n     * Get the name of the entry.\n     * @return the entry name\n     */",
+   "name": "getName"
+  },
+  {
+   "javadoc": "/**\n     * Is this entry a directory?\n     * @return true if the entry is a directory\n     */",
+   "name": "isDirectory"
+  },
+  {
+   "javadoc": "/**\n     * Set the name of the entry.\n     * @param name the name to use\n     */",
+   "name": "setName"
+  },
+  {
+   "javadoc": "/**\n     * Gets the uncompressed size of the entry data.\n     * @return the entry size\n     */",
+   "name": "getSize"
+  },
+  {
+   "javadoc": "/**\n     * Sets the uncompressed size of the entry data.\n     * @param size the uncompressed size in bytes\n     * @exception IllegalArgumentException if the specified size is less\n     *            than 0\n     */",
+   "name": "setSize"
+  },
+  {
+   "javadoc": "/**\n     * Sets the name using the raw bytes and the string created from\n     * it by guessing or using the configured encoding.\n     * @param name the name to use created from the raw bytes using\n     * the guessed or configured encoding\n     * @param rawName the bytes originally read as name from the\n     * archive\n     * @since 1.2\n     */",
+   "name": "setName"
+  },
+  {
+   "javadoc": "/**\n     * Returns the raw bytes that made up the name before it has been\n     * converted using the configured or guessed encoding.\n     *\n     * <p>This method will return null if this instance has not been\n     * read from an archive.</p>\n     *\n     * @since 1.2\n     */",
+   "name": "getRawName"
+  },
+  {
+   "javadoc": "/**\n     * Get the hashCode of the entry.\n     * This uses the name as the hashcode.\n     * @return a hashcode.\n     */",
+   "name": "hashCode"
+  },
+  {
+   "javadoc": "/**\n     * The \"general purpose bit\" field.\n     * @since 1.1\n     */",
+   "name": "getGeneralPurposeBit"
+  },
+  {
+   "javadoc": "/**\n     * The \"general purpose bit\" field.\n     * @since 1.1\n     */",
+   "name": "setGeneralPurposeBit"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getLastModifiedDate"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class ZipArchiveEntry extends java.util.zip.ZipEntry implements ArchiveEntry",
+  "constructors": [
+   "public ZipArchiveEntry(String name);",
+   "public ZipArchiveEntry(java.util.zip.ZipEntry entry) throws ZipException;",
+   "public ZipArchiveEntry(ZipArchiveEntry entry) throws ZipException;",
+   "protected ZipArchiveEntry();",
+   "public ZipArchiveEntry(File inputFile, String entryName);"
+  ],
+  "focal_signature": "public boolean equals(Object obj)",
+  "methods": [
+   "public Object clone();",
+   "public int getMethod();",
+   "public void setMethod(int method);",
+   "public int getInternalAttributes();",
+   "public void setInternalAttributes(int value);",
+   "public long getExternalAttributes();",
+   "public void setExternalAttributes(long value);",
+   "public void setUnixMode(int mode);",
+   "public int getUnixMode();",
+   "public int getPlatform();",
+   "protected void setPlatform(int platform);",
+   "public void setExtraFields(ZipExtraField[] fields);",
+   "public ZipExtraField[] getExtraFields();",
+   "public ZipExtraField[] getExtraFields(boolean includeUnparseable);",
+   "public void addExtraField(ZipExtraField ze);",
+   "public void addAsFirstExtraField(ZipExtraField ze);",
+   "public void removeExtraField(ZipShort type);",
+   "public void removeUnparseableExtraFieldData();",
+   "public ZipExtraField getExtraField(ZipShort type);",
+   "public UnparseableExtraFieldData getUnparseableExtraFieldData();",
+   "public void setExtra(byte[] extra) throws RuntimeException;",
+   "protected void setExtra();",
+   "public void setCentralDirectoryExtra(byte[] b);",
+   "public byte[] getLocalFileDataExtra();",
+   "public byte[] getCentralDirectoryExtra();",
+   "public String getName();",
+   "public boolean isDirectory();",
+   "protected void setName(String name);",
+   "public long getSize();",
+   "public void setSize(long size);",
+   "protected void setName(String name, byte[] rawName);",
+   "public byte[] getRawName();",
+   "public int hashCode();",
+   "public GeneralPurposeBit getGeneralPurposeBit();",
+   "public void setGeneralPurposeBit(GeneralPurposeBit b);",
+   "public Date getLastModifiedDate();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test"
+}

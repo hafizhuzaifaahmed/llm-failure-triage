@@ -1,0 +1,142 @@
+{
+ "bug_name": "Closure_99",
+ "call_sites": [
+  {
+   "line": 58,
+   "lines": [
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63
+   ],
+   "path": "src/com/google/javascript/jscomp/AliasKeywords.java",
+   "snippet": "     * Find the AliasSpecification associated with the node, and tell\n     * that AliasSpecification about the new node.\n     */\n    private void visitAliasableNode(Node n, Node parent) {\n      AliasSpecification aliasableNodes = aliasTypes.get(n.getType());\n      aliasableNodes.visit(n, parent);\n    }\n\n    /**\n     * Sanity check that our aliases are not already defined by\n     * someone else."
+  },
+  {
+   "line": 183,
+   "lines": [
+    178,
+    179,
+    180,
+    181,
+    182,
+    183,
+    184,
+    185,
+    186,
+    187,
+    188
+   ],
+   "path": "src/com/google/javascript/jscomp/ChainableReverseAbstractInterpreter.java",
+   "snippet": "   * @see #getRestrictedWithoutUndefined(JSType)\n   */\n  private final Visitor<JSType> restrictUndefinedVisitor =\n    new Visitor<JSType>() {\n      public JSType caseEnumElementType(EnumElementType enumElementType) {\n        JSType type = enumElementType.getPrimitiveType().visit(this);\n        if (type != null && enumElementType.getPrimitiveType().equals(type)) {\n          return enumElementType;\n        } else {\n          return type;\n        }"
+  },
+  {
+   "line": 248,
+   "lines": [
+    243,
+    244,
+    245,
+    246,
+    247,
+    248,
+    249,
+    250,
+    251,
+    252,
+    253
+   ],
+   "path": "src/com/google/javascript/jscomp/ChainableReverseAbstractInterpreter.java",
+   "snippet": "   * @see #getRestrictedWithoutNull(JSType)\n   */\n  private final Visitor<JSType> restrictNullVisitor =\n    new Visitor<JSType>() {\n      public JSType caseEnumElementType(EnumElementType enumElementType) {\n        JSType type = enumElementType.getPrimitiveType().visit(this);\n        if (type != null && enumElementType.getPrimitiveType().equals(type)) {\n          return enumElementType;\n        } else {\n          return type;\n        }"
+  },
+  {
+   "line": 334,
+   "lines": [
+    329,
+    330,
+    331,
+    332,
+    333,
+    334,
+    335,
+    336,
+    337,
+    338,
+    339
+   ],
+   "path": "src/com/google/javascript/jscomp/ChainableReverseAbstractInterpreter.java",
+   "snippet": "    }\n\n    public JSType caseUnionType(UnionType type) {\n      JSType restricted = null;\n      for (JSType alternate : type.getAlternates()) {\n        JSType restrictedAlternate = alternate.visit(this);\n        if (restrictedAlternate != null) {\n          if (restricted == null) {\n            restricted = restrictedAlternate;\n          } else {\n            restricted = restrictedAlternate.getLeastSupertype(restricted);"
+  },
+  {
+   "line": 360,
+   "lines": [
+    355,
+    356,
+    357,
+    358,
+    359,
+    360,
+    361,
+    362,
+    363,
+    364,
+    365
+   ],
+   "path": "src/com/google/javascript/jscomp/ChainableReverseAbstractInterpreter.java",
+   "snippet": "      // }\n      // There is no type that represents {MyEnum - string}. What we really\n      // need is a notion of \"enum subtyping\", so that we could dynamically\n      // create a subtype of MyEnum restricted by string. In any case,\n      // this should catch the common case.\n      JSType type = enumElementType.getPrimitiveType().visit(this);\n      if (type != null && enumElementType.getPrimitiveType().equals(type)) {\n        return enumElementType;\n      } else {\n        return type;\n      }"
+  }
+ ],
+ "class_simple": "CheckGlobalThis",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Checks for certain uses of the {@code this} keyword that are considered\n * unsafe because they are likely to reference the global {@code this} object\n * unintentionally.\n *\n * <p>A use of {@code this} is considered unsafe if it's on the left side of an\n * assignment or a property access, and not inside one of the following:\n * <ol>\n * <li>a prototype method\n * <li>a function annotated with {@code @constructor}\n * <li>a function annotated with {@code @this}.\n * <li>a function where there's no logical place to put a\n *     {@code this} annotation.\n * </ol>\n *\n * <p>Note that this check does not track assignments of {@code this} to\n * variables or objects. The code\n * <pre>\n * function evil() {\n *   var a = this;\n *   a.useful = undefined;\n * }\n * </pre>\n * will not get flagged, even though it is semantically equivalent to\n * <pre>\n * function evil() {\n *   this.useful = undefined;\n * }\n * </pre>\n * which would get flagged.\n *\n*\n*\n */\nfinal",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "static final DiagnosticType GLOBAL_THIS",
+  "private final AbstractCompiler compiler",
+  "private final CheckLevel level",
+  "private Node assignLhsChild"
+ ],
+ "focal_class": "com.google.javascript.jscomp.CheckGlobalThis",
+ "focal_id": "Closure_99::com.google.javascript.jscomp.CheckGlobalThis::visit(NodeTraversal,Node,Node)",
+ "focal_method_name": "visit",
+ "generations": 3,
+ "impl_B": "public void visit(NodeTraversal t, Node n, Node parent) {\n    if (n.getType() == Token.THIS && shouldReportThis(n, parent)) {\n      compiler.report(t.makeError(n, level, GLOBAL_THIS));\n    }\n    if (n == assignLhsChild) {\n      assignLhsChild = null;\n    }\n  }",
+ "imports": [
+  "com.google.javascript.jscomp.CheckLevel",
+  "com.google.javascript.jscomp.NodeTraversal.Callback",
+  "com.google.javascript.rhino.JSDocInfo",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.Token"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "/**\n   * Since this pass reports errors only when a global {@code this} keyword\n   * is encountered, there is no reason to traverse non global contexts.\n   */",
+   "name": "shouldTraverse"
+  }
+ ],
+ "sig": {
+  "class_declaration": "final class CheckGlobalThis implements Callback",
+  "constructors": [],
+  "focal_signature": "public void visit(NodeTraversal t, Node n, Node parent)",
+  "methods": [
+   "public boolean shouldTraverse(NodeTraversal t, Node n, Node parent);"
+  ],
+  "type_signatures": [
+   "public class NodeTraversal { public NodeTraversal(AbstractCompiler compiler, Callback cb); public NodeTraversal(AbstractCompiler compiler, Callback cb, ScopeCreator scopeCreator); public void traverse(Node root); public void traverseRoots(Node ... roots); public void traverseRoots(List<Node> roots); protected void traverseInnerNode(Node node, Node parent, Scope refinedScope); public Compiler getCompiler(); public int getLineNumber(); public String getSourceName(); public CompilerInput getInput(); public JSModule getModule(); public Node getCurrentNode(); public static void traverse( AbstractCompiler compiler, Node root, Callback cb); public static void traverseRoots( AbstractCompiler compiler, List<Node> roots, Callback cb); public Scope getScope(); }",
+   "public class Node implements Cloneable, Serializable { public Node(int nodeType); public Node(int nodeType, Node child); public Node(int nodeType, Node left, Node right); public Node(int nodeType, Node left, Node mid, Node right); public Node(int nodeType, Node left, Node mid, Node mid2, Node right); public Node(int nodeType, int lineno, int charno); public Node(int nodeType, Node child, int lineno, int charno); public Node(int nodeType, Node left, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node mid2, Node right, int lineno, int charno); public Node(int nodeType, Node[] children, int lineno, int charno); public Node(int nodeType, Node[] children); public static Node newNumber(double number); public static Node newNumber(double number, int lineno, int charno); public static Node newString(String str); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

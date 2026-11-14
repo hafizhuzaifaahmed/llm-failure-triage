@@ -1,0 +1,429 @@
+{
+ "bug_name": "JacksonDatabind_48",
+ "call_sites": [
+  {
+   "line": 3624,
+   "lines": [
+    3619,
+    3620,
+    3621,
+    3622,
+    3623,
+    3624,
+    3625,
+    3626,
+    3627,
+    3628,
+    3629
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java",
+   "snippet": "     */\n    protected final void _configAndWriteValue(JsonGenerator g, Object value)\n        throws IOException\n    {\n        SerializationConfig cfg = getSerializationConfig();\n        cfg.initialize(g); // since 2.5\n        if (cfg.isEnabled(SerializationFeature.CLOSE_CLOSEABLE) && (value instanceof Closeable)) {\n            _configAndWriteCloseable(g, value, cfg);\n            return;\n        }\n        boolean closed = false;"
+  },
+  {
+   "line": 3655,
+   "lines": [
+    3650,
+    3651,
+    3652,
+    3653,
+    3654,
+    3655,
+    3656,
+    3657,
+    3658,
+    3659,
+    3660
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java",
+   "snippet": "    @Deprecated // since 2.7, not used internally any more\n    protected final void _configAndWriteValue(JsonGenerator g, Object value, Class<?> viewClass)\n        throws IOException\n    {\n        SerializationConfig cfg = getSerializationConfig().withView(viewClass);\n        cfg.initialize(g); // since 2.5\n\n        // [JACKSON-282]: consider Closeable\n        if (cfg.isEnabled(SerializationFeature.CLOSE_CLOSEABLE) && (value instanceof Closeable)) {\n            _configAndWriteCloseable(g, value, cfg);\n            return;"
+  },
+  {
+   "line": 3838,
+   "lines": [
+    3833,
+    3834,
+    3835,
+    3836,
+    3837,
+    3838,
+    3839,
+    3840,
+    3841,
+    3842,
+    3843
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java",
+   "snippet": "     *   content to map (note: Json \"null\" value is considered content;\n     *   enf-of-stream not)\n     */\n    protected JsonToken _initForReading(JsonParser p) throws IOException\n    {\n        _deserializationConfig.initialize(p); // since 2.5\n\n        /* First: must point to a token; if not pointing to one, advance.\n         * This occurs before first read from JsonParser, as well as\n         * after clearing of current token.\n         */"
+  },
+  {
+   "line": 350,
+   "lines": [
+    345,
+    346,
+    347,
+    348,
+    349,
+    350,
+    351,
+    352,
+    353,
+    354,
+    355
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectReader.java",
+   "snippet": "    protected JsonToken _initForReading(JsonParser p) throws IOException\n    {\n        if (_schema != null) {\n            p.setSchema(_schema);\n        }\n        _config.initialize(p); // since 2.5\n\n        /* First: must point to a token; if not pointing to one, advance.\n         * This occurs before first read from JsonParser, as well as\n         * after clearing of current token.\n         */"
+  },
+  {
+   "line": 380,
+   "lines": [
+    375,
+    376,
+    377,
+    378,
+    379,
+    380,
+    381,
+    382,
+    383,
+    384,
+    385
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectReader.java",
+   "snippet": "     */\n    protected void _initForMultiRead(JsonParser p) throws IOException {\n        if (_schema != null) {\n            p.setSchema(_schema);\n        }\n        _config.initialize(p); // since 2.5\n    }\n\n    /*\n    /**********************************************************\n    /* Life-cycle, fluent factory methods for DeserializationFeatures"
+  }
+ ],
+ "class_simple": "DeserializationConfig",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Object that contains baseline configuration for deserialization\n * process. An instance is owned by {@link ObjectMapper}, which\n * passes an immutable instance to be used for deserialization process.\n *<p>\n * Note that instances are considered immutable and as such no copies\n * should need to be created for sharing; all copying is done with\n * \"fluent factory\" methods.\n */\npublic final",
+  "method_javadoc": "/**\n     * Method called by {@link ObjectMapper} and {@link ObjectReader}\n     * to modify those {@link com.fasterxml.jackson.core.JsonParser.Feature} settings\n     * that have been configured via this config instance.\n     * \n     * @since 2.5\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "protected final LinkedNode<DeserializationProblemHandler> _problemHandlers",
+  "protected final JsonNodeFactory _nodeFactory",
+  "protected final int _deserFeatures",
+  "protected final int _parserFeatures",
+  "protected final int _parserFeaturesToChange",
+  "protected final int _formatReadFeatures",
+  "protected final int _formatReadFeaturesToChange"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.DeserializationConfig",
+ "focal_id": "JacksonDatabind_48::com.fasterxml.jackson.databind.DeserializationConfig::initialize(JsonParser)",
+ "focal_method_name": "initialize",
+ "generations": 3,
+ "impl_B": "public void initialize(JsonParser p) {\n        if (_parserFeaturesToChange != 0) {\n            p.overrideStdFeatures(_parserFeatures, _parserFeaturesToChange);\n        }\n        if (_formatReadFeaturesToChange != 0) {\n            p.overrideFormatFeatures(_formatReadFeatures, _formatReadFeaturesToChange);\n        }\n    }",
+ "imports": [
+  "java.text.DateFormat",
+  "java.util.*",
+  "com.fasterxml.jackson.annotation.JsonAutoDetect",
+  "com.fasterxml.jackson.annotation.JsonFormat",
+  "com.fasterxml.jackson.annotation.JsonInclude",
+  "com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility",
+  "com.fasterxml.jackson.annotation.PropertyAccessor",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.databind.cfg.*",
+  "com.fasterxml.jackson.databind.deser.DeserializationProblemHandler",
+  "com.fasterxml.jackson.databind.introspect.*",
+  "com.fasterxml.jackson.databind.jsontype.*",
+  "com.fasterxml.jackson.databind.node.JsonNodeFactory",
+  "com.fasterxml.jackson.databind.type.TypeFactory",
+  "com.fasterxml.jackson.databind.util.LinkedNode",
+  "com.fasterxml.jackson.databind.util.RootNameLookup"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "getBaseSettings"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "with"
+  },
+  {
+   "javadoc": "",
+   "name": "without"
+  },
+  {
+   "javadoc": "",
+   "name": "with"
+  },
+  {
+   "javadoc": "",
+   "name": "with"
+  },
+  {
+   "javadoc": "",
+   "name": "with"
+  },
+  {
+   "javadoc": "",
+   "name": "with"
+  },
+  {
+   "javadoc": "",
+   "name": "withVisibility"
+  },
+  {
+   "javadoc": "",
+   "name": "with"
+  },
+  {
+   "javadoc": "",
+   "name": "with"
+  },
+  {
+   "javadoc": "",
+   "name": "with"
+  },
+  {
+   "javadoc": "",
+   "name": "withRootName"
+  },
+  {
+   "javadoc": "",
+   "name": "with"
+  },
+  {
+   "javadoc": "",
+   "name": "with"
+  },
+  {
+   "javadoc": "",
+   "name": "with"
+  },
+  {
+   "javadoc": "",
+   "name": "withInsertedAnnotationIntrospector"
+  },
+  {
+   "javadoc": "",
+   "name": "withAppendedAnnotationIntrospector"
+  },
+  {
+   "javadoc": "",
+   "name": "withView"
+  },
+  {
+   "javadoc": "",
+   "name": "with"
+  },
+  {
+   "javadoc": "",
+   "name": "with"
+  },
+  {
+   "javadoc": "",
+   "name": "with"
+  },
+  {
+   "javadoc": "",
+   "name": "with"
+  },
+  {
+   "javadoc": "/**\n     * Fluent factory method that will construct and return a new configuration\n     * object instance with specified features enabled.\n     */",
+   "name": "with"
+  },
+  {
+   "javadoc": "/**\n     * Fluent factory method that will construct and return a new configuration\n     * object instance with specified features enabled.\n     */",
+   "name": "with"
+  },
+  {
+   "javadoc": "/**\n     * Fluent factory method that will construct and return a new configuration\n     * object instance with specified features enabled.\n     */",
+   "name": "withFeatures"
+  },
+  {
+   "javadoc": "/**\n     * Fluent factory method that will construct and return a new configuration\n     * object instance with specified feature disabled.\n     */",
+   "name": "without"
+  },
+  {
+   "javadoc": "/**\n     * Fluent factory method that will construct and return a new configuration\n     * object instance with specified features disabled.\n     */",
+   "name": "without"
+  },
+  {
+   "javadoc": "/**\n     * Fluent factory method that will construct and return a new configuration\n     * object instance with specified features disabled.\n     */",
+   "name": "withoutFeatures"
+  },
+  {
+   "javadoc": "/**\n     * Fluent factory method that will construct and return a new configuration\n     * object instance with specified features enabled.\n     *\n     * @since 2.5\n     */",
+   "name": "with"
+  },
+  {
+   "javadoc": "/**\n     * Fluent factory method that will construct and return a new configuration\n     * object instance with specified features enabled.\n     *\n     * @since 2.5\n     */",
+   "name": "withFeatures"
+  },
+  {
+   "javadoc": "/**\n     * Fluent factory method that will construct and return a new configuration\n     * object instance with specified feature disabled.\n     *\n     * @since 2.5\n     */",
+   "name": "without"
+  },
+  {
+   "javadoc": "/**\n     * Fluent factory method that will construct and return a new configuration\n     * object instance with specified features disabled.\n     *\n     * @since 2.5\n     */",
+   "name": "withoutFeatures"
+  },
+  {
+   "javadoc": "/**\n     * Fluent factory method that will construct and return a new configuration\n     * object instance with specified features enabled.\n     *\n     * @since 2.7\n     */",
+   "name": "with"
+  },
+  {
+   "javadoc": "/**\n     * Fluent factory method that will construct and return a new configuration\n     * object instance with specified features enabled.\n     *\n     * @since 2.7\n     */",
+   "name": "withFeatures"
+  },
+  {
+   "javadoc": "/**\n     * Fluent factory method that will construct and return a new configuration\n     * object instance with specified feature disabled.\n     *\n     * @since 2.7\n     */",
+   "name": "without"
+  },
+  {
+   "javadoc": "/**\n     * Fluent factory method that will construct and return a new configuration\n     * object instance with specified features disabled.\n     *\n     * @since 2.7\n     */",
+   "name": "withoutFeatures"
+  },
+  {
+   "javadoc": "/**\n     * Fluent factory method that will construct a new instance with\n     * specified {@link JsonNodeFactory}\n     */",
+   "name": "with"
+  },
+  {
+   "javadoc": "/**\n     * Method that can be used to add a handler that can (try to)\n     * resolve non-fatal deserialization problems.\n     */",
+   "name": "withHandler"
+  },
+  {
+   "javadoc": "/**\n     * Method for removing all configured problem handlers; usually done to replace\n     * existing handler(s) with different one(s)\n     */",
+   "name": "withNoProblemHandlers"
+  },
+  {
+   "javadoc": "/**\n     * Method for getting {@link AnnotationIntrospector} configured\n     * to introspect annotation values used for configuration.\n     */",
+   "name": "getAnnotationIntrospector"
+  },
+  {
+   "javadoc": "/**\n     * Accessor for getting bean description that only contains class\n     * annotations: useful if no getter/setter/creator information is needed.\n     */",
+   "name": "introspectClassAnnotations"
+  },
+  {
+   "javadoc": "/**\n     * Accessor for getting bean description that only contains immediate class\n     * annotations: ones from the class, and its direct mix-in, if any, but\n     * not from super types.\n     */",
+   "name": "introspectDirectClassAnnotations"
+  },
+  {
+   "javadoc": "",
+   "name": "getDefaultVisibilityChecker"
+  },
+  {
+   "javadoc": "",
+   "name": "getDefaultPropertyInclusion"
+  },
+  {
+   "javadoc": "",
+   "name": "getDefaultPropertyInclusion"
+  },
+  {
+   "javadoc": "",
+   "name": "getDefaultPropertyFormat"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "useRootWrapping"
+  },
+  {
+   "javadoc": "",
+   "name": "isEnabled"
+  },
+  {
+   "javadoc": "",
+   "name": "isEnabled"
+  },
+  {
+   "javadoc": "/**\n     * Bulk access method for checking that all features specified by\n     * mask are enabled.\n     * \n     * @since 2.3\n     */",
+   "name": "hasDeserializationFeatures"
+  },
+  {
+   "javadoc": "/**\n     * Bulk access method for checking that at least one of features specified by\n     * mask is enabled.\n     * \n     * @since 2.6\n     */",
+   "name": "hasSomeOfFeatures"
+  },
+  {
+   "javadoc": "/**\n     * Bulk access method for getting the bit mask of all {@link DeserializationFeature}s\n     * that are enabled.\n     */",
+   "name": "getDeserializationFeatures"
+  },
+  {
+   "javadoc": "/**\n     * Method for getting head of the problem handler chain. May be null,\n     * if no handlers have been added.\n     */",
+   "name": "getProblemHandlers"
+  },
+  {
+   "javadoc": "",
+   "name": "getNodeFactory"
+  },
+  {
+   "javadoc": "/**\n     * Helper method that is needed to properly handle polymorphic referenced\n     * types, such as types referenced by {@link java.util.concurrent.atomic.AtomicReference},\n     * or various \"optional\" types.\n     * \n     * @since 2.4\n     */",
+   "name": "findTypeDeserializer"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public final class DeserializationConfig extends MapperConfigBase<DeserializationFeature, DeserializationConfig> implements java.io.Serializable",
+  "constructors": [
+   "public DeserializationConfig(BaseSettings base, SubtypeResolver str, SimpleMixInResolver mixins, RootNameLookup rootNames);",
+   "protected DeserializationConfig(DeserializationConfig src, ContextAttributes attrs);",
+   "protected DeserializationConfig(DeserializationConfig src, SimpleMixInResolver mixins);",
+   "protected DeserializationConfig(DeserializationConfig src, SimpleMixInResolver mixins, RootNameLookup rootNames);"
+  ],
+  "focal_signature": "public void initialize(JsonParser p)",
+  "methods": [
+   "protected BaseSettings getBaseSettings();",
+   "public DeserializationConfig with(MapperFeature... features);",
+   "public DeserializationConfig without(MapperFeature... features);",
+   "public DeserializationConfig with(MapperFeature feature, boolean state);",
+   "public DeserializationConfig with(ClassIntrospector ci);",
+   "public DeserializationConfig with(AnnotationIntrospector ai);",
+   "public DeserializationConfig with(VisibilityChecker<?> vc);",
+   "public DeserializationConfig withVisibility(PropertyAccessor forMethod, JsonAutoDetect.Visibility visibility);",
+   "public DeserializationConfig with(TypeResolverBuilder<?> trb);",
+   "public DeserializationConfig with(SubtypeResolver str);",
+   "public DeserializationConfig with(PropertyNamingStrategy pns);",
+   "public DeserializationConfig withRootName(PropertyName rootName);",
+   "public DeserializationConfig with(TypeFactory tf);",
+   "public DeserializationConfig with(DateFormat df);",
+   "public DeserializationConfig with(HandlerInstantiator hi);",
+   "public DeserializationConfig withInsertedAnnotationIntrospector(AnnotationIntrospector ai);",
+   "public DeserializationConfig withAppendedAnnotationIntrospector(AnnotationIntrospector ai);",
+   "public DeserializationConfig withView(Class<?> view);",
+   "public DeserializationConfig with(Locale l);",
+   "public DeserializationConfig with(TimeZone tz);",
+   "public DeserializationConfig with(Base64Variant base64);",
+   "public DeserializationConfig with(ContextAttributes attrs);",
+   "public DeserializationConfig with(DeserializationFeature feature);",
+   "public DeserializationConfig with(DeserializationFeature first, DeserializationFeature... features);",
+   "public DeserializationConfig withFeatures(DeserializationFeature... features);",
+   "public DeserializationConfig without(DeserializationFeature feature);",
+   "public DeserializationConfig without(DeserializationFeature first, DeserializationFeature... features);",
+   "public DeserializationConfig withoutFeatures(DeserializationFeature... features);",
+   "public DeserializationConfig with(JsonParser.Feature feature);",
+   "public DeserializationConfig withFeatures(JsonParser.Feature... features);",
+   "public DeserializationConfig without(JsonParser.Feature feature);",
+   "public DeserializationConfig withoutFeatures(JsonParser.Feature... features);",
+   "public DeserializationConfig with(FormatFeature feature);",
+   "public DeserializationConfig withFeatures(FormatFeature... features);",
+   "public DeserializationConfig without(FormatFeature feature);",
+   "public DeserializationConfig withoutFeatures(FormatFeature... features);",
+   "public DeserializationConfig with(JsonNodeFactory f);",
+   "public DeserializationConfig withHandler(DeserializationProblemHandler h);",
+   "public DeserializationConfig withNoProblemHandlers();",
+   "public AnnotationIntrospector getAnnotationIntrospector();",
+   "public BeanDescription introspectClassAnnotations(JavaType type);",
+   "public BeanDescription introspectDirectClassAnnotations(JavaType type);",
+   "public VisibilityChecker<?> getDefaultVisibilityChecker();",
+   "public JsonInclude.Value getDefaultPropertyInclusion();",
+   "public JsonInclude.Value getDefaultPropertyInclusion(Class<?> baseType);",
+   "public JsonFormat.Value getDefaultPropertyFormat(Class<?> baseType);",
+   "public boolean useRootWrapping();",
+   "public final boolean isEnabled(DeserializationFeature f);",
+   "public final boolean isEnabled(JsonParser.Feature f, JsonFactory factory);",
+   "public final boolean hasDeserializationFeatures(int featureMask);",
+   "public final boolean hasSomeOfFeatures(int featureMask);",
+   "public final int getDeserializationFeatures();",
+   "public LinkedNode<DeserializationProblemHandler> getProblemHandlers();",
+   "public final JsonNodeFactory getNodeFactory();",
+   "public TypeDeserializer findTypeDeserializer(JavaType baseType) throws JsonMappingException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

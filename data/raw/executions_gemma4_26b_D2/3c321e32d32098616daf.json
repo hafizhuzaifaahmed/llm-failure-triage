@@ -1,0 +1,96 @@
+{
+ "candidate_id": "3c321e32d32098616daf",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testGetIntValue_ThrowsClassCastExceptionWhenNotNumeric"
+  ],
+  "nc_both": [
+   "testGetIntValue_LargeValue",
+   "testGetIntValue_MinValue",
+   "testGetIntValue_NegativeValue",
+   "testGetIntValue_Success"
+  ],
+  "nc_one_version": [],
+  "passes": 1
+ },
+ "dataset": "D2",
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "JacksonDatabind_106::com.fasterxml.jackson.databind.node.TreeTraversingParser::getIntValue()#m78",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testGetIntValue_ThrowsClassCastExceptionWhenNotNumeric",
+   "runs_b": [
+    {
+     "duration_s": 0.367,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.333,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.355,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.331,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.372,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.356,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.databind.node;\n\nimport com.fasterxml.jackson.core.*;\nimport com.fasterxml.jackson.core.JsonParser;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.core.base.ParserMinimalBase;\nimport com.fasterxml.jackson.databind.JsonNode;\nimport com.fasterxml.jackson.databind.ObjectMapper;\nimport com.fasterxml.jackson.databind.node.IntNode;\nimport com.fasterxml.jackson.databind.node.NumericNode;\nimport com.fasterxml.jackson.databind.node.TextNode;\nimport java.io.*;\nimport java.io.IOException;\nimport java.io.OutputStream;\nimport java.lang.reflect.Field;\nimport java.lang.reflect.Method;\nimport java.math.*;\nimport java.math.BigDecimal;\nimport java.math.BigInteger;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Before;\nimport org.junit.Test;\nimport org.mockito.Mockito;\nimport static org.junit.Assert.*;\nimport static org.mockito.Mockito.*;\n\npublic class TreeTraversingParser_getIntValue_TriageGen1Test {\n\n    private ObjectMapper mapper;\n    private JsonNode rootNode;\n    private TreeTraversingParser parser;\n\n    @Before\n    public void setUp() {\n        mapper = new ObjectMapper();\n    }\n\n    /**\n     * Helper to instantiate TreeTraversingParser using reflection because \n     * currentNumericNode() is protected and depends on internal state.\n     * We mock the behavior of the internal currentNumericNode via reflection \n     * or by providing a valid JsonNode structure.\n     */\n    private TreeTraversingParser createParserWithNode(JsonNode node) throws Exception {\n        TreeTraversingParser parser = new TreeTraversingParser(node);\n        // Since currentNumericNode() is protected, we rely on the fact that \n        // TreeTraversingParser implementation iterates through the JsonNode.\n        // To test getIntValue specifically, we need the parser to be positioned at a NumericNode.\n        return parser;\n    }\n\n    \n\n    \n\n    @Test(expected = ClassCastException.class)\n    public void testGetIntValue_ThrowsClassCastExceptionWhenNotNumeric() throws Exception {\n        // Arrange\n        TextNode textNode = mapper.getNodeFactory().textNode(\"not a number\");\n        TreeTraversingParser realParser = new TreeTraversingParser(textNode);\n        TreeTraversingParser spyParser = spy(realParser);\n        \n        // currentNumericNode() returns a JsonNode, but getIntValue casts it to NumericNode\n        // If it's a TextNode, the cast (NumericNode) currentNumericNode() fails.\n        doReturn(textNode).when(spyParser).currentNumericNode();\n\n        // Act\n        spyParser.getIntValue();\n        \n        // Assert handled by expected exception\n    }\n\n    \n\n    \n}\n"
+  }
+ ],
+ "mutant_version": "m78",
+ "source_sha256": "7b2d3c0f26059acb57977f29167aa14cc82a742e7bdf422e4b2944ee48b308eb",
+ "utc": "2026-11-03T00:31:32Z"
+}

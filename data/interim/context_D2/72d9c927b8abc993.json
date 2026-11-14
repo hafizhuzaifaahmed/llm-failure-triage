@@ -1,0 +1,271 @@
+{
+ "base_focal_id": "JacksonCore_8::com.fasterxml.jackson.core.util.TextBuffer::getTextBuffer()",
+ "bug_name": "JacksonCore_8",
+ "call_sites": [
+  {
+   "line": 755,
+   "lines": [
+    750,
+    751,
+    752,
+    753,
+    754,
+    755,
+    756,
+    757,
+    758,
+    759,
+    760
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/base/ParserBase.java",
+   "snippet": "     */\n    protected void _parseNumericValue(int expType) throws IOException\n    {\n        // Int or float?\n        if (_currToken == JsonToken.VALUE_NUMBER_INT) {\n            char[] buf = _textBuffer.getTextBuffer();\n            int offset = _textBuffer.getTextOffset();\n            int len = _intLength;\n            if (_numberNegative) {\n                ++offset;\n            }"
+  },
+  {
+   "line": 810,
+   "lines": [
+    805,
+    806,
+    807,
+    808,
+    809,
+    810,
+    811,
+    812,
+    813,
+    814,
+    815
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/base/ParserBase.java",
+   "snippet": "    protected int _parseIntValue() throws IOException\n    {\n        // Inlined variant of: _parseNumericValue(NR_INT)\n\n        if (_currToken == JsonToken.VALUE_NUMBER_INT) {\n            char[] buf = _textBuffer.getTextBuffer();\n            int offset = _textBuffer.getTextOffset();\n            int len = _intLength;\n            if (_numberNegative) {\n                ++offset;\n            }"
+  },
+  {
+   "line": 314,
+   "lines": [
+    309,
+    310,
+    311,
+    312,
+    313,
+    314,
+    315,
+    316,
+    317,
+    318,
+    319
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/json/ReaderBasedJsonParser.java",
+   "snippet": "                    _finishString(); // only strings can be incomplete\n                }\n                // fall through\n            case ID_NUMBER_INT:\n            case ID_NUMBER_FLOAT:\n                return _textBuffer.getTextBuffer();\n                \n            default:\n                return _currToken.asCharArray();\n            }\n        }"
+  },
+  {
+   "line": 1318,
+   "lines": [
+    1313,
+    1314,
+    1315,
+    1316,
+    1317,
+    1318,
+    1319,
+    1320,
+    1321,
+    1322,
+    1323
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/json/ReaderBasedJsonParser.java",
+   "snippet": "            }\n        }\n        _textBuffer.setCurrentLength(outPtr);\n        {\n            TextBuffer tb = _textBuffer;\n            char[] buf = tb.getTextBuffer();\n            int start = tb.getTextOffset();\n            int len = tb.size();\n\n            return _symbols.findSymbol(buf, start, len, hash);\n        }"
+  },
+  {
+   "line": 1543,
+   "lines": [
+    1538,
+    1539,
+    1540,
+    1541,
+    1542,
+    1543,
+    1544,
+    1545,
+    1546,
+    1547,
+    1548
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/json/ReaderBasedJsonParser.java",
+   "snippet": "            }\n        }\n        _textBuffer.setCurrentLength(outPtr);\n        {\n            TextBuffer tb = _textBuffer;\n            char[] buf = tb.getTextBuffer();\n            int start = tb.getTextOffset();\n            int len = tb.size();\n\n            return _symbols.findSymbol(buf, start, len, hash);\n        }"
+  }
+ ],
+ "class_simple": "TextBuffer",
+ "dataset": "D2",
+ "doc": {
+  "class_javadoc": "/**\n * TextBuffer is a class similar to {@link StringBuffer}, with\n * following differences:\n *<ul>\n *  <li>TextBuffer uses segments character arrays, to avoid having\n *     to do additional array copies when array is not big enough.\n *     This means that only reallocating that is necessary is done only once:\n *     if and when caller\n *     wants to access contents in a linear array (char[], String).\n *    </li>\n*  <li>TextBuffer can also be initialized in \"shared mode\", in which\n*     it will just act as a wrapper to a single char array managed\n*     by another object (like parser that owns it)\n *    </li>\n *  <li>TextBuffer is not synchronized.\n *    </li>\n * </ul>\n */\npublic final",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "final static char[] NO_CHARS",
+  "final static int MIN_SEGMENT_LEN",
+  "final static int MAX_SEGMENT_LEN",
+  "private final BufferRecycler _allocator",
+  "private char[] _inputBuffer",
+  "private int _inputStart",
+  "private int _inputLen",
+  "private ArrayList<char[]> _segments",
+  "private boolean _hasSegments",
+  "private int _segmentSize",
+  "private char[] _currentSegment",
+  "private int _currentSize",
+  "private String _resultString",
+  "private char[] _resultArray"
+ ],
+ "focal_class": "com.fasterxml.jackson.core.util.TextBuffer",
+ "focal_id": "JacksonCore_8::com.fasterxml.jackson.core.util.TextBuffer::getTextBuffer()#m112",
+ "focal_method_name": "getTextBuffer",
+ "impl_B": "public char[] getTextBuffer()\n    {\n        // Are we just using shared input buffer?\n        if (_inputStart >= 0) return _inputBuffer;\n        if (_resultArray != null)  return _resultArray;\n        if (_resultString != null) {\n            return (_resultArray = _resultString.toCharArray());\n        }\n        // Nope; but does it fit in just one segment?\n        if (!_hasSegments && true)  return _currentSegment;\n        // Nope, need to have/create a non-segmented array and return it\n        return contentsAsArray();\n    }",
+ "imports": [
+  "java.math.BigDecimal",
+  "java.util.ArrayList",
+  "java.util.Arrays",
+  "com.fasterxml.jackson.core.io.NumberInput"
+ ],
+ "javadoc_edited_by_fix": false,
+ "mutant_id": 112,
+ "operator": "ROR",
+ "package": "com.fasterxml.jackson.core.util",
+ "project": "JacksonCore",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Method called to indicate that the underlying buffers should now\n     * be recycled if they haven't yet been recycled. Although caller\n     * can still use this text buffer, it is not advisable to call this\n     * method if that is likely, since next time a buffer is needed,\n     * buffers need to reallocated.\n     * Note: calling this method automatically also clears contents\n     * of the buffer.\n     */",
+   "name": "releaseBuffers"
+  },
+  {
+   "javadoc": "/**\n     * Method called to clear out any content text buffer may have, and\n     * initializes buffer to use non-shared data.\n     */",
+   "name": "resetWithEmpty"
+  },
+  {
+   "javadoc": "/**\n     * Method called to initialize the buffer with a shared copy of data;\n     * this means that buffer will just have pointers to actual data. It\n     * also means that if anything is to be appended to the buffer, it\n     * will first have to unshare it (make a local copy).\n     */",
+   "name": "resetWithShared"
+  },
+  {
+   "javadoc": "",
+   "name": "resetWithCopy"
+  },
+  {
+   "javadoc": "",
+   "name": "resetWithString"
+  },
+  {
+   "javadoc": "/**\n     * @return Number of characters currently stored by this collector\n     */",
+   "name": "size"
+  },
+  {
+   "javadoc": "",
+   "name": "getTextOffset"
+  },
+  {
+   "javadoc": "/**\n     * Method that can be used to check whether textual contents can\n     * be efficiently accessed using {@link #getTextBuffer}.\n     */",
+   "name": "hasTextAsCharacters"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "contentsAsString"
+  },
+  {
+   "javadoc": "",
+   "name": "contentsAsArray"
+  },
+  {
+   "javadoc": "/**\n     * Convenience method for converting contents of the buffer\n     * into a {@link BigDecimal}.\n     */",
+   "name": "contentsAsDecimal"
+  },
+  {
+   "javadoc": "/**\n     * Convenience method for converting contents of the buffer\n     * into a Double value.\n     */",
+   "name": "contentsAsDouble"
+  },
+  {
+   "javadoc": "/**\n     * Method called to make sure that buffer is not using shared input\n     * buffer; if it is, it will copy such contents to private buffer.\n     */",
+   "name": "ensureNotShared"
+  },
+  {
+   "javadoc": "",
+   "name": "append"
+  },
+  {
+   "javadoc": "",
+   "name": "append"
+  },
+  {
+   "javadoc": "",
+   "name": "append"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getCurrentSegment"
+  },
+  {
+   "javadoc": "",
+   "name": "emptyAndGetCurrentSegment"
+  },
+  {
+   "javadoc": "",
+   "name": "getCurrentSegmentSize"
+  },
+  {
+   "javadoc": "",
+   "name": "setCurrentLength"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.6\n     */",
+   "name": "setCurrentAndReturn"
+  },
+  {
+   "javadoc": "",
+   "name": "finishCurrentSegment"
+  },
+  {
+   "javadoc": "/**\n     * Method called to expand size of the current segment, to\n     * accommodate for more contiguous content. Usually only\n     * used when parsing tokens like names if even then.\n     */",
+   "name": "expandCurrentSegment"
+  },
+  {
+   "javadoc": "/**\n     * Method called to expand size of the current segment, to\n     * accommodate for more contiguous content. Usually only\n     * used when parsing tokens like names if even then.\n     * \n     * @param minSize Required minimum strength of the current segment\n     *\n     * @since 2.4.0\n     */",
+   "name": "expandCurrentSegment"
+  },
+  {
+   "javadoc": "/**\n     * Note: calling this method may not be as efficient as calling\n     * {@link #contentsAsString}, since it's not guaranteed that resulting\n     * String is cached.\n     */",
+   "name": "toString"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public final class TextBuffer",
+  "constructors": [
+   "public TextBuffer(BufferRecycler allocator);"
+  ],
+  "focal_signature": "public char[] getTextBuffer()",
+  "methods": [
+   "public void releaseBuffers();",
+   "public void resetWithEmpty();",
+   "public void resetWithShared(char[] buf, int start, int len);",
+   "public void resetWithCopy(char[] buf, int start, int len);",
+   "public void resetWithString(String value);",
+   "public int size();",
+   "public int getTextOffset();",
+   "public boolean hasTextAsCharacters();",
+   "public String contentsAsString();",
+   "public char[] contentsAsArray();",
+   "public BigDecimal contentsAsDecimal() throws NumberFormatException;",
+   "public double contentsAsDouble() throws NumberFormatException;",
+   "public void ensureNotShared();",
+   "public void append(char c);",
+   "public void append(char[] c, int start, int len);",
+   "public void append(String str, int offset, int len);",
+   "public char[] getCurrentSegment();",
+   "public char[] emptyAndGetCurrentSegment();",
+   "public int getCurrentSegmentSize();",
+   "public void setCurrentLength(int len);",
+   "public String setCurrentAndReturn(int len);",
+   "public char[] finishCurrentSegment();",
+   "public char[] expandCurrentSegment();",
+   "public char[] expandCurrentSegment(int minSize);",
+   "public String toString();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test"
+}

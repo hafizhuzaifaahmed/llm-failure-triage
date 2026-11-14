@@ -1,0 +1,139 @@
+{
+ "bug_name": "JacksonDatabind_37",
+ "call_sites": [
+  {
+   "line": 194,
+   "lines": [
+    189,
+    190,
+    191,
+    192,
+    193,
+    194,
+    195,
+    196,
+    197,
+    198,
+    199
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/JavaType.java",
+   "snippet": "    public JavaType forcedNarrowBy(Class<?> subclass)\n    {\n        if (subclass == _class) { // can still optimize for simple case\n            return this;\n        }\n        JavaType result = _narrow(subclass);\n        // TODO: these checks should NOT actually be needed; above should suffice:\n        if (_valueHandler != result.<Object>getValueHandler()) {\n            result = result.withValueHandler(_valueHandler);\n        }\n        if (_typeHandler != result.<Object>getTypeHandler()) {"
+  }
+ ],
+ "class_simple": "SimpleType",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Simple types are defined as anything other than one of recognized\n * container types (arrays, Collections, Maps). For our needs we\n * need not know anything further, since we have no way of dealing\n * with generic types other than Collections and Maps.\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.type.SimpleType",
+ "focal_id": "JacksonDatabind_37::com.fasterxml.jackson.databind.type.SimpleType::_narrow(Class<?>)",
+ "focal_method_name": "_narrow",
+ "generations": 3,
+ "impl_B": "@Override\n    protected JavaType _narrow(Class<?> subclass)\n    {\n        if (_class == subclass) {\n            return this;\n        }\n        // Should we check that there is a sub-class relationship?\n        // 15-Jan-2016, tatu: Almost yes, but there are some complications with\n        //    placeholder values, so no.\n        /*\n        if (!_class.isAssignableFrom(subclass)) {\n            throw new IllegalArgumentException(\"Class \"+subclass.getName()+\" not sub-type of \"\n                    +_class.getName());\n        }\n        */\n        // 15-Jan-2015, tatu: Not correct; should really re-resolve...\n        return new SimpleType(subclass, _bindings, _superClass, _superInterfaces,\n                _valueHandler, _typeHandler, _asStatic);\n    }",
+ "imports": [
+  "java.util.*",
+  "com.fasterxml.jackson.databind.JavaType"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.type",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Method used by core Jackson classes: NOT to be used by application code:\n     * it does NOT properly handle inspection of super-types, so neither parent\n     * Classes nor implemented Interfaces are accessible with resulting type\n     * instance.\n     *<p>\n     * NOTE: public only because it is called by <code>ObjectMapper</code> which is\n     * not in same package\n     */",
+   "name": "constructUnsafe"
+  },
+  {
+   "javadoc": "/**\n     * Method that should NOT to be used by application code:\n     * it does NOT properly handle inspection of super-types, so neither parent\n     * Classes nor implemented Interfaces are accessible with resulting type\n     * instance. Instead, please use {@link TypeFactory}'s <code>constructType</code>\n     * methods which handle introspection appropriately.\n     *<p>\n     * Note that prior to 2.7, method usage was not limited and would typically\n     * have worked acceptably: the problem comes from inability to resolve super-type\n     * information, for which {@link TypeFactory} is needed.\n     * \n     * @deprecated Since 2.7\n     */",
+   "name": "construct"
+  },
+  {
+   "javadoc": "",
+   "name": "withContentType"
+  },
+  {
+   "javadoc": "",
+   "name": "withTypeHandler"
+  },
+  {
+   "javadoc": "",
+   "name": "withContentTypeHandler"
+  },
+  {
+   "javadoc": "",
+   "name": "withValueHandler"
+  },
+  {
+   "javadoc": "",
+   "name": "withContentValueHandler"
+  },
+  {
+   "javadoc": "",
+   "name": "withStaticTyping"
+  },
+  {
+   "javadoc": "",
+   "name": "refine"
+  },
+  {
+   "javadoc": "",
+   "name": "buildCanonicalName"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "isContainerType"
+  },
+  {
+   "javadoc": "",
+   "name": "getErasedSignature"
+  },
+  {
+   "javadoc": "",
+   "name": "getGenericSignature"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "toString"
+  },
+  {
+   "javadoc": "",
+   "name": "equals"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class SimpleType extends TypeBase",
+  "constructors": [
+   "protected SimpleType(Class<?> cls);",
+   "protected SimpleType(Class<?> cls, TypeBindings bindings, JavaType superClass, JavaType[] superInts);",
+   "protected SimpleType(TypeBase base);",
+   "protected SimpleType(Class<?> cls, TypeBindings bindings, JavaType superClass, JavaType[] superInts, Object valueHandler, Object typeHandler, boolean asStatic);",
+   "protected SimpleType(Class<?> cls, TypeBindings bindings, JavaType superClass, JavaType[] superInts, int extraHash, Object valueHandler, Object typeHandler, boolean asStatic);"
+  ],
+  "focal_signature": "protected JavaType _narrow(Class<?> subclass)",
+  "methods": [
+   "public static SimpleType constructUnsafe(Class<?> raw);",
+   "public static SimpleType construct(Class<?> cls);",
+   "public JavaType withContentType(JavaType contentType);",
+   "public SimpleType withTypeHandler(Object h);",
+   "public JavaType withContentTypeHandler(Object h);",
+   "public SimpleType withValueHandler(Object h);",
+   "public SimpleType withContentValueHandler(Object h);",
+   "public SimpleType withStaticTyping();",
+   "public JavaType refine(Class<?> rawType, TypeBindings bindings, JavaType superClass, JavaType[] superInterfaces);",
+   "protected String buildCanonicalName();",
+   "public boolean isContainerType();",
+   "public StringBuilder getErasedSignature(StringBuilder sb);",
+   "public StringBuilder getGenericSignature(StringBuilder sb);",
+   "public String toString();",
+   "public boolean equals(Object o);"
+  ],
+  "type_signatures": [
+   "public abstract class JavaType extends ResolvedType implements java.io.Serializable, java.lang.reflect.Type { protected JavaType(Class<?> raw, int additionalHash, Object valueHandler, Object typeHandler, boolean asStatic); protected JavaType(JavaType base); public abstract JavaType withTypeHandler(Object h); public abstract JavaType withContentTypeHandler(Object h); public abstract JavaType withValueHandler(Object h); public abstract JavaType withContentValueHandler(Object h); public abstract JavaType withContentType(JavaType contentType); public abstract JavaType withStaticTyping(); public abstract JavaType refine(Class<?> rawType, TypeBindings bindings, JavaType superClass, JavaType[] superInterfaces); public JavaType forcedNarrowBy(Class<?> subclass); protected abstract JavaType _narrow(Class<?> subclass); public final Class<?> getRawClass(); public final boolean hasRawClass(Class<?> clz); public final boolean isTypeOrSubTypeOf(Class<?> clz); public boolean isAbstract(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

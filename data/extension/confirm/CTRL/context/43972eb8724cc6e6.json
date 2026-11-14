@@ -1,0 +1,94 @@
+{
+ "bug_name": "JacksonDatabind_49",
+ "call_sites": [
+  {
+   "line": 593,
+   "lines": [
+    588,
+    589,
+    590,
+    591,
+    592,
+    593,
+    594,
+    595,
+    596,
+    597,
+    598
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ser/std/BeanSerializerBase.java",
+   "snippet": "            return;\n        }\n        if (startEndObject) {\n            gen.writeStartObject();\n        }\n        objectId.writeAsField(gen, provider, w);\n        if (_propertyFilterId != null) {\n            serializeFieldsFiltered(bean, gen, provider);\n        } else {\n            serializeFields(bean, gen, provider);\n        }"
+  },
+  {
+   "line": 633,
+   "lines": [
+    628,
+    629,
+    630,
+    631,
+    632,
+    633,
+    634,
+    635,
+    636,
+    637,
+    638
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ser/std/BeanSerializerBase.java",
+   "snippet": "        if (typeStr == null) {\n            typeSer.writeTypePrefixForObject(bean, gen);\n        } else {\n            typeSer.writeCustomTypePrefixForObject(bean, gen, typeStr);\n        }\n        objectId.writeAsField(gen, provider, w);\n        if (_propertyFilterId != null) {\n            serializeFieldsFiltered(bean, gen, provider);\n        } else {\n            serializeFields(bean, gen, provider);\n        }"
+  }
+ ],
+ "class_simple": "WritableObjectId",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Simple value container used to keep track of Object Ids during\n * serialization.\n */\npublic final",
+  "method_javadoc": "/**\n     * Method called to output Object Id as specified.\n     */"
+ },
+ "fields": [
+  "public final ObjectIdGenerator<?> generator",
+  "public Object id",
+  "protected boolean idWritten"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.ser.impl.WritableObjectId",
+ "focal_id": "JacksonDatabind_49::com.fasterxml.jackson.databind.ser.impl.WritableObjectId::writeAsField(JsonGenerator,SerializerProvider,ObjectIdWriter)",
+ "focal_method_name": "writeAsField",
+ "generations": 3,
+ "impl_B": "public void writeAsField(JsonGenerator gen, SerializerProvider provider,\n            ObjectIdWriter w) throws IOException\n    {\n        idWritten = true;\n\n        // 03-Aug-2013, tatu: Prefer Native Object Ids if available\n        if (gen.canWriteObjectId()) {\n            // Need to assume String(ified) ids, for now... could add 'long' variant?\n            gen.writeObjectId(String.valueOf(id));\n            return;\n        }\n        \n        SerializableString name = w.propertyName;\n        if (name != null) {\n            gen.writeFieldName(name);\n            w.serializer.serialize(id, gen, provider);\n        }\n    }",
+ "imports": [
+  "java.io.IOException",
+  "com.fasterxml.jackson.annotation.ObjectIdGenerator",
+  "com.fasterxml.jackson.core.JsonGenerator",
+  "com.fasterxml.jackson.core.SerializableString",
+  "com.fasterxml.jackson.databind.SerializerProvider"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.ser.impl",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "writeAsId"
+  },
+  {
+   "javadoc": "",
+   "name": "generateId"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public final class WritableObjectId",
+  "constructors": [
+   "public WritableObjectId(ObjectIdGenerator<?> generator);"
+  ],
+  "focal_signature": "public void writeAsField(JsonGenerator gen, SerializerProvider provider, ObjectIdWriter w) throws IOException",
+  "methods": [
+   "public boolean writeAsId(JsonGenerator gen, SerializerProvider provider, ObjectIdWriter w) throws IOException;",
+   "public Object generateId(Object forPojo);"
+  ],
+  "type_signatures": [
+   "public abstract class SerializerProvider extends DatabindContext { public SerializerProvider(); protected SerializerProvider(SerializerProvider src, SerializationConfig config, SerializerFactory f); protected SerializerProvider(SerializerProvider src); public void setDefaultKeySerializer(JsonSerializer<Object> ks); public void setNullValueSerializer(JsonSerializer<Object> nvs); public void setNullKeySerializer(JsonSerializer<Object> nks); public final SerializationConfig getConfig(); public final AnnotationIntrospector getAnnotationIntrospector(); public final TypeFactory getTypeFactory(); public final Class<?> getActiveView(); public final Class<?> getSerializationView(); public Locale getLocale(); public TimeZone getTimeZone(); public Object getAttribute(Object key); public SerializerProvider setAttribute(Object key, Object value); }",
+   "public final class ObjectIdWriter { public static ObjectIdWriter construct(JavaType idType, PropertyName propName, ObjectIdGenerator<?> generator, boolean alwaysAsId); // since 2.3 public static ObjectIdWriter construct(JavaType idType, String propName, ObjectIdGenerator<?> generator, boolean alwaysAsId); public ObjectIdWriter withSerializer(JsonSerializer<?> ser); public ObjectIdWriter withAlwaysAsId(boolean newState); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

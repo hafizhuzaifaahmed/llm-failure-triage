@@ -1,0 +1,138 @@
+{
+ "bug_name": "JxPath_15",
+ "call_sites": [
+  {
+   "line": 210,
+   "lines": [
+    205,
+    206,
+    207,
+    208,
+    209,
+    210,
+    211,
+    212,
+    213,
+    214,
+    215
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/EvalContext.java",
+   "snippet": "        List list = new ArrayList();\n        while (nextNode()) {\n            list.add(getCurrentNodePointer());\n        }\n        if (pos != 0) {\n            setPosition(pos);\n        }\n        else {\n            reset();\n        }\n        return list;"
+  },
+  {
+   "line": 51,
+   "lines": [
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/NamespaceResolver.java",
+   "snippet": "     */\n    protected static String getPrefix(NodePointer pointer, String namespaceURI) {\n        NodePointer currentPointer = pointer;\n        while (currentPointer != null) {\n            NodeIterator ni = currentPointer.namespaceIterator();\n            for (int position = 1; ni != null && ni.setPosition(position); position++) {\n                NodePointer nsPointer = ni.getNodePointer();\n                String uri = nsPointer.getNamespaceURI();\n                if (uri.equals(namespaceURI)) {\n                    String prefix = nsPointer.getName().getName();\n                    if (!\"\".equals(prefix)) {"
+  },
+  {
+   "line": 71,
+   "lines": [
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/axes/AttributeContext.java",
+   "snippet": "        }\n        return true;\n    }\n\n    public boolean nextNode() {\n        super.setPosition(getCurrentPosition() + 1);\n        if (!setStarted) {\n            setStarted = true;\n            if (!(nodeTest instanceof NodeNameTest)) {\n                return false;\n            }"
+  },
+  {
+   "line": 85,
+   "lines": [
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/axes/AttributeContext.java",
+   "snippet": "        }\n\n        if (iterator == null) {\n            return false;\n        }\n        if (!iterator.setPosition(iterator.getPosition() + 1)) {\n            return false;\n        }\n        currentNodePointer = iterator.getNodePointer();\n        return true;\n    }"
+  },
+  {
+   "line": 52,
+   "lines": [
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/axes/ChildContext.java",
+   "snippet": "        this.reverse = reverse;\n    }\n\n    public NodePointer getCurrentNodePointer() {\n        if (position == 0) {\n            if (!setPosition(1)) {\n                return null;\n            }\n        }\n        return iterator == null ? null : iterator.getNodePointer();\n    }"
+  }
+ ],
+ "class_simple": "UnionContext",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * EvalContext that represents a union between other contexts - result\n * of a union operation like (a | b)\n *\n * @author Dmitri Plotnikov\n * @version $Revision$ $Date$\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private EvalContext contexts[]",
+  "private boolean prepared"
+ ],
+ "focal_class": "org.apache.commons.jxpath.ri.axes.UnionContext",
+ "focal_id": "JxPath_15::org.apache.commons.jxpath.ri.axes.UnionContext::setPosition(int)",
+ "focal_method_name": "setPosition",
+ "generations": 3,
+ "impl_B": "public boolean setPosition(int position) {\n        if (!prepared) {\n            prepared = true;\n            BasicNodeSet nodeSet = (BasicNodeSet) getNodeSet();\n            ArrayList pointers = new ArrayList();\n            for (int i = 0; i < contexts.length; i++) {\n                EvalContext ctx = (EvalContext) contexts[i];\n                while (ctx.nextSet()) {\n                    while (ctx.nextNode()) {\n                        NodePointer ptr = ctx.getCurrentNodePointer();\n                        if (!pointers.contains(ptr)) {\n                            nodeSet.add(ptr);\n                            pointers.add(ptr);\n                        }\n                    }\n                }\n            }\n        }\n        return super.setPosition(position);\n    }",
+ "imports": [
+  "java.util.ArrayList",
+  "org.apache.commons.jxpath.BasicNodeSet",
+  "org.apache.commons.jxpath.ri.EvalContext",
+  "org.apache.commons.jxpath.ri.model.NodePointer"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.jxpath.ri.axes",
+ "project": "JxPath",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "getDocumentOrder"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class UnionContext extends NodeSetContext",
+  "constructors": [
+   "public UnionContext(EvalContext parentContext, EvalContext contexts[]);"
+  ],
+  "focal_signature": "public boolean setPosition(int position)",
+  "methods": [
+   "public int getDocumentOrder();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

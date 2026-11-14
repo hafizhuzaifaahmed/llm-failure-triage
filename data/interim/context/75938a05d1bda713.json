@@ -1,0 +1,346 @@
+{
+  "bug_name": "Math_98",
+  "call_sites": [
+    {
+      "line": 319,
+      "lines": [
+        314,
+        315,
+        316,
+        317,
+        318,
+        319,
+        320,
+        321,
+        322,
+        323,
+        324
+      ],
+      "path": "src/java/org/apache/commons/math/linear/BigMatrix.java",
+      "snippet": "     *\n     * @param v the vector to operate on\n     * @return this*v\n     * @throws IllegalArgumentException if columnDimension != v.size()\n     */\n    BigDecimal[] operate(BigDecimal[] v) throws IllegalArgumentException;\n\n    /**\n     * Returns the (row) vector result of premultiplying this by the vector <code>v</code>.\n     *\n     * @param v the row vector to premultiply by"
+    },
+    {
+      "line": 1014,
+      "lines": [
+        1009,
+        1010,
+        1011,
+        1012,
+        1013,
+        1014,
+        1015,
+        1016,
+        1017,
+        1018,
+        1019
+      ],
+      "path": "src/java/org/apache/commons/math/linear/BigMatrixImpl.java",
+      "snippet": "    public BigDecimal[] operate(double[] v) throws IllegalArgumentException {\n        final BigDecimal bd[] = new BigDecimal[v.length];\n        for (int i = 0; i < bd.length; i++) {\n            bd[i] = new BigDecimal(v[i]);\n        }\n        return operate(bd);\n    }\n    \n    /**\n     * Returns the (row) vector result of premultiplying this by the vector <code>v</code>.\n     *"
+    },
+    {
+      "line": 256,
+      "lines": [
+        251,
+        252,
+        253,
+        254,
+        255,
+        256,
+        257,
+        258,
+        259,
+        260,
+        261
+      ],
+      "path": "src/java/org/apache/commons/math/linear/RealMatrix.java",
+      "snippet": "     *\n     * @param v the vector to operate on\n     * @return this*v\n     * @throws IllegalArgumentException if columnDimension != v.size()\n     */\n    double[] operate(double[] v) throws IllegalArgumentException;\n\n    /**\n     * Returns the (row) vector result of premultiplying this by the vector <code>v</code>.\n     *\n     * @param v the row vector to premultiply by"
+    }
+  ],
+  "class_simple": "BigMatrixImpl",
+  "doc": {
+    "class_javadoc": "/**\n * Implementation of {@link BigMatrix} using a BigDecimal[][] array to store entries\n * and <a href=\"http://www.math.gatech.edu/~bourbaki/math2601/Web-notes/2num.pdf\">\n * LU decompostion</a> to support linear system \n * solution and inverse.\n * <p>\n * The LU decompostion is performed as needed, to support the following operations: <ul>\n * <li>solve</li>\n * <li>isSingular</li>\n * <li>getDeterminant</li>\n * <li>inverse</li> </ul></p>\n * <p>\n* <strong>Usage notes</strong>:<br>\n * <ul><li>\n * The LU decomposition is stored and reused on subsequent calls.  If matrix\n * data are modified using any of the public setXxx methods, the saved\n * decomposition is discarded.  If data are modified via references to the\n * underlying array obtained using <code>getDataRef()</code>, then the stored\n * LU decomposition will not be discarded.  In this case, you need to\n * explicitly invoke <code>LUDecompose()</code> to recompute the decomposition\n * before using any of the methods above.</li>\n * <li>\n * As specified in the {@link BigMatrix} interface, matrix element indexing\n * is 0-based -- e.g., <code>getEntry(0, 0)</code>\n * returns the element in the first row, first column of the matrix.</li></ul></p>\n * \n * @version $Revision$ $Date$\n */\npublic",
+    "method_javadoc": "/**\n     * Returns the result of multiplying this by the vector <code>v</code>.\n     *\n     * @param v the vector to operate on\n     * @return this*v\n     * @throws IllegalArgumentException if columnDimension != v.size()\n     */"
+  },
+  "fields": [
+    "private static final long serialVersionUID",
+    "protected BigDecimal data[][]",
+    "protected BigDecimal lu[][]",
+    "protected int[] permutation",
+    "protected int parity",
+    "private int roundingMode",
+    "private int scale",
+    "private static final BigDecimal TOO_SMALL",
+    "static final BigDecimal ZERO",
+    "static final BigDecimal ONE"
+  ],
+  "focal_class": "org.apache.commons.math.linear.BigMatrixImpl",
+  "focal_id": "Math_98::org.apache.commons.math.linear.BigMatrixImpl::operate(BigDecimal[])",
+  "focal_method_name": "operate",
+  "impl_B": "public BigDecimal[] operate(BigDecimal[] v) throws IllegalArgumentException {\n        if (v.length != this.getColumnDimension()) {\n            throw new IllegalArgumentException(\"vector has wrong length\");\n        }\n        final int nRows = this.getRowDimension();\n        final int nCols = this.getColumnDimension();\n        final BigDecimal[] out = new BigDecimal[v.length];\n        for (int row = 0; row < nRows; row++) {\n            BigDecimal sum = ZERO;\n            for (int i = 0; i < nCols; i++) {\n                sum = sum.add(data[row][i].multiply(v[i]));\n            }\n            out[row] = sum;\n        }\n        return out;\n    }",
+  "imports": [
+    "java.io.Serializable",
+    "java.math.BigDecimal"
+  ],
+  "javadoc_edited_by_fix": false,
+  "package": "org.apache.commons.math.linear",
+  "project": "Math",
+  "siblings": [
+    {
+      "javadoc": "/**\n     * Create a new BigMatrix which is a copy of this.\n     *\n     * @return  the cloned matrix\n     */",
+      "name": "copy"
+    },
+    {
+      "javadoc": "/**\n     * Compute the sum of this and <code>m</code>.\n     *\n     * @param m    matrix to be added\n     * @return     this + m\n     * @throws  IllegalArgumentException if m is not the same size as this\n     */",
+      "name": "add"
+    },
+    {
+      "javadoc": "/**\n     * Compute the sum of this and <code>m</code>.\n     *\n     * @param m    matrix to be added\n     * @return     this + m\n     * @throws  IllegalArgumentException if m is not the same size as this\n     */",
+      "name": "add"
+    },
+    {
+      "javadoc": "/**\n     * Compute  this minus <code>m</code>.\n     *\n     * @param m    matrix to be subtracted\n     * @return     this + m\n     * @throws  IllegalArgumentException if m is not the same size as this\n     */",
+      "name": "subtract"
+    },
+    {
+      "javadoc": "/**\n     * Compute  this minus <code>m</code>.\n     *\n     * @param m    matrix to be subtracted\n     * @return     this + m\n     * @throws  IllegalArgumentException if m is not the same size as this\n     */",
+      "name": "subtract"
+    },
+    {
+      "javadoc": "/**\n     * Returns the result of adding d to each entry of this.\n     *\n     * @param d    value to be added to each entry\n     * @return     d + this\n     */",
+      "name": "scalarAdd"
+    },
+    {
+      "javadoc": "/**\n     * Returns the result of multiplying each entry of this by <code>d</code>\n     * @param d  value to multiply all entries by\n     * @return d * this\n     */",
+      "name": "scalarMultiply"
+    },
+    {
+      "javadoc": "/**\n     * Returns the result of postmultiplying this by <code>m</code>.\n     * @param m    matrix to postmultiply by\n     * @return     this*m\n     * @throws     IllegalArgumentException\n     *             if columnDimension(this) != rowDimension(m)\n     */",
+      "name": "multiply"
+    },
+    {
+      "javadoc": "/**\n     * Returns the result of postmultiplying this by <code>m</code>.\n     * @param m    matrix to postmultiply by\n     * @return     this*m\n     * @throws     IllegalArgumentException\n     *             if columnDimension(this) != rowDimension(m)\n     */",
+      "name": "multiply"
+    },
+    {
+      "javadoc": "/**\n     * Returns the result premultiplying this by <code>m</code>.\n     * @param m    matrix to premultiply by\n     * @return     m * this\n     * @throws     IllegalArgumentException\n     *             if rowDimension(this) != columnDimension(m)\n     */",
+      "name": "preMultiply"
+    },
+    {
+      "javadoc": "/**\n     * Returns matrix entries as a two-dimensional array.\n     * <p>\n     * Makes a fresh copy of the underlying data.</p>\n     *\n     * @return    2-dimensional array of entries\n     */",
+      "name": "getData"
+    },
+    {
+      "javadoc": "/**\n     * Returns matrix entries as a two-dimensional array.\n     * <p>\n     * Makes a fresh copy of the underlying data converted to\n     * <code>double</code> values.</p>\n     *\n     * @return    2-dimensional array of entries\n     */",
+      "name": "getDataAsDoubleArray"
+    },
+    {
+      "javadoc": "/**\n     * Returns a reference to the underlying data array.\n     * <p>\n     * Does not make a fresh copy of the underlying data.</p>\n     *\n     * @return 2-dimensional array of entries\n     */",
+      "name": "getDataRef"
+    },
+    {
+      "javadoc": "/***\n     * Gets the rounding mode for division operations\n     * The default is {@link java.math.BigDecimal#ROUND_HALF_UP}\n     * @see BigDecimal\n     * @return the rounding mode.\n     */",
+      "name": "getRoundingMode"
+    },
+    {
+      "javadoc": "/***\n     * Sets the rounding mode for decimal divisions.\n     * @see BigDecimal\n     * @param roundingMode rounding mode for decimal divisions\n     */",
+      "name": "setRoundingMode"
+    },
+    {
+      "javadoc": "/***\n     * Sets the scale for division operations.\n     * The default is 64\n     * @see BigDecimal\n     * @return the scale\n     */",
+      "name": "getScale"
+    },
+    {
+      "javadoc": "/***\n     * Sets the scale for division operations.\n     * @see BigDecimal\n     * @param scale scale for division operations\n     */",
+      "name": "setScale"
+    },
+    {
+      "javadoc": "/**\n     * Returns the <a href=\"http://mathworld.wolfram.com/MaximumAbsoluteRowSumNorm.html\">\n     * maximum absolute row sum norm</a> of the matrix.\n     *\n     * @return norm\n     */",
+      "name": "getNorm"
+    },
+    {
+      "javadoc": "/**\n     * Gets a submatrix. Rows and columns are indicated\n     * counting from 0 to n-1.\n     *\n     * @param startRow Initial row index\n     * @param endRow Final row index\n     * @param startColumn Initial column index\n     * @param endColumn Final column index\n     * @return The subMatrix containing the data of the\n     *         specified rows and columns\n     * @exception MatrixIndexException if row or column selections are not valid\n     */",
+      "name": "getSubMatrix"
+    },
+    {
+      "javadoc": "/**\n     * Gets a submatrix. Rows and columns are indicated\n     * counting from 0 to n-1.\n     *\n     * @param selectedRows Array of row indices must be non-empty\n     * @param selectedColumns Array of column indices must be non-empty\n     * @return The subMatrix containing the data in the\n     *     specified rows and columns\n     * @exception MatrixIndexException  if supplied row or column index arrays\n     *     are not valid\n     */",
+      "name": "getSubMatrix"
+    },
+    {
+      "javadoc": "/**\n     * Replace the submatrix starting at <code>row, column</code> using data in\n     * the input <code>subMatrix</code> array. Indexes are 0-based.\n     * <p> \n     * Example:<br>\n     * Starting with <pre>\n     * 1  2  3  4\n     * 5  6  7  8\n     * 9  0  1  2\n     * </pre>\n     * and <code>subMatrix = {{3, 4} {5,6}}</code>, invoking \n     * <code>setSubMatrix(subMatrix,1,1))</code> will result in <pre>\n     * 1  2  3  4\n     * 5  3  4  8\n     * 9  5  6  2\n     * </pre></p>\n     * \n     * @param subMatrix  array containing the submatrix replacement data\n     * @param row  row coordinate of the top, left element to be replaced\n     * @param column  column coordinate of the top, left element to be replaced\n     * @throws MatrixIndexException  if subMatrix does not fit into this \n     *    matrix from element in (row, column) \n     * @throws IllegalArgumentException if <code>subMatrix</code> is not rectangular\n     *  (not all rows have the same length) or empty\n     * @throws NullPointerException if <code>subMatrix</code> is null\n     * @since 1.1\n     */",
+      "name": "setSubMatrix"
+    },
+    {
+      "javadoc": "/**\n     * Returns the entries in row number <code>row</code>\n     * as a row matrix.  Row indices start at 0.\n     *\n     * @param row the row to be fetched\n     * @return row matrix\n     * @throws MatrixIndexException if the specified row index is invalid\n     */",
+      "name": "getRowMatrix"
+    },
+    {
+      "javadoc": "/**\n     * Returns the entries in column number <code>column</code>\n     * as a column matrix.  Column indices start at 0.\n     *\n     * @param column the column to be fetched\n     * @return column matrix\n     * @throws MatrixIndexException if the specified column index is invalid\n     */",
+      "name": "getColumnMatrix"
+    },
+    {
+      "javadoc": "/**\n     * Returns the entries in row number <code>row</code> as an array.\n     * <p>\n     * Row indices start at 0.  A <code>MatrixIndexException</code> is thrown\n     * unless <code>0 <= row < rowDimension.</code></p>\n     *\n     * @param row the row to be fetched\n     * @return array of entries in the row\n     * @throws MatrixIndexException if the specified row index is not valid\n     */",
+      "name": "getRow"
+    },
+    {
+      "javadoc": "/**\n     * Returns the entries in row number <code>row</code> as an array\n     * of double values.\n     * <p>\n     * Row indices start at 0.  A <code>MatrixIndexException</code> is thrown\n     * unless <code>0 <= row < rowDimension.</code></p>\n     *\n     * @param row the row to be fetched\n     * @return array of entries in the row\n     * @throws MatrixIndexException if the specified row index is not valid\n     */",
+      "name": "getRowAsDoubleArray"
+    },
+    {
+      "javadoc": "/**\n     * Returns the entries in column number <code>col</code> as an array.\n     * <p>\n     * Column indices start at 0.  A <code>MatrixIndexException</code> is thrown\n     * unless <code>0 <= column < columnDimension.</code></p>\n     *\n     * @param col the column to be fetched\n     * @return array of entries in the column\n     * @throws MatrixIndexException if the specified column index is not valid\n     */",
+      "name": "getColumn"
+    },
+    {
+      "javadoc": "/**\n     * Returns the entries in column number <code>col</code> as an array\n     * of double values.\n     * <p>\n     * Column indices start at 0.  A <code>MatrixIndexException</code> is thrown\n     * unless <code>0 <= column < columnDimension.</code></p>\n     *\n     * @param col the column to be fetched\n     * @return array of entries in the column\n     * @throws MatrixIndexException if the specified column index is not valid\n     */",
+      "name": "getColumnAsDoubleArray"
+    },
+    {
+      "javadoc": "/**\n     * Returns the entry in the specified row and column.\n     * <p>\n     * Row and column indices start at 0 and must satisfy \n     * <ul>\n     * <li><code>0 <= row < rowDimension</code></li>\n     * <li><code> 0 <= column < columnDimension</code></li>\n     * </ul>\n     * otherwise a <code>MatrixIndexException</code> is thrown.</p>\n     *\n     * @param row  row location of entry to be fetched  \n     * @param column  column location of entry to be fetched\n     * @return matrix entry in row,column\n     * @throws MatrixIndexException if the row or column index is not valid\n     */",
+      "name": "getEntry"
+    },
+    {
+      "javadoc": "/**\n     * Returns the entry in the specified row and column as a double.\n     * <p>\n     * Row and column indices start at 0 and must satisfy \n     * <ul>\n     * <li><code>0 <= row < rowDimension</code></li>\n     * <li><code> 0 <= column < columnDimension</code></li>\n     * </ul>\n     * otherwise a <code>MatrixIndexException</code> is thrown.</p>\n     *\n     * @param row  row location of entry to be fetched\n     * @param column  column location of entry to be fetched\n     * @return matrix entry in row,column\n     * @throws MatrixIndexException if the row\n     * or column index is not valid\n     */",
+      "name": "getEntryAsDouble"
+    },
+    {
+      "javadoc": "/**\n     * Returns the transpose matrix.\n     *\n     * @return transpose matrix\n     */",
+      "name": "transpose"
+    },
+    {
+      "javadoc": "/**\n     * Returns the inverse matrix if this matrix is invertible.\n     * \n     * @return inverse matrix\n     * @throws InvalidMatrixException if this is not invertible\n     */",
+      "name": "inverse"
+    },
+    {
+      "javadoc": "/**\n     * Returns the determinant of this matrix.\n     *\n     * @return determinant\n     * @throws InvalidMatrixException if matrix is not square\n     */",
+      "name": "getDeterminant"
+    },
+    {
+      "javadoc": "/**\n     * Is this a square matrix?\n     * @return true if the matrix is square (rowDimension = columnDimension)\n     */",
+      "name": "isSquare"
+    },
+    {
+      "javadoc": "/**\n     * Is this a singular matrix?\n     * @return true if the matrix is singular\n     */",
+      "name": "isSingular"
+    },
+    {
+      "javadoc": "/**\n     * Returns the number of rows in the matrix.\n     *\n     * @return rowDimension\n     */",
+      "name": "getRowDimension"
+    },
+    {
+      "javadoc": "/**\n     * Returns the number of columns in the matrix.\n     *\n     * @return columnDimension\n     */",
+      "name": "getColumnDimension"
+    },
+    {
+      "javadoc": "/**\n     * Returns the <a href=\"http://mathworld.wolfram.com/MatrixTrace.html\">\n     * trace</a> of the matrix (the sum of the elements on the main diagonal).\n     *\n     * @return trace\n     * \n     * @throws IllegalArgumentException if this matrix is not square.\n     */",
+      "name": "getTrace"
+    },
+    {
+      "javadoc": "/**\n     * Returns the result of multiplying this by the vector <code>v</code>.\n     *\n     * @param v the vector to operate on\n     * @return this*v\n     * @throws IllegalArgumentException if columnDimension != v.size()\n     */",
+      "name": "operate"
+    },
+    {
+      "javadoc": "/**\n     * Returns the (row) vector result of premultiplying this by the vector <code>v</code>.\n     *\n     * @param v the row vector to premultiply by\n     * @return v*this\n     * @throws IllegalArgumentException if rowDimension != v.size()\n     */",
+      "name": "preMultiply"
+    },
+    {
+      "javadoc": "/**\n     * Returns a matrix of (column) solution vectors for linear systems with\n     * coefficient matrix = this and constant vectors = columns of\n     * <code>b</code>. \n     *\n     * @param b  array of constants forming RHS of linear systems to\n     * to solve\n     * @return solution array\n     * @throws IllegalArgumentException if this.rowDimension != row dimension\n     * @throws InvalidMatrixException if this matrix is not square or is singular\n     */",
+      "name": "solve"
+    },
+    {
+      "javadoc": "/**\n     * Returns a matrix of (column) solution vectors for linear systems with\n     * coefficient matrix = this and constant vectors = columns of\n     * <code>b</code>. \n     *\n     * @param b  array of constants forming RHS of linear systems to\n     * to solve\n     * @return solution array\n     * @throws IllegalArgumentException if this.rowDimension != row dimension\n     * @throws InvalidMatrixException if this matrix is not square or is singular\n     */",
+      "name": "solve"
+    },
+    {
+      "javadoc": "/**\n     * Returns a matrix of (column) solution vectors for linear systems with\n     * coefficient matrix = this and constant vectors = columns of\n     * <code>b</code>. \n     *\n     * @param b  matrix of constant vectors forming RHS of linear systems to\n     * to solve\n     * @return matrix of solution vectors\n     * @throws IllegalArgumentException if this.rowDimension != row dimension\n     * @throws InvalidMatrixException if this matrix is not square or is singular\n     */",
+      "name": "solve"
+    },
+    {
+      "javadoc": "/**\n     * Computes a new \n     * <a href=\"http://www.math.gatech.edu/~bourbaki/math2601/Web-notes/2num.pdf\">\n     * LU decompostion</a> for this matrix, storing the result for use by other methods. \n     * <p>\n     * <strong>Implementation Note</strong>:<br>\n     * Uses <a href=\"http://www.damtp.cam.ac.uk/user/fdl/people/sd/lectures/nummeth98/linear.htm\">\n     * Crout's algortithm</a>, with partial pivoting.</p>\n     * <p>\n     * <strong>Usage Note</strong>:<br>\n     * This method should rarely be invoked directly. Its only use is\n     * to force recomputation of the LU decomposition when changes have been\n     * made to the underlying data using direct array references. Changes\n     * made using setXxx methods will trigger recomputation when needed\n     * automatically.</p>\n     *\n     * @throws InvalidMatrixException if the matrix is non-square or singular.\n     */",
+      "name": "luDecompose"
+    },
+    {
+      "javadoc": "/**\n     * Get a string representation for this matrix.\n     * @return a string representation for this matrix\n     */",
+      "name": "toString"
+    },
+    {
+      "javadoc": "/**\n     * Returns true iff <code>object</code> is a \n     * <code>BigMatrixImpl</code> instance with the same dimensions as this\n     * and all corresponding matrix entries are equal.  BigDecimal.equals\n     * is used to compare corresponding entries.\n     * \n     * @param object the object to test equality against.\n     * @return true if object equals this\n     */",
+      "name": "equals"
+    },
+    {
+      "javadoc": "/**\n     * Computes a hashcode for the matrix.\n     * \n     * @return hashcode for matrix\n     */",
+      "name": "hashCode"
+    },
+    {
+      "javadoc": "/**\n     *  Returns the LU decomposition as a BigMatrix.\n     *  Returns a fresh copy of the cached LU matrix if this has been computed; \n     *  otherwise the composition is computed and cached for use by other methods.   \n     *  Since a copy is returned in either case, changes to the returned matrix do not \n     *  affect the LU decomposition property. \n     * <p>\n     * The matrix returned is a compact representation of the LU decomposition. \n     * Elements below the main diagonal correspond to entries of the \"L\" matrix;   \n     * elements on and above the main diagonal correspond to entries of the \"U\"\n     * matrix.</p>\n     * <p>\n     * Example: <pre>\n     * \n     *     Returned matrix                L                  U\n     *         2  3  1                   1  0  0            2  3  1          \n     *         5  4  6                   5  1  0            0  4  6\n     *         1  7  8                   1  7  1            0  0  8          \n     * </pre>\n     * \n     * The L and U matrices satisfy the matrix equation LU = permuteRows(this), <br>\n     *  where permuteRows reorders the rows of the matrix to follow the order determined\n     *  by the <a href=#getPermutation()>permutation</a> property.</p>\n     * \n     * @return LU decomposition matrix\n     * @throws InvalidMatrixException if the matrix is non-square or singular.\n     */",
+      "name": "getLUMatrix"
+    },
+    {
+      "javadoc": "/**\n     * Returns the permutation associated with the lu decomposition.\n     * The entries of the array represent a permutation of the numbers 0, ... , nRows - 1.\n     * <p>\n     * Example:\n     * permutation = [1, 2, 0] means current 2nd row is first, current third row is second\n     * and current first row is last.</p>\n     * <p>\n     * Returns a fresh copy of the array.</p>\n     * \n     * @return the permutation\n     */",
+      "name": "getPermutation"
+    }
+  ],
+  "sig": {
+    "class_declaration": "public class BigMatrixImpl implements BigMatrix, Serializable",
+    "constructors": [
+      "public BigMatrixImpl();",
+      "public BigMatrixImpl(int rowDimension, int columnDimension);",
+      "public BigMatrixImpl(BigDecimal[][] d);",
+      "public BigMatrixImpl(BigDecimal[][] d, boolean copyArray);",
+      "public BigMatrixImpl(double[][] d);",
+      "public BigMatrixImpl(String[][] d);",
+      "public BigMatrixImpl(BigDecimal[] v);"
+    ],
+    "focal_signature": "public BigDecimal[] operate(BigDecimal[] v) throws IllegalArgumentException",
+    "methods": [
+      "public BigMatrix copy();",
+      "public BigMatrix add(BigMatrix m) throws IllegalArgumentException;",
+      "public BigMatrixImpl add(BigMatrixImpl m) throws IllegalArgumentException;",
+      "public BigMatrix subtract(BigMatrix m) throws IllegalArgumentException;",
+      "public BigMatrixImpl subtract(BigMatrixImpl m) throws IllegalArgumentException;",
+      "public BigMatrix scalarAdd(BigDecimal d);",
+      "public BigMatrix scalarMultiply(BigDecimal d);",
+      "public BigMatrix multiply(BigMatrix m) throws IllegalArgumentException;",
+      "public BigMatrixImpl multiply(BigMatrixImpl m) throws IllegalArgumentException;",
+      "public BigMatrix preMultiply(BigMatrix m) throws IllegalArgumentException;",
+      "public BigDecimal[][] getData();",
+      "public double[][] getDataAsDoubleArray();",
+      "public BigDecimal[][] getDataRef();",
+      "public int getRoundingMode();",
+      "public void setRoundingMode(int roundingMode);",
+      "public int getScale();",
+      "public void setScale(int scale);",
+      "public BigDecimal getNorm();",
+      "public BigMatrix getSubMatrix(int startRow, int endRow, int startColumn, int endColumn) throws MatrixIndexException;",
+      "public BigMatrix getSubMatrix(int[] selectedRows, int[] selectedColumns) throws MatrixIndexException;",
+      "public void setSubMatrix(BigDecimal[][] subMatrix, int row, int column) throws MatrixIndexException;",
+      "public BigMatrix getRowMatrix(int row) throws MatrixIndexException;",
+      "public BigMatrix getColumnMatrix(int column) throws MatrixIndexException;",
+      "public BigDecimal[] getRow(int row) throws MatrixIndexException;",
+      "public double[] getRowAsDoubleArray(int row) throws MatrixIndexException;",
+      "public BigDecimal[] getColumn(int col) throws MatrixIndexException;",
+      "public double[] getColumnAsDoubleArray(int col) throws MatrixIndexException;",
+      "public BigDecimal getEntry(int row, int column) throws MatrixIndexException;",
+      "public double getEntryAsDouble(int row, int column) throws MatrixIndexException;",
+      "public BigMatrix transpose();",
+      "public BigMatrix inverse() throws InvalidMatrixException;",
+      "public BigDecimal getDeterminant() throws InvalidMatrixException;",
+      "public boolean isSquare();",
+      "public boolean isSingular();",
+      "public int getRowDimension();",
+      "public int getColumnDimension();",
+      "public BigDecimal getTrace() throws IllegalArgumentException;",
+      "public BigDecimal[] operate(double[] v) throws IllegalArgumentException;",
+      "public BigDecimal[] preMultiply(BigDecimal[] v) throws IllegalArgumentException;",
+      "public BigDecimal[] solve(BigDecimal[] b) throws IllegalArgumentException, InvalidMatrixException;",
+      "public BigDecimal[] solve(double[] b) throws IllegalArgumentException, InvalidMatrixException;",
+      "public BigMatrix solve(BigMatrix b) throws IllegalArgumentException, InvalidMatrixException;",
+      "public void luDecompose() throws InvalidMatrixException;",
+      "public String toString();",
+      "public boolean equals(Object object);",
+      "public int hashCode();",
+      "protected BigMatrix getLUMatrix() throws InvalidMatrixException;",
+      "protected int[] getPermutation();"
+    ],
+    "type_signatures": []
+  },
+  "split": "test"
+}

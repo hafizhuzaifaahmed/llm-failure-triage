@@ -1,0 +1,162 @@
+{
+ "bug_name": "Closure_162",
+ "call_sites": [
+  {
+   "line": 676,
+   "lines": [
+    671,
+    672,
+    673,
+    674,
+    675,
+    676,
+    677,
+    678,
+    679,
+    680,
+    681
+   ],
+   "path": "src/com/google/debugging/sourcemap/SourceMapConsumerV3.java",
+   "snippet": "      return name;\n    }\n  }\n\n  static interface EntryVisitor {\n    void visit(String sourceName,\n               String symbolName,\n               FilePosition sourceStartPosition,\n               FilePosition startPosition,\n               FilePosition endPosition);\n  }"
+  },
+  {
+   "line": 700,
+   "lines": [
+    695,
+    696,
+    697,
+    698,
+    699,
+    700,
+    701,
+    702,
+    703,
+    704,
+    705
+   ],
+   "path": "src/com/google/debugging/sourcemap/SourceMapConsumerV3.java",
+   "snippet": "        for (int j = 0; j < entryCount; j++) {\n          Entry entry = line.get(j);\n          if (pending) {\n            FilePosition endPosition = new FilePosition(\n                i, entry.getGeneratedColumn());\n            visitor.visit(\n                sourceName,\n                symbolName,\n                sourceStartPosition,\n                startPosition,\n                endPosition);"
+  },
+  {
+   "line": 506,
+   "lines": [
+    501,
+    502,
+    503,
+    504,
+    505,
+    506,
+    507,
+    508,
+    509,
+    510,
+    511
+   ],
+   "path": "src/com/google/debugging/sourcemap/SourceMapGeneratorV1.java",
+   "snippet": "     * @param col The starting column for this code segment.\n     * @param endLine The ending line\n     * @param endCol The ending column\n     * @throws IOException\n     */\n    void visit(Mapping m, int line, int col, int endLine, int endCol)\n        throws IOException;\n  }\n\n  /**\n   * Walk the mappings and visit each segment of the mappings, unmapped"
+  },
+  {
+   "line": 595,
+   "lines": [
+    590,
+    591,
+    592,
+    593,
+    594,
+    595,
+    596,
+    597,
+    598,
+    599,
+    600
+   ],
+   "path": "src/com/google/debugging/sourcemap/SourceMapGeneratorV1.java",
+   "snippet": "      int nextLine = getAdjustedLine(m.endPosition);\n      int nextCol = getAdjustedCol(m.endPosition);\n      // If this anything remaining in this mapping beyond the\n      // current line and column position, write it out now.\n      if (line < nextLine || (line == nextLine && col < nextCol)) {\n        visit(v, m, nextLine, nextCol);\n      }\n    }\n\n    /**\n     * Write any needed entries to complete the provided mapping."
+  },
+  {
+   "line": 609,
+   "lines": [
+    604,
+    605,
+    606,
+    607,
+    608,
+    609,
+    610,
+    611,
+    612,
+    613,
+    614
+   ],
+   "path": "src/com/google/debugging/sourcemap/SourceMapGeneratorV1.java",
+   "snippet": "      int nextLine = getAdjustedLine(m.startPosition);\n      int nextCol = getAdjustedCol(m.startPosition);\n      // If the previous value is null, no mapping exists.\n      Preconditions.checkState(line < nextLine || col <= nextCol);\n      if (line < nextLine || (line == nextLine && col < nextCol)) {\n        visit(v, parent, nextLine, nextCol);\n      }\n    }\n\n    /**\n     * Write any entries needed between the current position the next position"
+  }
+ ],
+ "class_simple": "Traversal",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private final List<Node> aliasDefinitionsInOrder",
+  "private final List<Node> scopeCalls",
+  "private final List<AliasUsage> aliasUsages",
+  "private final Map<String, Var> aliases",
+  "private boolean hasErrors",
+  "private AliasTransformation transformation"
+ ],
+ "focal_class": "com.google.javascript.jscomp.ScopedAliases.Traversal",
+ "focal_id": "Closure_162::com.google.javascript.jscomp.ScopedAliases$Traversal::visit(NodeTraversal,Node,Node)",
+ "focal_method_name": "visit",
+ "generations": 3,
+ "impl_B": "@Override\n    public void visit(NodeTraversal t, Node n, Node parent) {\n      if (isCallToScopeMethod(n)) {\n        validateScopeCall(t, n, n.getParent());\n      }\n\n\n\n      // Validate the top level of the goog.scope block.\n      if (t.getScopeDepth() == 2) {\n        int type = n.getType();\n        if (type == Token.NAME && parent.getType() == Token.VAR) {\n          if (n.hasChildren() && n.getFirstChild().isQualifiedName()) {\n            String name = n.getString();\n            Var aliasVar = t.getScope().getVar(name);\n            aliases.put(name, aliasVar);\n            aliasDefinitionsInOrder.add(n);\n\n            String qualifiedName =\n                aliasVar.getInitialValue().getQualifiedName();\n            transformation.addAlias(name, qualifiedName);\n            // Return early, to ensure that we don't record a definition\n            // twice.\n            return;\n          } else {\n            report(t, n, GOOG_SCOPE_NON_ALIAS_LOCAL, n.getString());\n          }\n        }\n        if (type == Token.NAME && NodeUtil.isAssignmentOp(parent) &&\n            n == parent.getFirstChild()) {\n            report(t, n, GOOG_SCOPE_ALIAS_REDEFINED, n.getString());\n        }\n\n        if (type == Token.RETURN) {\n          report(t, n, GOOG_SCOPE_USES_RETURN);\n        } else if (type == Token.THIS) {\n          report(t, n, GOOG_SCOPE_REFERENCES_THIS);\n        } else if (type == Token.THROW) {\n          report(t, n, GOOG_SCOPE_USES_THROW);\n        }\n      }\n\n      // Validate all descendent scopes of the goog.scope block.\n      if (t.getScopeDepth() >= 2) {\n        // Check if this name points to an alias.\n        if (n.getType() == Token.NAME) {\n          String name = n.getString();\n          Var aliasVar = aliases.get(name);\n          if (aliasVar != null &&\n              t.getScope().getVar(name) == aliasVar) {\n          // Note, to support the transitive case, it's important we don't\n          // clone aliasedNode here.  For example,\n          // var g = goog; var d = g.dom; d.createElement('DIV');\n          // The node in aliasedNode (which is \"g\") will be replaced in the\n          // changes pass above with \"goog\".  If we cloned here, we'd end up\n          // with <code>g.dom.createElement('DIV')</code>.\n          Node aliasedNode = aliasVar.getInitialValue();\n          aliasUsages.add(new AliasedNode(n, aliasedNode));\n          }\n        }\n\n        JSDocInfo info = n.getJSDocInfo();\n        if (info != null) {\n          for (Node node : info.getTypeNodes()) {\n            fixTypeNode(node);\n          }\n        }\n\n        // TODO(robbyw): Error for goog.scope not at root.\n      }\n    }",
+ "imports": [
+  "com.google.common.collect.Lists",
+  "com.google.common.collect.Maps",
+  "com.google.javascript.jscomp.CompilerOptions.AliasTransformation",
+  "com.google.javascript.jscomp.CompilerOptions.AliasTransformationHandler",
+  "com.google.javascript.jscomp.Scope.Var",
+  "com.google.javascript.rhino.JSDocInfo",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.SourcePosition",
+  "com.google.javascript.rhino.Token",
+  "java.util.Collection",
+  "java.util.List",
+  "java.util.Map",
+  "javax.annotation.Nullable"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "enterScope"
+  },
+  {
+   "javadoc": "",
+   "name": "exitScope"
+  },
+  {
+   "javadoc": "",
+   "name": "shouldTraverse"
+  }
+ ],
+ "sig": {
+  "class_declaration": "private class Traversal implements NodeTraversal.ScopedCallback",
+  "constructors": [],
+  "focal_signature": "public void visit(NodeTraversal t, Node n, Node parent)",
+  "methods": [
+   "public void enterScope(NodeTraversal t);",
+   "public void exitScope(NodeTraversal t);",
+   "public final boolean shouldTraverse(NodeTraversal t, Node n, Node parent);"
+  ],
+  "type_signatures": [
+   "public class NodeTraversal { public NodeTraversal(AbstractCompiler compiler, Callback cb); public NodeTraversal(AbstractCompiler compiler, Callback cb, ScopeCreator scopeCreator); public void traverse(Node root); public void traverseRoots(Node ... roots); public void traverseRoots(List<Node> roots); protected void traverseInnerNode(Node node, Node parent, Scope refinedScope); public Compiler getCompiler(); public int getLineNumber(); public String getSourceName(); public CompilerInput getInput(); public JSModule getModule(); public Node getCurrentNode(); public static void traverse( AbstractCompiler compiler, Node root, Callback cb); public static void traverseRoots( AbstractCompiler compiler, List<Node> roots, Callback cb); public Scope getScope(); }",
+   "public class Node implements Cloneable, Serializable { public Node(int nodeType); public Node(int nodeType, Node child); public Node(int nodeType, Node left, Node right); public Node(int nodeType, Node left, Node mid, Node right); public Node(int nodeType, Node left, Node mid, Node mid2, Node right); public Node(int nodeType, int lineno, int charno); public Node(int nodeType, Node child, int lineno, int charno); public Node(int nodeType, Node left, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node mid2, Node right, int lineno, int charno); public Node(int nodeType, Node[] children, int lineno, int charno); public Node(int nodeType, Node[] children); public static Node newNumber(double number); public static Node newNumber(double number, int lineno, int charno); public static Node newString(String str); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

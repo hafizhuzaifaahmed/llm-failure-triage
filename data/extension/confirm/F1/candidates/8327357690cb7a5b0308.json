@@ -1,0 +1,14 @@
+{
+  "assembled": true,
+  "call_key": "9ad0a1a33eee73204542aafee9b58ce00c5d7bf0c223921a68ce28c784198f8c",
+  "candidate_id": "8327357690cb7a5b0308",
+  "class_name": "Fraction_reduce_TriageGen2Test",
+  "dataset": "D1C_F1",
+  "focal_id": "Lang_49::org.apache.commons.lang.math.Fraction::reduce()",
+  "generation": 2,
+  "model_returned": "gemma4:26b",
+  "n_tests": 6,
+  "package": "org.apache.commons.lang.math",
+  "source": "package org.apache.commons.lang.math;\n\nimport java.io.*;\nimport java.math.*;\nimport java.math.BigInteger;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class Fraction_reduce_TriageGen2Test {\n\n    @Test\n    public void testReduce_AlreadyReduced() {\n        // Case where gcd is 1, should return 'this'\n        Fraction fraction = Fraction.getFraction(3, 7);\n        Fraction reduced = fraction.reduce();\n        \n        assertSame(\"Should return the same instance if gcd is 1\", fraction, reduced);\n        assertEquals(3, reduced.getNumerator());\n        assertEquals(7, reduced.getDenominator());\n    }\n\n    @Test\n    public void testReduce_NeedsReduction() {\n        // Case where gcd > 1, should return a new reduced fraction\n        Fraction fraction = Fraction.getFraction(4, 8);\n        Fraction reduced = fraction.reduce();\n        \n        assertNotSame(\"Should return a new instance when reduction occurs\", fraction, reduced);\n        assertEquals(1, reduced.getNumerator());\n        assertEquals(2, reduced.getDenominator());\n    }\n\n    @Test\n    public void testReduce_LargeReduction() {\n        // Case with larger numbers\n        Fraction fraction = Fraction.getFraction(100, 250);\n        Fraction reduced = fraction.reduce();\n        \n        assertEquals(2, reduced.getNumerator());\n        assertEquals(5, reduced.getDenominator());\n    }\n\n    @Test\n    public void testReduce_NegativeNumerator() {\n        // Testing Math.abs logic in gcd calculation\n        // gcd(abs(-4), 8) = gcd(4, 8) = 4\n        Fraction fraction = Fraction.getFraction(-4, 8);\n        Fraction reduced = fraction.reduce();\n        \n        assertEquals(-1, reduced.getNumerator());\n        assertEquals(2, reduced.getDenominator());\n    }\n\n    @Test\n    public void testReduce_UnitNumerator() {\n        // gcd(1, 5) = 1\n        Fraction fraction = Fraction.getFraction(1, 5);\n        Fraction reduced = fraction.reduce();\n        \n        assertSame(fraction, reduced);\n    }\n\n    @Test\n    public void testReduce_LargeCommonDivisor() {\n        // gcd(12, 12) = 12\n        Fraction fraction = Fraction.getFraction(12, 12);\n        Fraction reduced = fraction.reduce();\n        \n        assertEquals(1, reduced.getNumerator());\n        assertEquals(1, reduced.getDenominator());\n    }\n}\n",
+  "tranche": "F1"
+}

@@ -1,0 +1,119 @@
+{
+ "bug_name": "Closure_107",
+ "call_sites": [
+  {
+   "line": 739,
+   "lines": [
+    734,
+    735,
+    736,
+    737,
+    738,
+    739,
+    740,
+    741,
+    742,
+    743,
+    744
+   ],
+   "path": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java",
+   "snippet": "    Compiler.setLoggingLevel(Level.parse(config.loggingLevel));\n\n    List<SourceFile> externs = createExterns();\n\n    compiler = createCompiler();\n    B options = createOptions();\n\n    List<JSModule> modules = null;\n    Result result = null;\n\n    setRunOptions(options);"
+  }
+ ],
+ "class_simple": "CommandLineRunner",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * CommandLineRunner translates flags into Java API calls on the Compiler.\n *\n * This class may be extended and used to create other Java classes\n * that behave the same as running the Compiler from the command line. If you\n * want to run the compiler in-process in Java, you should look at this class\n * for hints on what API calls to make, but you should not use this class\n * directly.\n *\n * Example:\n * <pre>\n * class MyCommandLineRunner extends CommandLineRunner {\n *   MyCommandLineRunner(String[] args) {\n *     super(args);\n *   }\n *\n *   {@code @Override} protected CompilerOptions createOptions() {\n *     CompilerOptions options = super.createOptions();\n *     addMyCrazyCompilerPassThatOutputsAnExtraFile(options);\n *     return options;\n *   }\n *\n *   public static void main(String[] args) {\n *     MyCommandLineRunner runner = new MyCommandLineRunner(args);\n *     if (runner.shouldRunCompiler()) {\n *       runner.run();\n *     } else {\n *       System.exit(-1);\n *     }\n *   }\n * }\n * </pre>\n *\n * This class is totally not thread-safe.\n *\n * @author bolinfest@google.com (Michael Bolin)\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private final Flags flags",
+  "private boolean isConfigValid",
+  "private static final List<String> DEFAULT_EXTERNS_NAMES"
+ ],
+ "focal_class": "com.google.javascript.jscomp.CommandLineRunner",
+ "focal_id": "Closure_107::com.google.javascript.jscomp.CommandLineRunner::createOptions()",
+ "focal_method_name": "createOptions",
+ "generations": 3,
+ "impl_B": "@Override\n  protected CompilerOptions createOptions() {\n    CompilerOptions options = new CompilerOptions();\n    if (flags.processJqueryPrimitives) {\n      options.setCodingConvention(new JqueryCodingConvention());\n    } else {\n      options.setCodingConvention(new ClosureCodingConvention());\n    }\n\n    options.setExtraAnnotationNames(flags.extraAnnotationName);\n\n    CompilationLevel level = flags.compilationLevel;\n    level.setOptionsForCompilationLevel(options);\n\n    if (flags.debug) {\n      level.setDebugOptionsForCompilationLevel(options);\n    }\n\n    if (flags.useTypesForOptimization) {\n      level.setTypeBasedOptimizationOptions(options);\n    }\n\n    if (flags.generateExports) {\n      options.setGenerateExports(flags.generateExports);\n    }\n\n    WarningLevel wLevel = flags.warningLevel;\n    wLevel.setOptionsForWarningLevel(options);\n    for (FormattingOption formattingOption : flags.formatting) {\n      formattingOption.applyToOptions(options);\n    }\n\n    options.closurePass = flags.processClosurePrimitives;\n\n    options.jqueryPass = CompilationLevel.ADVANCED_OPTIMIZATIONS == level &&\n        flags.processJqueryPrimitives;\n\n    options.angularPass = flags.angularPass;\n\n    if (!flags.translationsFile.isEmpty()) {\n      try {\n        options.messageBundle = new XtbMessageBundle(\n            new FileInputStream(flags.translationsFile),\n            flags.translationsProject);\n      } catch (IOException e) {\n        throw new RuntimeException(\"Reading XTB file\", e);\n      }\n    } else if (CompilationLevel.ADVANCED_OPTIMIZATIONS == level) {\n      // In SIMPLE or WHITESPACE mode, if the user hasn't specified a\n      // translations file, they might reasonably try to write their own\n      // implementation of goog.getMsg that makes the substitution at\n      // run-time.\n      //\n      // In ADVANCED mode, goog.getMsg is going to be renamed anyway,\n      // so we might as well inline it. But shut off the i18n warnings,\n      // because the user didn't really ask for i18n.\n      options.messageBundle = new EmptyMessageBundle();\n    }\n\n    return options;\n  }",
+ "imports": [
+  "com.google.common.base.Preconditions",
+  "com.google.common.collect.ImmutableList",
+  "com.google.common.collect.Lists",
+  "com.google.common.collect.Maps",
+  "com.google.common.collect.Sets",
+  "com.google.common.io.ByteStreams",
+  "com.google.common.io.Files",
+  "org.kohsuke.args4j.Argument",
+  "org.kohsuke.args4j.CmdLineException",
+  "org.kohsuke.args4j.CmdLineParser",
+  "org.kohsuke.args4j.Option",
+  "org.kohsuke.args4j.OptionDef",
+  "org.kohsuke.args4j.spi.FieldSetter",
+  "org.kohsuke.args4j.spi.OptionHandler",
+  "org.kohsuke.args4j.spi.Parameters",
+  "org.kohsuke.args4j.spi.Setter",
+  "org.kohsuke.args4j.spi.StringOptionHandler",
+  "java.io.BufferedInputStream",
+  "java.io.File",
+  "java.io.FileInputStream",
+  "java.io.IOException",
+  "java.io.InputStream",
+  "java.io.PrintStream",
+  "java.lang.reflect.AnnotatedElement",
+  "java.nio.charset.Charset",
+  "java.util.List",
+  "java.util.Map",
+  "java.util.Set",
+  "java.util.logging.Level",
+  "java.util.regex.Matcher",
+  "java.util.regex.Pattern",
+  "java.util.zip.ZipEntry",
+  "java.util.zip.ZipInputStream"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "createCompiler"
+  },
+  {
+   "javadoc": "",
+   "name": "createExterns"
+  },
+  {
+   "javadoc": "/**\n   * @return a mutable list\n   * @throws IOException\n   */",
+   "name": "getDefaultExterns"
+  },
+  {
+   "javadoc": "/**\n   * @return Whether the configuration is valid.\n   */",
+   "name": "shouldRunCompiler"
+  },
+  {
+   "javadoc": "/**\n   * Runs the Compiler. Exits cleanly in the event of an error.\n   */",
+   "name": "main"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class CommandLineRunner extends AbstractCommandLineRunner<Compiler, CompilerOptions>",
+  "constructors": [
+   "protected CommandLineRunner(String[] args);",
+   "protected CommandLineRunner(String[] args, PrintStream out, PrintStream err);"
+  ],
+  "focal_signature": "protected CompilerOptions createOptions()",
+  "methods": [
+   "protected Compiler createCompiler();",
+   "protected List<SourceFile> createExterns() throws FlagUsageException, IOException;",
+   "public static List<SourceFile> getDefaultExterns() throws IOException;",
+   "public boolean shouldRunCompiler();",
+   "public static void main(String[] args);"
+  ],
+  "type_signatures": [
+   "public class CompilerOptions implements Serializable, Cloneable { public void setAggressiveVarCheck(CheckLevel level); public void setTightenTypes(boolean tighten); public void setReportMissingOverride(CheckLevel level); public void setCheckRequires(CheckLevel level); public void setCheckProvides(CheckLevel level); public void setCheckGlobalNamesLevel(CheckLevel level); public void setBrokenClosureRequiresLevel(CheckLevel level); public void setCheckGlobalThisLevel(CheckLevel level); public void setCheckMissingGetCssNameLevel(CheckLevel level); public void setCheckCaja(boolean check); public void setCheckEventfulObjectDisposalPolicy( CheckEventfulObjectDisposal.DisposalCheckingPolicy policy); public CheckEventfulObjectDisposal.DisposalCheckingPolicy getCheckEventfulObjectDisposalPolicy(); public void setCheckUnreachableCode(CheckLevel level); public void setCheckMissingReturn(CheckLevel level); public void setAliasableGlobals(String names); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

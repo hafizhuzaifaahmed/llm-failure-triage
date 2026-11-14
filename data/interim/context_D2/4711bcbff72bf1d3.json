@@ -1,0 +1,180 @@
+{
+ "base_focal_id": "Compress_5::org.apache.commons.compress.archivers.zip.ZipArchiveInputStream::read(byte[],int,int)",
+ "bug_name": "Compress_5",
+ "call_sites": [
+  {
+   "line": 81,
+   "lines": [
+    76,
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/ArchiveInputStream.java",
+   "snippet": "     * @throws IOException\n     *             if an I/O error has occurred or if a CPIO file error has\n     *             occurred\n     */\n    public int read() throws IOException {\n        int num = read(SINGLE, 0, 1);\n        return num == -1 ? -1 : SINGLE[0] & BYTE_MASK;\n    }\n    \n    /**\n     * Increments the counter of already read bytes."
+  },
+  {
+   "line": 158,
+   "lines": [
+    153,
+    154,
+    155,
+    156,
+    157,
+    158,
+    159,
+    160,
+    161,
+    162,
+    163
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java",
+   "snippet": "        }\n\n        final byte[] signature = new byte[12];\n        in.mark(signature.length);\n        try {\n            int signatureLength = in.read(signature);\n            in.reset();\n            if (ZipArchiveInputStream.matches(signature, signatureLength)) {\n                return new ZipArchiveInputStream(in);\n            } else if (JarArchiveInputStream.matches(signature, signatureLength)) {\n                return new JarArchiveInputStream(in);"
+  },
+  {
+   "line": 172,
+   "lines": [
+    167,
+    168,
+    169,
+    170,
+    171,
+    172,
+    173,
+    174,
+    175,
+    176,
+    177
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java",
+   "snippet": "                return new CpioArchiveInputStream(in);\n            }\n            // Tar needs a bigger buffer to check the signature; read the first block\n            final byte[] tarheader = new byte[512];\n            in.mark(tarheader.length);\n            signatureLength = in.read(tarheader);\n            in.reset();\n            if (TarArchiveInputStream.matches(tarheader, signatureLength)) {\n                return new TarArchiveInputStream(in);\n            }\n        } catch (IOException e) {"
+  },
+  {
+   "line": 74,
+   "lines": [
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream.java",
+   "snippet": "     */\n    public ArArchiveEntry getNextArEntry() throws IOException {\n        if (currentEntry != null) {\n            final long entryEnd = entryOffset + currentEntry.getLength();\n            while (offset < entryEnd) {\n                int x = read();\n                if (x == -1) {\n                    // hit EOF before previous entry was complete\n                    // TODO: throw an exception instead?\n                    return null;\n                }"
+  },
+  {
+   "line": 87,
+   "lines": [
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream.java",
+   "snippet": "        }\n\n        if (offset == 0) {\n            final byte[] expected = ArchiveUtils.toAsciiBytes(ArArchiveEntry.HEADER);\n            final byte[] realized = new byte[expected.length];\n            final int read = read(realized);\n            if (read != expected.length) {\n                throw new IOException(\"failed to read header. Occured at byte: \" + getCount());\n            }\n            for (int i = 0; i < expected.length; i++) {\n                if (expected[i] != realized[i]) {"
+  }
+ ],
+ "class_simple": "ZipArchiveInputStream",
+ "dataset": "D2",
+ "doc": {
+  "class_javadoc": "/**\n * Implements an input stream that can read Zip archives.\n * <p>\n * Note that {@link ZipArchiveEntry#getSize()} may return -1 if the DEFLATE algorithm is used, as the size information\n * is not available from the header.\n * <p>\n * The {@link ZipFile} class is preferred when reading from files.\n *  \n * @see ZipFile\n * @NotThreadSafe\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final int SHORT",
+  "private static final int WORD",
+  "private final ZipEncoding zipEncoding",
+  "private final boolean useUnicodeExtraFields",
+  "private final InputStream in",
+  "private final Inflater inf",
+  "private final CRC32 crc",
+  "private final byte[] buf",
+  "private ZipArchiveEntry current",
+  "private boolean closed",
+  "private boolean hitCentralDirectory",
+  "private int readBytesOfEntry",
+  "private int bytesReadFromStream",
+  "private int lengthOfLastRead",
+  "private boolean hasDataDescriptor",
+  "private static final int LFH_LEN"
+ ],
+ "focal_class": "org.apache.commons.compress.archivers.zip.ZipArchiveInputStream",
+ "focal_id": "Compress_5::org.apache.commons.compress.archivers.zip.ZipArchiveInputStream::read(byte[],int,int)#m166",
+ "focal_method_name": "read",
+ "impl_B": "public int read(byte[] buffer, int start, int length) throws IOException {\n        if (closed) {\n            throw new IOException(\"The stream is closed\");\n        }\n        if (inf.finished() || current == null) {\n            return -1;\n        }\n\n        // avoid int overflow, check null buffer\n        if (start <= buffer.length && length >= 0 && start >= 0\n            && buffer.length - start >= length) {\n            if (current.getMethod() == ZipArchiveOutputStream.STORED) {\n                int csize = (int) current.getSize();\n                if (readBytesOfEntry >= csize) {\n                    return -1;\n                }\n                if (offsetInBuffer >= lengthOfLastRead) {\n                    offsetInBuffer = 0;\n                    if ((lengthOfLastRead = in.read(buf)) == -1) {\n                        return -1;\n                    }\n                    count(lengthOfLastRead);\n                    bytesReadFromStream += lengthOfLastRead;\n                }\n                int toRead = length > lengthOfLastRead\n                    ? lengthOfLastRead - offsetInBuffer\n                    : length;\n                if ((csize - readBytesOfEntry) < toRead) {\n                    ;\n                }\n                System.arraycopy(buf, offsetInBuffer, buffer, start, toRead);\n                offsetInBuffer += toRead;\n                readBytesOfEntry += toRead;\n                crc.update(buffer, start, toRead);\n                return toRead;\n            }\n            if (inf.needsInput()) {\n                fill();\n                if (lengthOfLastRead > 0) {\n                    bytesReadFromStream += lengthOfLastRead;\n                }\n            }\n            int read = 0;\n            try {\n                read = inf.inflate(buffer, start, length);\n            } catch (DataFormatException e) {\n                throw new ZipException(e.getMessage());\n            }\n            if (read == 0) {\n                if (inf.finished()) {\n                    return -1;\n                } else if (lengthOfLastRead == -1) {\n                    throw new IOException(\"Truncated ZIP file\");\n                }\n            }\n            crc.update(buffer, start, read);\n            return read;\n        }\n        throw new ArrayIndexOutOfBoundsException();\n    }",
+ "imports": [
+  "java.io.EOFException",
+  "java.io.IOException",
+  "java.io.InputStream",
+  "java.io.PushbackInputStream",
+  "java.util.zip.CRC32",
+  "java.util.zip.DataFormatException",
+  "java.util.zip.Inflater",
+  "java.util.zip.ZipException",
+  "org.apache.commons.compress.archivers.ArchiveEntry",
+  "org.apache.commons.compress.archivers.ArchiveInputStream"
+ ],
+ "javadoc_edited_by_fix": false,
+ "mutant_id": 166,
+ "operator": "STD",
+ "package": "org.apache.commons.compress.archivers.zip",
+ "project": "Compress",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "getNextZipEntry"
+  },
+  {
+   "javadoc": "",
+   "name": "getNextEntry"
+  },
+  {
+   "javadoc": "",
+   "name": "close"
+  },
+  {
+   "javadoc": "",
+   "name": "skip"
+  },
+  {
+   "javadoc": "",
+   "name": "matches"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class ZipArchiveInputStream extends ArchiveInputStream",
+  "constructors": [
+   "public ZipArchiveInputStream(InputStream inputStream);",
+   "public ZipArchiveInputStream(InputStream inputStream, String encoding, boolean useUnicodeExtraFields);"
+  ],
+  "focal_signature": "public int read(byte[] buffer, int start, int length) throws IOException",
+  "methods": [
+   "public ZipArchiveEntry getNextZipEntry() throws IOException;",
+   "public ArchiveEntry getNextEntry() throws IOException;",
+   "public void close() throws IOException;",
+   "public long skip(long value) throws IOException;",
+   "public static boolean matches(byte[] signature, int length);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test"
+}

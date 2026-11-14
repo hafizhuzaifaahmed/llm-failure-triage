@@ -1,0 +1,182 @@
+{
+ "bug_name": "Compress_29",
+ "call_sites": [
+  {
+   "line": 85,
+   "lines": [
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream.java",
+   "snippet": "     *             if the entry could not be read\n     */\n    public ArArchiveEntry getNextArEntry() throws IOException {\n        if (currentEntry != null) {\n            final long entryEnd = entryOffset + currentEntry.getLength();\n            IOUtils.skip(this, entryEnd - offset);\n            currentEntry = null;\n        }\n\n        if (offset == 0) {\n            final byte[] expected = ArchiveUtils.toAsciiBytes(ArArchiveEntry.HEADER);"
+  },
+  {
+   "line": 317,
+   "lines": [
+    312,
+    313,
+    314,
+    315,
+    316,
+    317,
+    318,
+    319,
+    320,
+    321,
+    322
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/arj/ArjArchiveInputStream.java",
+   "snippet": "    \n    @Override\n    public ArjArchiveEntry getNextEntry() throws IOException {\n        if (currentInputStream != null) {\n            // return value ignored as IOUtils.skip ensures the stream is drained completely\n            IOUtils.skip(currentInputStream, Long.MAX_VALUE);\n            currentInputStream.close();\n            currentLocalFileHeader = null;\n            currentInputStream = null;\n        }\n        "
+  },
+  {
+   "line": 204,
+   "lines": [
+    199,
+    200,
+    201,
+    202,
+    203,
+    204,
+    205,
+    206,
+    207,
+    208,
+    209
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStream.java",
+   "snippet": "     *             occurred\n     */\n    private void closeEntry() throws IOException {\n        // the skip implementation of this class will not skip more\n        // than Integer.MAX_VALUE bytes\n        while (skip((long) Integer.MAX_VALUE) == Integer.MAX_VALUE) { // NOPMD\n            // do nothing\n        }\n    }\n\n    /**"
+  },
+  {
+   "line": 307,
+   "lines": [
+    302,
+    303,
+    304,
+    305,
+    306,
+    307,
+    308,
+    309,
+    310,
+    311,
+    312
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStream.java",
+   "snippet": "\n        if (this.entry == null || this.entryEOF) {\n            return -1;\n        }\n        if (this.entryBytesRead == this.entry.getSize()) {\n            skip(entry.getDataPadCount());\n            this.entryEOF = true;\n            if (this.entry.getFormat() == FORMAT_NEW_CRC\n                && this.crc != this.entry.getChksum()) {\n                throw new IOException(\"CRC Error. Occured at byte: \"\n                                      + getBytesRead());"
+  },
+  {
+   "line": 387,
+   "lines": [
+    382,
+    383,
+    384,
+    385,
+    386,
+    387,
+    388,
+    389,
+    390,
+    391,
+    392
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStream.java",
+   "snippet": "        String name = readCString((int) namesize);\n        ret.setName(name);\n        if (CpioUtil.fileType(mode) == 0 && !name.equals(CPIO_TRAILER)){\n            throw new IOException(\"Mode 0 only allowed in the trailer. Found entry name: \"+name + \" Occured at byte: \" + getBytesRead());\n        }\n        skip(ret.getHeaderPadCount());\n\n        return ret;\n    }\n\n    private CpioArchiveEntry readOldAsciiEntry() throws IOException {"
+  }
+ ],
+ "class_simple": "CpioArchiveInputStream",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * CPIOArchiveInputStream is a stream for reading cpio streams. All formats of\n * cpio are supported (old ascii, old binary, new portable format and the new\n * portable format with crc).\n *\n * <p>\n * The stream can be read by extracting a cpio entry (containing all\n * informations about a entry) and afterwards reading from the stream the file\n * specified by the entry.\n * </p>\n * <pre>\n * CPIOArchiveInputStream cpioIn = new CPIOArchiveInputStream(\n *         new FileInputStream(new File(&quot;test.cpio&quot;)));\n * CPIOArchiveEntry cpioEntry;\n *\n * while ((cpioEntry = cpioIn.getNextEntry()) != null) {\n *     System.out.println(cpioEntry.getName());\n *     int tmp;\n *     StringBuilder buf = new StringBuilder();\n *     while ((tmp = cpIn.read()) != -1) {\n *         buf.append((char) tmp);\n *     }\n *     System.out.println(buf.toString());\n * }\n * cpioIn.close();\n * </pre>\n * <p>\n * Note: This implementation should be compatible to cpio 2.5\n * \n * <p>This class uses mutable fields and is not considered to be threadsafe.\n * \n * <p>Based on code from the jRPM project (jrpm.sourceforge.net)\n */\n\npublic",
+  "method_javadoc": "/**\n     * Skips specified number of bytes in the current CPIO entry.\n     * \n     * @param n\n     *            the number of bytes to skip\n     * @return the actual number of bytes skipped\n     * @throws IOException\n     *             if an I/O error has occurred\n     * @throws IllegalArgumentException\n     *             if n &lt; 0\n     */"
+ },
+ "fields": [
+  "private boolean closed",
+  "private CpioArchiveEntry entry",
+  "private long entryBytesRead",
+  "private boolean entryEOF",
+  "private final byte tmpbuf[]",
+  "private long crc",
+  "private final InputStream in",
+  "private final byte[] TWO_BYTES_BUF",
+  "private final byte[] FOUR_BYTES_BUF",
+  "private final byte[] SIX_BYTES_BUF",
+  "private final int blockSize",
+  "private final ZipEncoding zipEncoding"
+ ],
+ "focal_class": "org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream",
+ "focal_id": "Compress_29::org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream::skip(long)",
+ "focal_method_name": "skip",
+ "generations": 3,
+ "impl_B": "@Override\n    public long skip(final long n) throws IOException {\n        if (n < 0) {\n            throw new IllegalArgumentException(\"negative skip length\");\n        }\n        ensureOpen();\n        int max = (int) Math.min(n, Integer.MAX_VALUE);\n        int total = 0;\n\n        while (total < max) {\n            int len = max - total;\n            if (len > this.tmpbuf.length) {\n                len = this.tmpbuf.length;\n            }\n            len = read(this.tmpbuf, 0, len);\n            if (len == -1) {\n                this.entryEOF = true;\n                break;\n            }\n            total += len;\n        }\n        return total;\n    }",
+ "imports": [
+  "java.io.EOFException",
+  "java.io.IOException",
+  "java.io.InputStream",
+  "org.apache.commons.compress.archivers.ArchiveEntry",
+  "org.apache.commons.compress.archivers.ArchiveInputStream",
+  "org.apache.commons.compress.archivers.zip.ZipEncoding",
+  "org.apache.commons.compress.archivers.zip.ZipEncodingHelper",
+  "org.apache.commons.compress.utils.ArchiveUtils",
+  "org.apache.commons.compress.utils.CharsetNames",
+  "org.apache.commons.compress.utils.IOUtils"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.compress.archivers.cpio",
+ "project": "Compress",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Returns 0 after EOF has reached for the current entry data, otherwise\n     * always return 1.\n     * <p>\n     * Programs should not count on this method to return the actual number of\n     * bytes that could be read without blocking.\n     * \n     * @return 1 before EOF and 0 after EOF has reached for current entry.\n     * @throws IOException\n     *             if an I/O error has occurred or if a CPIO file error has\n     *             occurred\n     */",
+   "name": "available"
+  },
+  {
+   "javadoc": "/**\n     * Closes the CPIO input stream.\n     * \n     * @throws IOException\n     *             if an I/O error has occurred\n     */",
+   "name": "close"
+  },
+  {
+   "javadoc": "/**\n     * Reads the next CPIO file entry and positions stream at the beginning of\n     * the entry data.\n     * \n     * @return the CPIOArchiveEntry just read\n     * @throws IOException\n     *             if an I/O error has occurred or if a CPIO file error has\n     *             occurred\n     */",
+   "name": "getNextCPIOEntry"
+  },
+  {
+   "javadoc": "/**\n     * Reads from the current CPIO entry into an array of bytes. Blocks until\n     * some input is available.\n     * \n     * @param b\n     *            the buffer into which the data is read\n     * @param off\n     *            the start offset of the data\n     * @param len\n     *            the maximum number of bytes read\n     * @return the actual number of bytes read, or -1 if the end of the entry is\n     *         reached\n     * @throws IOException\n     *             if an I/O error has occurred or if a CPIO file error has\n     *             occurred\n     */",
+   "name": "read"
+  },
+  {
+   "javadoc": "",
+   "name": "getNextEntry"
+  },
+  {
+   "javadoc": "/**\n     * Checks if the signature matches one of the following magic values:\n     * \n     * Strings:\n     *\n     * \"070701\" - MAGIC_NEW\n     * \"070702\" - MAGIC_NEW_CRC\n     * \"070707\" - MAGIC_OLD_ASCII\n     * \n     * Octal Binary value:\n     * \n     * 070707 - MAGIC_OLD_BINARY (held as a short) = 0x71C7 or 0xC771\n     */",
+   "name": "matches"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class CpioArchiveInputStream extends ArchiveInputStream implements CpioConstants",
+  "constructors": [
+   "public CpioArchiveInputStream(final InputStream in);",
+   "public CpioArchiveInputStream(final InputStream in, String encoding);",
+   "public CpioArchiveInputStream(final InputStream in, int blockSize);",
+   "public CpioArchiveInputStream(final InputStream in, int blockSize, String encoding);"
+  ],
+  "focal_signature": "public long skip(final long n) throws IOException",
+  "methods": [
+   "public int available() throws IOException;",
+   "public void close() throws IOException;",
+   "public CpioArchiveEntry getNextCPIOEntry() throws IOException;",
+   "public int read(final byte[] b, final int off, final int len) throws IOException;",
+   "public ArchiveEntry getNextEntry() throws IOException;",
+   "public static boolean matches(byte[] signature, int length);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

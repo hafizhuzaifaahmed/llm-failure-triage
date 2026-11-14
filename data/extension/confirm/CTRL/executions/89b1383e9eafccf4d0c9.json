@@ -1,0 +1,266 @@
+{
+ "candidate_id": "89b1383e9eafccf4d0c9",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testSealNoParent",
+   "testSealWithParent",
+   "testSealDeepHierarchy",
+   "testSealIdempotency"
+  ],
+  "nc_both": [],
+  "nc_one_version": [],
+  "passes": 0
+ },
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "JxPath_13::org.apache.commons.jxpath.ri.NamespaceResolver::seal()",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testSealNoParent",
+   "runs_b": [
+    {
+     "duration_s": 0.111,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.102,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.091,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.105,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.092,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.112,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.jxpath.ri;\n\nimport java.io.*;\nimport java.math.*;\nimport java.util.*;\nimport java.util.HashMap;\nimport java.util.Iterator;\nimport java.util.Map;\nimport org.apache.commons.jxpath.Pointer;\nimport org.apache.commons.jxpath.ri.model.NodeIterator;\nimport org.apache.commons.jxpath.ri.model.NodePointer;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for NamespaceResolver.seal()\n */\npublic class NamespaceResolver_seal_TriageGen1Test {\n\n    /**\n     * Tests that seal() sets the sealed flag to true when there is no parent.\n     * This covers the case where (parent == null).\n     */\n    @Test\n    public void testSealNoParent() {\n        NamespaceResolver resolver = new NamespaceResolver();\n        assertFalse(\"Resolver should not be sealed initially\", resolver.isSealed());\n        \n        resolver.seal();\n        \n        assertTrue(\"Resolver should be sealed after calling seal()\", resolver.isSealed());\n    }\n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testSealWithParent",
+   "runs_b": [
+    {
+     "duration_s": 0.098,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.098,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.096,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.09,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.092,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.102,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.jxpath.ri;\n\nimport java.io.*;\nimport java.math.*;\nimport java.util.*;\nimport java.util.HashMap;\nimport java.util.Iterator;\nimport java.util.Map;\nimport org.apache.commons.jxpath.Pointer;\nimport org.apache.commons.jxpath.ri.model.NodeIterator;\nimport org.apache.commons.jxpath.ri.model.NodePointer;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for NamespaceResolver.seal()\n */\npublic class NamespaceResolver_seal_TriageGen1Test {\n\n    \n\n    /**\n     * Tests that seal() sets the sealed flag to true for the current object \n     * and recursively calls seal() on the parent.\n     * This covers the case where (parent != null) and the recursive branch.\n     */\n    @Test\n    public void testSealWithParent() {\n        NamespaceResolver parent = new NamespaceResolver();\n        NamespaceResolver child = new NamespaceResolver(parent);\n        \n        assertFalse(\"Parent should not be sealed initially\", parent.isSealed());\n        assertFalse(\"Child should not be sealed initially\", child.isSealed());\n        \n        child.seal();\n        \n        assertTrue(\"Child should be sealed after calling seal()\", child.isSealed());\n        assertTrue(\"Parent should be sealed via recursion\", parent.isSealed());\n    }\n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testSealDeepHierarchy",
+   "runs_b": [
+    {
+     "duration_s": 0.098,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.112,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.114,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.096,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.101,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.108,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.jxpath.ri;\n\nimport java.io.*;\nimport java.math.*;\nimport java.util.*;\nimport java.util.HashMap;\nimport java.util.Iterator;\nimport java.util.Map;\nimport org.apache.commons.jxpath.Pointer;\nimport org.apache.commons.jxpath.ri.model.NodeIterator;\nimport org.apache.commons.jxpath.ri.model.NodePointer;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for NamespaceResolver.seal()\n */\npublic class NamespaceResolver_seal_TriageGen1Test {\n\n    \n\n    \n\n    /**\n     * Tests a chain of multiple parents to ensure deep recursion works correctly.\n     */\n    @Test\n    public void testSealDeepHierarchy() {\n        NamespaceResolver root = new NamespaceResolver();\n        NamespaceResolver middle = new NamespaceResolver(root);\n        NamespaceResolver leaf = new NamespaceResolver(middle);\n        \n        leaf.seal();\n        \n        assertTrue(\"Leaf should be sealed\", leaf.isSealed());\n        assertTrue(\"Middle should be sealed\", middle.isSealed());\n        assertTrue(\"Root should be sealed\", root.isSealed());\n    }\n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testSealIdempotency",
+   "runs_b": [
+    {
+     "duration_s": 0.081,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.1,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.104,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.091,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.088,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.083,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.jxpath.ri;\n\nimport java.io.*;\nimport java.math.*;\nimport java.util.*;\nimport java.util.HashMap;\nimport java.util.Iterator;\nimport java.util.Map;\nimport org.apache.commons.jxpath.Pointer;\nimport org.apache.commons.jxpath.ri.model.NodeIterator;\nimport org.apache.commons.jxpath.ri.model.NodePointer;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for NamespaceResolver.seal()\n */\npublic class NamespaceResolver_seal_TriageGen1Test {\n\n    \n\n    \n\n    \n\n    /**\n     * Tests that calling seal() multiple times does not cause issues.\n     */\n    @Test\n    public void testSealIdempotency() {\n        NamespaceResolver resolver = new NamespaceResolver();\n        resolver.seal();\n        assertTrue(resolver.isSealed());\n        \n        // Calling it again should not throw exception or change state\n        resolver.seal();\n        assertTrue(resolver.isSealed());\n    }\n}\n"
+  }
+ ],
+ "source_sha256": "175bf1b51a32d37ba61cdce6831167d12c6b43f12f4a95bbe9bdf76b5870b83e",
+ "utc": "2026-11-13T06:56:22Z"
+}

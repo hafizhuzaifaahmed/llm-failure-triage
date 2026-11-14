@@ -1,0 +1,14 @@
+{
+  "assembled": true,
+  "call_key": "bec67e12d857918db4e0ced52a2c2259eb2c6dfad15a8f46247c21453278afef",
+  "candidate_id": "2c6b9e6f87a0ac44e2e5",
+  "class_name": "Same_describeTo_TriageGen0Test",
+  "dataset": "D1C_F2",
+  "focal_id": "Mockito_29::org.mockito.internal.matchers.Same::describeTo(Description)",
+  "generation": 0,
+  "model_returned": "gemma4:26b",
+  "n_tests": 2,
+  "package": "org.mockito.internal.matchers",
+  "source": "package org.mockito.internal.matchers;\n\nimport java.io.*;\nimport java.io.Serializable;\nimport java.math.*;\nimport java.util.*;\nimport org.hamcrest.Description;\nimport org.junit.*;\nimport org.junit.Test;\nimport org.mockito.ArgumentMatcher;\nimport org.mockito.Mockito;\nimport static org.junit.Assert.*;\nimport static org.mockito.Mockito.inOrder;\nimport static org.mockito.Mockito.verify;\n\npublic class Same_describeTo_TriageGen0Test {\n\n    @Test\n    public void testDescribeTo() {\n        // Arrange\n        Object wanted = \"testObject\";\n        Same same = new Same(wanted);\n        Description description = Mockito.mock(Description.class);\n\n        // Act\n        same.describeTo(description);\n\n        // Assert\n        // We use inOrder to verify the exact sequence of calls to ensure coverage of the logic flow\n        inOrder same.describeTo(description);\n        verify(description).appendText(\"same(\");\n        \n        // Since appendQuoting is a private/protected method called within describeTo, \n        // its behavior is verified through the sequence of description calls.\n        // Based on the source, appendQuoting likely calls description.appendText(\"'\") or similar.\n        // However, without the source of appendQuoting, we verify the visible parts.\n        \n        verify(description).appendText(wanted.toString());\n        verify(description).appendText(\")\");\n    }\n\n    @Test\n    public void testDescribeToWithComplexObject() {\n        // Arrange\n        // Testing with a custom object to ensure toString() is handled correctly\n        class CustomObject {\n            @Override\n            public String toString() {\n                return \"CustomObj@123\";\n            }\n        }\n        CustomObject wanted = new CustomObject();\n        Same same = new Same(wanted);\n        Description description = Mockito.mock(Description.class);\n\n        // Act\n        same.describeTo(description);\n\n        // Assert\n        verify(description).appendText(\"same(\");\n        verify(description).appendText(\"CustomObj@123\");\n        verify(description).appendText(\")\");\n    }\n}\n",
+  "tranche": "F2"
+}

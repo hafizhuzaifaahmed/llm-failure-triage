@@ -1,0 +1,210 @@
+{
+ "candidate_id": "0481fe2b5a475c04ce2d",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testGetDateTimeMillis_IllegalCutoverGap",
+   "testGetDateTimeMillis_WithCustomCutover",
+   "testGetDateTimeMillis_GapWithCustomCutover"
+  ],
+  "nc_both": [
+   "testGetDateTimeMillis_GregorianDate",
+   "testGetDateTimeMillis_JulianDate"
+  ],
+  "nc_one_version": [],
+  "passes": 1
+ },
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "Time_18::org.joda.time.chrono.GJChronology::getDateTimeMillis(int,int,int,int,int,int,int)",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testGetDateTimeMillis_IllegalCutoverGap",
+   "runs_b": [
+    {
+     "duration_s": 0.109,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.111,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.111,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.122,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.118,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.114,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.joda.time.chrono;\n\nimport java.io.*;\nimport java.math.*;\nimport java.util.*;\nimport java.util.ArrayList;\nimport java.util.HashMap;\nimport java.util.Locale;\nimport java.util.Map;\nimport org.joda.time.Chronology;\nimport org.joda.time.DateTimeField;\nimport org.joda.time.DateTimeUtils;\nimport org.joda.time.DateTimeZone;\nimport org.joda.time.DurationField;\nimport org.joda.time.IllegalFieldValueException;\nimport org.joda.time.Instant;\nimport org.joda.time.ReadableInstant;\nimport org.joda.time.ReadablePartial;\nimport org.joda.time.field.BaseDateTimeField;\nimport org.joda.time.field.DecoratedDurationField;\nimport org.joda.time.format.DateTimeFormatter;\nimport org.joda.time.format.ISODateTimeFormat;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\nimport static org.junit.Assert.assertTrue;\n\npublic class GJChronology_getDateTimeMillis_TriageGen1Test {\n\n    \n\n    \n\n    @Test(expected = IllegalArgumentException.class)\n    public void testGetDateTimeMillis_IllegalCutoverGap() {\n        // To trigger the \"Specified date does not exist\" exception, \n        // we need a date that falls into the gap between Julian and Gregorian.\n        // This depends on the default cutover of GJChronology.\n        // Typically, the gap is around Oct 1582.\n        \n        GJChronology chronology = GJChronology.getInstance();\n        \n        // We attempt to find a date that results in (instant < iCutoverMillis) \n        // being true for Gregorian but (instant >= iCutoverMillis) being true for Julian.\n        // This is the logic: \n        // if (gregorianInstant < cutover) {\n        //    julianInstant = ...\n        //    if (julianInstant >= cutover) throw Exception\n        // }\n        \n        // Since we cannot easily control the internal iCutoverMillis without custom instantiation,\n        // we use the specific cutover provided by the instance if possible, \n        // or pick a known problematic date in the Gregorian transition.\n        \n        // For most GJChronology configurations, the transition is around 1582-10-15.\n        // Dates like 1582-10-05 might fall into the gap depending on the implementation.\n        // Note: In a real production test, we would use the constructor that allows setting the cutover.\n        \n        // Let's try a date that is known to be in the transition period for standard GJChronology\n        chronology.getDateTimeMillis(1582, 10, 5, 0, 0, 0, 0);\n    }\n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testGetDateTimeMillis_WithCustomCutover",
+   "runs_b": [
+    {
+     "duration_s": 0.115,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.119,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.118,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.124,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.126,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.126,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.joda.time.chrono;\n\nimport java.io.*;\nimport java.math.*;\nimport java.util.*;\nimport java.util.ArrayList;\nimport java.util.HashMap;\nimport java.util.Locale;\nimport java.util.Map;\nimport org.joda.time.Chronology;\nimport org.joda.time.DateTimeField;\nimport org.joda.time.DateTimeUtils;\nimport org.joda.time.DateTimeZone;\nimport org.joda.time.DurationField;\nimport org.joda.time.IllegalFieldValueException;\nimport org.joda.time.Instant;\nimport org.joda.time.ReadableInstant;\nimport org.joda.time.ReadablePartial;\nimport org.joda.time.field.BaseDateTimeField;\nimport org.joda.time.field.DecoratedDurationField;\nimport org.joda.time.format.DateTimeFormatter;\nimport org.joda.time.format.ISODateTimeFormat;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\nimport static org.junit.Assert.assertTrue;\n\npublic class GJChronology_getDateTimeMillis_TriageGen1Test {\n\n    \n\n    \n\n    \n\n    @Test\n    public void testGetDateTimeMillis_WithCustomCutover() {\n        // Using a custom cutover to force the logic branches\n        // We want to test the branch where instant < iCutoverMillis is true for Gregorian\n        // but the Julian calculation results in an instant >= iCutoverMillis.\n        \n        // We use a dummy Instant as the cutover.\n        // Let's pick a cutover that is far in the future to force Julian/Gregorian logic.\n        long cutoverMillis = 1000000000000L; // Year 2001\n        Instant cutover = new Instant(cutoverMillis);\n        \n        GJChronology chronology = GJChronology.getInstance(DateTimeZone.UTC, cutover, 7);\n        \n        // Test a date that is \"Gregorian\" but before the cutover\n        // This will trigger the 'if (instant < iCutoverMillis)' branch.\n        long millis = chronology.getDateTimeMillis(1990, 1, 1, 0, 0, 0, 0);\n        assertTrue(millis > 0);\n    }\n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testGetDateTimeMillis_GapWithCustomCutover",
+   "runs_b": [
+    {
+     "duration_s": 0.137,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": null,
+     "message": "Expected exception: java.lang.IllegalArgumentException",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Expected exception: java.lang.IllegalArgumentException\n\tat org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:32)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.153,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": null,
+     "message": "Expected exception: java.lang.IllegalArgumentException",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Expected exception: java.lang.IllegalArgumentException\n\tat org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:32)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.164,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": null,
+     "message": "Expected exception: java.lang.IllegalArgumentException",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Expected exception: java.lang.IllegalArgumentException\n\tat org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:32)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.142,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": null,
+     "message": "Expected exception: java.lang.IllegalArgumentException",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Expected exception: java.lang.IllegalArgumentException\n\tat org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:32)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.136,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": null,
+     "message": "Expected exception: java.lang.IllegalArgumentException",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Expected exception: java.lang.IllegalArgumentException\n\tat org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:32)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.134,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": null,
+     "message": "Expected exception: java.lang.IllegalArgumentException",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Expected exception: java.lang.IllegalArgumentException\n\tat org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:32)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package org.joda.time.chrono;\n\nimport java.io.*;\nimport java.math.*;\nimport java.util.*;\nimport java.util.ArrayList;\nimport java.util.HashMap;\nimport java.util.Locale;\nimport java.util.Map;\nimport org.joda.time.Chronology;\nimport org.joda.time.DateTimeField;\nimport org.joda.time.DateTimeUtils;\nimport org.joda.time.DateTimeZone;\nimport org.joda.time.DurationField;\nimport org.joda.time.IllegalFieldValueException;\nimport org.joda.time.Instant;\nimport org.joda.time.ReadableInstant;\nimport org.joda.time.ReadablePartial;\nimport org.joda.time.field.BaseDateTimeField;\nimport org.joda.time.field.DecoratedDurationField;\nimport org.joda.time.format.DateTimeFormatter;\nimport org.joda.time.format.ISODateTimeFormat;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\nimport static org.junit.Assert.assertTrue;\n\npublic class GJChronology_getDateTimeMillis_TriageGen1Test {\n\n    \n\n    \n\n    \n\n    \n\n    @Test(expected = IllegalArgumentException.class)\n    public void testGetDateTimeMillis_GapWithCustomCutover() {\n        // Force the \"Specified date does not exist\" exception\n        // We need: Gregorian(date) < cutover AND Julian(date) >= cutover\n        // This is mathematically difficult with standard calendars, \n        // but the code path exists for the \"gap\".\n        \n        // We simulate the gap by setting a cutover that exists between two calendar interpretations.\n        // Since we can't easily manipulate the internal iJulianChronology, \n        // we rely on the provided logic path.\n        \n        // For testing purposes, if the exception is not thrown, this test fails.\n        // This is a \"Triage\" test to ensure the branch is covered.\n        GJChronology chronology = GJChronology.getInstance(DateTimeZone.UTC, 1000000000000L, 7);\n        \n        // This is a placeholder call; in a real scenario, the specific parameters \n        // to trigger the exception are highly dependent on the internal iJulianChronology math.\n        chronology.getDateTimeMillis(1582, 10, 10, 0, 0, 0, 0);\n    }\n}\n"
+  }
+ ],
+ "source_sha256": "992f4b4faf1bdd1f0365168af9b8521e0aae604b7fd48a28ef0b5ef01fe9a452",
+ "utc": "2026-11-13T06:48:38Z"
+}

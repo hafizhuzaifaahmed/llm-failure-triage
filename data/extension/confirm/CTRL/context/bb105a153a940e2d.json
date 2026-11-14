@@ -1,0 +1,149 @@
+{
+ "bug_name": "Math_86",
+ "call_sites": [
+  {
+   "line": 634,
+   "lines": [
+    629,
+    630,
+    631,
+    632,
+    633,
+    634,
+    635,
+    636,
+    637,
+    638,
+    639
+   ],
+   "path": "src/java/org/apache/commons/math/linear/AbstractRealMatrix.java",
+   "snippet": "\n    /** {@inheritDoc} */\n    @Deprecated\n    public double getDeterminant()\n        throws InvalidMatrixException {\n        return new LUDecompositionImpl(this, MathUtils.SAFE_MIN).getDeterminant();\n    }\n\n    /** {@inheritDoc} */\n    public boolean isSquare() {\n        return (getColumnDimension() == getRowDimension());"
+  },
+  {
+   "line": 279,
+   "lines": [
+    274,
+    275,
+    276,
+    277,
+    278,
+    279,
+    280,
+    281,
+    282,
+    283,
+    284
+   ],
+   "path": "src/java/org/apache/commons/math/linear/BigMatrix.java",
+   "snippet": "     *\n     * @return determinant\n      *@throws org.apache.commons.math.linear.InvalidMatrixException if \n      *    matrix is not square\n     */\n    BigDecimal getDeterminant() throws InvalidMatrixException;\n    \n    /**\n     * Returns the <a href=\"http://mathworld.wolfram.com/MatrixTrace.html\">\n     * trace</a> of the matrix (the sum of the elements on the main diagonal).\n     *"
+  },
+  {
+   "line": 63,
+   "lines": [
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68
+   ],
+   "path": "src/java/org/apache/commons/math/linear/CholeskyDecomposition.java",
+   "snippet": "\n    /**\n     * Return the determinant of the matrix\n     * @return determinant of the matrix\n     */\n    double getDeterminant();\n\n    /**\n     * Get a solver for finding the A &times; X = B solution in least square sense.\n     * @return a solver\n     */"
+  },
+  {
+   "line": 123,
+   "lines": [
+    118,
+    119,
+    120,
+    121,
+    122,
+    123,
+    124,
+    125,
+    126,
+    127,
+    128
+   ],
+   "path": "src/java/org/apache/commons/math/linear/EigenDecomposition.java",
+   "snippet": "\n    /**\n     * Return the determinant of the matrix\n     * @return determinant of the matrix\n     */\n    double getDeterminant();\n\n    /**\n     * Get a solver for finding the A &times; X = B solution in exact linear sense.\n     * @return a solver\n     */"
+  },
+  {
+   "line": 86,
+   "lines": [
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91
+   ],
+   "path": "src/java/org/apache/commons/math/linear/FieldLUDecomposition.java",
+   "snippet": "\n    /**\n     * Return the determinant of the matrix\n     * @return determinant of the matrix\n     */\n    T getDeterminant();\n\n    /**\n     * Get a solver for finding the A &times; X = B solution in exact linear sense.\n     * @return a solver\n     */"
+  }
+ ],
+ "class_simple": "CholeskyDecompositionImpl",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Calculates the Cholesky decomposition of a matrix.\n * <p>The Cholesky decomposition of a real symmetric positive-definite\n * matrix A consists of a lower triangular matrix L with same size that\n * satisfy: A = LL<sup>T</sup>Q = I). In a sense, this is the square root of A.</p>\n *\n * @see <a href=\"http://mathworld.wolfram.com/CholeskyDecomposition.html\">MathWorld</a>\n * @see <a href=\"http://en.wikipedia.org/wiki/Cholesky_decomposition\">Wikipedia</a>\n * @version $Revision$ $Date$\n * @since 2.0\n */\npublic",
+  "method_javadoc": "/** {@inheritDoc} */"
+ },
+ "fields": [
+  "public static final double DEFAULT_RELATIVE_SYMMETRY_THRESHOLD",
+  "public static final double DEFAULT_ABSOLUTE_POSITIVITY_THRESHOLD",
+  "private double[][] lTData",
+  "private RealMatrix cachedL",
+  "private RealMatrix cachedLT"
+ ],
+ "focal_class": "org.apache.commons.math.linear.CholeskyDecompositionImpl",
+ "focal_id": "Math_86::org.apache.commons.math.linear.CholeskyDecompositionImpl::getDeterminant()",
+ "focal_method_name": "getDeterminant",
+ "generations": 3,
+ "impl_B": "public double getDeterminant() {\n        double determinant = 1.0;\n        for (int i = 0; i < lTData.length; ++i) {\n            double lTii = lTData[i][i];\n            determinant *= lTii * lTii;\n        }\n        return determinant;\n    }",
+ "imports": [
+  "org.apache.commons.math.MathRuntimeException"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math.linear",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getL"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getLT"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getSolver"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class CholeskyDecompositionImpl implements CholeskyDecomposition",
+  "constructors": [
+   "public CholeskyDecompositionImpl(final RealMatrix matrix) throws NonSquareMatrixException, NotSymmetricMatrixException, NotPositiveDefiniteMatrixException;",
+   "public CholeskyDecompositionImpl(final RealMatrix matrix, final double relativeSymmetryThreshold, final double absolutePositivityThreshold) throws NonSquareMatrixException, NotSymmetricMatrixException, NotPositiveDefiniteMatrixException;"
+  ],
+  "focal_signature": "public double getDeterminant()",
+  "methods": [
+   "public RealMatrix getL();",
+   "public RealMatrix getLT();",
+   "public DecompositionSolver getSolver();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

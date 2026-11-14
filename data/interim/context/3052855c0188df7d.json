@@ -1,0 +1,244 @@
+{
+  "bug_name": "Gson_4",
+  "call_sites": [
+    {
+      "line": 286,
+      "lines": [
+        281,
+        282,
+        283,
+        284,
+        285,
+        286,
+        287,
+        288,
+        289,
+        290,
+        291
+      ],
+      "path": "gson/src/main/java/com/google/gson/Gson.java",
+      "snippet": "          out.nullValue();\n          return;\n        }\n        double doubleValue = value.doubleValue();\n        checkValidFloatingPoint(doubleValue);\n        out.value(value);\n      }\n    };\n  }\n\n  private TypeAdapter<Number> floatAdapter(boolean serializeSpecialFloatingPointValues) {"
+    },
+    {
+      "line": 310,
+      "lines": [
+        305,
+        306,
+        307,
+        308,
+        309,
+        310,
+        311,
+        312,
+        313,
+        314,
+        315
+      ],
+      "path": "gson/src/main/java/com/google/gson/Gson.java",
+      "snippet": "          out.nullValue();\n          return;\n        }\n        float floatValue = value.floatValue();\n        checkValidFloatingPoint(floatValue);\n        out.value(value);\n      }\n    };\n  }\n\n  static void checkValidFloatingPoint(double value) {"
+    },
+    {
+      "line": 340,
+      "lines": [
+        335,
+        336,
+        337,
+        338,
+        339,
+        340,
+        341,
+        342,
+        343,
+        344,
+        345
+      ],
+      "path": "gson/src/main/java/com/google/gson/Gson.java",
+      "snippet": "      @Override public void write(JsonWriter out, Number value) throws IOException {\n        if (value == null) {\n          out.nullValue();\n          return;\n        }\n        out.value(value.toString());\n      }\n    };\n  }\n\n  private static TypeAdapter<AtomicLong> atomicLongAdapter(final TypeAdapter<Number> longAdapter) {"
+    },
+    {
+      "line": 95,
+      "lines": [
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98
+      ],
+      "path": "gson/src/main/java/com/google/gson/annotations/JsonAdapter.java",
+      "snippet": "@Retention(RetentionPolicy.RUNTIME)\n@Target({ElementType.TYPE, ElementType.FIELD})\npublic @interface JsonAdapter {\n\n  /** Either a {@link TypeAdapter} or {@link TypeAdapterFactory}. */\n  Class<?> value();\n\n}\n"
+    },
+    {
+      "line": 86,
+      "lines": [
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91
+      ],
+      "path": "gson/src/main/java/com/google/gson/annotations/SerializedName.java",
+      "snippet": "public @interface SerializedName {\n\n  /**\n   * @return the desired name of the field when it is serialized or deserialized\n   */\n  String value();\n  /**\n   * @return the alternative names of the field when it is deserialized\n   */\n  String[] alternate() default {};\n}"
+    }
+  ],
+  "class_simple": "JsonWriter",
+  "doc": {
+    "class_javadoc": "/**\n * Writes a JSON (<a href=\"http://www.ietf.org/rfc/rfc7159.txt\">RFC 7159</a>)\n * encoded value to a stream, one token at a time. The stream includes both\n * literal values (strings, numbers, booleans and nulls) as well as the begin\n * and end delimiters of objects and arrays.\n *\n * <h3>Encoding JSON</h3>\n * To encode your data as JSON, create a new {@code JsonWriter}. Each JSON\n * document must contain one top-level array or object. Call methods on the\n * writer as you walk the structure's contents, nesting arrays and objects as\n * necessary:\n * <ul>\n *   <li>To write <strong>arrays</strong>, first call {@link #beginArray()}.\n *       Write each of the array's elements with the appropriate {@link #value}\n *       methods or by nesting other arrays and objects. Finally close the array\n *       using {@link #endArray()}.\n *   <li>To write <strong>objects</strong>, first call {@link #beginObject()}.\n *       Write each of the object's properties by alternating calls to\n *       {@link #name} with the property's value. Write property values with the\n *       appropriate {@link #value} method or by nesting other objects or arrays.\n *       Finally close the object using {@link #endObject()}.\n * </ul>\n *\n * <h3>Example</h3>\n * Suppose we'd like to encode a stream of messages such as the following: <pre> {@code\n * [\n *   {\n *     \"id\": 912345678901,\n *     \"text\": \"How do I stream JSON in Java?\",\n *     \"geo\": null,\n *     \"user\": {\n *       \"name\": \"json_newb\",\n *       \"followers_count\": 41\n *      }\n *   },\n *   {\n *     \"id\": 912345678902,\n *     \"text\": \"@json_newb just use JsonWriter!\",\n *     \"geo\": [50.454722, -104.606667],\n *     \"user\": {\n *       \"name\": \"jesse\",\n *       \"followers_count\": 2\n *     }\n *   }\n * ]}</pre>\n * This code encodes the above structure: <pre>   {@code\n *   public void writeJsonStream(OutputStream out, List<Message> messages) throws IOException {\n *     JsonWriter writer = new JsonWriter(new OutputStreamWriter(out, \"UTF-8\"));\n *     writer.setIndent(\"    \");\n *     writeMessagesArray(writer, messages);\n *     writer.close();\n *   }\n *\n *   public void writeMessagesArray(JsonWriter writer, List<Message> messages) throws IOException {\n *     writer.beginArray();\n *     for (Message message : messages) {\n *       writeMessage(writer, message);\n *     }\n *     writer.endArray();\n *   }\n *\n *   public void writeMessage(JsonWriter writer, Message message) throws IOException {\n *     writer.beginObject();\n *     writer.name(\"id\").value(message.getId());\n *     writer.name(\"text\").value(message.getText());\n *     if (message.getGeo() != null) {\n *       writer.name(\"geo\");\n *       writeDoublesArray(writer, message.getGeo());\n *     } else {\n *       writer.name(\"geo\").nullValue();\n *     }\n *     writer.name(\"user\");\n *     writeUser(writer, message.getUser());\n *     writer.endObject();\n *   }\n *\n *   public void writeUser(JsonWriter writer, User user) throws IOException {\n *     writer.beginObject();\n *     writer.name(\"name\").value(user.getName());\n *     writer.name(\"followers_count\").value(user.getFollowersCount());\n *     writer.endObject();\n *   }\n *\n *   public void writeDoublesArray(JsonWriter writer, List<Double> doubles) throws IOException {\n *     writer.beginArray();\n *     for (Double value : doubles) {\n *       writer.value(value);\n *     }\n *     writer.endArray();\n *   }}</pre>\n *\n * <p>Each {@code JsonWriter} may be used to write a single JSON stream.\n * Instances of this class are not thread safe. Calls that would result in a\n * malformed JSON string will fail with an {@link IllegalStateException}.\n *\n * @author Jesse Wilson\n * @since 1.6\n */\npublic",
+    "method_javadoc": "/**\n   * Encodes {@code value}.\n   *\n   * @param value the literal string value, or null to encode a null literal.\n   * @return this writer.\n   */"
+  },
+  "fields": [
+    "private static final String[] REPLACEMENT_CHARS",
+    "private static final String[] HTML_SAFE_REPLACEMENT_CHARS",
+    "private final Writer out",
+    "private int[] stack",
+    "private int stackSize",
+    "private String indent",
+    "private String separator",
+    "private boolean lenient",
+    "private boolean htmlSafe",
+    "private String deferredName",
+    "private boolean serializeNulls"
+  ],
+  "focal_class": "com.google.gson.stream.JsonWriter",
+  "focal_id": "Gson_4::com.google.gson.stream.JsonWriter::value(String)",
+  "focal_method_name": "value",
+  "impl_B": "public JsonWriter value(String value) throws IOException {\n    if (value == null) {\n      return nullValue();\n    }\n    writeDeferredName();\n    beforeValue(false);\n    string(value);\n    return this;\n  }",
+  "imports": [
+    "java.io.Closeable",
+    "java.io.Flushable",
+    "java.io.IOException",
+    "java.io.Writer",
+    "static com.google.gson.stream.JsonScope.DANGLING_NAME",
+    "static com.google.gson.stream.JsonScope.EMPTY_ARRAY",
+    "static com.google.gson.stream.JsonScope.EMPTY_DOCUMENT",
+    "static com.google.gson.stream.JsonScope.EMPTY_OBJECT",
+    "static com.google.gson.stream.JsonScope.NONEMPTY_ARRAY",
+    "static com.google.gson.stream.JsonScope.NONEMPTY_DOCUMENT",
+    "static com.google.gson.stream.JsonScope.NONEMPTY_OBJECT"
+  ],
+  "javadoc_edited_by_fix": false,
+  "package": "com.google.gson.stream",
+  "project": "Gson",
+  "siblings": [
+    {
+      "javadoc": "/**\n   * Sets the indentation string to be repeated for each level of indentation\n   * in the encoded document. If {@code indent.isEmpty()} the encoded document\n   * will be compact. Otherwise the encoded document will be more\n   * human-readable.\n   *\n   * @param indent a string containing only whitespace.\n   */",
+      "name": "setIndent"
+    },
+    {
+      "javadoc": "/**\n   * Configure this writer to relax its syntax rules. By default, this writer\n   * only emits well-formed JSON as specified by <a\n   * href=\"http://www.ietf.org/rfc/rfc7159.txt\">RFC 7159</a>. Setting the writer\n   * to lenient permits the following:\n   * <ul>\n   *   <li>Top-level values of any type. With strict writing, the top-level\n   *       value must be an object or an array.\n   *   <li>Numbers may be {@link Double#isNaN() NaNs} or {@link\n   *       Double#isInfinite() infinities}.\n   * </ul>\n   */",
+      "name": "setLenient"
+    },
+    {
+      "javadoc": "/**\n   * Returns true if this writer has relaxed syntax rules.\n   */",
+      "name": "isLenient"
+    },
+    {
+      "javadoc": "/**\n   * Configure this writer to emit JSON that's safe for direct inclusion in HTML\n   * and XML documents. This escapes the HTML characters {@code <}, {@code >},\n   * {@code &} and {@code =} before writing them to the stream. Without this\n   * setting, your XML/HTML encoder should replace these characters with the\n   * corresponding escape sequences.\n   */",
+      "name": "setHtmlSafe"
+    },
+    {
+      "javadoc": "/**\n   * Returns true if this writer writes JSON that's safe for inclusion in HTML\n   * and XML documents.\n   */",
+      "name": "isHtmlSafe"
+    },
+    {
+      "javadoc": "/**\n   * Sets whether object members are serialized when their value is null.\n   * This has no impact on array elements. The default is true.\n   */",
+      "name": "setSerializeNulls"
+    },
+    {
+      "javadoc": "/**\n   * Returns true if object members are serialized when their value is null.\n   * This has no impact on array elements. The default is true.\n   */",
+      "name": "getSerializeNulls"
+    },
+    {
+      "javadoc": "/**\n   * Begins encoding a new array. Each call to this method must be paired with\n   * a call to {@link #endArray}.\n   *\n   * @return this writer.\n   */",
+      "name": "beginArray"
+    },
+    {
+      "javadoc": "/**\n   * Ends encoding the current array.\n   *\n   * @return this writer.\n   */",
+      "name": "endArray"
+    },
+    {
+      "javadoc": "/**\n   * Begins encoding a new object. Each call to this method must be paired\n   * with a call to {@link #endObject}.\n   *\n   * @return this writer.\n   */",
+      "name": "beginObject"
+    },
+    {
+      "javadoc": "/**\n   * Ends encoding the current object.\n   *\n   * @return this writer.\n   */",
+      "name": "endObject"
+    },
+    {
+      "javadoc": "/**\n   * Encodes the property name.\n   *\n   * @param name the name of the forthcoming value. May not be null.\n   * @return this writer.\n   */",
+      "name": "name"
+    },
+    {
+      "javadoc": "/**\n   * Writes {@code value} directly to the writer without quoting or\n   * escaping.\n   *\n   * @param value the literal string value, or null to encode a null literal.\n   * @return this writer.\n   */",
+      "name": "jsonValue"
+    },
+    {
+      "javadoc": "/**\n   * Encodes {@code null}.\n   *\n   * @return this writer.\n   */",
+      "name": "nullValue"
+    },
+    {
+      "javadoc": "/**\n   * Encodes {@code value}.\n   *\n   * @return this writer.\n   */",
+      "name": "value"
+    },
+    {
+      "javadoc": "/**\n   * Encodes {@code value}.\n   *\n   * @param value a finite value. May not be {@link Double#isNaN() NaNs} or\n   *     {@link Double#isInfinite() infinities}.\n   * @return this writer.\n   */",
+      "name": "value"
+    },
+    {
+      "javadoc": "/**\n   * Encodes {@code value}.\n   *\n   * @return this writer.\n   */",
+      "name": "value"
+    },
+    {
+      "javadoc": "/**\n   * Encodes {@code value}.\n   *\n   * @param value a finite value. May not be {@link Double#isNaN() NaNs} or\n   *     {@link Double#isInfinite() infinities}.\n   * @return this writer.\n   */",
+      "name": "value"
+    },
+    {
+      "javadoc": "/**\n   * Ensures all buffered data is written to the underlying {@link Writer}\n   * and flushes that writer.\n   */",
+      "name": "flush"
+    },
+    {
+      "javadoc": "/**\n   * Flushes and closes this writer and the underlying {@link Writer}.\n   *\n   * @throws IOException if the JSON document is incomplete.\n   */",
+      "name": "close"
+    }
+  ],
+  "sig": {
+    "class_declaration": "public class JsonWriter implements Closeable, Flushable",
+    "constructors": [
+      "public JsonWriter(Writer out);"
+    ],
+    "focal_signature": "public JsonWriter value(String value) throws IOException",
+    "methods": [
+      "public final void setIndent(String indent);",
+      "public final void setLenient(boolean lenient);",
+      "public boolean isLenient();",
+      "public final void setHtmlSafe(boolean htmlSafe);",
+      "public final boolean isHtmlSafe();",
+      "public final void setSerializeNulls(boolean serializeNulls);",
+      "public final boolean getSerializeNulls();",
+      "public JsonWriter beginArray() throws IOException;",
+      "public JsonWriter endArray() throws IOException;",
+      "public JsonWriter beginObject() throws IOException;",
+      "public JsonWriter endObject() throws IOException;",
+      "public JsonWriter name(String name) throws IOException;",
+      "public JsonWriter jsonValue(String value) throws IOException;",
+      "public JsonWriter nullValue() throws IOException;",
+      "public JsonWriter value(boolean value) throws IOException;",
+      "public JsonWriter value(double value) throws IOException;",
+      "public JsonWriter value(long value) throws IOException;",
+      "public JsonWriter value(Number value) throws IOException;",
+      "public void flush() throws IOException;",
+      "public void close() throws IOException;"
+    ],
+    "type_signatures": []
+  },
+  "split": "dev"
+}

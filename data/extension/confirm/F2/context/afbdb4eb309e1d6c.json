@@ -1,0 +1,65 @@
+{
+ "bug_name": "Math_86",
+ "call_sites": [],
+ "class_simple": "CholeskyDecompositionImpl",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Calculates the Cholesky decomposition of a matrix.\n * <p>The Cholesky decomposition of a real symmetric positive-definite\n * matrix A consists of a lower triangular matrix L with same size that\n * satisfy: A = LL<sup>T</sup>Q = I). In a sense, this is the square root of A.</p>\n *\n * @see <a href=\"http://mathworld.wolfram.com/CholeskyDecomposition.html\">MathWorld</a>\n * @see <a href=\"http://en.wikipedia.org/wiki/Cholesky_decomposition\">Wikipedia</a>\n * @version $Revision$ $Date$\n * @since 2.0\n */\npublic",
+  "method_javadoc": "/**\n     * Calculates the Cholesky decomposition of the given matrix.\n     * @param matrix the matrix to decompose\n     * @param relativeSymmetryThreshold threshold above which off-diagonal\n     * elements are considered too different and matrix not symmetric\n     * @param absolutePositivityThreshold threshold below which diagonal\n     * elements are considered null and matrix not positive definite\n     * @exception NonSquareMatrixException if matrix is not square\n     * @exception NotSymmetricMatrixException if matrix is not symmetric\n     * @exception NotPositiveDefiniteMatrixException if the matrix is not\n     * strictly positive definite\n     * @see #CholeskyDecompositionImpl(RealMatrix)\n     * @see #DEFAULT_RELATIVE_SYMMETRY_THRESHOLD\n     * @see #DEFAULT_ABSOLUTE_POSITIVITY_THRESHOLD\n     */"
+ },
+ "fields": [
+  "public static final double DEFAULT_RELATIVE_SYMMETRY_THRESHOLD",
+  "public static final double DEFAULT_ABSOLUTE_POSITIVITY_THRESHOLD",
+  "private double[][] lTData",
+  "private RealMatrix cachedL",
+  "private RealMatrix cachedLT"
+ ],
+ "focal_class": "org.apache.commons.math.linear.CholeskyDecompositionImpl",
+ "focal_id": "Math_86::org.apache.commons.math.linear.CholeskyDecompositionImpl::CholeskyDecompositionImpl(RealMatrix,double,double)",
+ "focal_method_name": "CholeskyDecompositionImpl",
+ "generations": 3,
+ "impl_B": "public CholeskyDecompositionImpl(final RealMatrix matrix,\n                                     final double relativeSymmetryThreshold,\n                                     final double absolutePositivityThreshold)\n        throws NonSquareMatrixException,\n               NotSymmetricMatrixException, NotPositiveDefiniteMatrixException {\n\n        if (!matrix.isSquare()) {\n            throw new NonSquareMatrixException(matrix.getRowDimension(),\n                                               matrix.getColumnDimension());\n        }\n\n        final int order = matrix.getRowDimension();\n        lTData   = matrix.getData();\n        cachedL  = null;\n        cachedLT = null;\n\n        // check the matrix before transformation\n        for (int i = 0; i < order; ++i) {\n\n            final double[] lI = lTData[i];\n\n            if (lTData[i][i] < absolutePositivityThreshold) {\n                throw new NotPositiveDefiniteMatrixException();\n            }\n            // check off-diagonal elements (and reset them to 0)\n            for (int j = i + 1; j < order; ++j) {\n                final double[] lJ = lTData[j];\n                final double lIJ = lI[j];\n                final double lJI = lJ[i];\n                final double maxDelta =\n                    relativeSymmetryThreshold * Math.max(Math.abs(lIJ), Math.abs(lJI));\n                if (Math.abs(lIJ - lJI) > maxDelta) {\n                    throw new NotSymmetricMatrixException();\n                }\n                lJ[i] = 0;\n           }\n        }\n\n        // transform the matrix\n        for (int i = 0; i < order; ++i) {\n\n            final double[] ltI = lTData[i];\n\n            // check diagonal element\n\n            ltI[i] = Math.sqrt(ltI[i]);\n            final double inverse = 1.0 / ltI[i];\n\n            for (int q = order - 1; q > i; --q) {\n                ltI[q] *= inverse;\n                final double[] ltQ = lTData[q];\n                for (int p = q; p < order; ++p) {\n                    ltQ[p] -= ltI[q] * ltI[p];\n                }\n            }\n\n        }\n\n    }",
+ "imports": [
+  "org.apache.commons.math.MathRuntimeException"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math.linear",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getL"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getLT"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getDeterminant"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getSolver"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class CholeskyDecompositionImpl implements CholeskyDecomposition",
+  "constructors": [
+   "public CholeskyDecompositionImpl(final RealMatrix matrix) throws NonSquareMatrixException, NotSymmetricMatrixException, NotPositiveDefiniteMatrixException;",
+   "public CholeskyDecompositionImpl(final RealMatrix matrix, final double relativeSymmetryThreshold, final double absolutePositivityThreshold) throws NonSquareMatrixException, NotSymmetricMatrixException, NotPositiveDefiniteMatrixException;"
+  ],
+  "focal_signature": "public CholeskyDecompositionImpl(final RealMatrix matrix, final double relativeSymmetryThreshold, final double absolutePositivityThreshold) throws NonSquareMatrixException, NotSymmetricMatrixException, NotPositiveDefiniteMatrixException",
+  "methods": [
+   "public RealMatrix getL();",
+   "public RealMatrix getLT();",
+   "public double getDeterminant();",
+   "public DecompositionSolver getSolver();"
+  ],
+  "type_signatures": [
+   "public interface RealMatrix extends AnyMatrix { public RealMatrix preMultiply(RealMatrix m) throws IllegalArgumentException; }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

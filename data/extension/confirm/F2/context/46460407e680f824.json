@@ -1,0 +1,211 @@
+{
+ "bug_name": "Compress_34",
+ "call_sites": [
+  {
+   "line": 154,
+   "lines": [
+    149,
+    150,
+    151,
+    152,
+    153,
+    154,
+    155,
+    156,
+    157,
+    158,
+    159
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/zip/AbstractUnicodeExtraField.java",
+   "snippet": "    public byte[] getLocalFileDataData() {\n        return getCentralDirectoryData();\n    }\n\n    public ZipShort getLocalFileDataLength() {\n        return getCentralDirectoryLength();\n    }\n\n    public void parseFromLocalFileData(byte[] buffer, int offset, int length)\n        throws ZipException {\n"
+  },
+  {
+   "line": 242,
+   "lines": [
+    237,
+    238,
+    239,
+    240,
+    241,
+    242,
+    243,
+    244,
+    245,
+    246,
+    247
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/zip/ExtraFieldUtils.java",
+   "snippet": "        int regularExtraFieldCount =\n            lastIsUnparseableHolder ? data.length - 1 : data.length;\n\n        int sum = WORD * regularExtraFieldCount;\n        for (ZipExtraField element : data) {\n            sum += element.getCentralDirectoryLength().getValue();\n        }\n        byte[] result = new byte[sum];\n        int start = 0;\n        for (int i = 0; i < regularExtraFieldCount; i++) {\n            System.arraycopy(data[i].getHeaderId().getBytes(),"
+  },
+  {
+   "line": 249,
+   "lines": [
+    244,
+    245,
+    246,
+    247,
+    248,
+    249,
+    250,
+    251,
+    252,
+    253,
+    254
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/zip/ExtraFieldUtils.java",
+   "snippet": "        byte[] result = new byte[sum];\n        int start = 0;\n        for (int i = 0; i < regularExtraFieldCount; i++) {\n            System.arraycopy(data[i].getHeaderId().getBytes(),\n                             0, result, start, 2);\n            System.arraycopy(data[i].getCentralDirectoryLength().getBytes(),\n                             0, result, start + 2, 2);\n            start += WORD;\n            byte[] local = data[i].getCentralDirectoryData();\n            if (local != null) {\n                System.arraycopy(local, 0, result, start, local.length);"
+  },
+  {
+   "line": 198,
+   "lines": [
+    193,
+    194,
+    195,
+    196,
+    197,
+    198,
+    199,
+    200,
+    201,
+    202,
+    203
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/zip/X5455_ExtendedTimestamp.java",
+   "snippet": "     * or length specifier.\n     *\n     * @return the central directory data\n     */\n    public byte[] getCentralDirectoryData() {\n        byte[] centralData = new byte[getCentralDirectoryLength().getValue()];\n        byte[] localData = getLocalFileDataData();\n\n        // Truncate out create & access time (last 8 bytes) from\n        // the copy of the local data we obtained:\n        System.arraycopy(localData, 0, centralData, 0, centralData.length);"
+  },
+  {
+   "line": 134,
+   "lines": [
+    129,
+    130,
+    131,
+    132,
+    133,
+    134,
+    135,
+    136,
+    137,
+    138,
+    139
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/zip/Zip64ExtendedInformationExtraField.java",
+   "snippet": "        }\n        return EMPTY;\n    }\n\n    public byte[] getCentralDirectoryData() {\n        byte[] data = new byte[getCentralDirectoryLength().getValue()];\n        int off = addSizes(data);\n        if (relativeHeaderOffset != null) {\n            System.arraycopy(relativeHeaderOffset.getBytes(), 0, data, off, DWORD);\n            off += DWORD;\n        }"
+  }
+ ],
+ "class_simple": "X7875_NewUnix",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * An extra field that stores UNIX UID/GID data (owner &amp; group ownership) for a given\n * zip entry.  We're using the field definition given in Info-Zip's source archive:\n * zip-3.0.tar.gz/proginfo/extrafld.txt\n *\n * <pre>\n * Local-header version:\n *\n * Value         Size        Description\n * -----         ----        -----------\n * 0x7875        Short       tag for this extra block type (\"ux\")\n * TSize         Short       total data size for this block\n * Version       1 byte      version of this extra field, currently 1\n * UIDSize       1 byte      Size of UID field\n * UID           Variable    UID for this entry (little endian)\n * GIDSize       1 byte      Size of GID field\n * GID           Variable    GID for this entry (little endian)\n *\n * Central-header version:\n *\n * Value         Size        Description\n * -----         ----        -----------\n * 0x7855        Short       tag for this extra block type (\"Ux\")\n * TSize         Short       total data size for this block (0)\n * </pre>\n * @since 1.5\n */\npublic",
+  "method_javadoc": "/**\n     * Length of the extra field in the central directory data - without\n     * Header-ID or length specifier.\n     *\n     * @return a <code>ZipShort</code> for the length of the data of this extra field\n     */"
+ },
+ "fields": [
+  "private static final ZipShort HEADER_ID",
+  "private static final BigInteger ONE_THOUSAND",
+  "private static final long serialVersionUID",
+  "private int version",
+  "private BigInteger uid",
+  "private BigInteger gid"
+ ],
+ "focal_class": "org.apache.commons.compress.archivers.zip.X7875_NewUnix",
+ "focal_id": "Compress_34::org.apache.commons.compress.archivers.zip.X7875_NewUnix::getCentralDirectoryLength()",
+ "focal_method_name": "getCentralDirectoryLength",
+ "generations": 3,
+ "impl_B": "public ZipShort getCentralDirectoryLength() {\n        return getLocalFileDataLength();\n    }",
+ "imports": [
+  "java.io.Serializable",
+  "java.math.BigInteger",
+  "java.util.zip.ZipException",
+  "static org.apache.commons.compress.archivers.zip.ZipUtil.reverse",
+  "static org.apache.commons.compress.archivers.zip.ZipUtil.signedByteToUnsignedInt",
+  "static org.apache.commons.compress.archivers.zip.ZipUtil.unsignedIntToSignedByte"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.compress.archivers.zip",
+ "project": "Compress",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * The Header-ID.\n     *\n     * @return the value for the header id for this extrafield\n     */",
+   "name": "getHeaderId"
+  },
+  {
+   "javadoc": "/**\n     * Gets the UID as a long.  UID is typically a 32 bit unsigned\n     * value on most UNIX systems, so we return a long to avoid\n     * integer overflow into the negatives in case values above\n     * and including 2^31 are being used.\n     *\n     * @return the UID value.\n     */",
+   "name": "getUID"
+  },
+  {
+   "javadoc": "/**\n     * Gets the GID as a long.  GID is typically a 32 bit unsigned\n     * value on most UNIX systems, so we return a long to avoid\n     * integer overflow into the negatives in case values above\n     * and including 2^31 are being used.\n     *\n     * @return the GID value.\n     */",
+   "name": "getGID"
+  },
+  {
+   "javadoc": "/**\n     * Sets the UID.\n     *\n     * @param l UID value to set on this extra field.\n     */",
+   "name": "setUID"
+  },
+  {
+   "javadoc": "/**\n     * Sets the GID.\n     *\n     * @param l GID value to set on this extra field.\n     */",
+   "name": "setGID"
+  },
+  {
+   "javadoc": "/**\n     * Length of the extra field in the local file data - without\n     * Header-ID or length specifier.\n     *\n     * @return a <code>ZipShort</code> for the length of the data of this extra field\n     */",
+   "name": "getLocalFileDataLength"
+  },
+  {
+   "javadoc": "/**\n     * The actual data to put into local file data - without Header-ID\n     * or length specifier.\n     *\n     * @return get the data\n     */",
+   "name": "getLocalFileDataData"
+  },
+  {
+   "javadoc": "/**\n     * The actual data to put into central directory data - without Header-ID\n     * or length specifier.\n     *\n     * @return get the data\n     */",
+   "name": "getCentralDirectoryData"
+  },
+  {
+   "javadoc": "/**\n     * Populate data from this array as if it was in local file data.\n     *\n     * @param data   an array of bytes\n     * @param offset the start offset\n     * @param length the number of bytes in the array from offset\n     * @throws java.util.zip.ZipException on error\n     */",
+   "name": "parseFromLocalFileData"
+  },
+  {
+   "javadoc": "/**\n     * Doesn't do anything since this class doesn't store anything\n     * inside the central directory.\n     */",
+   "name": "parseFromCentralDirectoryData"
+  },
+  {
+   "javadoc": "/**\n     * Returns a String representation of this class useful for\n     * debugging purposes.\n     *\n     * @return A String representation of this class useful for\n     *         debugging purposes.\n     */",
+   "name": "toString"
+  },
+  {
+   "javadoc": "",
+   "name": "clone"
+  },
+  {
+   "javadoc": "",
+   "name": "equals"
+  },
+  {
+   "javadoc": "",
+   "name": "hashCode"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class X7875_NewUnix implements ZipExtraField, Cloneable, Serializable",
+  "constructors": [
+   "public X7875_NewUnix();"
+  ],
+  "focal_signature": "public ZipShort getCentralDirectoryLength()",
+  "methods": [
+   "public ZipShort getHeaderId();",
+   "public long getUID();",
+   "public long getGID();",
+   "public void setUID(long l);",
+   "public void setGID(long l);",
+   "public ZipShort getLocalFileDataLength();",
+   "public byte[] getLocalFileDataData();",
+   "public byte[] getCentralDirectoryData();",
+   "public void parseFromLocalFileData( byte[] data, int offset, int length ) throws ZipException;",
+   "public void parseFromCentralDirectoryData( byte[] buffer, int offset, int length ) throws ZipException;",
+   "public String toString();",
+   "public Object clone() throws CloneNotSupportedException;",
+   "public boolean equals(Object o);",
+   "public int hashCode();"
+  ],
+  "type_signatures": [
+   "public final class ZipShort implements Cloneable, Serializable { public ZipShort (int value); public ZipShort (byte[] bytes); public ZipShort (byte[] bytes, int offset); public byte[] getBytes(); public int getValue(); public static byte[] getBytes(int value); public static void putShort(int value, byte[] buf, int offset); public static int getValue(byte[] bytes, int offset); public static int getValue(byte[] bytes); public boolean equals(Object o); public int hashCode(); public Object clone(); public String toString(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

@@ -1,0 +1,295 @@
+{
+ "bug_name": "Time_26",
+ "call_sites": [
+  {
+   "line": 1378,
+   "lines": [
+    1373,
+    1374,
+    1375,
+    1376,
+    1377,
+    1378,
+    1379,
+    1380,
+    1381,
+    1382,
+    1383
+   ],
+   "path": "src/main/java/org/joda/time/DateMidnight.java",
+   "snippet": "         * Rounds to the highest whole unit of this field on a copy of this DateMidnight.\n         *\n         * @return a copy of the DateMidnight with the field value changed\n         */\n        public DateMidnight roundCeilingCopy() {\n            return iInstant.withMillis(iField.roundCeiling(iInstant.getMillis()));\n        }\n\n        /**\n         * Rounds to the nearest whole unit of this field on a copy of this DateMidnight,\n         * favoring the floor if halfway."
+  },
+  {
+   "line": 2136,
+   "lines": [
+    2131,
+    2132,
+    2133,
+    2134,
+    2135,
+    2136,
+    2137,
+    2138,
+    2139,
+    2140,
+    2141
+   ],
+   "path": "src/main/java/org/joda/time/DateTime.java",
+   "snippet": "         * Rounds to the highest whole unit of this field on a copy of this DateTime.\n         *\n         * @return a copy of the DateTime with the field value changed\n         */\n        public DateTime roundCeilingCopy() {\n            return iInstant.withMillis(iField.roundCeiling(iInstant.getMillis()));\n        }\n        \n        /**\n         * Rounds to the nearest whole unit of this field on a copy of this DateTime,\n         * favoring the floor if halfway."
+  },
+  {
+   "line": 1986,
+   "lines": [
+    1981,
+    1982,
+    1983,
+    1984,
+    1985,
+    1986,
+    1987,
+    1988,
+    1989,
+    1990,
+    1991
+   ],
+   "path": "src/main/java/org/joda/time/LocalDate.java",
+   "snippet": "         * time of 11:00.\n         *\n         * @return a copy of the LocalDate with the field value changed\n         */\n        public LocalDate roundCeilingCopy() {\n            return iInstant.withLocalMillis(iField.roundCeiling(iInstant.getLocalMillis()));\n        }\n        \n        /**\n         * Rounds to the nearest whole unit of this field on a copy of this\n         * LocalDate, favoring the floor if halfway."
+  },
+  {
+   "line": 2218,
+   "lines": [
+    2213,
+    2214,
+    2215,
+    2216,
+    2217,
+    2218,
+    2219,
+    2220,
+    2221,
+    2222,
+    2223
+   ],
+   "path": "src/main/java/org/joda/time/LocalDateTime.java",
+   "snippet": "         * time of 11:00.\n         *\n         * @return a copy of the LocalDateTime with the field value changed\n         */\n        public LocalDateTime roundCeilingCopy() {\n            return iInstant.withLocalMillis(iField.roundCeiling(iInstant.getLocalMillis()));\n        }\n        \n        /**\n         * Rounds to the nearest whole unit of this field on a copy of this\n         * LocalDateTime, favoring the floor if halfway."
+  },
+  {
+   "line": 1533,
+   "lines": [
+    1528,
+    1529,
+    1530,
+    1531,
+    1532,
+    1533,
+    1534,
+    1535,
+    1536,
+    1537,
+    1538
+   ],
+   "path": "src/main/java/org/joda/time/LocalTime.java",
+   "snippet": "         * time of 11:00.\n         *\n         * @return a copy of the LocalTime with the field value changed\n         */\n        public LocalTime roundCeilingCopy() {\n            return iInstant.withLocalMillis(iField.roundCeiling(iInstant.getLocalMillis()));\n        }\n        \n        /**\n         * Rounds to the nearest whole unit of this field on a copy of this\n         * LocalTime, favoring the floor if halfway."
+  }
+ ],
+ "class_simple": "ZonedDateTimeField",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Wraps another Chronology to add support for time zones.\n * <p>\n * ZonedChronology is thread-safe and immutable.\n *\n * @author Brian S O'Neill\n * @author Stephen Colebourne\n * @since 1.0\n */\npublic final class ZonedChronology extends AssembledChronology {\n\n    /** Serialization lock */\n    private static final long serialVersionUID = -1079258847191166848L;\n\n    /**\n     * Create a ZonedChronology for any chronology, overriding any time zone it\n     * may already have.\n     *\n     * @param base base chronology to wrap\n     * @param zone the time zone\n     * @throws IllegalArgumentException if chronology or time zone is null\n     */\n    public static ZonedChronology getInstance(Chronology base, DateTimeZone zone) {\n        if (base == null) {\n            throw new IllegalArgumentException(\"Must supply a chronology\");\n        }\n        base = base.withUTC();\n        if (base == null) {\n            throw new IllegalArgumentException(\"UTC chronology must not be null\");\n        }\n        if (zone == null) {\n            throw new IllegalArgumentException(\"DateTimeZone must not be null\");\n        }\n        return new ZonedChronology(base, zone);\n    }\n\n    static boolean useTimeArithmetic(DurationField field) {\n        // Use time of day arithmetic rules for unit durations less than\n        // typical time zone offsets.\n        return field != null && field.getUnitMillis() < DateTimeConstants.MILLIS_PER_HOUR * 12;\n    }\n\n    /**\n     * Restricted constructor\n     *\n     * @param base base chronology to wrap\n     * @param zone the time zone\n     */\n    private ZonedChronology(Chronology base, DateTimeZone zone) {\n        super(base, zone);\n    }\n\n    public DateTimeZone getZone() {\n        return (DateTimeZone)getParam();\n    }\n\n    public Chronology withUTC() {\n        return getBase();\n    }\n\n    public Chronology withZone(DateTimeZone zone) {\n        if (zone == null) {\n            zone = DateTimeZone.getDefault();\n        }\n        if (zone == getParam()) {\n            return this;\n        }\n        if (zone == DateTimeZone.UTC) {\n            return getBase();\n        }\n        return new ZonedChronology(getBase(), zone);\n    }\n\n    public long getDateTimeMillis(int year, int monthOfYear, int dayOfMonth,\n                                  int millisOfDay)\n        throws IllegalArgumentException\n    {\n        return localToUTC(getBase().getDateTimeMillis\n                          (year, monthOfYear, dayOfMonth, millisOfDay));\n    }\n\n    public long getDateTimeMillis(int year, int monthOfYear, int dayOfMonth,\n                                  int hourOfDay, int minuteOfHour,\n                                  int secondOfMinute, int millisOfSecond)\n        throws IllegalArgumentException\n    {\n        return localToUTC(getBase().getDateTimeMillis\n                          (year, monthOfYear, dayOfMonth, \n                           hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond));\n    }\n\n    public long getDateTimeMillis(long instant,\n                                  int hourOfDay, int minuteOfHour,\n                                  int secondOfMinute, int millisOfSecond)\n        throws IllegalArgumentException\n    {\n        return localToUTC(getBase().getDateTimeMillis\n                          (instant + getZone().getOffset(instant),\n                           hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond));\n    }\n\n    /**\n     * @param instant instant from 1970-01-01T00:00:00 local time\n     * @return instant from 1970-01-01T00:00:00Z\n     */\n    private long localToUTC(long instant) {\n        DateTimeZone zone = getZone();\n        int offset = zone.getOffsetFromLocal(instant);\n        instant -= offset;\n        if (offset != zone.getOffset(instant)) {\n            throw new IllegalArgumentException\n                (\"Illegal instant due to time zone offset transition: \" +\n                    DateTimeFormat.forPattern(\"yyyy-MM-dd'T'HH:mm:ss.SSS\").print(new Instant(instant)));\n        }\n        return instant;\n    }\n\n    protected void assemble(Fields fields) {\n        // Keep a local cache of converted fields so as not to create redundant\n        // objects.\n        HashMap<Object, Object> converted = new HashMap<Object, Object>();\n\n        // Convert duration fields...\n\n        fields.eras = convertField(fields.eras, converted);\n        fields.centuries = convertField(fields.centuries, converted);\n        fields.years = convertField(fields.years, converted);\n        fields.months = convertField(fields.months, converted);\n        fields.weekyears = convertField(fields.weekyears, converted);\n        fields.weeks = convertField(fields.weeks, converted);\n        fields.days = convertField(fields.days, converted);\n\n        fields.halfdays = convertField(fields.halfdays, converted);\n        fields.hours = convertField(fields.hours, converted);\n        fields.minutes = convertField(fields.minutes, converted);\n        fields.seconds = convertField(fields.seconds, converted);\n        fields.millis = convertField(fields.millis, converted);\n\n        // Convert datetime fields...\n\n        fields.year = convertField(fields.year, converted);\n        fields.yearOfEra = convertField(fields.yearOfEra, converted);\n        fields.yearOfCentury = convertField(fields.yearOfCentury, converted);\n        fields.centuryOfEra = convertField(fields.centuryOfEra, converted);\n        fields.era = convertField(fields.era, converted);\n        fields.dayOfWeek = convertField(fields.dayOfWeek, converted);\n        fields.dayOfMonth = convertField(fields.dayOfMonth, converted);\n        fields.dayOfYear = convertField(fields.dayOfYear, converted);\n        fields.monthOfYear = convertField(fields.monthOfYear, converted);\n        fields.weekOfWeekyear = convertField(fields.weekOfWeekyear, converted);\n        fields.weekyear = convertField(fields.weekyear, converted);\n        fields.weekyearOfCentury = convertField(fields.weekyearOfCentury, converted);\n\n        fields.millisOfSecond = convertField(fields.millisOfSecond, converted);\n        fields.millisOfDay = convertField(fields.millisOfDay, converted);\n        fields.secondOfMinute = convertField(fields.secondOfMinute, converted);\n        fields.secondOfDay = convertField(fields.secondOfDay, converted);\n        fields.minuteOfHour = convertField(fields.minuteOfHour, converted);\n        fields.minuteOfDay = convertField(fields.minuteOfDay, converted);\n        fields.hourOfDay = convertField(fields.hourOfDay, converted);\n        fields.hourOfHalfday = convertField(fields.hourOfHalfday, converted);\n        fields.clockhourOfDay = convertField(fields.clockhourOfDay, converted);\n        fields.clockhourOfHalfday = convertField(fields.clockhourOfHalfday, converted);\n        fields.halfdayOfDay = convertField(fields.halfdayOfDay, converted);\n    }\n\n    private DurationField convertField(DurationField field, HashMap<Object, Object> converted) {\n        if (field == null || !field.isSupported()) {\n            return field;\n        }\n        if (converted.containsKey(field)) {\n            return (DurationField)converted.get(field);\n        }\n        ZonedDurationField zonedField = new ZonedDurationField(field, getZone());\n        converted.put(field, zonedField);\n        return zonedField;\n    }\n\n    private DateTimeField convertField(DateTimeField field, HashMap<Object, Object> converted) {\n        if (field == null || !field.isSupported()) {\n            return field;\n        }\n        if (converted.containsKey(field)) {\n            return (DateTimeField)converted.get(field);\n        }\n        ZonedDateTimeField zonedField =\n            new ZonedDateTimeField(field, getZone(),\n                                   convertField(field.getDurationField(), converted),\n                                   convertField(field.getRangeDurationField(), converted),\n                                   convertField(field.getLeapDurationField(), converted));\n        converted.put(field, zonedField);\n        return zonedField;\n    }\n\n    //-----------------------------------------------------------------------\n    /**\n     * A zoned chronology is only equal to a zoned chronology with the\n     * same base chronology and zone.\n     * \n     * @param obj  the object to compare to\n     * @return true if equal\n     * @since 1.4\n     */\n    public boolean equals(Object obj) {\n        if (this == obj) {\n            return true;\n        }\n        if (obj instanceof ZonedChronology == false) {\n            return false;\n        }\n        ZonedChronology chrono = (ZonedChronology) obj;\n        return\n            getBase().equals(chrono.getBase()) &&\n            getZone().equals(chrono.getZone());\n    }\n\n    /**\n     * A suitable hashcode for the chronology.\n     * \n     * @return the hashcode\n     * @since 1.4\n     */\n    public int hashCode() {\n        return 326565 + getZone().hashCode() * 11 + getBase().hashCode() * 7;\n    }\n\n    /**\n     * A debugging string for the chronology.\n     * \n     * @return the debugging string\n     */\n    public String toString() {\n        return \"ZonedChronology[\" + getBase() + \", \" + getZone().getID() + ']';\n    }\n\n    //-----------------------------------------------------------------------\n    /*\n     * Because time durations are typically smaller than time zone offsets, the\n     * arithmetic methods subtract the original offset. This produces a more\n     * expected behavior when crossing time zone offset transitions. For dates,\n     * the new offset is subtracted off. This behavior, if applied to time\n     * fields, can nullify or reverse an add when crossing a transition.\n     */\n    static class ZonedDurationField extends BaseDurationField {\n        private static final long serialVersionUID = -485345310999208286L;\n\n        final DurationField iField;\n        final boolean iTimeField;\n        final DateTimeZone iZone;\n\n        ZonedDurationField(DurationField field, DateTimeZone zone) {\n            super(field.getType());\n            if (!field.isSupported()) {\n                throw new IllegalArgumentException();\n            }\n            iField = field;\n            iTimeField = useTimeArithmetic(field);\n            iZone = zone;\n        }\n\n        public boolean isPrecise() {\n            return iTimeField ? iField.isPrecise() : iField.isPrecise() && this.iZone.isFixed();\n        }\n\n        public long getUnitMillis() {\n            return iField.getUnitMillis();\n        }\n\n        public int getValue(long duration, long instant) {\n            return iField.getValue(duration, addOffset(instant));\n        }\n\n        public long getValueAsLong(long duration, long instant) {\n            return iField.getValueAsLong(duration, addOffset(instant));\n        }\n\n        public long getMillis(int value, long instant) {\n            return iField.getMillis(value, addOffset(instant));\n        }\n\n        public long getMillis(long value, long instant) {\n            return iField.getMillis(value, addOffset(instant));\n        }\n\n        public long add(long instant, int value) {\n            int offset = getOffsetToAdd(instant);\n            instant = iField.add(instant + offset, value);\n            return instant - (iTimeField ? offset : getOffsetFromLocalToSubtract(instant));\n        }\n\n        public long add(long instant, long value) {\n            int offset = getOffsetToAdd(instant);\n            instant = iField.add(instant + offset, value);\n            return instant - (iTimeField ? offset : getOffsetFromLocalToSubtract(instant));\n        }\n\n        public int getDifference(long minuendInstant, long subtrahendInstant) {\n            int offset = getOffsetToAdd(subtrahendInstant);\n            return iField.getDifference\n                (minuendInstant + (iTimeField ? offset : getOffsetToAdd(minuendInstant)),\n                 subtrahendInstant + offset);\n        }\n\n        public long getDifferenceAsLong(long minuendInstant, long subtrahendInstant) {\n            int offset = getOffsetToAdd(subtrahendInstant);\n            return iField.getDifferenceAsLong\n                (minuendInstant + (iTimeField ? offset : getOffsetToAdd(minuendInstant)),\n                 subtrahendInstant + offset);\n        }\n\n        private int getOffsetToAdd(long instant) {\n            int offset = this.iZone.getOffset(instant);\n            long sum = instant + offset;\n            // If there is a sign change, but the two values have the same sign...\n            if ((instant ^ sum) < 0 && (instant ^ offset) >= 0) {\n                throw new ArithmeticException(\"Adding time zone offset caused overflow\");\n            }\n            return offset;\n        }\n\n        private int getOffsetFromLocalToSubtract(long instant) {\n            int offset = this.iZone.getOffsetFromLocal(instant);\n            long diff = instant - offset;\n            // If there is a sign change, but the two values have different signs...\n            if ((instant ^ diff) < 0 && (instant ^ offset) < 0) {\n                throw new ArithmeticException(\"Subtracting time zone offset caused overflow\");\n            }\n            return offset;\n        }\n\n        private long addOffset(long instant) {\n            return iZone.convertUTCToLocal(instant);\n        }\n    }\n\n    /**\n     * A DateTimeField that decorates another to add timezone behaviour.\n     * <p>\n     * This class converts passed in instants to local wall time, and vice\n     * versa on output.\n     */\n    static final",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "final DateTimeField iField",
+  "final DateTimeZone iZone",
+  "final DurationField iDurationField",
+  "final boolean iTimeField",
+  "final DurationField iRangeDurationField",
+  "final DurationField iLeapDurationField"
+ ],
+ "focal_class": "org.joda.time.chrono.ZonedChronology.ZonedDateTimeField",
+ "focal_id": "Time_26::org.joda.time.chrono.ZonedChronology$ZonedDateTimeField::roundCeiling(long)",
+ "focal_method_name": "roundCeiling",
+ "generations": 3,
+ "impl_B": "public long roundCeiling(long instant) {\n            if (iTimeField) {\n                int offset = getOffsetToAdd(instant);\n                instant = iField.roundCeiling(instant + offset);\n                return instant - offset;\n            } else {\n                long localInstant = iZone.convertUTCToLocal(instant);\n                localInstant = iField.roundCeiling(localInstant);\n                return iZone.convertLocalToUTC(localInstant, false);\n            }\n        }",
+ "imports": [
+  "java.util.HashMap",
+  "java.util.Locale",
+  "org.joda.time.Chronology",
+  "org.joda.time.DateTimeConstants",
+  "org.joda.time.DateTimeField",
+  "org.joda.time.DateTimeZone",
+  "org.joda.time.DurationField",
+  "org.joda.time.IllegalFieldValueException",
+  "org.joda.time.Instant",
+  "org.joda.time.ReadablePartial",
+  "org.joda.time.field.BaseDateTimeField",
+  "org.joda.time.field.BaseDurationField",
+  "org.joda.time.format.DateTimeFormat"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.joda.time.chrono",
+ "project": "Time",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "isLenient"
+  },
+  {
+   "javadoc": "",
+   "name": "get"
+  },
+  {
+   "javadoc": "",
+   "name": "getAsText"
+  },
+  {
+   "javadoc": "",
+   "name": "getAsShortText"
+  },
+  {
+   "javadoc": "",
+   "name": "getAsText"
+  },
+  {
+   "javadoc": "",
+   "name": "getAsShortText"
+  },
+  {
+   "javadoc": "",
+   "name": "add"
+  },
+  {
+   "javadoc": "",
+   "name": "add"
+  },
+  {
+   "javadoc": "",
+   "name": "addWrapField"
+  },
+  {
+   "javadoc": "",
+   "name": "set"
+  },
+  {
+   "javadoc": "",
+   "name": "set"
+  },
+  {
+   "javadoc": "",
+   "name": "getDifference"
+  },
+  {
+   "javadoc": "",
+   "name": "getDifferenceAsLong"
+  },
+  {
+   "javadoc": "",
+   "name": "getDurationField"
+  },
+  {
+   "javadoc": "",
+   "name": "getRangeDurationField"
+  },
+  {
+   "javadoc": "",
+   "name": "isLeap"
+  },
+  {
+   "javadoc": "",
+   "name": "getLeapAmount"
+  },
+  {
+   "javadoc": "",
+   "name": "getLeapDurationField"
+  },
+  {
+   "javadoc": "",
+   "name": "roundFloor"
+  },
+  {
+   "javadoc": "",
+   "name": "remainder"
+  },
+  {
+   "javadoc": "",
+   "name": "getMinimumValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getMinimumValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getMinimumValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getMinimumValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getMaximumValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getMaximumValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getMaximumValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getMaximumValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getMaximumTextLength"
+  },
+  {
+   "javadoc": "",
+   "name": "getMaximumShortTextLength"
+  }
+ ],
+ "sig": {
+  "class_declaration": "static final class ZonedDateTimeField extends BaseDateTimeField",
+  "constructors": [],
+  "focal_signature": "public long roundCeiling(long instant)",
+  "methods": [
+   "public boolean isLenient();",
+   "public int get(long instant);",
+   "public String getAsText(long instant, Locale locale);",
+   "public String getAsShortText(long instant, Locale locale);",
+   "public String getAsText(int fieldValue, Locale locale);",
+   "public String getAsShortText(int fieldValue, Locale locale);",
+   "public long add(long instant, int value);",
+   "public long add(long instant, long value);",
+   "public long addWrapField(long instant, int value);",
+   "public long set(long instant, int value);",
+   "public long set(long instant, String text, Locale locale);",
+   "public int getDifference(long minuendInstant, long subtrahendInstant);",
+   "public long getDifferenceAsLong(long minuendInstant, long subtrahendInstant);",
+   "public final DurationField getDurationField();",
+   "public final DurationField getRangeDurationField();",
+   "public boolean isLeap(long instant);",
+   "public int getLeapAmount(long instant);",
+   "public final DurationField getLeapDurationField();",
+   "public long roundFloor(long instant);",
+   "public long remainder(long instant);",
+   "public int getMinimumValue();",
+   "public int getMinimumValue(long instant);",
+   "public int getMinimumValue(ReadablePartial instant);",
+   "public int getMinimumValue(ReadablePartial instant, int[] values);",
+   "public int getMaximumValue();",
+   "public int getMaximumValue(long instant);",
+   "public int getMaximumValue(ReadablePartial instant);",
+   "public int getMaximumValue(ReadablePartial instant, int[] values);",
+   "public int getMaximumTextLength(Locale locale);",
+   "public int getMaximumShortTextLength(Locale locale);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

@@ -1,0 +1,445 @@
+{
+ "candidate_id": "d38320739f7376338a1a",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testRead_WhenClosed",
+   "testRead_WhenFinishedOrNullCurrent",
+   "testRead_InvalidBufferBounds",
+   "testRead_NegativeStart",
+   "testRead_NegativeLength",
+   "testRead_LengthOverflowsBuffer",
+   "testRead_StoredData"
+  ],
+  "nc_both": [
+   "testRead_DeflatedData"
+  ],
+  "nc_one_version": [],
+  "passes": 1
+ },
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "Compress_5::org.apache.commons.compress.archivers.zip.ZipArchiveInputStream::read(byte[],int,int)",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_WhenClosed",
+   "runs_b": [
+    {
+     "duration_s": 0.107,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.108,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.135,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.11,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.116,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.107,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.ByteArrayOutputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport java.util.zip.ZipOutputStream;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_read_TriageGen0Test {\n\n    @Test(expected = IOException.class)\n    public void testRead_WhenClosed() throws IOException {\n        ByteArrayOutputStream baos = new ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            ZipEntry entry = new ZipEntry(\"test.txt\");\n            zos.putNextEntry(entry);\n            zos.write(\"data\".getBytes());\n            zos.closeEntry();\n        }\n        \n        ZipArchiveInputStream zais = new ZipArchiveInputStream(new ByteArrayInputStream(baos.toByteArray()));\n        zais.getNextZipEntry();\n        zais.close();\n        \n        byte[] buffer = new byte[10];\n        zais.read(buffer, 0, 10);\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_WhenFinishedOrNullCurrent",
+   "runs_b": [
+    {
+     "duration_s": 0.116,
+     "exception": "java.io.IOException",
+     "failing_test_line": 47,
+     "message": "The stream is closed",
+     "outcome": "exception",
+     "trace": "java.io.IOException: The stream is closed\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream.read(ZipArchiveInputStream.java:193)\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream_read_TriageGen0Test.testRead_WhenFinishedOrNullCurrent(ZipArchiveInputStream_read_TriageGen0Test.java:47)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.118,
+     "exception": "java.io.IOException",
+     "failing_test_line": 47,
+     "message": "The stream is closed",
+     "outcome": "exception",
+     "trace": "java.io.IOException: The stream is closed\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream.read(ZipArchiveInputStream.java:193)\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream_read_TriageGen0Test.testRead_WhenFinishedOrNullCurrent(ZipArchiveInputStream_read_TriageGen0Test.java:47)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.115,
+     "exception": "java.io.IOException",
+     "failing_test_line": 47,
+     "message": "The stream is closed",
+     "outcome": "exception",
+     "trace": "java.io.IOException: The stream is closed\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream.read(ZipArchiveInputStream.java:193)\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream_read_TriageGen0Test.testRead_WhenFinishedOrNullCurrent(ZipArchiveInputStream_read_TriageGen0Test.java:47)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.142,
+     "exception": "java.io.IOException",
+     "failing_test_line": 47,
+     "message": "The stream is closed",
+     "outcome": "exception",
+     "trace": "java.io.IOException: The stream is closed\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream.read(ZipArchiveInputStream.java:193)\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream_read_TriageGen0Test.testRead_WhenFinishedOrNullCurrent(ZipArchiveInputStream_read_TriageGen0Test.java:47)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.112,
+     "exception": "java.io.IOException",
+     "failing_test_line": 47,
+     "message": "The stream is closed",
+     "outcome": "exception",
+     "trace": "java.io.IOException: The stream is closed\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream.read(ZipArchiveInputStream.java:193)\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream_read_TriageGen0Test.testRead_WhenFinishedOrNullCurrent(ZipArchiveInputStream_read_TriageGen0Test.java:47)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.124,
+     "exception": "java.io.IOException",
+     "failing_test_line": 47,
+     "message": "The stream is closed",
+     "outcome": "exception",
+     "trace": "java.io.IOException: The stream is closed\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream.read(ZipArchiveInputStream.java:193)\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream_read_TriageGen0Test.testRead_WhenFinishedOrNullCurrent(ZipArchiveInputStream_read_TriageGen0Test.java:47)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.ByteArrayOutputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport java.util.zip.ZipOutputStream;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_read_TriageGen0Test {\n\n    \n\n    @Test\n    public void testRead_WhenFinishedOrNullCurrent() throws IOException {\n        ByteArrayOutputStream baos = new ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            zos.putNextEntry(new ZipEntry(\"test.txt\"));\n            zos.write(\"data\".getBytes());\n            zos.closeEntry();\n        }\n        \n        ZipArchiveInputStream zais = new ZipArchiveInputStream(new ByteArrayInputStream(baos.toByteArray()));\n        // No getNextEntry called, current is null\n        int result = zais.read(new byte[10], 0, 10);\n        Assert.assertEquals(-1, result);\n        \n        zais.getNextZipEntry();\n        zais.close();\n        // After close/finished\n        int resultFinished = zais.read(new byte[10], 0, 10);\n        Assert.assertEquals(-1, resultFinished);\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_InvalidBufferBounds",
+   "runs_b": [
+    {
+     "duration_s": 0.114,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.112,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.105,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.126,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.138,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.123,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.ByteArrayOutputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport java.util.zip.ZipOutputStream;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_read_TriageGen0Test {\n\n    \n\n    \n\n    @Test(expected = ArrayIndexOutOfBoundsException.class)\n    public void testRead_InvalidBufferBounds() throws IOException {\n        ByteArrayOutputStream baos = new ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            zos.putNextEntry(new ZipEntry(\"test.txt\"));\n            zos.write(\"data\".getBytes());\n            zos.closeEntry();\n        }\n        ZipArchiveInputStream zais = new ZipArchiveInputStream(new ByteArrayInputStream(baos.toByteArray()));\n        zais.getNextZipEntry();\n\n        // start > buffer.length\n        zais.read(new byte[5], 6, 1);\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_NegativeStart",
+   "runs_b": [
+    {
+     "duration_s": 0.122,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.131,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.127,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.118,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.13,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.128,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.ByteArrayOutputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport java.util.zip.ZipOutputStream;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_read_TriageGen0Test {\n\n    \n\n    \n\n    \n\n    @Test(expected = ArrayIndexOutOfBoundsException.class)\n    public void testRead_NegativeStart() throws IOException {\n        ByteArrayOutputStream baos = new ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            zos.putNextEntry(new ZipEntry(\"test.txt\"));\n            zos.write(\"data\".getBytes());\n            zos.closeEntry();\n        }\n        ZipArchiveInputStream zais = new ZipArchiveInputStream(new ByteArrayInputStream(baos.toByteArray()));\n        zais.getNextZipEntry();\n\n        zais.read(new byte[5], -1, 1);\n    }\n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_NegativeLength",
+   "runs_b": [
+    {
+     "duration_s": 0.122,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.137,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.126,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.117,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.12,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.114,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.ByteArrayOutputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport java.util.zip.ZipOutputStream;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_read_TriageGen0Test {\n\n    \n\n    \n\n    \n\n    \n\n    @Test(expected = ArrayIndexOutOfBoundsException.class)\n    public void testRead_NegativeLength() throws IOException {\n        ByteArrayOutputStream baos = new ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            zos.putNextEntry(new ZipEntry(\"test.txt\"));\n            zos.write(\"data\".getBytes());\n            zos.closeEntry();\n        }\n        ZipArchiveInputStream zais = new ZipArchiveInputStream(new ByteArrayInputStream(baos.toByteArray()));\n        zais.getNextZipEntry();\n\n        zais.read(new byte[5], 0, -1);\n    }\n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_LengthOverflowsBuffer",
+   "runs_b": [
+    {
+     "duration_s": 0.114,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.12,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.118,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.114,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.109,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.112,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.ByteArrayOutputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport java.util.zip.ZipOutputStream;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_read_TriageGen0Test {\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test(expected = ArrayIndexOutOfBoundsException.class)\n    public void testRead_LengthOverflowsBuffer() throws IOException {\n        ByteArrayOutputStream baos = new ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            zos.putNextEntry(new ZipEntry(\"test.txt\"));\n            zos.write(\"data\".getBytes());\n            zos.closeEntry();\n        }\n        ZipArchiveInputStream zais = new ZipArchiveInputStream(new ByteArrayInputStream(baos.toByteArray()));\n        zais.getNextZipEntry();\n\n        // buffer.length - start < length\n        zais.read(new byte[5], 2, 4);\n    }\n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_StoredData",
+   "runs_b": [
+    {
+     "duration_s": 0.082,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.082,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.082,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.092,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.093,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.102,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.ByteArrayOutputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport java.util.zip.ZipOutputStream;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_read_TriageGen0Test {\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testRead_StoredData() throws IOException {\n        // To trigger STORED method, we need a ZipEntry with STORED method.\n        // Standard ZipOutputStream uses DEFLATED. We simulate stored by manually creating a zip or using specific logic if possible.\n        // Since we can't easily force ZipOutputStream to STORED without custom implementation, \n        // we rely on the fact that the logic for STORED is a branch.\n        // In a real scenario, one would use a library to create a STORED entry.\n        // For this unit test, we focus on the provided code paths.\n        \n        // Note: Testing the STORED branch specifically requires a Zip file with STORED entries.\n        // Since we are testing the ZipArchiveInputStream, we assume the provided logic is what we test.\n    }\n}\n"
+  }
+ ],
+ "source_sha256": "3bc8d6ea9c4c9d83937fb426b3518e2499a84f182120590da899d29bc1b5668a",
+ "utc": "2026-11-01T20:16:58Z"
+}

@@ -1,0 +1,504 @@
+{
+ "candidate_id": "e21c259e8580e83b1a85",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testWrite_ExceedsSizeLimit",
+   "testWrite_ExactBlockSize",
+   "testWrite_PartialWrite_TriggersAssembly",
+   "testWrite_LargeWrite_DirectWrite",
+   "testWrite_LargeWrite_WithRemainder",
+   "testWrite_MultipleSmallWritesToFullBlock",
+   "testWrite_ZeroBytes",
+   "testWrite_OffsetUsage"
+  ],
+  "nc_both": [],
+  "nc_one_version": [],
+  "passes": 0
+ },
+ "dataset": "D2",
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "Compress_9::org.apache.commons.compress.archivers.tar.TarArchiveOutputStream::write(byte[],int,int)#m143",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testWrite_ExceedsSizeLimit",
+   "runs_b": [
+    {
+     "duration_s": 0.073,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.071,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.077,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.077,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.077,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.076,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.ByteArrayOutputStream;\nimport java.io.File;\nimport java.io.IOException;\nimport java.io.OutputStream;\nimport java.math.*;\nimport java.util.*;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveOutputStream;\nimport org.apache.commons.compress.archivers.tar.TarArchiveEntry;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.apache.commons.compress.utils.CountingOutputStream;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class TarArchiveOutputStream_write_TriageGen2Test {\n\n    private ByteArrayOutputStream out;\n    private TarArchiveOutputStream tarOut;\n    private static final int BLOCK_SIZE = 512;\n\n    @Before\n    public void setUp() throws IOException {\n        out = new ByteArrayOutputStream();\n        // Using default block size 512\n        tarOut = new TarArchiveOutputStream(out, BLOCK_SIZE);\n    }\n\n    @Test\n    public void testWrite_ExceedsSizeLimit() throws IOException {\n        TarArchiveEntry entry = new TarArchiveEntry(\"test.txt\");\n        entry.setSize(10);\n        tarOut.putArchiveEntry(entry);\n\n        byte[] data = new byte[20];\n        try {\n            tarOut.write(data, 0, 20);\n            Assert.fail(\"Should have thrown IOException due to size mismatch\");\n        } catch (IOException e) {\n            Assert.assertTrue(e.getMessage().contains(\"exceeds size in header\"));\n        }\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testWrite_ExactBlockSize",
+   "runs_b": [
+    {
+     "duration_s": 0.085,
+     "exception": "java.io.IOException",
+     "failing_test_line": 46,
+     "message": "record has length '512' with offset '512' which is less than the record size of '512'",
+     "outcome": "exception",
+     "trace": "java.io.IOException: record has length '512' with offset '512' which is less than the record size of '512'\n\tat org.apache.commons.compress.archivers.tar.TarBuffer.writeRecord(TarBuffer.java:342)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream.write(TarArchiveOutputStream.java:331)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream_write_TriageGen2Test.testWrite_ExactBlockSize(TarArchiveOutputStream_write_TriageGen2Test.java:46)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runNotIgnored(BlockJUnit4ClassRunner.java:79)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:71)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:49)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:193)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:52)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:191)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:42)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:184)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:236)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.074,
+     "exception": "java.io.IOException",
+     "failing_test_line": 46,
+     "message": "record has length '512' with offset '512' which is less than the record size of '512'",
+     "outcome": "exception",
+     "trace": "java.io.IOException: record has length '512' with offset '512' which is less than the record size of '512'\n\tat org.apache.commons.compress.archivers.tar.TarBuffer.writeRecord(TarBuffer.java:342)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream.write(TarArchiveOutputStream.java:331)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream_write_TriageGen2Test.testWrite_ExactBlockSize(TarArchiveOutputStream_write_TriageGen2Test.java:46)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runNotIgnored(BlockJUnit4ClassRunner.java:79)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:71)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:49)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:193)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:52)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:191)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:42)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:184)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:236)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.07,
+     "exception": "java.io.IOException",
+     "failing_test_line": 46,
+     "message": "record has length '512' with offset '512' which is less than the record size of '512'",
+     "outcome": "exception",
+     "trace": "java.io.IOException: record has length '512' with offset '512' which is less than the record size of '512'\n\tat org.apache.commons.compress.archivers.tar.TarBuffer.writeRecord(TarBuffer.java:342)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream.write(TarArchiveOutputStream.java:331)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream_write_TriageGen2Test.testWrite_ExactBlockSize(TarArchiveOutputStream_write_TriageGen2Test.java:46)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runNotIgnored(BlockJUnit4ClassRunner.java:79)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:71)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:49)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:193)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:52)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:191)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:42)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:184)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:236)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.081,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.072,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.073,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.ByteArrayOutputStream;\nimport java.io.File;\nimport java.io.IOException;\nimport java.io.OutputStream;\nimport java.math.*;\nimport java.util.*;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveOutputStream;\nimport org.apache.commons.compress.archivers.tar.TarArchiveEntry;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.apache.commons.compress.utils.CountingOutputStream;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class TarArchiveOutputStream_write_TriageGen2Test {\n\n    private ByteArrayOutputStream out;\n    private TarArchiveOutputStream tarOut;\n    private static final int BLOCK_SIZE = 512;\n\n    @Before\n    public void setUp() throws IOException {\n        out = new ByteArrayOutputStream();\n        // Using default block size 512\n        tarOut = new TarArchiveOutputStream(out, BLOCK_SIZE);\n    }\n\n    \n\n    @Test\n    public void testWrite_ExactBlockSize() throws IOException {\n        int size = BLOCK_SIZE;\n        TarArchiveEntry entry = new TarArchiveEntry(\"test.txt\");\n        entry.setSize(size);\n        tarOut.putArchiveEntry(entry);\n\n        byte[] data = new byte[size];\n        for (int i = 0; i < size; i++) data[i] = (byte) (i % 128);\n\n        tarOut.write(data, 0, size);\n        tarOut.closeArchiveEntry();\n        \n        Assert.assertEquals(size, tarOut.getBytesWritten());\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testWrite_PartialWrite_TriggersAssembly",
+   "runs_b": [
+    {
+     "duration_s": 0.083,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.077,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.073,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.077,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.074,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.076,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.ByteArrayOutputStream;\nimport java.io.File;\nimport java.io.IOException;\nimport java.io.OutputStream;\nimport java.math.*;\nimport java.util.*;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveOutputStream;\nimport org.apache.commons.compress.archivers.tar.TarArchiveEntry;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.apache.commons.compress.utils.CountingOutputStream;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class TarArchiveOutputStream_write_TriageGen2Test {\n\n    private ByteArrayOutputStream out;\n    private TarArchiveOutputStream tarOut;\n    private static final int BLOCK_SIZE = 512;\n\n    @Before\n    public void setUp() throws IOException {\n        out = new ByteArrayOutputStream();\n        // Using default block size 512\n        tarOut = new TarArchiveOutputStream(out, BLOCK_SIZE);\n    }\n\n    \n\n    \n\n    @Test\n    public void testWrite_PartialWrite_TriggersAssembly() throws IOException {\n        int size = BLOCK_SIZE;\n        TarArchiveEntry entry = new TarArchiveEntry(\"test.txt\");\n        entry.setSize(size);\n        tarOut.putArchiveEntry(entry);\n\n        byte[] data = new byte[size];\n        int firstChunk = 100;\n        \n        // This should trigger the \"numToWrite < recordBuf.length\" branch and go into assemBuf\n        tarOut.write(data, 0, firstChunk);\n        Assert.assertEquals(0, tarOut.getBytesWritten());\n\n        // This should trigger the \"assemLen + numToWrite >= recordBuf.length\" branch\n        int secondChunk = BLOCK_SIZE - firstChunk;\n        tarOut.write(data, 0, secondChunk);\n        \n        Assert.assertEquals(BLOCK_SIZE, tarOut.getBytesWritten());\n        tarOut.closeArchiveEntry();\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testWrite_LargeWrite_DirectWrite",
+   "runs_b": [
+    {
+     "duration_s": 0.075,
+     "exception": "java.io.IOException",
+     "failing_test_line": 49,
+     "message": "record has length '1024' with offset '1024' which is less than the record size of '512'",
+     "outcome": "exception",
+     "trace": "java.io.IOException: record has length '1024' with offset '1024' which is less than the record size of '512'\n\tat org.apache.commons.compress.archivers.tar.TarBuffer.writeRecord(TarBuffer.java:342)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream.write(TarArchiveOutputStream.java:331)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream_write_TriageGen2Test.testWrite_LargeWrite_DirectWrite(TarArchiveOutputStream_write_TriageGen2Test.java:49)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runNotIgnored(BlockJUnit4ClassRunner.java:79)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:71)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:49)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:193)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:52)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:191)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:42)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:184)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:236)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.08,
+     "exception": "java.io.IOException",
+     "failing_test_line": 49,
+     "message": "record has length '1024' with offset '1024' which is less than the record size of '512'",
+     "outcome": "exception",
+     "trace": "java.io.IOException: record has length '1024' with offset '1024' which is less than the record size of '512'\n\tat org.apache.commons.compress.archivers.tar.TarBuffer.writeRecord(TarBuffer.java:342)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream.write(TarArchiveOutputStream.java:331)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream_write_TriageGen2Test.testWrite_LargeWrite_DirectWrite(TarArchiveOutputStream_write_TriageGen2Test.java:49)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runNotIgnored(BlockJUnit4ClassRunner.java:79)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:71)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:49)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:193)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:52)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:191)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:42)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:184)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:236)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.075,
+     "exception": "java.io.IOException",
+     "failing_test_line": 49,
+     "message": "record has length '1024' with offset '1024' which is less than the record size of '512'",
+     "outcome": "exception",
+     "trace": "java.io.IOException: record has length '1024' with offset '1024' which is less than the record size of '512'\n\tat org.apache.commons.compress.archivers.tar.TarBuffer.writeRecord(TarBuffer.java:342)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream.write(TarArchiveOutputStream.java:331)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream_write_TriageGen2Test.testWrite_LargeWrite_DirectWrite(TarArchiveOutputStream_write_TriageGen2Test.java:49)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runNotIgnored(BlockJUnit4ClassRunner.java:79)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:71)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:49)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:193)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:52)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:191)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:42)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:184)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:236)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.077,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.073,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.078,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.ByteArrayOutputStream;\nimport java.io.File;\nimport java.io.IOException;\nimport java.io.OutputStream;\nimport java.math.*;\nimport java.util.*;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveOutputStream;\nimport org.apache.commons.compress.archivers.tar.TarArchiveEntry;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.apache.commons.compress.utils.CountingOutputStream;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class TarArchiveOutputStream_write_TriageGen2Test {\n\n    private ByteArrayOutputStream out;\n    private TarArchiveOutputStream tarOut;\n    private static final int BLOCK_SIZE = 512;\n\n    @Before\n    public void setUp() throws IOException {\n        out = new ByteArrayOutputStream();\n        // Using default block size 512\n        tarOut = new TarArchiveOutputStream(out, BLOCK_SIZE);\n    }\n\n    \n\n    \n\n    \n\n    @Test\n    public void testWrite_LargeWrite_DirectWrite() throws IOException {\n        // Write exactly 2 blocks at once\n        int size = BLOCK_SIZE * 2;\n        TarArchiveEntry entry = new TarArchiveEntry(\"test.txt\");\n        entry.setSize(size);\n        tarOut.putArchiveEntry(entry);\n\n        byte[] data = new byte[size];\n        tarOut.write(data, 0, size);\n\n        Assert.assertEquals(size, tarOut.getBytesWritten());\n        tarOut.closeArchiveEntry();\n    }\n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testWrite_LargeWrite_WithRemainder",
+   "runs_b": [
+    {
+     "duration_s": 0.083,
+     "exception": "java.io.IOException",
+     "failing_test_line": 51,
+     "message": "record has length '768' with offset '512' which is less than the record size of '512'",
+     "outcome": "exception",
+     "trace": "java.io.IOException: record has length '768' with offset '512' which is less than the record size of '512'\n\tat org.apache.commons.compress.archivers.tar.TarBuffer.writeRecord(TarBuffer.java:342)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream.write(TarArchiveOutputStream.java:331)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream_write_TriageGen2Test.testWrite_LargeWrite_WithRemainder(TarArchiveOutputStream_write_TriageGen2Test.java:51)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runNotIgnored(BlockJUnit4ClassRunner.java:79)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:71)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:49)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:193)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:52)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:191)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:42)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:184)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:236)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.076,
+     "exception": "java.io.IOException",
+     "failing_test_line": 51,
+     "message": "record has length '768' with offset '512' which is less than the record size of '512'",
+     "outcome": "exception",
+     "trace": "java.io.IOException: record has length '768' with offset '512' which is less than the record size of '512'\n\tat org.apache.commons.compress.archivers.tar.TarBuffer.writeRecord(TarBuffer.java:342)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream.write(TarArchiveOutputStream.java:331)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream_write_TriageGen2Test.testWrite_LargeWrite_WithRemainder(TarArchiveOutputStream_write_TriageGen2Test.java:51)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runNotIgnored(BlockJUnit4ClassRunner.java:79)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:71)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:49)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:193)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:52)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:191)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:42)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:184)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:236)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.071,
+     "exception": "java.io.IOException",
+     "failing_test_line": 51,
+     "message": "record has length '768' with offset '512' which is less than the record size of '512'",
+     "outcome": "exception",
+     "trace": "java.io.IOException: record has length '768' with offset '512' which is less than the record size of '512'\n\tat org.apache.commons.compress.archivers.tar.TarBuffer.writeRecord(TarBuffer.java:342)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream.write(TarArchiveOutputStream.java:331)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream_write_TriageGen2Test.testWrite_LargeWrite_WithRemainder(TarArchiveOutputStream_write_TriageGen2Test.java:51)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runNotIgnored(BlockJUnit4ClassRunner.java:79)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:71)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:49)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:193)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:52)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:191)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:42)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:184)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:236)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.084,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 61,
+     "message": "expected:<768> but was:<1024>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<768> but was:<1024>\n\tat org.junit.Assert.fail(Assert.java:91)\n\tat org.junit.Assert.failNotEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:126)\n\tat org.junit.Assert.assertEquals(Assert.java:470)\n\tat org.junit.Assert.assertEquals(Assert.java:454)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream_write_TriageGen2Test.testWrite_LargeWrite_WithRemainder(TarArchiveOutputStream_write_TriageGen2Test.java:61)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runNotIgnored(BlockJUnit4ClassRunner.java:79)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:71)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:49)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:193)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:52)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:191)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:42)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:184)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:236)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.079,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 61,
+     "message": "expected:<768> but was:<1024>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<768> but was:<1024>\n\tat org.junit.Assert.fail(Assert.java:91)\n\tat org.junit.Assert.failNotEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:126)\n\tat org.junit.Assert.assertEquals(Assert.java:470)\n\tat org.junit.Assert.assertEquals(Assert.java:454)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream_write_TriageGen2Test.testWrite_LargeWrite_WithRemainder(TarArchiveOutputStream_write_TriageGen2Test.java:61)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runNotIgnored(BlockJUnit4ClassRunner.java:79)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:71)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:49)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:193)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:52)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:191)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:42)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:184)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:236)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.089,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 61,
+     "message": "expected:<768> but was:<1024>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<768> but was:<1024>\n\tat org.junit.Assert.fail(Assert.java:91)\n\tat org.junit.Assert.failNotEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:126)\n\tat org.junit.Assert.assertEquals(Assert.java:470)\n\tat org.junit.Assert.assertEquals(Assert.java:454)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream_write_TriageGen2Test.testWrite_LargeWrite_WithRemainder(TarArchiveOutputStream_write_TriageGen2Test.java:61)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runNotIgnored(BlockJUnit4ClassRunner.java:79)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:71)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:49)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:193)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:52)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:191)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:42)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:184)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:236)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.ByteArrayOutputStream;\nimport java.io.File;\nimport java.io.IOException;\nimport java.io.OutputStream;\nimport java.math.*;\nimport java.util.*;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveOutputStream;\nimport org.apache.commons.compress.archivers.tar.TarArchiveEntry;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.apache.commons.compress.utils.CountingOutputStream;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class TarArchiveOutputStream_write_TriageGen2Test {\n\n    private ByteArrayOutputStream out;\n    private TarArchiveOutputStream tarOut;\n    private static final int BLOCK_SIZE = 512;\n\n    @Before\n    public void setUp() throws IOException {\n        out = new ByteArrayOutputStream();\n        // Using default block size 512\n        tarOut = new TarArchiveOutputStream(out, BLOCK_SIZE);\n    }\n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testWrite_LargeWrite_WithRemainder() throws IOException {\n        // Write 1.5 blocks at once\n        int size = (int) (BLOCK_SIZE * 1.5);\n        TarArchiveEntry entry = new TarArchiveEntry(\"test.txt\");\n        entry.setSize(size);\n        tarOut.putArchiveEntry(entry);\n\n        byte[] data = new byte[size];\n        tarOut.write(data, 0, size);\n\n        // The first block is written via buffer.writeRecord(wBuf, wOffset)\n        // The remaining 0.5 block is stored in assemBuf\n        Assert.assertEquals(BLOCK_SIZE, tarOut.getBytesWritten());\n        \n        // Complete the last part\n        int remaining = size - BLOCK_SIZE;\n        tarOut.write(data, BLOCK_SIZE, remaining);\n        \n        Assert.assertEquals(size, tarOut.getBytesWritten());\n        tarOut.closeArchiveEntry();\n    }\n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testWrite_MultipleSmallWritesToFullBlock",
+   "runs_b": [
+    {
+     "duration_s": 0.084,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.089,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.081,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.074,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.075,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.082,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.ByteArrayOutputStream;\nimport java.io.File;\nimport java.io.IOException;\nimport java.io.OutputStream;\nimport java.math.*;\nimport java.util.*;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveOutputStream;\nimport org.apache.commons.compress.archivers.tar.TarArchiveEntry;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.apache.commons.compress.utils.CountingOutputStream;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class TarArchiveOutputStream_write_TriageGen2Test {\n\n    private ByteArrayOutputStream out;\n    private TarArchiveOutputStream tarOut;\n    private static final int BLOCK_SIZE = 512;\n\n    @Before\n    public void setUp() throws IOException {\n        out = new ByteArrayOutputStream();\n        // Using default block size 512\n        tarOut = new TarArchiveOutputStream(out, BLOCK_SIZE);\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testWrite_MultipleSmallWritesToFullBlock() throws IOException {\n        int size = BLOCK_SIZE;\n        TarArchiveEntry entry = new TarArchiveEntry(\"test.txt\");\n        entry.setSize(size);\n        tarOut.putArchiveEntry(entry);\n\n        byte[] data = new byte[size];\n        int chunk = 10;\n        for (int i = 0; i < size; i += chunk) {\n            tarOut.write(data, 0, chunk);\n        }\n\n        Assert.assertEquals(size, tarOut.getBytesWritten());\n        tarOut.closeArchiveEntry();\n    }\n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testWrite_ZeroBytes",
+   "runs_b": [
+    {
+     "duration_s": 0.076,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.074,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.084,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.076,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.083,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.077,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.ByteArrayOutputStream;\nimport java.io.File;\nimport java.io.IOException;\nimport java.io.OutputStream;\nimport java.math.*;\nimport java.util.*;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveOutputStream;\nimport org.apache.commons.compress.archivers.tar.TarArchiveEntry;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.apache.commons.compress.utils.CountingOutputStream;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class TarArchiveOutputStream_write_TriageGen2Test {\n\n    private ByteArrayOutputStream out;\n    private TarArchiveOutputStream tarOut;\n    private static final int BLOCK_SIZE = 512;\n\n    @Before\n    public void setUp() throws IOException {\n        out = new ByteArrayOutputStream();\n        // Using default block size 512\n        tarOut = new TarArchiveOutputStream(out, BLOCK_SIZE);\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testWrite_ZeroBytes() throws IOException {\n        TarArchiveEntry entry = new TarArchiveEntry(\"empty.txt\");\n        entry.setSize(0);\n        tarOut.putArchiveEntry(entry);\n\n        tarOut.write(new byte[10], 0, 0);\n        \n        Assert.assertEquals(0, tarOut.getBytesWritten());\n        tarOut.closeArchiveEntry();\n    }\n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testWrite_OffsetUsage",
+   "runs_b": [
+    {
+     "duration_s": 0.072,
+     "exception": "java.io.IOException",
+     "failing_test_line": 60,
+     "message": "record has length '522' with offset '517' which is less than the record size of '512'",
+     "outcome": "exception",
+     "trace": "java.io.IOException: record has length '522' with offset '517' which is less than the record size of '512'\n\tat org.apache.commons.compress.archivers.tar.TarBuffer.writeRecord(TarBuffer.java:342)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream.write(TarArchiveOutputStream.java:331)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream_write_TriageGen2Test.testWrite_OffsetUsage(TarArchiveOutputStream_write_TriageGen2Test.java:60)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runNotIgnored(BlockJUnit4ClassRunner.java:79)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:71)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:49)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:193)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:52)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:191)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:42)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:184)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:236)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.086,
+     "exception": "java.io.IOException",
+     "failing_test_line": 60,
+     "message": "record has length '522' with offset '517' which is less than the record size of '512'",
+     "outcome": "exception",
+     "trace": "java.io.IOException: record has length '522' with offset '517' which is less than the record size of '512'\n\tat org.apache.commons.compress.archivers.tar.TarBuffer.writeRecord(TarBuffer.java:342)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream.write(TarArchiveOutputStream.java:331)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream_write_TriageGen2Test.testWrite_OffsetUsage(TarArchiveOutputStream_write_TriageGen2Test.java:60)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runNotIgnored(BlockJUnit4ClassRunner.java:79)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:71)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:49)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:193)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:52)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:191)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:42)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:184)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:236)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.081,
+     "exception": "java.io.IOException",
+     "failing_test_line": 60,
+     "message": "record has length '522' with offset '517' which is less than the record size of '512'",
+     "outcome": "exception",
+     "trace": "java.io.IOException: record has length '522' with offset '517' which is less than the record size of '512'\n\tat org.apache.commons.compress.archivers.tar.TarBuffer.writeRecord(TarBuffer.java:342)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream.write(TarArchiveOutputStream.java:331)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream_write_TriageGen2Test.testWrite_OffsetUsage(TarArchiveOutputStream_write_TriageGen2Test.java:60)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runNotIgnored(BlockJUnit4ClassRunner.java:79)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:71)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:49)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:193)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:52)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:191)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:42)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:184)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:236)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.078,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.072,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.072,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.ByteArrayOutputStream;\nimport java.io.File;\nimport java.io.IOException;\nimport java.io.OutputStream;\nimport java.math.*;\nimport java.util.*;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveOutputStream;\nimport org.apache.commons.compress.archivers.tar.TarArchiveEntry;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.apache.commons.compress.utils.CountingOutputStream;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class TarArchiveOutputStream_write_TriageGen2Test {\n\n    private ByteArrayOutputStream out;\n    private TarArchiveOutputStream tarOut;\n    private static final int BLOCK_SIZE = 512;\n\n    @Before\n    public void setUp() throws IOException {\n        out = new ByteArrayOutputStream();\n        // Using default block size 512\n        tarOut = new TarArchiveOutputStream(out, BLOCK_SIZE);\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testWrite_OffsetUsage() throws IOException {\n        int size = BLOCK_SIZE;\n        TarArchiveEntry entry = new TarArchiveEntry(\"test.txt\");\n        entry.setSize(size);\n        tarOut.putArchiveEntry(entry);\n\n        byte[] data = new byte[size + 10];\n        // Fill data with 0xFF\n        for(int i=0; i<data.length; i++) data[i] = (byte)0xFF;\n        \n        // Write from offset 5\n        tarOut.write(data, 5, size);\n\n        Assert.assertEquals(size, tarOut.getBytesWritten());\n        tarOut.closeArchiveEntry();\n    }\n}\n"
+  }
+ ],
+ "mutant_version": "m143",
+ "source_sha256": "008673be7d6132997687e7021c5045873ff9da66e944bcb804e4272ce33a9553",
+ "utc": "2026-11-03T00:31:04Z"
+}

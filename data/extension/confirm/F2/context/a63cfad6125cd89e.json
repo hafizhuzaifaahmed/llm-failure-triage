@@ -1,0 +1,141 @@
+{
+ "bug_name": "Compress_19",
+ "call_sites": [
+  {
+   "line": 619,
+   "lines": [
+    614,
+    615,
+    616,
+    617,
+    618,
+    619,
+    620,
+    621,
+    622,
+    623,
+    624
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/zip/ZipFile.java",
+   "snippet": "        if (z64 != null) {\n            boolean hasUncompressedSize = ze.getSize() == ZIP64_MAGIC;\n            boolean hasCompressedSize = ze.getCompressedSize() == ZIP64_MAGIC;\n            boolean hasRelativeHeaderOffset =\n                offset.headerOffset == ZIP64_MAGIC;\n            z64.reparseCentralDirectoryData(hasUncompressedSize,\n                                            hasCompressedSize,\n                                            hasRelativeHeaderOffset,\n                                            diskStart == ZIP64_MAGIC_SHORT);\n\n            if (hasUncompressedSize) {"
+  }
+ ],
+ "class_simple": "Zip64ExtendedInformationExtraField",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Holds size and other extended information for entries that use Zip64\n * features.\n *\n * <p>From {@link \"http://www.pkware.com/documents/casestudies/APPNOTE.TXT PKWARE's APPNOTE.TXT\"}\n * <pre>\n * Zip64 Extended Information Extra Field (0x0001):\n *\n *          The following is the layout of the zip64 extended \n *          information \"extra\" block. If one of the size or\n *          offset fields in the Local or Central directory\n *          record is too small to hold the required data,\n *          a Zip64 extended information record is created.\n *          The order of the fields in the zip64 extended \n *          information record is fixed, but the fields will\n *          only appear if the corresponding Local or Central\n *          directory record field is set to 0xFFFF or 0xFFFFFFFF.\n *\n *          Note: all fields stored in Intel low-byte/high-byte order.\n *\n *          Value      Size       Description\n *          -----      ----       -----------\n *  (ZIP64) 0x0001     2 bytes    Tag for this \"extra\" block type\n *          Size       2 bytes    Size of this \"extra\" block\n *          Original \n *          Size       8 bytes    Original uncompressed file size\n *          Compressed\n *          Size       8 bytes    Size of compressed data\n *          Relative Header\n *          Offset     8 bytes    Offset of local header record\n *          Disk Start\n *          Number     4 bytes    Number of the disk on which\n *                                this file starts \n *\n *          This entry in the Local header must include BOTH original\n *          and compressed file size fields. If encrypting the \n *          central directory and bit 13 of the general purpose bit\n *          flag is set indicating masking, the value stored in the\n *          Local Header for the original file size will be zero.\n * </pre></p>\n *\n * <p>Currently Commons Compress doesn't support encrypting the\n * central directory so the note about masking doesn't apply.</p>\n *\n * <p>The implementation relies on data being read from the local file\n * header and assumes that both size values are always present.</p>\n *\n * @since 1.2\n * @NotThreadSafe\n */\npublic",
+  "method_javadoc": "/**\n     * Parses the raw bytes read from the central directory extra\n     * field with knowledge which fields are expected to be there.\n     *\n     * <p>All four fields inside the zip64 extended information extra\n     * field are optional and must only be present if their corresponding\n     * entry inside the central directory contains the correct magic\n     * value.</p>\n     */"
+ },
+ "fields": [
+  "static final ZipShort HEADER_ID",
+  "private static final String LFH_MUST_HAVE_BOTH_SIZES_MSG",
+  "private static final byte[] EMPTY",
+  "private ZipEightByteInteger size, compressedSize, relativeHeaderOffset",
+  "private ZipLong diskStart",
+  "private byte[] rawCentralDirectoryData"
+ ],
+ "focal_class": "org.apache.commons.compress.archivers.zip.Zip64ExtendedInformationExtraField",
+ "focal_id": "Compress_19::org.apache.commons.compress.archivers.zip.Zip64ExtendedInformationExtraField::reparseCentralDirectoryData(boolean,boolean,boolean,boolean)",
+ "focal_method_name": "reparseCentralDirectoryData",
+ "generations": 3,
+ "impl_B": "public void reparseCentralDirectoryData(boolean hasUncompressedSize,\n                                            boolean hasCompressedSize,\n                                            boolean hasRelativeHeaderOffset,\n                                            boolean hasDiskStart)\n        throws ZipException {\n        if (rawCentralDirectoryData != null) {\n            int expectedLength = (hasUncompressedSize ? DWORD : 0)\n                + (hasCompressedSize ? DWORD : 0)\n                + (hasRelativeHeaderOffset ? DWORD : 0)\n                + (hasDiskStart ? WORD : 0);\n            if (rawCentralDirectoryData.length != expectedLength) {\n                throw new ZipException(\"central directory zip64 extended\"\n                                       + \" information extra field's length\"\n                                       + \" doesn't match central directory\"\n                                       + \" data.  Expected length \"\n                                       + expectedLength + \" but is \"\n                                       + rawCentralDirectoryData.length);\n            }\n            int offset = 0;\n            if (hasUncompressedSize) {\n                size = new ZipEightByteInteger(rawCentralDirectoryData, offset);\n                offset += DWORD;\n            }\n            if (hasCompressedSize) {\n                compressedSize = new ZipEightByteInteger(rawCentralDirectoryData,\n                                                         offset);\n                offset += DWORD;\n            }\n            if (hasRelativeHeaderOffset) {\n                relativeHeaderOffset =\n                    new ZipEightByteInteger(rawCentralDirectoryData, offset);\n                offset += DWORD;\n            }\n            if (hasDiskStart) {\n                diskStart = new ZipLong(rawCentralDirectoryData, offset);\n                offset += WORD;\n            }\n        }\n    }",
+ "imports": [
+  "java.util.zip.ZipException",
+  "static org.apache.commons.compress.archivers.zip.ZipConstants.DWORD",
+  "static org.apache.commons.compress.archivers.zip.ZipConstants.WORD"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.compress.archivers.zip",
+ "project": "Compress",
+ "siblings": [
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getHeaderId"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getLocalFileDataLength"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getCentralDirectoryLength"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getLocalFileDataData"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getCentralDirectoryData"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "parseFromLocalFileData"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "parseFromCentralDirectoryData"
+  },
+  {
+   "javadoc": "/**\n     * The uncompressed size stored in this extra field.\n     */",
+   "name": "getSize"
+  },
+  {
+   "javadoc": "/**\n     * The uncompressed size stored in this extra field.\n     */",
+   "name": "setSize"
+  },
+  {
+   "javadoc": "/**\n     * The compressed size stored in this extra field.\n     */",
+   "name": "getCompressedSize"
+  },
+  {
+   "javadoc": "/**\n     * The uncompressed size stored in this extra field.\n     */",
+   "name": "setCompressedSize"
+  },
+  {
+   "javadoc": "/**\n     * The relative header offset stored in this extra field.\n     */",
+   "name": "getRelativeHeaderOffset"
+  },
+  {
+   "javadoc": "/**\n     * The relative header offset stored in this extra field.\n     */",
+   "name": "setRelativeHeaderOffset"
+  },
+  {
+   "javadoc": "/**\n     * The disk start number stored in this extra field.\n     */",
+   "name": "getDiskStartNumber"
+  },
+  {
+   "javadoc": "/**\n     * The disk start number stored in this extra field.\n     */",
+   "name": "setDiskStartNumber"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class Zip64ExtendedInformationExtraField implements ZipExtraField",
+  "constructors": [
+   "public Zip64ExtendedInformationExtraField();",
+   "public Zip64ExtendedInformationExtraField(ZipEightByteInteger size, ZipEightByteInteger compressedSize);",
+   "public Zip64ExtendedInformationExtraField(ZipEightByteInteger size, ZipEightByteInteger compressedSize, ZipEightByteInteger relativeHeaderOffset, ZipLong diskStart);"
+  ],
+  "focal_signature": "public void reparseCentralDirectoryData(boolean hasUncompressedSize, boolean hasCompressedSize, boolean hasRelativeHeaderOffset, boolean hasDiskStart) throws ZipException",
+  "methods": [
+   "public ZipShort getHeaderId();",
+   "public ZipShort getLocalFileDataLength();",
+   "public ZipShort getCentralDirectoryLength();",
+   "public byte[] getLocalFileDataData();",
+   "public byte[] getCentralDirectoryData();",
+   "public void parseFromLocalFileData(byte[] buffer, int offset, int length) throws ZipException;",
+   "public void parseFromCentralDirectoryData(byte[] buffer, int offset, int length) throws ZipException;",
+   "public ZipEightByteInteger getSize();",
+   "public void setSize(ZipEightByteInteger size);",
+   "public ZipEightByteInteger getCompressedSize();",
+   "public void setCompressedSize(ZipEightByteInteger compressedSize);",
+   "public ZipEightByteInteger getRelativeHeaderOffset();",
+   "public void setRelativeHeaderOffset(ZipEightByteInteger rho);",
+   "public ZipLong getDiskStartNumber();",
+   "public void setDiskStartNumber(ZipLong ds);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

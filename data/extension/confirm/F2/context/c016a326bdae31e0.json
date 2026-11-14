@@ -1,0 +1,220 @@
+{
+ "bug_name": "JacksonDatabind_50",
+ "call_sites": [
+  {
+   "line": 395,
+   "lines": [
+    390,
+    391,
+    392,
+    393,
+    394,
+    395,
+    396,
+    397,
+    398,
+    399,
+    400
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java",
+   "snippet": "            // creator property?\n            SettableBeanProperty creatorProp = creator.findCreatorProperty(propName);\n            if (creatorProp != null) {\n                // Last creator property to set?\n                if (buffer.assignParameter(creatorProp,\n                        _deserializeWithErrorWrapping(p, ctxt, creatorProp))) {\n                    p.nextToken(); // to move to following FIELD_NAME/END_OBJECT\n                    Object bean;\n                    try {\n                        bean = creator.build(ctxt, buffer);\n                    } catch (Exception e) {"
+  },
+  {
+   "line": 429,
+   "lines": [
+    424,
+    425,
+    426,
+    427,
+    428,
+    429,
+    430,
+    431,
+    432,
+    433,
+    434
+   ],
+   "patch_lines_removed": true,
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java",
+   "snippet": "                continue;\n            }\n            // regular property? needs buffering\n            SettableBeanProperty prop = _beanProperties.find(propName);\n            if (prop != null) {\n                    buffer.bufferProperty(prop, _deserializeWithErrorWrapping(p, ctxt, prop));\n                    // 14-Jun-2016, tatu: As per [databind#1261], looks like we need additional\n                    //    facilities did not cover, but this does appear to solve the problem\n            }"
+  },
+  {
+   "line": 689,
+   "lines": [
+    684,
+    685,
+    686,
+    687,
+    688,
+    689,
+    690,
+    691,
+    692,
+    693,
+    694
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java",
+   "snippet": "            p.nextToken(); // to point to value\n            // creator property?\n            SettableBeanProperty creatorProp = creator.findCreatorProperty(propName);\n            if (creatorProp != null) {\n                // Last creator property to set?\n                if (buffer.assignParameter(creatorProp, _deserializeWithErrorWrapping(p, ctxt, creatorProp))) {\n                    t = p.nextToken(); // to move to following FIELD_NAME/END_OBJECT\n                    Object bean;\n                    try {\n                        bean = creator.build(ctxt, buffer);\n                    } catch (Exception e) {"
+  },
+  {
+   "line": 724,
+   "lines": [
+    719,
+    720,
+    721,
+    722,
+    723,
+    724,
+    725,
+    726,
+    727,
+    728,
+    729
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java",
+   "snippet": "                continue;\n            }\n            // regular property? needs buffering\n            SettableBeanProperty prop = _beanProperties.find(propName);\n            if (prop != null) {\n                buffer.bufferProperty(prop, _deserializeWithErrorWrapping(p, ctxt, prop));\n                continue;\n            }\n            // Things marked as ignorable should not be passed to any setter\n            if (_ignorableProps != null && _ignorableProps.contains(propName)) {\n                handleIgnoredProperty(p, ctxt, handledType(), propName);"
+  },
+  {
+   "line": 858,
+   "lines": [
+    853,
+    854,
+    855,
+    856,
+    857,
+    858,
+    859,
+    860,
+    861,
+    862,
+    863
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java",
+   "snippet": "                //   since it is not the bean\n                if (ext.handlePropertyValue(p, ctxt, propName, null)) {\n                    ;\n                } else {\n                    // Last creator property to set?\n                    if (buffer.assignParameter(creatorProp, _deserializeWithErrorWrapping(p, ctxt, creatorProp))) {\n                        t = p.nextToken(); // to move to following FIELD_NAME/END_OBJECT\n                        Object bean;\n                        try {\n                            bean = creator.build(ctxt, buffer);\n                        } catch (Exception e) {"
+  }
+ ],
+ "class_simple": "BeanDeserializer",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Deserializer class that can deserialize instances of\n * arbitrary bean objects, usually from JSON Object structs,\n */\npublic",
+  "method_javadoc": "/**\n     * @since 2.8\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "protected transient Exception _nullFromCreator"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.deser.BeanDeserializer",
+ "focal_id": "JacksonDatabind_50::com.fasterxml.jackson.databind.deser.BeanDeserializer::_deserializeWithErrorWrapping(JsonParser,DeserializationContext,SettableBeanProperty)",
+ "focal_method_name": "_deserializeWithErrorWrapping",
+ "generations": 3,
+ "impl_B": "protected final Object _deserializeWithErrorWrapping(JsonParser p,\n            DeserializationContext ctxt, SettableBeanProperty prop)\n        throws IOException\n    {\n        try {\n            return prop.deserialize(p, ctxt);\n        } catch (Exception e) {\n            wrapAndThrow(e, _beanType.getRawClass(), prop.getName(), ctxt);\n            // never gets here, unless caller declines to throw an exception\n            return null;\n        }\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.util.*",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.deser.impl.*",
+  "com.fasterxml.jackson.databind.util.NameTransformer",
+  "com.fasterxml.jackson.databind.util.TokenBuffer"
+ ],
+ "javadoc_edited_by_fix": true,
+ "package": "com.fasterxml.jackson.databind.deser",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "unwrappingDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "withObjectIdReader"
+  },
+  {
+   "javadoc": "",
+   "name": "withIgnorableProperties"
+  },
+  {
+   "javadoc": "",
+   "name": "withBeanProperties"
+  },
+  {
+   "javadoc": "",
+   "name": "asArrayDeserializer"
+  },
+  {
+   "javadoc": "/**\n     * Main deserialization method for bean-based objects (POJOs).\n     */",
+   "name": "deserialize"
+  },
+  {
+   "javadoc": "",
+   "name": "_deserializeOther"
+  },
+  {
+   "javadoc": "",
+   "name": "_missingToken"
+  },
+  {
+   "javadoc": "/**\n     * Secondary deserialization method, called in cases where POJO\n     * instance is created as part of deserialization, potentially\n     * after collecting some or all of the properties to set.\n     */",
+   "name": "deserialize"
+  },
+  {
+   "javadoc": "/**\n     * General version used when handling needs more advanced features.\n     */",
+   "name": "deserializeFromObject"
+  },
+  {
+   "javadoc": "/**\n     * Helper method called for rare case of pointing to {@link JsonToken#VALUE_NULL}\n     * token. While this is most often an erroneous condition, there is one specific\n     * case with XML handling where polymorphic type with no properties is exposed\n     * as such, and should be handled same as empty Object.\n     *\n     * @since 2.7\n     */",
+   "name": "deserializeFromNull"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "deserializeWithView"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "deserializeWithExternalTypeId"
+  },
+  {
+   "javadoc": "",
+   "name": "deserializeWithExternalTypeId"
+  },
+  {
+   "javadoc": "/**\n     * Helper method for getting a lazily construct exception to be reported\n     * to {@link DeserializationContext#handleInstantiationProblem(Class, Object, Throwable)}.\n     *\n     * @since 2.8\n     */",
+   "name": "_creatorReturnedNullException"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class BeanDeserializer extends BeanDeserializerBase implements java.io.Serializable",
+  "constructors": [
+   "public BeanDeserializer(BeanDeserializerBuilder builder, BeanDescription beanDesc, BeanPropertyMap properties, Map<String, SettableBeanProperty> backRefs, HashSet<String> ignorableProps, boolean ignoreAllUnknown, boolean hasViews);",
+   "protected BeanDeserializer(BeanDeserializerBase src);",
+   "protected BeanDeserializer(BeanDeserializerBase src, boolean ignoreAllUnknown);",
+   "protected BeanDeserializer(BeanDeserializerBase src, NameTransformer unwrapper);",
+   "public BeanDeserializer(BeanDeserializerBase src, ObjectIdReader oir);",
+   "public BeanDeserializer(BeanDeserializerBase src, Set<String> ignorableProps);",
+   "public BeanDeserializer(BeanDeserializerBase src, BeanPropertyMap props);"
+  ],
+  "focal_signature": "protected final Object _deserializeWithErrorWrapping(JsonParser p, DeserializationContext ctxt, SettableBeanProperty prop) throws IOException",
+  "methods": [
+   "public JsonDeserializer<Object> unwrappingDeserializer(NameTransformer unwrapper);",
+   "public BeanDeserializer withObjectIdReader(ObjectIdReader oir);",
+   "public BeanDeserializer withIgnorableProperties(Set<String> ignorableProps);",
+   "public BeanDeserializerBase withBeanProperties(BeanPropertyMap props);",
+   "protected BeanDeserializerBase asArrayDeserializer();",
+   "public Object deserialize(JsonParser p, DeserializationContext ctxt) throws IOException;",
+   "protected final Object _deserializeOther(JsonParser p, DeserializationContext ctxt, JsonToken t) throws IOException;",
+   "// since 2.8; remove unless getting used protected Object _missingToken(JsonParser p, DeserializationContext ctxt) throws IOException;",
+   "public Object deserialize(JsonParser p, DeserializationContext ctxt, Object bean) throws IOException;",
+   "public Object deserializeFromObject(JsonParser p, DeserializationContext ctxt) throws IOException;",
+   "protected Object deserializeFromNull(JsonParser p, DeserializationContext ctxt) throws IOException;",
+   "protected final Object deserializeWithView(JsonParser p, DeserializationContext ctxt, Object bean, Class<?> activeView) throws IOException;",
+   "protected Object deserializeWithExternalTypeId(JsonParser p, DeserializationContext ctxt) throws IOException;",
+   "protected Object deserializeWithExternalTypeId(JsonParser p, DeserializationContext ctxt, Object bean) throws IOException;",
+   "protected Exception _creatorReturnedNullException();"
+  ],
+  "type_signatures": [
+   "@SuppressWarnings(\"serial\") public abstract class SettableBeanProperty extends ConcreteBeanPropertyBase implements java.io.Serializable { protected SettableBeanProperty(BeanPropertyDefinition propDef, JavaType type, TypeDeserializer typeDeser, Annotations contextAnnotations); // since 2.3 protected SettableBeanProperty(String propName, JavaType type, PropertyName wrapper, TypeDeserializer typeDeser, Annotations contextAnnotations, boolean isRequired); protected SettableBeanProperty(PropertyName propName, JavaType type, PropertyName wrapper, TypeDeserializer typeDeser, Annotations contextAnnotations, PropertyMetadata metadata); protected SettableBeanProperty(PropertyName propName, JavaType type, PropertyMetadata metadata, JsonDeserializer<Object> valueDeser); protected SettableBeanProperty(SettableBeanProperty src); protected SettableBeanProperty(SettableBeanProperty src, PropertyName newName); public abstract SettableBeanProperty withValueDeserializer(JsonDeserializer<?> deser); public abstract SettableBeanProperty withName(PropertyName newName); public SettableBeanProperty withSimpleName(String simpleName); // since 2.3 -- use 'withSimpleName' instead if need be public SettableBeanProperty withName(String simpleName); public void setManagedReferenceName(String n); public void setObjectIdInfo(ObjectIdInfo objectIdInfo); public void setViews(Class<?>[] views); public void assignIndex(int index); public final String getName(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

@@ -1,0 +1,98 @@
+{
+  "bug_name": "Jsoup_26",
+  "call_sites": [
+    {
+      "line": 197,
+      "lines": [
+        192,
+        193,
+        194,
+        195,
+        196,
+        197,
+        198,
+        199,
+        200,
+        201,
+        202
+      ],
+      "path": "src/main/java/org/jsoup/Jsoup.java",
+      "snippet": "     @see Cleaner#clean(Document)\n     */\n    public static String clean(String bodyHtml, String baseUri, Whitelist whitelist) {\n        Document dirty = parseBodyFragment(bodyHtml, baseUri);\n        Cleaner cleaner = new Cleaner(whitelist);\n        Document clean = cleaner.clean(dirty);\n        return clean.body().html();\n    }\n\n    /**\n     Get safe HTML from untrusted input HTML, by parsing input HTML and filtering it through a white-list of permitted"
+    },
+    {
+      "line": 212,
+      "lines": [
+        207,
+        208,
+        209,
+        210,
+        211,
+        212,
+        213,
+        214,
+        215,
+        216,
+        217
+      ],
+      "path": "src/main/java/org/jsoup/Jsoup.java",
+      "snippet": "     @return safe HTML (body fragment)\n\n     @see Cleaner#clean(Document)\n     */\n    public static String clean(String bodyHtml, Whitelist whitelist) {\n        return clean(bodyHtml, \"\", whitelist);\n    }\n\n    /**\n     * Get safe HTML from untrusted input HTML, by parsing input HTML and filtering it through a white-list of\n     * permitted"
+    },
+    {
+      "line": 230,
+      "lines": [
+        225,
+        226,
+        227,
+        228,
+        229,
+        230,
+        231,
+        232,
+        233,
+        234,
+        235
+      ],
+      "path": "src/main/java/org/jsoup/Jsoup.java",
+      "snippet": "     * @see Cleaner#clean(Document)\n     */\n    public static String clean(String bodyHtml, String baseUri, Whitelist whitelist, Document.OutputSettings outputSettings) {\n        Document dirty = parseBodyFragment(bodyHtml, baseUri);\n        Cleaner cleaner = new Cleaner(whitelist);\n        Document clean = cleaner.clean(dirty);\n        clean.outputSettings(outputSettings);\n        return clean.body().html();\n    }\n\n    /**"
+    }
+  ],
+  "class_simple": "Cleaner",
+  "doc": {
+    "class_javadoc": "/**\n The whitelist based HTML cleaner. Use to ensure that end-user provided HTML contains only the elements and attributes\n that you are expecting; no junk, and no cross-site scripting attacks!\n <p/>\n The HTML cleaner parses the input as HTML and then runs it through a white-list, so the output HTML can only contain\n HTML that is allowed by the whitelist.\n <p/>\n It is assumed that the input HTML is a body fragment; the clean methods only pull from the source's body, and the\n canned white-lists only allow body contained tags.\n <p/>\n Rather than interacting directly with a Cleaner object, generally see the {@code clean} methods in {@link org.jsoup.Jsoup}.\n */\npublic",
+    "method_javadoc": "/**\n     Creates a new, clean document, from the original dirty document, containing only elements allowed by the whitelist.\n     The original document is not modified. Only elements from the dirt document's <code>body</code> are used.\n     @param dirtyDocument Untrusted base document to clean.\n     @return cleaned document.\n     */"
+  },
+  "fields": [
+    "private Whitelist whitelist"
+  ],
+  "focal_class": "org.jsoup.safety.Cleaner",
+  "focal_id": "Jsoup_26::org.jsoup.safety.Cleaner::clean(Document)",
+  "focal_method_name": "clean",
+  "impl_B": "public Document clean(Document dirtyDocument) {\n        Validate.notNull(dirtyDocument);\n\n        Document clean = Document.createShell(dirtyDocument.baseUri());\n            copySafeNodes(dirtyDocument.body(), clean.body());\n\n        return clean;\n    }",
+  "imports": [
+    "org.jsoup.helper.Validate",
+    "org.jsoup.nodes.*",
+    "org.jsoup.parser.Tag",
+    "java.util.List"
+  ],
+  "javadoc_edited_by_fix": false,
+  "package": "org.jsoup.safety",
+  "project": "Jsoup",
+  "siblings": [
+    {
+      "javadoc": "/**\n     Determines if the input document is valid, against the whitelist. It is considered valid if all the tags and attributes\n     in the input HTML are allowed by the whitelist.\n     <p/>\n     This method can be used as a validator for user input forms. An invalid document will still be cleaned successfully\n     using the {@link #clean(Document)} document. If using as a validator, it is recommended to still clean the document\n     to ensure enforced attributes are set correctly, and that the output is tidied.\n     @param dirtyDocument document to test\n     @return true if no tags or attributes need to be removed; false if they do\n     */",
+      "name": "isValid"
+    }
+  ],
+  "sig": {
+    "class_declaration": "public class Cleaner",
+    "constructors": [
+      "public Cleaner(Whitelist whitelist);"
+    ],
+    "focal_signature": "public Document clean(Document dirtyDocument)",
+    "methods": [
+      "public boolean isValid(Document dirtyDocument);"
+    ],
+    "type_signatures": []
+  },
+  "split": "dev"
+}

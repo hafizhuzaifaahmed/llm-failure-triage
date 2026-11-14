@@ -1,0 +1,14 @@
+{
+  "assembled": true,
+  "call_key": "f8cb0296f9046c52000171f0f58d79f7a5fc1654a843bd5ef44b20b1287c14c4",
+  "candidate_id": "b78373963397b6dc544a",
+  "class_name": "StopWatch_stop_TriageGen5Test",
+  "dataset": "D1C_F1",
+  "focal_id": "Lang_55::org.apache.commons.lang.time.StopWatch::stop()",
+  "generation": 5,
+  "model_returned": "gemma4:26b",
+  "n_tests": 5,
+  "package": "org.apache.commons.lang.time",
+  "source": "package org.apache.commons.lang.time;\n\nimport java.io.*;\nimport java.math.*;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for org.apache.commons.lang.time.StopWatch#stop()\n */\npublic class StopWatch_stop_TriageGen5Test {\n\n    @Test\n    public void testStop_WhenRunning_ShouldStopSuccessfully() {\n        StopWatch stopWatch = new StopWatch();\n        stopWatch.start();\n        \n        stopWatch.stop();\n        \n        // Verify state change via toString or behavior\n        // Since runningState is private, we verify by ensuring no exception is thrown \n        // and the state is consistent with a stopped watch.\n        Assert.assertTrue(stopWatch.toString().contains(\"stopped\"));\n    }\n\n    @Test\n    public void testStop_WhenSuspended_ShouldStopSuccessfully() {\n        StopWatch stopWatch = new StopWatch();\n        stopWatch.start();\n        stopWatch.suspend();\n        \n        stopWatch.stop();\n        \n        Assert.assertTrue(stopWatch.toString().contains(\"stopped\"));\n    }\n\n    @Test(expected = IllegalStateException.class)\n    public void testStop_WhenNotStarted_ShouldThrowIllegalStateException() {\n        StopWatch stopWatch = new StopWatch();\n        // State is STATE_STOPPED or initial state\n        stopWatch.stop();\n    }\n\n    @Test(expected = IllegalStateException.class)\n    public void testStop_WhenAlreadyStopped_ShouldThrowIllegalStateException() {\n        StopWatch stopWatch = new StopWatch();\n        stopWatch.start();\n        stopWatch.stop();\n        \n        // Second attempt to stop should throw exception because state is now STATE_STOPPED\n        stopWatch.stop();\n    }\n\n    @Test\n    public void testStop_UpdatesStopTime() throws InterruptedException {\n        StopWatch stopWatch = new StopWatch();\n        stopWatch.start();\n        Thread.sleep(10); // Ensure some time passes\n        stopWatch.stop();\n        \n        long timeAtStop = stopWatch.getTime();\n        Assert.assertTrue(\"Time should be greater than 0\", timeAtStop > 0);\n    }\n}\n",
+  "tranche": "F1"
+}

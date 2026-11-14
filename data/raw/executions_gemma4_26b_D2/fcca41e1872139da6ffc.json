@@ -1,0 +1,268 @@
+{
+ "candidate_id": "fcca41e1872139da6ffc",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testGetIntValue_Success",
+   "testGetIntValue_CannotConvertToInt",
+   "testGetIntValue_ThrowsIOException",
+   "testGetIntValue_LargeNumber"
+  ],
+  "nc_both": [],
+  "nc_one_version": [],
+  "passes": 0
+ },
+ "dataset": "D2",
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "JacksonDatabind_106::com.fasterxml.jackson.databind.node.TreeTraversingParser::getIntValue()#m79",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testGetIntValue_Success",
+   "runs_b": [
+    {
+     "duration_s": 0.335,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.41,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.342,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.407,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.358,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.404,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.databind.node;\n\nimport com.fasterxml.jackson.core.*;\nimport com.fasterxml.jackson.core.JsonParser;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.core.base.ParserMinimalBase;\nimport com.fasterxml.jackson.databind.JsonNode;\nimport com.fasterxml.jackson.databind.ObjectMapper;\nimport com.fasterxml.jackson.databind.node.IntNode;\nimport com.fasterxml.jackson.databind.node.NumericNode;\nimport com.fasterxml.jackson.databind.node.TextNode;\nimport java.io.*;\nimport java.io.IOException;\nimport java.io.OutputStream;\nimport java.lang.reflect.Field;\nimport java.lang.reflect.Method;\nimport java.math.*;\nimport java.math.BigDecimal;\nimport java.math.BigInteger;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Before;\nimport org.junit.Test;\nimport org.mockito.Mockito;\nimport static org.junit.Assert.*;\nimport static org.mockito.Mockito.spy;\nimport static org.mockito.Mockito.when;\n\npublic class TreeTraversingParser_getIntValue_TriageGen2Test {\n\n    private ObjectMapper mapper;\n\n    @Before\n    public void setUp() {\n        mapper = new ObjectMapper();\n    }\n\n    /**\n     * Test case for a successful integer retrieval.\n     * Covers the standard path where currentNumericNode returns a valid IntNode.\n     */\n    @Test\n    public void testGetIntValue_Success() throws Exception {\n        JsonNode node = mapper.getNodeFactory().numberNode(42);\n        TreeTraversingParser parser = spy(new TreeTraversingParser(node));\n\n        // Use reflection or spy to ensure currentNumericNode returns our node\n        // Since currentNumericNode is protected, we use a spy to simulate its behavior\n        Method currentNumericNodeMethod = TreeTraversingParser.class.getDeclaredMethod(\"currentNumericNode\");\n        currentNumericNodeMethod.setAccessible(true);\n        \n        // In a real scenario, TreeTraversingParser would be pointing to a numeric token.\n        // We mock the internal call to return our specific NumericNode.\n        when(parser.currentNumericNode()).thenReturn((NumericNode) node);\n\n        int result = parser.getIntValue();\n        Assert.assertEquals(42, result);\n    }\n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testGetIntValue_CannotConvertToInt",
+   "runs_b": [
+    {
+     "duration_s": 0.365,
+     "exception": "com.fasterxml.jackson.core.JsonParseException",
+     "failing_test_line": 55,
+     "message": "Current token (null) not numeric, cannot use numeric value accessors\n at [Source: UNKNOWN; line: -1, column: -1]",
+     "outcome": "exception",
+     "trace": "com.fasterxml.jackson.core.JsonParseException: Current token (null) not numeric, cannot use numeric value accessors\n at [Source: UNKNOWN; line: -1, column: -1]\n\tat com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1833)\n\tat com.fasterxml.jackson.databind.node.TreeTraversingParser_getIntValue_TriageGen2Test.testGetIntValue_CannotConvertToInt(TreeTraversingParser_getIntValue_TriageGen2Test.java:55)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.381,
+     "exception": "com.fasterxml.jackson.core.JsonParseException",
+     "failing_test_line": 55,
+     "message": "Current token (null) not numeric, cannot use numeric value accessors\n at [Source: UNKNOWN; line: -1, column: -1]",
+     "outcome": "exception",
+     "trace": "com.fasterxml.jackson.core.JsonParseException: Current token (null) not numeric, cannot use numeric value accessors\n at [Source: UNKNOWN; line: -1, column: -1]\n\tat com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1833)\n\tat com.fasterxml.jackson.databind.node.TreeTraversingParser_getIntValue_TriageGen2Test.testGetIntValue_CannotConvertToInt(TreeTraversingParser_getIntValue_TriageGen2Test.java:55)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.34,
+     "exception": "com.fasterxml.jackson.core.JsonParseException",
+     "failing_test_line": 55,
+     "message": "Current token (null) not numeric, cannot use numeric value accessors\n at [Source: UNKNOWN; line: -1, column: -1]",
+     "outcome": "exception",
+     "trace": "com.fasterxml.jackson.core.JsonParseException: Current token (null) not numeric, cannot use numeric value accessors\n at [Source: UNKNOWN; line: -1, column: -1]\n\tat com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1833)\n\tat com.fasterxml.jackson.databind.node.TreeTraversingParser_getIntValue_TriageGen2Test.testGetIntValue_CannotConvertToInt(TreeTraversingParser_getIntValue_TriageGen2Test.java:55)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.419,
+     "exception": "com.fasterxml.jackson.core.JsonParseException",
+     "failing_test_line": 55,
+     "message": "Current token (null) not numeric, cannot use numeric value accessors\n at [Source: UNKNOWN; line: -1, column: -1]",
+     "outcome": "exception",
+     "trace": "com.fasterxml.jackson.core.JsonParseException: Current token (null) not numeric, cannot use numeric value accessors\n at [Source: UNKNOWN; line: -1, column: -1]\n\tat com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1833)\n\tat com.fasterxml.jackson.databind.node.TreeTraversingParser_getIntValue_TriageGen2Test.testGetIntValue_CannotConvertToInt(TreeTraversingParser_getIntValue_TriageGen2Test.java:55)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.38,
+     "exception": "com.fasterxml.jackson.core.JsonParseException",
+     "failing_test_line": 55,
+     "message": "Current token (null) not numeric, cannot use numeric value accessors\n at [Source: UNKNOWN; line: -1, column: -1]",
+     "outcome": "exception",
+     "trace": "com.fasterxml.jackson.core.JsonParseException: Current token (null) not numeric, cannot use numeric value accessors\n at [Source: UNKNOWN; line: -1, column: -1]\n\tat com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1833)\n\tat com.fasterxml.jackson.databind.node.TreeTraversingParser_getIntValue_TriageGen2Test.testGetIntValue_CannotConvertToInt(TreeTraversingParser_getIntValue_TriageGen2Test.java:55)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.385,
+     "exception": "com.fasterxml.jackson.core.JsonParseException",
+     "failing_test_line": 55,
+     "message": "Current token (null) not numeric, cannot use numeric value accessors\n at [Source: UNKNOWN; line: -1, column: -1]",
+     "outcome": "exception",
+     "trace": "com.fasterxml.jackson.core.JsonParseException: Current token (null) not numeric, cannot use numeric value accessors\n at [Source: UNKNOWN; line: -1, column: -1]\n\tat com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1833)\n\tat com.fasterxml.jackson.databind.node.TreeTraversingParser_getIntValue_TriageGen2Test.testGetIntValue_CannotConvertToInt(TreeTraversingParser_getIntValue_TriageGen2Test.java:55)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.databind.node;\n\nimport com.fasterxml.jackson.core.*;\nimport com.fasterxml.jackson.core.JsonParser;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.core.base.ParserMinimalBase;\nimport com.fasterxml.jackson.databind.JsonNode;\nimport com.fasterxml.jackson.databind.ObjectMapper;\nimport com.fasterxml.jackson.databind.node.IntNode;\nimport com.fasterxml.jackson.databind.node.NumericNode;\nimport com.fasterxml.jackson.databind.node.TextNode;\nimport java.io.*;\nimport java.io.IOException;\nimport java.io.OutputStream;\nimport java.lang.reflect.Field;\nimport java.lang.reflect.Method;\nimport java.math.*;\nimport java.math.BigDecimal;\nimport java.math.BigInteger;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Before;\nimport org.junit.Test;\nimport org.mockito.Mockito;\nimport static org.junit.Assert.*;\nimport static org.mockito.Mockito.spy;\nimport static org.mockito.Mockito.when;\n\npublic class TreeTraversingParser_getIntValue_TriageGen2Test {\n\n    private ObjectMapper mapper;\n\n    @Before\n    public void setUp() {\n        mapper = new ObjectMapper();\n    }\n\n    \n\n    /**\n     * Test case for when the node cannot be converted to an int.\n     * Covers the branch: if (!node.canConvertToInt()) { ; }\n     * Even though the branch body is empty (a no-op), we need to trigger it to satisfy branch coverage.\n     */\n    @Test\n    public void testGetIntValue_CannotConvertToInt() throws Exception {\n        // A DoubleNode can be a NumericNode but might fail canConvertToInt if it's too large or specific\n        // However, to trigger the specific branch in the provided code snippet:\n        // We use a NumericNode that returns false for canConvertToInt().\n        NumericNode mockNode = spy(mapper.getNodeFactory().numberNode(123.456));\n        when(mockNode.canConvertToInt()).thenReturn(false);\n\n        TreeTraversingParser parser = spy(new TreeTraversingParser(mapper.getNodeFactory().objectNode()));\n        when(parser.currentNumericNode()).thenReturn(mockNode);\n\n        // The code executes the empty block and then calls node.intValue()\n        // node.intValue() on a DoubleNode usually truncates.\n        int result = parser.getIntValue();\n        Assert.assertEquals(123, result);\n    }\n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testGetIntValue_ThrowsIOException",
+   "runs_b": [
+    {
+     "duration_s": 0.352,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.393,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.38,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.405,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.346,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.376,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.databind.node;\n\nimport com.fasterxml.jackson.core.*;\nimport com.fasterxml.jackson.core.JsonParser;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.core.base.ParserMinimalBase;\nimport com.fasterxml.jackson.databind.JsonNode;\nimport com.fasterxml.jackson.databind.ObjectMapper;\nimport com.fasterxml.jackson.databind.node.IntNode;\nimport com.fasterxml.jackson.databind.node.NumericNode;\nimport com.fasterxml.jackson.databind.node.TextNode;\nimport java.io.*;\nimport java.io.IOException;\nimport java.io.OutputStream;\nimport java.lang.reflect.Field;\nimport java.lang.reflect.Method;\nimport java.math.*;\nimport java.math.BigDecimal;\nimport java.math.BigInteger;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Before;\nimport org.junit.Test;\nimport org.mockito.Mockito;\nimport static org.junit.Assert.*;\nimport static org.mockito.Mockito.spy;\nimport static org.mockito.Mockito.when;\n\npublic class TreeTraversingParser_getIntValue_TriageGen2Test {\n\n    private ObjectMapper mapper;\n\n    @Before\n    public void setUp() {\n        mapper = new ObjectMapper();\n    }\n\n    \n\n    \n\n    /**\n     * Test case to simulate an IOException being thrown from currentNumericNode.\n     * Covers the 'throws IOException' part of the signature.\n     */\n    @Test(expected = IOException.class)\n    public void testGetIntValue_ThrowsIOException() throws Exception {\n        TreeTraversingParser parser = spy(new TreeTraversingParser(mapper.getNodeFactory().objectNode()));\n        when(parser.currentNumericNode()).thenThrow(new IOException(\"Simulated IO Error\"));\n\n        parser.getIntValue();\n    }\n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testGetIntValue_LargeNumber",
+   "runs_b": [
+    {
+     "duration_s": 0.335,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.405,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.322,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.431,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.354,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.415,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.databind.node;\n\nimport com.fasterxml.jackson.core.*;\nimport com.fasterxml.jackson.core.JsonParser;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.core.base.ParserMinimalBase;\nimport com.fasterxml.jackson.databind.JsonNode;\nimport com.fasterxml.jackson.databind.ObjectMapper;\nimport com.fasterxml.jackson.databind.node.IntNode;\nimport com.fasterxml.jackson.databind.node.NumericNode;\nimport com.fasterxml.jackson.databind.node.TextNode;\nimport java.io.*;\nimport java.io.IOException;\nimport java.io.OutputStream;\nimport java.lang.reflect.Field;\nimport java.lang.reflect.Method;\nimport java.math.*;\nimport java.math.BigDecimal;\nimport java.math.BigInteger;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Before;\nimport org.junit.Test;\nimport org.mockito.Mockito;\nimport static org.junit.Assert.*;\nimport static org.mockito.Mockito.spy;\nimport static org.mockito.Mockito.when;\n\npublic class TreeTraversingParser_getIntValue_TriageGen2Test {\n\n    private ObjectMapper mapper;\n\n    @Before\n    public void setUp() {\n        mapper = new ObjectMapper();\n    }\n\n    \n\n    \n\n    \n\n    /**\n     * Test case where the node is a large number that might overflow or behave specifically.\n     */\n    @Test\n    public void testGetIntValue_LargeNumber() throws Exception {\n        // Using a large long that fits in int via truncation or specific value\n        JsonNode node = mapper.getNodeFactory().numberNode(Integer.MAX_VALUE);\n        TreeTraversingParser parser = spy(new TreeTraversingParser(node));\n        \n        // Mocking the protected method call\n        when(parser.currentNumericNode()).thenReturn((NumericNode) node);\n\n        int result = parser.getIntValue();\n        Assert.assertEquals(Integer.MAX_VALUE, result);\n    }\n}\n"
+  }
+ ],
+ "mutant_version": "m79",
+ "source_sha256": "086ba731d94ed4ab23e15672a041741b6d044a02018aca0eb0283853195c1989",
+ "utc": "2026-11-03T00:32:47Z"
+}

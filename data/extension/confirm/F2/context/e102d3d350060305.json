@@ -1,0 +1,88 @@
+{
+ "bug_name": "Math_61",
+ "call_sites": [],
+ "class_simple": "PoissonDistributionImpl",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Implementation for the {@link PoissonDistribution}.\n *\n * @version $Revision$ $Date$\n */\npublic",
+  "method_javadoc": "/**\n     * Create a new Poisson distribution with the given mean, convergence criterion\n     * and maximum number of iterations.\n     *\n     * @param p the Poisson mean\n     * @param epsilon the convergence criteria for cumulative probabilites\n     * @param maxIterations the maximum number of iterations for cumulative probabilites\n     * @since 2.1\n     */"
+ },
+ "fields": [
+  "public static final int DEFAULT_MAX_ITERATIONS",
+  "public static final double DEFAULT_EPSILON",
+  "private static final long serialVersionUID",
+  "private NormalDistribution normal",
+  "private double mean",
+  "private int maxIterations",
+  "private double epsilon"
+ ],
+ "focal_class": "org.apache.commons.math.distribution.PoissonDistributionImpl",
+ "focal_id": "Math_61::org.apache.commons.math.distribution.PoissonDistributionImpl::PoissonDistributionImpl(double,double,int)",
+ "focal_method_name": "PoissonDistributionImpl",
+ "generations": 3,
+ "impl_B": "public PoissonDistributionImpl(double p, double epsilon, int maxIterations) {\n        if (p <= 0) {\n            throw MathRuntimeException.createIllegalArgumentException(LocalizedFormats.NOT_POSITIVE_POISSON_MEAN, p);\n        }\n        mean = p;\n        normal = new NormalDistributionImpl(p, FastMath.sqrt(p));\n        this.epsilon = epsilon;\n        this.maxIterations = maxIterations;\n    }",
+ "imports": [
+  "java.io.Serializable",
+  "org.apache.commons.math.MathException",
+  "org.apache.commons.math.MathRuntimeException",
+  "org.apache.commons.math.exception.util.LocalizedFormats",
+  "org.apache.commons.math.special.Gamma",
+  "org.apache.commons.math.util.MathUtils",
+  "org.apache.commons.math.util.FastMath"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math.distribution",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Get the Poisson mean for the distribution.\n     *\n     * @return the Poisson mean for the distribution.\n     */",
+   "name": "getMean"
+  },
+  {
+   "javadoc": "/**\n     * The probability mass function P(X = x) for a Poisson distribution.\n     *\n     * @param x the value at which the probability density function is\n     *            evaluated.\n     * @return the value of the probability mass function at x\n     */",
+   "name": "probability"
+  },
+  {
+   "javadoc": "/**\n     * The probability distribution function P(X <= x) for a Poisson\n     * distribution.\n     *\n     * @param x the value at which the PDF is evaluated.\n     * @return Poisson distribution function evaluated at x\n     * @throws MathException if the cumulative probability can not be computed\n     *             due to convergence or other numerical errors.\n     */",
+   "name": "cumulativeProbability"
+  },
+  {
+   "javadoc": "/**\n     * Calculates the Poisson distribution function using a normal\n     * approximation. The <code>N(mean, sqrt(mean))</code> distribution is used\n     * to approximate the Poisson distribution.\n     * <p>\n     * The computation uses \"half-correction\" -- evaluating the normal\n     * distribution function at <code>x + 0.5</code>\n     * </p>\n     *\n     * @param x the upper bound, inclusive\n     * @return the distribution function value calculated using a normal\n     *         approximation\n     * @throws MathException if an error occurs computing the normal\n     *             approximation\n     */",
+   "name": "normalApproximateProbability"
+  },
+  {
+   "javadoc": "/**\n     * Generates a random value sampled from this distribution.\n     *\n     * <p><strong>Algorithm Description</strong>:\n     * <ul><li> For small means, uses simulation of a Poisson process\n     * using Uniform deviates, as described\n     * <a href=\"http://irmi.epfl.ch/cmos/Pmmi/interactive/rng7.htm\"> here.</a>\n     * The Poisson process (and hence value returned) is bounded by 1000 * mean.</li><\n     *\n     * <li> For large means, uses the rejection algorithm described in <br/>\n     * Devroye, Luc. (1981).<i>The Computer Generation of Poisson Random Variables</i>\n     * <strong>Computing</strong> vol. 26 pp. 197-207.</li></ul></p>\n     *\n     * @return random value\n     * @since 2.2\n     * @throws MathException if an error occurs generating the random value\n     */",
+   "name": "sample"
+  },
+  {
+   "javadoc": "/**\n     * Access the domain value lower bound, based on <code>p</code>, used to\n     * bracket a CDF root. This method is used by\n     * {@link #inverseCumulativeProbability(double)} to find critical values.\n     *\n     * @param p the desired probability for the critical value\n     * @return domain lower bound\n     */",
+   "name": "getDomainLowerBound"
+  },
+  {
+   "javadoc": "/**\n     * Access the domain value upper bound, based on <code>p</code>, used to\n     * bracket a CDF root. This method is used by\n     * {@link #inverseCumulativeProbability(double)} to find critical values.\n     *\n     * @param p the desired probability for the critical value\n     * @return domain upper bound\n     */",
+   "name": "getDomainUpperBound"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class PoissonDistributionImpl extends AbstractIntegerDistribution implements PoissonDistribution, Serializable",
+  "constructors": [
+   "public PoissonDistributionImpl(double p);",
+   "public PoissonDistributionImpl(double p, double epsilon, int maxIterations);",
+   "public PoissonDistributionImpl(double p, double epsilon);",
+   "public PoissonDistributionImpl(double p, int maxIterations);"
+  ],
+  "focal_signature": "public PoissonDistributionImpl(double p, double epsilon, int maxIterations)",
+  "methods": [
+   "public double getMean();",
+   "public double probability(int x);",
+   "public double cumulativeProbability(int x) throws MathException;",
+   "public double normalApproximateProbability(int x) throws MathException;",
+   "public int sample() throws MathException;",
+   "protected int getDomainLowerBound(double p);",
+   "protected int getDomainUpperBound(double p);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

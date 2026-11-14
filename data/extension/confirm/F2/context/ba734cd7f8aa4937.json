@@ -1,0 +1,144 @@
+{
+ "bug_name": "JacksonDatabind_79",
+ "call_sites": [
+  {
+   "line": 573,
+   "lines": [
+    568,
+    569,
+    570,
+    571,
+    572,
+    573,
+    574,
+    575,
+    576,
+    577,
+    578
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/introspect/JacksonAnnotationIntrospector.java",
+   "snippet": "        if (info == null || info.generator() == ObjectIdGenerators.None.class) {\n            return null;\n        }\n        // In future may need to allow passing namespace?\n        PropertyName name = PropertyName.construct(info.property());\n        return new ObjectIdInfo(name, info.scope(), info.generator(), info.resolver());\n    }\n\n    @Override\n    public ObjectIdInfo findObjectReferenceInfo(Annotated ann, ObjectIdInfo objectIdInfo) {\n        JsonIdentityReference ref = _findAnnotation(ann, JsonIdentityReference.class);"
+  },
+  {
+   "line": 68,
+   "lines": [
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73
+   ],
+   "patch_lines_removed": true,
+   "path": "src/main/java/com/fasterxml/jackson/databind/introspect/ObjectIdInfo.java",
+   "snippet": "\n        }\n        return new ObjectIdInfo(_propertyName, _scope, _generator, state, _resolver);\n    }\n    \n    public PropertyName getPropertyName() { return _propertyName; }\n    public Class<?> getScope() { return _scope; }\n    public Class<? extends ObjectIdGenerator<?>> getGeneratorType() { return _generator; }"
+  },
+  {
+   "line": 433,
+   "lines": [
+    428,
+    429,
+    430,
+    431,
+    432,
+    433,
+    434,
+    435,
+    436,
+    437,
+    438
+   ],
+   "patch_lines_removed": true,
+   "path": "src/main/java/com/fasterxml/jackson/databind/ser/std/BeanSerializerBase.java",
+   "snippet": "            ObjectIdInfo objectIdInfo = intr.findObjectIdInfo(accessor);\n            if (objectIdInfo == null) {\n                // no ObjectId override, but maybe ObjectIdRef?\n                if (oiw != null) {\n            } else {\n                // Ugh: mostly copied from BeanDeserializerBase: but can't easily change it\n                // to be able to move to SerializerProvider (where it really belongs)"
+  }
+ ],
+ "class_simple": "ObjectIdInfo",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Container object that encapsulates information usually\n * derived from {@link JsonIdentityInfo} annotation or its\n * custom alternatives\n */\npublic",
+  "method_javadoc": "/**\n     * @since 2.8.9\n     */"
+ },
+ "fields": [
+  "protected final PropertyName _propertyName",
+  "protected final Class<? extends ObjectIdGenerator<?>> _generator",
+  "protected final Class<? extends ObjectIdResolver> _resolver",
+  "protected final Class<?> _scope",
+  "protected final boolean _alwaysAsId"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.introspect.ObjectIdInfo",
+ "focal_id": "JacksonDatabind_79::com.fasterxml.jackson.databind.introspect.ObjectIdInfo::ObjectIdInfo(PropertyName,Class<?>,Class<? extends ObjectIdGenerator<?>>,Class<? extends ObjectIdResolver>)",
+ "focal_method_name": "ObjectIdInfo",
+ "generations": 3,
+ "impl_B": "public ObjectIdInfo(PropertyName name, Class<?> scope, Class<? extends ObjectIdGenerator<?>> gen,\n            Class<? extends ObjectIdResolver> resolver)\n    {\n        this(name, scope, gen, false, resolver);\n    }",
+ "imports": [
+  "com.fasterxml.jackson.annotation.JsonIdentityInfo",
+  "com.fasterxml.jackson.annotation.ObjectIdGenerator",
+  "com.fasterxml.jackson.annotation.ObjectIdResolver",
+  "com.fasterxml.jackson.annotation.SimpleObjectIdResolver",
+  "com.fasterxml.jackson.databind.PropertyName"
+ ],
+ "javadoc_edited_by_fix": true,
+ "package": "com.fasterxml.jackson.databind.introspect",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "withAlwaysAsId"
+  },
+  {
+   "javadoc": "",
+   "name": "getPropertyName"
+  },
+  {
+   "javadoc": "",
+   "name": "getScope"
+  },
+  {
+   "javadoc": "",
+   "name": "getGeneratorType"
+  },
+  {
+   "javadoc": "",
+   "name": "getResolverType"
+  },
+  {
+   "javadoc": "",
+   "name": "getAlwaysAsId"
+  },
+  {
+   "javadoc": "",
+   "name": "toString"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class ObjectIdInfo",
+  "constructors": [
+   "public ObjectIdInfo(PropertyName name, Class<?> scope, Class<? extends ObjectIdGenerator<?>> gen, Class<? extends ObjectIdResolver> resolver);",
+   "// since 2.4 public ObjectIdInfo(PropertyName name, Class<?> scope, Class<? extends ObjectIdGenerator<?>> gen);",
+   "// since 2.3 public ObjectIdInfo(String name, Class<?> scope, Class<? extends ObjectIdGenerator<?>> gen);",
+   "protected ObjectIdInfo(PropertyName prop, Class<?> scope, Class<? extends ObjectIdGenerator<?>> gen, boolean alwaysAsId);",
+   "protected ObjectIdInfo(PropertyName prop, Class<?> scope, Class<? extends ObjectIdGenerator<?>> gen, boolean alwaysAsId, Class<? extends ObjectIdResolver> resolver);"
+  ],
+  "focal_signature": "public ObjectIdInfo(PropertyName name, Class<?> scope, Class<? extends ObjectIdGenerator<?>> gen, Class<? extends ObjectIdResolver> resolver)",
+  "methods": [
+   "public ObjectIdInfo withAlwaysAsId(boolean state);",
+   "public PropertyName getPropertyName();",
+   "public Class<?> getScope();",
+   "public Class<? extends ObjectIdGenerator<?>> getGeneratorType();",
+   "public Class<? extends ObjectIdResolver> getResolverType();",
+   "public boolean getAlwaysAsId();",
+   "public String toString();"
+  ],
+  "type_signatures": [
+   "public class PropertyName implements java.io.Serializable { public PropertyName(String simpleName); public PropertyName(String simpleName, String namespace); protected Object readResolve(); public static PropertyName construct(String simpleName); public static PropertyName construct(String simpleName, String ns); public PropertyName internSimpleName(); public PropertyName withSimpleName(String simpleName); public PropertyName withNamespace(String ns); public String getSimpleName(); public SerializableString simpleAsEncoded(MapperConfig<?> config); public String getNamespace(); public boolean hasSimpleName(); public boolean hasSimpleName(String str); public boolean hasNamespace(); public boolean isEmpty(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

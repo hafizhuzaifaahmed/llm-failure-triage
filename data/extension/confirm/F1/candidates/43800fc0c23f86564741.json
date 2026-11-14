@@ -1,0 +1,14 @@
+{
+  "assembled": true,
+  "call_key": "c2fa93181e556c1dd0c916b4b86b339b62c4251f600d1eb22c4de0357424b3e7",
+  "candidate_id": "43800fc0c23f86564741",
+  "class_name": "LocaleUtils_isAvailableLocale_TriageGen1Test",
+  "dataset": "D1C_F1",
+  "focal_id": "Lang_57::org.apache.commons.lang.LocaleUtils::isAvailableLocale(Locale)",
+  "generation": 1,
+  "model_returned": "gemma4:26b",
+  "n_tests": 4,
+  "package": "org.apache.commons.lang",
+  "source": "package org.apache.commons.lang;\n\nimport java.io.*;\nimport java.math.*;\nimport java.util.*;\nimport java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.Collections;\nimport java.util.HashMap;\nimport java.util.HashSet;\nimport java.util.List;\nimport java.util.Locale;\nimport java.util.Map;\nimport java.util.Set;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for LocaleUtils.isAvailableLocale\n */\npublic class LocaleUtils_isAvailableLocale_TriageGen1Test {\n\n    @Test\n    public void testIsAvailableLocale_WithAvailableLocale() {\n        // Get an actual available locale from the utility itself to ensure truthiness\n        Locale availableLocale = LocaleUtils.availableLocaleList().get(0);\n        \n        boolean result = LocaleUtils.isAvailableLocale(availableLocale);\n        \n        assertTrue(\"Expected locale to be available\", result);\n    }\n\n    @Test\n    public void testIsAvailableLocale_WithUnavailableLocale() {\n        // Create a locale that is highly unlikely to be in the available set\n        // Using a rare combination or a non-existent language/country\n        Locale unavailableLocale = new Locale(\"zz\", \"ZZ\");\n        \n        boolean result = LocaleUtils.isAvailableLocale(unavailableLocale);\n        \n        assertFalse(\"Expected locale to be unavailable\", result);\n    }\n\n    @Test\n    public void testIsAvailableLocale_WithNull() {\n        // Testing null handling. \n        // Depending on implementation, contains(null) usually returns false in Sets.\n        boolean result = LocaleUtils.isAvailableLocale(null);\n        \n        assertFalse(\"Expected result to be false when locale is null\", result);\n    }\n\n    @Test\n    public void testIsAvailableLocale_WithAllAvailableLocales() {\n        // Iterate through all available locales to ensure coverage of the set contents\n        for (Locale locale : LocaleUtils.availableLocaleList()) {\n            assertTrue(\"Locale \" + locale + \" should be reported as available\", \n                LocaleUtils.isAvailableLocale(locale));\n        }\n    }\n}\n",
+  "tranche": "F1"
+}

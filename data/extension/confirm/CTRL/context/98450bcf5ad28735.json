@@ -1,0 +1,304 @@
+{
+ "bug_name": "JxPath_12",
+ "call_sites": [
+  {
+   "line": 310,
+   "lines": [
+    305,
+    306,
+    307,
+    308,
+    309,
+    310,
+    311,
+    312,
+    313,
+    314,
+    315
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer.java",
+   "snippet": "        }\n        return null;\n    }\n\n    protected String getLanguage() {\n        return findEnclosingAttribute(node, \"xml:lang\");\n    }\n\n    /**\n     * Sets contents of the node to the specified value. If the value is\n     * a String, the contents of the node are replaced with this text."
+  },
+  {
+   "line": 643,
+   "lines": [
+    638,
+    639,
+    640,
+    641,
+    642,
+    643,
+    644,
+    645,
+    646,
+    647,
+    648
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer.java",
+   "snippet": "    private String stringValue(Node node) {\n        int nodeType = node.getNodeType();\n        if (nodeType == Node.COMMENT_NODE) {\n            return \"\";\n        }\n        boolean trim = !\"preserve\".equals(findEnclosingAttribute(node, \"xml:space\"));\n        if (nodeType == Node.TEXT_NODE || nodeType == Node.CDATA_SECTION_NODE) {\n            String text = node.getNodeValue();\n            return text == null ? \"\" : trim ? text.trim() : text;\n        }\n        if (nodeType == Node.PROCESSING_INSTRUCTION_NODE) {"
+  },
+  {
+   "line": 263,
+   "lines": [
+    258,
+    259,
+    260,
+    261,
+    262,
+    263,
+    264,
+    265,
+    266,
+    267,
+    268
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/model/jdom/JDOMNodePointer.java",
+   "snippet": "            result = ((Text) node).getText();\n        }\n        if (node instanceof ProcessingInstruction) {\n            result = ((ProcessingInstruction) node).getData();\n        }\n        boolean trim = !\"preserve\".equals(findEnclosingAttribute(node, \"space\", Namespace.XML_NAMESPACE));\n        return result != null && trim ? result.trim() : result;\n    }\n\n    public void setValue(Object value) {\n        if (node instanceof Text) {"
+  },
+  {
+   "line": 438,
+   "lines": [
+    433,
+    434,
+    435,
+    436,
+    437,
+    438,
+    439,
+    440,
+    441,
+    442,
+    443
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/model/jdom/JDOMNodePointer.java",
+   "snippet": "        String current = getLanguage();\n        return current == null ? super.isLanguage(lang) : current.toUpperCase().startsWith(lang.toUpperCase());\n    }\n\n    protected String getLanguage() {\n        return findEnclosingAttribute(node, \"lang\", Namespace.XML_NAMESPACE);\n    }\n\n    protected static String findEnclosingAttribute(Object n, String attrName, Namespace ns) {\n        while (n != null) {\n            if (n instanceof Element) {"
+  }
+ ],
+ "class_simple": "DOMNodePointer",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * A Pointer that points to a DOM node.\n *\n * @author Dmitri Plotnikov\n * @version $Revision$ $Date$\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "private Node node",
+  "private Map namespaces",
+  "private String defaultNamespace",
+  "private String id",
+  "public static final String XML_NAMESPACE_URI",
+  "public static final String XMLNS_NAMESPACE_URI"
+ ],
+ "focal_class": "org.apache.commons.jxpath.ri.model.dom.DOMNodePointer",
+ "focal_id": "JxPath_12::org.apache.commons.jxpath.ri.model.dom.DOMNodePointer::findEnclosingAttribute(Node,String)",
+ "focal_method_name": "findEnclosingAttribute",
+ "generations": 3,
+ "impl_B": "protected static String findEnclosingAttribute(Node n, String attrName) {\n        while (n != null) {\n            if (n.getNodeType() == Node.ELEMENT_NODE) {\n                Element e = (Element) n;\n                String attr = e.getAttribute(attrName);\n                if (attr != null && !attr.equals(\"\")) {\n                    return attr;\n                }\n            }\n            n = n.getParentNode();\n        }\n        return null;\n    }",
+ "imports": [
+  "java.util.HashMap",
+  "java.util.Locale",
+  "java.util.Map",
+  "org.apache.commons.jxpath.AbstractFactory",
+  "org.apache.commons.jxpath.JXPathAbstractFactoryException",
+  "org.apache.commons.jxpath.JXPathContext",
+  "org.apache.commons.jxpath.JXPathException",
+  "org.apache.commons.jxpath.Pointer",
+  "org.apache.commons.jxpath.ri.Compiler",
+  "org.apache.commons.jxpath.ri.QName",
+  "org.apache.commons.jxpath.ri.compiler.NodeNameTest",
+  "org.apache.commons.jxpath.ri.compiler.NodeTest",
+  "org.apache.commons.jxpath.ri.compiler.NodeTypeTest",
+  "org.apache.commons.jxpath.ri.compiler.ProcessingInstructionTest",
+  "org.apache.commons.jxpath.ri.model.NodeIterator",
+  "org.apache.commons.jxpath.ri.model.NodePointer",
+  "org.apache.commons.jxpath.ri.model.beans.NullPointer",
+  "org.apache.commons.jxpath.util.TypeUtils",
+  "org.w3c.dom.Attr",
+  "org.w3c.dom.Comment",
+  "org.w3c.dom.Document",
+  "org.w3c.dom.Element",
+  "org.w3c.dom.NamedNodeMap",
+  "org.w3c.dom.Node",
+  "org.w3c.dom.NodeList",
+  "org.w3c.dom.ProcessingInstruction"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.jxpath.ri.model.dom",
+ "project": "JxPath",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "testNode"
+  },
+  {
+   "javadoc": "",
+   "name": "testNode"
+  },
+  {
+   "javadoc": "",
+   "name": "getName"
+  },
+  {
+   "javadoc": "",
+   "name": "getNamespaceURI"
+  },
+  {
+   "javadoc": "",
+   "name": "childIterator"
+  },
+  {
+   "javadoc": "",
+   "name": "attributeIterator"
+  },
+  {
+   "javadoc": "",
+   "name": "namespacePointer"
+  },
+  {
+   "javadoc": "",
+   "name": "namespaceIterator"
+  },
+  {
+   "javadoc": "",
+   "name": "getNamespaceURI"
+  },
+  {
+   "javadoc": "",
+   "name": "getDefaultNamespaceURI"
+  },
+  {
+   "javadoc": "",
+   "name": "getBaseValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getImmediateNode"
+  },
+  {
+   "javadoc": "",
+   "name": "isActual"
+  },
+  {
+   "javadoc": "",
+   "name": "isCollection"
+  },
+  {
+   "javadoc": "",
+   "name": "getLength"
+  },
+  {
+   "javadoc": "",
+   "name": "isLeaf"
+  },
+  {
+   "javadoc": "/**\n     * Returns true if the xml:lang attribute for the current node\n     * or its parent has the specified prefix <i>lang</i>.\n     * If no node has this prefix, calls <code>super.isLanguage(lang)</code>.\n     */",
+   "name": "isLanguage"
+  },
+  {
+   "javadoc": "",
+   "name": "getLanguage"
+  },
+  {
+   "javadoc": "/**\n     * Sets contents of the node to the specified value. If the value is\n     * a String, the contents of the node are replaced with this text.\n     * If the value is an Element or Document, the children of the\n     * node are replaced with the children of the passed node.\n     */",
+   "name": "setValue"
+  },
+  {
+   "javadoc": "",
+   "name": "createChild"
+  },
+  {
+   "javadoc": "",
+   "name": "createChild"
+  },
+  {
+   "javadoc": "",
+   "name": "createAttribute"
+  },
+  {
+   "javadoc": "",
+   "name": "remove"
+  },
+  {
+   "javadoc": "",
+   "name": "asPath"
+  },
+  {
+   "javadoc": "",
+   "name": "hashCode"
+  },
+  {
+   "javadoc": "",
+   "name": "equals"
+  },
+  {
+   "javadoc": "",
+   "name": "getPrefix"
+  },
+  {
+   "javadoc": "",
+   "name": "getLocalName"
+  },
+  {
+   "javadoc": "",
+   "name": "getNamespaceURI"
+  },
+  {
+   "javadoc": "",
+   "name": "getValue"
+  },
+  {
+   "javadoc": "/**\n     * Locates a node by ID.\n     */",
+   "name": "getPointerByID"
+  },
+  {
+   "javadoc": "",
+   "name": "compareChildNodePointers"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class DOMNodePointer extends NodePointer",
+  "constructors": [
+   "public DOMNodePointer(Node node, Locale locale);",
+   "public DOMNodePointer(Node node, Locale locale, String id);",
+   "public DOMNodePointer(NodePointer parent, Node node);"
+  ],
+  "focal_signature": "protected static String findEnclosingAttribute(Node n, String attrName)",
+  "methods": [
+   "public boolean testNode(NodeTest test);",
+   "public static boolean testNode(Node node, NodeTest test);",
+   "public QName getName();",
+   "public String getNamespaceURI();",
+   "public NodeIterator childIterator( NodeTest test, boolean reverse, NodePointer startWith);",
+   "public NodeIterator attributeIterator(QName name);",
+   "public NodePointer namespacePointer(String prefix);",
+   "public NodeIterator namespaceIterator();",
+   "public String getNamespaceURI(String prefix);",
+   "public String getDefaultNamespaceURI();",
+   "public Object getBaseValue();",
+   "public Object getImmediateNode();",
+   "public boolean isActual();",
+   "public boolean isCollection();",
+   "public int getLength();",
+   "public boolean isLeaf();",
+   "public boolean isLanguage(String lang);",
+   "protected String getLanguage();",
+   "public void setValue(Object value);",
+   "public NodePointer createChild( JXPathContext context, QName name, int index);",
+   "public NodePointer createChild(JXPathContext context, QName name, int index, Object value);",
+   "public NodePointer createAttribute(JXPathContext context, QName name);",
+   "public void remove();",
+   "public String asPath();",
+   "public int hashCode();",
+   "public boolean equals(Object object);",
+   "public static String getPrefix(Node node);",
+   "public static String getLocalName(Node node);",
+   "public static String getNamespaceURI(Node node);",
+   "public Object getValue();",
+   "public Pointer getPointerByID(JXPathContext context, String id);",
+   "public int compareChildNodePointers( NodePointer pointer1, NodePointer pointer2);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

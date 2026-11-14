@@ -1,0 +1,367 @@
+{
+ "bug_name": "JacksonCore_17",
+ "call_sites": [
+  {
+   "line": 997,
+   "lines": [
+    992,
+    993,
+    994,
+    995,
+    996,
+    997,
+    998,
+    999,
+    1000,
+    1001,
+    1002
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/JsonGenerator.java",
+   "snippet": "     * use UTF-8 encoding).\n     * \n     * @since 2.1\n     */\n    public void writeRaw(SerializableString raw) throws IOException {\n        writeRaw(raw.getValue());\n    }\n\n    /**\n     * Method that will force generator to copy\n     * input text verbatim without any modifications, but assuming"
+  },
+  {
+   "line": 294,
+   "lines": [
+    289,
+    290,
+    291,
+    292,
+    293,
+    294,
+    295,
+    296,
+    297,
+    298,
+    299
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/base/GeneratorBase.java",
+   "snippet": "        writeString(text.getValue());\n    }\n\n    @Override public void writeRawValue(String text) throws IOException {\n        _verifyValueWrite(\"write raw value\");\n        writeRaw(text);\n    }\n\n    @Override public void writeRawValue(String text, int offset, int len) throws IOException {\n        _verifyValueWrite(\"write raw value\");\n        writeRaw(text, offset, len);"
+  },
+  {
+   "line": 299,
+   "lines": [
+    294,
+    295,
+    296,
+    297,
+    298,
+    299,
+    300,
+    301,
+    302,
+    303,
+    304
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/base/GeneratorBase.java",
+   "snippet": "        writeRaw(text);\n    }\n\n    @Override public void writeRawValue(String text, int offset, int len) throws IOException {\n        _verifyValueWrite(\"write raw value\");\n        writeRaw(text, offset, len);\n    }\n\n    @Override public void writeRawValue(char[] text, int offset, int len) throws IOException {\n        _verifyValueWrite(\"write raw value\");\n        writeRaw(text, offset, len);"
+  },
+  {
+   "line": 304,
+   "lines": [
+    299,
+    300,
+    301,
+    302,
+    303,
+    304,
+    305,
+    306,
+    307,
+    308,
+    309
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/base/GeneratorBase.java",
+   "snippet": "        writeRaw(text, offset, len);\n    }\n\n    @Override public void writeRawValue(char[] text, int offset, int len) throws IOException {\n        _verifyValueWrite(\"write raw value\");\n        writeRaw(text, offset, len);\n    }\n\n    @Override public void writeRawValue(SerializableString text) throws IOException {\n        _verifyValueWrite(\"write raw value\");\n        writeRaw(text);"
+  },
+  {
+   "line": 309,
+   "lines": [
+    304,
+    305,
+    306,
+    307,
+    308,
+    309,
+    310,
+    311,
+    312,
+    313,
+    314
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/base/GeneratorBase.java",
+   "snippet": "        writeRaw(text, offset, len);\n    }\n\n    @Override public void writeRawValue(SerializableString text) throws IOException {\n        _verifyValueWrite(\"write raw value\");\n        writeRaw(text);\n    }\n\n    @Override\n    public int writeBinary(Base64Variant b64variant, InputStream data, int dataLength) throws IOException {\n        // Let's implement this as \"unsupported\" to make it easier to add new parser impls"
+  }
+ ],
+ "class_simple": "UTF8JsonGenerator",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private final static byte BYTE_u",
+  "private final static byte BYTE_0",
+  "private final static byte BYTE_LBRACKET",
+  "private final static byte BYTE_RBRACKET",
+  "private final static byte BYTE_LCURLY",
+  "private final static byte BYTE_RCURLY",
+  "private final static byte BYTE_BACKSLASH",
+  "private final static byte BYTE_COMMA",
+  "private final static byte BYTE_COLON",
+  "private final static byte BYTE_QUOTE",
+  "private final static int MAX_BYTES_TO_BUFFER",
+  "private final static byte[] HEX_CHARS",
+  "private final static byte[] NULL_BYTES",
+  "private final static byte[] TRUE_BYTES",
+  "private final static byte[] FALSE_BYTES",
+  "final protected OutputStream _outputStream",
+  "protected byte[] _outputBuffer",
+  "protected int _outputTail",
+  "protected final int _outputEnd",
+  "protected final int _outputMaxContiguous",
+  "protected char[] _charBuffer",
+  "protected final int _charBufferLength",
+  "protected byte[] _entityBuffer",
+  "protected boolean _bufferRecyclable"
+ ],
+ "focal_class": "com.fasterxml.jackson.core.json.UTF8JsonGenerator",
+ "focal_id": "JacksonCore_17::com.fasterxml.jackson.core.json.UTF8JsonGenerator::writeRaw(String,int,int)",
+ "focal_method_name": "writeRaw",
+ "generations": 3,
+ "impl_B": "@Override\n    public void writeRaw(String text, int offset, int len) throws IOException\n    {\n        final char[] buf = _charBuffer;\n\n        // minor optimization: see if we can just get and copy\n\n        // If not, need segmented approach. For speed, let's also use input buffer\n        // size that is guaranteed to fit in output buffer; each char can expand to\n        // at most 3 bytes, so at most 1/3 of buffer size.\n\n        while (len > 0) {\n            int len2 = Math.min(buf.length, len);\n            text.getChars(offset, offset+len2, buf, 0);\n            writeRaw(buf, 0, len2);\n            // If this is NOT the last segment and if the last character looks like\n            // split surrogate second half, drop it\n            offset += len2;\n            len -= len2;\n        }\n    }",
+ "imports": [
+  "java.io.*",
+  "java.math.BigDecimal",
+  "java.math.BigInteger",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.core.io.*"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.core.json",
+ "project": "JacksonCore",
+ "siblings": [
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getOutputTarget"
+  },
+  {
+   "javadoc": "",
+   "name": "getOutputBuffered"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "writeFieldName"
+  },
+  {
+   "javadoc": "",
+   "name": "writeFieldName"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "writeStartArray"
+  },
+  {
+   "javadoc": "",
+   "name": "writeEndArray"
+  },
+  {
+   "javadoc": "",
+   "name": "writeStartObject"
+  },
+  {
+   "javadoc": "",
+   "name": "writeEndObject"
+  },
+  {
+   "javadoc": "/**\n     * Specialized version of <code>_writeFieldName</code>, off-lined\n     * to keep the \"fast path\" as simple (and hopefully fast) as possible.\n     */",
+   "name": "_writePPFieldName"
+  },
+  {
+   "javadoc": "",
+   "name": "_writePPFieldName"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "writeString"
+  },
+  {
+   "javadoc": "",
+   "name": "writeString"
+  },
+  {
+   "javadoc": "",
+   "name": "writeString"
+  },
+  {
+   "javadoc": "",
+   "name": "writeRawUTF8String"
+  },
+  {
+   "javadoc": "",
+   "name": "writeUTF8String"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "writeRaw"
+  },
+  {
+   "javadoc": "",
+   "name": "writeRaw"
+  },
+  {
+   "javadoc": "",
+   "name": "writeRawValue"
+  },
+  {
+   "javadoc": "",
+   "name": "writeRaw"
+  },
+  {
+   "javadoc": "",
+   "name": "writeRaw"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "writeBinary"
+  },
+  {
+   "javadoc": "",
+   "name": "writeBinary"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "writeNumber"
+  },
+  {
+   "javadoc": "",
+   "name": "writeNumber"
+  },
+  {
+   "javadoc": "",
+   "name": "writeNumber"
+  },
+  {
+   "javadoc": "",
+   "name": "writeNumber"
+  },
+  {
+   "javadoc": "",
+   "name": "writeNumber"
+  },
+  {
+   "javadoc": "",
+   "name": "writeNumber"
+  },
+  {
+   "javadoc": "",
+   "name": "writeNumber"
+  },
+  {
+   "javadoc": "",
+   "name": "writeNumber"
+  },
+  {
+   "javadoc": "",
+   "name": "writeBoolean"
+  },
+  {
+   "javadoc": "",
+   "name": "writeNull"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_verifyValueWrite"
+  },
+  {
+   "javadoc": "",
+   "name": "_verifyPrettyValueWrite"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "flush"
+  },
+  {
+   "javadoc": "",
+   "name": "close"
+  },
+  {
+   "javadoc": "",
+   "name": "_releaseBuffers"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_writeBinary"
+  },
+  {
+   "javadoc": "",
+   "name": "_writeBinary"
+  },
+  {
+   "javadoc": "",
+   "name": "_writeBinary"
+  },
+  {
+   "javadoc": "",
+   "name": "_outputSurrogates"
+  },
+  {
+   "javadoc": "",
+   "name": "_flushBuffer"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class UTF8JsonGenerator extends JsonGeneratorImpl",
+  "constructors": [
+   "public UTF8JsonGenerator(IOContext ctxt, int features, ObjectCodec codec, OutputStream out);",
+   "public UTF8JsonGenerator(IOContext ctxt, int features, ObjectCodec codec, OutputStream out, byte[] outputBuffer, int outputOffset, boolean bufferRecyclable);"
+  ],
+  "focal_signature": "public void writeRaw(String text, int offset, int len) throws IOException",
+  "methods": [
+   "public Object getOutputTarget();",
+   "public int getOutputBuffered();",
+   "public void writeFieldName(String name) throws IOException;",
+   "public void writeFieldName(SerializableString name) throws IOException;",
+   "public final void writeStartArray() throws IOException;",
+   "public final void writeEndArray() throws IOException;",
+   "public final void writeStartObject() throws IOException;",
+   "public final void writeEndObject() throws IOException;",
+   "protected final void _writePPFieldName(String name) throws IOException;",
+   "protected final void _writePPFieldName(SerializableString name) throws IOException;",
+   "public void writeString(String text) throws IOException;",
+   "public void writeString(char[] text, int offset, int len) throws IOException;",
+   "public final void writeString(SerializableString text) throws IOException;",
+   "public void writeRawUTF8String(byte[] text, int offset, int length) throws IOException;",
+   "public void writeUTF8String(byte[] text, int offset, int len) throws IOException;",
+   "public void writeRaw(String text) throws IOException;",
+   "public void writeRaw(SerializableString text) throws IOException;",
+   "public void writeRawValue(SerializableString text) throws IOException;",
+   "public final void writeRaw(char[] cbuf, int offset, int len) throws IOException;",
+   "public void writeRaw(char ch) throws IOException;",
+   "public void writeBinary(Base64Variant b64variant, byte[] data, int offset, int len) throws IOException, JsonGenerationException;",
+   "public int writeBinary(Base64Variant b64variant, InputStream data, int dataLength) throws IOException, JsonGenerationException;",
+   "public void writeNumber(short s) throws IOException;",
+   "public void writeNumber(int i) throws IOException;",
+   "public void writeNumber(long l) throws IOException;",
+   "public void writeNumber(BigInteger value) throws IOException;",
+   "public void writeNumber(double d) throws IOException;",
+   "public void writeNumber(float f) throws IOException;",
+   "public void writeNumber(BigDecimal value) throws IOException;",
+   "public void writeNumber(String encodedValue) throws IOException;",
+   "public void writeBoolean(boolean state) throws IOException;",
+   "public void writeNull() throws IOException;",
+   "protected final void _verifyValueWrite(String typeMsg) throws IOException;",
+   "protected final void _verifyPrettyValueWrite(String typeMsg, int status) throws IOException;",
+   "public void flush() throws IOException;",
+   "public void close() throws IOException;",
+   "protected void _releaseBuffers();",
+   "protected final void _writeBinary(Base64Variant b64variant, byte[] input, int inputPtr, final int inputEnd) throws IOException, JsonGenerationException;",
+   "protected final int _writeBinary(Base64Variant b64variant, InputStream data, byte[] readBuffer, int bytesLeft) throws IOException, JsonGenerationException;",
+   "protected final int _writeBinary(Base64Variant b64variant, InputStream data, byte[] readBuffer) throws IOException, JsonGenerationException;",
+   "protected final void _outputSurrogates(int surr1, int surr2) throws IOException;",
+   "protected final void _flushBuffer() throws IOException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

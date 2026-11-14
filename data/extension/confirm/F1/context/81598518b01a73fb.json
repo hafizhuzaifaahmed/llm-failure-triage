@@ -1,0 +1,189 @@
+{
+ "bug_name": "Math_34",
+ "call_sites": [
+  {
+   "line": 209,
+   "lines": [
+    204,
+    205,
+    206,
+    207,
+    208,
+    209,
+    210,
+    211,
+    212
+   ],
+   "patch_lines_removed": true,
+   "path": "src/main/java/org/apache/commons/math3/genetics/ListPopulation.java",
+   "snippet": "     * <p>Any call to {@link Iterator#remove()} will result in a {@link UnsupportedOperationException}.</p>\n     *\n     * @return chromosome iterator\n     */\n    public Iterator<Chromosome> iterator() {\n}\n"
+  },
+  {
+   "line": 133,
+   "lines": [
+    128,
+    129,
+    130,
+    131,
+    132,
+    133,
+    134,
+    135,
+    136,
+    137,
+    138
+   ],
+   "path": "src/main/java/org/apache/commons/math3/geometry/euclidean/twod/NestedLoops.java",
+   "snippet": "                return;\n            }\n        }\n\n        // check if we can absorb some of the instance children\n        for (final Iterator<NestedLoops> iterator = surrounded.iterator(); iterator.hasNext();) {\n            final NestedLoops child = iterator.next();\n            if (node.polygon.contains(child.polygon)) {\n                node.surrounded.add(child);\n                iterator.remove();\n            }"
+  },
+  {
+   "line": 175,
+   "lines": [
+    170,
+    171,
+    172,
+    173,
+    174,
+    175,
+    176,
+    177,
+    178,
+    179,
+    180
+   ],
+   "path": "src/main/java/org/apache/commons/math3/geometry/partitioning/AbstractRegion.java",
+   "snippet": "     * @param boundary collection of edges belonging to the cell defined\n     * by the node\n     */\n    private void insertCuts(final BSPTree<S> node, final Collection<SubHyperplane<S>> boundary) {\n\n        final Iterator<SubHyperplane<S>> iterator = boundary.iterator();\n\n        // build the current level\n        Hyperplane<S> inserted = null;\n        while ((inserted == null) && iterator.hasNext()) {\n            inserted = iterator.next().getHyperplane();"
+  },
+  {
+   "line": 103,
+   "lines": [
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108
+   ],
+   "path": "src/main/java/org/apache/commons/math3/linear/OpenMapRealMatrix.java",
+   "snippet": "\n        // safety check\n        MatrixUtils.checkAdditionCompatible(this, m);\n\n        final OpenMapRealMatrix out = new OpenMapRealMatrix(this);\n        for (OpenIntToDoubleHashMap.Iterator iterator = m.entries.iterator(); iterator.hasNext();) {\n            iterator.advance();\n            final int row = iterator.key() / columns;\n            final int col = iterator.key() - row * columns;\n            out.setEntry(row, col, getEntry(row, col) + iterator.value());\n        }"
+  },
+  {
+   "line": 137,
+   "lines": [
+    132,
+    133,
+    134,
+    135,
+    136,
+    137,
+    138,
+    139,
+    140,
+    141,
+    142
+   ],
+   "path": "src/main/java/org/apache/commons/math3/linear/OpenMapRealMatrix.java",
+   "snippet": "    public OpenMapRealMatrix subtract(OpenMapRealMatrix m) {\n        // Safety check.\n        MatrixUtils.checkAdditionCompatible(this, m);\n\n        final OpenMapRealMatrix out = new OpenMapRealMatrix(this);\n        for (OpenIntToDoubleHashMap.Iterator iterator = m.entries.iterator(); iterator.hasNext();) {\n            iterator.advance();\n            final int row = iterator.key() / columns;\n            final int col = iterator.key() - row * columns;\n            out.setEntry(row, col, getEntry(row, col) - iterator.value());\n        }"
+  }
+ ],
+ "class_simple": "ListPopulation",
+ "dataset": "D1C_F1",
+ "doc": {
+  "class_javadoc": "/**\n * Population of chromosomes represented by a {@link List}.\n *\n * @since 2.0\n * @version $Id$\n */\npublic abstract",
+  "method_javadoc": "/**\n     * Returns an iterator over the unmodifiable list of chromosomes.\n     * <p>Any call to {@link Iterator#remove()} will result in a {@link UnsupportedOperationException}.</p>\n     *\n     * @return chromosome iterator\n     */"
+ },
+ "fields": [
+  "private List<Chromosome> chromosomes",
+  "private int populationLimit"
+ ],
+ "focal_class": "org.apache.commons.math3.genetics.ListPopulation",
+ "focal_id": "Math_34::org.apache.commons.math3.genetics.ListPopulation::iterator()",
+ "focal_method_name": "iterator",
+ "generations": 6,
+ "impl_B": "public Iterator<Chromosome> iterator() {\n        return chromosomes.iterator();\n    }",
+ "imports": [
+  "java.util.ArrayList",
+  "java.util.Collection",
+  "java.util.Collections",
+  "java.util.Iterator",
+  "java.util.List",
+  "org.apache.commons.math3.exception.util.LocalizedFormats",
+  "org.apache.commons.math3.exception.NotPositiveException",
+  "org.apache.commons.math3.exception.NullArgumentException",
+  "org.apache.commons.math3.exception.NumberIsTooLargeException",
+  "org.apache.commons.math3.exception.NumberIsTooSmallException"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math3.genetics",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Sets the list of chromosomes.\n     * <p>Note: this method removed all existing chromosomes in the population and adds all chromosomes\n     * of the specified list to the population.</p>\n     * @param chromosomes the list of chromosomes\n     * @throws NullArgumentException if the list of chromosomes is {@code null}\n     * @throws NumberIsTooLargeException if the list of chromosomes exceeds the population limit\n     * @deprecated use {@link #addChromosomes(Collection)} instead\n     */",
+   "name": "setChromosomes"
+  },
+  {
+   "javadoc": "/**\n     * Add a {@link Collection} of chromosomes to this {@link Population}.\n     * @param chromosomeColl a {@link Collection} of chromosomes\n     * @throws NumberIsTooLargeException if the population would exceed the population limit when\n     * adding this chromosome\n     */",
+   "name": "addChromosomes"
+  },
+  {
+   "javadoc": "/**\n     * Returns an unmodifiable list of the chromosomes in this population.\n     * @return the unmodifiable list of chromosomes\n     */",
+   "name": "getChromosomes"
+  },
+  {
+   "javadoc": "/**\n     * Access the list of chromosomes.\n     * @return the list of chromosomes\n     */",
+   "name": "getChromosomeList"
+  },
+  {
+   "javadoc": "/**\n     * Add the given chromosome to the population.\n     * @param chromosome the chromosome to add.\n     * @throws NumberIsTooLargeException if the population would exceed the {@code populationLimit} after\n     * adding this chromosome\n     */",
+   "name": "addChromosome"
+  },
+  {
+   "javadoc": "/**\n     * Access the fittest chromosome in this population.\n     * @return the fittest chromosome.\n     */",
+   "name": "getFittestChromosome"
+  },
+  {
+   "javadoc": "/**\n     * Access the maximum population size.\n     * @return the maximum population size.\n     */",
+   "name": "getPopulationLimit"
+  },
+  {
+   "javadoc": "/**\n     * Sets the maximal population size.\n     * @param populationLimit maximal population size.\n     * @throws NotPositiveException if the population limit is not a positive number (&lt; 1)\n     * @throws NumberIsTooSmallException if the new population size is smaller than the current number\n     * of chromosomes in the population\n     */",
+   "name": "setPopulationLimit"
+  },
+  {
+   "javadoc": "/**\n     * Access the current population size.\n     * @return the current population size.\n     */",
+   "name": "getPopulationSize"
+  },
+  {
+   "javadoc": "/**\n     * {@inheritDoc}\n     */",
+   "name": "toString"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public abstract class ListPopulation implements Population",
+  "constructors": [
+   "public ListPopulation(final int populationLimit);",
+   "public ListPopulation(final List<Chromosome> chromosomes, final int populationLimit);"
+  ],
+  "focal_signature": "public Iterator<Chromosome> iterator()",
+  "methods": [
+   "public void setChromosomes(final List<Chromosome> chromosomes);",
+   "public void addChromosomes(final Collection<Chromosome> chromosomeColl);",
+   "public List<Chromosome> getChromosomes();",
+   "protected List<Chromosome> getChromosomeList();",
+   "public void addChromosome(final Chromosome chromosome);",
+   "public Chromosome getFittestChromosome();",
+   "public int getPopulationLimit();",
+   "public void setPopulationLimit(final int populationLimit);",
+   "public int getPopulationSize();",
+   "public String toString();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F1"
+}

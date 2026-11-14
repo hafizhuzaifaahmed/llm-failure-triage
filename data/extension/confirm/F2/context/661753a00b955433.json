@@ -1,0 +1,199 @@
+{
+ "bug_name": "JacksonDatabind_15",
+ "call_sites": [
+  {
+   "line": 194,
+   "lines": [
+    189,
+    190,
+    191,
+    192,
+    193,
+    194,
+    195,
+    196,
+    197,
+    198,
+    199
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/JsonSerializer.java",
+   "snippet": "     * \n     * @since 2.5\n     */\n    public boolean isEmpty(SerializerProvider provider, T value) {\n        // replace with implementation in 2.6 or later\n        return isEmpty(value);\n    }\n    \n    /**\n     * Method that can be called to see whether this serializer instance\n     * will use Object Id to handle cyclic references."
+  },
+  {
+   "line": 64,
+   "lines": [
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/PropertyMetadata.java",
+   "snippet": "    protected PropertyMetadata(Boolean req, String desc, Integer index, String def)\n    {\n        _required = req;\n        _description = desc;\n        _index = index;\n        _defaultValue = (def == null || def.isEmpty()) ? null : def;\n    }\n\n    /**\n     * @since 2.4 Use variant that takes more arguments.\n     */"
+  },
+  {
+   "line": 103,
+   "lines": [
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/PropertyMetadata.java",
+   "snippet": "    public PropertyMetadata withDescription(String desc) {\n        return new PropertyMetadata(_required, desc, _index, _defaultValue);\n    }\n\n    public PropertyMetadata withDefaultValue(String def) {\n        if ((def == null) || def.isEmpty()) {\n            if (_defaultValue == null) {\n                return this;\n            }\n            def = null;\n        } else if (_defaultValue.equals(def)) {"
+  },
+  {
+   "line": 194,
+   "lines": [
+    189,
+    190,
+    191,
+    192,
+    193,
+    194,
+    195,
+    196,
+    197,
+    198,
+    199
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/PropertyName.java",
+   "snippet": "     *</pre>\n     * \n     * @since 2.4\n     */\n    public boolean isEmpty() {\n        return (_namespace == null) && (_simpleName.isEmpty());\n    }\n\n    /*\n    /**********************************************************\n    /* Std method overrides"
+  },
+  {
+   "line": 131,
+   "lines": [
+    126,
+    127,
+    128,
+    129,
+    130,
+    131,
+    132,
+    133,
+    134,
+    135,
+    136
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/cfg/ContextAttributes.java",
+   "snippet": "\n        @Override\n        public ContextAttributes withoutSharedAttribute(Object key)\n        {\n            // first couple of trivial optimizations\n            if (_shared.isEmpty()) {\n                return this;\n            }\n            if (_shared.containsKey(key)) {\n                if (_shared.size() == 1) {\n                    return EMPTY;"
+  }
+ ],
+ "class_simple": "StdDelegatingSerializer",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Serializer implementation where given Java type is first converted\n * to an intermediate \"delegate type\" (using a configured\n * {@link Converter}, and then this delegate value is serialized by Jackson.\n *<p>\n * Note that although types may be related, they must not be same; trying\n * to do this will result in an exception.\n *\n * @since 2.1\n */\n@SuppressWarnings(\"serial\")\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "protected final Converter<Object,?> _converter",
+  "protected final JavaType _delegateType",
+  "protected final JsonSerializer<Object> _delegateSerializer"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.ser.std.StdDelegatingSerializer",
+ "focal_id": "JacksonDatabind_15::com.fasterxml.jackson.databind.ser.std.StdDelegatingSerializer::isEmpty(SerializerProvider,Object)",
+ "focal_method_name": "isEmpty",
+ "generations": 3,
+ "impl_B": "@Override\n    public boolean isEmpty(SerializerProvider prov, Object value)\n    {\n        Object delegateValue = convertValue(value);\n        return _delegateSerializer.isEmpty(prov, delegateValue);\n    }",
+ "imports": [
+  "com.fasterxml.jackson.core.JsonGenerator",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitable",
+  "com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper",
+  "com.fasterxml.jackson.databind.jsonschema.SchemaAware",
+  "com.fasterxml.jackson.databind.jsontype.TypeSerializer",
+  "com.fasterxml.jackson.databind.ser.ContextualSerializer",
+  "com.fasterxml.jackson.databind.ser.ResolvableSerializer",
+  "com.fasterxml.jackson.databind.util.Converter",
+  "java.io.IOException",
+  "java.lang.reflect.Type"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.ser.std",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Method used for creating resolved contextual instances. Must be\n     * overridden when sub-classing.\n     */",
+   "name": "withDelegate"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "resolve"
+  },
+  {
+   "javadoc": "",
+   "name": "createContextual"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getConverter"
+  },
+  {
+   "javadoc": "",
+   "name": "getDelegatee"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "serialize"
+  },
+  {
+   "javadoc": "",
+   "name": "serializeWithType"
+  },
+  {
+   "javadoc": "",
+   "name": "isEmpty"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getSchema"
+  },
+  {
+   "javadoc": "",
+   "name": "getSchema"
+  },
+  {
+   "javadoc": "",
+   "name": "acceptJsonFormatVisitor"
+  },
+  {
+   "javadoc": "/**\n     * Method called to convert from source Java value into delegate\n     * value (which will be serialized using standard Jackson serializer for delegate type)\n     *<P>\n     * The default implementation uses configured {@link Converter} to do\n     * conversion.\n     * \n     * @param value Value to convert\n     * \n     * @return Result of conversion\n     */",
+   "name": "convertValue"
+  }
+ ],
+ "sig": {
+  "class_declaration": "@SuppressWarnings(\"serial\") public class StdDelegatingSerializer extends StdSerializer<Object> implements ContextualSerializer, ResolvableSerializer, JsonFormatVisitable, SchemaAware",
+  "constructors": [],
+  "focal_signature": "public boolean isEmpty(SerializerProvider prov, Object value)",
+  "methods": [
+   "protected StdDelegatingSerializer withDelegate(Converter<Object,?> converter, JavaType delegateType, JsonSerializer<?> delegateSerializer);",
+   "public void resolve(SerializerProvider provider) throws JsonMappingException;",
+   "public JsonSerializer<?> createContextual(SerializerProvider provider, BeanProperty property) throws JsonMappingException;",
+   "protected Converter<Object, ?> getConverter();",
+   "public JsonSerializer<?> getDelegatee();",
+   "public void serialize(Object value, JsonGenerator gen, SerializerProvider provider) throws IOException;",
+   "public void serializeWithType(Object value, JsonGenerator gen, SerializerProvider provider, TypeSerializer typeSer) throws IOException;",
+   "// since 2.5 public boolean isEmpty(Object value);",
+   "public JsonNode getSchema(SerializerProvider provider, Type typeHint) throws JsonMappingException;",
+   "public JsonNode getSchema(SerializerProvider provider, Type typeHint, boolean isOptional) throws JsonMappingException;",
+   "public void acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint) throws JsonMappingException;",
+   "protected Object convertValue(Object value);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

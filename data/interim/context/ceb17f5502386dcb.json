@@ -1,0 +1,260 @@
+{
+  "bug_name": "Gson_7",
+  "call_sites": [
+    {
+      "line": 107,
+      "lines": [
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112
+      ],
+      "path": "gson/src/main/java/com/google/gson/internal/bind/TypeAdapters.java",
+      "snippet": "      JsonToken tokenType = in.peek();\n      while (tokenType != JsonToken.END_ARRAY) {\n        boolean set;\n        switch (tokenType) {\n        case NUMBER:\n          set = in.nextInt() != 0;\n          break;\n        case BOOLEAN:\n          set = in.nextBoolean();\n          break;\n        case STRING:"
+    },
+    {
+      "line": 202,
+      "lines": [
+        197,
+        198,
+        199,
+        200,
+        201,
+        202,
+        203,
+        204,
+        205,
+        206,
+        207
+      ],
+      "path": "gson/src/main/java/com/google/gson/internal/bind/TypeAdapters.java",
+      "snippet": "      if (in.peek() == JsonToken.NULL) {\n        in.nextNull();\n        return null;\n      }\n      try {\n        int intValue = in.nextInt();\n        return (byte) intValue;\n      } catch (NumberFormatException e) {\n        throw new JsonSyntaxException(e);\n      }\n    }"
+    },
+    {
+      "line": 225,
+      "lines": [
+        220,
+        221,
+        222,
+        223,
+        224,
+        225,
+        226,
+        227,
+        228,
+        229,
+        230
+      ],
+      "path": "gson/src/main/java/com/google/gson/internal/bind/TypeAdapters.java",
+      "snippet": "      if (in.peek() == JsonToken.NULL) {\n        in.nextNull();\n        return null;\n      }\n      try {\n        return (short) in.nextInt();\n      } catch (NumberFormatException e) {\n        throw new JsonSyntaxException(e);\n      }\n    }\n    @Override"
+    },
+    {
+      "line": 247,
+      "lines": [
+        242,
+        243,
+        244,
+        245,
+        246,
+        247,
+        248,
+        249,
+        250,
+        251,
+        252
+      ],
+      "path": "gson/src/main/java/com/google/gson/internal/bind/TypeAdapters.java",
+      "snippet": "      if (in.peek() == JsonToken.NULL) {\n        in.nextNull();\n        return null;\n      }\n      try {\n        return in.nextInt();\n      } catch (NumberFormatException e) {\n        throw new JsonSyntaxException(e);\n      }\n    }\n    @Override"
+    },
+    {
+      "line": 263,
+      "lines": [
+        258,
+        259,
+        260,
+        261,
+        262,
+        263,
+        264,
+        265,
+        266,
+        267,
+        268
+      ],
+      "path": "gson/src/main/java/com/google/gson/internal/bind/TypeAdapters.java",
+      "snippet": "      = newFactory(int.class, Integer.class, INTEGER);\n\n  public static final TypeAdapter<AtomicInteger> ATOMIC_INTEGER = new TypeAdapter<AtomicInteger>() {\n    @Override public AtomicInteger read(JsonReader in) throws IOException {\n      try {\n        return new AtomicInteger(in.nextInt());\n      } catch (NumberFormatException e) {\n        throw new JsonSyntaxException(e);\n      }\n    }\n    @Override public void write(JsonWriter out, AtomicInteger value) throws IOException {"
+    }
+  ],
+  "class_simple": "JsonReader",
+  "doc": {
+    "class_javadoc": "/**\n * Reads a JSON (<a href=\"http://www.ietf.org/rfc/rfc7159.txt\">RFC 7159</a>)\n * encoded value as a stream of tokens. This stream includes both literal\n * values (strings, numbers, booleans, and nulls) as well as the begin and\n * end delimiters of objects and arrays. The tokens are traversed in\n * depth-first order, the same order that they appear in the JSON document.\n * Within JSON objects, name/value pairs are represented by a single token.\n *\n * <h3>Parsing JSON</h3>\n * To create a recursive descent parser for your own JSON streams, first create\n * an entry point method that creates a {@code JsonReader}.\n *\n * <p>Next, create handler methods for each structure in your JSON text. You'll\n * need a method for each object type and for each array type.\n * <ul>\n *   <li>Within <strong>array handling</strong> methods, first call {@link\n *       #beginArray} to consume the array's opening bracket. Then create a\n *       while loop that accumulates values, terminating when {@link #hasNext}\n *       is false. Finally, read the array's closing bracket by calling {@link\n *       #endArray}.\n *   <li>Within <strong>object handling</strong> methods, first call {@link\n *       #beginObject} to consume the object's opening brace. Then create a\n *       while loop that assigns values to local variables based on their name.\n *       This loop should terminate when {@link #hasNext} is false. Finally,\n *       read the object's closing brace by calling {@link #endObject}.\n * </ul>\n * <p>When a nested object or array is encountered, delegate to the\n * corresponding handler method.\n *\n * <p>When an unknown name is encountered, strict parsers should fail with an\n * exception. Lenient parsers should call {@link #skipValue()} to recursively\n * skip the value's nested tokens, which may otherwise conflict.\n *\n * <p>If a value may be null, you should first check using {@link #peek()}.\n * Null literals can be consumed using either {@link #nextNull()} or {@link\n * #skipValue()}.\n *\n * <h3>Example</h3>\n * Suppose we'd like to parse a stream of messages such as the following: <pre> {@code\n * [\n *   {\n *     \"id\": 912345678901,\n *     \"text\": \"How do I read a JSON stream in Java?\",\n *     \"geo\": null,\n *     \"user\": {\n *       \"name\": \"json_newb\",\n *       \"followers_count\": 41\n *      }\n *   },\n *   {\n *     \"id\": 912345678902,\n *     \"text\": \"@json_newb just use JsonReader!\",\n *     \"geo\": [50.454722, -104.606667],\n *     \"user\": {\n *       \"name\": \"jesse\",\n *       \"followers_count\": 2\n *     }\n *   }\n * ]}</pre>\n * This code implements the parser for the above structure: <pre>   {@code\n *\n *   public List<Message> readJsonStream(InputStream in) throws IOException {\n *     JsonReader reader = new JsonReader(new InputStreamReader(in, \"UTF-8\"));\n *     try {\n *       return readMessagesArray(reader);\n *     } finally {\n *       reader.close();\n *     }\n *   }\n *\n *   public List<Message> readMessagesArray(JsonReader reader) throws IOException {\n *     List<Message> messages = new ArrayList<Message>();\n *\n *     reader.beginArray();\n *     while (reader.hasNext()) {\n *       messages.add(readMessage(reader));\n *     }\n *     reader.endArray();\n *     return messages;\n *   }\n *\n *   public Message readMessage(JsonReader reader) throws IOException {\n *     long id = -1;\n *     String text = null;\n *     User user = null;\n *     List<Double> geo = null;\n *\n *     reader.beginObject();\n *     while (reader.hasNext()) {\n *       String name = reader.nextName();\n *       if (name.equals(\"id\")) {\n *         id = reader.nextLong();\n *       } else if (name.equals(\"text\")) {\n *         text = reader.nextString();\n *       } else if (name.equals(\"geo\") && reader.peek() != JsonToken.NULL) {\n *         geo = readDoublesArray(reader);\n *       } else if (name.equals(\"user\")) {\n *         user = readUser(reader);\n *       } else {\n *         reader.skipValue();\n *       }\n *     }\n *     reader.endObject();\n *     return new Message(id, text, user, geo);\n *   }\n *\n *   public List<Double> readDoublesArray(JsonReader reader) throws IOException {\n *     List<Double> doubles = new ArrayList<Double>();\n *\n *     reader.beginArray();\n *     while (reader.hasNext()) {\n *       doubles.add(reader.nextDouble());\n *     }\n *     reader.endArray();\n *     return doubles;\n *   }\n *\n *   public User readUser(JsonReader reader) throws IOException {\n *     String username = null;\n *     int followersCount = -1;\n *\n *     reader.beginObject();\n *     while (reader.hasNext()) {\n *       String name = reader.nextName();\n *       if (name.equals(\"name\")) {\n *         username = reader.nextString();\n *       } else if (name.equals(\"followers_count\")) {\n *         followersCount = reader.nextInt();\n *       } else {\n *         reader.skipValue();\n *       }\n *     }\n *     reader.endObject();\n *     return new User(username, followersCount);\n *   }}</pre>\n *\n * <h3>Number Handling</h3>\n * This reader permits numeric values to be read as strings and string values to\n * be read as numbers. For example, both elements of the JSON array {@code\n * [1, \"1\"]} may be read using either {@link #nextInt} or {@link #nextString}.\n * This behavior is intended to prevent lossy numeric conversions: double is\n * JavaScript's only numeric type and very large values like {@code\n * 9007199254740993} cannot be represented exactly on that platform. To minimize\n * precision loss, extremely large values should be written and read as strings\n * in JSON.\n *\n * <a name=\"nonexecuteprefix\"/><h3>Non-Execute Prefix</h3>\n * Web servers that serve private data using JSON may be vulnerable to <a\n * href=\"http://en.wikipedia.org/wiki/JSON#Cross-site_request_forgery\">Cross-site\n * request forgery</a> attacks. In such an attack, a malicious site gains access\n * to a private JSON file by executing it with an HTML {@code <script>} tag.\n *\n * <p>Prefixing JSON files with <code>\")]}'\\n\"</code> makes them non-executable\n * by {@code <script>} tags, disarming the attack. Since the prefix is malformed\n * JSON, strict parsing fails when it is encountered. This class permits the\n * non-execute prefix when {@link #setLenient(boolean) lenient parsing} is\n * enabled.\n *\n * <p>Each {@code JsonReader} may be used to read a single JSON stream. Instances\n * of this class are not thread safe.\n *\n * @author Jesse Wilson\n * @since 1.6\n */\npublic",
+    "method_javadoc": "/**\n   * Returns the {@link com.google.gson.stream.JsonToken#NUMBER int} value of the next token,\n   * consuming it. If the next token is a string, this method will attempt to\n   * parse it as an int. If the next token's numeric value cannot be exactly\n   * represented by a Java {@code int}, this method throws.\n   *\n   * @throws IllegalStateException if the next token is not a literal value.\n   * @throws NumberFormatException if the next literal value cannot be parsed\n   *     as a number, or exactly represented as an int.\n   */"
+  },
+  "fields": [
+    "private static final char[] NON_EXECUTE_PREFIX",
+    "private static final long MIN_INCOMPLETE_INTEGER",
+    "private static final int PEEKED_NONE",
+    "private static final int PEEKED_BEGIN_OBJECT",
+    "private static final int PEEKED_END_OBJECT",
+    "private static final int PEEKED_BEGIN_ARRAY",
+    "private static final int PEEKED_END_ARRAY",
+    "private static final int PEEKED_TRUE",
+    "private static final int PEEKED_FALSE",
+    "private static final int PEEKED_NULL",
+    "private static final int PEEKED_SINGLE_QUOTED",
+    "private static final int PEEKED_DOUBLE_QUOTED",
+    "private static final int PEEKED_UNQUOTED",
+    "private static final int PEEKED_BUFFERED",
+    "private static final int PEEKED_SINGLE_QUOTED_NAME",
+    "private static final int PEEKED_DOUBLE_QUOTED_NAME",
+    "private static final int PEEKED_UNQUOTED_NAME",
+    "private static final int PEEKED_LONG",
+    "private static final int PEEKED_NUMBER",
+    "private static final int PEEKED_EOF",
+    "private static final int NUMBER_CHAR_NONE",
+    "private static final int NUMBER_CHAR_SIGN",
+    "private static final int NUMBER_CHAR_DIGIT",
+    "private static final int NUMBER_CHAR_DECIMAL",
+    "private static final int NUMBER_CHAR_FRACTION_DIGIT",
+    "private static final int NUMBER_CHAR_EXP_E",
+    "private static final int NUMBER_CHAR_EXP_SIGN",
+    "private static final int NUMBER_CHAR_EXP_DIGIT",
+    "private final Reader in",
+    "private boolean lenient",
+    "private final char[] buffer",
+    "private int pos",
+    "private int limit",
+    "private int lineNumber",
+    "private int lineStart",
+    "int peeked",
+    "private long peekedLong",
+    "private int peekedNumberLength",
+    "private String peekedString",
+    "private int[] stack"
+  ],
+  "focal_class": "com.google.gson.stream.JsonReader",
+  "focal_id": "Gson_7::com.google.gson.stream.JsonReader::nextInt()",
+  "focal_method_name": "nextInt",
+  "impl_B": "public int nextInt() throws IOException {\n    int p = peeked;\n    if (p == PEEKED_NONE) {\n      p = doPeek();\n    }\n\n    int result;\n    if (p == PEEKED_LONG) {\n      result = (int) peekedLong;\n      if (peekedLong != result) { // Make sure no precision was lost casting to 'int'.\n        throw new NumberFormatException(\"Expected an int but was \" + peekedLong\n            + \" at line \" + getLineNumber() + \" column \" + getColumnNumber() + \" path \" + getPath());\n      }\n      peeked = PEEKED_NONE;\n      pathIndices[stackSize - 1]++;\n      return result;\n    }\n\n    if (p == PEEKED_NUMBER) {\n      peekedString = new String(buffer, pos, peekedNumberLength);\n      pos += peekedNumberLength;\n    } else if (p == PEEKED_SINGLE_QUOTED || p == PEEKED_DOUBLE_QUOTED) {\n        peekedString = nextQuotedValue(p == PEEKED_SINGLE_QUOTED ? '\\'' : '\"');\n      try {\n        result = Integer.parseInt(peekedString);\n        peeked = PEEKED_NONE;\n        pathIndices[stackSize - 1]++;\n        return result;\n      } catch (NumberFormatException ignored) {\n        // Fall back to parse as a double below.\n      }\n    } else {\n      throw new IllegalStateException(\"Expected an int but was \" + peek()\n          + \" at line \" + getLineNumber() + \" column \" + getColumnNumber() + \" path \" + getPath());\n    }\n\n    peeked = PEEKED_BUFFERED;\n    double asDouble = Double.parseDouble(peekedString); // don't catch this NumberFormatException.\n    result = (int) asDouble;\n    if (result != asDouble) { // Make sure no precision was lost casting to 'int'.\n      throw new NumberFormatException(\"Expected an int but was \" + peekedString\n          + \" at line \" + getLineNumber() + \" column \" + getColumnNumber() + \" path \" + getPath());\n    }\n    peekedString = null;\n    peeked = PEEKED_NONE;\n    pathIndices[stackSize - 1]++;\n    return result;\n  }",
+  "imports": [
+    "com.google.gson.internal.JsonReaderInternalAccess",
+    "com.google.gson.internal.bind.JsonTreeReader",
+    "java.io.Closeable",
+    "java.io.EOFException",
+    "java.io.IOException",
+    "java.io.Reader"
+  ],
+  "javadoc_edited_by_fix": false,
+  "package": "com.google.gson.stream",
+  "project": "Gson",
+  "siblings": [
+    {
+      "javadoc": "/**\n   * Configure this parser to be liberal in what it accepts. By default,\n   * this parser is strict and only accepts JSON as specified by <a\n   * href=\"http://www.ietf.org/rfc/rfc4627.txt\">RFC 4627</a>. Setting the\n   * parser to lenient causes it to ignore the following syntax errors:\n   *\n   * <ul>\n   *   <li>Streams that start with the <a href=\"#nonexecuteprefix\">non-execute\n   *       prefix</a>, <code>\")]}'\\n\"</code>.\n   *   <li>Streams that include multiple top-level values. With strict parsing,\n   *       each stream must contain exactly one top-level value.\n   *   <li>Top-level values of any type. With strict parsing, the top-level\n   *       value must be an object or an array.\n   *   <li>Numbers may be {@link Double#isNaN() NaNs} or {@link\n   *       Double#isInfinite() infinities}.\n   *   <li>End of line comments starting with {@code //} or {@code #} and\n   *       ending with a newline character.\n   *   <li>C-style comments starting with {@code /*} and ending with\n   *       {@code *}{@code /}. Such comments may not be nested.\n   *   <li>Names that are unquoted or {@code 'single quoted'}.\n   *   <li>Strings that are unquoted or {@code 'single quoted'}.\n   *   <li>Array elements separated by {@code ;} instead of {@code ,}.\n   *   <li>Unnecessary array separators. These are interpreted as if null\n   *       was the omitted value.\n   *   <li>Names and values separated by {@code =} or {@code =>} instead of\n   *       {@code :}.\n   *   <li>Name/value pairs separated by {@code ;} instead of {@code ,}.\n   * </ul>\n   */",
+      "name": "setLenient"
+    },
+    {
+      "javadoc": "/**\n   * Returns true if this parser is liberal in what it accepts.\n   */",
+      "name": "isLenient"
+    },
+    {
+      "javadoc": "/**\n   * Consumes the next token from the JSON stream and asserts that it is the\n   * beginning of a new array.\n   */",
+      "name": "beginArray"
+    },
+    {
+      "javadoc": "/**\n   * Consumes the next token from the JSON stream and asserts that it is the\n   * end of the current array.\n   */",
+      "name": "endArray"
+    },
+    {
+      "javadoc": "/**\n   * Consumes the next token from the JSON stream and asserts that it is the\n   * beginning of a new object.\n   */",
+      "name": "beginObject"
+    },
+    {
+      "javadoc": "/**\n   * Consumes the next token from the JSON stream and asserts that it is the\n   * end of the current object.\n   */",
+      "name": "endObject"
+    },
+    {
+      "javadoc": "/**\n   * Returns true if the current array or object has another element.\n   */",
+      "name": "hasNext"
+    },
+    {
+      "javadoc": "/**\n   * Returns the type of the next token without consuming it.\n   */",
+      "name": "peek"
+    },
+    {
+      "javadoc": "/**\n   * Returns the next token, a {@link com.google.gson.stream.JsonToken#NAME property name}, and\n   * consumes it.\n   *\n   * @throws java.io.IOException if the next token in the stream is not a property\n   *     name.\n   */",
+      "name": "nextName"
+    },
+    {
+      "javadoc": "/**\n   * Returns the {@link com.google.gson.stream.JsonToken#STRING string} value of the next token,\n   * consuming it. If the next token is a number, this method will return its\n   * string form.\n   *\n   * @throws IllegalStateException if the next token is not a string or if\n   *     this reader is closed.\n   */",
+      "name": "nextString"
+    },
+    {
+      "javadoc": "/**\n   * Returns the {@link com.google.gson.stream.JsonToken#BOOLEAN boolean} value of the next token,\n   * consuming it.\n   *\n   * @throws IllegalStateException if the next token is not a boolean or if\n   *     this reader is closed.\n   */",
+      "name": "nextBoolean"
+    },
+    {
+      "javadoc": "/**\n   * Consumes the next token from the JSON stream and asserts that it is a\n   * literal null.\n   *\n   * @throws IllegalStateException if the next token is not null or if this\n   *     reader is closed.\n   */",
+      "name": "nextNull"
+    },
+    {
+      "javadoc": "/**\n   * Returns the {@link com.google.gson.stream.JsonToken#NUMBER double} value of the next token,\n   * consuming it. If the next token is a string, this method will attempt to\n   * parse it as a double using {@link Double#parseDouble(String)}.\n   *\n   * @throws IllegalStateException if the next token is not a literal value.\n   * @throws NumberFormatException if the next literal value cannot be parsed\n   *     as a double, or is non-finite.\n   */",
+      "name": "nextDouble"
+    },
+    {
+      "javadoc": "/**\n   * Returns the {@link com.google.gson.stream.JsonToken#NUMBER long} value of the next token,\n   * consuming it. If the next token is a string, this method will attempt to\n   * parse it as a long. If the next token's numeric value cannot be exactly\n   * represented by a Java {@code long}, this method throws.\n   *\n   * @throws IllegalStateException if the next token is not a literal value.\n   * @throws NumberFormatException if the next literal value cannot be parsed\n   *     as a number, or exactly represented as a long.\n   */",
+      "name": "nextLong"
+    },
+    {
+      "javadoc": "/**\n   * Closes this JSON reader and the underlying {@link java.io.Reader}.\n   */",
+      "name": "close"
+    },
+    {
+      "javadoc": "/**\n   * Skips the next value recursively. If it is an object or array, all nested\n   * elements are skipped. This method is intended for use when the JSON token\n   * stream contains unrecognized or unhandled values.\n   */",
+      "name": "skipValue"
+    },
+    {
+      "javadoc": "",
+      "name": "toString"
+    },
+    {
+      "javadoc": "/**\n   * Returns a <a href=\"http://goessner.net/articles/JsonPath/\">JsonPath</a> to\n   * the current location in the JSON value.\n   */",
+      "name": "getPath"
+    }
+  ],
+  "sig": {
+    "class_declaration": "public class JsonReader implements Closeable",
+    "constructors": [
+      "public JsonReader(Reader in);"
+    ],
+    "focal_signature": "public int nextInt() throws IOException",
+    "methods": [
+      "public final void setLenient(boolean lenient);",
+      "public final boolean isLenient();",
+      "public void beginArray() throws IOException;",
+      "public void endArray() throws IOException;",
+      "public void beginObject() throws IOException;",
+      "public void endObject() throws IOException;",
+      "public boolean hasNext() throws IOException;",
+      "public JsonToken peek() throws IOException;",
+      "public String nextName() throws IOException;",
+      "public String nextString() throws IOException;",
+      "public boolean nextBoolean() throws IOException;",
+      "public void nextNull() throws IOException;",
+      "public double nextDouble() throws IOException;",
+      "public long nextLong() throws IOException;",
+      "public void close() throws IOException;",
+      "public void skipValue() throws IOException;",
+      "public String toString();",
+      "public String getPath();"
+    ],
+    "type_signatures": []
+  },
+  "split": "dev"
+}

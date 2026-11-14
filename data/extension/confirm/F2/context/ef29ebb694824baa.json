@@ -1,0 +1,147 @@
+{
+ "bug_name": "JacksonDatabind_9",
+ "call_sites": [
+  {
+   "line": 929,
+   "lines": [
+    924,
+    925,
+    926,
+    927,
+    928,
+    929,
+    930,
+    931,
+    932,
+    933,
+    934
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/SerializerProvider.java",
+   "snippet": "    {\n        if (value == null) {\n            if (_stdNullValueSerializer) { // minor perf optimization\n                jgen.writeNull();\n            } else {\n                _nullValueSerializer.serialize(null, jgen, this);\n            }\n        } else {\n            Class<?> cls = value.getClass();\n            findTypedValueSerializer(cls, true, null).serialize(value, jgen, this);\n        }"
+  },
+  {
+   "line": 933,
+   "lines": [
+    928,
+    929,
+    930,
+    931,
+    932,
+    933,
+    934,
+    935,
+    936,
+    937,
+    938
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/SerializerProvider.java",
+   "snippet": "            } else {\n                _nullValueSerializer.serialize(null, jgen, this);\n            }\n        } else {\n            Class<?> cls = value.getClass();\n            findTypedValueSerializer(cls, true, null).serialize(value, jgen, this);\n        }\n    }\n    \n    /**\n     * Convenience method that will serialize given field with specified"
+  },
+  {
+   "line": 953,
+   "lines": [
+    948,
+    949,
+    950,
+    951,
+    952,
+    953,
+    954,
+    955,
+    956,
+    957,
+    958
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/SerializerProvider.java",
+   "snippet": "             * any more; caller must check it.\n             */\n            if (_stdNullValueSerializer) { // minor perf optimization\n                jgen.writeNull();\n            } else {\n                _nullValueSerializer.serialize(null, jgen, this);\n            }\n        } else {\n            Class<?> cls = value.getClass();\n            findTypedValueSerializer(cls, true, null).serialize(value, jgen, this);\n        }"
+  },
+  {
+   "line": 957,
+   "lines": [
+    952,
+    953,
+    954,
+    955,
+    956,
+    957,
+    958,
+    959,
+    960,
+    961,
+    962
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/SerializerProvider.java",
+   "snippet": "            } else {\n                _nullValueSerializer.serialize(null, jgen, this);\n            }\n        } else {\n            Class<?> cls = value.getClass();\n            findTypedValueSerializer(cls, true, null).serialize(value, jgen, this);\n        }\n    }\n\n    /*\n    /**********************************************************"
+  },
+  {
+   "line": 1039,
+   "lines": [
+    1034,
+    1035,
+    1036,
+    1037,
+    1038,
+    1039,
+    1040,
+    1041,
+    1042,
+    1043,
+    1044
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/SerializerProvider.java",
+   "snippet": "        throws IOException, JsonProcessingException\n    {\n        if (_stdNullValueSerializer) { // minor perf optimization\n            jgen.writeNull();\n        } else {\n            _nullValueSerializer.serialize(null, jgen, this);\n        }\n    }\n\n    /*\n    /********************************************************"
+  }
+ ],
+ "class_simple": "StdKeySerializer",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Specialized serializer that can be used as the generic key\n * serializer, when serializing {@link java.util.Map}s to JSON\n * Objects.\n */\n@SuppressWarnings(\"serial\")\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [],
+ "focal_class": "com.fasterxml.jackson.databind.ser.std.StdKeySerializer",
+ "focal_id": "JacksonDatabind_9::com.fasterxml.jackson.databind.ser.std.StdKeySerializer::serialize(Object,JsonGenerator,SerializerProvider)",
+ "focal_method_name": "serialize",
+ "generations": 3,
+ "impl_B": "@Override\n    public void serialize(Object value, JsonGenerator jgen, SerializerProvider provider) throws IOException {\n        String str;\n        \n        if (value instanceof Date) {\n            provider.defaultSerializeDateKey((Date) value, jgen);\n            return;\n        } else {\n            str = value.toString();\n        }\n        jgen.writeFieldName(str);\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.lang.reflect.Type",
+  "java.util.Date",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.databind.JavaType",
+  "com.fasterxml.jackson.databind.JsonMappingException",
+  "com.fasterxml.jackson.databind.JsonNode",
+  "com.fasterxml.jackson.databind.SerializerProvider",
+  "com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.ser.std",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "getSchema"
+  },
+  {
+   "javadoc": "",
+   "name": "acceptJsonFormatVisitor"
+  }
+ ],
+ "sig": {
+  "class_declaration": "@SuppressWarnings(\"serial\") public class StdKeySerializer extends StdSerializer<Object>",
+  "constructors": [
+   "public StdKeySerializer();"
+  ],
+  "focal_signature": "public void serialize(Object value, JsonGenerator jgen, SerializerProvider provider) throws IOException",
+  "methods": [
+   "public JsonNode getSchema(SerializerProvider provider, Type typeHint) throws JsonMappingException;",
+   "public void acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint) throws JsonMappingException;"
+  ],
+  "type_signatures": [
+   "public abstract class SerializerProvider extends DatabindContext { public SerializerProvider(); protected SerializerProvider(SerializerProvider src, SerializationConfig config, SerializerFactory f); protected SerializerProvider(SerializerProvider src); public void setDefaultKeySerializer(JsonSerializer<Object> ks); public void setNullValueSerializer(JsonSerializer<Object> nvs); public void setNullKeySerializer(JsonSerializer<Object> nks); public final SerializationConfig getConfig(); public final AnnotationIntrospector getAnnotationIntrospector(); public final TypeFactory getTypeFactory(); public final Class<?> getActiveView(); public final Class<?> getSerializationView(); public Object getAttribute(Object key); public SerializerProvider setAttribute(Object key, Object value); public final boolean isEnabled(SerializationFeature feature); public final boolean hasSerializationFeatures(int featureMask); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

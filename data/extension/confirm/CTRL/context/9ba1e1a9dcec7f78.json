@@ -1,0 +1,152 @@
+{
+ "bug_name": "Closure_108",
+ "call_sites": [
+  {
+   "line": 130,
+   "lines": [
+    125,
+    126,
+    127,
+    128,
+    129,
+    130,
+    131,
+    132,
+    133,
+    134,
+    135
+   ],
+   "path": "src/com/google/javascript/jscomp/CombinedCompilerPass.java",
+   "snippet": "        waiting = null;\n      }\n    }\n\n    void shouldTraverseIfActive(NodeTraversal t, Node n, Node parent) {\n      if (isActive() && !callback.shouldTraverse(t, n, parent)) {\n        waiting = n;\n      }\n    }\n\n    void enterScopeIfActive(NodeTraversal t) {"
+  },
+  {
+   "line": 99,
+   "lines": [
+    94,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104
+   ],
+   "path": "src/com/google/javascript/jscomp/NodeTraversal.java",
+   "snippet": "     * {@link #visit(NodeTraversal, Node, Node)} in postorder.</p>\n     * <p>Implementations can have side effects (e.g. modifying the parse\n     * tree).</p>\n     * @return whether the children of this node should be visited\n     */\n    boolean shouldTraverse(NodeTraversal nodeTraversal, Node n, Node parent);\n\n    /**\n     * <p>Visits a node in postorder (after its children have been visited).\n     * A node is visited only if all its parents should be traversed\n     * ({@link #shouldTraverse(NodeTraversal, Node, Node)}).</p>"
+  },
+  {
+   "line": 523,
+   "lines": [
+    518,
+    519,
+    520,
+    521,
+    522,
+    523,
+    524,
+    525,
+    526,
+    527,
+    528
+   ],
+   "path": "src/com/google/javascript/jscomp/NodeTraversal.java",
+   "snippet": "      inputId = n.getInputId();\n      sourceName = getSourceName(n);\n    }\n\n    curNode = n;\n    if (!callback.shouldTraverse(this, n, parent)) {\n      return;\n    }\n\n    if (type == Token.FUNCTION) {\n      traverseFunction(n, parent);"
+  },
+  {
+   "line": 400,
+   "lines": [
+    395,
+    396,
+    397,
+    398,
+    399,
+    400,
+    401,
+    402,
+    403,
+    404,
+    405
+   ],
+   "path": "src/com/google/javascript/jscomp/SpecializeModule.java",
+   "snippet": "    public void match(Node ast1, Node ast2) {\n      // Just blunder ahead and assume that the two nodes actually match\n\n      reportMatch(ast1, ast2);\n\n      if (shouldTraverse(ast1, ast2)) {\n        Node childOf1 = ast1.getFirstChild();\n        Node childOf2 = ast2.getFirstChild();\n\n        while (childOf1 != null) {\n          match(childOf1, childOf2);"
+  }
+ ],
+ "class_simple": "Traversal",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Process aliases in goog.scope blocks.\n *\n * goog.scope(function() {\n *   var dom = goog.dom;\n *   var DIV = dom.TagName.DIV;\n *\n *   dom.createElement(DIV);\n * });\n *\n * should become\n *\n * goog.dom.createElement(goog.dom.TagName.DIV);\n *\n * The advantage of using goog.scope is that the compiler will *guarantee*\n * the anonymous function will be inlined, even if it can't prove\n * that it's semantically correct to do so. For example, consider this case:\n *\n * goog.scope(function() {\n *   goog.getBar = function () { return alias; };\n *   ...\n *   var alias = foo.bar;\n * })\n *\n * In theory, the compiler can't inline 'alias' unless it can prove that\n * goog.getBar is called only after 'alias' is defined.\n *\n * In practice, the compiler will inline 'alias' anyway, at the risk of\n * 'fixing' bad code.\n *\n * @author robbyw@google.com (Robby Walker)\n */\nclass ScopedAliases implements HotSwapCompilerPass {\n  /** Name used to denote an scoped function block used for aliasing. */\n  static final String SCOPING_METHOD_NAME = \"goog.scope\";\n\n  private final AbstractCompiler compiler;\n  private final PreprocessorSymbolTable preprocessorSymbolTable;\n  private final AliasTransformationHandler transformationHandler;\n\n  // Errors\n  static final DiagnosticType GOOG_SCOPE_USED_IMPROPERLY = DiagnosticType.error(\n      \"JSC_GOOG_SCOPE_USED_IMPROPERLY\",\n      \"The call to goog.scope must be alone in a single statement.\");\n\n  static final DiagnosticType GOOG_SCOPE_HAS_BAD_PARAMETERS =\n      DiagnosticType.error(\n          \"JSC_GOOG_SCOPE_HAS_BAD_PARAMETERS\",\n          \"The call to goog.scope must take only a single parameter.  It must\" +\n              \" be an anonymous function that itself takes no parameters.\");\n\n  static final DiagnosticType GOOG_SCOPE_REFERENCES_THIS = DiagnosticType.error(\n      \"JSC_GOOG_SCOPE_REFERENCES_THIS\",\n      \"The body of a goog.scope function cannot reference 'this'.\");\n\n  static final DiagnosticType GOOG_SCOPE_USES_RETURN = DiagnosticType.error(\n      \"JSC_GOOG_SCOPE_USES_RETURN\",\n      \"The body of a goog.scope function cannot use 'return'.\");\n\n  static final DiagnosticType GOOG_SCOPE_USES_THROW = DiagnosticType.error(\n      \"JSC_GOOG_SCOPE_USES_THROW\",\n      \"The body of a goog.scope function cannot use 'throw'.\");\n\n  static final DiagnosticType GOOG_SCOPE_ALIAS_REDEFINED = DiagnosticType.error(\n      \"JSC_GOOG_SCOPE_ALIAS_REDEFINED\",\n      \"The alias {0} is assigned a value more than once.\");\n\n  static final DiagnosticType GOOG_SCOPE_ALIAS_CYCLE = DiagnosticType.error(\n      \"JSC_GOOG_SCOPE_ALIAS_CYCLE\",\n      \"The aliases {0} has a cycle.\");\n\n  static final DiagnosticType GOOG_SCOPE_NON_ALIAS_LOCAL = DiagnosticType.error(\n      \"JSC_GOOG_SCOPE_NON_ALIAS_LOCAL\",\n      \"The local variable {0} is in a goog.scope and is not an alias.\");\n\n  private Multiset<String> scopedAliasNames = HashMultiset.create();\n\n  ScopedAliases(AbstractCompiler compiler,\n      @Nullable PreprocessorSymbolTable preprocessorSymbolTable,\n      AliasTransformationHandler transformationHandler) {\n    this.compiler = compiler;\n    this.preprocessorSymbolTable = preprocessorSymbolTable;\n    this.transformationHandler = transformationHandler;\n  }\n\n  @Override\n  public void process(Node externs, Node root) {\n    hotSwapScript(root, null);\n  }\n\n  @Override\n  public void hotSwapScript(Node root, Node originalRoot) {\n    Traversal traversal = new Traversal();\n    NodeTraversal.traverse(compiler, root, traversal);\n\n    if (!traversal.hasErrors()) {\n\n      // Apply the aliases.\n      List<AliasUsage> aliasWorkQueue =\n          Lists.newArrayList(traversal.getAliasUsages());\n      while (!aliasWorkQueue.isEmpty()) {\n        List<AliasUsage> newQueue = Lists.newArrayList();\n        for (AliasUsage aliasUsage : aliasWorkQueue) {\n          if (aliasUsage.referencesOtherAlias()) {\n            newQueue.add(aliasUsage);\n          } else {\n            aliasUsage.applyAlias();\n          }\n        }\n\n        // Prevent an infinite loop.\n        if (newQueue.size() == aliasWorkQueue.size()) {\n          Var cycleVar = newQueue.get(0).aliasVar;\n          compiler.report(JSError.make(\n              cycleVar.getNode(), GOOG_SCOPE_ALIAS_CYCLE, cycleVar.getName()));\n          break;\n        } else {\n          aliasWorkQueue = newQueue;\n        }\n      }\n\n      // Remove the alias definitions.\n      for (Node aliasDefinition : traversal.getAliasDefinitionsInOrder()) {\n        if (aliasDefinition.getParent().isVar() &&\n            aliasDefinition.getParent().hasOneChild()) {\n          aliasDefinition.getParent().detachFromParent();\n        } else {\n          aliasDefinition.detachFromParent();\n        }\n      }\n\n      // Collapse the scopes.\n      for (Node scopeCall : traversal.getScopeCalls()) {\n        Node expressionWithScopeCall = scopeCall.getParent();\n        Node scopeClosureBlock = scopeCall.getLastChild().getLastChild();\n        scopeClosureBlock.detachFromParent();\n        expressionWithScopeCall.getParent().replaceChild(\n            expressionWithScopeCall,\n            scopeClosureBlock);\n        NodeUtil.tryMergeBlock(scopeClosureBlock);\n      }\n\n      if (traversal.getAliasUsages().size() > 0 ||\n          traversal.getAliasDefinitionsInOrder().size() > 0 ||\n          traversal.getScopeCalls().size() > 0) {\n        compiler.reportCodeChange();\n      }\n    }\n  }\n\n  private abstract class AliasUsage {\n    final Var aliasVar;\n    final Node aliasReference;\n\n    AliasUsage(Var aliasVar, Node aliasReference) {\n      this.aliasVar = aliasVar;\n      this.aliasReference = aliasReference;\n    }\n\n    /** Checks to see if this references another alias. */\n    public boolean referencesOtherAlias() {\n      Node aliasDefinition = aliasVar.getInitialValue();\n      Node root = NodeUtil.getRootOfQualifiedName(aliasDefinition);\n      Var otherAliasVar = aliasVar.getScope().getOwnSlot(root.getString());\n      return otherAliasVar != null;\n    }\n\n    public abstract void applyAlias();\n  }\n\n  private class AliasedNode extends AliasUsage {\n    AliasedNode(Var aliasVar, Node aliasReference) {\n      super(aliasVar, aliasReference);\n    }\n\n    @Override\n    public void applyAlias() {\n      Node aliasDefinition = aliasVar.getInitialValue();\n      aliasReference.getParent().replaceChild(\n          aliasReference, aliasDefinition.cloneTree());\n    }\n  }\n\n  private class AliasedTypeNode extends AliasUsage {\n    AliasedTypeNode(Var aliasVar, Node aliasReference) {\n      super(aliasVar, aliasReference);\n    }\n\n    @Override\n    public void applyAlias() {\n      Node aliasDefinition = aliasVar.getInitialValue();\n      String aliasName = aliasVar.getName();\n      String typeName = aliasReference.getString();\n      String aliasExpanded =\n          Preconditions.checkNotNull(aliasDefinition.getQualifiedName());\n      Preconditions.checkState(typeName.startsWith(aliasName));\n      String replacement =\n          aliasExpanded + typeName.substring(aliasName.length());\n      aliasReference.setString(replacement);\n\n    }\n  }\n\n\n  private",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private final List<Node> aliasDefinitionsInOrder",
+  "private final List<Node> scopeCalls",
+  "private final List<AliasUsage> aliasUsages",
+  "private final Map<String, Var> aliases",
+  "private final Set<String> forbiddenLocals",
+  "private boolean hasNamespaceShadows",
+  "private boolean hasErrors",
+  "private AliasTransformation transformation"
+ ],
+ "focal_class": "com.google.javascript.jscomp.ScopedAliases.Traversal",
+ "focal_id": "Closure_108::com.google.javascript.jscomp.ScopedAliases$Traversal::shouldTraverse(NodeTraversal,Node,Node)",
+ "focal_method_name": "shouldTraverse",
+ "generations": 3,
+ "impl_B": "@Override\n    public final boolean shouldTraverse(NodeTraversal t, Node n, Node parent) {\n      if (n.isFunction() && t.inGlobalScope()) {\n        // Do not traverse in to functions except for goog.scope functions.\n        if (parent == null || !isCallToScopeMethod(parent)) {\n          return false;\n        }\n      }\n      return true;\n    }",
+ "imports": [
+  "com.google.common.base.Preconditions",
+  "com.google.common.collect.HashMultiset",
+  "com.google.common.collect.Lists",
+  "com.google.common.collect.Maps",
+  "com.google.common.collect.Multiset",
+  "com.google.common.collect.Sets",
+  "com.google.javascript.jscomp.CompilerOptions.AliasTransformation",
+  "com.google.javascript.jscomp.CompilerOptions.AliasTransformationHandler",
+  "com.google.javascript.jscomp.Scope.Var",
+  "com.google.javascript.rhino.IR",
+  "com.google.javascript.rhino.JSDocInfo",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.SourcePosition",
+  "com.google.javascript.rhino.Token",
+  "java.util.Collection",
+  "java.util.List",
+  "java.util.Map",
+  "java.util.Set",
+  "javax.annotation.Nullable"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "enterScope"
+  },
+  {
+   "javadoc": "",
+   "name": "exitScope"
+  },
+  {
+   "javadoc": "",
+   "name": "visit"
+  }
+ ],
+ "sig": {
+  "class_declaration": "private class Traversal implements NodeTraversal.ScopedCallback",
+  "constructors": [],
+  "focal_signature": "public final boolean shouldTraverse(NodeTraversal t, Node n, Node parent)",
+  "methods": [
+   "public void enterScope(NodeTraversal t);",
+   "public void exitScope(NodeTraversal t);",
+   "public void visit(NodeTraversal t, Node n, Node parent);"
+  ],
+  "type_signatures": [
+   "public class NodeTraversal { public NodeTraversal(AbstractCompiler compiler, Callback cb); public NodeTraversal(AbstractCompiler compiler, Callback cb, ScopeCreator scopeCreator); public void traverse(Node root); public void traverseRoots(Node ... roots); public void traverseRoots(List<Node> roots); protected void traverseInnerNode(Node node, Node parent, Scope refinedScope); public AbstractCompiler getCompiler(); public int getLineNumber(); public String getSourceName(); public CompilerInput getInput(); public JSModule getModule(); public Node getCurrentNode(); public static void traverseChangedFunctions( AbstractCompiler compiler, FunctionCallback callback); public static void traverse( AbstractCompiler compiler, Node root, Callback cb); public static void traverseRoots( AbstractCompiler compiler, List<Node> roots, Callback cb); }",
+   "public class Node implements Cloneable, Serializable { public Node(int nodeType); public Node(int nodeType, Node child); public Node(int nodeType, Node left, Node right); public Node(int nodeType, Node left, Node mid, Node right); public Node(int nodeType, Node left, Node mid, Node mid2, Node right); public Node(int nodeType, int lineno, int charno); public Node(int nodeType, Node child, int lineno, int charno); public Node(int nodeType, Node left, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node mid2, Node right, int lineno, int charno); public Node(int nodeType, Node[] children, int lineno, int charno); public Node(int nodeType, Node[] children); public static Node newNumber(double number); public static Node newNumber(double number, int lineno, int charno); public static Node newString(String str); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

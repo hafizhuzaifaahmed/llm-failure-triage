@@ -1,0 +1,138 @@
+You review a failing unit test of a Java method. The implementation of the method is intentionally not shown.
+Using only the evidence package below, decide whether the failure is caused by a fault in the program under test or by a fault in the test.
+PROGRAM_FAULT: the method under test behaves incorrectly for what the test gives it - it returns a wrong value, throws an exception it should not, or does not do what its name, signature or documentation promise.
+TEST_FAULT: the test is wrong - its expected value is wrong, its set-up is invalid, or it uses the API in a way the interface does not allow.
+Do not presume that the implementation is correct, nor that its documentation is complete or up to date. Decide which side is more likely wrong from all the evidence; do not default to either label.
+
+=== [T] Failing test ===
+[T0] imports: java.io.*; java.math.*; java.util.*; java.util.regex.Pattern; java.util.regex.PatternSyntaxException; org.jsoup.helper.StringUtil; org.jsoup.helper.Validate; org.jsoup.parser.Parser; org.jsoup.parser.Tag; org.jsoup.select.*; org.junit.*; org.junit.Test; static org.junit.Assert.*
+[T1] @Test
+[T2]     public void testHtml_WithMixedContent() {
+[T3]         Element element = new Element(Tag.valueOf("div"), "");
+[T4]         element.appendText("Text before ");
+[T5]         element.appendElement("b").appendText("bold");
+[T6]         element.appendText(" text after.");
+[T7] 
+[T8]         String expected = "<div>Text before <b>bold</b> text after.</div>";
+[T9]         assertEquals(expected, element.html());
+[T10]     }
+
+=== [F] Failure evidence (program version under test) ===
+[F1] outcome=assertion_failure; exception=org.junit.ComparisonFailure
+[F2] message: expected:<[<div>Text before <b>bold</b> text after.</div>]> but was:<[Text before 
+<b>bold</b> text after.]>
+[F3] failing test line: assertEquals(expected, element.html());
+[F4] at org.jsoup.nodes.Element_html_TriageGen1Test.testHtml_WithMixedContent(Element_html_TriageGen1Test.java:35)
+
+=== [Sig] Interface ===
+[Sig1] public String html()
+[Sig2] public class Element extends Node
+[Sig3] public Element(Tag tag, String baseUri, Attributes attributes);
+[Sig4] public Element(Tag tag, String baseUri);
+[Sig5] public String nodeName();
+[Sig6] public String tagName();
+[Sig7] public Element tagName(String tagName);
+[Sig8] public Tag tag();
+[Sig9] public boolean isBlock();
+[Sig10] public String id();
+[Sig11] public Element attr(String attributeKey, String attributeValue);
+[Sig12] public Map<String, String> dataset();
+[Sig13] public final Element parent();
+[Sig14] public Elements parents();
+[Sig15] public Element child(int index);
+[Sig16] public Elements children();
+[Sig17] public List<TextNode> textNodes();
+[Sig18] public List<DataNode> dataNodes();
+[Sig19] public Elements select(String cssQuery);
+[Sig20] public Element appendChild(Node child);
+[Sig21] public Element prependChild(Node child);
+[Sig22] public Element insertChildren(int index, Collection<? extends Node> children);
+[Sig23] public Element appendElement(String tagName);
+[Sig24] public Element prependElement(String tagName);
+[Sig25] public Element appendText(String text);
+[Sig26] public Element prependText(String text);
+[Sig27] public Element append(String html);
+[Sig28] public Element prepend(String html);
+[Sig29] public Element before(String html);
+[Sig30] public Element before(Node node);
+[Sig31] public Element after(String html);
+[Sig32] public Element after(Node node);
+[Sig33] public Element empty();
+[Sig34] public Element wrap(String html);
+[Sig35] public Elements siblingElements();
+[Sig36] public Element nextElementSibling();
+[Sig37] public Element previousElementSibling();
+[Sig38] public Element firstElementSibling();
+[Sig39] public Integer elementSiblingIndex();
+[Sig40] public Element lastElementSibling();
+[Sig41] public Elements getElementsByTag(String tagName);
+[Sig42] public Element getElementById(String id);
+[Sig43] public Elements getElementsByClass(String className);
+[Sig44] public Elements getElementsByAttribute(String key);
+[Sig45] public Elements getElementsByAttributeStarting(String keyPrefix);
+[Sig46] public Elements getElementsByAttributeValue(String key, String value);
+[Sig47] public Elements getElementsByAttributeValueNot(String key, String value);
+[Sig48] public Elements getElementsByAttributeValueStarting(String key, String valuePrefix);
+[Sig49] public Elements getElementsByAttributeValueEnding(String key, String valueSuffix);
+[Sig50] public Elements getElementsByAttributeValueContaining(String key, String match);
+[Sig51] public Elements getElementsByAttributeValueMatching(String key, Pattern pattern);
+[Sig52] public Elements getElementsByAttributeValueMatching(String key, String regex);
+[Sig53] public Elements getElementsByIndexLessThan(int index);
+[Sig54] public Elements getElementsByIndexGreaterThan(int index);
+[Sig55] public Elements getElementsByIndexEquals(int index);
+[Sig56] public Elements getElementsContainingText(String searchText);
+[Sig57] public Elements getElementsContainingOwnText(String searchText);
+[Sig58] public Elements getElementsMatchingText(Pattern pattern);
+[Sig59] public Elements getElementsMatchingText(String regex);
+[Sig60] public Elements getElementsMatchingOwnText(Pattern pattern);
+[Sig61] public Elements getElementsMatchingOwnText(String regex);
+[Sig62] public Elements getAllElements();
+[Sig63] public String text();
+[Sig64] public String ownText();
+[Sig65] public Element text(String text);
+[Sig66] public boolean hasText();
+[Sig67] public String data();
+[Sig68] public String className();
+[Sig69] public Set<String> classNames();
+[Sig70] public Element classNames(Set<String> classNames);
+[Sig71] public boolean hasClass(String className);
+[Sig72] public Element addClass(String className);
+[Sig73] public Element removeClass(String className);
+[Sig74] public Element toggleClass(String className);
+[Sig75] public String val();
+[Sig76] public Element val(String value);
+[Sig77] public Element html(String html);
+[Sig78] public String toString();
+[Sig79] public boolean equals(Object o);
+[Sig80] public int hashCode();
+[Sig81] public Element clone();
+
+=== [Doc] Documentation ===
+[Doc1] /**
+ * Retrieves the element's inner HTML. E.g. on a with one empty , would return
+ * . (Whereas #outerHtml() would return .)
+ * 
+ * @return String of HTML.
+ * @see #outerHtml()
+ */
+[Doc2] /**
+ * A HTML element consists of a tag name, attributes, and child nodes (including text nodes and
+ * other elements).
+ * 
+ * From an Element, you can extract data, traverse the node graph, and manipulate the HTML.
+ * 
+ * @author Jonathan Hedley, jonathan@hedley.net
+ */
+public
+
+Return only one JSON object with exactly these fields:
+{"label": "PROGRAM_FAULT" | "TEST_FAULT",
+ "reason_category": "WRONG_EXPECTED_VALUE" | "INVALID_SETUP_OR_API_MISUSE" | "SPEC_VIOLATED_BY_PROGRAM" | "UNEXPECTED_EXCEPTION_IN_PROGRAM" | "OTHER",
+ "evidence_ids": [ids of the evidence items that support the decision, e.g. "T4", "F2", "Doc1"],
+ "summary": "at most 60 words",
+ "confidence": integer 0-100}
+Cite evidence ids. Do not write step-by-step reasoning.
+Examples of the expected form (values are illustrative only):
+{"label": "PROGRAM_FAULT", "reason_category": "SPEC_VIOLATED_BY_PROGRAM", "evidence_ids": ["Doc1", "F2"], "summary": "The documented result for this input is 3 but the method returned 4.", "confidence": 70}
+{"label": "TEST_FAULT", "reason_category": "WRONG_EXPECTED_VALUE", "evidence_ids": ["T3", "F2"], "summary": "The assertion expects 4 but the documented result is 3; the expectation is wrong.", "confidence": 70}
+Keep the summary to one or two short sentences and end the JSON object immediately after the confidence value.

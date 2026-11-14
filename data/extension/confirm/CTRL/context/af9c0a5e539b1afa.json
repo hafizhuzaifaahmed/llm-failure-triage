@@ -1,0 +1,149 @@
+{
+ "bug_name": "Closure_174",
+ "call_sites": [
+  {
+   "line": 749,
+   "lines": [
+    744,
+    745,
+    746,
+    747,
+    748,
+    749,
+    750,
+    751,
+    752,
+    753,
+    754
+   ],
+   "path": "src/com/google/javascript/jscomp/ProcessClosurePrimitives.java",
+   "snippet": "      return false;\n    }\n\n    String name = args.getString();\n    for (String part : name.split(\"\\\\.\")) {\n      if (!NodeUtil.isValidQualifiedName(part)) {\n        compiler.report(t.makeError(args, INVALID_DEFINE_NAME_ERROR, name));\n        return false;\n      }\n    }\n"
+  }
+ ],
+ "class_simple": "NodeUtil",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * NodeUtil contains generally useful AST utilities.\n *\n */\npublic final",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "static final long MAX_POSITIVE_INTEGER_NUMBER",
+  "static final String JSC_PROPERTY_NAME_FN",
+  "static final char LARGEST_BASIC_LATIN",
+  "private static final Set<String> CONSTRUCTORS_WITHOUT_SIDE_EFFECTS",
+  "private static final Set<String> BUILTIN_FUNCTIONS_WITHOUT_SIDEEFFECTS",
+  "private static final Set<String> OBJECT_METHODS_WITHOUT_SIDEEFFECTS",
+  "private static final Set<String> REGEXP_METHODS",
+  "private static final Set<String> STRING_REGEXP_METHODS",
+  "static final Predicate<Node> IMMUTABLE_PREDICATE",
+  "static final NumbericResultPredicate NUMBERIC_RESULT_PREDICATE",
+  "static final BooleanResultPredicate BOOLEAN_RESULT_PREDICATE",
+  "static final MayBeStringResultPredicate MAY_BE_STRING_PREDICATE",
+  "static final Predicate<Node> MATCH_NOT_FUNCTION"
+ ],
+ "focal_class": "com.google.javascript.jscomp.NodeUtil",
+ "focal_id": "Closure_174::com.google.javascript.jscomp.NodeUtil::isValidQualifiedName(String)",
+ "focal_method_name": "isValidQualifiedName",
+ "generations": 3,
+ "impl_B": "public static boolean isValidQualifiedName(String name) {\n    if (name.endsWith(\".\") || name.startsWith(\".\")) {\n      return false;\n    }\n    String[] parts = name.split(\"\\\\.\");\n    for (String part : parts) {\n      if (!isValidSimpleName(part)) {\n        return false;\n      }\n    }\n    return true;\n  }",
+ "imports": [
+  "com.google.common.base.Preconditions",
+  "com.google.common.base.Predicate",
+  "com.google.common.base.Predicates",
+  "com.google.common.collect.ImmutableSet",
+  "com.google.common.collect.Maps",
+  "com.google.javascript.rhino.IR",
+  "com.google.javascript.rhino.InputId",
+  "com.google.javascript.rhino.JSDocInfo",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.Token",
+  "com.google.javascript.rhino.TokenStream",
+  "com.google.javascript.rhino.jstype.FunctionType",
+  "com.google.javascript.rhino.jstype.JSType",
+  "com.google.javascript.rhino.jstype.StaticSourceFile",
+  "com.google.javascript.rhino.jstype.TernaryValue",
+  "java.util.Arrays",
+  "java.util.Collection",
+  "java.util.Collections",
+  "java.util.HashMap",
+  "java.util.HashSet",
+  "java.util.Map",
+  "java.util.Set",
+  "javax.annotation.Nullable"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "/**\n   * Copied from Rhino's ScriptRuntime\n   */",
+   "name": "isStrWhiteSpaceChar"
+  },
+  {
+   "javadoc": "/**\n   * Gets the function's name. This method recognizes the forms:\n   * <ul>\n   * <li>{@code &#123;'name': function() ...&#125;}</li>\n   * <li>{@code &#123;name: function() ...&#125;}</li>\n   * <li>{@code function name() ...}</li>\n   * <li>{@code var name = function() ...}</li>\n   * <li>{@code qualified.name = function() ...}</li>\n   * <li>{@code var name2 = function name1() ...}</li>\n   * <li>{@code qualified.name2 = function name1() ...}</li>\n   * </ul>\n   *\n   * @param n a node whose type is {@link Token#FUNCTION}\n   * @return the function's name, or {@code null} if it has no name\n   */",
+   "name": "getNearestFunctionName"
+  },
+  {
+   "javadoc": "/**\n   * Determines whether this node is used as an L-value. Notice that sometimes\n   * names are used as both L-values and R-values.\n   *\n   * We treat \"var x;\" as a pseudo-L-value, which kind of makes sense if you\n   * treat it as \"assignment to 'undefined' at the top of the scope\". But if\n   * we're honest with ourselves, it doesn't make sense, and we only do this\n   * because it makes sense to treat this as syntactically similar to\n   * \"var x = 0;\".\n   *\n   * @param n The node\n   * @return True if n is an L-value.\n   */",
+   "name": "isLValue"
+  },
+  {
+   "javadoc": "/**\n   * Creates a node representing a qualified name.\n   *\n   * @param name A qualified name (e.g. \"foo\" or \"foo.bar.baz\")\n   * @return A NAME or GETPROP node\n   */",
+   "name": "newQualifiedNameNode"
+  },
+  {
+   "javadoc": "/**\n   * Creates a node representing a qualified name.\n   *\n   * @param name A qualified name (e.g. \"foo\" or \"foo.bar.baz\")\n   * @return A NAME or GETPROP node\n   */",
+   "name": "newQualifiedNameNodeDeclaration"
+  },
+  {
+   "javadoc": "/**\n    * @param fnNode The function.\n    * @return The Node containing the Function parameters.\n    */",
+   "name": "getFunctionParameters"
+  },
+  {
+   "javadoc": "/**\n   * Get the JSDocInfo for a function.\n   */",
+   "name": "getFunctionJSDocInfo"
+  },
+  {
+   "javadoc": "/**\n   * @param n The node.\n   * @return The source name property on the node or its ancestors.\n   */",
+   "name": "getSourceName"
+  },
+  {
+   "javadoc": "/**\n   * @param n The node.\n   * @return The source name property on the node or its ancestors.\n   */",
+   "name": "getSourceFile"
+  },
+  {
+   "javadoc": "/**\n   * @param n The node.\n   * @return The InputId property on the node or its ancestors.\n   */",
+   "name": "getInputId"
+  },
+  {
+   "javadoc": "/**\n   * Given an AST and its copy, map the root node of each scope of main to the\n   * corresponding root node of clone\n   */",
+   "name": "mapMainToClone"
+  },
+  {
+   "javadoc": "/** Checks that the scope roots marked as changed have indeed changed */",
+   "name": "verifyScopeChanges"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public final class NodeUtil",
+  "constructors": [],
+  "focal_signature": "public static boolean isValidQualifiedName(String name)",
+  "methods": [
+   "public static TernaryValue isStrWhiteSpaceChar(int c);",
+   "public static String getNearestFunctionName(Node n);",
+   "public static boolean isLValue(Node n);",
+   "public static Node newQualifiedNameNode( CodingConvention convention, String name);",
+   "public static Node newQualifiedNameNodeDeclaration( CodingConvention convention, String name, Node value, JSDocInfo info);",
+   "public static Node getFunctionParameters(Node fnNode);",
+   "public static JSDocInfo getFunctionJSDocInfo(Node n);",
+   "public static String getSourceName(Node n);",
+   "public static StaticSourceFile getSourceFile(Node n);",
+   "public static InputId getInputId(Node n);",
+   "public static Map<Node, Node> mapMainToClone(Node main, Node clone);",
+   "public static void verifyScopeChanges(Map<Node, Node> map, Node main, boolean verifyUnchangedNodes, AbstractCompiler compiler);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

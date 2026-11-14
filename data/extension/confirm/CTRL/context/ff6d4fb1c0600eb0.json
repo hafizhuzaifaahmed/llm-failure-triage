@@ -1,0 +1,137 @@
+{
+ "bug_name": "Lang_62",
+ "call_sites": [
+  {
+   "line": 495,
+   "lines": [
+    490,
+    491,
+    492,
+    493,
+    494,
+    495,
+    496,
+    497,
+    498,
+    499,
+    500
+   ],
+   "path": "src/java/org/apache/commons/lang/StringEscapeUtils.java",
+   "snippet": "            throw new IllegalArgumentException (\"The Writer must not be null.\");\n        }\n        if (string == null) {\n            return;\n        }\n        Entities.HTML40.escape(writer, string);\n    }\n\n    //-----------------------------------------------------------------------\n    /**\n     * <p>Unescapes a string containing entity escapes to a string"
+  },
+  {
+   "line": 586,
+   "lines": [
+    581,
+    582,
+    583,
+    584,
+    585,
+    586,
+    587,
+    588,
+    589,
+    590,
+    591
+   ],
+   "path": "src/java/org/apache/commons/lang/StringEscapeUtils.java",
+   "snippet": "            throw new IllegalArgumentException (\"The Writer must not be null.\");\n        }\n        if (str == null) {\n            return;\n        }\n        Entities.XML.escape(writer, str);\n    }\n\n    /**\n     * <p>Escapes the characters in a <code>String</code> using XML entities.</p>\n     *"
+  },
+  {
+   "line": 610,
+   "lines": [
+    605,
+    606,
+    607,
+    608,
+    609,
+    610,
+    611,
+    612,
+    613,
+    614,
+    615
+   ],
+   "path": "src/java/org/apache/commons/lang/StringEscapeUtils.java",
+   "snippet": "     */\n    public static String escapeXml(String str) {\n        if (str == null) {\n            return null;\n        }\n        return Entities.XML.escape(str);\n    }\n\n    //-----------------------------------------------------------------------\n    /**\n     * <p>Unescapes a string containing XML entity escapes to a string"
+  }
+ ],
+ "class_simple": "Entities",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * <p>Provides HTML and XML entity utilities.</p>\n *\n * @see <a href=\"http://hotwired.lycos.com/webmonkey/reference/special_characters/\">ISO Entities</a>\n * @see <a href=\"http://www.w3.org/TR/REC-html32#latin1\">HTML 3.2 Character Entities for ISO Latin-1</a>\n * @see <a href=\"http://www.w3.org/TR/REC-html40/sgml/entities.html\">HTML 4.0 Character entity references</a>\n * @see <a href=\"http://www.w3.org/TR/html401/charset.html#h-5.3\">HTML 4.01 Character References</a>\n * @see <a href=\"http://www.w3.org/TR/html401/charset.html#code-position\">HTML 4.01 Code positions</a>\n *\n * @author <a href=\"mailto:alex@purpletech.com\">Alexander Day Chaffee</a>\n * @author <a href=\"mailto:ggregory@seagullsw.com\">Gary Gregory</a>\n * @since 2.0\n * @version $Id$\n */",
+  "method_javadoc": "/**\n     * <p>Escapes the characters in a <code>String</code>.</p>\n     *\n     * <p>For example, if you have called addEntity(&quot;foo&quot;, 0xA1),\n     * escape(&quot;\\u00A1&quot;) will return &quot;&amp;foo;&quot;</p>\n     *\n     * @param str The <code>String</code> to escape.\n     * @return A new escaped <code>String</code>.\n     */"
+ },
+ "fields": [
+  "private static final String[][] BASIC_ARRAY",
+  "private static final String[][] APOS_ARRAY",
+  "static final String[][] ISO8859_1_ARRAY",
+  "static final String[][] HTML40_ARRAY",
+  "public static final Entities XML",
+  "public static final Entities HTML32",
+  "public static final Entities HTML40",
+  "EntityMap map"
+ ],
+ "focal_class": "org.apache.commons.lang.Entities",
+ "focal_id": "Lang_62::org.apache.commons.lang.Entities::escape(String)",
+ "focal_method_name": "escape",
+ "generations": 3,
+ "impl_B": "public String escape(String str) {\n        //todo: rewrite to use a Writer\n        StringBuffer buf = new StringBuffer(str.length() * 2);\n        int i;\n        for (i = 0; i < str.length(); ++i) {\n            char ch = str.charAt(i);\n            String entityName = this.entityName(ch);\n            if (entityName == null) {\n                if (ch > 0x7F) {\n                    int intValue = ch;\n                    buf.append(\"&#\");\n                    buf.append(intValue);\n                    buf.append(';');\n                } else {\n                    buf.append(ch);\n                }\n            } else {\n                buf.append('&');\n                buf.append(entityName);\n                buf.append(';');\n            }\n        }\n        return buf.toString();\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.io.Writer",
+  "java.util.HashMap",
+  "java.util.Map",
+  "java.util.TreeMap"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.lang",
+ "project": "Lang",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * <p>Adds entities to this entity.</p>\n     * \n     * @param entityArray array of entities to be added\n     */",
+   "name": "addEntities"
+  },
+  {
+   "javadoc": "/**\n     * <p>Add an entity to this entity.</p>\n     * \n     * @param name name of the entity\n     * @param value vale of the entity\n     */",
+   "name": "addEntity"
+  },
+  {
+   "javadoc": "/**\n     * <p>Returns the name of the entity identified by the specified value.</p>\n     * \n     * @param value the value to locate\n     * @return entity name associated with the specified value\n     */",
+   "name": "entityName"
+  },
+  {
+   "javadoc": "/**\n     * <p>Returns the value of the entity identified by the specified name.</p>\n     * \n     * @param name the name to locate\n     * @return entity value associated with the specified name\n     */",
+   "name": "entityValue"
+  },
+  {
+   "javadoc": "/**\n     * <p>Escapes the characters in the <code>String</code> passed and writes the result\n     * to the <code>Writer</code> passed. </p>\n     * \n     * @param writer The <code>Writer</code> to write the results of the escaping to.\n     *                            Assumed to be a non-null value.\n     * @param str The <code>String</code> to escape. Assumed to be a non-null value.\n     * @throws IOException when <code>Writer</code> passed throws the exception from\n     *                                       calls to the {@link Writer#write(int)} methods.\n     *                                       \n     * @see #escape(String)\n     * @see Writer\n     */",
+   "name": "escape"
+  },
+  {
+   "javadoc": "/**\n     * <p>Unescapes the entities in a <code>String</code>.</p>\n     *\n     * <p>For example, if you have called addEntity(&quot;foo&quot;, 0xA1),\n     * unescape(&quot;&amp;foo;&quot;) will return &quot;\\u00A1&quot;</p>\n     *\n     * @param str The <code>String</code> to escape.\n     * @return A new escaped <code>String</code>.\n     */",
+   "name": "unescape"
+  },
+  {
+   "javadoc": "/**\n     * <p>Unescapes the escaped entities in the <code>String</code> passed and\n     * writes the result to the <code>Writer</code> passed.</p>\n     * \n     * @param writer The <code>Writer</code> to write the results to; assumed to be non-null.\n     * @param string The <code>String</code> to write the results to; assumed to be non-null.\n     * @throws IOException when <code>Writer</code> passed throws the exception from\n     *                                       calls to the {@link Writer#write(int)} methods.\n     *                                       \n     * @see #escape(String)\n     * @see Writer\n     */",
+   "name": "unescape"
+  }
+ ],
+ "sig": {
+  "class_declaration": "class Entities",
+  "constructors": [],
+  "focal_signature": "public String escape(String str)",
+  "methods": [
+   "public void addEntities(String[][] entityArray);",
+   "public void addEntity(String name, int value);",
+   "public String entityName(int value);",
+   "public int entityValue(String name);",
+   "public void escape(Writer writer, String str) throws IOException;",
+   "public String unescape(String str);",
+   "public void unescape(Writer writer, String string) throws IOException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

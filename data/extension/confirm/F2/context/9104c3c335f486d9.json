@@ -1,0 +1,84 @@
+{
+ "bug_name": "Lang_54",
+ "call_sites": [],
+ "class_simple": "LocaleUtils",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * <p>Operations to assist when working with a {@link Locale}.</p>\n *\n * <p>This class tries to handle <code>null</code> input gracefully.\n * An exception will not be thrown for a <code>null</code> input.\n * Each method documents its behaviour in more detail.</p>\n *\n * @author Stephen Colebourne\n * @since 2.2\n * @version $Id$\n */\npublic",
+  "method_javadoc": "/**\n     * <p>Converts a String to a Locale.</p>\n     *\n     * <p>This method takes the string format of a locale and creates the\n     * locale object from it.</p>\n     *\n     * <pre>\n     *   LocaleUtils.toLocale(\"en\")         = new Locale(\"en\", \"\")\n     *   LocaleUtils.toLocale(\"en_GB\")      = new Locale(\"en\", \"GB\")\n     *   LocaleUtils.toLocale(\"en_GB_xxx\")  = new Locale(\"en\", \"GB\", \"xxx\")   (#)\n     * </pre>\n     *\n     * <p>(#) The behaviour of the JDK variant constructor changed between JDK1.3 and JDK1.4.\n     * In JDK1.3, the constructor upper cases the variant, in JDK1.4, it doesn't.\n     * Thus, the result from getVariant() may vary depending on your JDK.</p>\n     *\n     * <p>This method validates the input strictly.\n     * The language code must be lowercase.\n     * The country code must be uppercase.\n     * The separator must be an underscore.\n     * The length must be correct.\n     * </p>\n     *\n     * @param str  the locale String to convert, null returns null\n     * @return a Locale, null if null input\n     * @throws IllegalArgumentException if the string is an invalid format\n     */"
+ },
+ "fields": [
+  "private static final List cAvailableLocaleList",
+  "private static Set cAvailableLocaleSet",
+  "private static final Map cLanguagesByCountry",
+  "private static final Map cCountriesByLanguage"
+ ],
+ "focal_class": "org.apache.commons.lang.LocaleUtils",
+ "focal_id": "Lang_54::org.apache.commons.lang.LocaleUtils::toLocale(String)",
+ "focal_method_name": "toLocale",
+ "generations": 3,
+ "impl_B": "public static Locale toLocale(String str) {\n        if (str == null) {\n            return null;\n        }\n        int len = str.length();\n        if (len != 2 && len != 5 && len < 7) {\n            throw new IllegalArgumentException(\"Invalid locale format: \" + str);\n        }\n        char ch0 = str.charAt(0);\n        char ch1 = str.charAt(1);\n        if (ch0 < 'a' || ch0 > 'z' || ch1 < 'a' || ch1 > 'z') {\n            throw new IllegalArgumentException(\"Invalid locale format: \" + str);\n        }\n        if (len == 2) {\n            return new Locale(str, \"\");\n        } else {\n            if (str.charAt(2) != '_') {\n                throw new IllegalArgumentException(\"Invalid locale format: \" + str);\n            }\n            char ch3 = str.charAt(3);\n            char ch4 = str.charAt(4);\n            if (ch3 < 'A' || ch3 > 'Z' || ch4 < 'A' || ch4 > 'Z') {\n                throw new IllegalArgumentException(\"Invalid locale format: \" + str);\n            }\n            if (len == 5) {\n                return new Locale(str.substring(0, 2), str.substring(3, 5));\n            } else {\n                if (str.charAt(5) != '_') {\n                    throw new IllegalArgumentException(\"Invalid locale format: \" + str);\n                }\n                return new Locale(str.substring(0, 2), str.substring(3, 5), str.substring(6));\n            }\n        }\n    }",
+ "imports": [
+  "java.util.ArrayList",
+  "java.util.Arrays",
+  "java.util.Collections",
+  "java.util.HashMap",
+  "java.util.HashSet",
+  "java.util.List",
+  "java.util.Locale",
+  "java.util.Map",
+  "java.util.Set"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.lang",
+ "project": "Lang",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * <p>Obtains the list of locales to search through when performing\n     * a locale search.</p>\n     *\n     * <pre>\n     * localeLookupList(Locale(\"fr\",\"CA\",\"xxx\"))\n     *   = [Locale(\"fr\",\"CA\",\"xxx\"), Locale(\"fr\",\"CA\"), Locale(\"fr\")]\n     * </pre>\n     *\n     * @param locale  the locale to start from\n     * @return the unmodifiable list of Locale objects, 0 being locale, never null\n     */",
+   "name": "localeLookupList"
+  },
+  {
+   "javadoc": "/**\n     * <p>Obtains the list of locales to search through when performing\n     * a locale search.</p>\n     *\n     * <pre>\n     * localeLookupList(Locale(\"fr\", \"CA\", \"xxx\"), Locale(\"en\"))\n     *   = [Locale(\"fr\",\"CA\",\"xxx\"), Locale(\"fr\",\"CA\"), Locale(\"fr\"), Locale(\"en\"]\n     * </pre>\n     *\n     * <p>The result list begins with the most specific locale, then the\n     * next more general and so on, finishing with the default locale.\n     * The list will never contain the same locale twice.</p>\n     *\n     * @param locale  the locale to start from, null returns empty list\n     * @param defaultLocale  the default locale to use if no other is found\n     * @return the unmodifiable list of Locale objects, 0 being locale, never null\n     */",
+   "name": "localeLookupList"
+  },
+  {
+   "javadoc": "/**\n     * <p>Obtains an unmodifiable list of installed locales.</p>\n     * \n     * <p>This method is a wrapper around {@link Locale#getAvailableLocales()}.\n     * It is more efficient, as the JDK method must create a new array each\n     * time it is called.</p>\n     *\n     * @return the unmodifiable list of available locales\n     */",
+   "name": "availableLocaleList"
+  },
+  {
+   "javadoc": "/**\n     * <p>Obtains an unmodifiable set of installed locales.</p>\n     * \n     * <p>This method is a wrapper around {@link Locale#getAvailableLocales()}.\n     * It is more efficient, as the JDK method must create a new array each\n     * time it is called.</p>\n     *\n     * @return the unmodifiable set of available locales\n     */",
+   "name": "availableLocaleSet"
+  },
+  {
+   "javadoc": "/**\n     * <p>Checks if the locale specified is in the list of available locales.</p>\n     *\n     * @param locale the Locale object to check if it is available\n     * @return true if the locale is a known locale\n     */",
+   "name": "isAvailableLocale"
+  },
+  {
+   "javadoc": "/**\n     * <p>Obtains the list of languages supported for a given country.</p>\n     *\n     * <p>This method takes a country code and searches to find the\n     * languages available for that country. Variant locales are removed.</p>\n     *\n     * @param countryCode  the 2 letter country code, null returns empty\n     * @return an unmodifiable List of Locale objects, never null\n     */",
+   "name": "languagesByCountry"
+  },
+  {
+   "javadoc": "/**\n     * <p>Obtains the list of countries supported for a given language.</p>\n     * \n     * <p>This method takes a language code and searches to find the\n     * countries available for that language. Variant locales are removed.</p>\n     *\n     * @param languageCode  the 2 letter language code, null returns empty\n     * @return an unmodifiable List of Locale objects, never null\n     */",
+   "name": "countriesByLanguage"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class LocaleUtils",
+  "constructors": [
+   "public LocaleUtils();"
+  ],
+  "focal_signature": "public static Locale toLocale(String str)",
+  "methods": [
+   "public static List localeLookupList(Locale locale);",
+   "public static List localeLookupList(Locale locale, Locale defaultLocale);",
+   "public static List availableLocaleList();",
+   "public static Set availableLocaleSet();",
+   "public static boolean isAvailableLocale(Locale locale);",
+   "public static List languagesByCountry(String countryCode);",
+   "public static List countriesByLanguage(String languageCode);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

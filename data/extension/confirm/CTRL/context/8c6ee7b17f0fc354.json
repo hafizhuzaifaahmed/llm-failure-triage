@@ -1,0 +1,195 @@
+{
+ "bug_name": "Math_45",
+ "call_sites": [
+  {
+   "line": 247,
+   "lines": [
+    242,
+    243,
+    244,
+    245,
+    246,
+    247,
+    248,
+    249,
+    250,
+    251,
+    252
+   ],
+   "path": "src/main/java/org/apache/commons/math/distribution/KolmogorovSmirnovDistributionImpl.java",
+   "snippet": "         */\n        final RealMatrix H = new Array2DRowRealMatrix(m, m);\n\n        for (int i = 0; i < m; ++i) {\n            for (int j = 0; j < m; ++j) {\n                H.setEntry(i, j, HBigFraction.getEntry(i, j).doubleValue());\n            }\n        }\n\n        final RealMatrix Hpower = H.power(n);\n"
+  },
+  {
+   "line": 189,
+   "lines": [
+    184,
+    185,
+    186,
+    187,
+    188,
+    189,
+    190,
+    191,
+    192,
+    193,
+    194
+   ],
+   "path": "src/main/java/org/apache/commons/math/linear/AbstractFieldMatrix.java",
+   "snippet": "        final int rowCount    = getRowDimension();\n        final int columnCount = getColumnDimension();\n        final FieldMatrix<T> out = createMatrix(rowCount, columnCount);\n        for (int row = 0; row < rowCount; ++row) {\n            for (int col = 0; col < columnCount; ++col) {\n                out.setEntry(row, col, getEntry(row, col).add(m.getEntry(row, col)));\n            }\n        }\n\n        return out;\n    }"
+  },
+  {
+   "line": 206,
+   "lines": [
+    201,
+    202,
+    203,
+    204,
+    205,
+    206,
+    207,
+    208,
+    209,
+    210,
+    211
+   ],
+   "path": "src/main/java/org/apache/commons/math/linear/AbstractFieldMatrix.java",
+   "snippet": "        final int rowCount    = getRowDimension();\n        final int columnCount = getColumnDimension();\n        final FieldMatrix<T> out = createMatrix(rowCount, columnCount);\n        for (int row = 0; row < rowCount; ++row) {\n            for (int col = 0; col < columnCount; ++col) {\n                out.setEntry(row, col, getEntry(row, col).subtract(m.getEntry(row, col)));\n            }\n        }\n\n        return out;\n    }"
+  },
+  {
+   "line": 221,
+   "lines": [
+    216,
+    217,
+    218,
+    219,
+    220,
+    221,
+    222,
+    223,
+    224,
+    225,
+    226
+   ],
+   "path": "src/main/java/org/apache/commons/math/linear/AbstractFieldMatrix.java",
+   "snippet": "        final int rowCount    = getRowDimension();\n        final int columnCount = getColumnDimension();\n        final FieldMatrix<T> out = createMatrix(rowCount, columnCount);\n        for (int row = 0; row < rowCount; ++row) {\n            for (int col = 0; col < columnCount; ++col) {\n                out.setEntry(row, col, getEntry(row, col).add(d));\n            }\n        }\n\n        return out;\n    }"
+  },
+  {
+   "line": 235,
+   "lines": [
+    230,
+    231,
+    232,
+    233,
+    234,
+    235,
+    236,
+    237,
+    238,
+    239,
+    240
+   ],
+   "path": "src/main/java/org/apache/commons/math/linear/AbstractFieldMatrix.java",
+   "snippet": "        final int rowCount    = getRowDimension();\n        final int columnCount = getColumnDimension();\n        final FieldMatrix<T> out = createMatrix(rowCount, columnCount);\n        for (int row = 0; row < rowCount; ++row) {\n            for (int col = 0; col < columnCount; ++col) {\n                out.setEntry(row, col, getEntry(row, col).multiply(d));\n            }\n        }\n\n        return out;\n    }"
+  }
+ ],
+ "class_simple": "OpenMapRealMatrix",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Sparse matrix implementation based on an open addressed map.\n *\n * @version $Id$\n * @since 2.0\n */\npublic",
+  "method_javadoc": "/** {@inheritDoc} */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "private final int rows",
+  "private final int columns",
+  "private final OpenIntToDoubleHashMap entries"
+ ],
+ "focal_class": "org.apache.commons.math.linear.OpenMapRealMatrix",
+ "focal_id": "Math_45::org.apache.commons.math.linear.OpenMapRealMatrix::setEntry(int,int,double)",
+ "focal_method_name": "setEntry",
+ "generations": 3,
+ "impl_B": "@Override\n    public void setEntry(int row, int column, double value) {\n        MatrixUtils.checkRowIndex(this, row);\n        MatrixUtils.checkColumnIndex(this, column);\n        if (value == 0.0) {\n            entries.remove(computeKey(row, column));\n        } else {\n            entries.put(computeKey(row, column), value);\n        }\n    }",
+ "imports": [
+  "java.io.Serializable",
+  "org.apache.commons.math.exception.NumberIsTooLargeException",
+  "org.apache.commons.math.util.OpenIntToDoubleHashMap"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math.linear",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "copy"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "createMatrix"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getColumnDimension"
+  },
+  {
+   "javadoc": "/**\n     * Compute the sum of this matrix and {@code m}.\n     *\n     * @param m Matrix to be added.\n     * @return {@code this} + {@code m}.\n     * @throws org.apache.commons.math.exception.DimensionMismatchException\n     * if {@code m} is not the same size as this matrix.\n     */",
+   "name": "add"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "subtract"
+  },
+  {
+   "javadoc": "/**\n     * Subtract {@code m} from this matrix.\n     *\n     * @param m Matrix to be subtracted.\n     * @return {@code this} - {@code m}.\n     * @throws org.apache.commons.math.exception.DimensionMismatchException\n     * if {@code m} is not the same size as this matrix.\n     */",
+   "name": "subtract"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "multiply"
+  },
+  {
+   "javadoc": "/**\n     * Postmultiply this matrix by {@code m}.\n     *\n     * @param m Matrix to postmultiply by.\n     * @return {@code this} * {@code m}.\n     * @throws MatrixDimensionMismatchException\n     * if the number of rows of {@code m} differ from the number of columns\n     * of this matrix.\n     */",
+   "name": "multiply"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getEntry"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getRowDimension"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "addToEntry"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "multiplyEntry"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class OpenMapRealMatrix extends AbstractRealMatrix implements SparseRealMatrix, Serializable",
+  "constructors": [
+   "public OpenMapRealMatrix(int rowDimension, int columnDimension);",
+   "public OpenMapRealMatrix(OpenMapRealMatrix matrix);"
+  ],
+  "focal_signature": "public void setEntry(int row, int column, double value)",
+  "methods": [
+   "public OpenMapRealMatrix copy();",
+   "public OpenMapRealMatrix createMatrix(int rowDimension, int columnDimension);",
+   "public int getColumnDimension();",
+   "public OpenMapRealMatrix add(OpenMapRealMatrix m);",
+   "public OpenMapRealMatrix subtract(final RealMatrix m);",
+   "public OpenMapRealMatrix subtract(OpenMapRealMatrix m);",
+   "public RealMatrix multiply(final RealMatrix m);",
+   "public OpenMapRealMatrix multiply(OpenMapRealMatrix m);",
+   "public double getEntry(int row, int column);",
+   "public int getRowDimension();",
+   "public void addToEntry(int row, int column, double increment);",
+   "public void multiplyEntry(int row, int column, double factor);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

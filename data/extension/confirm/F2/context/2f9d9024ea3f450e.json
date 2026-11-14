@@ -1,0 +1,298 @@
+{
+ "bug_name": "JacksonDatabind_104",
+ "call_sites": [
+  {
+   "line": 851,
+   "lines": [
+    846,
+    847,
+    848,
+    849,
+    850,
+    851,
+    852,
+    853,
+    854,
+    855,
+    856
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "    public Object handleWeirdKey(Class<?> keyClass, String keyValue,\n            String msg, Object... msgArgs)\n        throws IOException\n    {\n        // but if not handled, just throw exception\n        msg = _format(msg, msgArgs);\n        LinkedNode<DeserializationProblemHandler> h = _config.getProblemHandlers();\n        while (h != null) {\n            // Can bail out if it's handled\n            Object key = h.value().handleWeirdKey(this, keyClass, keyValue, msg);\n            if (key != DeserializationProblemHandler.NOT_HANDLED) {"
+  },
+  {
+   "line": 895,
+   "lines": [
+    890,
+    891,
+    892,
+    893,
+    894,
+    895,
+    896,
+    897,
+    898,
+    899,
+    900
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "    public Object handleWeirdStringValue(Class<?> targetClass, String value,\n            String msg, Object... msgArgs)\n        throws IOException\n    {\n        // but if not handled, just throw exception\n        msg = _format(msg, msgArgs);\n        LinkedNode<DeserializationProblemHandler> h = _config.getProblemHandlers();\n        while (h != null) {\n            // Can bail out if it's handled\n            Object instance = h.value().handleWeirdStringValue(this, targetClass, value, msg);\n            if (instance != DeserializationProblemHandler.NOT_HANDLED) {"
+  },
+  {
+   "line": 938,
+   "lines": [
+    933,
+    934,
+    935,
+    936,
+    937,
+    938,
+    939,
+    940,
+    941,
+    942,
+    943
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "     */\n    public Object handleWeirdNumberValue(Class<?> targetClass, Number value,\n            String msg, Object... msgArgs)\n        throws IOException\n    {\n        msg = _format(msg, msgArgs);\n        LinkedNode<DeserializationProblemHandler> h = _config.getProblemHandlers();\n        while (h != null) {\n            // Can bail out if it's handled\n            Object key = h.value().handleWeirdNumberValue(this, targetClass, value, msg);\n            if (key != DeserializationProblemHandler.NOT_HANDLED) {"
+  },
+  {
+   "line": 948,
+   "lines": [
+    943,
+    944,
+    945,
+    946,
+    947,
+    948,
+    949,
+    950,
+    951,
+    952,
+    953
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "            if (key != DeserializationProblemHandler.NOT_HANDLED) {\n                // Sanity check for broken handlers, otherwise nasty to debug:\n                if (_isCompatible(targetClass, key)) {\n                    return key;\n                }\n                throw weirdNumberException(value, targetClass, _format(\n                        \"DeserializationProblemHandler.handleWeirdNumberValue() for type %s returned value of type %s\",\n                        targetClass, key.getClass()));\n            }\n            h = h.next();\n        }"
+  },
+  {
+   "line": 971,
+   "lines": [
+    966,
+    967,
+    968,
+    969,
+    970,
+    971,
+    972,
+    973,
+    974,
+    975,
+    976
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "            if (goodValue != DeserializationProblemHandler.NOT_HANDLED) {\n                // Sanity check for broken handlers, otherwise nasty to debug:\n                if ((goodValue == null) || raw.isInstance(goodValue)) {\n                    return goodValue;\n                }\n                throw JsonMappingException.from(p, _format(\n\"DeserializationProblemHandler.handleWeirdNativeValue() for type %s returned value of type %s\",\ntargetType, goodValue.getClass()));\n            }\n        }\n        throw weirdNativeValueException(badValue, raw);"
+  }
+ ],
+ "class_simple": "StdDateFormat",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Default {@link DateFormat} implementation used by standard Date\n * serializers and deserializers. For serialization defaults to using\n * an ISO-8601 compliant format (format String \"yyyy-MM-dd'T'HH:mm:ss.SSSZ\")\n * and for deserialization, both ISO-8601 and RFC-1123.\n */\n@SuppressWarnings(\"serial\")\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "protected final static String PATTERN_PLAIN_STR",
+  "protected final static Pattern PATTERN_PLAIN",
+  "protected final static Pattern PATTERN_ISO8601",
+  "public final static String DATE_FORMAT_STR_ISO8601",
+  "protected final static String DATE_FORMAT_STR_PLAIN",
+  "protected final static String DATE_FORMAT_STR_RFC1123",
+  "protected final static String[] ALL_FORMATS",
+  "protected final static TimeZone DEFAULT_TIMEZONE",
+  "protected final static Locale DEFAULT_LOCALE",
+  "protected final static DateFormat DATE_FORMAT_RFC1123",
+  "protected final static DateFormat DATE_FORMAT_ISO8601",
+  "public final static StdDateFormat instance",
+  "protected static final Calendar CALENDAR",
+  "protected transient TimeZone _timezone",
+  "protected final Locale _locale",
+  "protected Boolean _lenient",
+  "private transient Calendar _calendar",
+  "private transient DateFormat _formatRFC1123",
+  "private boolean _tzSerializedWithColon"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.util.StdDateFormat",
+ "focal_id": "JacksonDatabind_104::com.fasterxml.jackson.databind.util.StdDateFormat::_format(TimeZone,Locale,Date,StringBuffer)",
+ "focal_method_name": "_format",
+ "generations": 3,
+ "impl_B": "protected void _format(TimeZone tz, Locale loc, Date date,\n            StringBuffer buffer)\n    {\n        Calendar cal = _getCalendar(tz);\n        cal.setTime(date);\n        // [databind#2167]: handle range beyond [1, 9999]\n        final int year = cal.get(Calendar.YEAR);\n\n        // Assuming GregorianCalendar, special handling needed for BCE (aka BC)\n                // 22-Nov-2018, tatu: Handling beyond 4-digits is not well specified wrt ISO-8601, but\n                //   it seems that plus prefix IS mandated. Padding is an open question, but since agreeement\n                //   for max length would be needed, we ewould need to limit to arbitrary length\n                //   like five digits (erroring out if beyond or padding to that as minimum).\n                //   Instead, let's just print number out as is and let decoder try to make sense of it.\n            pad4(buffer, year);\n        buffer.append('-');\n        pad2(buffer, cal.get(Calendar.MONTH) + 1);\n        buffer.append('-');\n        pad2(buffer, cal.get(Calendar.DAY_OF_MONTH));\n        buffer.append('T');\n        pad2(buffer, cal.get(Calendar.HOUR_OF_DAY));\n        buffer.append(':');\n        pad2(buffer, cal.get(Calendar.MINUTE));\n        buffer.append(':');\n        pad2(buffer, cal.get(Calendar.SECOND));\n        buffer.append('.');\n        pad3(buffer, cal.get(Calendar.MILLISECOND));\n\n        int offset = tz.getOffset(cal.getTimeInMillis());\n        if (offset != 0) {\n            int hours = Math.abs((offset / (60 * 1000)) / 60);\n            int minutes = Math.abs((offset / (60 * 1000)) % 60);\n            buffer.append(offset < 0 ? '-' : '+');\n            pad2(buffer, hours);\n            if( _tzSerializedWithColon ) {\n            \t\tbuffer.append(':');\n            }\n            pad2(buffer, minutes);\n        } else {\n            // 24-Jun-2017, tatu: While `Z` would be conveniently short, older specs\n            //   mandate use of full `+0000`\n//            formatted.append('Z');\n\t        \tif( _tzSerializedWithColon ) {\n\t            buffer.append(\"+00:00\");\n\t        \t}\n\t        \telse {\n\t        \t\tbuffer.append(\"+0000\");\n\t        \t}\n        }\n    }",
+ "imports": [
+  "java.text.DateFormat",
+  "java.text.FieldPosition",
+  "java.text.ParseException",
+  "java.text.ParsePosition",
+  "java.text.SimpleDateFormat",
+  "java.util.*",
+  "java.util.regex.Matcher",
+  "java.util.regex.Pattern",
+  "com.fasterxml.jackson.core.io.NumberInput"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.util",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "getDefaultTimeZone"
+  },
+  {
+   "javadoc": "/**\n     * Method used for creating a new instance with specified timezone;\n     * if no timezone specified, defaults to the default timezone (UTC).\n     */",
+   "name": "withTimeZone"
+  },
+  {
+   "javadoc": "/**\n     * \"Mutant factory\" method that will return an instance that uses specified\n     * {@code Locale}:\n     * either {@code this} instance (if setting would not change), or newly\n     * constructed instance with different {@code Locale} to use.\n     */",
+   "name": "withLocale"
+  },
+  {
+   "javadoc": "/**\n     * \"Mutant factory\" method that will return an instance that has specified leniency\n     * setting: either {@code this} instance (if setting would not change), or newly\n     * constructed instance.\n     *\n     * @since 2.9\n     */",
+   "name": "withLenient"
+  },
+  {
+   "javadoc": "/**\n     * \"Mutant factory\" method that will return an instance that has specified\n     * handling of colon when serializing timezone (timezone either written\n     * like {@code +0500} or {@code +05:00}):\n     * either {@code this} instance (if setting would not change), or newly\n     * constructed instance with desired setting for colon inclusion.\n     *<p>\n     * NOTE: does NOT affect deserialization as colon is optional accepted\n     * but not required -- put another way, either serialization is accepted\n     * by this class.\n     *\n     * @since 2.9.1\n     */",
+   "name": "withColonInTimeZone"
+  },
+  {
+   "javadoc": "",
+   "name": "clone"
+  },
+  {
+   "javadoc": "/**\n     * Method for getting a non-shared DateFormat instance\n     * that uses specified timezone and can handle simple ISO-8601\n     * compliant date format.\n     * \n     * @since 2.4\n     *\n     * @deprecated Since 2.9\n     */",
+   "name": "getISO8601Format"
+  },
+  {
+   "javadoc": "/**\n     * Method for getting a non-shared DateFormat instance\n     * that uses specific timezone and can handle RFC-1123\n     * compliant date format.\n     * \n     * @since 2.4\n     *\n     * @deprecated Since 2.9\n     */",
+   "name": "getRFC1123Format"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getTimeZone"
+  },
+  {
+   "javadoc": "",
+   "name": "setTimeZone"
+  },
+  {
+   "javadoc": "/**\n     * Need to override since we need to keep track of leniency locally,\n     * and not via underlying {@link Calendar} instance like base class\n     * does.\n     */",
+   "name": "setLenient"
+  },
+  {
+   "javadoc": "",
+   "name": "isLenient"
+  },
+  {
+   "javadoc": "/**\n     * Accessor for checking whether this instance would include colon\n     * within timezone serialization or not: if {code true}, timezone offset\n     * is serialized like {@code -06:00}; if {code false} as {@code -0600}.\n     *<p>\n     * NOTE: only relevant for serialization (formatting), as deserialization\n     * (parsing) always accepts optional colon but does not require it, regardless\n     * of this setting.\n     *\n     * @return {@code true} if a colon is to be inserted between the hours and minutes \n     * of the TZ offset when serializing as String; otherwise {@code false}\n     *\n     * @since 2.9.1\n     */",
+   "name": "isColonIncludedInTimeZone"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "parse"
+  },
+  {
+   "javadoc": "",
+   "name": "parse"
+  },
+  {
+   "javadoc": "",
+   "name": "_parseDate"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "format"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "toString"
+  },
+  {
+   "javadoc": "",
+   "name": "toPattern"
+  },
+  {
+   "javadoc": "",
+   "name": "equals"
+  },
+  {
+   "javadoc": "",
+   "name": "hashCode"
+  },
+  {
+   "javadoc": "/**\n     * Helper method used to figure out if input looks like valid\n     * ISO-8601 string.\n     */",
+   "name": "looksLikeISO8601"
+  },
+  {
+   "javadoc": "",
+   "name": "parseAsISO8601"
+  },
+  {
+   "javadoc": "",
+   "name": "_parseAsISO8601"
+  },
+  {
+   "javadoc": "",
+   "name": "parseAsRFC1123"
+  },
+  {
+   "javadoc": "",
+   "name": "_clearFormats"
+  },
+  {
+   "javadoc": "",
+   "name": "_getCalendar"
+  },
+  {
+   "javadoc": "",
+   "name": "_equals"
+  }
+ ],
+ "sig": {
+  "class_declaration": "@SuppressWarnings(\"serial\") public class StdDateFormat extends DateFormat",
+  "constructors": [
+   "public StdDateFormat();",
+   "// since 2.7 public StdDateFormat(TimeZone tz, Locale loc);",
+   "protected StdDateFormat(TimeZone tz, Locale loc, Boolean lenient);",
+   "protected StdDateFormat(TimeZone tz, Locale loc, Boolean lenient, boolean formatTzOffsetWithColon);"
+  ],
+  "focal_signature": "protected void _format(TimeZone tz, Locale loc, Date date, StringBuffer buffer)",
+  "methods": [
+   "public static TimeZone getDefaultTimeZone();",
+   "public StdDateFormat withTimeZone(TimeZone tz);",
+   "public StdDateFormat withLocale(Locale loc);",
+   "public StdDateFormat withLenient(Boolean b);",
+   "public StdDateFormat withColonInTimeZone(boolean b);",
+   "public StdDateFormat clone();",
+   "// since 2.9 public static DateFormat getISO8601Format(TimeZone tz, Locale loc);",
+   "// since 2.9 public static DateFormat getRFC1123Format(TimeZone tz, Locale loc);",
+   "// since 2.6 public TimeZone getTimeZone();",
+   "public void setTimeZone(TimeZone tz);",
+   "// since 2.7 public void setLenient(boolean enabled);",
+   "// since 2.7 public boolean isLenient();",
+   "public boolean isColonIncludedInTimeZone();",
+   "public Date parse(String dateStr) throws ParseException;",
+   "public Date parse(String dateStr, ParsePosition pos);",
+   "protected Date _parseDate(String dateStr, ParsePosition pos) throws ParseException;",
+   "public StringBuffer format(Date date, StringBuffer toAppendTo, FieldPosition fieldPosition);",
+   "public String toString();",
+   "public String toPattern();",
+   "// since 2.7[.2], as per [databind#1130] public boolean equals(Object o);",
+   "// since 2.7[.2], as per [databind#1130] public int hashCode();",
+   "protected boolean looksLikeISO8601(String dateStr);",
+   "protected Date parseAsISO8601(String dateStr, ParsePosition pos) throws ParseException;",
+   "protected Date _parseAsISO8601(String dateStr, ParsePosition bogus) throws IllegalArgumentException, ParseException;",
+   "protected Date parseAsRFC1123(String dateStr, ParsePosition pos);",
+   "protected void _clearFormats();",
+   "protected Calendar _getCalendar(TimeZone tz);",
+   "protected static <T> boolean _equals(T value1, T value2);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

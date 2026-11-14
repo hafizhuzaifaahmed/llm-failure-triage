@@ -1,0 +1,13 @@
+{
+  "assembled": true,
+  "call_key": "96d5e93c4331dcc9966c61a23ec2b40eb4f28eeb53544e91ef3541109e368cb5",
+  "candidate_id": "3c94f442243162eae705",
+  "class_name": "FieldUtils_safeMultiply_TriageGen0Test",
+  "dataset": "D2",
+  "focal_id": "Time_15::org.joda.time.field.FieldUtils::safeMultiply(long,int)#m100",
+  "generation": 0,
+  "model_returned": "gemma4:26b",
+  "n_tests": 6,
+  "package": "org.joda.time.field",
+  "source": "package org.joda.time.field;\n\nimport java.io.*;\nimport java.math.*;\nimport java.util.*;\nimport org.joda.time.DateTimeField;\nimport org.joda.time.DateTimeFieldType;\nimport org.joda.time.IllegalFieldValueException;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\npublic class FieldUtils_safeMultiply_TriageGen0Test {\n\n    @Test\n    public void testSafeMultiply_CaseMinusOne_Normal() {\n        // Tests case -1 where val1 is not Long.MIN_VALUE\n        assertEquals(10L, FieldUtils.safeMultiply(10L, -1));\n        assertEquals(-10L, FieldUtils.safeMultiply(-10L, -1));\n        assertEquals(0L, FieldUtils.safeMultiply(0L, -1));\n    }\n\n    @Test(expected = ArithmeticException.class)\n    public void testSafeMultiply_CaseMinusOne_Overflow() {\n        // Tests case -1 where val1 is Long.MIN_VALUE (overflows when negated)\n        FieldUtils.safeMultiply(Long.MIN_VALUE, -1);\n    }\n\n    @Test\n    public void testSafeMultiply_CaseZero() {\n        // Tests case 0\n        assertEquals(0L, FieldUtils.safeMultiply(100L, 0));\n        assertEquals(0L, FieldUtils.safeMultiply(-100L, 0));\n        assertEquals(0L, FieldUtils.safeMultiply(0L, 0));\n    }\n\n    @Test\n    public void testSafeMultiply_CaseOne() {\n        // Tests case 1\n        assertEquals(100L, FieldUtils.safeMultiply(100L, 1));\n        assertEquals(-100L, FieldUtils.safeMultiply(-100L, 1));\n        assertEquals(0L, FieldUtils.safeMultiply(0L, 1));\n    }\n\n    @Test(expected = ArithmeticException.class)\n    public void testSafeMultiply_OtherCases_ThrowsException() {\n        // The provided implementation has a hardcoded 'if (true)' \n        // which forces an ArithmeticException for any val2 not in {-1, 0, 1}\n        FieldUtils.safeMultiply(10L, 2);\n    }\n\n    @Test(expected = ArithmeticException.class)\n    public void testSafeMultiply_OtherCases_Negative() {\n        // Tests branch for val2 < -1\n        FieldUtils.safeMultiply(10L, -2);\n    }\n}\n"
+}

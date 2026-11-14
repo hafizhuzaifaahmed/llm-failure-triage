@@ -1,0 +1,328 @@
+{
+ "bug_name": "JacksonCore_3",
+ "call_sites": [
+  {
+   "line": 232,
+   "lines": [
+    227,
+    228,
+    229,
+    230,
+    231,
+    232,
+    233,
+    234,
+    235,
+    236,
+    237
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/json/ByteSourceJsonBootstrapper.java",
+   "snippet": "            /* and without canonicalization, byte-based approach is not performance; just use std UTF-8 reader\n             * (which is ok for larger input; not so hot for smaller; but this is not a common case)\n             */\n            if (canonicalize) {\n                BytesToNameCanonicalizer can = rootByteSymbols.makeChild(canonicalize, intern);\n                return new UTF8StreamJsonParser(_context, parserFeatures, _in, codec, can, _inputBuffer, _inputPtr, _inputEnd, _bufferRecyclable);\n            }\n        }\n        return new ReaderBasedJsonParser(_context, parserFeatures, constructReader(), codec,\n                rootCharSymbols.makeChild(canonicalize, intern));\n    }"
+  }
+ ],
+ "class_simple": "UTF8StreamJsonParser",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * This is a concrete implementation of {@link JsonParser}, which is\n * based on a {@link java.io.InputStream} as the input source.\n *<p>\n * Note: non-final since version 2.3.\n */\npublic",
+  "method_javadoc": "/**********************************************************\n     */"
+ },
+ "fields": [
+  "final static byte BYTE_LF",
+  "private final static int[] _icUTF8",
+  "protected final static int[] _icLatin1",
+  "private final static int[] _icWS",
+  "protected ObjectCodec _objectCodec",
+  "final protected BytesToNameCanonicalizer _symbols",
+  "protected int[] _quadBuffer",
+  "protected boolean _tokenIncomplete",
+  "private int _quad1",
+  "protected InputStream _inputStream",
+  "protected byte[] _inputBuffer",
+  "protected boolean _bufferRecyclable"
+ ],
+ "focal_class": "com.fasterxml.jackson.core.json.UTF8StreamJsonParser",
+ "focal_id": "JacksonCore_3::com.fasterxml.jackson.core.json.UTF8StreamJsonParser::UTF8StreamJsonParser(IOContext,int,InputStream,ObjectCodec,BytesToNameCanonicalizer,byte[],int,int,boolean)",
+ "focal_method_name": "UTF8StreamJsonParser",
+ "generations": 3,
+ "impl_B": "public UTF8StreamJsonParser(IOContext ctxt, int features, InputStream in,\n            ObjectCodec codec, BytesToNameCanonicalizer sym,\n            byte[] inputBuffer, int start, int end,\n            boolean bufferRecyclable)\n    {\n        super(ctxt, features);\n        _inputStream = in;\n        _objectCodec = codec;\n        _symbols = sym;\n        _inputBuffer = inputBuffer;\n        _inputPtr = start;\n        _inputEnd = end;\n        // If we have offset, need to omit that from byte offset, so:\n        _bufferRecyclable = bufferRecyclable;\n    }",
+ "imports": [
+  "java.io.*",
+  "java.util.Arrays",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.core.base.ParserBase",
+  "com.fasterxml.jackson.core.io.CharTypes",
+  "com.fasterxml.jackson.core.io.IOContext",
+  "com.fasterxml.jackson.core.sym.*",
+  "com.fasterxml.jackson.core.util.*",
+  "static com.fasterxml.jackson.core.JsonTokenId.*"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.core.json",
+ "project": "JacksonCore",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "getCodec"
+  },
+  {
+   "javadoc": "",
+   "name": "setCodec"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "releaseBuffered"
+  },
+  {
+   "javadoc": "",
+   "name": "getInputSource"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "loadMore"
+  },
+  {
+   "javadoc": "/**\n     * Helper method that will try to load at least specified number bytes in\n     * input buffer, possible moving existing data around if necessary\n     */",
+   "name": "_loadToHaveAtLeast"
+  },
+  {
+   "javadoc": "",
+   "name": "_closeInput"
+  },
+  {
+   "javadoc": "/**\n     * Method called to release internal buffers owned by the base\n     * reader. This may be called along with {@link #_closeInput} (for\n     * example, when explicitly closing this reader instance), or\n     * separately (if need be).\n     */",
+   "name": "_releaseBuffers"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getText"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueAsString"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueAsString"
+  },
+  {
+   "javadoc": "",
+   "name": "_getText2"
+  },
+  {
+   "javadoc": "",
+   "name": "getTextCharacters"
+  },
+  {
+   "javadoc": "",
+   "name": "getTextLength"
+  },
+  {
+   "javadoc": "",
+   "name": "getTextOffset"
+  },
+  {
+   "javadoc": "",
+   "name": "getBinaryValue"
+  },
+  {
+   "javadoc": "",
+   "name": "readBinaryValue"
+  },
+  {
+   "javadoc": "",
+   "name": "_readBinary"
+  },
+  {
+   "javadoc": "",
+   "name": "getTokenLocation"
+  },
+  {
+   "javadoc": "",
+   "name": "getCurrentLocation"
+  },
+  {
+   "javadoc": "/**\n     * @return Next token from the stream, if any found, or null\n     *   to indicate end-of-input\n     */",
+   "name": "nextToken"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "nextFieldName"
+  },
+  {
+   "javadoc": "",
+   "name": "nextTextValue"
+  },
+  {
+   "javadoc": "",
+   "name": "nextIntValue"
+  },
+  {
+   "javadoc": "",
+   "name": "nextLongValue"
+  },
+  {
+   "javadoc": "",
+   "name": "nextBooleanValue"
+  },
+  {
+   "javadoc": "/**\n     * Initial parsing method for number values. It needs to be able\n     * to parse enough input to be able to determine whether the\n     * value is to be considered a simple integer value, or a more\n     * generic decimal value: latter of which needs to be expressed\n     * as a floating point number. The basic rule is that if the number\n     * has no fractional or exponential part, it is an integer; otherwise\n     * a floating point number.\n     *<p>\n     * Because much of input has to be processed in any case, no partial\n     * parsing is done: all input text will be stored for further\n     * processing. However, actual numeric value conversion will be\n     * deferred, since it is usually the most complicated and costliest\n     * part of processing.\n     */",
+   "name": "_parseNumber"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_parseName"
+  },
+  {
+   "javadoc": "",
+   "name": "parseMediumName"
+  },
+  {
+   "javadoc": "",
+   "name": "parseLongName"
+  },
+  {
+   "javadoc": "/**\n     * Method called when not even first 8 bytes are guaranteed\n     * to come consequtively. Happens rarely, so this is offlined;\n     * plus we'll also do full checks for escaping etc.\n     */",
+   "name": "slowParseName"
+  },
+  {
+   "javadoc": "/**\n     * Slower parsing method which is generally branched to when\n     * an escape sequence is detected (or alternatively for long\n     * names, or ones crossing input buffer boundary). In any case,\n     * needs to be able to handle more exceptional cases, gets\n     * slower, and hance is offlined to a separate method.\n     */",
+   "name": "parseEscapedName"
+  },
+  {
+   "javadoc": "/**\n     * Method called when we see non-white space character other\n     * than double quote, when expecting a field name.\n     * In standard mode will just throw an expection; but\n     * in non-standard modes may be able to parse name.\n     */",
+   "name": "_handleOddName"
+  },
+  {
+   "javadoc": "",
+   "name": "_parseAposName"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_finishString"
+  },
+  {
+   "javadoc": "/**\n     * Method called to skim through rest of unparsed String value,\n     * if it is not needed. This can be done bit faster if contents\n     * need not be stored for future access.\n     */",
+   "name": "_skipString"
+  },
+  {
+   "javadoc": "/**\n     * Method for handling cases where first non-space character\n     * of an expected value token is not legal for standard JSON content.\n     */",
+   "name": "_handleUnexpectedValue"
+  },
+  {
+   "javadoc": "",
+   "name": "_handleApos"
+  },
+  {
+   "javadoc": "/**\n     * Method called if expected numeric value (due to leading sign) does not\n     * look like a number\n     */",
+   "name": "_handleInvalidNumberStart"
+  },
+  {
+   "javadoc": "",
+   "name": "_matchToken"
+  },
+  {
+   "javadoc": "",
+   "name": "_decodeEscaped"
+  },
+  {
+   "javadoc": "",
+   "name": "_decodeCharForError"
+  },
+  {
+   "javadoc": "/**\n     * We actually need to check the character value here\n     * (to see if we have \\n following \\r).\n     */",
+   "name": "_skipCR"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_reportInvalidToken"
+  },
+  {
+   "javadoc": "",
+   "name": "_reportInvalidToken"
+  },
+  {
+   "javadoc": "",
+   "name": "_reportInvalidChar"
+  },
+  {
+   "javadoc": "",
+   "name": "_reportInvalidInitial"
+  },
+  {
+   "javadoc": "",
+   "name": "_reportInvalidOther"
+  },
+  {
+   "javadoc": "",
+   "name": "_reportInvalidOther"
+  },
+  {
+   "javadoc": "",
+   "name": "growArrayBy"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class UTF8StreamJsonParser extends ParserBase",
+  "constructors": [
+   "public UTF8StreamJsonParser(IOContext ctxt, int features, InputStream in, ObjectCodec codec, BytesToNameCanonicalizer sym, byte[] inputBuffer, int start, int end, boolean bufferRecyclable);"
+  ],
+  "focal_signature": "public UTF8StreamJsonParser(IOContext ctxt, int features, InputStream in, ObjectCodec codec, BytesToNameCanonicalizer sym, byte[] inputBuffer, int start, int end, boolean bufferRecyclable)",
+  "methods": [
+   "public ObjectCodec getCodec();",
+   "public void setCodec(ObjectCodec c);",
+   "public int releaseBuffered(OutputStream out) throws IOException;",
+   "public Object getInputSource();",
+   "protected final boolean loadMore() throws IOException;",
+   "protected final boolean _loadToHaveAtLeast(int minAvailable) throws IOException;",
+   "protected void _closeInput() throws IOException;",
+   "protected void _releaseBuffers() throws IOException;",
+   "public String getText() throws IOException, JsonParseException;",
+   "public String getValueAsString() throws IOException, JsonParseException;",
+   "public String getValueAsString(String defValue) throws IOException, JsonParseException;",
+   "protected final String _getText2(JsonToken t);",
+   "public char[] getTextCharacters() throws IOException, JsonParseException;",
+   "public int getTextLength() throws IOException, JsonParseException;",
+   "public int getTextOffset() throws IOException, JsonParseException;",
+   "public byte[] getBinaryValue(Base64Variant b64variant) throws IOException, JsonParseException;",
+   "public int readBinaryValue(Base64Variant b64variant, OutputStream out) throws IOException, JsonParseException;",
+   "protected int _readBinary(Base64Variant b64variant, OutputStream out, byte[] buffer) throws IOException, JsonParseException;",
+   "public JsonLocation getTokenLocation();",
+   "public JsonLocation getCurrentLocation();",
+   "public JsonToken nextToken() throws IOException, JsonParseException;",
+   "public boolean nextFieldName(SerializableString str) throws IOException, JsonParseException;",
+   "public String nextTextValue() throws IOException, JsonParseException;",
+   "public int nextIntValue(int defaultValue) throws IOException, JsonParseException;",
+   "public long nextLongValue(long defaultValue) throws IOException, JsonParseException;",
+   "public Boolean nextBooleanValue() throws IOException, JsonParseException;",
+   "protected JsonToken _parseNumber(int c) throws IOException, JsonParseException;",
+   "protected Name _parseName(int i) throws IOException;",
+   "protected Name parseMediumName(int q2, final int[] codes) throws IOException;",
+   "protected Name parseLongName(int q) throws IOException;",
+   "protected Name slowParseName() throws IOException;",
+   "protected Name parseEscapedName(int[] quads, int qlen, int currQuad, int ch, int currQuadBytes) throws IOException;",
+   "protected Name _handleOddName(int ch) throws IOException;",
+   "protected Name _parseAposName() throws IOException;",
+   "protected void _finishString() throws IOException;",
+   "protected void _skipString() throws IOException;",
+   "protected JsonToken _handleUnexpectedValue(int c) throws IOException;",
+   "protected JsonToken _handleApos() throws IOException;",
+   "protected JsonToken _handleInvalidNumberStart(int ch, boolean neg) throws IOException;",
+   "protected void _matchToken(String matchStr, int i) throws IOException;",
+   "protected char _decodeEscaped() throws IOException;",
+   "protected int _decodeCharForError(int firstByte) throws IOException;",
+   "protected final void _skipCR() throws IOException;",
+   "protected void _reportInvalidToken(String matchedPart) throws IOException;",
+   "protected void _reportInvalidToken(String matchedPart, String msg) throws IOException;",
+   "protected void _reportInvalidChar(int c) throws JsonParseException;",
+   "protected void _reportInvalidInitial(int mask) throws JsonParseException;",
+   "protected void _reportInvalidOther(int mask) throws JsonParseException;",
+   "protected void _reportInvalidOther(int mask, int ptr) throws JsonParseException;",
+   "public static int[] growArrayBy(int[] arr, int more);"
+  ],
+  "type_signatures": [
+   "public final class IOContext { public IOContext(BufferRecycler br, Object sourceRef, boolean managedResource); public void setEncoding(JsonEncoding enc); public Object getSourceReference(); public JsonEncoding getEncoding(); public boolean isResourceManaged(); public TextBuffer constructTextBuffer(); public byte[] allocReadIOBuffer(); public byte[] allocWriteEncodingBuffer(); public byte[] allocBase64Buffer(); public char[] allocTokenBuffer(); public char[] allocConcatBuffer(); public char[] allocNameCopyBuffer(int minSize); public void releaseReadIOBuffer(byte[] buf); public void releaseWriteEncodingBuffer(byte[] buf); public void releaseBase64Buffer(byte[] buf); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

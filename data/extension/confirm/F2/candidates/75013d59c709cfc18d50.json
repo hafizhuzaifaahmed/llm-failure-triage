@@ -1,0 +1,14 @@
+{
+  "assembled": true,
+  "call_key": "ff593e865953924483c6b67b3116854e85e6c6efbd836a7b7a070b1490a9e475",
+  "candidate_id": "75013d59c709cfc18d50",
+  "class_name": "NullifyingDeserializer_deserialize_TriageGen1Test",
+  "dataset": "D1C_F2",
+  "focal_id": "JacksonDatabind_39::com.fasterxml.jackson.databind.deser.std.NullifyingDeserializer::deserialize(JsonParser,DeserializationContext)",
+  "generation": 1,
+  "model_returned": "gemma4:26b",
+  "n_tests": 2,
+  "package": "com.fasterxml.jackson.databind.deser.std",
+  "source": "package com.fasterxml.jackson.databind.deser.std;\n\nimport com.fasterxml.jackson.core.*;\nimport com.fasterxml.jackson.core.JsonParser;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.databind.*;\nimport com.fasterxml.jackson.databind.DeserializationContext;\nimport com.fasterxml.jackson.databind.jsontype.TypeDeserializer;\nimport java.io.*;\nimport java.io.IOException;\nimport java.math.*;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Before;\nimport org.junit.Test;\nimport org.mockito.Mockito;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertNull;\nimport static org.mockito.Mockito.mock;\nimport static org.mockito.Mockito.times;\nimport static org.mockito.Mockito.verify;\n\n/**\n * Unit tests for NullifyingDeserializer#deserialize\n */\npublic class NullifyingDeserializer_deserialize_TriageGen1Test {\n\n    private NullifyingDeserializer deserializer;\n    private JsonParser p;\n    private DeserializationContext ctxt;\n\n    @Before\n    public void setUp() {\n        deserializer = new NullifyingDeserializer();\n        p = mock(JsonParser.class);\n        ctxt = mock(DeserializationContext.class);\n    }\n\n    @Test\n    public void testDeserialize_ReturnsNullAndSkipsChildren() throws IOException {\n        // Execute\n        Object result = deserializer.deserialize(p, ctxt);\n\n        // Verify\n        assertNull(\"The method should return null\", result);\n        verify(p, times(1)).skipChildren();\n    }\n\n    @Test\n    public void testDeserialize_ThrowsIOException() throws IOException {\n        // Setup mock to throw exception\n        Mockito.doThrow(new IOException(\"Simulated IO Error\")).when(p).skipChildren();\n\n        // Execute & Verify\n        try {\n            deserializer.deserialize(p, ctxt);\n            org.junit.Assert.fail(\"Expected IOException to be thrown\");\n        } catch (IOException e) {\n            org.junit.Assert.assertEquals(\"Simulated IO Error\", e.getMessage());\n        }\n    }\n}\n",
+  "tranche": "F2"
+}

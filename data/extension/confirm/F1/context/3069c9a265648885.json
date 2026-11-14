@@ -1,0 +1,220 @@
+{
+ "bug_name": "Math_91",
+ "call_sites": [
+  {
+   "line": 157,
+   "lines": [
+    152,
+    153,
+    154,
+    155,
+    156,
+    157,
+    158,
+    159,
+    160,
+    161,
+    162
+   ],
+   "path": "src/java/org/apache/commons/math/fraction/BigFraction.java",
+   "snippet": "            denominator = BigInteger.ONE;\n        } else {\n\n            // reduce numerator and denominator by greatest common denominator\n            final BigInteger gcd = num.gcd(den);\n            if (BigInteger.ONE.compareTo(gcd) < 0) {\n                num = num.divide(gcd);\n                den = den.divide(gcd);\n            }\n\n            // move sign to numerator"
+  },
+  {
+   "line": 163,
+   "lines": [
+    158,
+    159,
+    160,
+    161,
+    162,
+    163,
+    164,
+    165,
+    166,
+    167,
+    168
+   ],
+   "path": "src/java/org/apache/commons/math/fraction/BigFraction.java",
+   "snippet": "                num = num.divide(gcd);\n                den = den.divide(gcd);\n            }\n\n            // move sign to numerator\n            if (BigInteger.ZERO.compareTo(den) > 0) {\n                num = num.negate();\n                den = den.negate();\n            }\n\n            // store the values in the final fields"
+  },
+  {
+   "line": 444,
+   "lines": [
+    439,
+    440,
+    441,
+    442,
+    443,
+    444,
+    445,
+    446,
+    447,
+    448,
+    449
+   ],
+   "path": "src/java/org/apache/commons/math/fraction/BigFraction.java",
+   "snippet": "     * </p>\n     * \n     * @return the absolute value as a {@link BigFraction}.\n     */\n    public BigFraction abs() {\n        return (BigInteger.ZERO.compareTo(numerator) <= 0) ? this : negate();\n    }\n\n    /**\n     * <p>\n     * Adds the value of this fraction to the passed {@link BigInteger},"
+  },
+  {
+   "line": 590,
+   "lines": [
+    585,
+    586,
+    587,
+    588,
+    589,
+    590,
+    591,
+    592,
+    593,
+    594,
+    595
+   ],
+   "path": "src/java/org/apache/commons/math/fraction/BigFraction.java",
+   "snippet": "     * @see java.lang.Comparable#compareTo(java.lang.Object)\n     */\n    public int compareTo(final BigFraction object) {\n        BigInteger nOd = numerator.multiply(object.denominator);\n        BigInteger dOn = denominator.multiply(object.numerator);\n        return nOd.compareTo(dOn);\n    }\n\n    /**\n     * <p>\n     * Divide the value of this fraction by the passed <code>BigInteger</code>,"
+  },
+  {
+   "line": 930,
+   "lines": [
+    925,
+    926,
+    927,
+    928,
+    929,
+    930,
+    931,
+    932,
+    933,
+    934,
+    935
+   ],
+   "path": "src/java/org/apache/commons/math/fraction/BigFraction.java",
+   "snippet": "    public BigFraction pow(final BigInteger exponent) {\n        BigFraction ret = this;\n        if (!BigInteger.ONE.equals(exponent)) {\n            ret = ONE;\n            if (!BigInteger.ZERO.equals(exponent)) {\n                for (BigInteger bg = BigInteger.ONE; bg.compareTo(exponent) < 0; bg = bg.add(BigInteger.ONE)) {\n                    ret = ret.multiply(this);\n                }\n            }\n        }\n"
+  }
+ ],
+ "class_simple": "Fraction",
+ "dataset": "D1C_F1",
+ "doc": {
+  "class_javadoc": "/**\n * Representation of a rational number.\n *\n * @since 1.1\n * @version $Revision$ $Date$\n */\npublic",
+  "method_javadoc": "/**\n     * Compares this object to another based on size.\n     * @param object the object to compare to\n     * @return -1 if this is less than <tt>object</tt>, +1 if this is greater\n     *         than <tt>object</tt>, 0 if they are equal.\n     */"
+ },
+ "fields": [
+  "public static final Fraction TWO",
+  "public static final Fraction ONE",
+  "public static final Fraction ZERO",
+  "public static final Fraction MINUS_ONE",
+  "private static final long serialVersionUID",
+  "private final int denominator",
+  "private final int numerator"
+ ],
+ "focal_class": "org.apache.commons.math.fraction.Fraction",
+ "focal_id": "Math_91::org.apache.commons.math.fraction.Fraction::compareTo(Fraction)",
+ "focal_method_name": "compareTo",
+ "generations": 6,
+ "impl_B": "public int compareTo(Fraction object) {\n        double nOd = doubleValue();\n        double dOn = object.doubleValue();\n        return (nOd < dOn) ? -1 : ((nOd > dOn) ? +1 : 0);\n    }",
+ "imports": [
+  "java.math.BigInteger",
+  "org.apache.commons.math.MathRuntimeException",
+  "org.apache.commons.math.util.MathUtils"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math.fraction",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Returns the absolute value of this fraction.\n     * @return the absolute value.\n     */",
+   "name": "abs"
+  },
+  {
+   "javadoc": "/**\n     * Gets the fraction as a <tt>double</tt>. This calculates the fraction as\n     * the numerator divided by denominator.\n     * @return the fraction as a <tt>double</tt>\n     */",
+   "name": "doubleValue"
+  },
+  {
+   "javadoc": "/**\n     * Test for the equality of two fractions.  If the lowest term\n     * numerator and denominators are the same for both fractions, the two\n     * fractions are considered to be equal.\n     * @param other fraction to test for equality to this fraction\n     * @return true if two fractions are equal, false if object is\n     *         <tt>null</tt>, not an instance of {@link Fraction}, or not equal\n     *         to this fraction instance.\n     */",
+   "name": "equals"
+  },
+  {
+   "javadoc": "/**\n     * Gets the fraction as a <tt>float</tt>. This calculates the fraction as\n     * the numerator divided by denominator.\n     * @return the fraction as a <tt>float</tt>\n     */",
+   "name": "floatValue"
+  },
+  {
+   "javadoc": "/**\n     * Access the denominator.\n     * @return the denominator.\n     */",
+   "name": "getDenominator"
+  },
+  {
+   "javadoc": "/**\n     * Access the numerator.\n     * @return the numerator.\n     */",
+   "name": "getNumerator"
+  },
+  {
+   "javadoc": "/**\n     * Gets a hashCode for the fraction.\n     * @return a hash code value for this object\n     */",
+   "name": "hashCode"
+  },
+  {
+   "javadoc": "/**\n     * Gets the fraction as an <tt>int</tt>. This returns the whole number part\n     * of the fraction.\n     * @return the whole number fraction part\n     */",
+   "name": "intValue"
+  },
+  {
+   "javadoc": "/**\n     * Gets the fraction as a <tt>long</tt>. This returns the whole number part\n     * of the fraction.\n     * @return the whole number fraction part\n     */",
+   "name": "longValue"
+  },
+  {
+   "javadoc": "/**\n     * Return the additive inverse of this fraction.\n     * @return the negation of this fraction.\n     */",
+   "name": "negate"
+  },
+  {
+   "javadoc": "/**\n     * Return the multiplicative inverse of this fraction.\n     * @return the reciprocal fraction\n     */",
+   "name": "reciprocal"
+  },
+  {
+   "javadoc": "/**\n     * <p>Adds the value of this fraction to another, returning the result in reduced form.\n     * The algorithm follows Knuth, 4.5.1.</p>\n     *\n     * @param fraction  the fraction to add, must not be <code>null</code>\n     * @return a <code>Fraction</code> instance with the resulting values\n     * @throws IllegalArgumentException if the fraction is <code>null</code>\n     * @throws ArithmeticException if the resulting numerator or denominator exceeds\n     *  <code>Integer.MAX_VALUE</code>\n     */",
+   "name": "add"
+  },
+  {
+   "javadoc": "/**\n     * <p>Subtracts the value of another fraction from the value of this one, \n     * returning the result in reduced form.</p>\n     *\n     * @param fraction  the fraction to subtract, must not be <code>null</code>\n     * @return a <code>Fraction</code> instance with the resulting values\n     * @throws IllegalArgumentException if the fraction is <code>null</code>\n     * @throws ArithmeticException if the resulting numerator or denominator\n     *   cannot be represented in an <code>int</code>.\n     */",
+   "name": "subtract"
+  },
+  {
+   "javadoc": "/**\n     * <p>Multiplies the value of this fraction by another, returning the \n     * result in reduced form.</p>\n     *\n     * @param fraction  the fraction to multiply by, must not be <code>null</code>\n     * @return a <code>Fraction</code> instance with the resulting values\n     * @throws IllegalArgumentException if the fraction is <code>null</code>\n     * @throws ArithmeticException if the resulting numerator or denominator exceeds\n     *  <code>Integer.MAX_VALUE</code>\n     */",
+   "name": "multiply"
+  },
+  {
+   "javadoc": "/**\n     * <p>Divide the value of this fraction by another.</p>\n     *\n     * @param fraction  the fraction to divide by, must not be <code>null</code>\n     * @return a <code>Fraction</code> instance with the resulting values\n     * @throws IllegalArgumentException if the fraction is <code>null</code>\n     * @throws ArithmeticException if the fraction to divide by is zero\n     * @throws ArithmeticException if the resulting numerator or denominator exceeds\n     *  <code>Integer.MAX_VALUE</code>\n     */",
+   "name": "divide"
+  },
+  {
+   "javadoc": "/**\n     * <p>Creates a <code>Fraction</code> instance with the 2 parts\n     * of a fraction Y/Z.</p>\n     *\n     * <p>Any negative signs are resolved to be on the numerator.</p>\n     *\n     * @param numerator  the numerator, for example the three in 'three sevenths'\n     * @param denominator  the denominator, for example the seven in 'three sevenths'\n     * @return a new fraction instance, with the numerator and denominator reduced\n     * @throws ArithmeticException if the denominator is <code>zero</code>\n     */",
+   "name": "getReducedFraction"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class Fraction extends Number implements Comparable<Fraction>",
+  "constructors": [
+   "public Fraction(double value) throws FractionConversionException;",
+   "public Fraction(double value, double epsilon, int maxIterations) throws FractionConversionException;",
+   "public Fraction(double value, int maxDenominator) throws FractionConversionException;",
+   "public Fraction(int num, int den);"
+  ],
+  "focal_signature": "public int compareTo(Fraction object)",
+  "methods": [
+   "public Fraction abs();",
+   "public double doubleValue();",
+   "public boolean equals(Object other);",
+   "public float floatValue();",
+   "public int getDenominator();",
+   "public int getNumerator();",
+   "public int hashCode();",
+   "public int intValue();",
+   "public long longValue();",
+   "public Fraction negate();",
+   "public Fraction reciprocal();",
+   "public Fraction add(Fraction fraction);",
+   "public Fraction subtract(Fraction fraction);",
+   "public Fraction multiply(Fraction fraction);",
+   "public Fraction divide(Fraction fraction);",
+   "public static Fraction getReducedFraction(int numerator, int denominator);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F1"
+}

@@ -1,0 +1,258 @@
+{
+ "base_focal_id": "Chart_5::org.jfree.data.xy.XYSeries::addOrUpdate(Number,Number)",
+ "bug_name": "Chart_5",
+ "call_sites": [
+  {
+   "line": 654,
+   "lines": [
+    649,
+    650,
+    651,
+    652,
+    653,
+    654,
+    655,
+    656,
+    657,
+    658,
+    659
+   ],
+   "path": "source/org/jfree/data/time/TimeSeries.java",
+   "snippet": "    public TimeSeries addAndOrUpdate(TimeSeries series) {\n        TimeSeries overwritten = new TimeSeries(\"Overwritten values from: \"\n                + getKey(), series.getTimePeriodClass());\n        for (int i = 0; i < series.getItemCount(); i++) {\n            TimeSeriesDataItem item = series.getDataItem(i);\n            TimeSeriesDataItem oldItem = addOrUpdate(item.getPeriod(),\n                    item.getValue());\n            if (oldItem != null) {\n                overwritten.add(oldItem);\n            }\n        }"
+  },
+  {
+   "line": 677,
+   "lines": [
+    672,
+    673,
+    674,
+    675,
+    676,
+    677,
+    678,
+    679,
+    680,
+    681,
+    682
+   ],
+   "path": "source/org/jfree/data/time/TimeSeries.java",
+   "snippet": "     * @return A copy of the overwritten data item, or <code>null</code> if no\n     *         item was overwritten.\n     */\n    public TimeSeriesDataItem addOrUpdate(RegularTimePeriod period,\n                                          double value) {\n        return addOrUpdate(period, new Double(value));\n    }\n\n    /**\n     * Adds or updates an item in the times series and sends a\n     * {@link org.jfree.data.general.SeriesChangeEvent} to all registered"
+  },
+  {
+   "line": 527,
+   "lines": [
+    522,
+    523,
+    524,
+    525,
+    526,
+    527,
+    528,
+    529,
+    530,
+    531,
+    532
+   ],
+   "path": "source/org/jfree/data/xy/XYSeries.java",
+   "snippet": "     * @return The item that was overwritten, if any.\n     *\n     * @since 1.0.10\n     */\n    public XYDataItem addOrUpdate(double x, double y) {\n        return addOrUpdate(new Double(x), new Double(y));\n    }\n\n    /**\n     * Adds or updates an item in the series and sends a\n     * {@link SeriesChangeEvent} to all registered listeners."
+  }
+ ],
+ "class_simple": "XYSeries",
+ "dataset": "D2",
+ "doc": {
+  "class_javadoc": "/**\n * Represents a sequence of zero or more data items in the form (x, y).  By\n * default, items in the series will be sorted into ascending order by x-value,\n * and duplicate x-values are permitted.  Both the sorting and duplicate\n * defaults can be changed in the constructor.  Y-values can be\n * <code>null</code> to represent missing values.\n */\npublic",
+  "method_javadoc": "/**\n     * Adds or updates an item in the series and sends a\n     * {@link SeriesChangeEvent} to all registered listeners.\n     *\n     * @param x  the x-value (<code>null</code> not permitted).\n     * @param y  the y-value (<code>null</code> permitted).\n     *\n     * @return A copy of the overwritten data item, or <code>null</code> if no\n     *         item was overwritten.\n     */"
+ },
+ "fields": [
+  "static final long serialVersionUID",
+  "protected List data",
+  "private int maximumItemCount",
+  "private boolean autoSort",
+  "private boolean allowDuplicateXValues"
+ ],
+ "focal_class": "org.jfree.data.xy.XYSeries",
+ "focal_id": "Chart_5::org.jfree.data.xy.XYSeries::addOrUpdate(Number,Number)#m124",
+ "focal_method_name": "addOrUpdate",
+ "impl_B": "public XYDataItem addOrUpdate(Number x, Number y) {\n        if (x == null) {\n            throw new IllegalArgumentException(\"Null 'x' argument.\");\n        }\n        if (this.allowDuplicateXValues) {\n            add(x, y);\n            return null;\n        }\n\n        // if we get to here, we know that duplicate X values are not permitted\n        XYDataItem overwritten = null;\n        int index = indexOf(x);\n        if (index >= 0) {\n            XYDataItem existing = (XYDataItem) this.data.get(index);\n            try {\n                overwritten = (XYDataItem) existing.clone();\n            }\n            catch (CloneNotSupportedException e) {\n                throw new SeriesException(\"Couldn't clone XYDataItem!\");\n            }\n            existing.setY(y);\n        }\n        else {\n            // if the series is sorted, the negative index is a result from\n            // Collections.binarySearch() and tells us where to insert the\n            // new item...otherwise it will be just -1 and we should just\n            // append the value to the list...\n            if (this.autoSort) {\n                this.data.add(-index / 1, new XYDataItem(x, y));\n            }\n            else {\n                this.data.add(new XYDataItem(x, y));\n            }\n            // check if this addition will exceed the maximum item count...\n            if (getItemCount() > this.maximumItemCount) {\n                this.data.remove(0);\n            }\n        }\n        fireSeriesChanged();\n        return overwritten;\n    }",
+ "imports": [
+  "java.io.Serializable",
+  "java.util.Collections",
+  "java.util.List",
+  "org.jfree.chart.util.ObjectUtilities",
+  "org.jfree.data.general.Series",
+  "org.jfree.data.general.SeriesChangeEvent",
+  "org.jfree.data.general.SeriesException"
+ ],
+ "javadoc_edited_by_fix": false,
+ "mutant_id": 124,
+ "operator": "AOR",
+ "package": "org.jfree.data.xy",
+ "project": "Chart",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Returns the flag that controls whether the items in the series are\n     * automatically sorted.  There is no setter for this flag, it must be\n     * defined in the series constructor.\n     *\n     * @return A boolean.\n     */",
+   "name": "getAutoSort"
+  },
+  {
+   "javadoc": "/**\n     * Returns a flag that controls whether duplicate x-values are allowed.\n     * This flag can only be set in the constructor.\n     *\n     * @return A boolean.\n     */",
+   "name": "getAllowDuplicateXValues"
+  },
+  {
+   "javadoc": "/**\n     * Returns the number of items in the series.\n     *\n     * @return The item count.\n     */",
+   "name": "getItemCount"
+  },
+  {
+   "javadoc": "/**\n     * Returns the list of data items for the series (the list contains\n     * {@link XYDataItem} objects and is unmodifiable).\n     *\n     * @return The list of data items.\n     */",
+   "name": "getItems"
+  },
+  {
+   "javadoc": "/**\n     * Returns the maximum number of items that will be retained in the series.\n     * The default value is <code>Integer.MAX_VALUE</code>.\n     *\n     * @return The maximum item count.\n     * @see #setMaximumItemCount(int)\n     */",
+   "name": "getMaximumItemCount"
+  },
+  {
+   "javadoc": "/**\n     * Sets the maximum number of items that will be retained in the series.\n     * If you add a new item to the series such that the number of items will\n     * exceed the maximum item count, then the first element in the series is\n     * automatically removed, ensuring that the maximum item count is not\n     * exceeded.\n     * <p>\n     * Typically this value is set before the series is populated with data,\n     * but if it is applied later, it may cause some items to be removed from\n     * the series (in which case a {@link SeriesChangeEvent} will be sent to\n     * all registered listeners.\n     *\n     * @param maximum  the maximum number of items for the series.\n     */",
+   "name": "setMaximumItemCount"
+  },
+  {
+   "javadoc": "/**\n     * Adds a data item to the series and sends a {@link SeriesChangeEvent} to\n     * all registered listeners.\n     *\n     * @param item  the (x, y) item (<code>null</code> not permitted).\n     */",
+   "name": "add"
+  },
+  {
+   "javadoc": "/**\n     * Adds a data item to the series and sends a {@link SeriesChangeEvent} to\n     * all registered listeners.\n     *\n     * @param x  the x value.\n     * @param y  the y value.\n     */",
+   "name": "add"
+  },
+  {
+   "javadoc": "/**\n     * Adds a data item to the series and, if requested, sends a\n     * {@link SeriesChangeEvent} to all registered listeners.\n     *\n     * @param x  the x value.\n     * @param y  the y value.\n     * @param notify  a flag that controls whether or not a\n     *                {@link SeriesChangeEvent} is sent to all registered\n     *                listeners.\n     */",
+   "name": "add"
+  },
+  {
+   "javadoc": "/**\n     * Adds a data item to the series and sends a {@link SeriesChangeEvent} to\n     * all registered listeners.  The unusual pairing of parameter types is to\n     * make it easier to add <code>null</code> y-values.\n     *\n     * @param x  the x value.\n     * @param y  the y value (<code>null</code> permitted).\n     */",
+   "name": "add"
+  },
+  {
+   "javadoc": "/**\n     * Adds a data item to the series and, if requested, sends a\n     * {@link SeriesChangeEvent} to all registered listeners.  The unusual\n     * pairing of parameter types is to make it easier to add null y-values.\n     *\n     * @param x  the x value.\n     * @param y  the y value (<code>null</code> permitted).\n     * @param notify  a flag that controls whether or not a\n     *                {@link SeriesChangeEvent} is sent to all registered\n     *                listeners.\n     */",
+   "name": "add"
+  },
+  {
+   "javadoc": "/**\n     * Adds a new data item to the series (in the correct position if the\n     * <code>autoSort</code> flag is set for the series) and sends a\n     * {@link SeriesChangeEvent} to all registered listeners.\n     * <P>\n     * Throws an exception if the x-value is a duplicate AND the\n     * allowDuplicateXValues flag is false.\n     *\n     * @param x  the x-value (<code>null</code> not permitted).\n     * @param y  the y-value (<code>null</code> permitted).\n     *\n     * @throws SeriesException if the x-value is a duplicate and the\n     *     <code>allowDuplicateXValues</code> flag is not set for this series.\n     */",
+   "name": "add"
+  },
+  {
+   "javadoc": "/**\n     * Adds new data to the series and, if requested, sends a\n     * {@link SeriesChangeEvent} to all registered listeners.\n     * <P>\n     * Throws an exception if the x-value is a duplicate AND the\n     * allowDuplicateXValues flag is false.\n     *\n     * @param x  the x-value (<code>null</code> not permitted).\n     * @param y  the y-value (<code>null</code> permitted).\n     * @param notify  a flag the controls whether or not a\n     *                {@link SeriesChangeEvent} is sent to all registered\n     *                listeners.\n     */",
+   "name": "add"
+  },
+  {
+   "javadoc": "/**\n     * Adds a data item to the series and, if requested, sends a\n     * {@link SeriesChangeEvent} to all registered listeners.\n     *\n     * @param item  the (x, y) item (<code>null</code> not permitted).\n     * @param notify  a flag that controls whether or not a\n     *                {@link SeriesChangeEvent} is sent to all registered\n     *                listeners.\n     */",
+   "name": "add"
+  },
+  {
+   "javadoc": "/**\n     * Deletes a range of items from the series and sends a\n     * {@link SeriesChangeEvent} to all registered listeners.\n     *\n     * @param start  the start index (zero-based).\n     * @param end  the end index (zero-based).\n     */",
+   "name": "delete"
+  },
+  {
+   "javadoc": "/**\n     * Removes the item at the specified index and sends a\n     * {@link SeriesChangeEvent} to all registered listeners.\n     *\n     * @param index  the index.\n     *\n     * @return The item removed.\n     */",
+   "name": "remove"
+  },
+  {
+   "javadoc": "/**\n     * Removes the item with the specified x-value and sends a\n     * {@link SeriesChangeEvent} to all registered listeners.\n     *\n     * @param x  the x-value.\n\n     * @return The item removed.\n     */",
+   "name": "remove"
+  },
+  {
+   "javadoc": "/**\n     * Removes all data items from the series.\n     */",
+   "name": "clear"
+  },
+  {
+   "javadoc": "/**\n     * Return the data item with the specified index.\n     *\n     * @param index  the index.\n     *\n     * @return The data item with the specified index.\n     */",
+   "name": "getDataItem"
+  },
+  {
+   "javadoc": "/**\n     * Returns the x-value at the specified index.\n     *\n     * @param index  the index (zero-based).\n     *\n     * @return The x-value (never <code>null</code>).\n     */",
+   "name": "getX"
+  },
+  {
+   "javadoc": "/**\n     * Returns the y-value at the specified index.\n     *\n     * @param index  the index (zero-based).\n     *\n     * @return The y-value (possibly <code>null</code>).\n     */",
+   "name": "getY"
+  },
+  {
+   "javadoc": "/**\n     * Updates the value of an item in the series and sends a\n     * {@link SeriesChangeEvent} to all registered listeners.\n     *\n     * @param index  the item (zero based index).\n     * @param y  the new value (<code>null</code> permitted).\n     *\n     * @since 1.0.1\n     */",
+   "name": "updateByIndex"
+  },
+  {
+   "javadoc": "/**\n     * Updates an item in the series.\n     *\n     * @param x  the x-value (<code>null</code> not permitted).\n     * @param y  the y-value (<code>null</code> permitted).\n     *\n     * @throws SeriesException if there is no existing item with the specified\n     *         x-value.\n     */",
+   "name": "update"
+  },
+  {
+   "javadoc": "/**\n     * Adds or updates an item in the series and sends a\n     * {@link SeriesChangeEvent} to all registered listeners.\n     *\n     * @param x  the x-value.\n     * @param y  the y-value.\n     *\n     * @return The item that was overwritten, if any.\n     *\n     * @since 1.0.10\n     */",
+   "name": "addOrUpdate"
+  },
+  {
+   "javadoc": "/**\n     * Returns the index of the item with the specified x-value, or a negative\n     * index if the series does not contain an item with that x-value.  Be\n     * aware that for an unsorted series, the index is found by iterating\n     * through all items in the series.\n     *\n     * @param x  the x-value (<code>null</code> not permitted).\n     *\n     * @return The index.\n     */",
+   "name": "indexOf"
+  },
+  {
+   "javadoc": "/**\n     * Returns a new array containing the x and y values from this series.\n     *\n     * @return A new array containing the x and y values from this series.\n     *\n     * @since 1.0.4\n     */",
+   "name": "toArray"
+  },
+  {
+   "javadoc": "/**\n     * Returns a clone of the series.\n     *\n     * @return A clone of the series.\n     *\n     * @throws CloneNotSupportedException if there is a cloning problem.\n     */",
+   "name": "clone"
+  },
+  {
+   "javadoc": "/**\n     * Creates a new series by copying a subset of the data in this time series.\n     *\n     * @param start  the index of the first item to copy.\n     * @param end  the index of the last item to copy.\n     *\n     * @return A series containing a copy of this series from start until end.\n     *\n     * @throws CloneNotSupportedException if there is a cloning problem.\n     */",
+   "name": "createCopy"
+  },
+  {
+   "javadoc": "/**\n     * Tests this series for equality with an arbitrary object.\n     *\n     * @param obj  the object to test against for equality\n     *             (<code>null</code> permitted).\n     *\n     * @return A boolean.\n     */",
+   "name": "equals"
+  },
+  {
+   "javadoc": "/**\n     * Returns a hash code.\n     *\n     * @return A hash code.\n     */",
+   "name": "hashCode"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class XYSeries extends Series implements Cloneable, Serializable",
+  "constructors": [
+   "public XYSeries(Comparable key);",
+   "public XYSeries(Comparable key, boolean autoSort);",
+   "public XYSeries(Comparable key, boolean autoSort, boolean allowDuplicateXValues);"
+  ],
+  "focal_signature": "public XYDataItem addOrUpdate(Number x, Number y)",
+  "methods": [
+   "public boolean getAutoSort();",
+   "public boolean getAllowDuplicateXValues();",
+   "public int getItemCount();",
+   "public List getItems();",
+   "public int getMaximumItemCount();",
+   "public void setMaximumItemCount(int maximum);",
+   "public void add(XYDataItem item);",
+   "public void add(double x, double y);",
+   "public void add(double x, double y, boolean notify);",
+   "public void add(double x, Number y);",
+   "public void add(double x, Number y, boolean notify);",
+   "public void add(Number x, Number y);",
+   "public void add(Number x, Number y, boolean notify);",
+   "public void add(XYDataItem item, boolean notify);",
+   "public void delete(int start, int end);",
+   "public XYDataItem remove(int index);",
+   "public XYDataItem remove(Number x);",
+   "public void clear();",
+   "public XYDataItem getDataItem(int index);",
+   "public Number getX(int index);",
+   "public Number getY(int index);",
+   "public void updateByIndex(int index, Number y);",
+   "public void update(Number x, Number y);",
+   "public XYDataItem addOrUpdate(double x, double y);",
+   "public int indexOf(Number x);",
+   "public double[][] toArray();",
+   "public Object clone() throws CloneNotSupportedException;",
+   "public XYSeries createCopy(int start, int end) throws CloneNotSupportedException;",
+   "public boolean equals(Object obj);",
+   "public int hashCode();"
+  ],
+  "type_signatures": [
+   "public class XYDataItem implements Cloneable, Comparable, Serializable { public XYDataItem(Number x, Number y); public XYDataItem(double x, double y); public Number getX(); public double getXValue(); public Number getY(); public double getYValue(); public void setY(double y); public void setY(Number y); public int compareTo(Object o1); public Object clone() throws CloneNotSupportedException; public boolean equals(Object obj); public int hashCode(); public String toString(); }"
+  ]
+ },
+ "split": "test"
+}

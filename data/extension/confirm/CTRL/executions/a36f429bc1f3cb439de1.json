@@ -1,0 +1,209 @@
+{
+ "candidate_id": "a36f429bc1f3cb439de1",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testRead_ReturnsDataAndUpdatesChecksum",
+   "testRead_ThrowsIOException",
+   "testRead_IntegrationWithRealChecksum"
+  ],
+  "nc_both": [
+   "testRead_ReturnsEOFAndDoesNotUpdateChecksum"
+  ],
+  "nc_one_version": [],
+  "passes": 1
+ },
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "Compress_44::org.apache.commons.compress.utils.ChecksumCalculatingInputStream::read()",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_ReturnsDataAndUpdatesChecksum",
+   "runs_b": [
+    {
+     "duration_s": 0.172,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.158,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.179,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.151,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.155,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.18,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.utils;\n\nimport java.io.*;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.Checksum;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\nimport static org.mockito.Mockito.mock;\nimport static org.mockito.Mockito.verify;\nimport static org.mockito.Mockito.when;\n\npublic class ChecksumCalculatingInputStream_read_TriageGen2Test {\n\n    @Test\n    public void testRead_ReturnsDataAndUpdatesChecksum() throws IOException {\n        // Arrange\n        byte[] data = new byte[]{(byte) 0xAB};\n        InputStream inputStream = new InputStream() {\n            private int pos = 0;\n            @Override\n            public int read() throws IOException {\n                return (pos < data.length) ? (data[pos++] & 0xFF) : -1;\n            }\n        };\n        Checksum checksum = mock(Checksum.class);\n        ChecksumCalculatingInputStream cis = new ChecksumCalculatingInputStream(checksum, inputStream);\n\n        // Act\n        int result = cis.read();\n\n        // Assert\n        assertEquals(0xAB, result);\n        verify(checksum).update(0xAB);\n    }\n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_ThrowsIOException",
+   "runs_b": [
+    {
+     "duration_s": 0.134,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.145,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.168,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.176,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.174,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.195,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.utils;\n\nimport java.io.*;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.Checksum;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\nimport static org.mockito.Mockito.mock;\nimport static org.mockito.Mockito.verify;\nimport static org.mockito.Mockito.when;\n\npublic class ChecksumCalculatingInputStream_read_TriageGen2Test {\n\n    \n\n    \n\n    @Test\n    public void testRead_ThrowsIOException() throws IOException {\n        // Arrange\n        InputStream inputStream = mock(InputStream.class);\n        when(inputStream.read()).thenThrow(new IOException(\"Simulated IO error\"));\n        Checksum checksum = new CRC32();\n        ChecksumCalculatingInputStream cis = new ChecksumCalculatingInputStream(checksum, inputStream);\n\n        // Act & Assert\n        try {\n            cis.read();\n            org.junit.Assert.fail(\"Expected IOException to be thrown\");\n        } catch (IOException e) {\n            assertEquals(\"Simulated IO error\", e.getMessage());\n        }\n    }\n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_IntegrationWithRealChecksum",
+   "runs_b": [
+    {
+     "duration_s": 0.088,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.095,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.111,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.111,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.094,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.09,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.utils;\n\nimport java.io.*;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.Checksum;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\nimport static org.mockito.Mockito.mock;\nimport static org.mockito.Mockito.verify;\nimport static org.mockito.Mockito.when;\n\npublic class ChecksumCalculatingInputStream_read_TriageGen2Test {\n\n    \n\n    \n\n    \n\n    @Test\n    public void testRead_IntegrationWithRealChecksum() throws IOException {\n        // Arrange\n        byte[] data = new byte[]{1, 2, 3};\n        InputStream inputStream = new java.io.ByteArrayInputStream(data);\n        CRC32 crc = new CRC32();\n        CRC32 expectedCrc = new CRC32();\n        expectedCrc.update(1);\n        expectedCrc.update(2);\n        expectedCrc.update(3);\n\n        ChecksumCalculatingInputStream cis = new ChecksumCalculatingInputStream(crc, inputStream);\n\n        // Act\n        cis.read(); // reads 1\n        cis.read(); // reads 2\n        cis.read(); // reads 3\n        long actualValue = cis.getValue();\n\n        // Assert\n        assertEquals(expectedCrc.getValue(), actualValue);\n    }\n}\n"
+  }
+ ],
+ "source_sha256": "f4cc9d0eecd2553fd980707fd0029dce6ee2bc26c89c24285513db23710809d1",
+ "utc": "2026-11-13T06:51:58Z"
+}

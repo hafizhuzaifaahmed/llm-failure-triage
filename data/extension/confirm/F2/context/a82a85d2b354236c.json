@@ -1,0 +1,200 @@
+{
+ "bug_name": "JacksonDatabind_32",
+ "call_sites": [
+  {
+   "line": 758,
+   "lines": [
+    753,
+    754,
+    755,
+    756,
+    757,
+    758,
+    759,
+    760,
+    761,
+    762,
+    763
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "    public <T> T readValue(JsonParser p, JavaType type) throws IOException {\n        JsonDeserializer<Object> deser = findRootValueDeserializer(type);\n        if (deser == null) {\n            throw mappingException(\"Could not find JsonDeserializer for type %s\", type);\n        }\n        return (T) deser.deserialize(p, this);\n    }\n\n    /**\n     * Convenience method that may be used by composite or container deserializers,\n     * for reading one-off values for the composite type, taking into account"
+  },
+  {
+   "line": 784,
+   "lines": [
+    779,
+    780,
+    781,
+    782,
+    783,
+    784,
+    785,
+    786,
+    787,
+    788,
+    789
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "        if (deser == null) {\n            String propName = (prop == null) ? \"NULL\" : (\"'\"+prop.getName()+\"'\");\n            throw mappingException(\"Could not find JsonDeserializer for type %s (via property %s)\",\n                    type, propName);\n        }\n        return (T) deser.deserialize(p, this);\n    }\n\n    /*\n    /**********************************************************\n    /* Methods for problem handling, reporting"
+  },
+  {
+   "line": 277,
+   "lines": [
+    272,
+    273,
+    274,
+    275,
+    276,
+    277,
+    278,
+    279,
+    280,
+    281,
+    282
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/MappingIterator.java",
+   "snippet": "\n        int nextState = STATE_NEED_RESYNC;\n        try {\n            T value;\n            if (_updatedValue == null) {\n                value = _deserializer.deserialize(_parser, _context);\n            } else{\n                _deserializer.deserialize(_parser, _context, _updatedValue);\n                value = _updatedValue;\n            }\n            nextState = STATE_MAY_HAVE_VALUE;"
+  },
+  {
+   "line": 279,
+   "lines": [
+    274,
+    275,
+    276,
+    277,
+    278,
+    279,
+    280,
+    281,
+    282,
+    283,
+    284
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/MappingIterator.java",
+   "snippet": "        try {\n            T value;\n            if (_updatedValue == null) {\n                value = _deserializer.deserialize(_parser, _context);\n            } else{\n                _deserializer.deserialize(_parser, _context, _updatedValue);\n                value = _updatedValue;\n            }\n            nextState = STATE_MAY_HAVE_VALUE;\n            return value;\n        } finally {"
+  },
+  {
+   "line": 3454,
+   "lines": [
+    3449,
+    3450,
+    3451,
+    3452,
+    3453,
+    3454,
+    3455,
+    3456,
+    3457,
+    3458,
+    3459
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java",
+   "snippet": "                result = null;\n            } else { // pointing to event other than null\n                DeserializationContext ctxt = createDeserializationContext(jp, deserConfig);\n                JsonDeserializer<Object> deser = _findRootDeserializer(ctxt, toValueType);\n                // note: no handling of unwarpping\n                result = deser.deserialize(jp, ctxt);\n            }\n            jp.close();\n            return result;\n        } catch (IOException e) { // should not occur, no real i/o...\n            throw new IllegalArgumentException(e.getMessage(), e);"
+  }
+ ],
+ "class_simple": "UntypedObjectDeserializer",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Deserializer implementation that is used if it is necessary to bind content of\n * \"unknown\" type; something declared as basic {@link java.lang.Object}\n * (either explicitly, or due to type erasure).\n * If so, \"natural\" mapping is used to convert JSON values to their natural\n * Java object matches: JSON arrays to Java {@link java.util.List}s (or, if configured,\n * Object[]), JSON objects to {@link java.util.Map}s, numbers to\n * {@link java.lang.Number}s, booleans to {@link java.lang.Boolean}s and\n * strings to {@link java.lang.String} (and nulls to nulls).\n */\n@JacksonStdImpl\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "protected final static Object[] NO_OBJECTS",
+  "public final static UntypedObjectDeserializer instance",
+  "protected JsonDeserializer<Object> _mapDeserializer",
+  "protected JsonDeserializer<Object> _listDeserializer",
+  "protected JsonDeserializer<Object> _stringDeserializer",
+  "protected JsonDeserializer<Object> _numberDeserializer",
+  "protected JavaType _listType",
+  "protected JavaType _mapType"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.deser.std.UntypedObjectDeserializer",
+ "focal_id": "JacksonDatabind_32::com.fasterxml.jackson.databind.deser.std.UntypedObjectDeserializer::deserialize(JsonParser,DeserializationContext)",
+ "focal_method_name": "deserialize",
+ "generations": 3,
+ "impl_B": "@Override\n    public Object deserialize(JsonParser p, DeserializationContext ctxt) throws IOException\n    {\n        switch (p.getCurrentTokenId()) {\n        case JsonTokenId.ID_START_OBJECT:\n        case JsonTokenId.ID_FIELD_NAME:\n            // 28-Oct-2015, tatu: [databind#989] We may also be given END_OBJECT (similar to FIELD_NAME),\n            //    if caller has advanced to the first token of Object, but for empty Object\n            if (_mapDeserializer != null) {\n                return _mapDeserializer.deserialize(p, ctxt);\n            }\n            return mapObject(p, ctxt);\n        case JsonTokenId.ID_START_ARRAY:\n            if (ctxt.isEnabled(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY)) {\n                return mapArrayToArray(p, ctxt);\n            }\n            if (_listDeserializer != null) {\n                return _listDeserializer.deserialize(p, ctxt);\n            }\n            return mapArray(p, ctxt);\n        case JsonTokenId.ID_EMBEDDED_OBJECT:\n            return p.getEmbeddedObject();\n        case JsonTokenId.ID_STRING:\n            if (_stringDeserializer != null) {\n                return _stringDeserializer.deserialize(p, ctxt);\n            }\n            return p.getText();\n\n        case JsonTokenId.ID_NUMBER_INT:\n            if (_numberDeserializer != null) {\n                return _numberDeserializer.deserialize(p, ctxt);\n            }\n            /* Caller may want to get all integral values returned as {@link java.math.BigInteger},\n             * or {@link java.lang.Long} for consistency\n             */\n            if (ctxt.hasSomeOfFeatures(F_MASK_INT_COERCIONS)) {\n                return _coerceIntegral(p, ctxt);\n            }\n            return p.getNumberValue(); // should be optimal, whatever it is\n\n        case JsonTokenId.ID_NUMBER_FLOAT:\n            if (_numberDeserializer != null) {\n                return _numberDeserializer.deserialize(p, ctxt);\n            }\n            /* [JACKSON-72]: need to allow overriding the behavior regarding\n             *   which type to use\n             */\n            if (ctxt.isEnabled(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)) {\n                return p.getDecimalValue();\n            }\n            return p.getDoubleValue();\n\n        case JsonTokenId.ID_TRUE:\n            return Boolean.TRUE;\n        case JsonTokenId.ID_FALSE:\n            return Boolean.FALSE;\n\n        case JsonTokenId.ID_NULL: // should not get this but...\n            return null;\n\n//        case JsonTokenId.ID_END_ARRAY: // invalid\n        default:\n        }\n        throw ctxt.mappingException(Object.class);\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.util.*",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.databind.BeanProperty",
+  "com.fasterxml.jackson.databind.DeserializationContext",
+  "com.fasterxml.jackson.databind.DeserializationFeature",
+  "com.fasterxml.jackson.databind.JavaType",
+  "com.fasterxml.jackson.databind.JsonDeserializer",
+  "com.fasterxml.jackson.databind.JsonMappingException",
+  "com.fasterxml.jackson.databind.annotation.JacksonStdImpl",
+  "com.fasterxml.jackson.databind.deser.ContextualDeserializer",
+  "com.fasterxml.jackson.databind.deser.ResolvableDeserializer",
+  "com.fasterxml.jackson.databind.jsontype.TypeDeserializer",
+  "com.fasterxml.jackson.databind.type.TypeFactory",
+  "com.fasterxml.jackson.databind.util.ClassUtil",
+  "com.fasterxml.jackson.databind.util.ObjectBuffer"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.deser.std",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "_findCustomDeser"
+  },
+  {
+   "javadoc": "",
+   "name": "_clearIfStdImpl"
+  },
+  {
+   "javadoc": "/**\n     * We only use contextualization for optimizing the case where no customization\n     * occurred; if so, can slip in a more streamlined version.\n     */",
+   "name": "createContextual"
+  },
+  {
+   "javadoc": "",
+   "name": "_withResolved"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */\n\n    /* 07-Nov-2014, tatu: When investigating [databind#604], realized that it makes\n     *   sense to also mark this is cachable, since lookup not exactly free, and\n     *   since it's not uncommon to \"read anything\"\n     */",
+   "name": "isCachable"
+  },
+  {
+   "javadoc": "",
+   "name": "deserializeWithType"
+  },
+  {
+   "javadoc": "/**\n     * Method called to map a JSON Array into a Java value.\n     */",
+   "name": "mapArray"
+  },
+  {
+   "javadoc": "/**\n     * Method called to map a JSON Object into a Java value.\n     */",
+   "name": "mapObject"
+  },
+  {
+   "javadoc": "/**\n     * Method called to map a JSON Array into a Java Object array (Object[]).\n     */",
+   "name": "mapArrayToArray"
+  }
+ ],
+ "sig": {
+  "class_declaration": "@JacksonStdImpl public class UntypedObjectDeserializer extends StdDeserializer<Object> implements ResolvableDeserializer, ContextualDeserializer",
+  "constructors": [
+   "public UntypedObjectDeserializer();",
+   "public UntypedObjectDeserializer(JavaType listType, JavaType mapType);"
+  ],
+  "focal_signature": "public Object deserialize(JsonParser p, DeserializationContext ctxt) throws IOException",
+  "methods": [
+   "protected JsonDeserializer<Object> _findCustomDeser(DeserializationContext ctxt, JavaType type) throws JsonMappingException;",
+   "protected JsonDeserializer<Object> _clearIfStdImpl(JsonDeserializer<Object> deser);",
+   "public JsonDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property) throws JsonMappingException;",
+   "protected JsonDeserializer<?> _withResolved(JsonDeserializer<?> mapDeser, JsonDeserializer<?> listDeser, JsonDeserializer<?> stringDeser, JsonDeserializer<?> numberDeser);",
+   "public boolean isCachable();",
+   "public Object deserializeWithType(JsonParser p, DeserializationContext ctxt, TypeDeserializer typeDeserializer) throws IOException;",
+   "protected Object mapArray(JsonParser jp, DeserializationContext ctxt) throws IOException;",
+   "protected Object mapObject(JsonParser p, DeserializationContext ctxt) throws IOException;",
+   "protected Object[] mapArrayToArray(JsonParser jp, DeserializationContext ctxt) throws IOException;"
+  ],
+  "type_signatures": [
+   "public abstract class DeserializationContext extends DatabindContext implements java.io.Serializable { protected DeserializationContext(DeserializerFactory df); protected DeserializationContext(DeserializerFactory df, DeserializerCache cache); protected DeserializationContext(DeserializationContext src, DeserializerFactory factory); protected DeserializationContext(DeserializationContext src, DeserializationConfig config, JsonParser p, InjectableValues injectableValues); protected DeserializationContext(DeserializationContext src); public DeserializationConfig getConfig(); public final Class<?> getActiveView(); public final AnnotationIntrospector getAnnotationIntrospector(); public final TypeFactory getTypeFactory(); public Locale getLocale(); public TimeZone getTimeZone(); public Object getAttribute(Object key); public DeserializationContext setAttribute(Object key, Object value); public JavaType getContextualType(); public DeserializerFactory getFactory(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

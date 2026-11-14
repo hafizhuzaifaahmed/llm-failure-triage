@@ -1,0 +1,502 @@
+{
+ "candidate_id": "aff4fa513955b02ac56b",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testGetNextZipEntry_ClosedOrHitCentralDirectory",
+   "testGetNextZipEntry_EOF",
+   "testGetNextZipEntry_CentralDirectorySignatureFound",
+   "testGetNextZipEntry_ValidStoredEntry",
+   "testGetNextZipEntry_WithDataDescriptor",
+   "testGetNextZipEntry_MultipleEntries",
+   "testGetNextZipEntry_InvalidSignature",
+   "testGetNextZipEntry_CompressionMethods"
+  ],
+  "nc_both": [],
+  "nc_one_version": [],
+  "passes": 0
+ },
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "Compress_41::org.apache.commons.compress.archivers.zip.ZipArchiveInputStream::getNextZipEntry()",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testGetNextZipEntry_ClosedOrHitCentralDirectory",
+   "runs_b": [
+    {
+     "duration_s": 0.091,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.094,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.103,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.097,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.095,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.098,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.ByteArrayOutputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.nio.ByteBuffer;\nimport java.nio.ByteOrder;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.archivers.zip.ZipArchiveEntry;\nimport org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;\nimport org.apache.commons.compress.archivers.zip.ZipLong;\nimport org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_getNextZipEntry_TriageGen1Test {\n\n    private byte[] createLFH(String name, int method, boolean hasDataDescriptor, int compressedSize, int uncompressedSize, long crc) {\n        // LFH Signature\n        ByteBuffer bb = ByteBuffer.allocate(1024).order(ByteOrder.LITTLE_ENDIAN);\n        bb.putInt(0x04034b50); // LFH_SIG\n\n        // Version made by (2 bytes)\n        bb.putShort((short) 0x0200); \n        // General Purpose Bit Flag (2 bytes)\n        short flags = 0;\n        if (hasDataDescriptor) flags |= 0x0008;\n        bb.putShort(flags);\n\n        // Compression Method (2 bytes)\n        bb.putShort((short) method);\n\n        // Last mod file time/date (4 bytes)\n        bb.putInt(0);\n\n        if (!hasDataDescriptor) {\n            bb.putInt((int) crc);\n            bb.putInt(compressedSize);\n            bb.putInt(uncompressedSize);\n        } else {\n            bb.putInt(0); // placeholder for CRC\n            bb.putInt(0); // placeholder for compressed size\n            bb.putInt(0); // placeholder for uncompressed size\n        }\n\n        // Filename len (2 bytes)\n        byte[] nameBytes = name.getBytes();\n        bb.putShort((short) nameBytes.length);\n\n        // Extra len (2 bytes)\n        bb.putShort((short) 0);\n\n        // Filename\n        bb.put(nameBytes);\n\n        byte[] result = new byte[bb.position()];\n        System.arraycopy(bb.array(), 0, result, 0, bb.position());\n        return result;\n    }\n\n    @Test\n    public void testGetNextZipEntry_ClosedOrHitCentralDirectory() throws IOException {\n        InputStream is = new ByteArrayInputStream(new byte[10]);\n        ZipArchiveInputStream zis = new ZipArchiveInputStream(is);\n        zis.close();\n        Assert.assertNull(zis.getNextZipEntry());\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testGetNextZipEntry_EOF",
+   "runs_b": [
+    {
+     "duration_s": 0.095,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.103,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.101,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.094,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.095,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.1,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.ByteArrayOutputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.nio.ByteBuffer;\nimport java.nio.ByteOrder;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.archivers.zip.ZipArchiveEntry;\nimport org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;\nimport org.apache.commons.compress.archivers.zip.ZipLong;\nimport org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_getNextZipEntry_TriageGen1Test {\n\n    private byte[] createLFH(String name, int method, boolean hasDataDescriptor, int compressedSize, int uncompressedSize, long crc) {\n        // LFH Signature\n        ByteBuffer bb = ByteBuffer.allocate(1024).order(ByteOrder.LITTLE_ENDIAN);\n        bb.putInt(0x04034b50); // LFH_SIG\n\n        // Version made by (2 bytes)\n        bb.putShort((short) 0x0200); \n        // General Purpose Bit Flag (2 bytes)\n        short flags = 0;\n        if (hasDataDescriptor) flags |= 0x0008;\n        bb.putShort(flags);\n\n        // Compression Method (2 bytes)\n        bb.putShort((short) method);\n\n        // Last mod file time/date (4 bytes)\n        bb.putInt(0);\n\n        if (!hasDataDescriptor) {\n            bb.putInt((int) crc);\n            bb.putInt(compressedSize);\n            bb.putInt(uncompressedSize);\n        } else {\n            bb.putInt(0); // placeholder for CRC\n            bb.putInt(0); // placeholder for compressed size\n            bb.putInt(0); // placeholder for uncompressed size\n        }\n\n        // Filename len (2 bytes)\n        byte[] nameBytes = name.getBytes();\n        bb.putShort((short) nameBytes.length);\n\n        // Extra len (2 bytes)\n        bb.putShort((short) 0);\n\n        // Filename\n        bb.put(nameBytes);\n\n        byte[] result = new byte[bb.position()];\n        System.arraycopy(bb.array(), 0, result, 0, bb.position());\n        return result;\n    }\n\n    \n\n    @Test\n    public void testGetNextZipEntry_EOF() throws IOException {\n        InputStream is = new ByteArrayInputStream(new byte[0]);\n        ZipArchiveInputStream zis = new ZipArchiveInputStream(is);\n        Assert.assertNull(zis.getNextZipEntry());\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testGetNextZipEntry_CentralDirectorySignatureFound",
+   "runs_b": [
+    {
+     "duration_s": 0.101,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.121,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.092,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.092,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.101,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.095,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.ByteArrayOutputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.nio.ByteBuffer;\nimport java.nio.ByteOrder;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.archivers.zip.ZipArchiveEntry;\nimport org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;\nimport org.apache.commons.compress.archivers.zip.ZipLong;\nimport org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_getNextZipEntry_TriageGen1Test {\n\n    private byte[] createLFH(String name, int method, boolean hasDataDescriptor, int compressedSize, int uncompressedSize, long crc) {\n        // LFH Signature\n        ByteBuffer bb = ByteBuffer.allocate(1024).order(ByteOrder.LITTLE_ENDIAN);\n        bb.putInt(0x04034b50); // LFH_SIG\n\n        // Version made by (2 bytes)\n        bb.putShort((short) 0x0200); \n        // General Purpose Bit Flag (2 bytes)\n        short flags = 0;\n        if (hasDataDescriptor) flags |= 0x0008;\n        bb.putShort(flags);\n\n        // Compression Method (2 bytes)\n        bb.putShort((short) method);\n\n        // Last mod file time/date (4 bytes)\n        bb.putInt(0);\n\n        if (!hasDataDescriptor) {\n            bb.putInt((int) crc);\n            bb.putInt(compressedSize);\n            bb.putInt(uncompressedSize);\n        } else {\n            bb.putInt(0); // placeholder for CRC\n            bb.putInt(0); // placeholder for compressed size\n            bb.putInt(0); // placeholder for uncompressed size\n        }\n\n        // Filename len (2 bytes)\n        byte[] nameBytes = name.getBytes();\n        bb.putShort((short) nameBytes.length);\n\n        // Extra len (2 bytes)\n        bb.putShort((short) 0);\n\n        // Filename\n        bb.put(nameBytes);\n\n        byte[] result = new byte[bb.position()];\n        System.arraycopy(bb.array(), 0, result, 0, bb.position());\n        return result;\n    }\n\n    \n\n    \n\n    @Test\n    public void testGetNextZipEntry_CentralDirectorySignatureFound() throws IOException {\n        // Simulate finding CFH_SIG instead of LFH_SIG\n        ByteBuffer bb = ByteBuffer.allocate(12).order(ByteOrder.LITTLE_ENDIAN);\n        bb.putInt(0x02014b50); // CFH_SIG\n        byte[] data = bb.array();\n\n        InputStream is = new ByteArrayInputStream(data);\n        ZipArchiveInputStream zis = new ZipArchiveInputStream(is);\n        \n        // This should trigger hitCentralDirectory = true and return null because sig != LFH_SIG\n        Assert.assertNull(zis.getNextZipEntry());\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testGetNextZipEntry_ValidStoredEntry",
+   "runs_b": [
+    {
+     "duration_s": 0.136,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.129,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.115,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.127,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.107,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.115,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.ByteArrayOutputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.nio.ByteBuffer;\nimport java.nio.ByteOrder;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.archivers.zip.ZipArchiveEntry;\nimport org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;\nimport org.apache.commons.compress.archivers.zip.ZipLong;\nimport org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_getNextZipEntry_TriageGen1Test {\n\n    private byte[] createLFH(String name, int method, boolean hasDataDescriptor, int compressedSize, int uncompressedSize, long crc) {\n        // LFH Signature\n        ByteBuffer bb = ByteBuffer.allocate(1024).order(ByteOrder.LITTLE_ENDIAN);\n        bb.putInt(0x04034b50); // LFH_SIG\n\n        // Version made by (2 bytes)\n        bb.putShort((short) 0x0200); \n        // General Purpose Bit Flag (2 bytes)\n        short flags = 0;\n        if (hasDataDescriptor) flags |= 0x0008;\n        bb.putShort(flags);\n\n        // Compression Method (2 bytes)\n        bb.putShort((short) method);\n\n        // Last mod file time/date (4 bytes)\n        bb.putInt(0);\n\n        if (!hasDataDescriptor) {\n            bb.putInt((int) crc);\n            bb.putInt(compressedSize);\n            bb.putInt(uncompressedSize);\n        } else {\n            bb.putInt(0); // placeholder for CRC\n            bb.putInt(0); // placeholder for compressed size\n            bb.putInt(0); // placeholder for uncompressed size\n        }\n\n        // Filename len (2 bytes)\n        byte[] nameBytes = name.getBytes();\n        bb.putShort((short) nameBytes.length);\n\n        // Extra len (2 bytes)\n        bb.putShort((short) 0);\n\n        // Filename\n        bb.put(nameBytes);\n\n        byte[] result = new byte[bb.position()];\n        System.arraycopy(bb.array(), 0, result, 0, bb.position());\n        return result;\n    }\n\n    \n\n    \n\n    \n\n    @Test\n    public void testGetNextZipEntry_ValidStoredEntry() throws IOException {\n        byte[] lfh = createLFH(\"test.txt\", 0, false, 4, 4, 12345L);\n        InputStream is = new ByteArrayInputStream(lfh);\n        ZipArchiveInputStream zis = new ZipArchiveInputStream(is);\n\n        ZipArchiveEntry entry = zis.getNextZipEntry();\n        Assert.assertNotNull(entry);\n        Assert.assertEquals(\"test.txt\", entry.getName());\n        Assert.assertEquals(0, entry.getMethod());\n    }\n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testGetNextZipEntry_WithDataDescriptor",
+   "runs_b": [
+    {
+     "duration_s": 0.122,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.122,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.129,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.117,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.122,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.121,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.ByteArrayOutputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.nio.ByteBuffer;\nimport java.nio.ByteOrder;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.archivers.zip.ZipArchiveEntry;\nimport org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;\nimport org.apache.commons.compress.archivers.zip.ZipLong;\nimport org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_getNextZipEntry_TriageGen1Test {\n\n    private byte[] createLFH(String name, int method, boolean hasDataDescriptor, int compressedSize, int uncompressedSize, long crc) {\n        // LFH Signature\n        ByteBuffer bb = ByteBuffer.allocate(1024).order(ByteOrder.LITTLE_ENDIAN);\n        bb.putInt(0x04034b50); // LFH_SIG\n\n        // Version made by (2 bytes)\n        bb.putShort((short) 0x0200); \n        // General Purpose Bit Flag (2 bytes)\n        short flags = 0;\n        if (hasDataDescriptor) flags |= 0x0008;\n        bb.putShort(flags);\n\n        // Compression Method (2 bytes)\n        bb.putShort((short) method);\n\n        // Last mod file time/date (4 bytes)\n        bb.putInt(0);\n\n        if (!hasDataDescriptor) {\n            bb.putInt((int) crc);\n            bb.putInt(compressedSize);\n            bb.putInt(uncompressedSize);\n        } else {\n            bb.putInt(0); // placeholder for CRC\n            bb.putInt(0); // placeholder for compressed size\n            bb.putInt(0); // placeholder for uncompressed size\n        }\n\n        // Filename len (2 bytes)\n        byte[] nameBytes = name.getBytes();\n        bb.putShort((short) nameBytes.length);\n\n        // Extra len (2 bytes)\n        bb.putShort((short) 0);\n\n        // Filename\n        bb.put(nameBytes);\n\n        byte[] result = new byte[bb.position()];\n        System.arraycopy(bb.array(), 0, result, 0, bb.position());\n        return result;\n    }\n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testGetNextZipEntry_WithDataDescriptor() throws IOException {\n        // Manual construction for Data Descriptor logic\n        ByteBuffer bb = ByteBuffer.allocate(1024).order(ByteOrder.LITTLE_ENDIAN);\n        bb.putInt(0x04034b50); // LFH_SIG\n        bb.putShort((short) 0x0200); // version\n        bb.putShort((short) 0x0008); // GP bit flag: has data descriptor\n        bb.putShort((short) 0);      // method: STORE\n        bb.putInt(0);                // time\n        bb.putInt(0);                // CRC placeholder\n        bb.putInt(0);                // compressed size placeholder\n        bb.putInt(0);                // uncompressed size placeholder\n        \n        String name = \"data.txt\";\n        bb.putShort((short) name.length());\n        bb.putShort((short) 0);      // extra len\n        bb.put(name.getBytes());\n\n        // Data Descriptor part (must follow LFH)\n        bb.putInt(12345);            // CRC\n        bb.putInt(4);                // compressed size\n        bb.putInt(4);                // uncompressed size\n\n        byte[] data = new byte[bb.position()];\n        System.arraycopy(bb.array(), 0, data, 0, bb.position());\n\n        InputStream is = new ByteArrayInputStream(data);\n        ZipArchiveInputStream zis = new ZipArchiveInputStream(is);\n\n        ZipArchiveEntry entry = zis.getNextZipEntry();\n        Assert.assertNotNull(entry);\n        Assert.assertEquals(\"data.txt\", entry.getName());\n    }\n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testGetNextZipEntry_MultipleEntries",
+   "runs_b": [
+    {
+     "duration_s": 0.152,
+     "exception": "java.lang.NullPointerException",
+     "failing_test_line": 100,
+     "message": "null",
+     "outcome": "exception",
+     "trace": "java.lang.NullPointerException\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream_getNextZipEntry_TriageGen1Test.testGetNextZipEntry_MultipleEntries(ZipArchiveInputStream_getNextZipEntry_TriageGen1Test.java:100)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.122,
+     "exception": "java.lang.NullPointerException",
+     "failing_test_line": 100,
+     "message": "null",
+     "outcome": "exception",
+     "trace": "java.lang.NullPointerException\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream_getNextZipEntry_TriageGen1Test.testGetNextZipEntry_MultipleEntries(ZipArchiveInputStream_getNextZipEntry_TriageGen1Test.java:100)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.122,
+     "exception": "java.lang.NullPointerException",
+     "failing_test_line": 100,
+     "message": "null",
+     "outcome": "exception",
+     "trace": "java.lang.NullPointerException\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream_getNextZipEntry_TriageGen1Test.testGetNextZipEntry_MultipleEntries(ZipArchiveInputStream_getNextZipEntry_TriageGen1Test.java:100)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.129,
+     "exception": "java.util.zip.ZipException",
+     "failing_test_line": 100,
+     "message": "Unexpected record signature: 0X200",
+     "outcome": "exception",
+     "trace": "java.util.zip.ZipException: Unexpected record signature: 0X200\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream.getNextZipEntry(ZipArchiveInputStream.java:250)\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream_getNextZipEntry_TriageGen1Test.testGetNextZipEntry_MultipleEntries(ZipArchiveInputStream_getNextZipEntry_TriageGen1Test.java:100)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.136,
+     "exception": "java.util.zip.ZipException",
+     "failing_test_line": 100,
+     "message": "Unexpected record signature: 0X200",
+     "outcome": "exception",
+     "trace": "java.util.zip.ZipException: Unexpected record signature: 0X200\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream.getNextZipEntry(ZipArchiveInputStream.java:250)\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream_getNextZipEntry_TriageGen1Test.testGetNextZipEntry_MultipleEntries(ZipArchiveInputStream_getNextZipEntry_TriageGen1Test.java:100)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.125,
+     "exception": "java.util.zip.ZipException",
+     "failing_test_line": 100,
+     "message": "Unexpected record signature: 0X200",
+     "outcome": "exception",
+     "trace": "java.util.zip.ZipException: Unexpected record signature: 0X200\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream.getNextZipEntry(ZipArchiveInputStream.java:250)\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveInputStream_getNextZipEntry_TriageGen1Test.testGetNextZipEntry_MultipleEntries(ZipArchiveInputStream_getNextZipEntry_TriageGen1Test.java:100)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.ByteArrayOutputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.nio.ByteBuffer;\nimport java.nio.ByteOrder;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.archivers.zip.ZipArchiveEntry;\nimport org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;\nimport org.apache.commons.compress.archivers.zip.ZipLong;\nimport org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_getNextZipEntry_TriageGen1Test {\n\n    private byte[] createLFH(String name, int method, boolean hasDataDescriptor, int compressedSize, int uncompressedSize, long crc) {\n        // LFH Signature\n        ByteBuffer bb = ByteBuffer.allocate(1024).order(ByteOrder.LITTLE_ENDIAN);\n        bb.putInt(0x04034b50); // LFH_SIG\n\n        // Version made by (2 bytes)\n        bb.putShort((short) 0x0200); \n        // General Purpose Bit Flag (2 bytes)\n        short flags = 0;\n        if (hasDataDescriptor) flags |= 0x0008;\n        bb.putShort(flags);\n\n        // Compression Method (2 bytes)\n        bb.putShort((short) method);\n\n        // Last mod file time/date (4 bytes)\n        bb.putInt(0);\n\n        if (!hasDataDescriptor) {\n            bb.putInt((int) crc);\n            bb.putInt(compressedSize);\n            bb.putInt(uncompressedSize);\n        } else {\n            bb.putInt(0); // placeholder for CRC\n            bb.putInt(0); // placeholder for compressed size\n            bb.putInt(0); // placeholder for uncompressed size\n        }\n\n        // Filename len (2 bytes)\n        byte[] nameBytes = name.getBytes();\n        bb.putShort((short) nameBytes.length);\n\n        // Extra len (2 bytes)\n        bb.putShort((short) 0);\n\n        // Filename\n        bb.put(nameBytes);\n\n        byte[] result = new byte[bb.position()];\n        System.arraycopy(bb.array(), 0, result, 0, bb.position());\n        return result;\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testGetNextZipEntry_MultipleEntries() throws IOException {\n        byte[] entry1 = createLFH(\"1.txt\", 0, false, 4, 4, 1L);\n        byte[] entry2 = createLFH(\"2.txt\", 0, false, 4, 4, 2L);\n        \n        ByteBuffer bb = ByteBuffer.allocate(entry1.length + entry2.length);\n        bb.put(entry1);\n        bb.put(entry2);\n        \n        InputStream is = new ByteArrayInputStream(bb.array());\n        ZipArchiveInputStream zis = new ZipArchiveInputStream(is);\n\n        Assert.assertNotNull(zis.getNextZipEntry());\n        Assert.assertEquals(\"1.txt\", zis.getNextZipEntry().getName());\n        Assert.assertNull(zis.getNextZipEntry());\n    }\n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testGetNextZipEntry_InvalidSignature",
+   "runs_b": [
+    {
+     "duration_s": 0.11,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.089,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.102,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.095,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.098,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.103,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.ByteArrayOutputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.nio.ByteBuffer;\nimport java.nio.ByteOrder;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.archivers.zip.ZipArchiveEntry;\nimport org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;\nimport org.apache.commons.compress.archivers.zip.ZipLong;\nimport org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_getNextZipEntry_TriageGen1Test {\n\n    private byte[] createLFH(String name, int method, boolean hasDataDescriptor, int compressedSize, int uncompressedSize, long crc) {\n        // LFH Signature\n        ByteBuffer bb = ByteBuffer.allocate(1024).order(ByteOrder.LITTLE_ENDIAN);\n        bb.putInt(0x04034b50); // LFH_SIG\n\n        // Version made by (2 bytes)\n        bb.putShort((short) 0x0200); \n        // General Purpose Bit Flag (2 bytes)\n        short flags = 0;\n        if (hasDataDescriptor) flags |= 0x0008;\n        bb.putShort(flags);\n\n        // Compression Method (2 bytes)\n        bb.putShort((short) method);\n\n        // Last mod file time/date (4 bytes)\n        bb.putInt(0);\n\n        if (!hasDataDescriptor) {\n            bb.putInt((int) crc);\n            bb.putInt(compressedSize);\n            bb.putInt(uncompressedSize);\n        } else {\n            bb.putInt(0); // placeholder for CRC\n            bb.putInt(0); // placeholder for compressed size\n            bb.putInt(0); // placeholder for uncompressed size\n        }\n\n        // Filename len (2 bytes)\n        byte[] nameBytes = name.getBytes();\n        bb.putShort((short) nameBytes.length);\n\n        // Extra len (2 bytes)\n        bb.putShort((short) 0);\n\n        // Filename\n        bb.put(nameBytes);\n\n        byte[] result = new byte[bb.position()];\n        System.arraycopy(bb.array(), 0, result, 0, bb.position());\n        return result;\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testGetNextZipEntry_InvalidSignature() throws IOException {\n        ByteBuffer bb = ByteBuffer.allocate(12).order(ByteOrder.LITTLE_ENDIAN);\n        bb.putInt(0x12345678); // Wrong signature\n        byte[] data = bb.array();\n\n        InputStream is = new ByteArrayInputStream(data);\n        ZipArchiveInputStream zis = new ZipArchiveInputStream(is);\n        \n        Assert.assertNull(zis.getNextZipEntry());\n    }\n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testGetNextZipEntry_CompressionMethods",
+   "runs_b": [
+    {
+     "duration_s": 0.126,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.121,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.122,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.111,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.116,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.12,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.ByteArrayOutputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.nio.ByteBuffer;\nimport java.nio.ByteOrder;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.archivers.zip.ZipArchiveEntry;\nimport org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;\nimport org.apache.commons.compress.archivers.zip.ZipLong;\nimport org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_getNextZipEntry_TriageGen1Test {\n\n    private byte[] createLFH(String name, int method, boolean hasDataDescriptor, int compressedSize, int uncompressedSize, long crc) {\n        // LFH Signature\n        ByteBuffer bb = ByteBuffer.allocate(1024).order(ByteOrder.LITTLE_ENDIAN);\n        bb.putInt(0x04034b50); // LFH_SIG\n\n        // Version made by (2 bytes)\n        bb.putShort((short) 0x0200); \n        // General Purpose Bit Flag (2 bytes)\n        short flags = 0;\n        if (hasDataDescriptor) flags |= 0x0008;\n        bb.putShort(flags);\n\n        // Compression Method (2 bytes)\n        bb.putShort((short) method);\n\n        // Last mod file time/date (4 bytes)\n        bb.putInt(0);\n\n        if (!hasDataDescriptor) {\n            bb.putInt((int) crc);\n            bb.putInt(compressedSize);\n            bb.putInt(uncompressedSize);\n        } else {\n            bb.putInt(0); // placeholder for CRC\n            bb.putInt(0); // placeholder for compressed size\n            bb.putInt(0); // placeholder for uncompressed size\n        }\n\n        // Filename len (2 bytes)\n        byte[] nameBytes = name.getBytes();\n        bb.putShort((short) nameBytes.length);\n\n        // Extra len (2 bytes)\n        bb.putShort((short) 0);\n\n        // Filename\n        bb.put(nameBytes);\n\n        byte[] result = new byte[bb.position()];\n        System.arraycopy(bb.array(), 0, result, 0, bb.position());\n        return result;\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testGetNextZipEntry_CompressionMethods() throws IOException {\n        // Test Deflated (Imploding)\n        byte[] deflated = createLFH(\"deflated.txt\", 8, false, 4, 4, 1L);\n        InputStream is = new ByteArrayInputStream(deflated);\n        ZipArchiveInputStream zis = new ZipArchiveInputStream(is);\n        \n        ZipArchiveEntry entry = zis.getNextZipEntry();\n        Assert.assertNotNull(entry);\n        Assert.assertEquals(8, entry.getMethod());\n    }\n}\n"
+  }
+ ],
+ "source_sha256": "db598ff314c25bb3fb073ce2912fdf5eab4518526f7a2ece15276224515a94b0",
+ "utc": "2026-11-01T20:16:26Z"
+}

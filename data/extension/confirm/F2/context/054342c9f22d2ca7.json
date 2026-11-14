@@ -1,0 +1,152 @@
+{
+ "bug_name": "JacksonDatabind_3",
+ "call_sites": [
+  {
+   "line": 652,
+   "lines": [
+    647,
+    648,
+    649,
+    650,
+    651,
+    652,
+    653,
+    654,
+    655,
+    656,
+    657
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "    @SuppressWarnings(\"unchecked\")\n    public <T> T readValue(JsonParser p, JavaType type) throws IOException {\n        JsonDeserializer<Object> deser = findRootValueDeserializer(type);\n        if (deser == null) {\n        }\n        return (T) deser.deserialize(p, this);\n    }\n\n    /**\n     * Convenience method that may be used by composite or container deserializers,\n     * for reading one-off values for the composite type, taking into account"
+  },
+  {
+   "line": 676,
+   "lines": [
+    671,
+    672,
+    673,
+    674,
+    675,
+    676,
+    677,
+    678,
+    679,
+    680,
+    681
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "    public <T> T readPropertyValue(JsonParser p, BeanProperty prop, JavaType type) throws IOException {\n        JsonDeserializer<Object> deser = findContextualValueDeserializer(type, prop);\n        if (deser == null) {\n            \n        }\n        return (T) deser.deserialize(p, this);\n    }\n    \n    /*\n    /**********************************************************\n    /* Methods for problem handling, reporting"
+  },
+  {
+   "line": 189,
+   "lines": [
+    184,
+    185,
+    186,
+    187,
+    188,
+    189,
+    190,
+    191,
+    192,
+    193,
+    194
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/MappingIterator.java",
+   "snippet": "        }\n        _hasNextChecked = false;\n        T result;\n        \n        if (_updatedValue == null) {\n            result = _deserializer.deserialize(_parser, _context);\n        } else{\n            _deserializer.deserialize(_parser, _context, _updatedValue);\n            result = _updatedValue;\n        }\n        // Need to consume the token too"
+  },
+  {
+   "line": 191,
+   "lines": [
+    186,
+    187,
+    188,
+    189,
+    190,
+    191,
+    192,
+    193,
+    194,
+    195,
+    196
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/MappingIterator.java",
+   "snippet": "        T result;\n        \n        if (_updatedValue == null) {\n            result = _deserializer.deserialize(_parser, _context);\n        } else{\n            _deserializer.deserialize(_parser, _context, _updatedValue);\n            result = _updatedValue;\n        }\n        // Need to consume the token too\n        _parser.clearCurrentToken();\n        return result;"
+  },
+  {
+   "line": 2754,
+   "lines": [
+    2749,
+    2750,
+    2751,
+    2752,
+    2753,
+    2754,
+    2755,
+    2756,
+    2757,
+    2758,
+    2759
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java",
+   "snippet": "                result = null;\n            } else { // pointing to event other than null\n                DeserializationContext ctxt = createDeserializationContext(jp, deserConfig);\n                JsonDeserializer<Object> deser = _findRootDeserializer(ctxt, toValueType);\n                // note: no handling of unwarpping\n                result = deser.deserialize(jp, ctxt);\n            }\n            jp.close();\n            return result;\n        } catch (IOException e) { // should not occur, no real i/o...\n            throw new IllegalArgumentException(e.getMessage(), e);"
+  }
+ ],
+ "class_simple": "StringArrayDeserializer",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Separate implementation for serializing String arrays (instead of\n * using {@link ObjectArrayDeserializer}.\n * Used if (and only if) no custom value deserializers are used.\n */\n@JacksonStdImpl\npublic final",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "public final static StringArrayDeserializer instance",
+  "protected JsonDeserializer<String> _elementDeserializer"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.deser.std.StringArrayDeserializer",
+ "focal_id": "JacksonDatabind_3::com.fasterxml.jackson.databind.deser.std.StringArrayDeserializer::deserialize(JsonParser,DeserializationContext)",
+ "focal_method_name": "deserialize",
+ "generations": 3,
+ "impl_B": "@Override\n    public String[] deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException\n    {\n        // Ok: must point to START_ARRAY (or equivalent)\n        if (!jp.isExpectedStartArrayToken()) {\n            return handleNonArray(jp, ctxt);\n        }\n        if (_elementDeserializer != null) {\n            return _deserializeCustom(jp, ctxt);\n        }\n\n        final ObjectBuffer buffer = ctxt.leaseObjectBuffer();\n        Object[] chunk = buffer.resetAndStart();\n        \n        int ix = 0;\n        JsonToken t;\n        \n        while ((t = jp.nextToken()) != JsonToken.END_ARRAY) {\n            // Ok: no need to convert Strings, but must recognize nulls\n            String value;\n            if (t == JsonToken.VALUE_STRING) {\n                value = jp.getText();\n            } else if (t == JsonToken.VALUE_NULL) {\n                value = _elementDeserializer.getNullValue();\n            } else {\n                value = _parseString(jp, ctxt);\n            }\n            if (ix >= chunk.length) {\n                chunk = buffer.appendCompletedChunk(chunk);\n                ix = 0;\n            }\n            chunk[ix++] = value;\n        }\n        String[] result = buffer.completeAndClearBuffer(chunk, ix, String.class);\n        ctxt.returnObjectBuffer(buffer);\n        return result;\n    }",
+ "imports": [
+  "java.io.IOException",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.annotation.JacksonStdImpl",
+  "com.fasterxml.jackson.databind.deser.ContextualDeserializer",
+  "com.fasterxml.jackson.databind.jsontype.TypeDeserializer",
+  "com.fasterxml.jackson.databind.util.ObjectBuffer"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.deser.std",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Offlined version used when we do not use the default deserialization method.\n     */",
+   "name": "_deserializeCustom"
+  },
+  {
+   "javadoc": "",
+   "name": "deserializeWithType"
+  },
+  {
+   "javadoc": "/**\n     * Contextualization is needed to see whether we can \"inline\" deserialization\n     * of String values, or if we have to use separate value deserializer.\n     */",
+   "name": "createContextual"
+  }
+ ],
+ "sig": {
+  "class_declaration": "@JacksonStdImpl public final class StringArrayDeserializer extends StdDeserializer<String[]> implements ContextualDeserializer",
+  "constructors": [
+   "public StringArrayDeserializer();"
+  ],
+  "focal_signature": "public String[] deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException",
+  "methods": [
+   "protected final String[] _deserializeCustom(JsonParser jp, DeserializationContext ctxt) throws IOException;",
+   "public Object deserializeWithType(JsonParser jp, DeserializationContext ctxt, TypeDeserializer typeDeserializer) throws IOException;",
+   "public JsonDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property) throws JsonMappingException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

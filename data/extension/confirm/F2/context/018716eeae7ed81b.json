@@ -1,0 +1,288 @@
+{
+ "bug_name": "JacksonDatabind_5",
+ "call_sites": [
+  {
+   "line": 435,
+   "lines": [
+    430,
+    431,
+    432,
+    433,
+    434,
+    435,
+    436,
+    437,
+    438,
+    439,
+    440
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/introspect/AnnotatedClass.java",
+   "snippet": "        }\n        // Special case: mix-ins for Object.class? (to apply to ALL classes)\n        if (_mixInResolver != null) {\n            Class<?> mixin = _mixInResolver.findMixInClassFor(Object.class);\n            if (mixin != null) {\n                _addMethodMixIns(_class, _memberMethods, mixin, mixins);\n            }\n        }\n\n        /* Any unmatched mix-ins? Most likely error cases (not matching\n         * any method); but there is one possible real use case:"
+  },
+  {
+   "line": 594,
+   "lines": [
+    589,
+    590,
+    591,
+    592,
+    593,
+    594,
+    595,
+    596,
+    597,
+    598,
+    599
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/introspect/AnnotatedClass.java",
+   "snippet": "    protected void _addMemberMethods(Class<?> cls, AnnotatedMethodMap methods,\n            Class<?> mixInCls, AnnotatedMethodMap mixIns)\n    {\n        // first, mixIns, since they have higher priority then class methods\n        if (mixInCls != null) {\n            _addMethodMixIns(cls, methods, mixInCls, mixIns);\n        }        \n        if (cls == null) { // just so caller need not check when passing super-class\n            return;\n        }\n"
+  }
+ ],
+ "class_simple": "AnnotatedClass",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private final static AnnotationMap[] NO_ANNOTATION_MAPS",
+  "final protected Class<?> _class",
+  "final protected List<Class<?>> _superTypes",
+  "final protected AnnotationIntrospector _annotationIntrospector",
+  "final protected MixInResolver _mixInResolver",
+  "final protected Class<?> _primaryMixIn",
+  "protected AnnotationMap _classAnnotations",
+  "protected boolean _creatorsResolved",
+  "protected AnnotatedConstructor _defaultConstructor",
+  "protected List<AnnotatedConstructor> _constructors",
+  "protected List<AnnotatedMethod> _creatorMethods",
+  "protected AnnotatedMethodMap _memberMethods",
+  "protected List<AnnotatedField> _fields"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.introspect.AnnotatedClass",
+ "focal_id": "JacksonDatabind_5::com.fasterxml.jackson.databind.introspect.AnnotatedClass::_addMethodMixIns(Class<?>,AnnotatedMethodMap,Class<?>,AnnotatedMethodMap)",
+ "focal_method_name": "_addMethodMixIns",
+ "generations": 3,
+ "impl_B": "protected void _addMethodMixIns(Class<?> targetClass, AnnotatedMethodMap methods,\n            Class<?> mixInCls, AnnotatedMethodMap mixIns)\n    {\n        List<Class<?>> parents = new ArrayList<Class<?>>();\n        parents.add(mixInCls);\n        ClassUtil.findSuperTypes(mixInCls, targetClass, parents);\n        for (Class<?> mixin : parents) {\n            for (Method m : mixin.getDeclaredMethods()) {\n                if (!_isIncludableMemberMethod(m)) {\n                    continue;\n                }\n                AnnotatedMethod am = methods.find(m);\n                /* Do we already have a method to augment (from sub-class\n                 * that will mask this mixIn)? If so, add if visible\n                 * without masking (no such annotation)\n                 */\n                if (am != null) {\n                    _addMixUnders(m, am);\n                    /* Otherwise will have precedence, but must wait\n                     * until we find the real method (mixIn methods are\n                     * just placeholder, can't be called)\n                     */\n                } else {\n                    // Well, or, as per [Issue#515], multi-level merge within mixins...\n                        mixIns.add(_constructMethod(m));\n                }\n            }\n        }\n    }",
+ "imports": [
+  "java.lang.annotation.Annotation",
+  "java.lang.reflect.*",
+  "java.util.*",
+  "com.fasterxml.jackson.databind.AnnotationIntrospector",
+  "com.fasterxml.jackson.databind.introspect.ClassIntrospector.MixInResolver",
+  "com.fasterxml.jackson.databind.util.Annotations",
+  "com.fasterxml.jackson.databind.util.ClassUtil"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.introspect",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "withAnnotations"
+  },
+  {
+   "javadoc": "/**\n     * Factory method that instantiates an instance. Returned instance\n     * will only be initialized with class annotations, but not with\n     * any method information.\n     */",
+   "name": "construct"
+  },
+  {
+   "javadoc": "/**\n     * Method similar to {@link #construct}, but that will NOT include\n     * information from supertypes; only class itself and any direct\n     * mix-ins it may have.\n     */",
+   "name": "constructWithoutSuperTypes"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getAnnotated"
+  },
+  {
+   "javadoc": "",
+   "name": "getModifiers"
+  },
+  {
+   "javadoc": "",
+   "name": "getName"
+  },
+  {
+   "javadoc": "",
+   "name": "getAnnotation"
+  },
+  {
+   "javadoc": "",
+   "name": "getGenericType"
+  },
+  {
+   "javadoc": "",
+   "name": "getRawType"
+  },
+  {
+   "javadoc": "",
+   "name": "annotations"
+  },
+  {
+   "javadoc": "",
+   "name": "getAllAnnotations"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getAnnotations"
+  },
+  {
+   "javadoc": "",
+   "name": "hasAnnotations"
+  },
+  {
+   "javadoc": "",
+   "name": "getDefaultConstructor"
+  },
+  {
+   "javadoc": "",
+   "name": "getConstructors"
+  },
+  {
+   "javadoc": "",
+   "name": "getStaticMethods"
+  },
+  {
+   "javadoc": "",
+   "name": "memberMethods"
+  },
+  {
+   "javadoc": "",
+   "name": "getMemberMethodCount"
+  },
+  {
+   "javadoc": "",
+   "name": "findMethod"
+  },
+  {
+   "javadoc": "",
+   "name": "getFieldCount"
+  },
+  {
+   "javadoc": "",
+   "name": "fields"
+  },
+  {
+   "javadoc": "/**\n     * Helper method for adding any mix-in annotations specified\n     * class might have.\n     */",
+   "name": "_addClassMixIns"
+  },
+  {
+   "javadoc": "",
+   "name": "_addClassMixIns"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_addConstructorMixIns"
+  },
+  {
+   "javadoc": "",
+   "name": "_addFactoryMixIns"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_addMemberMethods"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_findFields"
+  },
+  {
+   "javadoc": "/**\n     * Method called to add field mix-ins from given mix-in class (and its fields)\n     * into already collected actual fields (from introspected classes and their\n     * super-classes)\n     */",
+   "name": "_addFieldMixIns"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_constructMethod"
+  },
+  {
+   "javadoc": "",
+   "name": "_constructConstructor"
+  },
+  {
+   "javadoc": "",
+   "name": "_constructCreatorMethod"
+  },
+  {
+   "javadoc": "",
+   "name": "_constructField"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_isIncludableMemberMethod"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_collectRelevantAnnotations"
+  },
+  {
+   "javadoc": "",
+   "name": "_collectRelevantAnnotations"
+  },
+  {
+   "javadoc": "/**\n     * @param addParamAnnotations Whether parameter annotations are to be\n     *   added as well\n     */",
+   "name": "_addMixOvers"
+  },
+  {
+   "javadoc": "/**\n     * @param addParamAnnotations Whether parameter annotations are to be\n     *   added as well\n     */",
+   "name": "_addMixOvers"
+  },
+  {
+   "javadoc": "/**\n     * Method that will add annotations from specified source method to target method,\n     * but only if target does not yet have them.\n     */",
+   "name": "_addMixUnders"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "toString"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public final class AnnotatedClass extends Annotated",
+  "constructors": [],
+  "focal_signature": "protected void _addMethodMixIns(Class<?> targetClass, AnnotatedMethodMap methods, Class<?> mixInCls, AnnotatedMethodMap mixIns)",
+  "methods": [
+   "public AnnotatedClass withAnnotations(AnnotationMap ann);",
+   "public static AnnotatedClass construct(Class<?> cls, AnnotationIntrospector aintr, MixInResolver mir);",
+   "public static AnnotatedClass constructWithoutSuperTypes(Class<?> cls, AnnotationIntrospector aintr, MixInResolver mir);",
+   "public Class<?> getAnnotated();",
+   "public int getModifiers();",
+   "public String getName();",
+   "public <A extends Annotation> A getAnnotation(Class<A> acls);",
+   "public Type getGenericType();",
+   "public Class<?> getRawType();",
+   "public Iterable<Annotation> annotations();",
+   "protected AnnotationMap getAllAnnotations();",
+   "public Annotations getAnnotations();",
+   "public boolean hasAnnotations();",
+   "public AnnotatedConstructor getDefaultConstructor();",
+   "public List<AnnotatedConstructor> getConstructors();",
+   "public List<AnnotatedMethod> getStaticMethods();",
+   "public Iterable<AnnotatedMethod> memberMethods();",
+   "public int getMemberMethodCount();",
+   "public AnnotatedMethod findMethod(String name, Class<?>[] paramTypes);",
+   "public int getFieldCount();",
+   "public Iterable<AnnotatedField> fields();",
+   "protected void _addClassMixIns(AnnotationMap annotations, Class<?> toMask);",
+   "protected void _addClassMixIns(AnnotationMap annotations, Class<?> toMask, Class<?> mixin);",
+   "protected void _addConstructorMixIns(Class<?> mixin);",
+   "protected void _addFactoryMixIns(Class<?> mixin);",
+   "protected void _addMemberMethods(Class<?> cls, AnnotatedMethodMap methods, Class<?> mixInCls, AnnotatedMethodMap mixIns);",
+   "protected Map<String,AnnotatedField> _findFields(Class<?> c, Map<String,AnnotatedField> fields);",
+   "protected void _addFieldMixIns(Class<?> targetClass, Class<?> mixInCls, Map<String,AnnotatedField> fields);",
+   "protected AnnotatedMethod _constructMethod(Method m);",
+   "protected AnnotatedConstructor _constructConstructor(Constructor<?> ctor, boolean defaultCtor);",
+   "protected AnnotatedMethod _constructCreatorMethod(Method m);",
+   "protected AnnotatedField _constructField(Field f);",
+   "protected boolean _isIncludableMemberMethod(Method m);",
+   "protected AnnotationMap[] _collectRelevantAnnotations(Annotation[][] anns);",
+   "protected AnnotationMap _collectRelevantAnnotations(Annotation[] anns);",
+   "protected void _addMixOvers(Constructor<?> mixin, AnnotatedConstructor target, boolean addParamAnnotations);",
+   "protected void _addMixOvers(Method mixin, AnnotatedMethod target, boolean addParamAnnotations);",
+   "protected void _addMixUnders(Method src, AnnotatedMethod target);",
+   "public String toString();"
+  ],
+  "type_signatures": [
+   "public final class AnnotatedMethodMap implements Iterable<AnnotatedMethod> { public AnnotatedMethodMap(); public void add(AnnotatedMethod am); public AnnotatedMethod remove(AnnotatedMethod am); public AnnotatedMethod remove(Method m); public boolean isEmpty(); public int size(); public AnnotatedMethod find(String name, Class<?>[] paramTypes); public AnnotatedMethod find(Method m); public Iterator<AnnotatedMethod> iterator(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

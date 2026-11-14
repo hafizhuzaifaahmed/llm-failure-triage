@@ -1,0 +1,163 @@
+{
+ "bug_name": "Closure_163",
+ "call_sites": [
+  {
+   "line": 677,
+   "lines": [
+    672,
+    673,
+    674,
+    675,
+    676,
+    677,
+    678,
+    679,
+    680,
+    681,
+    682
+   ],
+   "path": "src/com/google/debugging/sourcemap/SourceMapConsumerV3.java",
+   "snippet": "      return name;\n    }\n  }\n\n  static interface EntryVisitor {\n    void visit(String sourceName,\n               String symbolName,\n               FilePosition sourceStartPosition,\n               FilePosition startPosition,\n               FilePosition endPosition);\n  }"
+  },
+  {
+   "line": 701,
+   "lines": [
+    696,
+    697,
+    698,
+    699,
+    700,
+    701,
+    702,
+    703,
+    704,
+    705,
+    706
+   ],
+   "path": "src/com/google/debugging/sourcemap/SourceMapConsumerV3.java",
+   "snippet": "        for (int j = 0; j < entryCount; j++) {\n          Entry entry = line.get(j);\n          if (pending) {\n            FilePosition endPosition = new FilePosition(\n                i, entry.getGeneratedColumn());\n            visitor.visit(\n                sourceName,\n                symbolName,\n                sourceStartPosition,\n                startPosition,\n                endPosition);"
+  },
+  {
+   "line": 506,
+   "lines": [
+    501,
+    502,
+    503,
+    504,
+    505,
+    506,
+    507,
+    508,
+    509,
+    510,
+    511
+   ],
+   "path": "src/com/google/debugging/sourcemap/SourceMapGeneratorV1.java",
+   "snippet": "     * @param col The starting column for this code segment.\n     * @param endLine The ending line\n     * @param endCol The ending column\n     * @throws IOException\n     */\n    void visit(Mapping m, int line, int col, int endLine, int endCol)\n        throws IOException;\n  }\n\n  /**\n   * Walk the mappings and visit each segment of the mappings, unmapped"
+  },
+  {
+   "line": 595,
+   "lines": [
+    590,
+    591,
+    592,
+    593,
+    594,
+    595,
+    596,
+    597,
+    598,
+    599,
+    600
+   ],
+   "path": "src/com/google/debugging/sourcemap/SourceMapGeneratorV1.java",
+   "snippet": "      int nextLine = getAdjustedLine(m.endPosition);\n      int nextCol = getAdjustedCol(m.endPosition);\n      // If this anything remaining in this mapping beyond the\n      // current line and column position, write it out now.\n      if (line < nextLine || (line == nextLine && col < nextCol)) {\n        visit(v, m, nextLine, nextCol);\n      }\n    }\n\n    /**\n     * Write any needed entries to complete the provided mapping."
+  },
+  {
+   "line": 609,
+   "lines": [
+    604,
+    605,
+    606,
+    607,
+    608,
+    609,
+    610,
+    611,
+    612,
+    613,
+    614
+   ],
+   "path": "src/com/google/debugging/sourcemap/SourceMapGeneratorV1.java",
+   "snippet": "      int nextLine = getAdjustedLine(m.startPosition);\n      int nextCol = getAdjustedCol(m.startPosition);\n      // If the previous value is null, no mapping exists.\n      Preconditions.checkState(line < nextLine || col <= nextCol);\n      if (line < nextLine || (line == nextLine && col < nextCol)) {\n        visit(v, parent, nextLine, nextCol);\n      }\n    }\n\n    /**\n     * Write any entries needed between the current position the next position"
+  }
+ ],
+ "class_simple": "ProcessProperties",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Analyzes properties on prototypes.\n *\n * Uses a reference graph to analyze prototype properties. Each unique property\n * name is represented by a node in this graph. An edge from property A to\n * property B means that there's a GETPROP access of a property B on some\n * object inside of a method named A.\n *\n * Global functions are also represented by nodes in this graph, with\n * similar semantics.\n *\n */\nclass AnalyzePrototypeProperties implements CompilerPass {\n\n  // Constants for symbol types, for easier readability.\n  private final SymbolType PROPERTY = SymbolType.PROPERTY;\n  private final SymbolType VAR = SymbolType.VAR;\n\n  private final AbstractCompiler compiler;\n  private final boolean canModifyExterns;\n  private final boolean anchorUnusedVars;\n  private final JSModuleGraph moduleGraph;\n  private final JSModule firstModule;\n\n  // Properties that are implicitly used as part of the JS language.\n  private static final Set<String> IMPLICITLY_USED_PROPERTIES =\n      ImmutableSet.of(\"length\", \"toString\", \"valueOf\");\n\n  // A graph where the nodes are property names or variable names,\n  // and the edges signify the modules where the property is referenced.\n  // For example, if we had the code:\n  //\n  // Foo.prototype.bar = function(x) { x.baz(); }; // in module 2.;\n  //\n  // then this would be represented in the graph by a node representing\n  // \"bar\", a node representing \"baz\", and an edge between them representing\n  // module #2.\n  //\n  // Similarly, if we had:\n  //\n  // var scotch = function(f) { return f.age(); };\n  //\n  // then there would be a node for \"scotch\", a node for \"age\", and an edge\n  // from scotch to age.\n  private final LinkedDirectedGraph<NameInfo, JSModule> symbolGraph =\n      LinkedDirectedGraph.createWithoutAnnotations();\n\n  // A dummy node for representing global references.\n  private final NameInfo globalNode = new NameInfo(\"[global]\");\n\n  // A dummy node for representing extern references.\n  private final NameInfo externNode = new NameInfo(\"[extern]\");\n\n  // A dummy node for representing all anonymous functions with no names.\n  private final NameInfo anonymousNode = new NameInfo(\"[anonymous]\");\n\n  // All the real NameInfo for prototype properties, hashed by the name\n  // of the property that they represent.\n  private final Map<String, NameInfo> propertyNameInfo = Maps.newHashMap();\n\n  // All the NameInfo for global functions, hashed by the name of the\n  // gloval variable that it's assigned to.\n  private final Map<String, NameInfo> varNameInfo = Maps.newHashMap();\n\n  /**\n   * Creates a new pass for analyzing prototype properties.\n   * @param compiler The compiler.\n   * @param moduleGraph The graph for resolving module dependencies. May be\n   *     null if we don't care about module dependencies.\n   * @param canModifyExterns If true, then we can move prototype\n   *     properties that are declared in the externs file.\n   * @param anchorUnusedVars If true, then we must mark all vars as referenced,\n   *     even if they are never used.\n   */\n  AnalyzePrototypeProperties(AbstractCompiler compiler,\n      JSModuleGraph moduleGraph, boolean canModifyExterns,\n      boolean anchorUnusedVars) {\n    this.compiler = compiler;\n    this.moduleGraph = moduleGraph;\n    this.canModifyExterns = canModifyExterns;\n    this.anchorUnusedVars = anchorUnusedVars;\n\n    if (moduleGraph != null) {\n      firstModule = moduleGraph.getRootModule();\n    } else {\n      firstModule = null;\n    }\n\n    globalNode.markReference(null);\n    externNode.markReference(null);\n    symbolGraph.createNode(globalNode);\n    symbolGraph.createNode(externNode);\n\n    for (String property : IMPLICITLY_USED_PROPERTIES) {\n      NameInfo nameInfo = getNameInfoForName(property, PROPERTY);\n      if (moduleGraph == null) {\n        symbolGraph.connect(externNode, null, nameInfo);\n      } else {\n        for (JSModule module : moduleGraph.getAllModules()) {\n          symbolGraph.connect(externNode, module, nameInfo);\n        }\n      }\n    }\n  }\n\n  @Override\n  public void process(Node externRoot, Node root) {\n    if (!canModifyExterns) {\n      NodeTraversal.traverse(compiler, externRoot,\n          new ProcessExternProperties());\n    }\n\n    NodeTraversal.traverse(compiler, root, new ProcessProperties());\n\n    FixedPointGraphTraversal<NameInfo, JSModule> t =\n        FixedPointGraphTraversal.newTraversal(new PropagateReferences());\n    t.computeFixedPoint(symbolGraph,\n        Sets.newHashSet(externNode, globalNode));\n  }\n\n  /**\n   * Returns information on all prototype properties.\n   */\n  public Collection<NameInfo> getAllNameInfo() {\n    List<NameInfo> result = Lists.newArrayList(propertyNameInfo.values());\n    result.addAll(varNameInfo.values());\n    return result;\n  }\n\n  /**\n   * Gets the name info for the property or variable of a given name,\n   * and creates a new one if necessary.\n   *\n   * @param name The name of the symbol.\n   * @param type The type of symbol.\n   */\n  private NameInfo getNameInfoForName(String name, SymbolType type) {\n    Map<String, NameInfo> map = type == PROPERTY ?\n        propertyNameInfo : varNameInfo;\n    if (map.containsKey(name)) {\n      return map.get(name);\n    } else {\n      NameInfo nameInfo = new NameInfo(name);\n      map.put(name, nameInfo);\n      symbolGraph.createNode(nameInfo);\n      return nameInfo;\n    }\n  }\n\n  private",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private Stack<NameContext> symbolStack"
+ ],
+ "focal_class": "com.google.javascript.jscomp.AnalyzePrototypeProperties.ProcessProperties",
+ "focal_id": "Closure_163::com.google.javascript.jscomp.AnalyzePrototypeProperties$ProcessProperties::visit(NodeTraversal,Node,Node)",
+ "focal_method_name": "visit",
+ "generations": 3,
+ "impl_B": "@Override\n    public void visit(NodeTraversal t, Node n, Node parent) {\n      if (n.isGetProp()) {\n        String propName = n.getFirstChild().getNext().getString();\n\n          if (propName.equals(\"prototype\")) {\n          processPrototypeParent(t, parent);\n          } else if (compiler.getCodingConvention().isExported(propName)) {\n            addGlobalUseOfSymbol(propName, t.getModule(), PROPERTY);\n          } else {\n            // Do not mark prototype prop assigns as a 'use' in the global scope.\n          addSymbolUse(propName, t.getModule(), PROPERTY);\n        }\n\n      } else if (n.isObjectLit() &&\n        // Make sure that we're not handling object literals being\n        // assigned to a prototype, as in:\n        // Foo.prototype = {bar: 3, baz: 5};\n          !(parent.isAssign() &&\n            parent.getFirstChild().isGetProp() &&\n            parent.getFirstChild().getLastChild().getString().equals(\n                \"prototype\"))) {\n\n        // var x = {a: 1, b: 2}\n        // should count as a use of property a and b.\n        for (Node propNameNode = n.getFirstChild(); propNameNode != null;\n             propNameNode = propNameNode.getNext()) {\n          // May be STRING, GET, or SET, but NUMBER isn't interesting.\n          if (!propNameNode.isQuotedString()) {\n            addSymbolUse(propNameNode.getString(), t.getModule(), PROPERTY);\n          }\n        }\n      } else if (n.isName()) {\n        String name = n.getString();\n\n        Var var = t.getScope().getVar(name);\n        if (var != null) {\n          // Only process global functions.\n          if (var.isGlobal()) {\n            if (var.getInitialValue() != null &&\n                var.getInitialValue().isFunction()) {\n              if (t.inGlobalScope()) {\n                if (!processGlobalFunctionDeclaration(t, n, parent,\n                        parent.getParent())) {\n                  addGlobalUseOfSymbol(name, t.getModule(), VAR);\n                }\n              } else {\n                addSymbolUse(name, t.getModule(), VAR);\n              }\n            }\n\n          // If it is not a global, it might be accessing a local of the outer\n          // scope. If that's the case the functions between the variable's\n          // declaring scope and the variable reference scope cannot be moved.\n          } else if (var.getScope() != t.getScope()){\n            for (int i = symbolStack.size() - 1; i >= 0; i--) {\n              NameContext context = symbolStack.get(i);\n              if (context.scope == var.getScope()) {\n                break;\n              }\n\n              context.name.readClosureVariables = true;\n            }\n          }\n        }\n      }\n\n      // Process prototype assignments to non-functions.\n      if (isPrototypePropertyAssign(n) ||\n          isGlobalFunctionDeclaration(t, n) ||\n          n.isFunction()) {\n        symbolStack.pop();\n      }\n    }",
+ "imports": [
+  "com.google.common.base.Preconditions",
+  "com.google.common.collect.ImmutableSet",
+  "com.google.common.collect.Lists",
+  "com.google.common.collect.Maps",
+  "com.google.common.collect.Sets",
+  "com.google.javascript.jscomp.NodeTraversal.AbstractPostOrderCallback",
+  "com.google.javascript.jscomp.Scope.Var",
+  "com.google.javascript.jscomp.graph.FixedPointGraphTraversal",
+  "com.google.javascript.jscomp.graph.LinkedDirectedGraph",
+  "com.google.javascript.jscomp.graph.FixedPointGraphTraversal.EdgeCallback",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.Token",
+  "java.util.ArrayDeque",
+  "java.util.Collection",
+  "java.util.Deque",
+  "java.util.List",
+  "java.util.Map",
+  "java.util.Set",
+  "java.util.Stack"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "enterScope"
+  },
+  {
+   "javadoc": "",
+   "name": "exitScope"
+  },
+  {
+   "javadoc": "",
+   "name": "shouldTraverse"
+  }
+ ],
+ "sig": {
+  "class_declaration": "private class ProcessProperties implements NodeTraversal.ScopedCallback",
+  "constructors": [],
+  "focal_signature": "public void visit(NodeTraversal t, Node n, Node parent)",
+  "methods": [
+   "public void enterScope(NodeTraversal t);",
+   "public void exitScope(NodeTraversal t);",
+   "public boolean shouldTraverse(NodeTraversal t, Node n, Node parent);"
+  ],
+  "type_signatures": [
+   "public class NodeTraversal { public NodeTraversal(AbstractCompiler compiler, Callback cb); public NodeTraversal(AbstractCompiler compiler, Callback cb, ScopeCreator scopeCreator); public void traverse(Node root); public void traverseRoots(Node ... roots); public void traverseRoots(List<Node> roots); protected void traverseInnerNode(Node node, Node parent, Scope refinedScope); public Compiler getCompiler(); public int getLineNumber(); public String getSourceName(); public CompilerInput getInput(); public JSModule getModule(); public Node getCurrentNode(); public static void traverse( AbstractCompiler compiler, Node root, Callback cb); public static void traverseRoots( AbstractCompiler compiler, List<Node> roots, Callback cb); public static void traverseRoots( AbstractCompiler compiler, Callback cb, Node ... roots); }",
+   "public class Node implements Cloneable, Serializable { public Node(int nodeType); public Node(int nodeType, Node child); public Node(int nodeType, Node left, Node right); public Node(int nodeType, Node left, Node mid, Node right); public Node(int nodeType, Node left, Node mid, Node mid2, Node right); public Node(int nodeType, int lineno, int charno); public Node(int nodeType, Node child, int lineno, int charno); public Node(int nodeType, Node left, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node mid2, Node right, int lineno, int charno); public Node(int nodeType, Node[] children, int lineno, int charno); public Node(int nodeType, Node[] children); public static Node newNumber(double number); public static Node newNumber(double number, int lineno, int charno); public static Node newString(String str); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

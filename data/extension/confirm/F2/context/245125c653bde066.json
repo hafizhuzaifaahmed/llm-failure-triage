@@ -1,0 +1,155 @@
+{
+ "bug_name": "JacksonDatabind_109",
+ "call_sites": [
+  {
+   "line": 505,
+   "lines": [
+    500,
+    501,
+    502,
+    503,
+    504,
+    505,
+    506,
+    507,
+    508,
+    509,
+    510
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "            BeanProperty prop) throws JsonMappingException {\n        KeyDeserializer kd = _cache.findKeyDeserializer(this,\n                _factory, keyType);\n        // Second: contextualize?\n        if (kd instanceof ContextualKeyDeserializer) {\n            kd = ((ContextualKeyDeserializer) kd).createContextual(this, prop);\n        }\n        return kd;\n    }\n    \n    /*"
+  },
+  {
+   "line": 652,
+   "lines": [
+    647,
+    648,
+    649,
+    650,
+    651,
+    652,
+    653,
+    654,
+    655,
+    656,
+    657
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "        throws JsonMappingException\n    {\n        if (deser instanceof ContextualDeserializer) {\n            _currentType = new LinkedNode<JavaType>(type, _currentType);\n            try {\n                deser = ((ContextualDeserializer) deser).createContextual(this, prop);\n            } finally {\n                _currentType = _currentType.next();\n            }\n        }\n        return deser;"
+  },
+  {
+   "line": 683,
+   "lines": [
+    678,
+    679,
+    680,
+    681,
+    682,
+    683,
+    684,
+    685,
+    686,
+    687,
+    688
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "        throws JsonMappingException\n    {\n        if (deser instanceof ContextualDeserializer) {\n            _currentType = new LinkedNode<JavaType>(type, _currentType);\n            try {\n                deser = ((ContextualDeserializer) deser).createContextual(this, prop);\n            } finally {\n                _currentType = _currentType.next();\n            }\n        }\n        return deser;"
+  },
+  {
+   "line": 976,
+   "lines": [
+    971,
+    972,
+    973,
+    974,
+    975,
+    976,
+    977,
+    978,
+    979,
+    980,
+    981
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/SerializerProvider.java",
+   "snippet": "            BeanProperty property)\n        throws JsonMappingException\n    {\n        if (ser != null) {\n            if (ser instanceof ContextualSerializer) {\n                ser = ((ContextualSerializer) ser).createContextual(this, property);\n            }\n        }\n        return ser;\n    }\n"
+  },
+  {
+   "line": 1004,
+   "lines": [
+    999,
+    1000,
+    1001,
+    1002,
+    1003,
+    1004,
+    1005,
+    1006,
+    1007,
+    1008,
+    1009
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/SerializerProvider.java",
+   "snippet": "            BeanProperty property)\n        throws JsonMappingException\n    {\n        if (ser != null) {\n            if (ser instanceof ContextualSerializer) {\n                ser = ((ContextualSerializer) ser).createContextual(this, property);\n            }\n        }\n        return ser;\n    }\n    "
+  }
+ ],
+ "class_simple": "NumberSerializer",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * As a fallback, we may need to use this serializer for other\n * types of {@link Number}s: both custom types and \"big\" numbers\n * like {@link BigInteger} and {@link BigDecimal}.\n */\n@JacksonStdImpl\n@SuppressWarnings(\"serial\")\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "public final static NumberSerializer instance",
+  "protected final boolean _isInt"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.ser.std.NumberSerializer",
+ "focal_id": "JacksonDatabind_109::com.fasterxml.jackson.databind.ser.std.NumberSerializer::createContextual(SerializerProvider,BeanProperty)",
+ "focal_method_name": "createContextual",
+ "generations": 3,
+ "impl_B": "@Override\n    public JsonSerializer<?> createContextual(SerializerProvider prov,\n            BeanProperty property) throws JsonMappingException\n    {\n        JsonFormat.Value format = findFormatOverrides(prov, property, handledType());\n        if (format != null) {\n            switch (format.getShape()) {\n            case STRING:\n                // [databind#2264]: Need special handling for `BigDecimal`\n                return ToStringSerializer.instance;\n            default:\n            }\n        }\n        return this;\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.lang.reflect.Type",
+  "java.math.BigDecimal",
+  "java.math.BigInteger",
+  "com.fasterxml.jackson.annotation.JsonFormat",
+  "com.fasterxml.jackson.core.JsonGenerator",
+  "com.fasterxml.jackson.core.JsonParser",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.annotation.JacksonStdImpl",
+  "com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper",
+  "com.fasterxml.jackson.databind.ser.ContextualSerializer"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.ser.std",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "serialize"
+  },
+  {
+   "javadoc": "",
+   "name": "getSchema"
+  },
+  {
+   "javadoc": "",
+   "name": "acceptJsonFormatVisitor"
+  }
+ ],
+ "sig": {
+  "class_declaration": "@JacksonStdImpl @SuppressWarnings(\"serial\") public class NumberSerializer extends StdScalarSerializer<Number> implements ContextualSerializer",
+  "constructors": [
+   "public NumberSerializer(Class<? extends Number> rawType);"
+  ],
+  "focal_signature": "public JsonSerializer<?> createContextual(SerializerProvider prov, BeanProperty property) throws JsonMappingException",
+  "methods": [
+   "public void serialize(Number value, JsonGenerator g, SerializerProvider provider) throws IOException;",
+   "public JsonNode getSchema(SerializerProvider provider, Type typeHint);",
+   "public void acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint) throws JsonMappingException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

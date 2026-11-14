@@ -1,0 +1,189 @@
+{
+ "bug_name": "JacksonDatabind_85",
+ "call_sites": [
+  {
+   "line": 42,
+   "lines": [
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ser/std/CalendarSerializer.java",
+   "snippet": "    }\n\n    @Override\n    public void serialize(Calendar value, JsonGenerator jgen, SerializerProvider provider) throws IOException\n    {\n        if (_asTimestamp(provider)) {\n            jgen.writeNumber(_timestamp(value));\n        } else if (_customFormat != null) {\n            // 21-Feb-2011, tatu: not optimal, but better than alternatives:\n            synchronized (_customFormat) {\n                // _customformat cannot parse Calendar, so Date should be passed"
+  },
+  {
+   "line": 47,
+   "lines": [
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ser/std/DateSerializer.java",
+   "snippet": "    }\n\n    @Override\n    public void serialize(Date value, JsonGenerator gen, SerializerProvider provider) throws IOException\n    {\n        if (_asTimestamp(provider)) {\n            gen.writeNumber(_timestamp(value));\n        } else if (_customFormat != null) {\n            // 21-Feb-2011, tatu: not optimal, but better than alternatives:\n            synchronized (_customFormat) {\n                gen.writeString(_customFormat.format(value));"
+  },
+  {
+   "line": 121,
+   "lines": [
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122,
+    123,
+    124,
+    125,
+    126
+   ],
+   "patch_lines_removed": true,
+   "path": "src/main/java/com/fasterxml/jackson/databind/ser/std/DateTimeSerializerBase.java",
+   "snippet": "\n    @Override\n    public void acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint) throws JsonMappingException\n    {"
+  },
+  {
+   "line": 127,
+   "lines": [
+    122,
+    123,
+    124,
+    125,
+    126,
+    127,
+    128,
+    129,
+    130,
+    131,
+    132
+   ],
+   "patch_lines_removed": true,
+   "path": "src/main/java/com/fasterxml/jackson/databind/ser/std/DateTimeSerializerBase.java",
+   "snippet": "\n    @Override\n    public void acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint) throws JsonMappingException\n    {\n        _acceptJsonFormatVisitor(visitor, typeHint, _asTimestamp(visitor.getProvider()));\n    }\n\n    /*\n    /**********************************************************\n    /* Actual serialization"
+  },
+  {
+   "line": 48,
+   "lines": [
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ser/std/SqlDateSerializer.java",
+   "snippet": "    \n    @Override\n    public void serialize(java.sql.Date value, JsonGenerator gen, SerializerProvider provider)\n        throws IOException, JsonGenerationException\n    {\n        if (_asTimestamp(provider)) {\n            gen.writeNumber(_timestamp(value));\n        } else {\n            gen.writeString(value.toString());\n        }\n    }"
+  }
+ ],
+ "class_simple": "DateTimeSerializerBase",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "",
+  "method_javadoc": "/**********************************************************\n     */"
+ },
+ "fields": [
+  "protected final Boolean _useTimestamp",
+  "protected final DateFormat _customFormat"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.ser.std.DateTimeSerializerBase",
+ "focal_id": "JacksonDatabind_85::com.fasterxml.jackson.databind.ser.std.DateTimeSerializerBase::_asTimestamp(SerializerProvider)",
+ "focal_method_name": "_asTimestamp",
+ "generations": 3,
+ "impl_B": "protected boolean _asTimestamp(SerializerProvider serializers)\n    {\n        if (_useTimestamp != null) {\n            return _useTimestamp.booleanValue();\n        }\n        if (_customFormat == null) {\n            if (serializers != null) {\n                return serializers.isEnabled(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);\n            }\n            // 12-Jun-2014, tatu: Is it legal not to have provider? Was NPE:ing earlier so leave a check\n            throw new IllegalArgumentException(\"Null SerializerProvider passed for \"+handledType().getName());\n        }\n        return false;\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.lang.reflect.Type",
+  "java.text.DateFormat",
+  "java.text.SimpleDateFormat",
+  "java.util.Locale",
+  "java.util.TimeZone",
+  "com.fasterxml.jackson.annotation.JsonFormat",
+  "com.fasterxml.jackson.core.JsonGenerator",
+  "com.fasterxml.jackson.core.JsonParser",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.jsonFormatVisitors.*",
+  "com.fasterxml.jackson.databind.ser.ContextualSerializer",
+  "com.fasterxml.jackson.databind.util.StdDateFormat"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.ser.std",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "withFormat"
+  },
+  {
+   "javadoc": "",
+   "name": "createContextual"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "isEmpty"
+  },
+  {
+   "javadoc": "",
+   "name": "isEmpty"
+  },
+  {
+   "javadoc": "",
+   "name": "_timestamp"
+  },
+  {
+   "javadoc": "",
+   "name": "getSchema"
+  },
+  {
+   "javadoc": "",
+   "name": "acceptJsonFormatVisitor"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "serialize"
+  },
+  {
+   "javadoc": "",
+   "name": "_acceptJsonFormatVisitor"
+  }
+ ],
+ "sig": {
+  "class_declaration": "@SuppressWarnings(\"serial\") public abstract class DateTimeSerializerBase<T> extends StdScalarSerializer<T> implements ContextualSerializer",
+  "constructors": [
+   "protected DateTimeSerializerBase(Class<T> type, Boolean useTimestamp, DateFormat customFormat);"
+  ],
+  "focal_signature": "protected boolean _asTimestamp(SerializerProvider serializers)",
+  "methods": [
+   "public abstract DateTimeSerializerBase<T> withFormat(Boolean timestamp, DateFormat customFormat);",
+   "public JsonSerializer<?> createContextual(SerializerProvider serializers, BeanProperty property) throws JsonMappingException;",
+   "public boolean isEmpty(T value);",
+   "public boolean isEmpty(SerializerProvider serializers, T value);",
+   "protected abstract long _timestamp(T value);",
+   "public JsonNode getSchema(SerializerProvider serializers, Type typeHint);",
+   "public void acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint) throws JsonMappingException;",
+   "public abstract void serialize(T value, JsonGenerator gen, SerializerProvider serializers) throws IOException;",
+   "protected void _acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint, boolean asNumber) throws JsonMappingException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

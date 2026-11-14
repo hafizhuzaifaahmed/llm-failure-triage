@@ -1,0 +1,134 @@
+{
+ "bug_name": "Mockito_34",
+ "call_sites": [
+  {
+   "line": 40,
+   "lines": [
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45
+   ],
+   "path": "src/org/mockito/internal/debugging/WarningsPrinterImpl.java",
+   "snippet": "        while(unusedIterator.hasNext()) {\n            Invocation unused = unusedIterator.next();\n            Iterator<InvocationMatcher> unstubbedIterator = unstubbedInvocations.iterator();\n            while(unstubbedIterator.hasNext()) {\n                InvocationMatcher unstubbed = unstubbedIterator.next();\n                if(unstubbed.hasSimilarMethod(unused)) { \n                    logger.log(stubbedMethodCalledWithDifferentArguments(unused, unstubbed));\n                    unusedIterator.remove();\n                    unstubbedIterator.remove();\n                } \n            }"
+  },
+  {
+   "line": 66,
+   "lines": [
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71
+   ],
+   "path": "src/org/mockito/internal/invocation/InvocationsFinder.java",
+   "snippet": "    }\n    \n    public Invocation findSimilarInvocation(List<Invocation> invocations, InvocationMatcher wanted) {\n        Invocation firstSimilar = null;\n        for (Invocation invocation : invocations) {\n            if (!wanted.hasSimilarMethod(invocation)) {\n                continue;\n            }\n            if (firstSimilar == null) {\n                firstSimilar = invocation;\n            }"
+  }
+ ],
+ "class_simple": "InvocationMatcher",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "",
+  "method_javadoc": "/**\n     * similar means the same method name, same mock, unverified \n     * and: if arguments are the same cannot be overloaded\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "private final Invocation invocation",
+  "private final List<Matcher> matchers"
+ ],
+ "focal_class": "org.mockito.internal.invocation.InvocationMatcher",
+ "focal_id": "Mockito_34::org.mockito.internal.invocation.InvocationMatcher::hasSimilarMethod(Invocation)",
+ "focal_method_name": "hasSimilarMethod",
+ "generations": 3,
+ "impl_B": "public boolean hasSimilarMethod(Invocation candidate) {\n        String wantedMethodName = getMethod().getName();\n        String currentMethodName = candidate.getMethod().getName();\n        \n        final boolean methodNameEquals = wantedMethodName.equals(currentMethodName);\n        final boolean isUnverified = !candidate.isVerified();\n        final boolean mockIsTheSame = getInvocation().getMock() == candidate.getMock();\n        final boolean methodEquals = hasSameMethod(candidate);\n\n        if (!methodNameEquals || !isUnverified || !mockIsTheSame) {\n            return false;\n        }\n\n        final boolean overloadedButSameArgs = !methodEquals && safelyArgumentsMatch(candidate.getArguments());\n\n        return !overloadedButSameArgs;\n    }",
+ "imports": [
+  "java.io.Serializable",
+  "java.lang.reflect.Method",
+  "java.util.Collections",
+  "java.util.List",
+  "org.hamcrest.Matcher",
+  "org.mockito.exceptions.PrintableInvocation",
+  "org.mockito.internal.debugging.Location",
+  "org.mockito.internal.matchers.CapturesArguments",
+  "org.mockito.internal.reporting.PrintSettings",
+  "org.mockito.internal.reporting.PrintingFriendlyInvocation"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.mockito.internal.invocation",
+ "project": "Mockito",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "getMethod"
+  },
+  {
+   "javadoc": "",
+   "name": "getInvocation"
+  },
+  {
+   "javadoc": "",
+   "name": "getMatchers"
+  },
+  {
+   "javadoc": "",
+   "name": "toString"
+  },
+  {
+   "javadoc": "",
+   "name": "matches"
+  },
+  {
+   "javadoc": "",
+   "name": "hasSameMethod"
+  },
+  {
+   "javadoc": "",
+   "name": "getLocation"
+  },
+  {
+   "javadoc": "",
+   "name": "toString"
+  },
+  {
+   "javadoc": "",
+   "name": "captureArgumentsFrom"
+  }
+ ],
+ "sig": {
+  "class_declaration": "@SuppressWarnings(\"unchecked\") public class InvocationMatcher implements PrintableInvocation, PrintingFriendlyInvocation, CapturesArgumensFromInvocation, Serializable",
+  "constructors": [
+   "public InvocationMatcher(Invocation invocation, List<Matcher> matchers);",
+   "public InvocationMatcher(Invocation invocation);"
+  ],
+  "focal_signature": "public boolean hasSimilarMethod(Invocation candidate)",
+  "methods": [
+   "public Method getMethod();",
+   "public Invocation getInvocation();",
+   "public List<Matcher> getMatchers();",
+   "public String toString();",
+   "public boolean matches(Invocation actual);",
+   "public boolean hasSameMethod(Invocation candidate);",
+   "public Location getLocation();",
+   "public String toString(PrintSettings printSettings);",
+   "public void captureArgumentsFrom(Invocation i);"
+  ],
+  "type_signatures": [
+   "@SuppressWarnings(\"unchecked\") public class Invocation implements PrintableInvocation, InvocationOnMock, PrintingFriendlyInvocation { public Invocation(Object mock, MockitoMethod mockitoMethod, Object[] args, int sequenceNumber, RealMethod realMethod); public Object getMock(); public Method getMethod(); public Object[] getArguments(); public boolean isVerified(); public Integer getSequenceNumber(); public boolean isVerifiedInOrder(); public boolean equals(Object o); public int hashCode(); public String toString(); protected String toString(List<Matcher> matchers, PrintSettings printSettings); protected List<Matcher> argumentsToMatchers(); public static boolean isToString(InvocationOnMock invocation); public boolean isValidException(Throwable throwable); public boolean isValidReturnType(Class clazz); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

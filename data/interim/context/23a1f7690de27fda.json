@@ -1,0 +1,384 @@
+{
+  "bug_name": "Chart_2",
+  "call_sites": [
+    {
+      "line": 677,
+      "lines": [
+        672,
+        673,
+        674,
+        675,
+        676,
+        677,
+        678,
+        679,
+        680,
+        681,
+        682
+      ],
+      "path": "source/org/jfree/data/general/DatasetUtilities.java",
+      "snippet": "        if (dataset instanceof DomainInfo) {\n            DomainInfo info = (DomainInfo) dataset;\n            result = info.getDomainBounds(includeInterval);\n        }\n        else {\n            result = iterateDomainBounds(dataset, includeInterval);\n        }\n        return result;\n\n    }\n"
+    },
+    {
+      "line": 726,
+      "lines": [
+        721,
+        722,
+        723,
+        724,
+        725,
+        726,
+        727,
+        728,
+        729,
+        730,
+        731
+      ],
+      "path": "source/org/jfree/data/general/DatasetUtilities.java",
+      "snippet": "     * @param dataset  the dataset (<code>null</code> not permitted).\n     *\n     * @return The range (possibly <code>null</code>).\n     */\n    public static Range iterateDomainBounds(XYDataset dataset) {\n        return iterateDomainBounds(dataset, true);\n    }\n\n    /**\n     * Iterates over the items in an {@link XYDataset} to find\n     * the range of x-values."
+    },
+    {
+      "line": 299,
+      "lines": [
+        294,
+        295,
+        296,
+        297,
+        298,
+        299,
+        300,
+        301,
+        302,
+        303,
+        304
+      ],
+      "path": "source/org/jfree/data/xy/CategoryTableXYDataset.java",
+      "snippet": "    public Range getDomainBounds(boolean includeInterval) {\n        if (includeInterval) {\n            return this.intervalDelegate.getDomainBounds(includeInterval);\n        }\n        else {\n            return DatasetUtilities.iterateDomainBounds(this, includeInterval);\n        }\n    }\n\n    /**\n     * Returns the interval position factor."
+    },
+    {
+      "line": 600,
+      "lines": [
+        595,
+        596,
+        597,
+        598,
+        599,
+        600,
+        601,
+        602,
+        603,
+        604,
+        605
+      ],
+      "path": "source/org/jfree/data/xy/DefaultTableXYDataset.java",
+      "snippet": "    public Range getDomainBounds(boolean includeInterval) {\n        if (includeInterval) {\n            return this.intervalDelegate.getDomainBounds(includeInterval);\n        }\n        else {\n            return DatasetUtilities.iterateDomainBounds(this, includeInterval);\n        }\n    }\n\n    /**\n     * Returns the interval position factor."
+    }
+  ],
+  "class_simple": "DatasetUtilities",
+  "doc": {
+    "class_javadoc": "/**\n * A collection of useful static methods relating to datasets.\n */\npublic final",
+    "method_javadoc": "/**\n     * Iterates over the items in an {@link XYDataset} to find\n     * the range of x-values.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     * @param includeInterval  a flag that determines, for an\n     *          {@link IntervalXYDataset}, whether the x-interval or just the\n     *          x-value is used to determine the overall range.\n     *\n     * @return The range (possibly <code>null</code>).\n     */"
+  },
+  "fields": [],
+  "focal_class": "org.jfree.data.general.DatasetUtilities",
+  "focal_id": "Chart_2::org.jfree.data.general.DatasetUtilities::iterateDomainBounds(XYDataset,boolean)",
+  "focal_method_name": "iterateDomainBounds",
+  "impl_B": "public static Range iterateDomainBounds(XYDataset dataset,\n                                            boolean includeInterval) {\n        if (dataset == null) {\n            throw new IllegalArgumentException(\"Null 'dataset' argument.\");\n        }\n        double minimum = Double.POSITIVE_INFINITY;\n        double maximum = Double.NEGATIVE_INFINITY;\n        int seriesCount = dataset.getSeriesCount();\n        double lvalue;\n        double uvalue;\n        if (includeInterval && dataset instanceof IntervalXYDataset) {\n            IntervalXYDataset intervalXYData = (IntervalXYDataset) dataset;\n            for (int series = 0; series < seriesCount; series++) {\n                int itemCount = dataset.getItemCount(series);\n                for (int item = 0; item < itemCount; item++) {\n                    lvalue = intervalXYData.getStartXValue(series, item);\n                    uvalue = intervalXYData.getEndXValue(series, item);\n                    if (!Double.isNaN(lvalue)) {\n                        minimum = Math.min(minimum, lvalue);\n                    }\n                    if (!Double.isNaN(uvalue)) {\n                        maximum = Math.max(maximum, uvalue);\n                    }\n                }\n            }\n        }\n        else {\n            for (int series = 0; series < seriesCount; series++) {\n                int itemCount = dataset.getItemCount(series);\n                for (int item = 0; item < itemCount; item++) {\n                    lvalue = dataset.getXValue(series, item);\n                    uvalue = lvalue;\n                    if (!Double.isNaN(lvalue)) {\n                        minimum = Math.min(minimum, lvalue);\n                        maximum = Math.max(maximum, uvalue);\n                    }\n                }\n            }\n        }\n        if (minimum > maximum) {\n            return null;\n        }\n        else {\n            return new Range(minimum, maximum);\n        }\n    }",
+  "imports": [
+    "org.jfree.data.pie.PieDataset",
+    "org.jfree.data.pie.DefaultPieDataset",
+    "java.util.ArrayList",
+    "java.util.Iterator",
+    "java.util.List",
+    "org.jfree.chart.util.ArrayUtilities",
+    "org.jfree.data.DomainInfo",
+    "org.jfree.data.KeyToGroupMap",
+    "org.jfree.data.KeyedValues",
+    "org.jfree.data.Range",
+    "org.jfree.data.RangeInfo",
+    "org.jfree.data.category.CategoryDataset",
+    "org.jfree.data.category.CategoryRangeInfo",
+    "org.jfree.data.category.DefaultCategoryDataset",
+    "org.jfree.data.category.IntervalCategoryDataset",
+    "org.jfree.data.function.Function2D",
+    "org.jfree.data.statistics.BoxAndWhiskerCategoryDataset",
+    "org.jfree.data.statistics.BoxAndWhiskerXYDataset",
+    "org.jfree.data.statistics.MultiValueCategoryDataset",
+    "org.jfree.data.statistics.StatisticalCategoryDataset",
+    "org.jfree.data.xy.IntervalXYDataset",
+    "org.jfree.data.xy.OHLCDataset",
+    "org.jfree.data.xy.TableXYDataset",
+    "org.jfree.data.xy.XYDataset",
+    "org.jfree.data.xy.XYDomainInfo",
+    "org.jfree.data.xy.XYRangeInfo",
+    "org.jfree.data.xy.XYSeries",
+    "org.jfree.data.xy.XYSeriesCollection"
+  ],
+  "javadoc_edited_by_fix": false,
+  "package": "org.jfree.data.general",
+  "project": "Chart",
+  "siblings": [
+    {
+      "javadoc": "/**\n     * Calculates the total of all the values in a {@link PieDataset}.  If\n     * the dataset contains negative or <code>null</code> values, they are\n     * ignored.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     *\n     * @return The total.\n     */",
+      "name": "calculatePieDatasetTotal"
+    },
+    {
+      "javadoc": "/**\n     * Creates a pie dataset from a table dataset by taking all the values\n     * for a single row.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     * @param rowKey  the row key.\n     *\n     * @return A pie dataset.\n     */",
+      "name": "createPieDatasetForRow"
+    },
+    {
+      "javadoc": "/**\n     * Creates a pie dataset from a table dataset by taking all the values\n     * for a single row.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     * @param row  the row (zero-based index).\n     *\n     * @return A pie dataset.\n     */",
+      "name": "createPieDatasetForRow"
+    },
+    {
+      "javadoc": "/**\n     * Creates a pie dataset from a table dataset by taking all the values\n     * for a single column.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     * @param columnKey  the column key.\n     *\n     * @return A pie dataset.\n     */",
+      "name": "createPieDatasetForColumn"
+    },
+    {
+      "javadoc": "/**\n     * Creates a pie dataset from a {@link CategoryDataset} by taking all the\n     * values for a single column.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     * @param column  the column (zero-based index).\n     *\n     * @return A pie dataset.\n     */",
+      "name": "createPieDatasetForColumn"
+    },
+    {
+      "javadoc": "/**\n     * Creates a new pie dataset based on the supplied dataset, but modified\n     * by aggregating all the low value items (those whose value is lower\n     * than the <code>percentThreshold</code>) into a single item with the\n     * key \"Other\".\n     *\n     * @param source  the source dataset (<code>null</code> not permitted).\n     * @param key  a new key for the aggregated items (<code>null</code> not\n     *             permitted).\n     * @param minimumPercent  the percent threshold.\n     *\n     * @return The pie dataset with (possibly) aggregated items.\n     */",
+      "name": "createConsolidatedPieDataset"
+    },
+    {
+      "javadoc": "/**\n     * Creates a new pie dataset based on the supplied dataset, but modified\n     * by aggregating all the low value items (those whose value is lower\n     * than the <code>percentThreshold</code>) into a single item.  The\n     * aggregated items are assigned the specified key.  Aggregation only\n     * occurs if there are at least <code>minItems</code> items to aggregate.\n     *\n     * @param source  the source dataset (<code>null</code> not permitted).\n     * @param key  the key to represent the aggregated items.\n     * @param minimumPercent  the percent threshold (ten percent is 0.10).\n     * @param minItems  only aggregate low values if there are at least this\n     *                  many.\n     *\n     * @return The pie dataset with (possibly) aggregated items.\n     */",
+      "name": "createConsolidatedPieDataset"
+    },
+    {
+      "javadoc": "/**\n     * Creates a {@link CategoryDataset} that contains a copy of the data in an\n     * array (instances of <code>Double</code> are created to represent the\n     * data items).\n     * <p>\n     * Row and column keys are created by appending 0, 1, 2, ... to the\n     * supplied prefixes.\n     *\n     * @param rowKeyPrefix  the row key prefix.\n     * @param columnKeyPrefix  the column key prefix.\n     * @param data  the data.\n     *\n     * @return The dataset.\n     */",
+      "name": "createCategoryDataset"
+    },
+    {
+      "javadoc": "/**\n     * Creates a {@link CategoryDataset} that contains a copy of the data in\n     * an array.\n     * <p>\n     * Row and column keys are created by appending 0, 1, 2, ... to the\n     * supplied prefixes.\n     *\n     * @param rowKeyPrefix  the row key prefix.\n     * @param columnKeyPrefix  the column key prefix.\n     * @param data  the data.\n     *\n     * @return The dataset.\n     */",
+      "name": "createCategoryDataset"
+    },
+    {
+      "javadoc": "/**\n     * Creates a {@link CategoryDataset} that contains a copy of the data in\n     * an array (instances of <code>Double</code> are created to represent the\n     * data items).\n     * <p>\n     * Row and column keys are taken from the supplied arrays.\n     *\n     * @param rowKeys  the row keys (<code>null</code> not permitted).\n     * @param columnKeys  the column keys (<code>null</code> not permitted).\n     * @param data  the data.\n     *\n     * @return The dataset.\n     */",
+      "name": "createCategoryDataset"
+    },
+    {
+      "javadoc": "/**\n     * Creates a {@link CategoryDataset} by copying the data from the supplied\n     * {@link KeyedValues} instance.\n     *\n     * @param rowKey  the row key (<code>null</code> not permitted).\n     * @param rowData  the row data (<code>null</code> not permitted).\n     *\n     * @return A dataset.\n     */",
+      "name": "createCategoryDataset"
+    },
+    {
+      "javadoc": "/**\n     * Creates an {@link XYDataset} by sampling the specified function over a\n     * fixed range.\n     *\n     * @param f  the function (<code>null</code> not permitted).\n     * @param start  the start value for the range.\n     * @param end  the end value for the range.\n     * @param samples  the number of sample points (must be > 1).\n     * @param seriesKey  the key to give the resulting series\n     *                   (<code>null</code> not permitted).\n     *\n     * @return A dataset.\n     */",
+      "name": "sampleFunction2D"
+    },
+    {
+      "javadoc": "/**\n     * Creates an {@link XYSeries} by sampling the specified function over a\n     * fixed range.\n     *\n     * @param f  the function (<code>null</code> not permitted).\n     * @param start  the start value for the range.\n     * @param end  the end value for the range.\n     * @param samples  the number of sample points (must be > 1).\n     * @param seriesKey  the key to give the resulting series\n     *                   (<code>null</code> not permitted).\n     *\n     * @return A series.\n     *\n     * @since 1.0.13\n     */",
+      "name": "sampleFunction2DToSeries"
+    },
+    {
+      "javadoc": "/**\n     * Returns <code>true</code> if the dataset is empty (or <code>null</code>),\n     * and <code>false</code> otherwise.\n     *\n     * @param dataset  the dataset (<code>null</code> permitted).\n     *\n     * @return A boolean.\n     */",
+      "name": "isEmptyOrNull"
+    },
+    {
+      "javadoc": "/**\n     * Returns <code>true</code> if the dataset is empty (or <code>null</code>),\n     * and <code>false</code> otherwise.\n     *\n     * @param dataset  the dataset (<code>null</code> permitted).\n     *\n     * @return A boolean.\n     */",
+      "name": "isEmptyOrNull"
+    },
+    {
+      "javadoc": "/**\n     * Returns <code>true</code> if the dataset is empty (or <code>null</code>),\n     * and <code>false</code> otherwise.\n     *\n     * @param dataset  the dataset (<code>null</code> permitted).\n     *\n     * @return A boolean.\n     */",
+      "name": "isEmptyOrNull"
+    },
+    {
+      "javadoc": "/**\n     * Returns the range of values in the domain (x-values) of a dataset.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     *\n     * @return The range of values (possibly <code>null</code>).\n     */",
+      "name": "findDomainBounds"
+    },
+    {
+      "javadoc": "/**\n     * Returns the range of values in the domain (x-values) of a dataset.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     * @param includeInterval  determines whether or not the x-interval is taken\n     *                         into account (only applies if the dataset is an\n     *                         {@link IntervalXYDataset}).\n     *\n     * @return The range of values (possibly <code>null</code>).\n     */",
+      "name": "findDomainBounds"
+    },
+    {
+      "javadoc": "/**\n     * Returns the bounds of the x-values in the specified <code>dataset</code>\n     * taking into account only the visible series and including any x-interval\n     * if requested.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     * @param visibleSeriesKeys  the visible series keys (<code>null</code>\n     *     not permitted).\n     * @param includeInterval  include the x-interval (if any)?\n     *\n     * @return The bounds (or <code>null</code> if the dataset contains no\n     *     values.\n     *\n     * @since 1.0.13\n     */",
+      "name": "findDomainBounds"
+    },
+    {
+      "javadoc": "/**\n     * Iterates over the items in an {@link XYDataset} to find\n     * the range of x-values.  If the dataset is an instance of\n     * {@link IntervalXYDataset}, the starting and ending x-values\n     * will be used for the bounds calculation.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     *\n     * @return The range (possibly <code>null</code>).\n     */",
+      "name": "iterateDomainBounds"
+    },
+    {
+      "javadoc": "/**\n     * Returns the range of values in the range for the dataset.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     *\n     * @return The range (possibly <code>null</code>).\n     */",
+      "name": "findRangeBounds"
+    },
+    {
+      "javadoc": "/**\n     * Returns the range of values in the range for the dataset.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     * @param includeInterval  a flag that determines whether or not the\n     *                         y-interval is taken into account.\n     *\n     * @return The range (possibly <code>null</code>).\n     */",
+      "name": "findRangeBounds"
+    },
+    {
+      "javadoc": "/**\n     * Finds the bounds of the y-values in the specified dataset, including\n     * only those series that are listed in visibleSeriesKeys.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     * @param visibleSeriesKeys  the keys for the visible series\n     *     (<code>null</code> not permitted).\n     * @param includeInterval  include the y-interval (if the dataset has a\n     *     y-interval).\n     *\n     * @return The data bounds.\n     *\n     * @since 1.0.13\n     */",
+      "name": "findRangeBounds"
+    },
+    {
+      "javadoc": "/**\n     * Returns the range of values in the range for the dataset.  This method\n     * is the partner for the {@link #findDomainBounds(XYDataset)} method.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     *\n     * @return The range (possibly <code>null</code>).\n     */",
+      "name": "findRangeBounds"
+    },
+    {
+      "javadoc": "/**\n     * Returns the range of values in the range for the dataset.  This method\n     * is the partner for the {@link #findDomainBounds(XYDataset, boolean)}\n     * method.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     * @param includeInterval  a flag that determines whether or not the\n     *                         y-interval is taken into account.\n     *\n     * @return The range (possibly <code>null</code>).\n     */",
+      "name": "findRangeBounds"
+    },
+    {
+      "javadoc": "/**\n     * Finds the bounds of the y-values in the specified dataset, including\n     * only those series that are listed in visibleSeriesKeys, and those items\n     * whose x-values fall within the specified range.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     * @param visibleSeriesKeys  the keys for the visible series\n     *     (<code>null</code> not permitted).\n     * @param xRange  the x-range (<code>null</code> not permitted).\n     * @param includeInterval  include the y-interval (if the dataset has a\n     *     y-interval).\n     *\n     * @return The data bounds.\n     *\n     * @since 1.0.13\n     */",
+      "name": "findRangeBounds"
+    },
+    {
+      "javadoc": "/**\n     * Iterates over the data item of the category dataset to find\n     * the range bounds.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     * @param includeInterval  a flag that determines whether or not the\n     *                         y-interval is taken into account.\n     *\n     * @return The range (possibly <code>null</code>).\n     *\n     * @deprecated As of 1.0.10, use\n     *         {@link #iterateRangeBounds(CategoryDataset, boolean)}.\n     */",
+      "name": "iterateCategoryRangeBounds"
+    },
+    {
+      "javadoc": "/**\n     * Iterates over the data item of the category dataset to find\n     * the range bounds.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     *\n     * @return The range (possibly <code>null</code>).\n     *\n     * @since 1.0.10\n     */",
+      "name": "iterateRangeBounds"
+    },
+    {
+      "javadoc": "/**\n     * Iterates over the data item of the category dataset to find\n     * the range bounds.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     * @param includeInterval  a flag that determines whether or not the\n     *                         y-interval is taken into account.\n     *\n     * @return The range (possibly <code>null</code>).\n     *\n     * @since 1.0.10\n     */",
+      "name": "iterateRangeBounds"
+    },
+    {
+      "javadoc": "/**\n     * Iterates over the data item of the category dataset to find\n     * the range bounds.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     * @param includeInterval  a flag that determines whether or not the\n     *                         y-interval is taken into account.\n     * @param visibleSeriesKeys  the visible series keys.\n     *\n     * @return The range (possibly <code>null</code>).\n     *\n     * @since 1.0.13\n     */",
+      "name": "iterateToFindRangeBounds"
+    },
+    {
+      "javadoc": "/**\n     * Iterates over the data item of the xy dataset to find\n     * the range bounds.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     *\n     * @return The range (possibly <code>null</code>).\n     *\n     * @deprecated As of 1.0.10, use {@link #iterateRangeBounds(XYDataset)}.\n     */",
+      "name": "iterateXYRangeBounds"
+    },
+    {
+      "javadoc": "/**\n     * Iterates over the data item of the xy dataset to find\n     * the range bounds.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     *\n     * @return The range (possibly <code>null</code>).\n     *\n     * @since 1.0.10\n     */",
+      "name": "iterateRangeBounds"
+    },
+    {
+      "javadoc": "/**\n     * Iterates over the data items of the xy dataset to find\n     * the range bounds.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     * @param includeInterval  a flag that determines, for an\n     *          {@link IntervalXYDataset}, whether the y-interval or just the\n     *          y-value is used to determine the overall range.\n     *\n     * @return The range (possibly <code>null</code>).\n     *\n     * @since 1.0.10\n     */",
+      "name": "iterateRangeBounds"
+    },
+    {
+      "javadoc": "/**\n     * Returns the range of x-values in the specified dataset for the\n     * data items belonging to the visible series.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     * @param visibleSeriesKeys  the visible series keys (<code>null</code> not\n     *     permitted).\n     * @param includeInterval  a flag that determines whether or not the\n     *     y-interval for the dataset is included (this only applies if the\n     *     dataset is an instance of IntervalXYDataset).\n     *\n     * @return The x-range (possibly <code>null</code>).\n     *\n     * @since 1.0.13\n     */",
+      "name": "iterateToFindDomainBounds"
+    },
+    {
+      "javadoc": "/**\n     * Returns the range of y-values in the specified dataset for the\n     * data items belonging to the visible series and with x-values in the\n     * given range.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     * @param visibleSeriesKeys  the visible series keys (<code>null</code> not\n     *     permitted).\n     * @param xRange  the x-range (<code>null</code> not permitted).\n     * @param includeInterval  a flag that determines whether or not the\n     *     y-interval for the dataset is included (this only applies if the\n     *     dataset is an instance of IntervalXYDataset).\n     *\n     * @return The y-range (possibly <code>null</code>).\n     *\n     * @since 1.0.13\n     */",
+      "name": "iterateToFindRangeBounds"
+    },
+    {
+      "javadoc": "/**\n     * Finds the minimum domain (or X) value for the specified dataset.  This\n     * is easy if the dataset implements the {@link DomainInfo} interface (a\n     * good idea if there is an efficient way to determine the minimum value).\n     * Otherwise, it involves iterating over the entire data-set.\n     * <p>\n     * Returns <code>null</code> if all the data values in the dataset are\n     * <code>null</code>.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     *\n     * @return The minimum value (possibly <code>null</code>).\n     */",
+      "name": "findMinimumDomainValue"
+    },
+    {
+      "javadoc": "/**\n     * Returns the maximum domain value for the specified dataset.  This is\n     * easy if the dataset implements the {@link DomainInfo} interface (a good\n     * idea if there is an efficient way to determine the maximum value).\n     * Otherwise, it involves iterating over the entire data-set.  Returns\n     * <code>null</code> if all the data values in the dataset are\n     * <code>null</code>.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     *\n     * @return The maximum value (possibly <code>null</code>).\n     */",
+      "name": "findMaximumDomainValue"
+    },
+    {
+      "javadoc": "/**\n     * Returns the minimum range value for the specified dataset.  This is\n     * easy if the dataset implements the {@link RangeInfo} interface (a good\n     * idea if there is an efficient way to determine the minimum value).\n     * Otherwise, it involves iterating over the entire data-set.  Returns\n     * <code>null</code> if all the data values in the dataset are\n     * <code>null</code>.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     *\n     * @return The minimum value (possibly <code>null</code>).\n     */",
+      "name": "findMinimumRangeValue"
+    },
+    {
+      "javadoc": "/**\n     * Returns the minimum range value for the specified dataset.  This is\n     * easy if the dataset implements the {@link RangeInfo} interface (a good\n     * idea if there is an efficient way to determine the minimum value).\n     * Otherwise, it involves iterating over the entire data-set.  Returns\n     * <code>null</code> if all the data values in the dataset are\n     * <code>null</code>.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     *\n     * @return The minimum value (possibly <code>null</code>).\n     */",
+      "name": "findMinimumRangeValue"
+    },
+    {
+      "javadoc": "/**\n     * Returns the maximum range value for the specified dataset.  This is easy\n     * if the dataset implements the {@link RangeInfo} interface (a good idea\n     * if there is an efficient way to determine the maximum value).\n     * Otherwise, it involves iterating over the entire data-set.  Returns\n     * <code>null</code> if all the data values are <code>null</code>.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     *\n     * @return The maximum value (possibly <code>null</code>).\n     */",
+      "name": "findMaximumRangeValue"
+    },
+    {
+      "javadoc": "/**\n     * Returns the maximum range value for the specified dataset.  This is\n     * easy if the dataset implements the {@link RangeInfo} interface (a good\n     * idea if there is an efficient way to determine the maximum value).\n     * Otherwise, it involves iterating over the entire data-set.  Returns\n     * <code>null</code> if all the data values are <code>null</code>.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     *\n     * @return The maximum value (possibly <code>null</code>).\n     */",
+      "name": "findMaximumRangeValue"
+    },
+    {
+      "javadoc": "/**\n     * Returns the minimum and maximum values for the dataset's range\n     * (y-values), assuming that the series in one category are stacked.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     *\n     * @return The range (<code>null</code> if the dataset contains no values).\n     */",
+      "name": "findStackedRangeBounds"
+    },
+    {
+      "javadoc": "/**\n     * Returns the minimum and maximum values for the dataset's range\n     * (y-values), assuming that the series in one category are stacked.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     * @param base  the base value for the bars.\n     *\n     * @return The range (<code>null</code> if the dataset contains no values).\n     */",
+      "name": "findStackedRangeBounds"
+    },
+    {
+      "javadoc": "/**\n     * Returns the minimum and maximum values for the dataset's range\n     * (y-values), assuming that the series in one category are stacked.\n     *\n     * @param dataset  the dataset.\n     * @param map  a structure that maps series to groups.\n     *\n     * @return The value range (<code>null</code> if the dataset contains no\n     *         values).\n     */",
+      "name": "findStackedRangeBounds"
+    },
+    {
+      "javadoc": "/**\n     * Returns the minimum value in the dataset range, assuming that values in\n     * each category are \"stacked\".\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     *\n     * @return The minimum value.\n     *\n     * @see #findMaximumStackedRangeValue(CategoryDataset)\n     */",
+      "name": "findMinimumStackedRangeValue"
+    },
+    {
+      "javadoc": "/**\n     * Returns the maximum value in the dataset range, assuming that values in\n     * each category are \"stacked\".\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     *\n     * @return The maximum value (possibly <code>null</code>).\n     *\n     * @see #findMinimumStackedRangeValue(CategoryDataset)\n     */",
+      "name": "findMaximumStackedRangeValue"
+    },
+    {
+      "javadoc": "/**\n     * Returns the minimum and maximum values for the dataset's range,\n     * assuming that the series are stacked.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     *\n     * @return The range ([0.0, 0.0] if the dataset contains no values).\n     */",
+      "name": "findStackedRangeBounds"
+    },
+    {
+      "javadoc": "/**\n     * Returns the minimum and maximum values for the dataset's range,\n     * assuming that the series are stacked, using the specified base value.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     * @param base  the base value.\n     *\n     * @return The range (<code>null</code> if the dataset contains no values).\n     */",
+      "name": "findStackedRangeBounds"
+    },
+    {
+      "javadoc": "/**\n     * Calculates the total for the y-values in all series for a given item\n     * index.\n     *\n     * @param dataset  the dataset.\n     * @param item  the item index.\n     *\n     * @return The total.\n     *\n     * @since 1.0.5\n     */",
+      "name": "calculateStackTotal"
+    },
+    {
+      "javadoc": "/**\n     * Calculates the range of values for a dataset where each item is the\n     * running total of the items for the current series.\n     *\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     *\n     * @return The range.\n     *\n     * @see #findRangeBounds(CategoryDataset)\n     */",
+      "name": "findCumulativeRangeBounds"
+    }
+  ],
+  "sig": {
+    "class_declaration": "public final class DatasetUtilities",
+    "constructors": [],
+    "focal_signature": "public static Range iterateDomainBounds(XYDataset dataset, boolean includeInterval)",
+    "methods": [
+      "public static double calculatePieDatasetTotal(PieDataset dataset);",
+      "public static PieDataset createPieDatasetForRow(CategoryDataset dataset, Comparable rowKey);",
+      "public static PieDataset createPieDatasetForRow(CategoryDataset dataset, int row);",
+      "public static PieDataset createPieDatasetForColumn(CategoryDataset dataset, Comparable columnKey);",
+      "public static PieDataset createPieDatasetForColumn(CategoryDataset dataset, int column);",
+      "public static PieDataset createConsolidatedPieDataset(PieDataset source, Comparable key, double minimumPercent);",
+      "public static PieDataset createConsolidatedPieDataset(PieDataset source, Comparable key, double minimumPercent, int minItems);",
+      "public static CategoryDataset createCategoryDataset(String rowKeyPrefix, String columnKeyPrefix, double[][] data);",
+      "public static CategoryDataset createCategoryDataset(String rowKeyPrefix, String columnKeyPrefix, Number[][] data);",
+      "public static CategoryDataset createCategoryDataset(Comparable[] rowKeys, Comparable[] columnKeys, double[][] data);",
+      "public static CategoryDataset createCategoryDataset(Comparable rowKey, KeyedValues rowData);",
+      "public static XYDataset sampleFunction2D(Function2D f, double start, double end, int samples, Comparable seriesKey);",
+      "public static XYSeries sampleFunction2DToSeries(Function2D f, double start, double end, int samples, Comparable seriesKey);",
+      "public static boolean isEmptyOrNull(PieDataset dataset);",
+      "public static boolean isEmptyOrNull(CategoryDataset dataset);",
+      "public static boolean isEmptyOrNull(XYDataset dataset);",
+      "public static Range findDomainBounds(XYDataset dataset);",
+      "public static Range findDomainBounds(XYDataset dataset, boolean includeInterval);",
+      "public static Range findDomainBounds(XYDataset dataset, List visibleSeriesKeys, boolean includeInterval);",
+      "public static Range iterateDomainBounds(XYDataset dataset);",
+      "public static Range findRangeBounds(CategoryDataset dataset);",
+      "public static Range findRangeBounds(CategoryDataset dataset, boolean includeInterval);",
+      "public static Range findRangeBounds(CategoryDataset dataset, List visibleSeriesKeys, boolean includeInterval);",
+      "public static Range findRangeBounds(XYDataset dataset);",
+      "public static Range findRangeBounds(XYDataset dataset, boolean includeInterval);",
+      "public static Range findRangeBounds(XYDataset dataset, List visibleSeriesKeys, Range xRange, boolean includeInterval);",
+      "public static Range iterateCategoryRangeBounds(CategoryDataset dataset, boolean includeInterval);",
+      "public static Range iterateRangeBounds(CategoryDataset dataset);",
+      "public static Range iterateRangeBounds(CategoryDataset dataset, boolean includeInterval);",
+      "public static Range iterateToFindRangeBounds(CategoryDataset dataset, List visibleSeriesKeys, boolean includeInterval);",
+      "public static Range iterateXYRangeBounds(XYDataset dataset);",
+      "public static Range iterateRangeBounds(XYDataset dataset);",
+      "public static Range iterateRangeBounds(XYDataset dataset, boolean includeInterval);",
+      "public static Range iterateToFindDomainBounds(XYDataset dataset, List visibleSeriesKeys, boolean includeInterval);",
+      "public static Range iterateToFindRangeBounds(XYDataset dataset, List visibleSeriesKeys, Range xRange, boolean includeInterval);",
+      "public static Number findMinimumDomainValue(XYDataset dataset);",
+      "public static Number findMaximumDomainValue(XYDataset dataset);",
+      "public static Number findMinimumRangeValue(CategoryDataset dataset);",
+      "public static Number findMinimumRangeValue(XYDataset dataset);",
+      "public static Number findMaximumRangeValue(CategoryDataset dataset);",
+      "public static Number findMaximumRangeValue(XYDataset dataset);",
+      "public static Range findStackedRangeBounds(CategoryDataset dataset);",
+      "public static Range findStackedRangeBounds(CategoryDataset dataset, double base);",
+      "public static Range findStackedRangeBounds(CategoryDataset dataset, KeyToGroupMap map);",
+      "public static Number findMinimumStackedRangeValue(CategoryDataset dataset);",
+      "public static Number findMaximumStackedRangeValue(CategoryDataset dataset);",
+      "public static Range findStackedRangeBounds(TableXYDataset dataset);",
+      "public static Range findStackedRangeBounds(TableXYDataset dataset, double base);",
+      "public static double calculateStackTotal(TableXYDataset dataset, int item);",
+      "public static Range findCumulativeRangeBounds(CategoryDataset dataset);"
+    ],
+    "type_signatures": [
+      "public interface XYDataset extends SeriesDataset { public DomainOrder getDomainOrder(); public int getItemCount(int series); public Number getX(int series, int item); public double getXValue(int series, int item); public Number getY(int series, int item); public double getYValue(int series, int item); }",
+      "public strictfp class Range implements Serializable { public Range(double lower, double upper); public double getLowerBound(); public double getUpperBound(); public double getLength(); public double getCentralValue(); public boolean contains(double value); public boolean intersects(double b0, double b1); public boolean intersects(Range range); public double constrain(double value); public static Range combine(Range range1, Range range2); public static Range expandToInclude(Range range, double value); public static Range expand(Range range, double lowerMargin, double upperMargin); public static Range shift(Range base, double delta); public static Range shift(Range base, double delta, boolean allowZeroCrossing); public static Range scale(Range base, double factor); }"
+    ]
+  },
+  "split": "test"
+}

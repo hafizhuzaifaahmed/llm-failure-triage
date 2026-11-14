@@ -1,0 +1,339 @@
+{
+  "bug_name": "Math_47",
+  "call_sites": [
+    {
+      "line": 53,
+      "lines": [
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58
+      ],
+      "path": "src/main/java/org/apache/commons/math/FieldElement.java",
+      "snippet": "     * @param a element to add\n     * @return a new element representing this &divide; a\n     * @exception ArithmeticException if a is the zero of the\n     * additive operation (i.e. additive identity)\n     */\n    T divide(T a) throws ArithmeticException;\n\n    /** Get the {@link Field} to which the instance belongs.\n     * @return {@link Field} to which the instance belongs\n     */\n    Field<T> getField();"
+    },
+    {
+      "line": 303,
+      "lines": [
+        298,
+        299,
+        300,
+        301,
+        302,
+        303,
+        304,
+        305,
+        306,
+        307,
+        308
+      ],
+      "path": "src/main/java/org/apache/commons/math/analysis/solvers/LaguerreSolver.java",
+      "snippet": "                if (pv.abs() <= functionValueAccuracy) {\n                    return z;\n                }\n\n                // now pv != 0, calculate the new approximation\n                G = dv.divide(pv);\n                G2 = G.multiply(G);\n                H = G2.subtract(d2v.divide(pv));\n                delta = N1.multiply((N.multiply(H)).subtract(G2));\n                // choose a denominator larger in magnitude\n                Complex deltaSqrt = delta.sqrt();"
+    },
+    {
+      "line": 305,
+      "lines": [
+        300,
+        301,
+        302,
+        303,
+        304,
+        305,
+        306,
+        307,
+        308,
+        309,
+        310
+      ],
+      "path": "src/main/java/org/apache/commons/math/analysis/solvers/LaguerreSolver.java",
+      "snippet": "                }\n\n                // now pv != 0, calculate the new approximation\n                G = dv.divide(pv);\n                G2 = G.multiply(G);\n                H = G2.subtract(d2v.divide(pv));\n                delta = N1.multiply((N.multiply(H)).subtract(G2));\n                // choose a denominator larger in magnitude\n                Complex deltaSqrt = delta.sqrt();\n                Complex dplus = G.add(deltaSqrt);\n                Complex dminus = G.subtract(deltaSqrt);"
+    },
+    {
+      "line": 320,
+      "lines": [
+        315,
+        316,
+        317,
+        318,
+        319,
+        320,
+        321,
+        322,
+        323,
+        324,
+        325
+      ],
+      "path": "src/main/java/org/apache/commons/math/analysis/solvers/LaguerreSolver.java",
+      "snippet": "                    z = z.add(new Complex(absoluteAccuracy, absoluteAccuracy));\n                    oldz = new Complex(Double.POSITIVE_INFINITY,\n                                       Double.POSITIVE_INFINITY);\n                } else {\n                    oldz = z;\n                    z = z.subtract(N.divide(denominator));\n                }\n                incrementEvaluationCount();\n            }\n        }\n    }"
+    },
+    {
+      "line": 583,
+      "lines": [
+        578,
+        579,
+        580,
+        581,
+        582,
+        583,
+        584,
+        585,
+        586,
+        587,
+        588
+      ],
+      "path": "src/main/java/org/apache/commons/math/complex/Complex.java",
+      "snippet": "    public Complex atan() {\n        if (isNaN) {\n            return NaN;\n        }\n\n        return this.add(I).divide(I.subtract(this)).log()\n            .multiply(I.divide(createComplex(2.0, 0.0)));\n    }\n\n    /**\n     * Compute the"
+    }
+  ],
+  "class_simple": "Complex",
+  "doc": {
+    "class_javadoc": "/**\n * Representation of a Complex number, i.e. a number which has both a\n * real and imaginary part.\n * <br/>\n * Implementations of arithmetic operations handle {@code NaN} and\n * infinite values according to the rules for {@link java.lang.Double}, i.e.\n * {@link #equals} is an equivalence relation for all instances that have\n * a {@code NaN} in either real or imaginary part, e.g. the following are\n * considered equal:\n * <ul>\n *  <li>{@code 1 + NaNi}</li>\n *  <li>{@code NaN + i}</li>\n *  <li>{@code NaN + NaNi}</li>\n * </ul>\n * Note that this is in contradiction with the IEEE-754 standard for floating\n * point numbers (according to which the test {@code x == x} must fail if\n * {@code x} is {@code NaN}). The method\n * {@link MathUtils#equals(double,double,int) equals for primitive double} in\n * {@link MathUtils} conforms with IEEE-754 while this class conforms with\n * the standard behavior for Java object types.\n * <br/>\n * Implements Serializable since 2.0\n *\n * @version $Id$\n */\npublic",
+    "method_javadoc": "/**\n     * Returns a {@code Complex} whose value is\n     * {@code (this / divisor)}.\n     * Implements the definitional formula\n     * <pre>\n     *  <code>\n     *    a + bi          ac + bd + (bc - ad)i\n     *    ----------- = -------------------------\n     *    c + di         c<sup>2</sup> + d<sup>2</sup>\n     *  </code>\n     * </pre>\n     * but uses\n     * <a href=\"http://doi.acm.org/10.1145/1039813.1039814\">\n     * prescaling of operands</a> to limit the effects of overflows and\n     * underflows in the computation.\n     * <br/>\n     * {@code Infinite} and {@code NaN} values are handled according to the\n     * following rules, applied in the order presented:\n     * <ul>\n     *  <li>If either {@code this} or {@code divisor} has a {@code NaN} value\n     *   in either part, {@link #NaN} is returned.\n     *  </li>\n     *  <li>If {@code this} and {@code divisor} are both {@link #ZERO},\n     *   {@link #NaN} is returned.\n     *  </li>\n     *  <li>If {@code divisor} equals {@link #ZERO}, {@link #INF} is returned.\n     *  </li>\n     *  <li>If {@code this} and {@code divisor} are both infinite,\n     *   {@link #NaN} is returned.\n     *  </li>\n     *  <li>If {@code this} is finite (i.e., has no {@code Infinite} or\n     *   {@code NaN} parts) and {@code divisor} is infinite (one or both parts\n     *   infinite), {@link #ZERO} is returned.\n     *  </li>\n     *  <li>If {@code this} is infinite and {@code divisor} is finite,\n     *   {@code NaN} values are returned in the parts of the result if the\n     *   {@link java.lang.Double} rules applied to the definitional formula\n     *   force {@code NaN} results.\n     *  </li>\n     * </ul>\n     *\n     * @param divisor Value by which this {@code Complex} is to be divided.\n     * @return {@code this / divisor}.\n     * @throws NullArgumentException if {@code divisor} is {@code null}.\n     */"
+  },
+  "fields": [
+    "public static final Complex I",
+    "public static final Complex NaN",
+    "public static final Complex INF",
+    "public static final Complex ONE",
+    "public static final Complex ZERO",
+    "private static final long serialVersionUID",
+    "private final double imaginary",
+    "private final double real",
+    "private final transient boolean isNaN",
+    "private final transient boolean isInfinite"
+  ],
+  "focal_class": "org.apache.commons.math.complex.Complex",
+  "focal_id": "Math_47::org.apache.commons.math.complex.Complex::divide(Complex)",
+  "focal_method_name": "divide",
+  "impl_B": "public Complex divide(Complex divisor)\n        throws NullArgumentException {\n        MathUtils.checkNotNull(divisor);\n        if (isNaN || divisor.isNaN) {\n            return NaN;\n        }\n\n        if (divisor.getReal() == 0.0 && divisor.getImaginary() == 0.0) {\n            return NaN;\n        }\n\n        if (divisor.isInfinite() && !isInfinite()) {\n            return ZERO;\n        }\n\n        final double c = divisor.getReal();\n        final double d = divisor.getImaginary();\n\n        if (FastMath.abs(c) < FastMath.abs(d)) {\n            double q = c / d;\n            double denominator = c * q + d;\n            return createComplex((real * q + imaginary) / denominator,\n                (imaginary * q - real) / denominator);\n        } else {\n            double q = d / c;\n            double denominator = d * q + c;\n            return createComplex((imaginary * q + real) / denominator,\n                (imaginary - real * q) / denominator);\n        }\n    }",
+  "imports": [
+    "java.io.Serializable",
+    "java.util.ArrayList",
+    "java.util.List",
+    "org.apache.commons.math.FieldElement",
+    "org.apache.commons.math.exception.NullArgumentException",
+    "org.apache.commons.math.exception.NotPositiveException",
+    "org.apache.commons.math.exception.util.LocalizedFormats",
+    "org.apache.commons.math.util.MathUtils",
+    "org.apache.commons.math.util.FastMath"
+  ],
+  "javadoc_edited_by_fix": false,
+  "package": "org.apache.commons.math.complex",
+  "project": "Math",
+  "siblings": [
+    {
+      "javadoc": "/**\n     * Return the absolute value of this complex number.\n     * Returns {@code NaN} if either real or imaginary part is {@code NaN}\n     * and {@code Double.POSITIVE_INFINITY} if neither part is {@code NaN},\n     * but at least one part is infinite.\n     *\n     * @return the absolute value.\n     */",
+      "name": "abs"
+    },
+    {
+      "javadoc": "/**\n     * Returns a {@code Complex} whose value is\n     * {@code (this + addend)}.\n     * Uses the definitional formula\n     * <pre>\n     *  <code>\n     *   (a + bi) + (c + di) = (a+c) + (b+d)i\n     *  </code>\n     * </pre>\n     * <br/>\n     * If either {@code this} or {@code addend} has a {@code NaN} value in\n     * either part, {@link #NaN} is returned; otherwise {@code Infinite}\n     * and {@code NaN} values are returned in the parts of the result\n     * according to the rules for {@link java.lang.Double} arithmetic.\n     *\n     * @param  addend Value to be added to this {@code Complex}.\n     * @return {@code this + addend}.\n     * @throws NullArgumentException if {@code addend} is {@code null}.\n     */",
+      "name": "add"
+    },
+    {
+      "javadoc": "/**\n     * Returns a {@code Complex} whose value is {@code (this + addend)},\n     * with {@code addend} interpreted as a real number.\n     *\n     * @param addend Value to be added to this {@code Complex}.\n     * @return {@code this + addend}.\n     * @see #add(Complex)\n     */",
+      "name": "add"
+    },
+    {
+      "javadoc": "/**\n     * Return the conjugate of this complex number.\n     * The conjugate of {@code a + bi} is {@code a - bi}.\n     * <br/>\n     * {@link #NaN} is returned if either the real or imaginary\n     * part of this Complex number equals {@code Double.NaN}.\n     * <br/>\n     * If the imaginary part is infinite, and the real part is not\n     * {@code NaN}, the returned value has infinite imaginary part\n     * of the opposite sign, e.g. the conjugate of\n     * {@code 1 + POSITIVE_INFINITY i} is {@code 1 - NEGATIVE_INFINITY i}.\n     *\n     * @return the conjugate of this Complex object.\n     */",
+      "name": "conjugate"
+    },
+    {
+      "javadoc": "/**\n     * Returns a {@code Complex} whose value is {@code (this / divisor)},\n     * with {@code divisor} interpreted as a real number.\n     *\n     * @param  divisor Value by which this {@code Complex} is to be divided.\n     * @return {@code this / divisor}.\n     * @see #divide(Complex)\n     */",
+      "name": "divide"
+    },
+    {
+      "javadoc": "/**\n     * Test for the equality of two Complex objects.\n     * If both the real and imaginary parts of two complex numbers\n     * are exactly the same, and neither is {@code Double.NaN}, the two\n     * Complex objects are considered to be equal.\n     * All {@code NaN} values are considered to be equal - i.e, if either\n     * (or both) real and imaginary parts of the complex number are equal\n     * to {@code Double.NaN}, the complex number is equal to\n     * {@code NaN}.\n     *\n     * @param other Object to test for equality to this\n     * @return true if two Complex objects are equal, false if object is\n     * {@code null}, not an instance of Complex, or not equal to this Complex\n     * instance.\n     */",
+      "name": "equals"
+    },
+    {
+      "javadoc": "/**\n     * Get a hashCode for the complex number.\n     * Any {@code Double.NaN} value in real or imaginary part produces\n     * the same hash code {@code 7}.\n     *\n     * @return a hash code value for this object.\n     */",
+      "name": "hashCode"
+    },
+    {
+      "javadoc": "/**\n     * Access the imaginary part.\n     *\n     * @return the imaginary part.\n     */",
+      "name": "getImaginary"
+    },
+    {
+      "javadoc": "/**\n     * Access the real part.\n     *\n     * @return the real part.\n     */",
+      "name": "getReal"
+    },
+    {
+      "javadoc": "/**\n     * Checks whether either or both parts of this complex number is\n     * {@code NaN}.\n     *\n     * @return true if either or both parts of this complex number is\n     * {@code NaN}; false otherwise.\n     */",
+      "name": "isNaN"
+    },
+    {
+      "javadoc": "/**\n     * Checks whether either the real or imaginary part of this complex number\n     * takes an infinite value (either {@code Double.POSITIVE_INFINITY} or\n     * {@code Double.NEGATIVE_INFINITY}) and neither part\n     * is {@code NaN}.\n     *\n     * @return true if one or both parts of this complex number are infinite\n     * and neither part is {@code NaN}.\n     */",
+      "name": "isInfinite"
+    },
+    {
+      "javadoc": "/**\n     * Returns a {@code Complex} whose value is {@code this * factor}.\n     * Implements preliminary checks for {@code NaN} and infinity followed by\n     * the definitional formula:\n     * <pre>\n     *  <code>\n     *   (a + bi)(c + di) = (ac - bd) + (ad + bc)i\n     *  </code>\n     * </pre>\n     * Returns {@link #NaN} if either {@code this} or {@code factor} has one or\n     * more {@code NaN} parts.\n     * <br/>\n     * Returns {@link #INF} if neither {@code this} nor {@code factor} has one\n     * or more {@code NaN} parts and if either {@code this} or {@code factor}\n     * has one or more infinite parts (same result is returned regardless of\n     * the sign of the components).\n     * <br/>\n     * Returns finite values in components of the result per the definitional\n     * formula in all remaining cases.\n     *\n     * @param  factor value to be multiplied by this {@code Complex}.\n     * @return {@code this * factor}.\n     * @throws NullArgumentException if {@code factor} is {@code null}.\n     */",
+      "name": "multiply"
+    },
+    {
+      "javadoc": "/**\n     * Returns a {@code Complex} whose value is {@code this * factor}, with {@code factor}\n     * interpreted as a real number.\n     *\n     * @param  factor value to be multiplied by this {@code Complex}.\n     * @return {@code this * factor}.\n     * @see #multiply(Complex)\n     */",
+      "name": "multiply"
+    },
+    {
+      "javadoc": "/**\n     * Returns a {@code Complex} whose value is {@code (-this)}.\n     * Returns {@code NaN} if either real or imaginary\n     * part of this Complex number equals {@code Double.NaN}.\n     *\n     * @return {@code -this}.\n     */",
+      "name": "negate"
+    },
+    {
+      "javadoc": "/**\n     * Returns a {@code Complex} whose value is\n     * {@code (this - subtrahend)}.\n     * Uses the definitional formula\n     * <pre>\n     *  <code>\n     *   (a + bi) - (c + di) = (a-c) + (b-d)i\n     *  </code>\n     * </pre>\n     * If either {@code this} or {@code subtrahend} has a {@code NaN]} value in either part,\n     * {@link #NaN} is returned; otherwise infinite and {@code NaN} values are\n     * returned in the parts of the result according to the rules for\n     * {@link java.lang.Double} arithmetic.\n     *\n     * @param  subtrahend value to be subtracted from this {@code Complex}.\n     * @return {@code this - subtrahend}.\n     * @throws NullArgumentException if {@code subtrahend} is {@code null}.\n     */",
+      "name": "subtract"
+    },
+    {
+      "javadoc": "/**\n     * Returns a {@code Complex} whose value is\n     * {@code (this - subtrahend)}.\n     *\n     * @param  subtrahend value to be subtracted from this {@code Complex}.\n     * @return {@code this - subtrahend}.\n     * @see #subtract(Complex)\n     */",
+      "name": "subtract"
+    },
+    {
+      "javadoc": "/**\n     * Compute the\n     * <a href=\"http://mathworld.wolfram.com/InverseCosine.html\" TARGET=\"_top\">\n     * inverse cosine</a> of this complex number.\n     * Implements the formula:\n     * <pre>\n     *  <code>\n     *   acos(z) = -i (log(z + i (sqrt(1 - z<sup>2</sup>))))\n     *  </code>\n     * </pre>\n     * Returns {@link Complex#NaN} if either real or imaginary part of the\n     * input argument is {@code NaN} or infinite.\n     *\n     * @return the inverse cosine of this complex number.\n     * @since 1.2\n     */",
+      "name": "acos"
+    },
+    {
+      "javadoc": "/**\n     * Compute the\n     * <a href=\"http://mathworld.wolfram.com/InverseSine.html\" TARGET=\"_top\">\n     * inverse sine</a> of this complex number.\n     * Implements the formula:\n     * <pre>\n     *  <code>\n     *   asin(z) = -i (log(sqrt(1 - z<sup>2</sup>) + iz))\n     *  </code>\n     * </pre>\n     * Returns {@link Complex#NaN} if either real or imaginary part of the\n     * input argument is {@code NaN} or infinite.\n     *\n     * @return the inverse sine of this complex number.\n     * @since 1.2\n     */",
+      "name": "asin"
+    },
+    {
+      "javadoc": "/**\n     * Compute the\n     * <a href=\"http://mathworld.wolfram.com/InverseTangent.html\" TARGET=\"_top\">\n     * inverse tangent</a> of this complex number.\n     * Implements the formula:\n     * <pre>\n     *  <code>\n     *   atan(z) = (i/2) log((i + z)/(i - z))\n     *  </code>\n     * </pre>\n     * Returns {@link Complex#NaN} if either real or imaginary part of the\n     * input argument is {@code NaN} or infinite.\n     *\n     * @return the inverse tangent of this complex number\n     * @since 1.2\n     */",
+      "name": "atan"
+    },
+    {
+      "javadoc": "/**\n     * Compute the\n     * <a href=\"http://mathworld.wolfram.com/Cosine.html\" TARGET=\"_top\">\n     * cosine</a>\n     * of this complex number.\n     * Implements the formula:\n     * <pre>\n     *  <code>\n     *   cos(a + bi) = cos(a)cosh(b) - sin(a)sinh(b)i\n     *  </code>\n     * </pre>\n     * where the (real) functions on the right-hand side are\n     * {@link java.lang.Math#sin}, {@link java.lang.Math#cos},\n     * {@link MathUtils#cosh} and {@link MathUtils#sinh}.\n     * <br/>\n     * Returns {@link Complex#NaN} if either real or imaginary part of the\n     * input argument is {@code NaN}.\n     * <br/>\n     * Infinite values in real or imaginary parts of the input may result in\n     * infinite or NaN values returned in parts of the result.\n     * <pre>\n     *  Examples:\n     *  <code>\n     *   cos(1 &plusmn; INFINITY i) = 1 &#x2213; INFINITY i\n     *   cos(&plusmn;INFINITY + i) = NaN + NaN i\n     *   cos(&plusmn;INFINITY &plusmn; INFINITY i) = NaN + NaN i\n     *  </code>\n     * </pre>\n     *\n     * @return the cosine of this complex number.\n     * @since 1.2\n     */",
+      "name": "cos"
+    },
+    {
+      "javadoc": "/**\n     * Compute the\n     * <a href=\"http://mathworld.wolfram.com/HyperbolicCosine.html\" TARGET=\"_top\">\n     * hyperbolic cosine</a> of this complex number.\n     * Implements the formula:\n     * <pre>\n     *  <code>\n     *   cosh(a + bi) = cosh(a)cos(b) + sinh(a)sin(b)i}\n     *  </code>\n     * </pre>\n     * where the (real) functions on the right-hand side are\n     * {@link java.lang.Math#sin}, {@link java.lang.Math#cos},\n     * {@link MathUtils#cosh} and {@link MathUtils#sinh}.\n     * <br/>\n     * Returns {@link Complex#NaN} if either real or imaginary part of the\n     * input argument is {@code NaN}.\n     * <br/>\n     * Infinite values in real or imaginary parts of the input may result in\n     * infinite or NaN values returned in parts of the result.\n     * <pre>\n     *  Examples:\n     *  <code>\n     *   cosh(1 &plusmn; INFINITY i) = NaN + NaN i\n     *   cosh(&plusmn;INFINITY + i) = INFINITY &plusmn; INFINITY i\n     *   cosh(&plusmn;INFINITY &plusmn; INFINITY i) = NaN + NaN i\n     *  </code>\n     * </pre>\n     *\n     * @return the hyperbolic cosine of this complex number.\n     * @since 1.2\n     */",
+      "name": "cosh"
+    },
+    {
+      "javadoc": "/**\n     * Compute the\n     * <a href=\"http://mathworld.wolfram.com/ExponentialFunction.html\" TARGET=\"_top\">\n     * exponential function</a> of this complex number.\n     * Implements the formula:\n     * <pre>\n     *  <code>\n     *   exp(a + bi) = exp(a)cos(b) + exp(a)sin(b)i\n     *  </code>\n     * </pre>\n     * where the (real) functions on the right-hand side are\n     * {@link java.lang.Math#exp}, {@link java.lang.Math#cos}, and\n     * {@link java.lang.Math#sin}.\n     * <br/>\n     * Returns {@link Complex#NaN} if either real or imaginary part of the\n     * input argument is {@code NaN}.\n     * <br/>\n     * Infinite values in real or imaginary parts of the input may result in\n     * infinite or NaN values returned in parts of the result.\n     * <pre>\n     *  Examples:\n     *  <code>\n     *   exp(1 &plusmn; INFINITY i) = NaN + NaN i\n     *   exp(INFINITY + i) = INFINITY + INFINITY i\n     *   exp(-INFINITY + i) = 0 + 0i\n     *   exp(&plusmn;INFINITY &plusmn; INFINITY i) = NaN + NaN i\n     *  </code>\n     * </pre>\n     *\n     * @return <code><i>e</i><sup>this</sup></code>.\n     * @since 1.2\n     */",
+      "name": "exp"
+    },
+    {
+      "javadoc": "/**\n     * Compute the\n     * <a href=\"http://mathworld.wolfram.com/NaturalLogarithm.html\" TARGET=\"_top\">\n     * natural logarithm</a> of this complex number.\n     * Implements the formula:\n     * <pre>\n     *  <code>\n     *   log(a + bi) = ln(|a + bi|) + arg(a + bi)i\n     *  </code>\n     * </pre>\n     * where ln on the right hand side is {@link java.lang.Math#log},\n     * {@code |a + bi|} is the modulus, {@link Complex#abs},  and\n     * {@code arg(a + bi) = }{@link java.lang.Math#atan2}(b, a).\n     * <br/>\n     * Returns {@link Complex#NaN} if either real or imaginary part of the\n     * input argument is {@code NaN}.\n     * <br/>\n     * Infinite (or critical) values in real or imaginary parts of the input may\n     * result in infinite or NaN values returned in parts of the result.\n     * <pre>\n     *  Examples:\n     *  <code>\n     *   log(1 &plusmn; INFINITY i) = INFINITY &plusmn; (&pi;/2)i\n     *   log(INFINITY + i) = INFINITY + 0i\n     *   log(-INFINITY + i) = INFINITY + &pi;i\n     *   log(INFINITY &plusmn; INFINITY i) = INFINITY &plusmn; (&pi;/4)i\n     *   log(-INFINITY &plusmn; INFINITY i) = INFINITY &plusmn; (3&pi;/4)i\n     *   log(0 + 0i) = -INFINITY + 0i\n     *  </code>\n     * </pre>\n     *\n     * @return the value <code>ln &nbsp; this</code>, the natural logarithm\n     * of {@code this}.\n     * @since 1.2\n     */",
+      "name": "log"
+    },
+    {
+      "javadoc": "/**\n     * Returns of value of this complex number raised to the power of {@code x}.\n     * Implements the formula:\n     * <pre>\n     *  <code>\n     *   y<sup>x</sup> = exp(x&middot;log(y))\n     *  </code>\n     * </pre>\n     * where {@code exp} and {@code log} are {@link #exp} and\n     * {@link #log}, respectively.\n     * <br/>\n     * Returns {@link Complex#NaN} if either real or imaginary part of the\n     * input argument is {@code NaN} or infinite, or if {@code y}\n     * equals {@link Complex#ZERO}.\n     *\n     * @param  x exponent to which this {@code Complex} is to be raised.\n     * @return <code> this<sup>{@code x}</sup></code>.\n     * @throws NullArgumentException if x is {@code null}.\n     * @since 1.2\n     */",
+      "name": "pow"
+    },
+    {
+      "javadoc": "/**\n     * Returns of value of this complex number raised to the power of {@code x}.\n     *\n     * @param  x exponent to which this {@code Complex} is to be raised.\n     * @return <code>this<sup>x</sup></code>.\n     * @see #pow(Complex)\n     */",
+      "name": "pow"
+    },
+    {
+      "javadoc": "/**\n     * Compute the\n     * <a href=\"http://mathworld.wolfram.com/Sine.html\" TARGET=\"_top\">\n     * sine</a>\n     * of this complex number.\n     * Implements the formula:\n     * <pre>\n     *  <code>\n     *   sin(a + bi) = sin(a)cosh(b) - cos(a)sinh(b)i\n     *  </code>\n     * </pre>\n     * where the (real) functions on the right-hand side are\n     * {@link java.lang.Math#sin}, {@link java.lang.Math#cos},\n     * {@link MathUtils#cosh} and {@link MathUtils#sinh}.\n     * <br/>\n     * Returns {@link Complex#NaN} if either real or imaginary part of the\n     * input argument is {@code NaN}.\n     * <br/>\n     * Infinite values in real or imaginary parts of the input may result in\n     * infinite or {@code NaN} values returned in parts of the result.\n     * <pre>\n     *  Examples:\n     *  <code>\n     *   sin(1 &plusmn; INFINITY i) = 1 &plusmn; INFINITY i\n     *   sin(&plusmn;INFINITY + i) = NaN + NaN i\n     *   sin(&plusmn;INFINITY &plusmn; INFINITY i) = NaN + NaN i\n     *  </code>\n     * </pre>\n     *\n     * @return the sine of this complex number.\n     * @since 1.2\n     */",
+      "name": "sin"
+    },
+    {
+      "javadoc": "/**\n     * Compute the\n     * <a href=\"http://mathworld.wolfram.com/HyperbolicSine.html\" TARGET=\"_top\">\n     * hyperbolic sine</a> of this complex number.\n     * Implements the formula:\n     * <pre>\n     *  <code>\n     *   sinh(a + bi) = sinh(a)cos(b)) + cosh(a)sin(b)i\n     *  </code>\n     * </pre>\n     * where the (real) functions on the right-hand side are\n     * {@link java.lang.Math#sin}, {@link java.lang.Math#cos},\n     * {@link MathUtils#cosh} and {@link MathUtils#sinh}.\n     * <br/>\n     * Returns {@link Complex#NaN} if either real or imaginary part of the\n     * input argument is {@code NaN}.\n     * <br/>\n     * Infinite values in real or imaginary parts of the input may result in\n     * infinite or NaN values returned in parts of the result.\n     * <pre>\n     *  Examples:\n     *  <code>\n     *   sinh(1 &plusmn; INFINITY i) = NaN + NaN i\n     *   sinh(&plusmn;INFINITY + i) = &plusmn; INFINITY + INFINITY i\n     *   sinh(&plusmn;INFINITY &plusmn; INFINITY i) = NaN + NaN i\n     *  </code>\n     * </pre>\n     *\n     * @return the hyperbolic sine of {@code this}.\n     * @since 1.2\n     */",
+      "name": "sinh"
+    },
+    {
+      "javadoc": "/**\n     * Compute the\n     * <a href=\"http://mathworld.wolfram.com/SquareRoot.html\" TARGET=\"_top\">\n     * square root</a> of this complex number.\n     * Implements the following algorithm to compute {@code sqrt(a + bi)}:\n     * <ol><li>Let {@code t = sqrt((|a| + |a + bi|) / 2)}</li>\n     * <li><pre>if {@code  a &#8805; 0} return {@code t + (b/2t)i}\n     *  else return {@code |b|/2t + sign(b)t i }</pre></li>\n     * </ol>\n     * where <ul>\n     * <li>{@code |a| = }{@link Math#abs}(a)</li>\n     * <li>{@code |a + bi| = }{@link Complex#abs}(a + bi)</li>\n     * <li>{@code sign(b) =  }{@link MathUtils#indicator}(b)\n     * </ul>\n     * <br/>\n     * Returns {@link Complex#NaN} if either real or imaginary part of the\n     * input argument is {@code NaN}.\n     * <br/>\n     * Infinite values in real or imaginary parts of the input may result in\n     * infinite or NaN values returned in parts of the result.\n     * <pre>\n     *  Examples:\n     *  <code>\n     *   sqrt(1 &plusmn; INFINITY i) = INFINITY + NaN i\n     *   sqrt(INFINITY + i) = INFINITY + 0i\n     *   sqrt(-INFINITY + i) = 0 + INFINITY i\n     *   sqrt(INFINITY &plusmn; INFINITY i) = INFINITY + NaN i\n     *   sqrt(-INFINITY &plusmn; INFINITY i) = NaN &plusmn; INFINITY i\n     *  </code>\n     * </pre>\n     *\n     * @return the square root of {@code this}.\n     * @since 1.2\n     */",
+      "name": "sqrt"
+    },
+    {
+      "javadoc": "/**\n     * Compute the\n     * <a href=\"http://mathworld.wolfram.com/SquareRoot.html\" TARGET=\"_top\">\n     * square root</a> of <code>1 - this<sup>2</sup></code> for this complex\n     * number.\n     * Computes the result directly as\n     * {@code sqrt(ONE.subtract(z.multiply(z)))}.\n     * <br/>\n     * Returns {@link Complex#NaN} if either real or imaginary part of the\n     * input argument is {@code NaN}.\n     * <br/>\n     * Infinite values in real or imaginary parts of the input may result in\n     * infinite or NaN values returned in parts of the result.\n     *\n     * @return the square root of <code>1 - this<sup>2</sup></code>.\n     * @since 1.2\n     */",
+      "name": "sqrt1z"
+    },
+    {
+      "javadoc": "/**\n     * Compute the\n     * <a href=\"http://mathworld.wolfram.com/Tangent.html\" TARGET=\"_top\">\n     * tangent</a> of this complex number.\n     * Implements the formula:\n     * <pre>\n     *  <code>\n     *   tan(a + bi) = sin(2a)/(cos(2a)+cosh(2b)) + [sinh(2b)/(cos(2a)+cosh(2b))]i\n     *  </code>\n     * </pre>\n     * where the (real) functions on the right-hand side are\n     * {@link java.lang.Math#sin}, {@link java.lang.Math#cos},\n     * {@link MathUtils#cosh} and {@link MathUtils#sinh}.\n     * <br/>\n     * Returns {@link Complex#NaN} if either real or imaginary part of the\n     * input argument is {@code NaN}.\n     * <br/>\n     * Infinite (or critical) values in real or imaginary parts of the input may\n     * result in infinite or NaN values returned in parts of the result.\n     * <pre>\n     *  Examples:\n     *  <code>\n     *   tan(1 &plusmn; INFINITY i) = 0 + NaN i\n     *   tan(&plusmn;INFINITY + i) = NaN + NaN i\n     *   tan(&plusmn;INFINITY &plusmn; INFINITY i) = NaN + NaN i\n     *   tan(&plusmn;&pi;/2 + 0 i) = &plusmn;INFINITY + NaN i\n     *  </code>\n     * </pre>\n     *\n     * @return the tangent of {@code this}.\n     * @since 1.2\n     */",
+      "name": "tan"
+    },
+    {
+      "javadoc": "/**\n     * Compute the\n     * <a href=\"http://mathworld.wolfram.com/HyperbolicTangent.html\" TARGET=\"_top\">\n     * hyperbolic tangent</a> of this complex number.\n     * Implements the formula:\n     * <pre>\n     *  <code>\n     *   tan(a + bi) = sinh(2a)/(cosh(2a)+cos(2b)) + [sin(2b)/(cosh(2a)+cos(2b))]i\n     *  </code>\n     * </pre>\n     * where the (real) functions on the right-hand side are\n     * {@link java.lang.Math#sin}, {@link java.lang.Math#cos},\n     * {@link MathUtils#cosh} and {@link MathUtils#sinh}.\n     * <br/>\n     * Returns {@link Complex#NaN} if either real or imaginary part of the\n     * input argument is {@code NaN}.\n     * <br/>\n     * Infinite values in real or imaginary parts of the input may result in\n     * infinite or NaN values returned in parts of the result.\n     * <pre>\n     *  Examples:\n     *  <code>\n     *   tanh(1 &plusmn; INFINITY i) = NaN + NaN i\n     *   tanh(&plusmn;INFINITY + i) = NaN + 0 i\n     *   tanh(&plusmn;INFINITY &plusmn; INFINITY i) = NaN + NaN i\n     *   tanh(0 + (&pi;/2)i) = NaN + INFINITY i\n     *  </code>\n     * </pre>\n     *\n     * @return the hyperbolic tangent of {@code this}.\n     * @since 1.2\n     */",
+      "name": "tanh"
+    },
+    {
+      "javadoc": "/**\n     * Compute the argument of this complex number.\n     * The argument is the angle phi between the positive real axis and\n     * the point representing this number in the complex plane.\n     * The value returned is between -PI (not inclusive)\n     * and PI (inclusive), with negative values returned for numbers with\n     * negative imaginary parts.\n     * <br/>\n     * If either real or imaginary part (or both) is NaN, NaN is returned.\n     * Infinite parts are handled as {@code Math.atan2} handles them,\n     * essentially treating finite parts as zero in the presence of an\n     * infinite coordinate and returning a multiple of pi/4 depending on\n     * the signs of the infinite parts.\n     * See the javadoc for {@code Math.atan2} for full details.\n     *\n     * @return the argument of {@code this}.\n     */",
+      "name": "getArgument"
+    },
+    {
+      "javadoc": "/**\n     * Computes the n-th roots of this complex number.\n     * The nth roots are defined by the formula:\n     * <pre>\n     *  <code>\n     *   z<sub>k</sub> = abs<sup>1/n</sup> (cos(phi + 2&pi;k/n) + i (sin(phi + 2&pi;k/n))\n     *  </code>\n     * </pre>\n     * for <i>{@code k=0, 1, ..., n-1}</i>, where {@code abs} and {@code phi}\n     * are respectively the {@link #abs() modulus} and\n     * {@link #getArgument() argument} of this complex number.\n     * <br/>\n     * If one or both parts of this complex number is NaN, a list with just\n     * one element, {@link #NaN} is returned.\n     * if neither part is NaN, but at least one part is infinite, the result\n     * is a one-element list containing {@link #INF}.\n     *\n     * @param n Degree of root.\n     * @return a List<Complex> of all {@code n}-th roots of {@code this}.\n     * @throws NotPositiveException if {@code n <= 0}.\n     * @since 2.0\n     */",
+      "name": "nthRoot"
+    },
+    {
+      "javadoc": "/**\n     * Create a complex number given the real and imaginary parts.\n     *\n     * @param realPart Real part.\n     * @param imaginaryPart Imaginary part.\n     * @return a new complex number instance.\n     * @since 1.2\n     * @see #valueOf(double, double)\n     */",
+      "name": "createComplex"
+    },
+    {
+      "javadoc": "/**\n     * Create a complex number given the real and imaginary parts.\n     *\n     * @param realPart Real part.\n     * @param imaginaryPart Imaginary part.\n     * @return a Complex instance.\n     */",
+      "name": "valueOf"
+    },
+    {
+      "javadoc": "/**\n     * Create a complex number given only the real part.\n     *\n     * @param realPart Real part.\n     * @return a Complex instance.\n     */",
+      "name": "valueOf"
+    },
+    {
+      "javadoc": "/**\n     * Resolve the transient fields in a deserialized Complex Object.\n     * Subclasses will need to override {@link #createComplex} to\n     * deserialize properly.\n     *\n     * @return A Complex instance with all fields resolved.\n     * @since 2.0\n     */",
+      "name": "readResolve"
+    },
+    {
+      "javadoc": "/** {@inheritDoc} */",
+      "name": "getField"
+    },
+    {
+      "javadoc": "/** {@inheritDoc} */",
+      "name": "toString"
+    }
+  ],
+  "sig": {
+    "class_declaration": "public class Complex implements FieldElement<Complex>, Serializable",
+    "constructors": [
+      "public Complex(double real);",
+      "public Complex(double real, double imaginary);"
+    ],
+    "focal_signature": "public Complex divide(Complex divisor) throws NullArgumentException",
+    "methods": [
+      "public double abs();",
+      "public Complex add(Complex addend) throws NullArgumentException;",
+      "public Complex add(double addend);",
+      "public Complex conjugate();",
+      "public Complex divide(double divisor);",
+      "public boolean equals(Object other);",
+      "public int hashCode();",
+      "public double getImaginary();",
+      "public double getReal();",
+      "public boolean isNaN();",
+      "public boolean isInfinite();",
+      "public Complex multiply(Complex factor) throws NullArgumentException;",
+      "public Complex multiply(double factor);",
+      "public Complex negate();",
+      "public Complex subtract(Complex subtrahend) throws NullArgumentException;",
+      "public Complex subtract(double subtrahend);",
+      "public Complex acos();",
+      "public Complex asin();",
+      "public Complex atan();",
+      "public Complex cos();",
+      "public Complex cosh();",
+      "public Complex exp();",
+      "public Complex log();",
+      "public Complex pow(Complex x) throws NullArgumentException;",
+      "public Complex pow(double x);",
+      "public Complex sin();",
+      "public Complex sinh();",
+      "public Complex sqrt();",
+      "public Complex sqrt1z();",
+      "public Complex tan();",
+      "public Complex tanh();",
+      "public double getArgument();",
+      "public List<Complex> nthRoot(int n);",
+      "protected Complex createComplex(double realPart, double imaginaryPart);",
+      "public static Complex valueOf(double realPart, double imaginaryPart);",
+      "public static Complex valueOf(double realPart);",
+      "protected final Object readResolve();",
+      "public ComplexField getField();",
+      "public String toString();"
+    ],
+    "type_signatures": []
+  },
+  "split": "test"
+}

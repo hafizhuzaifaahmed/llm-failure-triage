@@ -1,0 +1,148 @@
+{
+  "bug_name": "Compress_3",
+  "call_sites": [
+    {
+      "line": 50,
+      "lines": [
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53
+      ],
+      "path": "src/main/java/org/apache/commons/compress/archivers/jar/JarArchiveOutputStream.java",
+      "snippet": "    public void putArchiveEntry(ArchiveEntry ze) throws IOException {\n        if (!jarMarkerAdded) {\n            ((ZipArchiveEntry)ze).addAsFirstExtraField(JarMarker.getInstance());\n            jarMarkerAdded = true;\n        }\n        super.putArchiveEntry(ze);\n    }\n}\n"
+    },
+    {
+      "line": 165,
+      "lines": [
+        160,
+        161,
+        162,
+        163,
+        164,
+        165,
+        166,
+        167,
+        168,
+        169,
+        170
+      ],
+      "path": "src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStream.java",
+      "snippet": "                TarArchiveEntry longLinkEntry = new TarArchiveEntry(TarConstants.GNU_LONGLINK,\n                                                                    TarConstants.LF_GNUTYPE_LONGNAME);\n\n                final byte[] nameBytes = entry.getName().getBytes(); // TODO is it correct to use the default charset here?\n                longLinkEntry.setSize(nameBytes.length + 1); // +1 for NUL\n                putArchiveEntry(longLinkEntry);\n                write(nameBytes);\n                write(0); // NUL terminator\n                closeArchiveEntry();\n            } else if (longFileMode != LONGFILE_TRUNCATE) {\n                throw new RuntimeException(\"file name '\" + entry.getName()"
+    },
+    {
+      "line": 172,
+      "lines": [
+        167,
+        168,
+        169,
+        170,
+        171,
+        172,
+        173,
+        174,
+        175,
+        176,
+        177
+      ],
+      "path": "src/main/java/org/apache/commons/compress/changes/ChangeSetPerformer.java",
+      "snippet": "     * @throws IOException\n     *             if data cannot be read or written\n     */\n    private void copyStream(InputStream in, ArchiveOutputStream out,\n            ArchiveEntry entry) throws IOException {\n        out.putArchiveEntry(entry);\n        IOUtils.copy(in, out);\n        out.closeArchiveEntry();\n    }\n}\n"
+    }
+  ],
+  "class_simple": "TarArchiveOutputStream",
+  "doc": {
+    "class_javadoc": "/**\n * The TarOutputStream writes a UNIX tar archive as an OutputStream.\n * Methods are provided to put entries, and then write their contents\n * by writing to this stream using write().\n * @NotThreadSafe\n */\npublic",
+    "method_javadoc": "/**\n     * Put an entry on the output stream. This writes the entry's\n     * header record and positions the output stream for writing\n     * the contents of the entry. Once this method is called, the\n     * stream is ready for calls to write() to write the entry's\n     * contents. Once the contents are written, closeArchiveEntry()\n     * <B>MUST</B> be called to ensure that all buffered data\n     * is completely written to the output stream.\n     *\n     * @param archiveEntry The TarEntry to be written to the archive.\n     * @throws IOException on error\n     * @throws ClassCastException if archiveEntry is not an instance of TarArchiveEntry\n     */"
+  },
+  "fields": [
+    "public static final int LONGFILE_ERROR",
+    "public static final int LONGFILE_TRUNCATE",
+    "public static final int LONGFILE_GNU",
+    "private long currSize",
+    "private String currName",
+    "private long currBytes",
+    "private final byte[] recordBuf",
+    "private int assemLen",
+    "private final byte[] assemBuf",
+    "protected final TarBuffer buffer",
+    "private int longFileMode",
+    "private boolean closed",
+    "private final OutputStream out"
+  ],
+  "focal_class": "org.apache.commons.compress.archivers.tar.TarArchiveOutputStream",
+  "focal_id": "Compress_3::org.apache.commons.compress.archivers.tar.TarArchiveOutputStream::putArchiveEntry(ArchiveEntry)",
+  "focal_method_name": "putArchiveEntry",
+  "impl_B": "public void putArchiveEntry(ArchiveEntry archiveEntry) throws IOException {\n        TarArchiveEntry entry = (TarArchiveEntry) archiveEntry;\n        if (entry.getName().length() >= TarConstants.NAMELEN) {\n\n            if (longFileMode == LONGFILE_GNU) {\n                // create a TarEntry for the LongLink, the contents\n                // of which are the entry's name\n                TarArchiveEntry longLinkEntry = new TarArchiveEntry(TarConstants.GNU_LONGLINK,\n                                                                    TarConstants.LF_GNUTYPE_LONGNAME);\n\n                final byte[] nameBytes = entry.getName().getBytes(); // TODO is it correct to use the default charset here?\n                longLinkEntry.setSize(nameBytes.length + 1); // +1 for NUL\n                putArchiveEntry(longLinkEntry);\n                write(nameBytes);\n                write(0); // NUL terminator\n                closeArchiveEntry();\n            } else if (longFileMode != LONGFILE_TRUNCATE) {\n                throw new RuntimeException(\"file name '\" + entry.getName()\n                                           + \"' is too long ( > \"\n                                           + TarConstants.NAMELEN + \" bytes)\");\n            }\n        }\n\n        entry.writeEntryHeader(recordBuf);\n        buffer.writeRecord(recordBuf);\n\n        currBytes = 0;\n\n        if (entry.isDirectory()) {\n            currSize = 0;\n        } else {\n            currSize = entry.getSize();\n        }\n        currName = entry.getName();\n    }",
+  "imports": [
+    "java.io.File",
+    "java.io.IOException",
+    "java.io.OutputStream",
+    "org.apache.commons.compress.archivers.ArchiveEntry",
+    "org.apache.commons.compress.archivers.ArchiveOutputStream"
+  ],
+  "javadoc_edited_by_fix": false,
+  "package": "org.apache.commons.compress.archivers.tar",
+  "project": "Compress",
+  "siblings": [
+    {
+      "javadoc": "/**\n     * Set the long file mode.\n     * This can be LONGFILE_ERROR(0), LONGFILE_TRUNCATE(1) or LONGFILE_GNU(2).\n     * This specifies the treatment of long file names (names >= TarConstants.NAMELEN).\n     * Default is LONGFILE_ERROR.\n     * @param longFileMode the mode to use\n     */",
+      "name": "setLongFileMode"
+    },
+    {
+      "javadoc": "/**\n     * Ends the TAR archive without closing the underlying OutputStream.\n     * \n     * An archive consists of a series of file entries terminated by an\n     * end-of-archive entry, which consists of two 512 blocks of zero bytes. \n     * POSIX.1 requires two EOF records, like some other implementations.\n     * \n     * @throws IOException on error\n     */",
+      "name": "finish"
+    },
+    {
+      "javadoc": "/**\n     * Ends the TAR archive and closes the underlying OutputStream.\n     * This means that finish() is called followed by calling the\n     * TarBuffer's close().\n     * @throws IOException on error\n     */",
+      "name": "close"
+    },
+    {
+      "javadoc": "/**\n     * Get the record size being used by this stream's TarBuffer.\n     *\n     * @return The TarBuffer record size.\n     */",
+      "name": "getRecordSize"
+    },
+    {
+      "javadoc": "/**\n     * Close an entry. This method MUST be called for all file\n     * entries that contain data. The reason is that we must\n     * buffer data written to the stream in order to satisfy\n     * the buffer's record based writes. Thus, there may be\n     * data fragments still being assembled that must be written\n     * to the output stream before this entry is closed and the\n     * next entry written.\n     * @throws IOException on error\n     */",
+      "name": "closeArchiveEntry"
+    },
+    {
+      "javadoc": "/**\n     * Writes bytes to the current tar archive entry. This method\n     * is aware of the current entry and will throw an exception if\n     * you attempt to write bytes past the length specified for the\n     * current entry. The method is also (painfully) aware of the\n     * record buffering required by TarBuffer, and manages buffers\n     * that are not a multiple of recordsize in length, including\n     * assembling records from small buffers.\n     *\n     * @param wBuf The buffer to write to the archive.\n     * @param wOffset The offset in the buffer from which to get bytes.\n     * @param numToWrite The number of bytes to write.\n     * @throws IOException on error\n     */",
+      "name": "write"
+    },
+    {
+      "javadoc": "",
+      "name": "flush"
+    },
+    {
+      "javadoc": "",
+      "name": "createArchiveEntry"
+    }
+  ],
+  "sig": {
+    "class_declaration": "public class TarArchiveOutputStream extends ArchiveOutputStream",
+    "constructors": [
+      "public TarArchiveOutputStream(OutputStream os);",
+      "public TarArchiveOutputStream(OutputStream os, int blockSize);",
+      "public TarArchiveOutputStream(OutputStream os, int blockSize, int recordSize);"
+    ],
+    "focal_signature": "public void putArchiveEntry(ArchiveEntry archiveEntry) throws IOException",
+    "methods": [
+      "public void setLongFileMode(int longFileMode);",
+      "public void finish() throws IOException;",
+      "public void close() throws IOException;",
+      "public int getRecordSize();",
+      "public void closeArchiveEntry() throws IOException;",
+      "public void write(byte[] wBuf, int wOffset, int numToWrite) throws IOException;",
+      "public void flush() throws IOException;",
+      "public ArchiveEntry createArchiveEntry(File inputFile, String entryName) throws IOException;"
+    ],
+    "type_signatures": [
+      "public interface ArchiveEntry { public String getName(); public long getSize(); public boolean isDirectory(); }"
+    ]
+  },
+  "split": "test"
+}

@@ -1,0 +1,162 @@
+{
+ "bug_name": "JacksonDatabind_111",
+ "call_sites": [
+  {
+   "line": 281,
+   "lines": [
+    276,
+    277,
+    278,
+    279,
+    280,
+    281,
+    282,
+    283,
+    284,
+    285,
+    286
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/JsonDeserializer.java",
+   "snippet": "     * @since 2.6 Added to replace earlier no-arguments variant\n     */\n    @Override\n    public T getNullValue(DeserializationContext ctxt) throws JsonMappingException {\n        // Change the direction in 2.7\n        return getNullValue();\n    }\n\n    /**\n     * Default implementation indicates that \"null value\" to use for input null\n     * is simply Java `null` for all deserializers, unless overridden by sub-classes."
+  },
+  {
+   "line": 334,
+   "lines": [
+    329,
+    330,
+    331,
+    332,
+    333,
+    334,
+    335,
+    336,
+    337,
+    338,
+    339
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/JsonDeserializer.java",
+   "snippet": "     * returns value.\n     *\n     * @since 2.6 Added to replace earlier no-arguments variant\n     */\n    public Object getEmptyValue(DeserializationContext ctxt) throws JsonMappingException {\n        return getNullValue(ctxt);\n    }\n\n    /**\n     * Accessor that can be used to check whether this deserializer\n     * is expecting to possibly get an Object Identifier value instead of full value"
+  },
+  {
+   "line": 3738,
+   "lines": [
+    3733,
+    3734,
+    3735,
+    3736,
+    3737,
+    3738,
+    3739,
+    3740,
+    3741,
+    3742,
+    3743
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java",
+   "snippet": "            // ok to pass in existing feature flags; unwrapping handled by mapper\n            final DeserializationConfig deserConfig = getDeserializationConfig();\n            JsonToken t = _initForReading(p, toValueType);\n            if (t == JsonToken.VALUE_NULL) {\n                DeserializationContext ctxt = createDeserializationContext(p, deserConfig);\n                result = _findRootDeserializer(ctxt, toValueType).getNullValue(ctxt);\n            } else if (t == JsonToken.END_ARRAY || t == JsonToken.END_OBJECT) {\n                result = null;\n            } else { // pointing to event other than null\n                DeserializationContext ctxt = createDeserializationContext(p, deserConfig);\n                JsonDeserializer<Object> deser = _findRootDeserializer(ctxt, toValueType);"
+  },
+  {
+   "line": 3975,
+   "lines": [
+    3970,
+    3971,
+    3972,
+    3973,
+    3974,
+    3975,
+    3976,
+    3977,
+    3978,
+    3979,
+    3980
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java",
+   "snippet": "        Object result;\n        JsonToken t = _initForReading(p, valueType);\n        final DeserializationContext ctxt = createDeserializationContext(p, cfg);\n        if (t == JsonToken.VALUE_NULL) {\n            // Ask JsonDeserializer what 'null value' to use:\n            result = _findRootDeserializer(ctxt, valueType).getNullValue(ctxt);\n        } else if (t == JsonToken.END_ARRAY || t == JsonToken.END_OBJECT) {\n            result = null;\n        } else { // pointing to event other than null\n            JsonDeserializer<Object> deser = _findRootDeserializer(ctxt, valueType);\n            // ok, let's get the value"
+  },
+  {
+   "line": 4005,
+   "lines": [
+    4000,
+    4001,
+    4002,
+    4003,
+    4004,
+    4005,
+    4006,
+    4007,
+    4008,
+    4009,
+    4010
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java",
+   "snippet": "            JsonToken t = _initForReading(p, valueType);\n            final DeserializationConfig cfg = getDeserializationConfig();\n            final DeserializationContext ctxt = createDeserializationContext(p, cfg);\n            if (t == JsonToken.VALUE_NULL) {\n                // Ask JsonDeserializer what 'null value' to use:\n                result = _findRootDeserializer(ctxt, valueType).getNullValue(ctxt);\n            } else if (t == JsonToken.END_ARRAY || t == JsonToken.END_OBJECT) {\n                result = null;\n            } else {\n                JsonDeserializer<Object> deser = _findRootDeserializer(ctxt, valueType);\n                if (cfg.useRootWrapping()) {"
+  }
+ ],
+ "class_simple": "AtomicReferenceDeserializer",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.deser.std.AtomicReferenceDeserializer",
+ "focal_id": "JacksonDatabind_111::com.fasterxml.jackson.databind.deser.std.AtomicReferenceDeserializer::getNullValue(DeserializationContext)",
+ "focal_method_name": "getNullValue",
+ "generations": 3,
+ "impl_B": "@Override\n    public AtomicReference<Object> getNullValue(DeserializationContext ctxt) throws JsonMappingException {\n        return new AtomicReference<Object>();\n    }",
+ "imports": [
+  "java.util.concurrent.atomic.AtomicReference",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.deser.ValueInstantiator",
+  "com.fasterxml.jackson.databind.jsontype.TypeDeserializer"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.deser.std",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "withResolved"
+  },
+  {
+   "javadoc": "",
+   "name": "getEmptyValue"
+  },
+  {
+   "javadoc": "",
+   "name": "referenceValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getReferenced"
+  },
+  {
+   "javadoc": "",
+   "name": "updateReference"
+  },
+  {
+   "javadoc": "",
+   "name": "supportsUpdate"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class AtomicReferenceDeserializer extends ReferenceTypeDeserializer<AtomicReference<Object>>",
+  "constructors": [
+   "public AtomicReferenceDeserializer(JavaType fullType, ValueInstantiator inst, TypeDeserializer typeDeser, JsonDeserializer<?> deser);"
+  ],
+  "focal_signature": "public AtomicReference<Object> getNullValue(DeserializationContext ctxt) throws JsonMappingException",
+  "methods": [
+   "public AtomicReferenceDeserializer withResolved(TypeDeserializer typeDeser, JsonDeserializer<?> valueDeser);",
+   "public Object getEmptyValue(DeserializationContext ctxt);",
+   "public AtomicReference<Object> referenceValue(Object contents);",
+   "public Object getReferenced(AtomicReference<Object> reference);",
+   "// since 2.9 public AtomicReference<Object> updateReference(AtomicReference<Object> reference, Object contents);",
+   "// since 2.9 public Boolean supportsUpdate(DeserializationConfig config);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

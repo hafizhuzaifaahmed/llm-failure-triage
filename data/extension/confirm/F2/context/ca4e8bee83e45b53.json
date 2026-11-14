@@ -1,0 +1,177 @@
+{
+ "bug_name": "Chart_25",
+ "call_sites": [
+  {
+   "line": 363,
+   "lines": [
+    358,
+    359,
+    360,
+    361,
+    362,
+    363,
+    364,
+    365,
+    366,
+    367,
+    368
+   ],
+   "path": "source/org/jfree/chart/renderer/category/BoxAndWhiskerRenderer.java",
+   "snippet": "        if (orientation == PlotOrientation.HORIZONTAL) {\n            drawHorizontalItem(g2, state, dataArea, plot, domainAxis, \n                    rangeAxis, dataset, row, column);\n        } \n        else if (orientation == PlotOrientation.VERTICAL) {\n            drawVerticalItem(g2, state, dataArea, plot, domainAxis, \n                    rangeAxis, dataset, row, column);\n        }\n        \n    }\n"
+  },
+  {
+   "line": 202,
+   "lines": [
+    197,
+    198,
+    199,
+    200,
+    201,
+    202,
+    203,
+    204,
+    205,
+    206,
+    207
+   ],
+   "path": "source/org/jfree/chart/renderer/category/LayeredBarRenderer.java",
+   "snippet": "        if (orientation == PlotOrientation.HORIZONTAL) {\n            drawHorizontalItem(g2, state, dataArea, plot, domainAxis, rangeAxis, \n                    data, row, column);\n        }\n        else if (orientation == PlotOrientation.VERTICAL) {\n            drawVerticalItem(g2, state, dataArea, plot, domainAxis, rangeAxis, \n                    data, row, column);\n        }\n\n    }\n"
+  },
+  {
+   "line": 212,
+   "lines": [
+    207,
+    208,
+    209,
+    210,
+    211,
+    212,
+    213,
+    214,
+    215,
+    216,
+    217
+   ],
+   "path": "source/org/jfree/chart/renderer/category/StatisticalBarRenderer.java",
+   "snippet": "        if (orientation == PlotOrientation.HORIZONTAL) {\n            drawHorizontalItem(g2, state, dataArea, plot, domainAxis, \n                    rangeAxis, statData, row, column);\n        }\n        else if (orientation == PlotOrientation.VERTICAL) {\n            drawVerticalItem(g2, state, dataArea, plot, domainAxis, rangeAxis, \n                    statData, row, column);\n        }\n    }\n                \n    /**"
+  },
+  {
+   "line": 311,
+   "lines": [
+    306,
+    307,
+    308,
+    309,
+    310,
+    311,
+    312,
+    313,
+    314,
+    315,
+    316
+   ],
+   "path": "source/org/jfree/chart/renderer/xy/XYBoxAndWhiskerRenderer.java",
+   "snippet": "        if (orientation == PlotOrientation.HORIZONTAL) {\n            drawHorizontalItem(g2, dataArea, info, plot, domainAxis, rangeAxis,\n                    dataset, series, item, crosshairState, pass);\n        }\n        else if (orientation == PlotOrientation.VERTICAL) {\n            drawVerticalItem(g2, dataArea, info, plot, domainAxis, rangeAxis,\n                    dataset, series, item, crosshairState, pass);\n        }\n\n    }\n"
+  }
+ ],
+ "class_simple": "StatisticalBarRenderer",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * A renderer that handles the drawing a bar plot where\n * each bar has a mean value and a standard deviation line.\n */\npublic",
+  "method_javadoc": "/**\n     * Draws an item for a plot with a vertical orientation.\n     * \n     * @param g2  the graphics device.\n     * @param state  the renderer state.\n     * @param dataArea  the data area.\n     * @param plot  the plot.\n     * @param domainAxis  the domain axis.\n     * @param rangeAxis  the range axis.\n     * @param dataset  the data.\n     * @param row  the row index (zero-based).\n     * @param column  the column index (zero-based).\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "private transient Paint errorIndicatorPaint",
+  "private transient Stroke errorIndicatorStroke"
+ ],
+ "focal_class": "org.jfree.chart.renderer.category.StatisticalBarRenderer",
+ "focal_id": "Chart_25::org.jfree.chart.renderer.category.StatisticalBarRenderer::drawVerticalItem(Graphics2D,CategoryItemRendererState,Rectangle2D,CategoryPlot,CategoryAxis,ValueAxis,StatisticalCategoryDataset,int,int)",
+ "focal_method_name": "drawVerticalItem",
+ "generations": 3,
+ "impl_B": "protected void drawVerticalItem(Graphics2D g2,\n                                    CategoryItemRendererState state,\n                                    Rectangle2D dataArea,\n                                    CategoryPlot plot,\n                                    CategoryAxis domainAxis,\n                                    ValueAxis rangeAxis,\n                                    StatisticalCategoryDataset dataset,\n                                    int row,\n                                    int column) {\n                                     \n        RectangleEdge xAxisLocation = plot.getDomainAxisEdge();\n        \n        // BAR X\n        double rectX = domainAxis.getCategoryStart(\n            column, getColumnCount(), dataArea, xAxisLocation\n        );\n\n        int seriesCount = getRowCount();\n        int categoryCount = getColumnCount();\n        if (seriesCount > 1) {\n            double seriesGap = dataArea.getWidth() * getItemMargin()\n                               / (categoryCount * (seriesCount - 1));\n            rectX = rectX + row * (state.getBarWidth() + seriesGap);\n        }\n        else {\n            rectX = rectX + row * state.getBarWidth();\n        }\n\n        // BAR Y\n        Number meanValue = dataset.getMeanValue(row, column);\n\n        double value = meanValue.doubleValue();\n        double base = 0.0;\n        double lclip = getLowerClip();\n        double uclip = getUpperClip();\n\n        if (uclip <= 0.0) {  // cases 1, 2, 3 and 4\n            if (value >= uclip) {\n                return; // bar is not visible\n            }\n            base = uclip;\n            if (value <= lclip) {\n                value = lclip;\n            }\n        }\n        else if (lclip <= 0.0) { // cases 5, 6, 7 and 8\n            if (value >= uclip) {\n                value = uclip;\n            }\n            else {\n                if (value <= lclip) {\n                    value = lclip;\n                }\n            }\n        }\n        else { // cases 9, 10, 11 and 12\n            if (value <= lclip) {\n                return; // bar is not visible\n            }\n            base = getLowerClip();\n            if (value >= uclip) {\n               value = uclip;\n            }\n        }\n\n        RectangleEdge yAxisLocation = plot.getRangeAxisEdge();\n        double transY1 = rangeAxis.valueToJava2D(base, dataArea, yAxisLocation);\n        double transY2 = rangeAxis.valueToJava2D(value, dataArea, \n                yAxisLocation);\n        double rectY = Math.min(transY2, transY1);\n\n        double rectWidth = state.getBarWidth();\n        double rectHeight = Math.abs(transY2 - transY1);\n\n        Rectangle2D bar = new Rectangle2D.Double(rectX, rectY, rectWidth, \n                rectHeight);\n        Paint seriesPaint = getItemPaint(row, column);\n        g2.setPaint(seriesPaint);\n        g2.fill(bar);\n        if (isDrawBarOutline() && state.getBarWidth() > 3) {\n            g2.setStroke(getItemStroke(row, column));\n            g2.setPaint(getItemOutlinePaint(row, column));\n            g2.draw(bar);\n        }\n\n        // standard deviation lines\n            double valueDelta = dataset.getStdDevValue(row, column).doubleValue();\n            double highVal = rangeAxis.valueToJava2D(meanValue.doubleValue() \n                    + valueDelta, dataArea, yAxisLocation);\n            double lowVal = rangeAxis.valueToJava2D(meanValue.doubleValue() \n                    - valueDelta, dataArea, yAxisLocation);\n\n            if (this.errorIndicatorStroke != null) {\n                g2.setStroke(this.errorIndicatorStroke);\n            }\n            else {\n                g2.setStroke(getItemOutlineStroke(row, column));\n            }\n            if (this.errorIndicatorPaint != null) {\n                g2.setPaint(this.errorIndicatorPaint);  \n            }\n            else {\n                g2.setPaint(getItemOutlinePaint(row, column));   \n            }\n            Line2D line = null;\n            line = new Line2D.Double(rectX + rectWidth / 2.0d, lowVal,\n                                     rectX + rectWidth / 2.0d, highVal);\n            g2.draw(line);\n            line = new Line2D.Double(rectX + rectWidth / 2.0d - 5.0d, highVal,\n                                     rectX + rectWidth / 2.0d + 5.0d, highVal);\n            g2.draw(line);\n            line = new Line2D.Double(rectX + rectWidth / 2.0d - 5.0d, lowVal,\n                                     rectX + rectWidth / 2.0d + 5.0d, lowVal);\n            g2.draw(line);\n        \n        CategoryItemLabelGenerator generator = getItemLabelGenerator(row, \n                column);\n        if (generator != null && isItemLabelVisible(row, column)) {\n            drawItemLabel(g2, dataset, row, column, plot, generator, bar, \n                    (value < 0.0));\n        }        \n\n        // add an item entity, if this information is being collected\n        EntityCollection entities = state.getEntityCollection();\n        if (entities != null) {\n            addItemEntity(entities, dataset, row, column, bar);\n        }\n    }",
+ "imports": [
+  "java.awt.BasicStroke",
+  "java.awt.Color",
+  "java.awt.Graphics2D",
+  "java.awt.Paint",
+  "java.awt.Stroke",
+  "java.awt.geom.Line2D",
+  "java.awt.geom.Rectangle2D",
+  "java.io.IOException",
+  "java.io.ObjectInputStream",
+  "java.io.ObjectOutputStream",
+  "java.io.Serializable",
+  "org.jfree.chart.axis.CategoryAxis",
+  "org.jfree.chart.axis.ValueAxis",
+  "org.jfree.chart.entity.EntityCollection",
+  "org.jfree.chart.event.RendererChangeEvent",
+  "org.jfree.chart.labels.CategoryItemLabelGenerator",
+  "org.jfree.chart.plot.CategoryPlot",
+  "org.jfree.chart.plot.PlotOrientation",
+  "org.jfree.chart.util.PaintUtilities",
+  "org.jfree.chart.util.PublicCloneable",
+  "org.jfree.chart.util.RectangleEdge",
+  "org.jfree.chart.util.SerialUtilities",
+  "org.jfree.data.category.CategoryDataset",
+  "org.jfree.data.statistics.StatisticalCategoryDataset"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.jfree.chart.renderer.category",
+ "project": "Chart",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Returns the paint used for the error indicators.\n     * \n     * @return The paint used for the error indicators (possibly \n     *         <code>null</code>).\n     *         \n     * @see #setErrorIndicatorPaint(Paint)\n     */",
+   "name": "getErrorIndicatorPaint"
+  },
+  {
+   "javadoc": "/**\n     * Sets the paint used for the error indicators (if <code>null</code>, \n     * the item outline paint is used instead)\n     * \n     * @param paint  the paint (<code>null</code> permitted).\n     * \n     * @see #getErrorIndicatorPaint()\n     */",
+   "name": "setErrorIndicatorPaint"
+  },
+  {
+   "javadoc": "/**\n     * Returns the stroke used for the error indicators.\n     * \n     * @return The stroke (possibly <code>null</code>).\n     *         \n     * @see #setErrorIndicatorStroke(Stroke)\n     *\n     * @since 1.2.0\n     */",
+   "name": "getErrorIndicatorStroke"
+  },
+  {
+   "javadoc": "/**\n     * Sets the stroke used for the error indicators (if <code>null</code>, \n     * the item outline stroke is used instead)\n     * \n     * @param stroke  the stroke (<code>null</code> permitted).\n     * \n     * @see #getErrorIndicatorStroke()\n     *\n     * @since 1.2.0\n     */",
+   "name": "setErrorIndicatorStroke"
+  },
+  {
+   "javadoc": "/**\n     * Draws the bar with its standard deviation line range for a single \n     * (series, category) data item.\n     *\n     * @param g2  the graphics device.\n     * @param state  the renderer state.\n     * @param dataArea  the data area.\n     * @param plot  the plot.\n     * @param domainAxis  the domain axis.\n     * @param rangeAxis  the range axis.\n     * @param data  the data.\n     * @param row  the row index (zero-based).\n     * @param column  the column index (zero-based).\n     * @param pass  the pass index.\n     */",
+   "name": "drawItem"
+  },
+  {
+   "javadoc": "/**\n     * Draws an item for a plot with a horizontal orientation.\n     * \n     * @param g2  the graphics device.\n     * @param state  the renderer state.\n     * @param dataArea  the data area.\n     * @param plot  the plot.\n     * @param domainAxis  the domain axis.\n     * @param rangeAxis  the range axis.\n     * @param dataset  the data.\n     * @param row  the row index (zero-based).\n     * @param column  the column index (zero-based).\n     */",
+   "name": "drawHorizontalItem"
+  },
+  {
+   "javadoc": "/**\n     * Tests this renderer for equality with an arbitrary object.\n     * \n     * @param obj  the object (<code>null</code> permitted).\n     * \n     * @return A boolean.\n     */",
+   "name": "equals"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class StatisticalBarRenderer extends BarRenderer implements CategoryItemRenderer, Cloneable, PublicCloneable, Serializable",
+  "constructors": [
+   "public StatisticalBarRenderer();"
+  ],
+  "focal_signature": "protected void drawVerticalItem(Graphics2D g2, CategoryItemRendererState state, Rectangle2D dataArea, CategoryPlot plot, CategoryAxis domainAxis, ValueAxis rangeAxis, StatisticalCategoryDataset dataset, int row, int column)",
+  "methods": [
+   "public Paint getErrorIndicatorPaint();",
+   "public void setErrorIndicatorPaint(Paint paint);",
+   "public Stroke getErrorIndicatorStroke();",
+   "public void setErrorIndicatorStroke(Stroke stroke);",
+   "public void drawItem(Graphics2D g2, CategoryItemRendererState state, Rectangle2D dataArea, CategoryPlot plot, CategoryAxis domainAxis, ValueAxis rangeAxis, CategoryDataset data, int row, int column, int pass);",
+   "protected void drawHorizontalItem(Graphics2D g2, CategoryItemRendererState state, Rectangle2D dataArea, CategoryPlot plot, CategoryAxis domainAxis, ValueAxis rangeAxis, StatisticalCategoryDataset dataset, int row, int column);",
+   "public boolean equals(Object obj);"
+  ],
+  "type_signatures": [
+   "public class CategoryItemRendererState extends RendererState { public CategoryItemRendererState(PlotRenderingInfo info); public double getBarWidth(); public void setBarWidth(double width); public double getSeriesRunningTotal(); }",
+   "public class CategoryPlot extends Plot implements ValueAxisPlot, Zoomable, RendererChangeListener, Cloneable, PublicCloneable, Serializable { public CategoryPlot(); public CategoryPlot(CategoryDataset dataset, CategoryAxis domainAxis, ValueAxis rangeAxis, CategoryItemRenderer renderer); public String getPlotType(); public PlotOrientation getOrientation(); public void setOrientation(PlotOrientation orientation); public RectangleInsets getAxisOffset(); public void setAxisOffset(RectangleInsets offset); public CategoryAxis getDomainAxis(); public CategoryAxis getDomainAxis(int index); public void setDomainAxis(CategoryAxis axis); public void setDomainAxis(int index, CategoryAxis axis); public void setDomainAxis(int index, CategoryAxis axis, boolean notify); public void setDomainAxes(CategoryAxis[] axes); public int getDomainAxisIndex(CategoryAxis axis); public AxisLocation getDomainAxisLocation(); }",
+   "public class CategoryAxis extends Axis implements Cloneable, Serializable { public CategoryAxis(); public CategoryAxis(String label); public double getLowerMargin(); public void setLowerMargin(double margin); public double getUpperMargin(); public void setUpperMargin(double margin); public double getCategoryMargin(); public void setCategoryMargin(double margin); public int getMaximumCategoryLabelLines(); public void setMaximumCategoryLabelLines(int lines); public float getMaximumCategoryLabelWidthRatio(); public void setMaximumCategoryLabelWidthRatio(float ratio); public int getCategoryLabelPositionOffset(); public void setCategoryLabelPositionOffset(int offset); public CategoryLabelPositions getCategoryLabelPositions(); }",
+   "public abstract class ValueAxis extends Axis implements Cloneable, PublicCloneable, Serializable { protected ValueAxis(String label, TickUnitSource standardTickUnits); public boolean isVerticalTickLabels(); public void setVerticalTickLabels(boolean flag); public boolean isPositiveArrowVisible(); public void setPositiveArrowVisible(boolean visible); public boolean isNegativeArrowVisible(); public void setNegativeArrowVisible(boolean visible); public Shape getUpArrow(); public void setUpArrow(Shape arrow); public Shape getDownArrow(); public void setDownArrow(Shape arrow); public Shape getLeftArrow(); public void setLeftArrow(Shape arrow); public Shape getRightArrow(); public void setRightArrow(Shape arrow); }",
+   "public interface StatisticalCategoryDataset extends CategoryDataset { public Number getMeanValue(int row, int column); public Number getMeanValue(Comparable rowKey, Comparable columnKey); public Number getStdDevValue(int row, int column); public Number getStdDevValue(Comparable rowKey, Comparable columnKey); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

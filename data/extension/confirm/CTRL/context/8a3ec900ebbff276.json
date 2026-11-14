@@ -1,0 +1,285 @@
+{
+ "bug_name": "Closure_33",
+ "call_sites": [
+  {
+   "line": 256,
+   "lines": [
+    251,
+    252,
+    253,
+    254,
+    255,
+    256,
+    257,
+    258,
+    259,
+    260,
+    261
+   ],
+   "path": "src/com/google/javascript/jscomp/ConcreteType.java",
+   "snippet": "  /**\n   * Returns the concrete type for the given property from the given type.\n   * If the given type is a union type, returns the union of types for the slots\n   * of the property.\n   */\n  ConcreteType getPropertyType(final String name) {\n    ConcreteType ret = NONE;\n    for (StaticSlot<ConcreteType> slot : getPropertySlots(name)) {\n      ret = ret.unionWith(slot.getType());\n    }\n    return ret;"
+  },
+  {
+   "line": 1000,
+   "lines": [
+    995,
+    996,
+    997,
+    998,
+    999,
+    1000,
+    1001,
+    1002,
+    1003,
+    1004,
+    1005
+   ],
+   "path": "src/com/google/javascript/jscomp/DisambiguateProperties.java",
+   "snippet": "        return cType;\n      } else if (jsType.isUnknownType()) {\n        for (JSTypeNative nativeType : nativeTypes) {\n          ConcreteType concrete = tt.getConcreteInstance(\n              tt.getTypeRegistry().getNativeObjectType(nativeType));\n          if (concrete != null && !concrete.getPropertyType(prop).isNone()) {\n            cType = cType.unionWith(concrete);\n          }\n        }\n        return cType;\n      }"
+  },
+  {
+   "line": 179,
+   "lines": [
+    174,
+    175,
+    176,
+    177,
+    178,
+    179,
+    180,
+    181,
+    182,
+    183,
+    184
+   ],
+   "path": "src/com/google/javascript/jscomp/InferJSDocInfo.java",
+   "snippet": "                lhsType.setPropertyJSDocInfo(propName, docInfo);\n              }\n\n              // Put the JSDoc in any constructors or function shapes as well.\n              ObjectType propType =\n                  dereferenceToObject(lhsType.getPropertyType(propName));\n              if (propType != null) {\n                attachJSDocInfoToNominalTypeOrShape(\n                    propType, docInfo, n.getQualifiedName());\n              }\n            }"
+  },
+  {
+   "line": 516,
+   "lines": [
+    511,
+    512,
+    513,
+    514,
+    515,
+    516,
+    517,
+    518,
+    519,
+    520,
+    521
+   ],
+   "path": "src/com/google/javascript/jscomp/TightenTypes.java",
+   "snippet": "\n      // If a property name was specified, then the receiver is actually the\n      // type of this and the actual receiver is the type of that property.\n      if (propName != null) {\n        thisType = recvType;\n        recvType = thisType.getPropertyType(propName);\n      }\n\n      if (recvType.isAll()) {\n        // TODO(user): ensure that this will trigger for code like\n        // functions[3]();"
+  },
+  {
+   "line": 573,
+   "lines": [
+    568,
+    569,
+    570,
+    571,
+    572,
+    573,
+    574,
+    575,
+    576,
+    577,
+    578
+   ],
+   "path": "src/com/google/javascript/jscomp/TightenTypes.java",
+   "snippet": "          : getTopScope().getTypeOfThis();\n      ConcreteType recvType = inferConcreteType(scope, receiver);\n\n      if (recvType instanceof ConcreteInstanceType &&\n          ((ConcreteInstanceType) recvType).isFunctionPrototype()) {\n        recvType = thisType.getPropertyType(propName);\n      }\n      List<ConcreteType> argTypes = Lists.newArrayList();\n      // Skip the first argument for call() as it is the 'this' object.\n      for (Node arg = firstArgument.getNext();\n           arg != null;"
+  }
+ ],
+ "class_simple": "PrototypeObjectType",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * The object type represents instances of JavaScript objects such as\n * {@code Object}, {@code Date}, {@code Function}.<p>\n *\n * Objects in JavaScript are unordered collections of properties.\n * Each property consists of a name, a value and a set of attributes.<p>\n *\n * Each instance has an implicit prototype property ({@code [[Prototype]]})\n * pointing to an object instance, which itself has an implicit property, thus\n * forming a chain.<p>\n *\n * A class begins life with no name.  Later, a name may be provided once it\n * can be inferred.  Note that the name in this case is strictly for\n * debugging purposes.  Looking up type name references goes through the\n * {@link JSTypeRegistry}.<p>\n */",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "private final String className",
+  "private final Map<String, Property> properties",
+  "private final boolean nativeType",
+  "private ObjectType implicitPrototypeFallback",
+  "private FunctionType ownerFunction",
+  "private boolean prettyPrint",
+  "private static final int MAX_PRETTY_PRINTED_PROPERTIES"
+ ],
+ "focal_class": "com.google.javascript.rhino.jstype.PrototypeObjectType",
+ "focal_id": "Closure_33::com.google.javascript.rhino.jstype.PrototypeObjectType::getPropertyType(String)",
+ "focal_method_name": "getPropertyType",
+ "generations": 3,
+ "impl_B": "@Override\n  public JSType getPropertyType(String property) {\n    StaticSlot<JSType> slot = getSlot(property);\n    if (slot == null) {\n      return getNativeType(JSTypeNative.UNKNOWN_TYPE);\n    }\n    return slot.getType();\n  }",
+ "imports": [
+  "static com.google.common.base.Preconditions.checkState",
+  "com.google.common.base.Preconditions",
+  "com.google.common.collect.ImmutableList",
+  "com.google.common.collect.Maps",
+  "com.google.common.collect.Sets",
+  "com.google.javascript.rhino.ErrorReporter",
+  "com.google.javascript.rhino.JSDocInfo",
+  "com.google.javascript.rhino.Node",
+  "java.util.Map",
+  "java.util.Set"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.rhino.jstype",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "getSlot"
+  },
+  {
+   "javadoc": "/**\n   * Gets the number of properties of this object.\n   */",
+   "name": "getPropertiesCount"
+  },
+  {
+   "javadoc": "",
+   "name": "hasProperty"
+  },
+  {
+   "javadoc": "",
+   "name": "hasOwnProperty"
+  },
+  {
+   "javadoc": "",
+   "name": "getOwnPropertyNames"
+  },
+  {
+   "javadoc": "",
+   "name": "isPropertyTypeDeclared"
+  },
+  {
+   "javadoc": "",
+   "name": "isPropertyTypeInferred"
+  },
+  {
+   "javadoc": "",
+   "name": "isPropertyInExterns"
+  },
+  {
+   "javadoc": "",
+   "name": "removeProperty"
+  },
+  {
+   "javadoc": "",
+   "name": "getPropertyNode"
+  },
+  {
+   "javadoc": "",
+   "name": "getOwnPropertyJSDocInfo"
+  },
+  {
+   "javadoc": "",
+   "name": "setPropertyJSDocInfo"
+  },
+  {
+   "javadoc": "",
+   "name": "matchesNumberContext"
+  },
+  {
+   "javadoc": "",
+   "name": "matchesStringContext"
+  },
+  {
+   "javadoc": "",
+   "name": "unboxesTo"
+  },
+  {
+   "javadoc": "",
+   "name": "matchesObjectContext"
+  },
+  {
+   "javadoc": "",
+   "name": "canBeCalled"
+  },
+  {
+   "javadoc": "",
+   "name": "getConstructor"
+  },
+  {
+   "javadoc": "",
+   "name": "getImplicitPrototype"
+  },
+  {
+   "javadoc": "",
+   "name": "getReferenceName"
+  },
+  {
+   "javadoc": "",
+   "name": "hasReferenceName"
+  },
+  {
+   "javadoc": "",
+   "name": "isSubtype"
+  },
+  {
+   "javadoc": "",
+   "name": "hasCachedValues"
+  },
+  {
+   "javadoc": "/** Whether this is a built-in object. */",
+   "name": "isNativeObjectType"
+  },
+  {
+   "javadoc": "",
+   "name": "getOwnerFunction"
+  },
+  {
+   "javadoc": "",
+   "name": "getCtorImplementedInterfaces"
+  },
+  {
+   "javadoc": "",
+   "name": "getCtorExtendedInterfaces"
+  },
+  {
+   "javadoc": "",
+   "name": "matchConstraint"
+  }
+ ],
+ "sig": {
+  "class_declaration": "class PrototypeObjectType extends ObjectType",
+  "constructors": [],
+  "focal_signature": "public JSType getPropertyType(String property)",
+  "methods": [
+   "public Property getSlot(String name);",
+   "public int getPropertiesCount();",
+   "public boolean hasProperty(String propertyName);",
+   "public boolean hasOwnProperty(String propertyName);",
+   "public Set<String> getOwnPropertyNames();",
+   "public boolean isPropertyTypeDeclared(String property);",
+   "public boolean isPropertyTypeInferred(String property);",
+   "public boolean isPropertyInExterns(String propertyName);",
+   "public boolean removeProperty(String name);",
+   "public Node getPropertyNode(String propertyName);",
+   "public JSDocInfo getOwnPropertyJSDocInfo(String propertyName);",
+   "public void setPropertyJSDocInfo(String propertyName, JSDocInfo info);",
+   "public boolean matchesNumberContext();",
+   "public boolean matchesStringContext();",
+   "public JSType unboxesTo();",
+   "public boolean matchesObjectContext();",
+   "public boolean canBeCalled();",
+   "public FunctionType getConstructor();",
+   "public ObjectType getImplicitPrototype();",
+   "public String getReferenceName();",
+   "public boolean hasReferenceName();",
+   "public boolean isSubtype(JSType that);",
+   "public boolean hasCachedValues();",
+   "public boolean isNativeObjectType();",
+   "public FunctionType getOwnerFunction();",
+   "public Iterable<ObjectType> getCtorImplementedInterfaces();",
+   "public Iterable<ObjectType> getCtorExtendedInterfaces();",
+   "public void matchConstraint(ObjectType constraintObj);"
+  ],
+  "type_signatures": [
+   "public abstract class JSType implements Serializable { public JSDocInfo getJSDocInfo(); public String getDisplayName(); public boolean hasDisplayName(); public boolean isNoType(); public boolean isNoResolvedType(); public boolean isNoObjectType(); public final boolean isEmptyType(); public boolean isNumberObjectType(); public boolean isNumberValueType(); public boolean isFunctionPrototypeType(); public boolean isStringObjectType(); public boolean isStringValueType(); public final boolean isString(); public final boolean isNumber(); public boolean isArrayType(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

@@ -1,0 +1,163 @@
+{
+ "bug_name": "Closure_137",
+ "call_sites": [
+  {
+   "line": 84,
+   "lines": [
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89
+   ],
+   "path": "src/com/google/javascript/jscomp/MakeDeclaredNamesUnique.java",
+   "snippet": "    if (declarationRoot.getType() == Token.FUNCTION) {\n      // Add the function parameters\n      Node fnParams = declarationRoot.getFirstChild().getNext();\n      for (Node c = fnParams.getFirstChild(); c != null; c = c.getNext()) {\n        String name = c.getString();\n        renamer.addDeclaredName(name);\n      }\n\n      // Add the function body declarations\n      Node functionBody = declarationRoot.getLastChild();\n      findDeclaredNames(functionBody, null, renamer);"
+  },
+  {
+   "line": 118,
+   "lines": [
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122,
+    123
+   ],
+   "path": "src/com/google/javascript/jscomp/MakeDeclaredNamesUnique.java",
+   "snippet": "\n          // If needed, add the function recursive name.\n          String name = n.getFirstChild().getString();\n          if (name != null && !name.isEmpty() && parent != null\n              && !NodeUtil.isFunctionDeclaration(n)) {\n            renamer.addDeclaredName(name);\n          }\n\n          nameStack.push(renamer);\n        }\n        break;"
+  },
+  {
+   "line": 130,
+   "lines": [
+    125,
+    126,
+    127,
+    128,
+    129,
+    130,
+    131,
+    132,
+    133,
+    134,
+    135
+   ],
+   "path": "src/com/google/javascript/jscomp/MakeDeclaredNamesUnique.java",
+   "snippet": "      case Token.CATCH:\n        {\n          Renamer renamer = nameStack.peek().forChildScope();\n\n          String name = n.getFirstChild().getString();\n          renamer.addDeclaredName(name);\n\n          nameStack.push(renamer);\n        }\n        break;\n    }"
+  },
+  {
+   "line": 193,
+   "lines": [
+    188,
+    189,
+    190,
+    191,
+    192,
+    193,
+    194,
+    195,
+    196,
+    197,
+    198
+   ],
+   "path": "src/com/google/javascript/jscomp/MakeDeclaredNamesUnique.java",
+   "snippet": "    // except for the name of the function itself.\n    if (parent == null\n        || parent.getType() != Token.FUNCTION\n        || n == parent.getFirstChild()) {\n      if (NodeUtil.isVarDeclaration(n)) {\n        renamer.addDeclaredName(n.getString());\n      } else if (NodeUtil.isFunctionDeclaration(n)) {\n        Node nameNode = n.getFirstChild();\n        renamer.addDeclaredName(nameNode.getString());\n      }\n"
+  },
+  {
+   "line": 196,
+   "lines": [
+    191,
+    192,
+    193,
+    194,
+    195,
+    196,
+    197,
+    198,
+    199,
+    200,
+    201
+   ],
+   "path": "src/com/google/javascript/jscomp/MakeDeclaredNamesUnique.java",
+   "snippet": "        || n == parent.getFirstChild()) {\n      if (NodeUtil.isVarDeclaration(n)) {\n        renamer.addDeclaredName(n.getString());\n      } else if (NodeUtil.isFunctionDeclaration(n)) {\n        Node nameNode = n.getFirstChild();\n        renamer.addDeclaredName(nameNode.getString());\n      }\n\n      for (Node c = n.getFirstChild(); c != null; c = c.getNext()) {\n        findDeclaredNames(c, n, renamer);\n      }"
+  }
+ ],
+ "class_simple": "ContextualRenamer",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n *  Find all Functions, VARs, and Exception names and make them\n *  unique.  Specifically, it will not modify object properties.\n *  @author johnlenz@google.com (John Lenz)\n *  TODO(johnlenz): Try to merge this with the ScopeCreator.\n */\nclass MakeDeclaredNamesUnique\n    implements NodeTraversal.ScopedCallback {\n\n  private Deque<Renamer> nameStack = new ArrayDeque<Renamer>();\n  private final Renamer rootRenamer;\n\n  MakeDeclaredNamesUnique() {\n    this.rootRenamer = new ContextualRenamer();\n  }\n\n  MakeDeclaredNamesUnique(Renamer renamer) {\n    this.rootRenamer = renamer;\n  }\n\n  static CompilerPass getContextualRenameInverter(AbstractCompiler compiler) {\n    return new ContextualRenameInverter(compiler);\n  }\n\n  @Override\n  public void enterScope(NodeTraversal t) {\n    Node declarationRoot = t.getScopeRoot();\n    Renamer renamer;\n    if (nameStack.isEmpty()) {\n      // If the contextual renamer is being used the starting context can not\n      // be a function.\n      Preconditions.checkState(\n          declarationRoot.getType() != Token.FUNCTION ||\n          !(rootRenamer instanceof ContextualRenamer));\n      Preconditions.checkState(t.inGlobalScope());\n      renamer = rootRenamer;\n    } else {\n      renamer = nameStack.peek().forChildScope();\n    }\n\n    if (declarationRoot.getType() == Token.FUNCTION) {\n      // Add the function parameters\n      Node fnParams = declarationRoot.getFirstChild().getNext();\n      for (Node c = fnParams.getFirstChild(); c != null; c = c.getNext()) {\n        String name = c.getString();\n        renamer.addDeclaredName(name);\n      }\n\n      // Add the function body declarations\n      Node functionBody = declarationRoot.getLastChild();\n      findDeclaredNames(functionBody, null, renamer);\n    } else {\n      // Add the block declarations\n      findDeclaredNames(declarationRoot, null, renamer);\n    }\n    nameStack.push(renamer);\n  }\n\n  @Override\n  public void exitScope(NodeTraversal t) {\n    if (!t.inGlobalScope()) {\n      nameStack.pop();\n    }\n  }\n\n  @Override\n  public boolean shouldTraverse(NodeTraversal t, Node n, Node parent) {\n\n    switch (n.getType()) {\n      case Token.FUNCTION:\n        {\n          // Add recursive function name, if needed.\n          // NOTE: \"enterScope\" is called after we need to pick up this name.\n          Renamer renamer = nameStack.peek().forChildScope();\n\n          // If needed, add the function recursive name.\n          String name = n.getFirstChild().getString();\n          if (name != null && !name.isEmpty() && parent != null\n              && !NodeUtil.isFunctionDeclaration(n)) {\n            renamer.addDeclaredName(name);\n          }\n\n          nameStack.push(renamer);\n        }\n        break;\n\n      case Token.CATCH:\n        {\n          Renamer renamer = nameStack.peek().forChildScope();\n\n          String name = n.getFirstChild().getString();\n          renamer.addDeclaredName(name);\n\n          nameStack.push(renamer);\n        }\n        break;\n    }\n\n    return true;\n  }\n\n  @Override\n  public void visit(NodeTraversal t, Node n, Node parent) {\n    switch (n.getType()) {\n      case Token.NAME:\n        String newName = getReplacementName(n.getString());\n        if (newName != null) {\n          Renamer renamer = nameStack.peek();\n          if (renamer.stripConstIfReplaced()) {\n            // TODO(johnlenz): Do we need to do anything about the javadoc?\n            n.removeProp(Node.IS_CONSTANT_NAME);\n          }\n          n.setString(newName);\n          t.getCompiler().reportCodeChange();\n        }\n        break;\n\n      case Token.FUNCTION:\n        // Remove function recursive name (if any).\n        nameStack.pop();\n        break;\n\n      case Token.CATCH:\n        // Remove catch except name from the stack of names.\n        nameStack.pop();\n        break;\n    }\n  }\n\n  /**\n   * Walks the stack of name maps and finds the replacement name for the\n   * current scope.\n   */\n  private String getReplacementName(String oldName) {\n    for (Renamer names : nameStack) {\n      String newName = names.getReplacementName(oldName);\n      if (newName != null) {\n        return newName;\n      }\n    }\n    return null;\n  }\n\n  /**\n   * Traverses the current scope and collects declared names.  Does not\n   * decent into functions or add CATCH exceptions.\n   */\n  private void findDeclaredNames(Node n, Node parent, Renamer renamer) {\n    // Do a shallow traversal, so don't traverse into function declarations,\n    // except for the name of the function itself.\n    if (parent == null\n        || parent.getType() != Token.FUNCTION\n        || n == parent.getFirstChild()) {\n      if (NodeUtil.isVarDeclaration(n)) {\n        renamer.addDeclaredName(n.getString());\n      } else if (NodeUtil.isFunctionDeclaration(n)) {\n        Node nameNode = n.getFirstChild();\n        renamer.addDeclaredName(nameNode.getString());\n      }\n\n      for (Node c = n.getFirstChild(); c != null; c = c.getNext()) {\n        findDeclaredNames(c, n, renamer);\n      }\n    }\n  }\n\n  /**\n   * Declared names renaming policy interface.\n   */\n  interface Renamer {\n\n    /**\n     * Called when a declared name is found in the local current scope.\n     */\n    void addDeclaredName(String name);\n\n    /**\n     * @return A replacement name, null if oldName is unknown or should not\n     * be replaced.\n     */\n    String getReplacementName(String oldName);\n\n    /**\n     * @return Whether the constant-ness of a name should be removed.\n     */\n    boolean stripConstIfReplaced();\n\n    /**\n     * @return A Renamer for a scope within the scope of the current Renamer.\n     */\n    Renamer forChildScope();\n  }\n\n  /**\n   * Inverts the transformation by {@link ContextualRenamer}, when possible.\n   */\n  static class ContextualRenameInverter extends AbstractPostOrderCallback\n      implements CompilerPass {\n    private final AbstractCompiler compiler;\n\n    // The set of names referenced in the current scope.\n\n    // Stack reference sets.\n\n    // Name are globally unique initially, so we don't need a per-scope map.\n    private Map<Var, String> nameMap = Maps.newHashMap();\n\n    private ContextualRenameInverter(AbstractCompiler compiler) {\n      this.compiler = compiler;\n    }\n\n    public void process(Node externs, Node js) {\n      NodeTraversal.traverse(compiler, js, this);\n    }\n\n    public static String getOrginalName(String name) {\n      int index = indexOfSeparator(name);\n      return (index == -1) ? name : name.substring(0, index);\n    }\n\n    private static int indexOfSeparator(String name) {\n      return name.lastIndexOf(ContextualRenamer.UNIQUE_ID_SEPARATOR);\n    }\n\n    private boolean containsSeparator(String name) {\n      return name.indexOf(ContextualRenamer.UNIQUE_ID_SEPARATOR) != -1;\n    }\n    private static String getOrginalNameInternal(String name, int index) {\n      return name.substring(0, index);\n    }\n\n    /**\n     * Prepare a set for the new scope.\n     */\n\n    private static String getNameSuffix(String name, int index) {\n      return name.substring(\n          index + ContextualRenamer.UNIQUE_ID_SEPARATOR.length(),\n          name.length());\n    }\n\n    /**\n     * Rename vars for the current scope, and merge any referenced \n     * names into the parent scope reference set.\n     */\n    @Override\n    public void visit(NodeTraversal t, Node node, Node parent) {\n      if (node.getType() == Token.NAME) {\n        String oldName = node.getString();\n        if (containsSeparator(oldName)) {\n          Scope scope = t.getScope();\n          Var var = t.getScope().getVar(oldName);\n          if (var == null || var.isGlobal()) {\n        return;\n      }\n\n          if (nameMap.containsKey(var)) {\n            node.setString(nameMap.get(var));\n          } else {\n            int index = indexOfSeparator(oldName);\n            String newName = getOrginalNameInternal(oldName, index);\n            String suffix = getNameSuffix(oldName, index);\n\n      // Merge any names that were referenced but not declared in the current\n      // scope.\n      // If there isn't anything left in the stack we will be going into the\n      // global scope: don't try to build a set of referenced names for the\n      // global scope.\n            boolean recurseScopes = false;\n            if (!suffix.matches(\"\\\\d+\")) {\n              recurseScopes = true;\n            }\n\n    /**\n     * For the Var declared in the current scope determine if it is possible\n     * to revert the name to its orginal form without conflicting with other\n     * values.\n     */\n        // Check if the new name is valid and if it would cause conflicts.\n            if (var.scope.isDeclared(newName, recurseScopes) ||\n                !TokenStream.isJSIdentifier(newName)) {\n              newName = oldName;\n            } else {\n              var.scope.declare(newName, var.nameNode, null, null);\n          // Adding a reference to the new name to prevent either the parent\n          // scopes or the current scope renaming another var to this new name.\n              Node parentNode = var.getParentNode();\n              if (parentNode.getType() == Token.FUNCTION &&\n                  parentNode == var.scope.getRootNode()) {\n                var.getNameNode().setString(newName);\n              }\n              node.setString(newName);\n          compiler.reportCodeChange();\n        }\n\n            nameMap.put(var, newName);\n\n      }\n\n        // Add all referenced names to the set so it is possible to check for\n        // conflicts.\n        // Store only references to candidate names in the node map.\n        }\n      }\n    }\n\n  }\n\n  /**\n   * Rename every locally name to be unique, the first encountered declaration\n   * (specifically global names) are left in their original form. Those that are\n   * renamed are made unique by giving them a unique suffix based on\n   * the number of declarations of the name.\n   *\n   * The root ContextualRenamer is assumed to be in GlobalScope.\n   *\n   * Used by the Normalize pass.\n   * @see Normalize\n   */\n  static",
+  "method_javadoc": "/**\n     * Adds a name to the map of names declared in this scope.\n     */"
+ },
+ "fields": [
+  "private final Multiset<String> nameUsage",
+  "private final Map<String, String> declarations",
+  "private final boolean global",
+  "final static String UNIQUE_ID_SEPARATOR"
+ ],
+ "focal_class": "com.google.javascript.jscomp.MakeDeclaredNamesUnique.ContextualRenamer",
+ "focal_id": "Closure_137::com.google.javascript.jscomp.MakeDeclaredNamesUnique$ContextualRenamer::addDeclaredName(String)",
+ "focal_method_name": "addDeclaredName",
+ "generations": 3,
+ "impl_B": "@Override\n    public void addDeclaredName(String name) {\n        if (global) {\n          reserveName(name);\n        } else {\n          // It hasn't been declared locally yet, so increment the count.\n          if (!declarations.containsKey(name)) {\n            int id = incrementNameCount(name);\n            String newName = null;\n            if (id != 0) {\n              newName = getUniqueName(name, id);\n          }\n          declarations.put(name, newName);\n        }\n      }\n    }",
+ "imports": [
+  "com.google.common.base.Preconditions",
+  "com.google.common.base.Supplier",
+  "com.google.common.collect.HashMultiset",
+  "com.google.common.collect.ImmutableSet",
+  "com.google.common.collect.Lists",
+  "com.google.common.collect.Maps",
+  "com.google.common.collect.Multiset",
+  "com.google.common.collect.Sets",
+  "com.google.javascript.jscomp.NodeTraversal.AbstractPostOrderCallback",
+  "com.google.javascript.jscomp.Scope.Var",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.Token",
+  "com.google.javascript.rhino.TokenStream",
+  "java.util.ArrayDeque",
+  "java.util.Deque",
+  "java.util.Iterator",
+  "java.util.List",
+  "java.util.Map",
+  "java.util.Set"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Create a ContextualRenamer\n     */",
+   "name": "forChildScope"
+  },
+  {
+   "javadoc": "",
+   "name": "getReplacementName"
+  },
+  {
+   "javadoc": "",
+   "name": "stripConstIfReplaced"
+  }
+ ],
+ "sig": {
+  "class_declaration": "static class ContextualRenamer implements Renamer",
+  "constructors": [],
+  "focal_signature": "public void addDeclaredName(String name)",
+  "methods": [
+   "public Renamer forChildScope();",
+   "public String getReplacementName(String oldName);",
+   "public boolean stripConstIfReplaced();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

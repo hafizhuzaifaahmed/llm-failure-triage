@@ -1,0 +1,169 @@
+{
+ "bug_name": "Compress_29",
+ "call_sites": [
+  {
+   "line": 238,
+   "lines": [
+    233,
+    234,
+    235,
+    236,
+    237,
+    238,
+    239,
+    240,
+    241,
+    242,
+    243
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java",
+   "snippet": "                return new JarArchiveInputStream(in);\n            }\n        }\n        if (CPIO.equalsIgnoreCase(archiverName)) {\n            if (entryEncoding != null) {\n                return new CpioArchiveInputStream(in, entryEncoding);\n            } else {\n                return new CpioArchiveInputStream(in);\n            }\n        }\n        if (DUMP.equalsIgnoreCase(archiverName)) {"
+  },
+  {
+   "line": 240,
+   "lines": [
+    235,
+    236,
+    237,
+    238,
+    239,
+    240,
+    241,
+    242,
+    243,
+    244,
+    245
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java",
+   "snippet": "        }\n        if (CPIO.equalsIgnoreCase(archiverName)) {\n            if (entryEncoding != null) {\n                return new CpioArchiveInputStream(in, entryEncoding);\n            } else {\n                return new CpioArchiveInputStream(in);\n            }\n        }\n        if (DUMP.equalsIgnoreCase(archiverName)) {\n            if (entryEncoding != null) {\n                return new DumpArchiveInputStream(in, entryEncoding);"
+  },
+  {
+   "line": 355,
+   "lines": [
+    350,
+    351,
+    352,
+    353,
+    354,
+    355,
+    356,
+    357,
+    358,
+    359,
+    360
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java",
+   "snippet": "                }\n            } else if (ArArchiveInputStream.matches(signature, signatureLength)) {\n                return new ArArchiveInputStream(in);\n            } else if (CpioArchiveInputStream.matches(signature, signatureLength)) {\n                if (entryEncoding != null) {\n                    return new CpioArchiveInputStream(in, entryEncoding);\n                } else {\n                    return new CpioArchiveInputStream(in);\n                }\n            } else if (ArjArchiveInputStream.matches(signature, signatureLength)) {\n                    return new ArjArchiveInputStream(in);"
+  },
+  {
+   "line": 357,
+   "lines": [
+    352,
+    353,
+    354,
+    355,
+    356,
+    357,
+    358,
+    359,
+    360,
+    361,
+    362
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java",
+   "snippet": "                return new ArArchiveInputStream(in);\n            } else if (CpioArchiveInputStream.matches(signature, signatureLength)) {\n                if (entryEncoding != null) {\n                    return new CpioArchiveInputStream(in, entryEncoding);\n                } else {\n                    return new CpioArchiveInputStream(in);\n                }\n            } else if (ArjArchiveInputStream.matches(signature, signatureLength)) {\n                    return new ArjArchiveInputStream(in);\n            } else if (SevenZFile.matches(signature, signatureLength)) {\n                throw new StreamingNotSupportedException(SEVEN_Z);"
+  }
+ ],
+ "class_simple": "CpioArchiveInputStream",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * CPIOArchiveInputStream is a stream for reading cpio streams. All formats of\n * cpio are supported (old ascii, old binary, new portable format and the new\n * portable format with crc).\n *\n * <p>\n * The stream can be read by extracting a cpio entry (containing all\n * informations about a entry) and afterwards reading from the stream the file\n * specified by the entry.\n * </p>\n * <pre>\n * CPIOArchiveInputStream cpioIn = new CPIOArchiveInputStream(\n *         new FileInputStream(new File(&quot;test.cpio&quot;)));\n * CPIOArchiveEntry cpioEntry;\n *\n * while ((cpioEntry = cpioIn.getNextEntry()) != null) {\n *     System.out.println(cpioEntry.getName());\n *     int tmp;\n *     StringBuilder buf = new StringBuilder();\n *     while ((tmp = cpIn.read()) != -1) {\n *         buf.append((char) tmp);\n *     }\n *     System.out.println(buf.toString());\n * }\n * cpioIn.close();\n * </pre>\n * <p>\n * Note: This implementation should be compatible to cpio 2.5\n * \n * <p>This class uses mutable fields and is not considered to be threadsafe.\n * \n * <p>Based on code from the jRPM project (jrpm.sourceforge.net)\n */\n\npublic",
+  "method_javadoc": "/**\n     * Construct the cpio input stream with a blocksize of {@link CpioConstants#BLOCK_SIZE BLOCK_SIZE}.\n     * \n     * @param in\n     *            The cpio stream\n     * @param blockSize\n     *            The block size of the archive.\n     * @param encoding\n     *            The encoding of file names to expect - use null for\n     *            the platform's default.\n     * @since 1.6\n     */"
+ },
+ "fields": [
+  "private boolean closed",
+  "private CpioArchiveEntry entry",
+  "private long entryBytesRead",
+  "private boolean entryEOF",
+  "private final byte tmpbuf[]",
+  "private long crc",
+  "private final InputStream in",
+  "private final byte[] TWO_BYTES_BUF",
+  "private final byte[] FOUR_BYTES_BUF",
+  "private final byte[] SIX_BYTES_BUF",
+  "private final int blockSize",
+  "private final ZipEncoding zipEncoding"
+ ],
+ "focal_class": "org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream",
+ "focal_id": "Compress_29::org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream::CpioArchiveInputStream(InputStream,int,String)",
+ "focal_method_name": "CpioArchiveInputStream",
+ "generations": 3,
+ "impl_B": "public CpioArchiveInputStream(final InputStream in, int blockSize, String encoding) {\n        this.in = in;\n        this.blockSize = blockSize;\n        this.zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);\n    }",
+ "imports": [
+  "java.io.EOFException",
+  "java.io.IOException",
+  "java.io.InputStream",
+  "org.apache.commons.compress.archivers.ArchiveEntry",
+  "org.apache.commons.compress.archivers.ArchiveInputStream",
+  "org.apache.commons.compress.archivers.zip.ZipEncoding",
+  "org.apache.commons.compress.archivers.zip.ZipEncodingHelper",
+  "org.apache.commons.compress.utils.ArchiveUtils",
+  "org.apache.commons.compress.utils.CharsetNames",
+  "org.apache.commons.compress.utils.IOUtils"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.compress.archivers.cpio",
+ "project": "Compress",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Returns 0 after EOF has reached for the current entry data, otherwise\n     * always return 1.\n     * <p>\n     * Programs should not count on this method to return the actual number of\n     * bytes that could be read without blocking.\n     * \n     * @return 1 before EOF and 0 after EOF has reached for current entry.\n     * @throws IOException\n     *             if an I/O error has occurred or if a CPIO file error has\n     *             occurred\n     */",
+   "name": "available"
+  },
+  {
+   "javadoc": "/**\n     * Closes the CPIO input stream.\n     * \n     * @throws IOException\n     *             if an I/O error has occurred\n     */",
+   "name": "close"
+  },
+  {
+   "javadoc": "/**\n     * Reads the next CPIO file entry and positions stream at the beginning of\n     * the entry data.\n     * \n     * @return the CPIOArchiveEntry just read\n     * @throws IOException\n     *             if an I/O error has occurred or if a CPIO file error has\n     *             occurred\n     */",
+   "name": "getNextCPIOEntry"
+  },
+  {
+   "javadoc": "/**\n     * Reads from the current CPIO entry into an array of bytes. Blocks until\n     * some input is available.\n     * \n     * @param b\n     *            the buffer into which the data is read\n     * @param off\n     *            the start offset of the data\n     * @param len\n     *            the maximum number of bytes read\n     * @return the actual number of bytes read, or -1 if the end of the entry is\n     *         reached\n     * @throws IOException\n     *             if an I/O error has occurred or if a CPIO file error has\n     *             occurred\n     */",
+   "name": "read"
+  },
+  {
+   "javadoc": "/**\n     * Skips specified number of bytes in the current CPIO entry.\n     * \n     * @param n\n     *            the number of bytes to skip\n     * @return the actual number of bytes skipped\n     * @throws IOException\n     *             if an I/O error has occurred\n     * @throws IllegalArgumentException\n     *             if n &lt; 0\n     */",
+   "name": "skip"
+  },
+  {
+   "javadoc": "",
+   "name": "getNextEntry"
+  },
+  {
+   "javadoc": "/**\n     * Checks if the signature matches one of the following magic values:\n     * \n     * Strings:\n     *\n     * \"070701\" - MAGIC_NEW\n     * \"070702\" - MAGIC_NEW_CRC\n     * \"070707\" - MAGIC_OLD_ASCII\n     * \n     * Octal Binary value:\n     * \n     * 070707 - MAGIC_OLD_BINARY (held as a short) = 0x71C7 or 0xC771\n     */",
+   "name": "matches"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class CpioArchiveInputStream extends ArchiveInputStream implements CpioConstants",
+  "constructors": [
+   "public CpioArchiveInputStream(final InputStream in);",
+   "public CpioArchiveInputStream(final InputStream in, String encoding);",
+   "public CpioArchiveInputStream(final InputStream in, int blockSize);",
+   "public CpioArchiveInputStream(final InputStream in, int blockSize, String encoding);"
+  ],
+  "focal_signature": "public CpioArchiveInputStream(final InputStream in, int blockSize, String encoding)",
+  "methods": [
+   "public int available() throws IOException;",
+   "public void close() throws IOException;",
+   "public CpioArchiveEntry getNextCPIOEntry() throws IOException;",
+   "public int read(final byte[] b, final int off, final int len) throws IOException;",
+   "public long skip(final long n) throws IOException;",
+   "public ArchiveEntry getNextEntry() throws IOException;",
+   "public static boolean matches(byte[] signature, int length);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

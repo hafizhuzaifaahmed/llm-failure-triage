@@ -1,0 +1,14 @@
+{
+  "assembled": true,
+  "call_key": "9e0dbb8f50a6687c2325fc7bd118954c75b10a4f1632c4e56daaa0767b9aef0d",
+  "candidate_id": "ea4184fc621317dd3f78",
+  "class_name": "TarUtils_parseName_TriageGen0Test",
+  "dataset": "D1C_F2",
+  "focal_id": "Compress_7::org.apache.commons.compress.archivers.tar.TarUtils::parseName(byte[],int,int)",
+  "generation": 0,
+  "model_returned": "gemma4:26b",
+  "n_tests": 9,
+  "package": "org.apache.commons.compress.archivers.tar",
+  "source": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.math.*;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for TarUtils.parseName\n */\npublic class TarUtils_parseName_TriageGen0Test {\n\n    @Test\n    public void testParseName_NormalString() {\n        byte[] buffer = \"testname\".getBytes();\n        String result = TarUtils.parseName(buffer, 0, buffer.length);\n        assertEquals(\"testname\", result);\n    }\n\n    @Test\n    public void testParseName_WithNullTerminator() {\n        // Test that it stops at the first 0 byte\n        byte[] buffer = {'a', 'b', 'c', 0, 'd', 'e'};\n        String result = TarUtils.parseName(buffer, 0, buffer.length);\n        assertEquals(\"abc\", result);\n    }\n\n    @Test\n    public void testParseName_WithOffset() {\n        // Test that it respects the offset\n        byte[] buffer = {'x', 'y', 'z', 'a', 'b', 'c'};\n        String result = TarUtils.parseName(buffer, 3, 3);\n        assertEquals(\"abc\", result);\n    }\n\n    @Test\n    public void testParseName_WithLengthLimitation() {\n        // Test that it respects the length parameter even if no null terminator is present\n        byte[] buffer = {'a', 'b', 'c', 'd', 'e'};\n        String result = TarUtils.parseName(buffer, 1, 2);\n        assertEquals(\"bc\", result);\n    }\n\n    @Test\n    public void testParseName_EmptyRange() {\n        byte[] buffer = {'a', 'b', 'c'};\n        String result = TarUtils.parseName(buffer, 1, 0);\n        assertEquals(\"\", result);\n    }\n\n    @Test\n    public void testParseName_OnlyNullTerminator() {\n        byte[] buffer = {0, 0, 0};\n        String result = TarUtils.parseName(buffer, 0, 3);\n        assertEquals(\"\", result);\n    }\n\n    @Test\n    public void testParseName_NullTerminatorAtEnd() {\n        byte[] buffer = {'h', 'e', 'l', 'l', 'o', 0};\n        String result = TarUtils.parseName(buffer, 0, 6);\n        assertEquals(\"hello\", result);\n    }\n\n    @Test(expected = IndexOutOfBoundsException.class)\n    public void testParseName_OffsetOutOfBounds() {\n        byte[] buffer = {'a', 'b'};\n        TarUtils.parseName(buffer, 5, 1);\n    }\n\n    @Test(expected = IndexOutOfBoundsException.class)\n    public void testParseName_LengthOutOfBounds() {\n        byte[] buffer = {'a', 'b'};\n        TarUtils.parseName(buffer, 0, 5);\n    }\n}\n",
+  "tranche": "F2"
+}

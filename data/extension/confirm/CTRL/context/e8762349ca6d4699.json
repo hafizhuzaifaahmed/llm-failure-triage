@@ -1,0 +1,237 @@
+{
+ "bug_name": "JacksonCore_14",
+ "call_sites": [
+  {
+   "line": 445,
+   "lines": [
+    440,
+    441,
+    442,
+    443,
+    444,
+    445,
+    446,
+    447,
+    448,
+    449,
+    450
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/json/ReaderBasedJsonParser.java",
+   "snippet": "        // otherwise do \"real\" incremental parsing...\n        byte[] buf = _ioContext.allocBase64Buffer();\n        try {\n            return _readBinary(b64variant, out, buf);\n        } finally {\n            _ioContext.releaseBase64Buffer(buf);\n        }\n    }\n\n    protected int _readBinary(Base64Variant b64variant, OutputStream out, byte[] buffer) throws IOException\n    {"
+  },
+  {
+   "line": 719,
+   "lines": [
+    714,
+    715,
+    716,
+    717,
+    718,
+    719,
+    720,
+    721,
+    722,
+    723,
+    724
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/json/UTF8JsonGenerator.java",
+   "snippet": "                    _reportError(\"Too few bytes available: missing \"+missing+\" bytes (out of \"+dataLength+\")\");\n                }\n                bytes = dataLength;\n            }\n        } finally {\n            _ioContext.releaseBase64Buffer(encodingBuffer);\n        }\n        // and closing quotes\n        if (_outputTail >= _outputEnd) {\n            _flushBuffer();\n        }"
+  },
+  {
+   "line": 550,
+   "lines": [
+    545,
+    546,
+    547,
+    548,
+    549,
+    550,
+    551,
+    552,
+    553,
+    554,
+    555
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/json/UTF8StreamJsonParser.java",
+   "snippet": "        // otherwise do \"real\" incremental parsing...\n        byte[] buf = _ioContext.allocBase64Buffer();\n        try {\n            return _readBinary(b64variant, out, buf);\n        } finally {\n            _ioContext.releaseBase64Buffer(buf);\n        }\n    }\n\n    protected int _readBinary(Base64Variant b64variant, OutputStream out,\n                              byte[] buffer) throws IOException"
+  },
+  {
+   "line": 547,
+   "lines": [
+    542,
+    543,
+    544,
+    545,
+    546,
+    547,
+    548,
+    549,
+    550,
+    551,
+    552
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/json/WriterBasedJsonGenerator.java",
+   "snippet": "                    _reportError(\"Too few bytes available: missing \"+missing+\" bytes (out of \"+dataLength+\")\");\n                }\n                bytes = dataLength;\n            }\n        } finally {\n            _ioContext.releaseBase64Buffer(encodingBuffer);\n        }\n        // and closing quotes\n        if (_outputTail >= _outputEnd) {\n            _flushBuffer();\n        }"
+  }
+ ],
+ "class_simple": "IOContext",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * To limit number of configuration and state objects to pass, all\n * contextual objects that need to be passed by the factory to\n * readers and writers are combined under this object. One instance\n * is created for each reader and writer.\n *<p>\n * NOTE: non-final since 2.4, to allow sub-classing.\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "protected final Object _sourceRef",
+  "protected JsonEncoding _encoding",
+  "protected final boolean _managedResource",
+  "protected final BufferRecycler _bufferRecycler",
+  "protected byte[] _readIOBuffer",
+  "protected byte[] _writeEncodingBuffer",
+  "protected byte[] _base64Buffer",
+  "protected char[] _tokenCBuffer",
+  "protected char[] _concatCBuffer",
+  "protected char[] _nameCopyBuffer"
+ ],
+ "focal_class": "com.fasterxml.jackson.core.io.IOContext",
+ "focal_id": "JacksonCore_14::com.fasterxml.jackson.core.io.IOContext::releaseBase64Buffer(byte[])",
+ "focal_method_name": "releaseBase64Buffer",
+ "generations": 3,
+ "impl_B": "public void releaseBase64Buffer(byte[] buf) {\n        if (buf != null) { // sanity checks, release once-and-only-once, must be one owned\n            _verifyRelease(buf, _base64Buffer);\n            _base64Buffer = null;\n            _bufferRecycler.releaseByteBuffer(BufferRecycler.BYTE_BASE64_CODEC_BUFFER, buf);\n        }\n    }",
+ "imports": [
+  "com.fasterxml.jackson.core.JsonEncoding",
+  "com.fasterxml.jackson.core.util.BufferRecycler",
+  "com.fasterxml.jackson.core.util.TextBuffer"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.core.io",
+ "project": "JacksonCore",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "setEncoding"
+  },
+  {
+   "javadoc": "/**\n     * @since 1.6\n     */",
+   "name": "withEncoding"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getSourceReference"
+  },
+  {
+   "javadoc": "",
+   "name": "getEncoding"
+  },
+  {
+   "javadoc": "",
+   "name": "isResourceManaged"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "constructTextBuffer"
+  },
+  {
+   "javadoc": "/**\n     *<p>\n     * Note: the method can only be called once during its life cycle.\n     * This is to protect against accidental sharing.\n     */",
+   "name": "allocReadIOBuffer"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.4\n     */",
+   "name": "allocReadIOBuffer"
+  },
+  {
+   "javadoc": "",
+   "name": "allocWriteEncodingBuffer"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.4\n     */",
+   "name": "allocWriteEncodingBuffer"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.1\n     */",
+   "name": "allocBase64Buffer"
+  },
+  {
+   "javadoc": "",
+   "name": "allocTokenBuffer"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.4\n     */",
+   "name": "allocTokenBuffer"
+  },
+  {
+   "javadoc": "",
+   "name": "allocConcatBuffer"
+  },
+  {
+   "javadoc": "",
+   "name": "allocNameCopyBuffer"
+  },
+  {
+   "javadoc": "/**\n     * Method to call when all the processing buffers can be safely\n     * recycled.\n     */",
+   "name": "releaseReadIOBuffer"
+  },
+  {
+   "javadoc": "",
+   "name": "releaseWriteEncodingBuffer"
+  },
+  {
+   "javadoc": "",
+   "name": "releaseTokenBuffer"
+  },
+  {
+   "javadoc": "",
+   "name": "releaseConcatBuffer"
+  },
+  {
+   "javadoc": "",
+   "name": "releaseNameCopyBuffer"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_verifyAlloc"
+  },
+  {
+   "javadoc": "",
+   "name": "_verifyRelease"
+  },
+  {
+   "javadoc": "",
+   "name": "_verifyRelease"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class IOContext",
+  "constructors": [
+   "public IOContext(BufferRecycler br, Object sourceRef, boolean managedResource);"
+  ],
+  "focal_signature": "public void releaseBase64Buffer(byte[] buf)",
+  "methods": [
+   "public void setEncoding(JsonEncoding enc);",
+   "public IOContext withEncoding(JsonEncoding enc);",
+   "public Object getSourceReference();",
+   "public JsonEncoding getEncoding();",
+   "public boolean isResourceManaged();",
+   "public TextBuffer constructTextBuffer();",
+   "public byte[] allocReadIOBuffer();",
+   "public byte[] allocReadIOBuffer(int minSize);",
+   "public byte[] allocWriteEncodingBuffer();",
+   "public byte[] allocWriteEncodingBuffer(int minSize);",
+   "public byte[] allocBase64Buffer();",
+   "public char[] allocTokenBuffer();",
+   "public char[] allocTokenBuffer(int minSize);",
+   "public char[] allocConcatBuffer();",
+   "public char[] allocNameCopyBuffer(int minSize);",
+   "public void releaseReadIOBuffer(byte[] buf);",
+   "public void releaseWriteEncodingBuffer(byte[] buf);",
+   "public void releaseTokenBuffer(char[] buf);",
+   "public void releaseConcatBuffer(char[] buf);",
+   "public void releaseNameCopyBuffer(char[] buf);",
+   "protected final void _verifyAlloc(Object buffer);",
+   "protected final void _verifyRelease(byte[] toRelease, byte[] src);",
+   "protected final void _verifyRelease(char[] toRelease, char[] src);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

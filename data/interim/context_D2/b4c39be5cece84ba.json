@@ -1,0 +1,148 @@
+{
+ "base_focal_id": "Compress_40::org.apache.commons.compress.utils.BitInputStream::readBits(int)",
+ "bug_name": "Compress_40",
+ "call_sites": [
+  {
+   "line": 583,
+   "lines": [
+    578,
+    579,
+    580,
+    581,
+    582,
+    583,
+    584,
+    585,
+    586,
+    587,
+    588
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/sevenz/SevenZFile.java",
+   "snippet": "            bits = new BitSet(size);\n            for (int i = 0; i < size; i++) {\n                bits.set(i, true);\n            }\n        } else {\n            bits = readBits(header, size);\n        }\n        return bits;\n    }\n    \n    private BitSet readBits(final DataInput header, final int size) throws IOException {"
+  },
+  {
+   "line": 620,
+   "lines": [
+    615,
+    616,
+    617,
+    618,
+    619,
+    620,
+    621,
+    622,
+    623,
+    624,
+    625
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/sevenz/SevenZFile.java",
+   "snippet": "                break;\n            }\n            final long size = readUint64(header);\n            switch (propertyType) {\n                case NID.kEmptyStream: {\n                    isEmptyStream = readBits(header, files.length);\n                    break;\n                }\n                case NID.kEmptyFile: {\n                    if (isEmptyStream == null) { // protect against NPE\n                        throw new IOException(\"Header format error: kEmptyStream must appear before kEmptyFile\");"
+  },
+  {
+   "line": 627,
+   "lines": [
+    622,
+    623,
+    624,
+    625,
+    626,
+    627,
+    628,
+    629,
+    630,
+    631,
+    632
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/sevenz/SevenZFile.java",
+   "snippet": "                }\n                case NID.kEmptyFile: {\n                    if (isEmptyStream == null) { // protect against NPE\n                        throw new IOException(\"Header format error: kEmptyStream must appear before kEmptyFile\");\n                    }\n                    isEmptyFile = readBits(header, isEmptyStream.cardinality());\n                    break;\n                }\n                case NID.kAnti: {\n                    if (isEmptyStream == null) { // protect against NPE\n                        throw new IOException(\"Header format error: kEmptyStream must appear before kAnti\");"
+  },
+  {
+   "line": 634,
+   "lines": [
+    629,
+    630,
+    631,
+    632,
+    633,
+    634,
+    635,
+    636,
+    637,
+    638,
+    639
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/sevenz/SevenZFile.java",
+   "snippet": "                }\n                case NID.kAnti: {\n                    if (isEmptyStream == null) { // protect against NPE\n                        throw new IOException(\"Header format error: kEmptyStream must appear before kAnti\");\n                    }\n                    isAnti = readBits(header, isEmptyStream.cardinality());\n                    break;\n                }\n                case NID.kName: {\n                    final int external = header.readUnsignedByte();\n                    if (external != 0) {"
+  },
+  {
+   "line": 45,
+   "lines": [
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/zip/BitStream.java",
+   "snippet": "     * Returns the next bit.\n     * \n     * @return The next bit (0 or 1) or -1 if the end of the stream has been reached\n     */\n    int nextBit() throws IOException {\n        return (int) readBits(1);\n    }\n\n    /**\n     * Returns the integer value formed by the n next bits (up to 8 bits).\n     *"
+  }
+ ],
+ "class_simple": "BitInputStream",
+ "dataset": "D2",
+ "doc": {
+  "class_javadoc": "/**\n * Reads bits from an InputStream.\n * @since 1.10\n * @NotThreadSafe\n */\npublic",
+  "method_javadoc": "/**\n     * Returns at most 63 bits read from the underlying stream.\n     *\n     * @param count the number of bits to read, must be a positive\n     * number not bigger than 63.\n     * @return the bits concatenated as a long using the stream's byte order.\n     *         -1 if the end of the underlying stream has been reached before reading\n     *         the requested number of bits\n     * @throws IOException on error\n     */"
+ },
+ "fields": [
+  "private static final int MAXIMUM_CACHE_SIZE",
+  "private static final long[] MASKS",
+  "private final InputStream in",
+  "private final ByteOrder byteOrder",
+  "private long bitsCached",
+  "private int bitsCachedSize"
+ ],
+ "focal_class": "org.apache.commons.compress.utils.BitInputStream",
+ "focal_id": "Compress_40::org.apache.commons.compress.utils.BitInputStream::readBits(int)#m69",
+ "focal_method_name": "readBits",
+ "impl_B": "public long readBits(final int count) throws IOException {\n        if (count < 0 || count > MAXIMUM_CACHE_SIZE) {\n            throw new IllegalArgumentException(\"count must not be negative or greater than \" + MAXIMUM_CACHE_SIZE);\n        }\n        while (bitsCachedSize < count && bitsCachedSize < 57) {\n            final long nextByte = in.read();\n            if (nextByte < 0) {\n                return nextByte;\n            }\n            if (byteOrder == ByteOrder.LITTLE_ENDIAN) {\n                bitsCached |= (nextByte >> bitsCachedSize);\n            } else {\n                bitsCached <<= 8;\n                bitsCached |= nextByte;\n            }\n            bitsCachedSize += 8;\n        }\n        int overflowBits = 0;\n        long overflow = 0l;\n        if (bitsCachedSize < count) {\n            // bitsCachedSize >= 57 and left-shifting it 8 bits would cause an overflow\n            int bitsToAddCount = count - bitsCachedSize;\n            overflowBits = 8 - bitsToAddCount;\n            final long nextByte = in.read();\n            if (nextByte < 0) {\n                return nextByte;\n            }\n            if (byteOrder == ByteOrder.LITTLE_ENDIAN) {\n                long bitsToAdd = nextByte & MASKS[bitsToAddCount];\n                bitsCached |= (bitsToAdd << bitsCachedSize);\n                overflow = (nextByte >>> bitsToAddCount) & MASKS[overflowBits];\n            } else {\n                bitsCached <<= bitsToAddCount;\n                long bitsToAdd = (nextByte >>> (overflowBits)) & MASKS[bitsToAddCount];\n                bitsCached |= bitsToAdd;\n                overflow = nextByte & MASKS[overflowBits];\n            }\n            bitsCachedSize = count;\n        }\n        \n        final long bitsOut;\n        if (overflowBits == 0) {\n            if (byteOrder == ByteOrder.LITTLE_ENDIAN) {\n                bitsOut = (bitsCached & MASKS[count]);\n                bitsCached >>>= count;\n            } else {\n                bitsOut = (bitsCached >> (bitsCachedSize - count)) & MASKS[count];\n            }\n            bitsCachedSize -= count;\n        } else {\n            bitsOut = bitsCached & MASKS[count];\n            bitsCached = overflow;\n            bitsCachedSize = overflowBits;\n        }\n        return bitsOut;\n    }",
+ "imports": [
+  "java.io.Closeable",
+  "java.io.IOException",
+  "java.io.InputStream",
+  "java.nio.ByteOrder"
+ ],
+ "javadoc_edited_by_fix": false,
+ "mutant_id": 69,
+ "operator": "SOR",
+ "package": "org.apache.commons.compress.utils",
+ "project": "Compress",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "close"
+  },
+  {
+   "javadoc": "/**\n     * Clears the cache of bits that have been read from the\n     * underlying stream but not yet provided via {@link #readBits}.\n     */",
+   "name": "clearBitCache"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class BitInputStream implements Closeable",
+  "constructors": [
+   "public BitInputStream(final InputStream in, final ByteOrder byteOrder);"
+  ],
+  "focal_signature": "public long readBits(final int count) throws IOException",
+  "methods": [
+   "public void close() throws IOException;",
+   "public void clearBitCache();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test"
+}

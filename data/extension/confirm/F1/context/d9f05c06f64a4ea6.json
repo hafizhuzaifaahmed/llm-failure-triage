@@ -1,0 +1,333 @@
+{
+ "bug_name": "Math_3",
+ "call_sites": [
+  {
+   "line": 291,
+   "lines": [
+    286,
+    287,
+    288,
+    289,
+    290,
+    291,
+    292,
+    293,
+    294,
+    295,
+    296
+   ],
+   "path": "src/main/java/org/apache/commons/math3/RealFieldElement.java",
+   "snippet": "     * @param b Factors.\n     * @return <code>&Sigma;<sub>i</sub> a<sub>i</sub> b<sub>i</sub></code>.\n     * @throws DimensionMismatchException if arrays dimensions don't match\n     * @since 3.2\n     */\n    T linearCombination(T[] a, T[] b)\n        throws DimensionMismatchException;\n\n    /**\n     * Compute a linear combination.\n     * @param a Factors."
+  },
+  {
+   "line": 302,
+   "lines": [
+    297,
+    298,
+    299,
+    300,
+    301,
+    302,
+    303,
+    304,
+    305,
+    306,
+    307
+   ],
+   "path": "src/main/java/org/apache/commons/math3/RealFieldElement.java",
+   "snippet": "     * @param b Factors.\n     * @return <code>&Sigma;<sub>i</sub> a<sub>i</sub> b<sub>i</sub></code>.\n     * @throws DimensionMismatchException if arrays dimensions don't match\n     * @since 3.2\n     */\n    T linearCombination(double[] a, T[] b)\n        throws DimensionMismatchException;\n\n    /**\n     * Compute a linear combination.\n     * @param a1 first factor of the first term"
+  },
+  {
+   "line": 317,
+   "lines": [
+    312,
+    313,
+    314,
+    315,
+    316,
+    317,
+    318,
+    319,
+    320,
+    321,
+    322
+   ],
+   "path": "src/main/java/org/apache/commons/math3/RealFieldElement.java",
+   "snippet": "     * a<sub>2</sub>&times;b<sub>2</sub>\n     * @see #linearCombination(Object, Object, Object, Object, Object, Object)\n     * @see #linearCombination(Object, Object, Object, Object, Object, Object, Object, Object)\n     * @since 3.2\n     */\n    T linearCombination(T a1, T b1, T a2, T b2);\n\n    /**\n     * Compute a linear combination.\n     * @param a1 first factor of the first term\n     * @param b1 second factor of the first term"
+  },
+  {
+   "line": 331,
+   "lines": [
+    326,
+    327,
+    328,
+    329,
+    330,
+    331,
+    332,
+    333,
+    334,
+    335,
+    336
+   ],
+   "path": "src/main/java/org/apache/commons/math3/RealFieldElement.java",
+   "snippet": "     * a<sub>2</sub>&times;b<sub>2</sub>\n     * @see #linearCombination(double, Object, double, Object, double, Object)\n     * @see #linearCombination(double, Object, double, Object, double, Object, double, Object)\n     * @since 3.2\n     */\n    T linearCombination(double a1, T b1, double a2, T b2);\n\n    /**\n     * Compute a linear combination.\n     * @param a1 first factor of the first term\n     * @param b1 second factor of the first term"
+  },
+  {
+   "line": 347,
+   "lines": [
+    342,
+    343,
+    344,
+    345,
+    346,
+    347,
+    348,
+    349,
+    350,
+    351,
+    352
+   ],
+   "path": "src/main/java/org/apache/commons/math3/RealFieldElement.java",
+   "snippet": "     * a<sub>2</sub>&times;b<sub>2</sub> + a<sub>3</sub>&times;b<sub>3</sub>\n     * @see #linearCombination(Object, Object, Object, Object)\n     * @see #linearCombination(Object, Object, Object, Object, Object, Object, Object, Object)\n     * @since 3.2\n     */\n    T linearCombination(T a1, T b1, T a2, T b2, T a3, T b3);\n\n    /**\n     * Compute a linear combination.\n     * @param a1 first factor of the first term\n     * @param b1 second factor of the first term"
+  }
+ ],
+ "class_simple": "MathArrays",
+ "dataset": "D1C_F1",
+ "doc": {
+  "class_javadoc": "/**\n * Arrays utilities.\n *\n * @since 3.0\n * @version $Id$\n */\npublic",
+  "method_javadoc": "/**\n     * Compute a linear combination accurately.\n     * This method computes the sum of the products\n     * <code>a<sub>i</sub> b<sub>i</sub></code> to high accuracy.\n     * It does so by using specific multiplication and addition algorithms to\n     * preserve accuracy and reduce cancellation effects.\n     * <br/>\n     * It is based on the 2005 paper\n     * <a href=\"http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.2.1547\">\n     * Accurate Sum and Dot Product</a> by Takeshi Ogita, Siegfried M. Rump,\n     * and Shin'ichi Oishi published in SIAM J. Sci. Comput.\n     *\n     * @param a Factors.\n     * @param b Factors.\n     * @return <code>&Sigma;<sub>i</sub> a<sub>i</sub> b<sub>i</sub></code>.\n     * @throws DimensionMismatchException if arrays dimensions don't match\n     */"
+ },
+ "fields": [
+  "private static final int SPLIT_FACTOR"
+ ],
+ "focal_class": "org.apache.commons.math3.util.MathArrays",
+ "focal_id": "Math_3::org.apache.commons.math3.util.MathArrays::linearCombination(double[],double[])",
+ "focal_method_name": "linearCombination",
+ "generations": 6,
+ "impl_B": "public static double linearCombination(final double[] a, final double[] b)\n        throws DimensionMismatchException {\n        final int len = a.length;\n        if (len != b.length) {\n            throw new DimensionMismatchException(len, b.length);\n        }\n\n            // Revert to scalar multiplication.\n\n        final double[] prodHigh = new double[len];\n        double prodLowSum = 0;\n\n        for (int i = 0; i < len; i++) {\n            final double ai = a[i];\n            final double ca = SPLIT_FACTOR * ai;\n            final double aHigh = ca - (ca - ai);\n            final double aLow = ai - aHigh;\n\n            final double bi = b[i];\n            final double cb = SPLIT_FACTOR * bi;\n            final double bHigh = cb - (cb - bi);\n            final double bLow = bi - bHigh;\n            prodHigh[i] = ai * bi;\n            final double prodLow = aLow * bLow - (((prodHigh[i] -\n                                                    aHigh * bHigh) -\n                                                   aLow * bHigh) -\n                                                  aHigh * bLow);\n            prodLowSum += prodLow;\n        }\n\n\n        final double prodHighCur = prodHigh[0];\n        double prodHighNext = prodHigh[1];\n        double sHighPrev = prodHighCur + prodHighNext;\n        double sPrime = sHighPrev - prodHighNext;\n        double sLowSum = (prodHighNext - (sHighPrev - sPrime)) + (prodHighCur - sPrime);\n\n        final int lenMinusOne = len - 1;\n        for (int i = 1; i < lenMinusOne; i++) {\n            prodHighNext = prodHigh[i + 1];\n            final double sHighCur = sHighPrev + prodHighNext;\n            sPrime = sHighCur - prodHighNext;\n            sLowSum += (prodHighNext - (sHighCur - sPrime)) + (sHighPrev - sPrime);\n            sHighPrev = sHighCur;\n        }\n\n        double result = sHighPrev + (prodLowSum + sLowSum);\n\n        if (Double.isNaN(result)) {\n            // either we have split infinite numbers or some coefficients were NaNs,\n            // just rely on the naive implementation and let IEEE754 handle this\n            result = 0;\n            for (int i = 0; i < len; ++i) {\n                result += a[i] * b[i];\n            }\n        }\n\n        return result;\n    }",
+ "imports": [
+  "java.lang.reflect.Array",
+  "java.util.ArrayList",
+  "java.util.Arrays",
+  "java.util.Collections",
+  "java.util.Comparator",
+  "java.util.List",
+  "org.apache.commons.math3.Field",
+  "org.apache.commons.math3.exception.DimensionMismatchException",
+  "org.apache.commons.math3.exception.MathArithmeticException",
+  "org.apache.commons.math3.exception.MathIllegalArgumentException",
+  "org.apache.commons.math3.exception.MathInternalError",
+  "org.apache.commons.math3.exception.NoDataException",
+  "org.apache.commons.math3.exception.NonMonotonicSequenceException",
+  "org.apache.commons.math3.exception.NotPositiveException",
+  "org.apache.commons.math3.exception.NotStrictlyPositiveException",
+  "org.apache.commons.math3.exception.NullArgumentException",
+  "org.apache.commons.math3.exception.util.LocalizedFormats"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math3.util",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Create a copy of an array scaled by a value.\n     *\n     * @param arr Array to scale.\n     * @param val Scalar.\n     * @return scaled copy of array with each entry multiplied by val.\n     * @since 3.2\n     */",
+   "name": "scale"
+  },
+  {
+   "javadoc": "/**\n     * <p>Multiply each element of an array by a value.</p>\n     *\n     * <p>The array is modified in place (no copy is created).</p>\n     *\n     * @param arr Array to scale\n     * @param val Scalar\n     * @since 3.2\n     */",
+   "name": "scaleInPlace"
+  },
+  {
+   "javadoc": "/**\n     * Creates an array whose contents will be the element-by-element\n     * addition of the arguments.\n     *\n     * @param a First term of the addition.\n     * @param b Second term of the addition.\n     * @return a new array {@code r} where {@code r[i] = a[i] + b[i]}.\n     * @throws DimensionMismatchException if the array lengths differ.\n     * @since 3.1\n     */",
+   "name": "ebeAdd"
+  },
+  {
+   "javadoc": "/**\n     * Creates an array whose contents will be the element-by-element\n     * subtraction of the second argument from the first.\n     *\n     * @param a First term.\n     * @param b Element to be subtracted.\n     * @return a new array {@code r} where {@code r[i] = a[i] - b[i]}.\n     * @throws DimensionMismatchException if the array lengths differ.\n     * @since 3.1\n     */",
+   "name": "ebeSubtract"
+  },
+  {
+   "javadoc": "/**\n     * Creates an array whose contents will be the element-by-element\n     * multiplication of the arguments.\n     *\n     * @param a First factor of the multiplication.\n     * @param b Second factor of the multiplication.\n     * @return a new array {@code r} where {@code r[i] = a[i] * b[i]}.\n     * @throws DimensionMismatchException if the array lengths differ.\n     * @since 3.1\n     */",
+   "name": "ebeMultiply"
+  },
+  {
+   "javadoc": "/**\n     * Creates an array whose contents will be the element-by-element\n     * division of the first argument by the second.\n     *\n     * @param a Numerator of the division.\n     * @param b Denominator of the division.\n     * @return a new array {@code r} where {@code r[i] = a[i] / b[i]}.\n     * @throws DimensionMismatchException if the array lengths differ.\n     * @since 3.1\n     */",
+   "name": "ebeDivide"
+  },
+  {
+   "javadoc": "/**\n     * Calculates the L<sub>1</sub> (sum of abs) distance between two points.\n     *\n     * @param p1 the first point\n     * @param p2 the second point\n     * @return the L<sub>1</sub> distance between the two points\n     */",
+   "name": "distance1"
+  },
+  {
+   "javadoc": "/**\n     * Calculates the L<sub>1</sub> (sum of abs) distance between two points.\n     *\n     * @param p1 the first point\n     * @param p2 the second point\n     * @return the L<sub>1</sub> distance between the two points\n     */",
+   "name": "distance1"
+  },
+  {
+   "javadoc": "/**\n     * Calculates the L<sub>2</sub> (Euclidean) distance between two points.\n     *\n     * @param p1 the first point\n     * @param p2 the second point\n     * @return the L<sub>2</sub> distance between the two points\n     */",
+   "name": "distance"
+  },
+  {
+   "javadoc": "/**\n     * Calculates the L<sub>2</sub> (Euclidean) distance between two points.\n     *\n     * @param p1 the first point\n     * @param p2 the second point\n     * @return the L<sub>2</sub> distance between the two points\n     */",
+   "name": "distance"
+  },
+  {
+   "javadoc": "/**\n     * Calculates the L<sub>&infin;</sub> (max of abs) distance between two points.\n     *\n     * @param p1 the first point\n     * @param p2 the second point\n     * @return the L<sub>&infin;</sub> distance between the two points\n     */",
+   "name": "distanceInf"
+  },
+  {
+   "javadoc": "/**\n     * Calculates the L<sub>&infin;</sub> (max of abs) distance between two points.\n     *\n     * @param p1 the first point\n     * @param p2 the second point\n     * @return the L<sub>&infin;</sub> distance between the two points\n     */",
+   "name": "distanceInf"
+  },
+  {
+   "javadoc": "/**\n     * Check that an array is monotonically increasing or decreasing.\n     *\n     * @param <T> the type of the elements in the specified array\n     * @param val Values.\n     * @param dir Ordering direction.\n     * @param strict Whether the order should be strict.\n     * @return {@code true} if sorted, {@code false} otherwise.\n     */",
+   "name": "isMonotonic"
+  },
+  {
+   "javadoc": "/**\n     * Check that an array is monotonically increasing or decreasing.\n     *\n     * @param val Values.\n     * @param dir Ordering direction.\n     * @param strict Whether the order should be strict.\n     * @return {@code true} if sorted, {@code false} otherwise.\n     */",
+   "name": "isMonotonic"
+  },
+  {
+   "javadoc": "/**\n     * Check that the given array is sorted.\n     *\n     * @param val Values.\n     * @param dir Ordering direction.\n     * @param strict Whether the order should be strict.\n     * @param abort Whether to throw an exception if the check fails.\n     * @return {@code true} if the array is sorted.\n     * @throws NonMonotonicSequenceException if the array is not sorted\n     * and {@code abort} is {@code true}.\n     */",
+   "name": "checkOrder"
+  },
+  {
+   "javadoc": "/**\n     * Check that the given array is sorted.\n     *\n     * @param val Values.\n     * @param dir Ordering direction.\n     * @param strict Whether the order should be strict.\n     * @throws NonMonotonicSequenceException if the array is not sorted.\n     * @since 2.2\n     */",
+   "name": "checkOrder"
+  },
+  {
+   "javadoc": "/**\n     * Check that the given array is sorted in strictly increasing order.\n     *\n     * @param val Values.\n     * @throws NonMonotonicSequenceException if the array is not sorted.\n     * @since 2.2\n     */",
+   "name": "checkOrder"
+  },
+  {
+   "javadoc": "/**\n     * Throws DimensionMismatchException if the input array is not rectangular.\n     *\n     * @param in array to be tested\n     * @throws NullArgumentException if input array is null\n     * @throws DimensionMismatchException if input array is not rectangular\n     * @since 3.1\n     */",
+   "name": "checkRectangular"
+  },
+  {
+   "javadoc": "/**\n     * Check that all entries of the input array are strictly positive.\n     *\n     * @param in Array to be tested\n     * @throws NotStrictlyPositiveException if any entries of the array are not\n     * strictly positive.\n     * @since 3.1\n     */",
+   "name": "checkPositive"
+  },
+  {
+   "javadoc": "/**\n     * Check that all entries of the input array are >= 0.\n     *\n     * @param in Array to be tested\n     * @throws NotPositiveException if any array entries are less than 0.\n     * @since 3.1\n     */",
+   "name": "checkNonNegative"
+  },
+  {
+   "javadoc": "/**\n     * Check all entries of the input array are >= 0.\n     *\n     * @param in Array to be tested\n     * @throws NotPositiveException if any array entries are less than 0.\n     * @since 3.1\n     */",
+   "name": "checkNonNegative"
+  },
+  {
+   "javadoc": "/**\n     * Returns the Cartesian norm (2-norm), handling both overflow and underflow.\n     * Translation of the minpack enorm subroutine.\n     *\n     * The redistribution policy for MINPACK is available\n     * <a href=\"http://www.netlib.org/minpack/disclaimer\">here</a>, for\n     * convenience, it is reproduced below.</p>\n     *\n     * <table border=\"0\" width=\"80%\" cellpadding=\"10\" align=\"center\" bgcolor=\"#E0E0E0\">\n     * <tr><td>\n     *    Minpack Copyright Notice (1999) University of Chicago.\n     *    All rights reserved\n     * </td></tr>\n     * <tr><td>\n     * Redistribution and use in source and binary forms, with or without\n     * modification, are permitted provided that the following conditions\n     * are met:\n     * <ol>\n     *  <li>Redistributions of source code must retain the above copyright\n     *      notice, this list of conditions and the following disclaimer.</li>\n     * <li>Redistributions in binary form must reproduce the above\n     *     copyright notice, this list of conditions and the following\n     *     disclaimer in the documentation and/or other materials provided\n     *     with the distribution.</li>\n     * <li>The end-user documentation included with the redistribution, if any,\n     *     must include the following acknowledgment:\n     *     {@code This product includes software developed by the University of\n     *           Chicago, as Operator of Argonne National Laboratory.}\n     *     Alternately, this acknowledgment may appear in the software itself,\n     *     if and wherever such third-party acknowledgments normally appear.</li>\n     * <li><strong>WARRANTY DISCLAIMER. THE SOFTWARE IS SUPPLIED \"AS IS\"\n     *     WITHOUT WARRANTY OF ANY KIND. THE COPYRIGHT HOLDER, THE\n     *     UNITED STATES, THE UNITED STATES DEPARTMENT OF ENERGY, AND\n     *     THEIR EMPLOYEES: (1) DISCLAIM ANY WARRANTIES, EXPRESS OR\n     *     IMPLIED, INCLUDING BUT NOT LIMITED TO ANY IMPLIED WARRANTIES\n     *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE\n     *     OR NON-INFRINGEMENT, (2) DO NOT ASSUME ANY LEGAL LIABILITY\n     *     OR RESPONSIBILITY FOR THE ACCURACY, COMPLETENESS, OR\n     *     USEFULNESS OF THE SOFTWARE, (3) DO NOT REPRESENT THAT USE OF\n     *     THE SOFTWARE WOULD NOT INFRINGE PRIVATELY OWNED RIGHTS, (4)\n     *     DO NOT WARRANT THAT THE SOFTWARE WILL FUNCTION\n     *     UNINTERRUPTED, THAT IT IS ERROR-FREE OR THAT ANY ERRORS WILL\n     *     BE CORRECTED.</strong></li>\n     * <li><strong>LIMITATION OF LIABILITY. IN NO EVENT WILL THE COPYRIGHT\n     *     HOLDER, THE UNITED STATES, THE UNITED STATES DEPARTMENT OF\n     *     ENERGY, OR THEIR EMPLOYEES: BE LIABLE FOR ANY INDIRECT,\n     *     INCIDENTAL, CONSEQUENTIAL, SPECIAL OR PUNITIVE DAMAGES OF\n     *     ANY KIND OR NATURE, INCLUDING BUT NOT LIMITED TO LOSS OF\n     *     PROFITS OR LOSS OF DATA, FOR ANY REASON WHATSOEVER, WHETHER\n     *     SUCH LIABILITY IS ASSERTED ON THE BASIS OF CONTRACT, TORT\n     *     (INCLUDING NEGLIGENCE OR STRICT LIABILITY), OR OTHERWISE,\n     *     EVEN IF ANY OF SAID PARTIES HAS BEEN WARNED OF THE\n     *     POSSIBILITY OF SUCH LOSS OR DAMAGES.</strong></li>\n     * <ol></td></tr>\n     * </table>\n     *\n     * @param v Vector of doubles.\n     * @return the 2-norm of the vector.\n     * @since 2.2\n     */",
+   "name": "safeNorm"
+  },
+  {
+   "javadoc": "/**\n     * Sort an array in ascending order in place and perform the same reordering\n     * of entries on other arrays. For example, if\n     * {@code x = [3, 1, 2], y = [1, 2, 3]} and {@code z = [0, 5, 7]}, then\n     * {@code sortInPlace(x, y, z)} will update {@code x} to {@code [1, 2, 3]},\n     * {@code y} to {@code [2, 3, 1]} and {@code z} to {@code [5, 7, 0]}.\n     *\n     * @param x Array to be sorted and used as a pattern for permutation\n     * of the other arrays.\n     * @param yList Set of arrays whose permutations of entries will follow\n     * those performed on {@code x}.\n     * @throws DimensionMismatchException if any {@code y} is not the same\n     * size as {@code x}.\n     * @throws NullArgumentException if {@code x} or any {@code y} is null.\n     * @since 3.0\n     */",
+   "name": "sortInPlace"
+  },
+  {
+   "javadoc": "/**\n     * Sort an array in place and perform the same reordering of entries on\n     * other arrays.  This method works the same as the other\n     * {@link #sortInPlace(double[], double[][]) sortInPlace} method, but\n     * allows the order of the sort to be provided in the {@code dir}\n     * parameter.\n     *\n     * @param x Array to be sorted and used as a pattern for permutation\n     * of the other arrays.\n     * @param dir Order direction.\n     * @param yList Set of arrays whose permutations of entries will follow\n     * those performed on {@code x}.\n     * @throws DimensionMismatchException if any {@code y} is not the same\n     * size as {@code x}.\n     * @throws NullArgumentException if {@code x} or any {@code y} is null\n     * @since 3.0\n     */",
+   "name": "sortInPlace"
+  },
+  {
+   "javadoc": "/**\n     * Creates a copy of the {@code source} array.\n     *\n     * @param source Array to be copied.\n     * @return the copied array.\n     */",
+   "name": "copyOf"
+  },
+  {
+   "javadoc": "/**\n     * Creates a copy of the {@code source} array.\n     *\n     * @param source Array to be copied.\n     * @return the copied array.\n     */",
+   "name": "copyOf"
+  },
+  {
+   "javadoc": "/**\n     * Creates a copy of the {@code source} array.\n     *\n     * @param source Array to be copied.\n     * @param len Number of entries to copy. If smaller then the source\n     * length, the copy will be truncated, if larger it will padded with\n     * zeroes.\n     * @return the copied array.\n     */",
+   "name": "copyOf"
+  },
+  {
+   "javadoc": "/**\n     * Creates a copy of the {@code source} array.\n     *\n     * @param source Array to be copied.\n     * @param len Number of entries to copy. If smaller then the source\n     * length, the copy will be truncated, if larger it will padded with\n     * zeroes.\n     * @return the copied array.\n     */",
+   "name": "copyOf"
+  },
+  {
+   "javadoc": "/**\n     * Compute a linear combination accurately.\n     * <p>\n     * This method computes a<sub>1</sub>&times;b<sub>1</sub> +\n     * a<sub>2</sub>&times;b<sub>2</sub> to high accuracy. It does\n     * so by using specific multiplication and addition algorithms to\n     * preserve accuracy and reduce cancellation effects. It is based\n     * on the 2005 paper <a\n     * href=\"http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.2.1547\">\n     * Accurate Sum and Dot Product</a> by Takeshi Ogita,\n     * Siegfried M. Rump, and Shin'ichi Oishi published in SIAM J. Sci. Comput.\n     * </p>\n     * @param a1 first factor of the first term\n     * @param b1 second factor of the first term\n     * @param a2 first factor of the second term\n     * @param b2 second factor of the second term\n     * @return a<sub>1</sub>&times;b<sub>1</sub> +\n     * a<sub>2</sub>&times;b<sub>2</sub>\n     * @see #linearCombination(double, double, double, double, double, double)\n     * @see #linearCombination(double, double, double, double, double, double, double, double)\n     */",
+   "name": "linearCombination"
+  },
+  {
+   "javadoc": "/**\n     * Compute a linear combination accurately.\n     * <p>\n     * This method computes a<sub>1</sub>&times;b<sub>1</sub> +\n     * a<sub>2</sub>&times;b<sub>2</sub> + a<sub>3</sub>&times;b<sub>3</sub>\n     * to high accuracy. It does so by using specific multiplication and\n     * addition algorithms to preserve accuracy and reduce cancellation effects.\n     * It is based on the 2005 paper <a\n     * href=\"http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.2.1547\">\n     * Accurate Sum and Dot Product</a> by Takeshi Ogita,\n     * Siegfried M. Rump, and Shin'ichi Oishi published in SIAM J. Sci. Comput.\n     * </p>\n     * @param a1 first factor of the first term\n     * @param b1 second factor of the first term\n     * @param a2 first factor of the second term\n     * @param b2 second factor of the second term\n     * @param a3 first factor of the third term\n     * @param b3 second factor of the third term\n     * @return a<sub>1</sub>&times;b<sub>1</sub> +\n     * a<sub>2</sub>&times;b<sub>2</sub> + a<sub>3</sub>&times;b<sub>3</sub>\n     * @see #linearCombination(double, double, double, double)\n     * @see #linearCombination(double, double, double, double, double, double, double, double)\n     */",
+   "name": "linearCombination"
+  },
+  {
+   "javadoc": "/**\n     * Compute a linear combination accurately.\n     * <p>\n     * This method computes a<sub>1</sub>&times;b<sub>1</sub> +\n     * a<sub>2</sub>&times;b<sub>2</sub> + a<sub>3</sub>&times;b<sub>3</sub> +\n     * a<sub>4</sub>&times;b<sub>4</sub>\n     * to high accuracy. It does so by using specific multiplication and\n     * addition algorithms to preserve accuracy and reduce cancellation effects.\n     * It is based on the 2005 paper <a\n     * href=\"http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.2.1547\">\n     * Accurate Sum and Dot Product</a> by Takeshi Ogita,\n     * Siegfried M. Rump, and Shin'ichi Oishi published in SIAM J. Sci. Comput.\n     * </p>\n     * @param a1 first factor of the first term\n     * @param b1 second factor of the first term\n     * @param a2 first factor of the second term\n     * @param b2 second factor of the second term\n     * @param a3 first factor of the third term\n     * @param b3 second factor of the third term\n     * @param a4 first factor of the third term\n     * @param b4 second factor of the third term\n     * @return a<sub>1</sub>&times;b<sub>1</sub> +\n     * a<sub>2</sub>&times;b<sub>2</sub> + a<sub>3</sub>&times;b<sub>3</sub> +\n     * a<sub>4</sub>&times;b<sub>4</sub>\n     * @see #linearCombination(double, double, double, double)\n     * @see #linearCombination(double, double, double, double, double, double)\n     */",
+   "name": "linearCombination"
+  },
+  {
+   "javadoc": "/**\n     * Returns true iff both arguments are null or have same dimensions and all\n     * their elements are equal as defined by\n     * {@link Precision#equals(float,float)}.\n     *\n     * @param x first array\n     * @param y second array\n     * @return true if the values are both null or have same dimension\n     * and equal elements.\n     */",
+   "name": "equals"
+  },
+  {
+   "javadoc": "/**\n     * Returns true iff both arguments are null or have same dimensions and all\n     * their elements are equal as defined by\n     * {@link Precision#equalsIncludingNaN(double,double) this method}.\n     *\n     * @param x first array\n     * @param y second array\n     * @return true if the values are both null or have same dimension and\n     * equal elements\n     * @since 2.2\n     */",
+   "name": "equalsIncludingNaN"
+  },
+  {
+   "javadoc": "/**\n     * Returns {@code true} iff both arguments are {@code null} or have same\n     * dimensions and all their elements are equal as defined by\n     * {@link Precision#equals(double,double)}.\n     *\n     * @param x First array.\n     * @param y Second array.\n     * @return {@code true} if the values are both {@code null} or have same\n     * dimension and equal elements.\n     */",
+   "name": "equals"
+  },
+  {
+   "javadoc": "/**\n     * Returns {@code true} iff both arguments are {@code null} or have same\n     * dimensions and all their elements are equal as defined by\n     * {@link Precision#equalsIncludingNaN(double,double) this method}.\n     *\n     * @param x First array.\n     * @param y Second array.\n     * @return {@code true} if the values are both {@code null} or have same\n     * dimension and equal elements.\n     * @since 2.2\n     */",
+   "name": "equalsIncludingNaN"
+  },
+  {
+   "javadoc": "/**\n      * Normalizes an array to make it sum to a specified value.\n      * Returns the result of the transformation <pre>\n      *    x |-> x * normalizedSum / sum\n      * </pre>\n      * applied to each non-NaN element x of the input array, where sum is the\n      * sum of the non-NaN entries in the input array.</p>\n      *\n      * <p>Throws IllegalArgumentException if {@code normalizedSum} is infinite\n      * or NaN and ArithmeticException if the input array contains any infinite elements\n      * or sums to 0.</p>\n      *\n      * <p>Ignores (i.e., copies unchanged to the output array) NaNs in the input array.</p>\n      *\n      * @param values Input array to be normalized\n      * @param normalizedSum Target sum for the normalized array\n      * @return the normalized array.\n      * @throws MathArithmeticException if the input array contains infinite\n      * elements or sums to zero.\n      * @throws MathIllegalArgumentException if the target sum is infinite or {@code NaN}.\n      * @since 2.1\n      */",
+   "name": "normalizeArray"
+  },
+  {
+   "javadoc": "/** Build an array of elements.\n      * <p>\n      * Arrays are filled with field.getZero()\n      * </p>\n      * @param <T> the type of the field elements\n      * @param field field to which array elements belong\n      * @param length of the array\n      * @return a new array\n      * @since 3.2\n      */",
+   "name": "buildArray"
+  },
+  {
+   "javadoc": "/**\n      * Calculates the <a href=\"http://en.wikipedia.org/wiki/Convolution\">\n      * convolution</a> between two sequences.\n      * The solution is obtained via straightforward computation of the\n      * convolution sum (and not via FFT).\n      * Whenever the computation needs an element that would be located\n      * at an index outside the input arrays, the value is assumed to be\n      * zero.\n      *\n      * @param x First sequence.\n      * Typically, this sequence will represent an input signal to a system.\n      * @param h Second sequence.\n      * Typically, this sequence will represent the impulse response of the\n      * system.\n      * @return the convolution of {@code x} and {@code h}.\n      * This array's length will be {@code x.length + h.length - 1}.\n      * @throws NullArgumentException if either {@code x} or {@code h} is\n      * {@code null}.\n      * @throws NoDataException if either {@code x} or {@code h} is empty.\n      *\n      * @since 3.3\n      */",
+   "name": "convolve"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class MathArrays",
+  "constructors": [],
+  "focal_signature": "public static double linearCombination(final double[] a, final double[] b) throws DimensionMismatchException",
+  "methods": [
+   "public static double[] scale(double val, final double[] arr);",
+   "public static void scaleInPlace(double val, final double[] arr);",
+   "public static double[] ebeAdd(double[] a, double[] b) throws DimensionMismatchException;",
+   "public static double[] ebeSubtract(double[] a, double[] b) throws DimensionMismatchException;",
+   "public static double[] ebeMultiply(double[] a, double[] b) throws DimensionMismatchException;",
+   "public static double[] ebeDivide(double[] a, double[] b) throws DimensionMismatchException;",
+   "public static double distance1(double[] p1, double[] p2);",
+   "public static int distance1(int[] p1, int[] p2);",
+   "public static double distance(double[] p1, double[] p2);",
+   "public static double distance(int[] p1, int[] p2);",
+   "public static double distanceInf(double[] p1, double[] p2);",
+   "public static int distanceInf(int[] p1, int[] p2);",
+   "public static <T extends Comparable<? super T>> boolean isMonotonic(T[] val, OrderDirection dir, boolean strict);",
+   "public static boolean isMonotonic(double[] val, OrderDirection dir, boolean strict);",
+   "public static boolean checkOrder(double[] val, OrderDirection dir, boolean strict, boolean abort) throws NonMonotonicSequenceException;",
+   "public static void checkOrder(double[] val, OrderDirection dir, boolean strict) throws NonMonotonicSequenceException;",
+   "public static void checkOrder(double[] val) throws NonMonotonicSequenceException;",
+   "public static void checkRectangular(final long[][] in) throws NullArgumentException, DimensionMismatchException;",
+   "public static void checkPositive(final double[] in) throws NotStrictlyPositiveException;",
+   "public static void checkNonNegative(final long[] in) throws NotPositiveException;",
+   "public static void checkNonNegative(final long[][] in) throws NotPositiveException;",
+   "public static double safeNorm(double[] v);",
+   "public static void sortInPlace(double[] x, double[] ... yList) throws DimensionMismatchException, NullArgumentException;",
+   "public static void sortInPlace(double[] x, final OrderDirection dir, double[] ... yList) throws NullArgumentException, DimensionMismatchException;",
+   "public static int[] copyOf(int[] source);",
+   "public static double[] copyOf(double[] source);",
+   "public static int[] copyOf(int[] source, int len);",
+   "public static double[] copyOf(double[] source, int len);",
+   "public static double linearCombination(final double a1, final double b1, final double a2, final double b2);",
+   "public static double linearCombination(final double a1, final double b1, final double a2, final double b2, final double a3, final double b3);",
+   "public static double linearCombination(final double a1, final double b1, final double a2, final double b2, final double a3, final double b3, final double a4, final double b4);",
+   "public static boolean equals(float[] x, float[] y);",
+   "public static boolean equalsIncludingNaN(float[] x, float[] y);",
+   "public static boolean equals(double[] x, double[] y);",
+   "public static boolean equalsIncludingNaN(double[] x, double[] y);",
+   "public static double[] normalizeArray(double[] values, double normalizedSum) throws MathIllegalArgumentException, MathArithmeticException;",
+   "public static <T> T[] buildArray(final Field<T> field, final int length);",
+   "public static double[] convolve(double[] x, double[] h) throws NullArgumentException, NoDataException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F1"
+}

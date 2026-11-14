@@ -1,0 +1,92 @@
+{
+ "candidate_id": "9430f04c7495e43b46f9",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testClearFormatsMultipleTimes"
+  ],
+  "nc_both": [
+   "testClearFormatsDoesNotAffectTimeZoneOrLocale",
+   "testClearFormatsSetsInternalFieldsToNull"
+  ],
+  "nc_one_version": [],
+  "passes": 1
+ },
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "JacksonDatabind_87::com.fasterxml.jackson.databind.util.StdDateFormat::_clearFormats()",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testClearFormatsMultipleTimes",
+   "runs_b": [
+    {
+     "duration_s": 0.15,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.141,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.142,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.16,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.16,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.153,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.databind.util;\n\nimport com.fasterxml.jackson.core.io.NumberInput;\nimport java.io.*;\nimport java.math.*;\nimport java.text.DateFormat;\nimport java.text.FieldPosition;\nimport java.text.ParseException;\nimport java.text.ParsePosition;\nimport java.text.SimpleDateFormat;\nimport java.util.*;\nimport java.util.Date;\nimport java.util.Locale;\nimport java.util.TimeZone;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for StdDateFormat._clearFormats().\n * Since _clearFormats is protected, we use a subclass to expose it for testing.\n */\npublic class StdDateFormat__clearFormats_TriageGen1Test {\n\n    /**\n     * A test subclass to expose the protected method _clearFormats.\n     */\n    private static class TestableStdDateFormat extends StdDateFormat {\n        public TestableStdDateFormat() {\n            super();\n        }\n\n        public TestableStdDateFormat(TimeZone tz, Locale loc) {\n            super(tz, loc);\n        }\n\n        @Override\n        public void _clearFormats() {\n            super._clearFormats();\n        }\n\n        // Helper to check if internal formats are null via reflection or side effects.\n        // Since we cannot access private fields directly without reflection, \n        // we verify the effect by checking if the object's behavior changes \n        // (i.e., it re-initializes formats upon next use).\n        public boolean areFormatsNull() throws Exception {\n            java.lang.reflect.Field f1 = StdDateFormat.class.getDeclaredField(\"_formatRFC1123\");\n            java.lang.reflect.Field f2 = StdDateFormat.class.getDeclaredField(\"_formatISO8601\");\n            java.lang.reflect.Field f3 = StdDateFormat.class.getDeclaredField(\"_formatISO8601_z\");\n            java.lang.reflect.Field f4 = StdDateFormat.class.getDeclaredField(\"_formatPlain\");\n            \n            f1.setAccessible(true);\n            f2.setAccessible(true);\n            f3.setAccessible(true);\n            f4.setAccessible(true);\n\n            return f1.get(this) == null && \n                   f2.get(this) == null && \n                   f3.get(this) == null && \n                   f4.get(this) == null;\n        }\n    }\n\n    \n\n    \n\n    @Test\n    public void testClearFormatsMultipleTimes() throws Exception {\n        TestableStdDateFormat dateFormat = new TestableStdDateFormat();\n\n        // Call multiple times to ensure no exceptions (like NullPointerException) occur\n        dateFormat._clearFormats();\n        assertTrue(dateFormat.areFormatsNull());\n        \n        dateFormat._clearFormats();\n        assertTrue(dateFormat.areFormatsNull());\n    }\n}\n"
+  }
+ ],
+ "source_sha256": "2714487c2c0fc852e59345941f36bb0420f6ab466d8294babe99dd7df9434689",
+ "utc": "2026-11-13T06:35:21Z"
+}

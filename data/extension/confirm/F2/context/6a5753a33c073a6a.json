@@ -1,0 +1,263 @@
+{
+ "bug_name": "Math_44",
+ "call_sites": [
+  {
+   "line": 276,
+   "lines": [
+    271,
+    272,
+    273,
+    274,
+    275,
+    276,
+    277,
+    278,
+    279,
+    280,
+    281
+   ],
+   "path": "src/main/java/org/apache/commons/math/ode/nonstiff/AdamsBashforthIntegrator.java",
+   "snippet": "            updateHighOrderDerivativesPhase2(scaled, predictedScaled, nordsieckTmp);\n            interpolator.reinitialize(stepEnd, stepSize, predictedScaled, nordsieckTmp);\n\n            // discrete events handling\n            interpolator.storeTime(stepEnd);\n            stepStart = acceptStep(interpolator, y, yDot, t);\n            scaled    = predictedScaled;\n            nordsieck = nordsieckTmp;\n            interpolator.reinitialize(stepEnd, stepSize, scaled, nordsieck);\n\n            if (!isLastStep) {"
+  },
+  {
+   "line": 295,
+   "lines": [
+    290,
+    291,
+    292,
+    293,
+    294,
+    295,
+    296,
+    297,
+    298,
+    299,
+    300
+   ],
+   "path": "src/main/java/org/apache/commons/math/ode/nonstiff/AdamsMoultonIntegrator.java",
+   "snippet": "            System.arraycopy(yTmp, 0, y, 0, y.length);\n            interpolator.reinitialize(stepEnd, stepSize, correctedScaled, nordsieckTmp);\n            interpolator.storeTime(stepStart);\n            interpolator.shift();\n            interpolator.storeTime(stepEnd);\n            stepStart = acceptStep(interpolator, y, yDot, t);\n            scaled    = correctedScaled;\n            nordsieck = nordsieckTmp;\n\n            if (!isLastStep) {\n"
+  },
+  {
+   "line": 296,
+   "lines": [
+    291,
+    292,
+    293,
+    294,
+    295,
+    296,
+    297,
+    298,
+    299,
+    300,
+    301
+   ],
+   "path": "src/main/java/org/apache/commons/math/ode/nonstiff/EmbeddedRungeKuttaIntegrator.java",
+   "snippet": "\n      // local error is small enough: accept the step, trigger events and step handlers\n      interpolator.storeTime(stepStart + stepSize);\n      System.arraycopy(yTmp, 0, y, 0, y0.length);\n      System.arraycopy(yDotK[stages - 1], 0, yDotTmp, 0, y0.length);\n      stepStart = acceptStep(interpolator, y, yDotTmp, t);\n\n      if (!isLastStep) {\n\n          // prepare next step\n          interpolator.storeTime(stepStart);"
+  },
+  {
+   "line": 864,
+   "lines": [
+    859,
+    860,
+    861,
+    862,
+    863,
+    864,
+    865,
+    866,
+    867,
+    868,
+    869
+   ],
+   "path": "src/main/java/org/apache/commons/math/ode/nonstiff/GraggBulirschStoerIntegrator.java",
+   "snippet": "\n      if (! reject) {\n\n        // Discrete events handling\n        interpolator.storeTime(stepStart + stepSize);\n        stepStart = acceptStep(interpolator, y1, yDot1, t);\n\n        // prepare next step\n        interpolator.storeTime(stepStart);\n        System.arraycopy(y1, 0, y, 0, y0.length);\n        System.arraycopy(yDot1, 0, yDot0, 0, y0.length);"
+  },
+  {
+   "line": 163,
+   "lines": [
+    158,
+    159,
+    160,
+    161,
+    162,
+    163,
+    164,
+    165,
+    166,
+    167,
+    168
+   ],
+   "path": "src/main/java/org/apache/commons/math/ode/nonstiff/RungeKuttaIntegrator.java",
+   "snippet": "\n      // discrete events handling\n      interpolator.storeTime(stepStart + stepSize);\n      System.arraycopy(yTmp, 0, y, 0, y0.length);\n      System.arraycopy(yDotK[stages - 1], 0, yDotTmp, 0, y0.length);\n      stepStart = acceptStep(interpolator, y, yDotTmp, t);\n\n      if (!isLastStep) {\n\n          // prepare next step\n          interpolator.storeTime(stepStart);"
+  }
+ ],
+ "class_simple": "AbstractIntegrator",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Base class managing common boilerplate for all integrators.\n * @version $Id$\n * @since 2.0\n */\npublic abstract",
+  "method_javadoc": "/** Accept a step, triggering events and step handlers.\n     * @param interpolator step interpolator\n     * @param y state vector at step end time, must be reset if an event\n     * asks for resetting or if an events stops integration during the step\n     * @param yDot placeholder array where to put the time derivative of the state vector\n     * @param tEnd final integration time\n     * @return time at end of step\n     * @exception MathIllegalStateException if the value of one event state cannot be evaluated\n     * @since 2.2\n     */"
+ },
+ "fields": [
+  "protected Collection<StepHandler> stepHandlers",
+  "protected double stepStart",
+  "protected double stepSize",
+  "protected boolean isLastStep",
+  "protected boolean resetOccurred",
+  "private Collection<EventState> eventsStates",
+  "private boolean statesInitialized",
+  "private final String name",
+  "private Incrementor evaluations",
+  "private transient ExpandableStatefulODE expandable"
+ ],
+ "focal_class": "org.apache.commons.math.ode.AbstractIntegrator",
+ "focal_id": "Math_44::org.apache.commons.math.ode.AbstractIntegrator::acceptStep(AbstractStepInterpolator,double[],double[],double)",
+ "focal_method_name": "acceptStep",
+ "generations": 3,
+ "impl_B": "protected double acceptStep(final AbstractStepInterpolator interpolator,\n                                final double[] y, final double[] yDot, final double tEnd)\n        throws MathIllegalStateException {\n\n            double previousT = interpolator.getGlobalPreviousTime();\n            final double currentT = interpolator.getGlobalCurrentTime();\n            resetOccurred = false;\n\n            // initialize the events states if needed\n            if (! statesInitialized) {\n                for (EventState state : eventsStates) {\n                    state.reinitializeBegin(interpolator);\n                }\n                statesInitialized = true;\n            }\n\n            // search for next events that may occur during the step\n            final int orderingSign = interpolator.isForward() ? +1 : -1;\n            SortedSet<EventState> occuringEvents = new TreeSet<EventState>(new Comparator<EventState>() {\n\n                /** {@inheritDoc} */\n                public int compare(EventState es0, EventState es1) {\n                    return orderingSign * Double.compare(es0.getEventTime(), es1.getEventTime());\n                }\n\n            });\n\n            for (final EventState state : eventsStates) {\n                if (state.evaluateStep(interpolator)) {\n                    // the event occurs during the current step\n                    occuringEvents.add(state);\n                }\n            }\n\n            while (!occuringEvents.isEmpty()) {\n\n                // handle the chronologically first event\n                final Iterator<EventState> iterator = occuringEvents.iterator();\n                final EventState currentEvent = iterator.next();\n                iterator.remove();\n\n                // restrict the interpolator to the first part of the step, up to the event\n                final double eventT = currentEvent.getEventTime();\n                interpolator.setSoftPreviousTime(previousT);\n                interpolator.setSoftCurrentTime(eventT);\n\n                // trigger the event\n                interpolator.setInterpolatedTime(eventT);\n                final double[] eventY = interpolator.getInterpolatedState();\n                currentEvent.stepAccepted(eventT, eventY);\n                isLastStep = currentEvent.stop();\n\n                // handle the first part of the step, up to the event\n                for (final StepHandler handler : stepHandlers) {\n                    handler.handleStep(interpolator, isLastStep);\n                }\n\n                if (isLastStep) {\n                    // the event asked to stop integration\n                    System.arraycopy(eventY, 0, y, 0, y.length);\n                    return eventT;\n                }\n\n                if (currentEvent.reset(eventT, eventY)) {\n                    // some event handler has triggered changes that\n                    // invalidate the derivatives, we need to recompute them\n                    System.arraycopy(eventY, 0, y, 0, y.length);\n                    computeDerivatives(eventT, y, yDot);\n                    resetOccurred = true;\n                    return eventT;\n                }\n\n                // prepare handling of the remaining part of the step\n                previousT = eventT;\n                interpolator.setSoftPreviousTime(eventT);\n                interpolator.setSoftCurrentTime(currentT);\n\n                // check if the same event occurs again in the remaining part of the step\n                if (currentEvent.evaluateStep(interpolator)) {\n                    // the event occurs during the current step\n                    occuringEvents.add(currentEvent);\n                }\n\n            }\n\n            interpolator.setInterpolatedTime(currentT);\n            final double[] currentY = interpolator.getInterpolatedState();\n            for (final EventState state : eventsStates) {\n                state.stepAccepted(currentT, currentY);\n                isLastStep = isLastStep || state.stop();\n            }\n            isLastStep = isLastStep || Precision.equals(currentT, tEnd, 1);\n\n            // handle the remaining part of the step, after all events if any\n            for (StepHandler handler : stepHandlers) {\n                handler.handleStep(interpolator, isLastStep);\n            }\n\n            return currentT;\n\n    }",
+ "imports": [
+  "java.util.ArrayList",
+  "java.util.Collection",
+  "java.util.Collections",
+  "java.util.Comparator",
+  "java.util.Iterator",
+  "java.util.List",
+  "java.util.SortedSet",
+  "java.util.TreeSet",
+  "org.apache.commons.math.analysis.solvers.BracketingNthOrderBrentSolver",
+  "org.apache.commons.math.analysis.solvers.UnivariateRealSolver",
+  "org.apache.commons.math.exception.DimensionMismatchException",
+  "org.apache.commons.math.exception.MathIllegalArgumentException",
+  "org.apache.commons.math.exception.MathIllegalStateException",
+  "org.apache.commons.math.exception.MaxCountExceededException",
+  "org.apache.commons.math.exception.NumberIsTooSmallException",
+  "org.apache.commons.math.exception.util.LocalizedFormats",
+  "org.apache.commons.math.ode.events.EventHandler",
+  "org.apache.commons.math.ode.events.EventState",
+  "org.apache.commons.math.ode.sampling.AbstractStepInterpolator",
+  "org.apache.commons.math.ode.sampling.StepHandler",
+  "org.apache.commons.math.util.FastMath",
+  "org.apache.commons.math.util.Incrementor",
+  "org.apache.commons.math.util.Precision"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math.ode",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getName"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "addStepHandler"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getStepHandlers"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "clearStepHandlers"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "addEventHandler"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "addEventHandler"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getEventHandlers"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "clearEventHandlers"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getCurrentStepStart"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getCurrentSignedStepsize"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "setMaxEvaluations"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getMaxEvaluations"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getEvaluations"
+  },
+  {
+   "javadoc": "/** Reset the number of evaluations to zero.\n     */",
+   "name": "resetEvaluations"
+  },
+  {
+   "javadoc": "/** Set the equations.\n     * @param equations equations to set\n     */",
+   "name": "setEquations"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "integrate"
+  },
+  {
+   "javadoc": "/** Integrate a set of differential equations up to the given time.\n     * <p>This method solves an Initial Value Problem (IVP).</p>\n     * <p>The set of differential equations is composed of a main set, which\n     * can be extended by some sets of secondary equations. The set of\n     * equations must be already set up with initial time and partial states.\n     * At integration completion, the final time and partial states will be\n     * available in the same object.</p>\n     * <p>Since this method stores some internal state variables made\n     * available in its public interface during integration ({@link\n     * #getCurrentSignedStepsize()}), it is <em>not</em> thread-safe.</p>\n     * @param equations complete set of differential equations to integrate\n     * @param t target time for the integration\n     * (can be set to a value smaller than <code>t0</code> for backward integration)\n     * @throws MathIllegalStateException if the integrator cannot perform integration\n     * @throws MathIllegalArgumentException if integration parameters are wrong (typically\n     * too small integration span)\n     */",
+   "name": "integrate"
+  },
+  {
+   "javadoc": "/** Compute the derivatives and check the number of evaluations.\n     * @param t current value of the independent <I>time</I> variable\n     * @param y array containing the current value of the state vector\n     * @param yDot placeholder array where to put the time derivative of the state vector\n     * @exception MaxCountExceededException if the number of functions evaluations is exceeded\n     */",
+   "name": "computeDerivatives"
+  },
+  {
+   "javadoc": "/** Set the stateInitialized flag.\n     * <p>This method must be called by integrators with the value\n     * {@code false} before they start integration, so a proper lazy\n     * initialization is done automatically on the first step.</p>\n     * @param stateInitialized new value for the flag\n     * @since 2.2\n     */",
+   "name": "setStateInitialized"
+  },
+  {
+   "javadoc": "/** Check the integration span.\n     * @param equations set of differential equations\n     * @param t target time for the integration\n     * @exception NumberIsTooSmallException if integration span is too small\n     */",
+   "name": "sanityChecks"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public abstract class AbstractIntegrator implements FirstOrderIntegrator",
+  "constructors": [
+   "public AbstractIntegrator(final String name);",
+   "protected AbstractIntegrator();"
+  ],
+  "focal_signature": "protected double acceptStep(final AbstractStepInterpolator interpolator, final double[] y, final double[] yDot, final double tEnd) throws MathIllegalStateException",
+  "methods": [
+   "public String getName();",
+   "public void addStepHandler(final StepHandler handler);",
+   "public Collection<StepHandler> getStepHandlers();",
+   "public void clearStepHandlers();",
+   "public void addEventHandler(final EventHandler handler, final double maxCheckInterval, final double convergence, final int maxIterationCount);",
+   "public void addEventHandler(final EventHandler handler, final double maxCheckInterval, final double convergence, final int maxIterationCount, final UnivariateRealSolver solver);",
+   "public Collection<EventHandler> getEventHandlers();",
+   "public void clearEventHandlers();",
+   "public double getCurrentStepStart();",
+   "public double getCurrentSignedStepsize();",
+   "public void setMaxEvaluations(int maxEvaluations);",
+   "public int getMaxEvaluations();",
+   "public int getEvaluations();",
+   "protected void resetEvaluations();",
+   "protected void setEquations(final ExpandableStatefulODE equations);",
+   "public double integrate(final FirstOrderDifferentialEquations equations, final double t0, final double[] y0, final double t, final double[] y) throws MathIllegalStateException, MathIllegalArgumentException;",
+   "public abstract void integrate(ExpandableStatefulODE equations, double t) throws MathIllegalStateException, MathIllegalArgumentException;",
+   "public void computeDerivatives(final double t, final double[] y, final double[] yDot) throws MaxCountExceededException;",
+   "protected void setStateInitialized(final boolean stateInitialized);",
+   "protected void sanityChecks(final ExpandableStatefulODE equations, final double t) throws NumberIsTooSmallException;"
+  ],
+  "type_signatures": [
+   "public abstract class AbstractStepInterpolator implements StepInterpolator { protected AbstractStepInterpolator(); protected AbstractStepInterpolator(final double[] y, final boolean forward, final EquationsMapper primaryMapper, final EquationsMapper[] secondaryMappers); protected AbstractStepInterpolator(final AbstractStepInterpolator interpolator); protected void reinitialize(final double[] y, final boolean isForward, final EquationsMapper primary, final EquationsMapper[] secondary); public StepInterpolator copy(); protected abstract StepInterpolator doCopy(); public void shift(); public void storeTime(final double t); public void setSoftPreviousTime(final double softPreviousTime); public void setSoftCurrentTime(final double softCurrentTime); public double getGlobalPreviousTime(); public double getGlobalCurrentTime(); public double getPreviousTime(); public double getCurrentTime(); public double getInterpolatedTime(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

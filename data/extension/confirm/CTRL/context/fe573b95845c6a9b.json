@@ -1,0 +1,88 @@
+{
+ "bug_name": "Csv_1",
+ "call_sites": [
+  {
+   "line": 94,
+   "lines": [
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    99
+   ],
+   "path": "src/main/java/org/apache/commons/csv/CSVLexer.java",
+   "snippet": "            }\n            \n            // ok, start of token reached: comment, encapsulated, or token\n            if (isCommentStart(c)) {\n                // ignore everything till end of line and continue (incr linecount)\n                in.readLine();\n                tkn = nextToken(tkn.reset());\n            } else if (isDelimiter(c)) {\n                // empty token return TOKEN(\"\")\n                tkn.type = TOKEN;\n            } else if (eol) {"
+  },
+  {
+   "line": 123,
+   "lines": [
+    118,
+    119,
+    120,
+    121,
+    122,
+    123,
+    124,
+    125,
+    126,
+    127,
+    128
+   ],
+   "path": "src/main/java/org/apache/commons/csv/ExtendedBufferedReader.java",
+   "snippet": "     * \n     * @return the line that was read, or null if reached EOF.\n     */\n    @Override\n    public String readLine() throws IOException {\n        String line = super.readLine();\n\n        if (line != null) {\n            if (line.length() > 0) {\n                lastChar = line.charAt(line.length() - 1);\n            }"
+  }
+ ],
+ "class_simple": "ExtendedBufferedReader",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * ExtendedBufferedReader\n *\n * A special reader decorator which supports more\n * sophisticated access to the underlying reader object.\n *\n * In particular the reader supports a look-ahead option,\n * which allows you to see the next char returned by\n * next().\n */",
+  "method_javadoc": "/**\n     * Calls {@link BufferedReader#readLine()} which drops the line terminator(s).\n     * This method should only be called when processing a comment, otherwise\n     * information can be lost.\n     * <p>\n     * Increments  {@link #lineCounter}\n     * <p>\n     * Sets {@link #lastChar} to {@link #END_OF_STREAM} at EOF, \n     * otherwise to last character on the line (won't be CR or LF) \n     * \n     * @return the line that was read, or null if reached EOF.\n     */"
+ },
+ "fields": [
+  "static final int END_OF_STREAM",
+  "static final int UNDEFINED",
+  "private int lastChar",
+  "private int lineCounter"
+ ],
+ "focal_class": "org.apache.commons.csv.ExtendedBufferedReader",
+ "focal_id": "Csv_1::org.apache.commons.csv.ExtendedBufferedReader::readLine()",
+ "focal_method_name": "readLine",
+ "generations": 3,
+ "impl_B": "@Override\n    public String readLine() throws IOException {\n        String line = super.readLine();\n\n        if (line != null) {\n            if (line.length() > 0) {\n                lastChar = line.charAt(line.length() - 1);\n            }\n            lineCounter++;\n        } else {\n            lastChar = END_OF_STREAM;\n        }\n\n        return line;\n    }",
+ "imports": [
+  "java.io.BufferedReader",
+  "java.io.IOException",
+  "java.io.Reader"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.csv",
+ "project": "Csv",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "read"
+  },
+  {
+   "javadoc": "",
+   "name": "read"
+  }
+ ],
+ "sig": {
+  "class_declaration": "class ExtendedBufferedReader extends BufferedReader",
+  "constructors": [],
+  "focal_signature": "public String readLine() throws IOException",
+  "methods": [
+   "public int read() throws IOException;",
+   "public int read(char[] buf, int offset, int length) throws IOException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

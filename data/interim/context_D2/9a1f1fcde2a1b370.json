@@ -1,0 +1,272 @@
+{
+ "base_focal_id": "Time_8::org.joda.time.DateTimeZone::forOffsetHoursMinutes(int,int)",
+ "bug_name": "Time_8",
+ "call_sites": [
+  {
+   "line": 238,
+   "lines": [
+    233,
+    234,
+    235,
+    236,
+    237,
+    238,
+    239,
+    240,
+    241,
+    242,
+    243
+   ],
+   "path": "src/main/java/org/joda/time/DateTimeZone.java",
+   "snippet": "     * @param hoursOffset  the offset in hours from UTC, from -23 to +23\n     * @return the DateTimeZone object for the offset\n     * @throws IllegalArgumentException if the offset is too large or too small\n     */\n    public static DateTimeZone forOffsetHours(int hoursOffset) throws IllegalArgumentException {\n        return forOffsetHoursMinutes(hoursOffset, 0);\n    }\n\n    /**\n     * Gets a time zone instance for the specified offset to UTC in hours and minutes.\n     * This method assumes 60 minutes in an hour, and standard length minutes."
+  }
+ ],
+ "class_simple": "DateTimeZone",
+ "dataset": "D2",
+ "doc": {
+  "class_javadoc": "/**\n * DateTimeZone represents a time zone.\n * <p>\n * A time zone is a system of rules to convert time from one geographic \n * location to another. For example, Paris, France is one hour ahead of\n * London, England. Thus when it is 10:00 in London, it is 11:00 in Paris.\n * <p>\n * All time zone rules are expressed, for historical reasons, relative to\n * Greenwich, London. Local time in Greenwich is referred to as Greenwich Mean\n * Time (GMT).  This is similar, but not precisely identical, to Universal \n * Coordinated Time, or UTC. This library only uses the term UTC.\n * <p>\n * Using this system, America/Los_Angeles is expressed as UTC-08:00, or UTC-07:00\n * in the summer. The offset -08:00 indicates that America/Los_Angeles time is\n * obtained from UTC by adding -08:00, that is, by subtracting 8 hours.\n * <p>\n * The offset differs in the summer because of daylight saving time, or DST.\n * The following definitions of time are generally used:\n * <ul>\n * <li>UTC - The reference time.\n * <li>Standard Time - The local time without a daylight saving time offset.\n * For example, in Paris, standard time is UTC+01:00.\n * <li>Daylight Saving Time - The local time with a daylight saving time \n * offset. This offset is typically one hour, but not always. It is typically\n * used in most countries away from the equator.  In Paris, daylight saving \n * time is UTC+02:00.\n * <li>Wall Time - This is what a local clock on the wall reads. This will be\n * either Standard Time or Daylight Saving Time depending on the time of year\n * and whether the location uses Daylight Saving Time.\n * </ul>\n * <p>\n * Unlike the Java TimeZone class, DateTimeZone is immutable. It also only\n * supports long format time zone ids. Thus EST and ECT are not accepted.\n * However, the factory that accepts a TimeZone will attempt to convert from\n * the old short id to a suitable long id.\n * <p>\n * DateTimeZone is thread-safe and immutable, and all subclasses must be as\n * well.\n * \n * @author Brian S O'Neill\n * @author Stephen Colebourne\n * @since 1.0\n */\npublic abstract",
+  "method_javadoc": "/**\n     * Gets a time zone instance for the specified offset to UTC in hours and minutes.\n     * This method assumes 60 minutes in an hour, and standard length minutes.\n     * <p>\n     * This factory is a convenient way of constructing zones with a fixed offset.\n     * The hours value must be in the range -23 to +23.\n     * The minutes value must be in the range -59 to +59.\n     * The following combinations of sign for the hour and minute are possible:\n     * <pre>\n     *  Hour    Minute    Example    Result\n     * \n     *  +ve     +ve       (2, 15)    +02:15\n     *  +ve     zero      (2, 0)     +02:00\n     *  +ve     -ve       (2, -15)   IllegalArgumentException\n     * \n     *  zero    +ve       (0, 15)    +00:15\n     *  zero    zero      (0, 0)     +00:00\n     *  zero    -ve       (0, -15)   -00:15\n     * \n     *  -ve     +ve       (-2, 15)   -02:15\n     *  -ve     zero      (-2, 0)    -02:00\n     *  -ve     -ve       (-2, -15)  -02:15\n     * </pre>\n     * Note that in versions before 2.3, the minutes had to be zero or positive.\n     * \n     * @param hoursOffset  the offset in hours from UTC, from -23 to +23\n     * @param minutesOffset  the offset in minutes from UTC, from -59 to +59\n     * @return the DateTimeZone object for the offset\n     * @throws IllegalArgumentException if any value is out of range, the minutes are negative\n     *  when the hours are positive, or the resulting offset exceeds +/- 23:59:59.000\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "public static final DateTimeZone UTC",
+  "private static final int MAX_MILLIS",
+  "private static Provider cProvider",
+  "private static NameProvider cNameProvider",
+  "private static Set<String> cAvailableIDs",
+  "private static volatile DateTimeZone cDefault",
+  "private static DateTimeFormatter cOffsetFormatter",
+  "private static Map<String, SoftReference<DateTimeZone>> iFixedOffsetCache",
+  "private static Map<String, String> cZoneIdConversion",
+  "private final String iID"
+ ],
+ "focal_class": "org.joda.time.DateTimeZone",
+ "focal_id": "Time_8::org.joda.time.DateTimeZone::forOffsetHoursMinutes(int,int)#m50",
+ "focal_method_name": "forOffsetHoursMinutes",
+ "impl_B": "public static DateTimeZone forOffsetHoursMinutes(int hoursOffset, int minutesOffset) throws IllegalArgumentException {\n        if (minutesOffset == 0) {\n            return DateTimeZone.UTC;\n        }\n        if (hoursOffset < -23 || hoursOffset > 23) {\n            throw new IllegalArgumentException(\"Hours out of range: \" + hoursOffset);\n        }\n        if (minutesOffset < -59 || minutesOffset > 59) {\n            throw new IllegalArgumentException(\"Minutes out of range: \" + minutesOffset);\n        }\n        if (hoursOffset > 0 && minutesOffset < 0) {\n            throw new IllegalArgumentException(\"Positive hours must not have negative minutes: \" + minutesOffset);\n        }\n        int offset = 0;\n        try {\n            int hoursInMinutes = hoursOffset * 60;\n            if (hoursInMinutes < 0) {\n                minutesOffset = hoursInMinutes - Math.abs(minutesOffset);\n            } else {\n                minutesOffset = hoursInMinutes + minutesOffset;\n            }\n            offset = FieldUtils.safeMultiply(minutesOffset, DateTimeConstants.MILLIS_PER_MINUTE);\n        } catch (ArithmeticException ex) {\n            throw new IllegalArgumentException(\"Offset is too large\");\n        }\n        return forOffsetMillis(offset);\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.io.ObjectInputStream",
+  "java.io.ObjectOutputStream",
+  "java.io.ObjectStreamException",
+  "java.io.Serializable",
+  "java.lang.ref.Reference",
+  "java.lang.ref.SoftReference",
+  "java.util.HashMap",
+  "java.util.Locale",
+  "java.util.Map",
+  "java.util.Set",
+  "java.util.TimeZone",
+  "org.joda.convert.FromString",
+  "org.joda.convert.ToString",
+  "org.joda.time.chrono.BaseChronology",
+  "org.joda.time.field.FieldUtils",
+  "org.joda.time.format.DateTimeFormatter",
+  "org.joda.time.format.DateTimeFormatterBuilder",
+  "org.joda.time.format.FormatUtils",
+  "org.joda.time.tz.DefaultNameProvider",
+  "org.joda.time.tz.FixedDateTimeZone",
+  "org.joda.time.tz.NameProvider",
+  "org.joda.time.tz.Provider",
+  "org.joda.time.tz.UTCProvider",
+  "org.joda.time.tz.ZoneInfoProvider"
+ ],
+ "javadoc_edited_by_fix": false,
+ "mutant_id": 50,
+ "operator": "COR",
+ "package": "org.joda.time",
+ "project": "Time",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Gets the default time zone.\n     * <p>\n     * The default time zone is derived from the system property {@code user.timezone}.\n     * If that is {@code null} or is not a valid identifier, then the value of the\n     * JDK {@code TimeZone} default is converted. If that fails, {@code UTC} is used.\n     * <p>\n     * NOTE: If the {@code java.util.TimeZone} default is updated <i>after</i> calling this\n     * method, then the change will not be picked up here.\n     * \n     * @return the default datetime zone object\n     */",
+   "name": "getDefault"
+  },
+  {
+   "javadoc": "/**\n     * Sets the default time zone.\n     * <p>\n     * NOTE: Calling this method does <i>not</i> set the {@code java.util.TimeZone} default.\n     * \n     * @param zone  the default datetime zone object, must not be null\n     * @throws IllegalArgumentException if the zone is null\n     * @throws SecurityException if the application has insufficient security rights\n     */",
+   "name": "setDefault"
+  },
+  {
+   "javadoc": "/**\n     * Gets a time zone instance for the specified time zone id.\n     * <p>\n     * The time zone id may be one of those returned by getAvailableIDs.\n     * Short ids, as accepted by {@link java.util.TimeZone}, are not accepted.\n     * All IDs must be specified in the long format.\n     * The exception is UTC, which is an acceptable id.\n     * <p>\n     * Alternatively a locale independent, fixed offset, datetime zone can\n     * be specified. The form <code>[+-]hh:mm</code> can be used.\n     * \n     * @param id  the ID of the datetime zone, null means default\n     * @return the DateTimeZone object for the ID\n     * @throws IllegalArgumentException if the ID is not recognised\n     */",
+   "name": "forID"
+  },
+  {
+   "javadoc": "/**\n     * Gets a time zone instance for the specified offset to UTC in hours.\n     * This method assumes standard length hours.\n     * <p>\n     * This factory is a convenient way of constructing zones with a fixed offset.\n     * \n     * @param hoursOffset  the offset in hours from UTC, from -23 to +23\n     * @return the DateTimeZone object for the offset\n     * @throws IllegalArgumentException if the offset is too large or too small\n     */",
+   "name": "forOffsetHours"
+  },
+  {
+   "javadoc": "/**\n     * Gets a time zone instance for the specified offset to UTC in milliseconds.\n     *\n     * @param millisOffset  the offset in millis from UTC, from -23:59:59.999 to +23:59:59.999\n     * @return the DateTimeZone object for the offset\n     */",
+   "name": "forOffsetMillis"
+  },
+  {
+   "javadoc": "/**\n     * Gets a time zone instance for a JDK TimeZone.\n     * <p>\n     * DateTimeZone only accepts a subset of the IDs from TimeZone. The\n     * excluded IDs are the short three letter form (except UTC). This \n     * method will attempt to convert between time zones created using the\n     * short IDs and the full version.\n     * <p>\n     * This method is not designed to parse time zones with rules created by\n     * applications using <code>SimpleTimeZone</code> directly.\n     * \n     * @param zone  the zone to convert, null means default\n     * @return the DateTimeZone object for the zone\n     * @throws IllegalArgumentException if the zone is not recognised\n     */",
+   "name": "forTimeZone"
+  },
+  {
+   "javadoc": "/**\n     * Gets all the available IDs supported.\n     * \n     * @return an unmodifiable Set of String IDs\n     */",
+   "name": "getAvailableIDs"
+  },
+  {
+   "javadoc": "/**\n     * Gets the zone provider factory.\n     * <p>\n     * The zone provider is a pluggable instance factory that supplies the\n     * actual instances of DateTimeZone.\n     * \n     * @return the provider\n     */",
+   "name": "getProvider"
+  },
+  {
+   "javadoc": "/**\n     * Sets the zone provider factory.\n     * <p>\n     * The zone provider is a pluggable instance factory that supplies the\n     * actual instances of DateTimeZone.\n     * \n     * @param provider  provider to use, or null for default\n     * @throws SecurityException if you do not have the permission DateTimeZone.setProvider\n     * @throws IllegalArgumentException if the provider is invalid\n     */",
+   "name": "setProvider"
+  },
+  {
+   "javadoc": "/**\n     * Gets the name provider factory.\n     * <p>\n     * The name provider is a pluggable instance factory that supplies the\n     * names of each DateTimeZone.\n     * \n     * @return the provider\n     */",
+   "name": "getNameProvider"
+  },
+  {
+   "javadoc": "/**\n     * Sets the name provider factory.\n     * <p>\n     * The name provider is a pluggable instance factory that supplies the\n     * names of each DateTimeZone.\n     * \n     * @param nameProvider  provider to use, or null for default\n     * @throws SecurityException if you do not have the permission DateTimeZone.setNameProvider\n     * @throws IllegalArgumentException if the provider is invalid\n     */",
+   "name": "setNameProvider"
+  },
+  {
+   "javadoc": "/**\n     * Gets the ID of this datetime zone.\n     * \n     * @return the ID of this datetime zone\n     */",
+   "name": "getID"
+  },
+  {
+   "javadoc": "/**\n     * Returns a non-localized name that is unique to this time zone. It can be\n     * combined with id to form a unique key for fetching localized names.\n     *\n     * @param instant  milliseconds from 1970-01-01T00:00:00Z to get the name for\n     * @return name key or null if id should be used for names\n     */",
+   "name": "getNameKey"
+  },
+  {
+   "javadoc": "/**\n     * Gets the short name of this datetime zone suitable for display using\n     * the default locale.\n     * <p>\n     * If the name is not available for the locale, then this method returns a\n     * string in the format <code>[+-]hh:mm</code>.\n     * \n     * @param instant  milliseconds from 1970-01-01T00:00:00Z to get the name for\n     * @return the human-readable short name in the default locale\n     */",
+   "name": "getShortName"
+  },
+  {
+   "javadoc": "/**\n     * Gets the short name of this datetime zone suitable for display using\n     * the specified locale.\n     * <p>\n     * If the name is not available for the locale, then this method returns a\n     * string in the format <code>[+-]hh:mm</code>.\n     * \n     * @param instant  milliseconds from 1970-01-01T00:00:00Z to get the name for\n     * @param locale  the locale to get the name for\n     * @return the human-readable short name in the specified locale\n     */",
+   "name": "getShortName"
+  },
+  {
+   "javadoc": "/**\n     * Gets the long name of this datetime zone suitable for display using\n     * the default locale.\n     * <p>\n     * If the name is not available for the locale, then this method returns a\n     * string in the format <code>[+-]hh:mm</code>.\n     * \n     * @param instant  milliseconds from 1970-01-01T00:00:00Z to get the name for\n     * @return the human-readable long name in the default locale\n     */",
+   "name": "getName"
+  },
+  {
+   "javadoc": "/**\n     * Gets the long name of this datetime zone suitable for display using\n     * the specified locale.\n     * <p>\n     * If the name is not available for the locale, then this method returns a\n     * string in the format <code>[+-]hh:mm</code>.\n     * \n     * @param instant  milliseconds from 1970-01-01T00:00:00Z to get the name for\n     * @param locale  the locale to get the name for\n     * @return the human-readable long name in the specified locale\n     */",
+   "name": "getName"
+  },
+  {
+   "javadoc": "/**\n     * Gets the millisecond offset to add to UTC to get local time.\n     * \n     * @param instant  milliseconds from 1970-01-01T00:00:00Z to get the offset for\n     * @return the millisecond offset to add to UTC to get local time\n     */",
+   "name": "getOffset"
+  },
+  {
+   "javadoc": "/**\n     * Gets the millisecond offset to add to UTC to get local time.\n     * \n     * @param instant  instant to get the offset for, null means now\n     * @return the millisecond offset to add to UTC to get local time\n     */",
+   "name": "getOffset"
+  },
+  {
+   "javadoc": "/**\n     * Gets the standard millisecond offset to add to UTC to get local time,\n     * when standard time is in effect.\n     * \n     * @param instant  milliseconds from 1970-01-01T00:00:00Z to get the offset for\n     * @return the millisecond offset to add to UTC to get local time\n     */",
+   "name": "getStandardOffset"
+  },
+  {
+   "javadoc": "/**\n     * Checks whether, at a particular instant, the offset is standard or not.\n     * <p>\n     * This method can be used to determine whether Summer Time (DST) applies.\n     * As a general rule, if the offset at the specified instant is standard,\n     * then either Winter time applies, or there is no Summer Time. If the\n     * instant is not standard, then Summer Time applies.\n     * <p>\n     * The implementation of the method is simply whether {@link #getOffset(long)}\n     * equals {@link #getStandardOffset(long)} at the specified instant.\n     * \n     * @param instant  milliseconds from 1970-01-01T00:00:00Z to get the offset for\n     * @return true if the offset at the given instant is the standard offset\n     * @since 1.5\n     */",
+   "name": "isStandardOffset"
+  },
+  {
+   "javadoc": "/**\n     * Gets the millisecond offset to subtract from local time to get UTC time.\n     * This offset can be used to undo adding the offset obtained by getOffset.\n     *\n     * <pre>\n     * millisLocal == millisUTC   + getOffset(millisUTC)\n     * millisUTC   == millisLocal - getOffsetFromLocal(millisLocal)\n     * </pre>\n     *\n     * NOTE: After calculating millisLocal, some error may be introduced. At\n     * offset transitions (due to DST or other historical changes), ranges of\n     * local times may map to different UTC times.\n     * <p>\n     * This method will return an offset suitable for calculating an instant\n     * after any DST gap. For example, consider a zone with a cutover\n     * from 01:00 to 01:59:<br />\n     * Input: 00:00  Output: 00:00<br />\n     * Input: 00:30  Output: 00:30<br />\n     * Input: 01:00  Output: 02:00<br />\n     * Input: 01:30  Output: 02:30<br />\n     * Input: 02:00  Output: 02:00<br />\n     * Input: 02:30  Output: 02:30<br />\n     * <p>\n     * During a DST overlap (where the local time is ambiguous) this method will return\n     * the earlier instant. The combination of these two rules is to always favour\n     * daylight (summer) time over standard (winter) time.\n     * <p>\n     * NOTE: Prior to v2.0, the DST overlap behaviour was not defined and varied by hemisphere.\n     * Prior to v1.5, the DST gap behaviour was also not defined.\n     *\n     * @param instantLocal  the millisecond instant, relative to this time zone, to get the offset for\n     * @return the millisecond offset to subtract from local time to get UTC time\n     */",
+   "name": "getOffsetFromLocal"
+  },
+  {
+   "javadoc": "/**\n     * Converts a standard UTC instant to a local instant with the same\n     * local time. This conversion is used before performing a calculation\n     * so that the calculation can be done using a simple local zone.\n     *\n     * @param instantUTC  the UTC instant to convert to local\n     * @return the local instant with the same local time\n     * @throws ArithmeticException if the result overflows a long\n     * @since 1.5\n     */",
+   "name": "convertUTCToLocal"
+  },
+  {
+   "javadoc": "/**\n     * Converts a local instant to a standard UTC instant with the same\n     * local time attempting to use the same offset as the original.\n     * <p>\n     * This conversion is used after performing a calculation\n     * where the calculation was done using a simple local zone.\n     * Whenever possible, the same offset as the original offset will be used.\n     * This is most significant during a daylight savings overlap.\n     *\n     * @param instantLocal  the local instant to convert to UTC\n     * @param strict  whether the conversion should reject non-existent local times\n     * @param originalInstantUTC  the original instant that the calculation is based on\n     * @return the UTC instant with the same local time, \n     * @throws ArithmeticException if the result overflows a long\n     * @throws IllegalArgumentException if the zone has no equivalent local time\n     * @since 2.0\n     */",
+   "name": "convertLocalToUTC"
+  },
+  {
+   "javadoc": "/**\n     * Converts a local instant to a standard UTC instant with the same\n     * local time. This conversion is used after performing a calculation\n     * where the calculation was done using a simple local zone.\n     *\n     * @param instantLocal  the local instant to convert to UTC\n     * @param strict  whether the conversion should reject non-existent local times\n     * @return the UTC instant with the same local time, \n     * @throws ArithmeticException if the result overflows a long\n     * @throws IllegalInstantException if the zone has no equivalent local time\n     * @since 1.5\n     */",
+   "name": "convertLocalToUTC"
+  },
+  {
+   "javadoc": "/**\n     * Gets the millisecond instant in another zone keeping the same local time.\n     * <p>\n     * The conversion is performed by converting the specified UTC millis to local\n     * millis in this zone, then converting back to UTC millis in the new zone.\n     *\n     * @param newZone  the new zone, null means default\n     * @param oldInstant  the UTC millisecond instant to convert\n     * @return the UTC millisecond instant with the same local time in the new zone\n     */",
+   "name": "getMillisKeepLocal"
+  },
+  {
+   "javadoc": "/**\n     * Checks if the given {@link LocalDateTime} is within a gap.\n     * <p>\n     * When switching from standard time to Daylight Savings Time there is\n     * typically a gap where a clock hour is missing. This method identifies\n     * whether the local datetime refers to such a gap.\n     * \n     * @param localDateTime  the time to check, not null\n     * @return true if the given datetime refers to a gap\n     * @since 1.6\n     */",
+   "name": "isLocalDateTimeGap"
+  },
+  {
+   "javadoc": "/**\n     * Adjusts the offset to be the earlier or later one during an overlap.\n     * \n     * @param instant  the instant to adjust\n     * @param earlierOrLater  false for earlier, true for later\n     * @return the adjusted instant millis\n     */",
+   "name": "adjustOffset"
+  },
+  {
+   "javadoc": "/**\n     * Returns true if this time zone has no transitions.\n     *\n     * @return true if no transitions\n     */",
+   "name": "isFixed"
+  },
+  {
+   "javadoc": "/**\n     * Advances the given instant to where the time zone offset or name changes.\n     * If the instant returned is exactly the same as passed in, then\n     * no changes occur after the given instant.\n     *\n     * @param instant  milliseconds from 1970-01-01T00:00:00Z\n     * @return milliseconds from 1970-01-01T00:00:00Z\n     */",
+   "name": "nextTransition"
+  },
+  {
+   "javadoc": "/**\n     * Retreats the given instant to where the time zone offset or name changes.\n     * If the instant returned is exactly the same as passed in, then\n     * no changes occur before the given instant.\n     *\n     * @param instant  milliseconds from 1970-01-01T00:00:00Z\n     * @return milliseconds from 1970-01-01T00:00:00Z\n     */",
+   "name": "previousTransition"
+  },
+  {
+   "javadoc": "/**\n     * Get the datetime zone as a {@link java.util.TimeZone}.\n     * \n     * @return the closest matching TimeZone object\n     */",
+   "name": "toTimeZone"
+  },
+  {
+   "javadoc": "/**\n     * Compare this datetime zone with another.\n     * \n     * @param object the object to compare with\n     * @return true if equal, based on the ID and all internal rules\n     */",
+   "name": "equals"
+  },
+  {
+   "javadoc": "/**\n     * Gets a hash code compatable with equals.\n     * \n     * @return suitable hashcode\n     */",
+   "name": "hashCode"
+  },
+  {
+   "javadoc": "/**\n     * Gets the datetime zone as a string, which is simply its ID.\n     * @return the id of the zone\n     */",
+   "name": "toString"
+  },
+  {
+   "javadoc": "/**\n     * By default, when DateTimeZones are serialized, only a \"stub\" object\n     * referring to the id is written out. When the stub is read in, it\n     * replaces itself with a DateTimeZone object.\n     * @return a stub object to go in the stream\n     */",
+   "name": "writeReplace"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public abstract class DateTimeZone implements Serializable",
+  "constructors": [
+   "protected DateTimeZone(String id);"
+  ],
+  "focal_signature": "public static DateTimeZone forOffsetHoursMinutes(int hoursOffset, int minutesOffset) throws IllegalArgumentException",
+  "methods": [
+   "public static DateTimeZone getDefault();",
+   "public static void setDefault(DateTimeZone zone) throws SecurityException;",
+   "public static DateTimeZone forID(String id);",
+   "public static DateTimeZone forOffsetHours(int hoursOffset) throws IllegalArgumentException;",
+   "public static DateTimeZone forOffsetMillis(int millisOffset);",
+   "public static DateTimeZone forTimeZone(TimeZone zone);",
+   "public static Set<String> getAvailableIDs();",
+   "public static Provider getProvider();",
+   "public static void setProvider(Provider provider) throws SecurityException;",
+   "public static NameProvider getNameProvider();",
+   "public static void setNameProvider(NameProvider nameProvider) throws SecurityException;",
+   "public final String getID();",
+   "public abstract String getNameKey(long instant);",
+   "public final String getShortName(long instant);",
+   "public String getShortName(long instant, Locale locale);",
+   "public final String getName(long instant);",
+   "public String getName(long instant, Locale locale);",
+   "public abstract int getOffset(long instant);",
+   "public final int getOffset(ReadableInstant instant);",
+   "public abstract int getStandardOffset(long instant);",
+   "public boolean isStandardOffset(long instant);",
+   "public int getOffsetFromLocal(long instantLocal);",
+   "public long convertUTCToLocal(long instantUTC);",
+   "public long convertLocalToUTC(long instantLocal, boolean strict, long originalInstantUTC);",
+   "public long convertLocalToUTC(long instantLocal, boolean strict);",
+   "public long getMillisKeepLocal(DateTimeZone newZone, long oldInstant);",
+   "public boolean isLocalDateTimeGap(LocalDateTime localDateTime);",
+   "public long adjustOffset(long instant, boolean earlierOrLater);",
+   "public abstract boolean isFixed();",
+   "public abstract long nextTransition(long instant);",
+   "public abstract long previousTransition(long instant);",
+   "public java.util.TimeZone toTimeZone();",
+   "public abstract boolean equals(Object object);",
+   "public int hashCode();",
+   "public String toString();",
+   "protected Object writeReplace() throws ObjectStreamException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test"
+}

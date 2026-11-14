@@ -1,0 +1,202 @@
+{
+ "bug_name": "JacksonDatabind_32",
+ "call_sites": [
+  {
+   "line": 488,
+   "lines": [
+    483,
+    484,
+    485,
+    486,
+    487,
+    488,
+    489,
+    490,
+    491,
+    492,
+    493
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "            BeanProperty prop) throws JsonMappingException {\n        KeyDeserializer kd = _cache.findKeyDeserializer(this,\n                _factory, keyType);\n        // Second: contextualize?\n        if (kd instanceof ContextualKeyDeserializer) {\n            kd = ((ContextualKeyDeserializer) kd).createContextual(this, prop);\n        }\n        return kd;\n    }\n    \n    /*"
+  },
+  {
+   "line": 638,
+   "lines": [
+    633,
+    634,
+    635,
+    636,
+    637,
+    638,
+    639,
+    640,
+    641,
+    642,
+    643
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "        throws JsonMappingException\n    {\n        if (deser instanceof ContextualDeserializer) {\n            _currentType = new LinkedNode<JavaType>(type, _currentType);\n            try {\n                deser = ((ContextualDeserializer) deser).createContextual(this, prop);\n            } finally {\n                _currentType = _currentType.next();\n            }\n        }\n        return deser;"
+  },
+  {
+   "line": 669,
+   "lines": [
+    664,
+    665,
+    666,
+    667,
+    668,
+    669,
+    670,
+    671,
+    672,
+    673,
+    674
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "        throws JsonMappingException\n    {\n        if (deser instanceof ContextualDeserializer) {\n            _currentType = new LinkedNode<JavaType>(type, _currentType);\n            try {\n                deser = ((ContextualDeserializer) deser).createContextual(this, prop);\n            } finally {\n                _currentType = _currentType.next();\n            }\n        }\n        return deser;"
+  },
+  {
+   "line": 685,
+   "lines": [
+    680,
+    681,
+    682,
+    683,
+    684,
+    685,
+    686,
+    687,
+    688,
+    689,
+    690
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "    }\n\n    @Deprecated // since 2.5; remove from 2.7\n    public JsonDeserializer<?> handleSecondaryContextualization(JsonDeserializer<?> deser, BeanProperty prop) throws JsonMappingException {\n        if (deser instanceof ContextualDeserializer) {\n            deser = ((ContextualDeserializer) deser).createContextual(this, prop);\n        }\n        return deser;\n    }\n\n    /*"
+  },
+  {
+   "line": 916,
+   "lines": [
+    911,
+    912,
+    913,
+    914,
+    915,
+    916,
+    917,
+    918,
+    919,
+    920,
+    921
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/SerializerProvider.java",
+   "snippet": "            BeanProperty property)\n        throws JsonMappingException\n    {\n        if (ser != null) {\n            if (ser instanceof ContextualSerializer) {\n                ser = ((ContextualSerializer) ser).createContextual(this, property);\n            }\n        }\n        return ser;\n    }\n"
+  }
+ ],
+ "class_simple": "UntypedObjectDeserializer",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Deserializer implementation that is used if it is necessary to bind content of\n * \"unknown\" type; something declared as basic {@link java.lang.Object}\n * (either explicitly, or due to type erasure).\n * If so, \"natural\" mapping is used to convert JSON values to their natural\n * Java object matches: JSON arrays to Java {@link java.util.List}s (or, if configured,\n * Object[]), JSON objects to {@link java.util.Map}s, numbers to\n * {@link java.lang.Number}s, booleans to {@link java.lang.Boolean}s and\n * strings to {@link java.lang.String} (and nulls to nulls).\n */\n@JacksonStdImpl\npublic",
+  "method_javadoc": "/**\n     * We only use contextualization for optimizing the case where no customization\n     * occurred; if so, can slip in a more streamlined version.\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "protected final static Object[] NO_OBJECTS",
+  "public final static UntypedObjectDeserializer instance",
+  "protected JsonDeserializer<Object> _mapDeserializer",
+  "protected JsonDeserializer<Object> _listDeserializer",
+  "protected JsonDeserializer<Object> _stringDeserializer",
+  "protected JsonDeserializer<Object> _numberDeserializer",
+  "protected JavaType _listType",
+  "protected JavaType _mapType"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.deser.std.UntypedObjectDeserializer",
+ "focal_id": "JacksonDatabind_32::com.fasterxml.jackson.databind.deser.std.UntypedObjectDeserializer::createContextual(DeserializationContext,BeanProperty)",
+ "focal_method_name": "createContextual",
+ "generations": 3,
+ "impl_B": "@Override\n    public JsonDeserializer<?> createContextual(DeserializationContext ctxt,\n            BeanProperty property) throws JsonMappingException\n    {\n        // 20-Apr-2014, tatu: If nothing custom, let's use \"vanilla\" instance,\n        //     simpler and can avoid some of delegation\n        if ((_stringDeserializer == null) && (_numberDeserializer == null)\n                && (_mapDeserializer == null) && (_listDeserializer == null)\n                &&  getClass() == UntypedObjectDeserializer.class) {\n            return Vanilla.std;\n        }\n        return this;\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.util.*",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.databind.BeanProperty",
+  "com.fasterxml.jackson.databind.DeserializationContext",
+  "com.fasterxml.jackson.databind.DeserializationFeature",
+  "com.fasterxml.jackson.databind.JavaType",
+  "com.fasterxml.jackson.databind.JsonDeserializer",
+  "com.fasterxml.jackson.databind.JsonMappingException",
+  "com.fasterxml.jackson.databind.annotation.JacksonStdImpl",
+  "com.fasterxml.jackson.databind.deser.ContextualDeserializer",
+  "com.fasterxml.jackson.databind.deser.ResolvableDeserializer",
+  "com.fasterxml.jackson.databind.jsontype.TypeDeserializer",
+  "com.fasterxml.jackson.databind.type.TypeFactory",
+  "com.fasterxml.jackson.databind.util.ClassUtil",
+  "com.fasterxml.jackson.databind.util.ObjectBuffer"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.deser.std",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "_findCustomDeser"
+  },
+  {
+   "javadoc": "",
+   "name": "_clearIfStdImpl"
+  },
+  {
+   "javadoc": "",
+   "name": "_withResolved"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */\n\n    /* 07-Nov-2014, tatu: When investigating [databind#604], realized that it makes\n     *   sense to also mark this is cachable, since lookup not exactly free, and\n     *   since it's not uncommon to \"read anything\"\n     */",
+   "name": "isCachable"
+  },
+  {
+   "javadoc": "",
+   "name": "deserialize"
+  },
+  {
+   "javadoc": "",
+   "name": "deserializeWithType"
+  },
+  {
+   "javadoc": "/**\n     * Method called to map a JSON Array into a Java value.\n     */",
+   "name": "mapArray"
+  },
+  {
+   "javadoc": "/**\n     * Method called to map a JSON Object into a Java value.\n     */",
+   "name": "mapObject"
+  },
+  {
+   "javadoc": "/**\n     * Method called to map a JSON Array into a Java Object array (Object[]).\n     */",
+   "name": "mapArrayToArray"
+  }
+ ],
+ "sig": {
+  "class_declaration": "@JacksonStdImpl public class UntypedObjectDeserializer extends StdDeserializer<Object> implements ResolvableDeserializer, ContextualDeserializer",
+  "constructors": [
+   "public UntypedObjectDeserializer();",
+   "public UntypedObjectDeserializer(JavaType listType, JavaType mapType);"
+  ],
+  "focal_signature": "public JsonDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property) throws JsonMappingException",
+  "methods": [
+   "protected JsonDeserializer<Object> _findCustomDeser(DeserializationContext ctxt, JavaType type) throws JsonMappingException;",
+   "protected JsonDeserializer<Object> _clearIfStdImpl(JsonDeserializer<Object> deser);",
+   "protected JsonDeserializer<?> _withResolved(JsonDeserializer<?> mapDeser, JsonDeserializer<?> listDeser, JsonDeserializer<?> stringDeser, JsonDeserializer<?> numberDeser);",
+   "public boolean isCachable();",
+   "public Object deserialize(JsonParser p, DeserializationContext ctxt) throws IOException;",
+   "public Object deserializeWithType(JsonParser p, DeserializationContext ctxt, TypeDeserializer typeDeserializer) throws IOException;",
+   "protected Object mapArray(JsonParser jp, DeserializationContext ctxt) throws IOException;",
+   "protected Object mapObject(JsonParser p, DeserializationContext ctxt) throws IOException;",
+   "protected Object[] mapArrayToArray(JsonParser jp, DeserializationContext ctxt) throws IOException;"
+  ],
+  "type_signatures": [
+   "public abstract class DeserializationContext extends DatabindContext implements java.io.Serializable { protected DeserializationContext(DeserializerFactory df); protected DeserializationContext(DeserializerFactory df, DeserializerCache cache); protected DeserializationContext(DeserializationContext src, DeserializerFactory factory); protected DeserializationContext(DeserializationContext src, DeserializationConfig config, JsonParser p, InjectableValues injectableValues); protected DeserializationContext(DeserializationContext src); public DeserializationConfig getConfig(); public final Class<?> getActiveView(); public final AnnotationIntrospector getAnnotationIntrospector(); public final TypeFactory getTypeFactory(); public Locale getLocale(); public TimeZone getTimeZone(); public Object getAttribute(Object key); public DeserializationContext setAttribute(Object key, Object value); public JavaType getContextualType(); public DeserializerFactory getFactory(); }",
+   "public interface BeanProperty extends Named { public String getName(); public PropertyName getFullName(); public JavaType getType(); public PropertyName getWrapperName(); public PropertyMetadata getMetadata(); public boolean isRequired(); public <A extends Annotation> A getAnnotation(Class<A> acls); public <A extends Annotation> A getContextAnnotation(Class<A> acls); public AnnotatedMember getMember(); public JsonFormat.Value findFormatOverrides(AnnotationIntrospector intr); public void depositSchemaProperty(JsonObjectFormatVisitor objectVisitor) throws JsonMappingException; }",
+   "public abstract class JsonDeserializer<T> { public abstract T deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException; public T deserialize(JsonParser p, DeserializationContext ctxt, T intoValue) throws IOException, JsonProcessingException; public Object deserializeWithType(JsonParser p, DeserializationContext ctxt, TypeDeserializer typeDeserializer) throws IOException; public JsonDeserializer<T> unwrappingDeserializer(NameTransformer unwrapper); public JsonDeserializer<?> replaceDelegatee(JsonDeserializer<?> delegatee); public Class<?> handledType(); public boolean isCachable(); public JsonDeserializer<?> getDelegatee(); public Collection<Object> getKnownPropertyNames(); public T getNullValue(DeserializationContext ctxt) throws JsonMappingException; public T getEmptyValue(DeserializationContext ctxt) throws JsonMappingException; public ObjectIdReader getObjectIdReader(); public SettableBeanProperty findBackReference(String refName); public T getNullValue(); public T getEmptyValue(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

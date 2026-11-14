@@ -1,0 +1,224 @@
+{
+ "bug_name": "Chart_8",
+ "call_sites": [
+  {
+   "line": 304,
+   "lines": [
+    299,
+    300,
+    301,
+    302,
+    303,
+    304,
+    305,
+    306,
+    307,
+    308,
+    309
+   ],
+   "path": "source/org/jfree/data/time/Week.java",
+   "snippet": "     */\n    public RegularTimePeriod previous() {\n\n        Week result;\n        if (this.week != FIRST_WEEK_IN_YEAR) {\n            result = new Week(this.week - 1, this.year);\n        }\n        else {\n            // we need to work out if the previous year has 52 or 53 weeks...\n            if (this.year > 1900) {\n                int yy = this.year - 1;"
+  },
+  {
+   "line": 312,
+   "lines": [
+    307,
+    308,
+    309,
+    310,
+    311,
+    312,
+    313,
+    314,
+    315,
+    316,
+    317
+   ],
+   "path": "source/org/jfree/data/time/Week.java",
+   "snippet": "            // we need to work out if the previous year has 52 or 53 weeks...\n            if (this.year > 1900) {\n                int yy = this.year - 1;\n                Calendar prevYearCalendar = Calendar.getInstance();\n                prevYearCalendar.set(yy, Calendar.DECEMBER, 31);\n                result = new Week(prevYearCalendar.getActualMaximum(\n                        Calendar.WEEK_OF_YEAR), yy);\n            }\n            else {\n                result = null;\n            }"
+  },
+  {
+   "line": 336,
+   "lines": [
+    331,
+    332,
+    333,
+    334,
+    335,
+    336,
+    337,
+    338,
+    339,
+    340,
+    341
+   ],
+   "path": "source/org/jfree/data/time/Week.java",
+   "snippet": "     */\n    public RegularTimePeriod next() {\n\n        Week result;\n        if (this.week < 52) {\n            result = new Week(this.week + 1, this.year);\n        }\n        else {\n            Calendar calendar = Calendar.getInstance();\n            calendar.set(this.year, Calendar.DECEMBER, 31);\n            int actualMaxWeek"
+  },
+  {
+   "line": 344,
+   "lines": [
+    339,
+    340,
+    341,
+    342,
+    343,
+    344,
+    345,
+    346,
+    347,
+    348,
+    349
+   ],
+   "path": "source/org/jfree/data/time/Week.java",
+   "snippet": "            Calendar calendar = Calendar.getInstance();\n            calendar.set(this.year, Calendar.DECEMBER, 31);\n            int actualMaxWeek\n                = calendar.getActualMaximum(Calendar.WEEK_OF_YEAR);\n            if (this.week < actualMaxWeek) {\n                result = new Week(this.week + 1, this.year);\n            }\n            else {\n                if (this.year < 9999) {\n                    result = new Week(FIRST_WEEK_IN_YEAR, this.year + 1);\n                }"
+  },
+  {
+   "line": 348,
+   "lines": [
+    343,
+    344,
+    345,
+    346,
+    347,
+    348,
+    349,
+    350,
+    351,
+    352,
+    353
+   ],
+   "path": "source/org/jfree/data/time/Week.java",
+   "snippet": "            if (this.week < actualMaxWeek) {\n                result = new Week(this.week + 1, this.year);\n            }\n            else {\n                if (this.year < 9999) {\n                    result = new Week(FIRST_WEEK_IN_YEAR, this.year + 1);\n                }\n                else {\n                    result = null;\n                }\n            }"
+  }
+ ],
+ "class_simple": "Week",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * A calendar week.  All years are considered to have 53 weeks, numbered from 1\n * to 53, although in many cases the 53rd week is empty.  Most of the time, the\n * 1st week of the year *begins* in the previous calendar year, but it always\n * finishes in the current year (this behaviour matches the workings of the\n * <code>GregorianCalendar</code> class).\n * <P>\n * This class is immutable, which is a requirement for all\n * {@link RegularTimePeriod} subclasses.\n */\npublic",
+  "method_javadoc": "/**\n     * Creates a time period for the week in which the specified date/time\n     * falls, calculated relative to the specified time zone.\n     *\n     * @param time  the date/time (<code>null</code> not permitted).\n     * @param zone  the time zone (<code>null</code> not permitted).\n     *\n     * @deprecated As of 1.0.7, use {@link #Week(Date, TimeZone, Locale)}.\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "public static final int FIRST_WEEK_IN_YEAR",
+  "public static final int LAST_WEEK_IN_YEAR",
+  "private short year",
+  "private byte week",
+  "private long firstMillisecond",
+  "private long lastMillisecond"
+ ],
+ "focal_class": "org.jfree.data.time.Week",
+ "focal_id": "Chart_8::org.jfree.data.time.Week::Week(Date,TimeZone)",
+ "focal_method_name": "Week",
+ "generations": 3,
+ "impl_B": "public Week(Date time, TimeZone zone) {\n        // defer argument checking...\n        this(time, RegularTimePeriod.DEFAULT_TIME_ZONE, Locale.getDefault());\n    }",
+ "imports": [
+  "java.io.Serializable",
+  "java.util.Calendar",
+  "java.util.Date",
+  "java.util.Locale",
+  "java.util.TimeZone"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.jfree.data.time",
+ "project": "Chart",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Returns the year in which the week falls.\n     *\n     * @return The year (never <code>null</code>).\n     */",
+   "name": "getYear"
+  },
+  {
+   "javadoc": "/**\n     * Returns the year in which the week falls, as an integer value.\n     *\n     * @return The year.\n     */",
+   "name": "getYearValue"
+  },
+  {
+   "javadoc": "/**\n     * Returns the week.\n     *\n     * @return The week.\n     */",
+   "name": "getWeek"
+  },
+  {
+   "javadoc": "/**\n     * Returns the first millisecond of the week.  This will be determined\n     * relative to the time zone specified in the constructor, or in the\n     * calendar instance passed in the most recent call to the\n     * {@link #peg(Calendar)} method.\n     *\n     * @return The first millisecond of the week.\n     *\n     * @see #getLastMillisecond()\n     */",
+   "name": "getFirstMillisecond"
+  },
+  {
+   "javadoc": "/**\n     * Returns the last millisecond of the week.  This will be\n     * determined relative to the time zone specified in the constructor, or\n     * in the calendar instance passed in the most recent call to the\n     * {@link #peg(Calendar)} method.\n     *\n     * @return The last millisecond of the week.\n     *\n     * @see #getFirstMillisecond()\n     */",
+   "name": "getLastMillisecond"
+  },
+  {
+   "javadoc": "/**\n     * Recalculates the start date/time and end date/time for this time period\n     * relative to the supplied calendar (which incorporates a time zone).\n     *\n     * @param calendar  the calendar (<code>null</code> not permitted).\n     *\n     * @since 1.0.3\n     */",
+   "name": "peg"
+  },
+  {
+   "javadoc": "/**\n     * Returns the week preceding this one.  This method will return\n     * <code>null</code> for some lower limit on the range of weeks (currently\n     * week 1, 1900).  For week 1 of any year, the previous week is always week\n     * 53, but week 53 may not contain any days (you should check for this).\n     *\n     * @return The preceding week (possibly <code>null</code>).\n     */",
+   "name": "previous"
+  },
+  {
+   "javadoc": "/**\n     * Returns the week following this one.  This method will return\n     * <code>null</code> for some upper limit on the range of weeks (currently\n     * week 53, 9999).  For week 52 of any year, the following week is always\n     * week 53, but week 53 may not contain any days (you should check for\n     * this).\n     *\n     * @return The following week (possibly <code>null</code>).\n     */",
+   "name": "next"
+  },
+  {
+   "javadoc": "/**\n     * Returns a serial index number for the week.\n     *\n     * @return The serial index number.\n     */",
+   "name": "getSerialIndex"
+  },
+  {
+   "javadoc": "/**\n     * Returns the first millisecond of the week, evaluated using the supplied\n     * calendar (which determines the time zone).\n     *\n     * @param calendar  the calendar (<code>null</code> not permitted).\n     *\n     * @return The first millisecond of the week.\n     *\n     * @throws NullPointerException if <code>calendar</code> is\n     *     <code>null</code>.\n     */",
+   "name": "getFirstMillisecond"
+  },
+  {
+   "javadoc": "/**\n     * Returns the last millisecond of the week, evaluated using the supplied\n     * calendar (which determines the time zone).\n     *\n     * @param calendar  the calendar (<code>null</code> not permitted).\n     *\n     * @return The last millisecond of the week.\n     *\n     * @throws NullPointerException if <code>calendar</code> is\n     *     <code>null</code>.\n     */",
+   "name": "getLastMillisecond"
+  },
+  {
+   "javadoc": "/**\n     * Returns a string representing the week (e.g. \"Week 9, 2002\").\n     *\n     * TODO: look at internationalisation.\n     *\n     * @return A string representing the week.\n     */",
+   "name": "toString"
+  },
+  {
+   "javadoc": "/**\n     * Tests the equality of this Week object to an arbitrary object.  Returns\n     * true if the target is a Week instance representing the same week as this\n     * object.  In all other cases, returns false.\n     *\n     * @param obj  the object (<code>null</code> permitted).\n     *\n     * @return <code>true</code> if week and year of this and object are the\n     *         same.\n     */",
+   "name": "equals"
+  },
+  {
+   "javadoc": "/**\n     * Returns a hash code for this object instance.  The approach described by\n     * Joshua Bloch in \"Effective Java\" has been used here:\n     * <p>\n     * <code>http://developer.java.sun.com/developer/Books/effectivejava\n     * /Chapter3.pdf</code>\n     *\n     * @return A hash code.\n     */",
+   "name": "hashCode"
+  },
+  {
+   "javadoc": "/**\n     * Returns an integer indicating the order of this Week object relative to\n     * the specified object:\n     *\n     * negative == before, zero == same, positive == after.\n     *\n     * @param o1  the object to compare.\n     *\n     * @return negative == before, zero == same, positive == after.\n     */",
+   "name": "compareTo"
+  },
+  {
+   "javadoc": "/**\n     * Parses the string argument as a week.\n     * <P>\n     * This method is required to accept the format \"YYYY-Wnn\".  It will also\n     * accept \"Wnn-YYYY\". Anything else, at the moment, is a bonus.\n     *\n     * @param s  string to parse.\n     *\n     * @return <code>null</code> if the string is not parseable, the week\n     *         otherwise.\n     */",
+   "name": "parseWeek"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class Week extends RegularTimePeriod implements Serializable",
+  "constructors": [
+   "public Week();",
+   "public Week(int week, int year);",
+   "public Week(int week, Year year);",
+   "public Week(Date time);",
+   "public Week(Date time, TimeZone zone);",
+   "public Week(Date time, TimeZone zone, Locale locale);"
+  ],
+  "focal_signature": "public Week(Date time, TimeZone zone)",
+  "methods": [
+   "public Year getYear();",
+   "public int getYearValue();",
+   "public int getWeek();",
+   "public long getFirstMillisecond();",
+   "public long getLastMillisecond();",
+   "public void peg(Calendar calendar);",
+   "public RegularTimePeriod previous();",
+   "public RegularTimePeriod next();",
+   "public long getSerialIndex();",
+   "public long getFirstMillisecond(Calendar calendar);",
+   "public long getLastMillisecond(Calendar calendar);",
+   "public String toString();",
+   "public boolean equals(Object obj);",
+   "public int hashCode();",
+   "public int compareTo(Object o1);",
+   "public static Week parseWeek(String s);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

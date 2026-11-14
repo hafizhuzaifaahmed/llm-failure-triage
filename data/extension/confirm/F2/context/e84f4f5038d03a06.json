@@ -1,0 +1,141 @@
+{
+ "bug_name": "Closure_157",
+ "call_sites": [
+  {
+   "line": 500,
+   "lines": [
+    495,
+    496,
+    497,
+    498,
+    499,
+    500,
+    501,
+    502,
+    503,
+    504,
+    505
+   ],
+   "path": "src/com/google/debugging/sourcemap/SourceMapGeneratorV1.java",
+   "snippet": "     * @param col The starting column for this code segment.\n     * @param endLine The ending line\n     * @param endCol The ending column\n     * @throws IOException\n     */\n    void visit(Mapping m, int line, int col, int endLine, int endCol)\n        throws IOException;\n  }\n\n  /**\n   * Walk the mappings and visit each segment of the mappings, unmapped"
+  },
+  {
+   "line": 589,
+   "lines": [
+    584,
+    585,
+    586,
+    587,
+    588,
+    589,
+    590,
+    591,
+    592,
+    593,
+    594
+   ],
+   "path": "src/com/google/debugging/sourcemap/SourceMapGeneratorV1.java",
+   "snippet": "      int nextLine = getAdjustedLine(m.endPosition);\n      int nextCol = getAdjustedCol(m.endPosition);\n      // If this anything remaining in this mapping beyond the\n      // current line and column position, write it out now.\n      if (line < nextLine || (line == nextLine && col < nextCol)) {\n        visit(v, m, nextLine, nextCol);\n      }\n    }\n\n    /**\n     * Write any needed entries to complete the provided mapping."
+  },
+  {
+   "line": 603,
+   "lines": [
+    598,
+    599,
+    600,
+    601,
+    602,
+    603,
+    604,
+    605,
+    606,
+    607,
+    608
+   ],
+   "path": "src/com/google/debugging/sourcemap/SourceMapGeneratorV1.java",
+   "snippet": "      int nextLine = getAdjustedLine(m.startPosition);\n      int nextCol = getAdjustedCol(m.startPosition);\n      // If the previous value is null, no mapping exists.\n      Preconditions.checkState(line < nextLine || col <= nextCol);\n      if (line < nextLine || (line == nextLine && col < nextCol)) {\n        visit(v, parent, nextLine, nextCol);\n      }\n    }\n\n    /**\n     * Write any entries needed between the current position the next position"
+  },
+  {
+   "line": 623,
+   "lines": [
+    618,
+    619,
+    620,
+    621,
+    622,
+    623,
+    624,
+    625,
+    626,
+    627,
+    628
+   ],
+   "path": "src/com/google/debugging/sourcemap/SourceMapGeneratorV1.java",
+   "snippet": "        // Nothing to do.\n        Preconditions.checkState(false);\n        return;\n      }\n\n      v.visit(m, line, col, nextLine, nextCol);\n\n      line = nextLine;\n      col = nextCol;\n    }\n  }"
+  },
+  {
+   "line": 827,
+   "lines": [
+    822,
+    823,
+    824,
+    825,
+    826,
+    827,
+    828,
+    829,
+    830,
+    831,
+    832
+   ],
+   "path": "src/com/google/debugging/sourcemap/SourceMapGeneratorV2.java",
+   "snippet": "     * @param col The starting column for this code segment.\n     * @param endLine The ending line\n     * @param endCol The ending column\n     * @throws IOException\n     */\n    void visit(Mapping m, int line, int col, int endLine, int endCol)\n        throws IOException;\n  }\n\n  /**\n   * Walk the mappings and visit each segment of the mappings, unmapped"
+  }
+ ],
+ "class_simple": "ProcessProperties",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * RenamePrototypes renames custom properties (including methods) of custom\n * prototypes and object literals. Externed property names are never renamed.\n *\n * To ensure that a prototype property or object literal property gets renamed,\n * end it with an underscore.\n *\n * To ensure that a prototype property is not renamed, give it a leading\n * underscore.\n *\n * For custom prototype property names that lack leading and trailing\n * underscores:\n * - To always rename these, use aggressive renaming.\n * - If aggresive renaming is off, we use a heuristic to decide whether to\n *   rename (to avoid most built-in js methods). We rename if the original name\n *   contains at least one character that is not a lowercase letter.\n *\n * When a property name is used both in a prototype definition and as an object\n * literal key, we rename it only if it satisifies both renaming policies.\n *\n */\nclass RenamePrototypes implements CompilerPass {\n\n  private final AbstractCompiler compiler;\n  private final boolean aggressiveRenaming;\n  private final char[] reservedCharacters;\n\n  /** Previously used prototype renaming map. */\n  private final VariableMap prevUsedRenameMap;\n\n  /**\n   * The Property class encapsulates the information needed for renaming\n   * a method or member.\n   */\n  private class Property {\n    String oldName;\n    String newName;\n    int prototypeCount;\n    int objLitCount;\n    int refCount;\n\n    Property(String name) {\n      this.oldName = name;\n      this.newName = null;\n      this.prototypeCount = 0;\n      this.objLitCount = 0;\n      this.refCount = 0;\n    }\n\n    int count() {\n      return prototypeCount + objLitCount + refCount;\n    }\n\n    boolean canRename() {\n      if (this.prototypeCount > 0 && this.objLitCount == 0) {\n        return canRenamePrototypeProperty();\n      }\n      if (this.objLitCount > 0 && this.prototypeCount == 0) {\n        return canRenameObjLitProperty();\n      }\n      // We're not sure what kind of property this is, so we're conservative.\n      // Note that we still want to try renaming the property even when both\n      // counts are zero. It may be a property added to an object at runtime,\n      // like: o.newProp = x;\n      return canRenamePrototypeProperty() && canRenameObjLitProperty();\n    }\n\n    private boolean canRenamePrototypeProperty() {\n      if (compiler.getCodingConvention().isExported(oldName)) {\n        // an externally visible name should not be renamed.\n        return false;\n      }\n\n      if (compiler.getCodingConvention().isPrivate(oldName)) {\n        // private names can be safely renamed. Rename!\n        return true;\n      }\n\n      if (aggressiveRenaming) {\n        return true;\n      }\n\n      for (int i = 0, n = oldName.length(); i < n; i++) {\n        char ch = oldName.charAt(i);\n\n        if (Character.isUpperCase(ch) || !Character.isLetter(ch)) {\n          return true;\n        }\n      }\n      return false;\n    }\n\n    private boolean canRenameObjLitProperty() {\n      if (compiler.getCodingConvention().isExported(oldName)) {\n        // an externally visible name should not be renamed.\n        return false;\n      }\n\n      if (compiler.getCodingConvention().isPrivate(oldName)) {\n        // private names can be safely renamed. Rename!\n        return true;\n      }\n\n      // NOTE(user): We should probably have more aggressive options, like\n      // renaming all obj lit properties that are not quoted.\n      return false;\n    }\n  }\n\n  /**\n   * Sorts Property objects by their count, breaking ties alphabetically to\n   * ensure a deterministic total ordering.\n   */\n  private static final Comparator<Property> FREQUENCY_COMPARATOR =\n    new Comparator<Property>() {\n      public int compare(Property a1, Property a2) {\n        int n1 = a1.count();\n        int n2 = a2.count();\n        if (n1 != n2) {\n          return n2 - n1;\n        }\n        return a1.oldName.compareTo(a2.oldName);\n      }\n    };\n\n\n  // Set of String nodes to rename\n  private final Set<Node> stringNodes = new HashSet<Node>();\n\n  // Mapping of property names to Property objects\n  private final Map<String, Property> properties =\n      new HashMap<String, Property>();\n\n  // Set of names not to rename. Externed properties/methods are added later.\n  private final Set<String> reservedNames =\n      new HashSet<String>(Arrays.asList(\n          \"indexOf\", \"lastIndexOf\", \"toString\", \"valueOf\"));\n\n  // Set of OBJLIT nodes that are assigned to prototypes\n  private final Set<Node> prototypeObjLits = new HashSet<Node>();\n\n  /**\n   * Creates an instance.\n   *\n   * @param compiler The JSCompiler\n   * @param aggressiveRenaming Whether to rename aggressively\n   * @param reservedCharacters If specified these characters won't be used in\n   *   generated names\n   * @param prevUsedRenameMap The rename map used in the previous compilation\n   */\n  RenamePrototypes(AbstractCompiler compiler, boolean aggressiveRenaming,\n                   @Nullable char[] reservedCharacters,\n                   @Nullable VariableMap prevUsedRenameMap) {\n    this.compiler = compiler;\n    this.aggressiveRenaming = aggressiveRenaming;\n    this.reservedCharacters = reservedCharacters;\n    this.prevUsedRenameMap = prevUsedRenameMap;\n  }\n\n  /**\n   * Does property/method renaming.\n   *\n   * @param externs The root of the externs parse tree\n   * @param root The root of the main code parse tree\n   */\n  public void process(Node externs, Node root) {\n    Preconditions.checkState(compiler.getLifeCycleStage().isNormalized());\n\n    NodeTraversal.traverse(compiler, externs,\n                           new ProcessExternedProperties());\n    NodeTraversal.traverse(compiler, root, new ProcessProperties());\n\n    // Gather the properties to rename, sorted by count.\n    SortedSet<Property> propsByFrequency =\n        new TreeSet<Property>(FREQUENCY_COMPARATOR);\n\n    for (Iterator<Map.Entry<String, Property>> it =\n           properties.entrySet().iterator(); it.hasNext(); ) {\n      Property a = it.next().getValue();\n      if (a.canRename() && !reservedNames.contains(a.oldName)) {\n        propsByFrequency.add(a);\n      } else {\n        it.remove();\n\n        // If we're not renaming this, make sure we don't name something\n        // else to this name.\n        reservedNames.add(a.oldName);\n      }\n    }\n\n    // Try and reuse as many names from the previous compilation as possible.\n    if (prevUsedRenameMap != null) {\n      reusePrototypeNames(propsByFrequency);\n    }\n\n    // Generate new names.\n    NameGenerator nameGen = new NameGenerator(reservedNames, \"\",\n                                              reservedCharacters);\n    StringBuilder debug = new StringBuilder();\n    for (Property a : propsByFrequency) {\n      if (a.newName == null) {\n        a.newName = nameGen.generateNextName();\n        reservedNames.add(a.newName);\n      }\n\n      debug.append(a.oldName).append(\" => \").append(a.newName).append('\\n');\n    }\n\n    compiler.addToDebugLog(\"JS property assignments:\\n\" + debug);\n\n    // Update the string nodes.\n    boolean changed = false;\n    for (Node n : stringNodes) {\n      String oldName = n.getString();\n      Property a = properties.get(oldName);\n      if (a != null && a.newName != null) {\n        n.setString(a.newName);\n        changed = changed || !a.newName.equals(oldName);\n      }\n    }\n\n    if (changed) {\n      compiler.reportCodeChange();\n    }\n\n    compiler.setLifeCycleStage(LifeCycleStage.NORMALIZED_OBFUSCATED);\n  }\n\n  /**\n   * Runs through the list of properties and tries to rename as many as possible\n   * with names that were used for them in the previous compilation.\n   * {@code reservedNames} is updated with the set of reused names.\n   * @param properties The set of properties to attempt to rename.\n   */\n  private void reusePrototypeNames(Set<Property> properties) {\n    for (Property prop : properties) {\n      String prevName = prevUsedRenameMap.lookupNewName(prop.oldName);\n      if (prevName != null) {\n        if (reservedNames.contains(prevName)) {\n          continue;\n        }\n\n        prop.newName = prevName;\n        reservedNames.add(prevName);\n      }\n    }\n  }\n\n  /**\n   * Iterate through the nodes, collect all of the STRING nodes that are\n   * children of GETPROP or GETELEM and mark them as externs.\n   */\n  private class ProcessExternedProperties extends AbstractPostOrderCallback {\n\n    public void visit(NodeTraversal t, Node n, Node parent) {\n      switch (n.getType()) {\n        case Token.GETPROP:\n        case Token.GETELEM:\n          Node dest = n.getFirstChild().getNext();\n          if (dest.getType() == Token.STRING) {\n            reservedNames.add(dest.getString());\n          }\n      }\n    }\n  }\n\n  /**\n   * Iterate through the nodes, collect all of the STRING nodes that are\n   * children of GETPROP, GETELEM, or OBJLIT, and also count the number of\n   * times each STRING is referenced.\n   *\n   * Also collects OBJLIT assignments of prototypes as candidates for renaming.\n   */\n  private",
+  "method_javadoc": ""
+ },
+ "fields": [],
+ "focal_class": "com.google.javascript.jscomp.RenamePrototypes.ProcessProperties",
+ "focal_id": "Closure_157::com.google.javascript.jscomp.RenamePrototypes$ProcessProperties::visit(NodeTraversal,Node,Node)",
+ "focal_method_name": "visit",
+ "generations": 3,
+ "impl_B": "public void visit(NodeTraversal t, Node n, Node parent) {\n      switch (n.getType()) {\n        case Token.GETPROP:\n        case Token.GETELEM:\n          Node dest = n.getFirstChild().getNext();\n          if (dest.getType() == Token.STRING) {\n            String s = dest.getString();\n            if (s.equals(\"prototype\")) {\n              processPrototypeParent(parent, t.getInput());\n            } else {\n              markPropertyAccessCandidate(dest, t.getInput());\n            }\n          }\n          break;\n        case Token.OBJECTLIT:\n          if (!prototypeObjLits.contains(n)) {\n            // Object literals have their property name/value pairs as a flat\n            // list as their children. We want every other node in order to get\n            // only the property names.\n            for (Node child = n.getFirstChild();\n                 child != null;\n                 child = child.getNext()) {\n\n              if (child.getType() != Token.NUMBER) {\n                markObjLitPropertyCandidate(child, t.getInput());\n              }\n            }\n          }\n          break;\n      }\n    }",
+ "imports": [
+  "com.google.common.base.Preconditions",
+  "com.google.javascript.jscomp.AbstractCompiler.LifeCycleStage",
+  "com.google.javascript.jscomp.NodeTraversal.AbstractPostOrderCallback",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.Token",
+  "com.google.javascript.rhino.TokenStream",
+  "java.util.Arrays",
+  "java.util.Comparator",
+  "java.util.HashMap",
+  "java.util.HashSet",
+  "java.util.Iterator",
+  "java.util.Map",
+  "java.util.Set",
+  "java.util.SortedSet",
+  "java.util.TreeSet",
+  "javax.annotation.Nullable"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [],
+ "sig": {
+  "class_declaration": "private class ProcessProperties extends AbstractPostOrderCallback",
+  "constructors": [],
+  "focal_signature": "public void visit(NodeTraversal t, Node n, Node parent)",
+  "methods": [],
+  "type_signatures": [
+   "public class NodeTraversal { public NodeTraversal(AbstractCompiler compiler, Callback cb); public NodeTraversal(AbstractCompiler compiler, Callback cb, ScopeCreator scopeCreator); public void traverse(Node root); public void traverseRoots(Node ... roots); public void traverseRoots(List<Node> roots); protected void traverseInnerNode(Node node, Node parent, Scope refinedScope); public Compiler getCompiler(); public int getLineNumber(); public String getSourceName(); public CompilerInput getInput(); public JSModule getModule(); public Node getCurrentNode(); public static void traverse( AbstractCompiler compiler, Node root, Callback cb); public static void traverseRoots( AbstractCompiler compiler, List<Node> roots, Callback cb); public Scope getScope(); }",
+   "public class Node implements Cloneable, Serializable { public Node(int nodeType); public Node(int nodeType, Node child); public Node(int nodeType, Node left, Node right); public Node(int nodeType, Node left, Node mid, Node right); public Node(int nodeType, Node left, Node mid, Node mid2, Node right); public Node(int nodeType, int lineno, int charno); public Node(int nodeType, Node child, int lineno, int charno); public Node(int nodeType, Node left, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node mid2, Node right, int lineno, int charno); public Node(int nodeType, Node[] children, int lineno, int charno); public Node(int nodeType, Node[] children); public static Node newNumber(double number); public static Node newNumber(double number, int lineno, int charno); public static Node newString(String str); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

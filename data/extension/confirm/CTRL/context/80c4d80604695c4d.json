@@ -1,0 +1,272 @@
+{
+ "bug_name": "JacksonDatabind_24",
+ "call_sites": [
+  {
+   "line": 330,
+   "lines": [
+    325,
+    326,
+    327,
+    328,
+    329,
+    330,
+    331,
+    332,
+    333,
+    334,
+    335
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationConfig.java",
+   "snippet": "        return (_view == view) ? this : new DeserializationConfig(this, view);\n    }\n\n    @Override\n    public DeserializationConfig with(Locale l) {\n        return _withBase(_base.with(l));\n    }\n\n    @Override\n    public DeserializationConfig with(TimeZone tz) {\n        return _withBase(_base.with(tz));"
+  },
+  {
+   "line": 335,
+   "lines": [
+    330,
+    331,
+    332,
+    333,
+    334,
+    335,
+    336,
+    337,
+    338,
+    339,
+    340
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationConfig.java",
+   "snippet": "        return _withBase(_base.with(l));\n    }\n\n    @Override\n    public DeserializationConfig with(TimeZone tz) {\n        return _withBase(_base.with(tz));\n    }\n\n    @Override\n    public DeserializationConfig with(Base64Variant base64) {\n        return _withBase(_base.with(base64));"
+  },
+  {
+   "line": 340,
+   "lines": [
+    335,
+    336,
+    337,
+    338,
+    339,
+    340,
+    341,
+    342,
+    343,
+    344,
+    345
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationConfig.java",
+   "snippet": "        return _withBase(_base.with(tz));\n    }\n\n    @Override\n    public DeserializationConfig with(Base64Variant base64) {\n        return _withBase(_base.with(base64));\n    }\n\n    @Override\n    public DeserializationConfig with(ContextAttributes attrs) {\n        return (attrs == _attributes) ? this : new DeserializationConfig(this, attrs);"
+  },
+  {
+   "line": 765,
+   "lines": [
+    760,
+    761,
+    762,
+    763,
+    764,
+    765,
+    766,
+    767,
+    768,
+    769,
+    770
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java",
+   "snippet": "            // // // Methods for registering handlers: deserializers\n            \n            @Override\n            public void addDeserializers(Deserializers d) {\n                DeserializerFactory df = mapper._deserializationContext._factory.withAdditionalDeserializers(d);\n                mapper._deserializationContext = mapper._deserializationContext.with(df);\n            }\n\n            @Override\n            public void addKeyDeserializers(KeyDeserializers d) {\n                DeserializerFactory df = mapper._deserializationContext._factory.withAdditionalKeyDeserializers(d);"
+  },
+  {
+   "line": 771,
+   "lines": [
+    766,
+    767,
+    768,
+    769,
+    770,
+    771,
+    772,
+    773,
+    774,
+    775,
+    776
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java",
+   "snippet": "            }\n\n            @Override\n            public void addKeyDeserializers(KeyDeserializers d) {\n                DeserializerFactory df = mapper._deserializationContext._factory.withAdditionalKeyDeserializers(d);\n                mapper._deserializationContext = mapper._deserializationContext.with(df);\n            }\n\n            @Override\n            public void addBeanDeserializerModifier(BeanDeserializerModifier modifier) {\n                DeserializerFactory df = mapper._deserializationContext._factory.withDeserializerModifier(modifier);"
+  }
+ ],
+ "class_simple": "BaseSettings",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Immutable container class used to store simple configuration\n * settings. Since instances are fully immutable, instances can\n * be freely shared and used without synchronization.\n */\npublic final",
+  "method_javadoc": "/**\n     * Fluent factory for constructing a new instance that uses specified TimeZone.\n     * Note that timezone used with also be assigned to configured {@link DateFormat},\n     * changing time formatting defaults.\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "protected final ClassIntrospector _classIntrospector",
+  "protected final AnnotationIntrospector _annotationIntrospector",
+  "protected final VisibilityChecker<?> _visibilityChecker",
+  "protected final PropertyNamingStrategy _propertyNamingStrategy",
+  "protected final TypeFactory _typeFactory",
+  "protected final TypeResolverBuilder<?> _typeResolverBuilder",
+  "protected final DateFormat _dateFormat",
+  "protected final HandlerInstantiator _handlerInstantiator",
+  "protected final Locale _locale",
+  "protected final TimeZone _timeZone",
+  "protected final Base64Variant _defaultBase64"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.cfg.BaseSettings",
+ "focal_id": "JacksonDatabind_24::com.fasterxml.jackson.databind.cfg.BaseSettings::with(TimeZone)",
+ "focal_method_name": "with",
+ "generations": 3,
+ "impl_B": "public BaseSettings with(TimeZone tz)\n    {\n        if (tz == null) {\n            throw new IllegalArgumentException();\n        }\n        DateFormat df = _dateFormat;\n        if (df instanceof StdDateFormat) {\n            df = ((StdDateFormat) df).withTimeZone(tz);\n        } else {\n            // we don't know if original format might be shared; better create a clone:\n            df = (DateFormat) df.clone();\n            df.setTimeZone(tz);\n        }\n        return new BaseSettings(_classIntrospector, _annotationIntrospector,\n                _visibilityChecker, _propertyNamingStrategy, _typeFactory,\n                _typeResolverBuilder, df, _handlerInstantiator, _locale,\n                tz, _defaultBase64);\n    }",
+ "imports": [
+  "java.text.DateFormat",
+  "java.util.Locale",
+  "java.util.TimeZone",
+  "com.fasterxml.jackson.annotation.JsonAutoDetect",
+  "com.fasterxml.jackson.annotation.PropertyAccessor",
+  "com.fasterxml.jackson.core.Base64Variant",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.introspect.AnnotationIntrospectorPair",
+  "com.fasterxml.jackson.databind.introspect.ClassIntrospector",
+  "com.fasterxml.jackson.databind.introspect.VisibilityChecker",
+  "com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder",
+  "com.fasterxml.jackson.databind.type.TypeFactory",
+  "com.fasterxml.jackson.databind.util.StdDateFormat"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.cfg",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "withClassIntrospector"
+  },
+  {
+   "javadoc": "",
+   "name": "withAnnotationIntrospector"
+  },
+  {
+   "javadoc": "",
+   "name": "withInsertedAnnotationIntrospector"
+  },
+  {
+   "javadoc": "",
+   "name": "withAppendedAnnotationIntrospector"
+  },
+  {
+   "javadoc": "",
+   "name": "withVisibilityChecker"
+  },
+  {
+   "javadoc": "",
+   "name": "withVisibility"
+  },
+  {
+   "javadoc": "",
+   "name": "withPropertyNamingStrategy"
+  },
+  {
+   "javadoc": "",
+   "name": "withTypeFactory"
+  },
+  {
+   "javadoc": "",
+   "name": "withTypeResolverBuilder"
+  },
+  {
+   "javadoc": "",
+   "name": "withDateFormat"
+  },
+  {
+   "javadoc": "",
+   "name": "withHandlerInstantiator"
+  },
+  {
+   "javadoc": "",
+   "name": "with"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.1\n     */",
+   "name": "with"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getClassIntrospector"
+  },
+  {
+   "javadoc": "",
+   "name": "getAnnotationIntrospector"
+  },
+  {
+   "javadoc": "",
+   "name": "getVisibilityChecker"
+  },
+  {
+   "javadoc": "",
+   "name": "getPropertyNamingStrategy"
+  },
+  {
+   "javadoc": "",
+   "name": "getTypeFactory"
+  },
+  {
+   "javadoc": "",
+   "name": "getTypeResolverBuilder"
+  },
+  {
+   "javadoc": "",
+   "name": "getDateFormat"
+  },
+  {
+   "javadoc": "",
+   "name": "getHandlerInstantiator"
+  },
+  {
+   "javadoc": "",
+   "name": "getLocale"
+  },
+  {
+   "javadoc": "",
+   "name": "getTimeZone"
+  },
+  {
+   "javadoc": "",
+   "name": "getBase64Variant"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public final class BaseSettings implements java.io.Serializable",
+  "constructors": [
+   "public BaseSettings(ClassIntrospector ci, AnnotationIntrospector ai, VisibilityChecker<?> vc, PropertyNamingStrategy pns, TypeFactory tf, TypeResolverBuilder<?> typer, DateFormat dateFormat, HandlerInstantiator hi, Locale locale, TimeZone tz, Base64Variant defaultBase64);"
+  ],
+  "focal_signature": "public BaseSettings with(TimeZone tz)",
+  "methods": [
+   "public BaseSettings withClassIntrospector(ClassIntrospector ci);",
+   "public BaseSettings withAnnotationIntrospector(AnnotationIntrospector ai);",
+   "public BaseSettings withInsertedAnnotationIntrospector(AnnotationIntrospector ai);",
+   "public BaseSettings withAppendedAnnotationIntrospector(AnnotationIntrospector ai);",
+   "public BaseSettings withVisibilityChecker(VisibilityChecker<?> vc);",
+   "public BaseSettings withVisibility(PropertyAccessor forMethod, JsonAutoDetect.Visibility visibility);",
+   "public BaseSettings withPropertyNamingStrategy(PropertyNamingStrategy pns);",
+   "public BaseSettings withTypeFactory(TypeFactory tf);",
+   "public BaseSettings withTypeResolverBuilder(TypeResolverBuilder<?> typer);",
+   "public BaseSettings withDateFormat(DateFormat df);",
+   "public BaseSettings withHandlerInstantiator(HandlerInstantiator hi);",
+   "public BaseSettings with(Locale l);",
+   "public BaseSettings with(Base64Variant base64);",
+   "public ClassIntrospector getClassIntrospector();",
+   "public AnnotationIntrospector getAnnotationIntrospector();",
+   "public VisibilityChecker<?> getVisibilityChecker();",
+   "public PropertyNamingStrategy getPropertyNamingStrategy();",
+   "public TypeFactory getTypeFactory();",
+   "public TypeResolverBuilder<?> getTypeResolverBuilder();",
+   "public DateFormat getDateFormat();",
+   "public HandlerInstantiator getHandlerInstantiator();",
+   "public Locale getLocale();",
+   "public TimeZone getTimeZone();",
+   "public Base64Variant getBase64Variant();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

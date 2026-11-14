@@ -1,0 +1,338 @@
+{
+ "bug_name": "Math_43",
+ "call_sites": [
+  {
+   "line": 293,
+   "lines": [
+    288,
+    289,
+    290,
+    291,
+    292,
+    293,
+    294,
+    295,
+    296,
+    297,
+    298
+   ],
+   "path": "src/main/java/org/apache/commons/math/analysis/polynomials/PolynomialFunction.java",
+   "snippet": "        if (coefficients[0] == 0.0) {\n            if (coefficients.length == 1) {\n                return \"0\";\n            }\n        } else {\n            s.append(toString(coefficients[0]));\n        }\n\n        for (int i = 1; i < coefficients.length; ++i) {\n            if (coefficients[i] != 0) {\n                if (s.length() > 0) {"
+  },
+  {
+   "line": 312,
+   "lines": [
+    307,
+    308,
+    309,
+    310,
+    311,
+    312,
+    313,
+    314,
+    315,
+    316,
+    317
+   ],
+   "path": "src/main/java/org/apache/commons/math/analysis/polynomials/PolynomialFunction.java",
+   "snippet": "                    }\n                }\n\n                double absAi = FastMath.abs(coefficients[i]);\n                if ((absAi - 1) != 0) {\n                    s.append(toString(absAi));\n                    s.append(' ');\n                }\n\n                s.append(\"x\");\n                if (i > 1) {"
+  },
+  {
+   "line": 319,
+   "lines": [
+    314,
+    315,
+    316,
+    317,
+    318,
+    319,
+    320,
+    321,
+    322,
+    323,
+    324
+   ],
+   "path": "src/main/java/org/apache/commons/math/analysis/polynomials/PolynomialFunction.java",
+   "snippet": "                }\n\n                s.append(\"x\");\n                if (i > 1) {\n                    s.append('^');\n                    s.append(Integer.toString(i));\n                }\n            }\n        }\n\n        return s.toString();"
+  },
+  {
+   "line": 324,
+   "lines": [
+    319,
+    320,
+    321,
+    322,
+    323,
+    324,
+    325,
+    326,
+    327,
+    328,
+    329
+   ],
+   "path": "src/main/java/org/apache/commons/math/analysis/polynomials/PolynomialFunction.java",
+   "snippet": "                    s.append(Integer.toString(i));\n                }\n            }\n        }\n\n        return s.toString();\n    }\n\n    /**\n     * Creates a string representing a coefficient, removing \".0\" endings.\n     *"
+  },
+  {
+   "line": 334,
+   "lines": [
+    329,
+    330,
+    331,
+    332,
+    333,
+    334,
+    335,
+    336,
+    337,
+    338,
+    339
+   ],
+   "path": "src/main/java/org/apache/commons/math/analysis/polynomials/PolynomialFunction.java",
+   "snippet": "     *\n     * @param coeff Coefficient.\n     * @return a string representation of {@code coeff}.\n     */\n    private static String toString(double coeff) {\n        final String c = Double.toString(coeff);\n        if (c.endsWith(\".0\")) {\n            return c.substring(0, c.length() - 2);\n        } else {\n            return c;\n        }"
+  }
+ ],
+ "class_simple": "SummaryStatistics",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * <p>\n * Computes summary statistics for a stream of data values added using the\n * {@link #addValue(double) addValue} method. The data values are not stored in\n * memory, so this class can be used to compute statistics for very large data\n * streams.\n * </p>\n * <p>\n * The {@link StorelessUnivariateStatistic} instances used to maintain summary\n * state and compute statistics are configurable via setters. For example, the\n * default implementation for the variance can be overridden by calling\n * {@link #setVarianceImpl(StorelessUnivariateStatistic)}. Actual parameters to\n * these methods must implement the {@link StorelessUnivariateStatistic}\n * interface and configuration must be completed before <code>addValue</code>\n * is called. No configuration is necessary to use the default, commons-math\n * provided implementations.\n * </p>\n * <p>\n * Note: This class is not thread-safe. Use\n * {@link SynchronizedSummaryStatistics} if concurrent access from multiple\n * threads is required.\n * </p>\n * @version $Id$\n */\npublic",
+  "method_javadoc": "/**\n     * Generates a text report displaying summary statistics from values that\n     * have been added.\n     * @return String with line feeds displaying statistics\n     * @since 1.2\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "protected long n",
+  "protected SecondMoment secondMoment",
+  "protected Sum sum",
+  "protected SumOfSquares sumsq",
+  "protected Min min",
+  "protected Max max",
+  "protected SumOfLogs sumLog",
+  "protected GeometricMean geoMean",
+  "protected Mean mean",
+  "protected Variance variance",
+  "private StorelessUnivariateStatistic sumImpl",
+  "private StorelessUnivariateStatistic sumsqImpl",
+  "private StorelessUnivariateStatistic minImpl",
+  "private StorelessUnivariateStatistic maxImpl",
+  "private StorelessUnivariateStatistic sumLogImpl",
+  "private StorelessUnivariateStatistic geoMeanImpl",
+  "private StorelessUnivariateStatistic meanImpl",
+  "private StorelessUnivariateStatistic varianceImpl"
+ ],
+ "focal_class": "org.apache.commons.math.stat.descriptive.SummaryStatistics",
+ "focal_id": "Math_43::org.apache.commons.math.stat.descriptive.SummaryStatistics::toString()",
+ "focal_method_name": "toString",
+ "generations": 3,
+ "impl_B": "@Override\n    public String toString() {\n        StringBuilder outBuffer = new StringBuilder();\n        String endl = \"\\n\";\n        outBuffer.append(\"SummaryStatistics:\").append(endl);\n        outBuffer.append(\"n: \").append(getN()).append(endl);\n        outBuffer.append(\"min: \").append(getMin()).append(endl);\n        outBuffer.append(\"max: \").append(getMax()).append(endl);\n        outBuffer.append(\"mean: \").append(getMean()).append(endl);\n        outBuffer.append(\"geometric mean: \").append(getGeometricMean())\n            .append(endl);\n        outBuffer.append(\"variance: \").append(getVariance()).append(endl);\n        outBuffer.append(\"sum of squares: \").append(getSumsq()).append(endl);\n        outBuffer.append(\"standard deviation: \").append(getStandardDeviation())\n            .append(endl);\n        outBuffer.append(\"sum of logs: \").append(getSumOfLogs()).append(endl);\n        return outBuffer.toString();\n    }",
+ "imports": [
+  "java.io.Serializable",
+  "org.apache.commons.math.exception.MathIllegalStateException",
+  "org.apache.commons.math.exception.NullArgumentException",
+  "org.apache.commons.math.exception.util.LocalizedFormats",
+  "org.apache.commons.math.stat.descriptive.moment.GeometricMean",
+  "org.apache.commons.math.stat.descriptive.moment.Mean",
+  "org.apache.commons.math.stat.descriptive.moment.SecondMoment",
+  "org.apache.commons.math.stat.descriptive.moment.Variance",
+  "org.apache.commons.math.stat.descriptive.rank.Max",
+  "org.apache.commons.math.stat.descriptive.rank.Min",
+  "org.apache.commons.math.stat.descriptive.summary.Sum",
+  "org.apache.commons.math.stat.descriptive.summary.SumOfLogs",
+  "org.apache.commons.math.stat.descriptive.summary.SumOfSquares",
+  "org.apache.commons.math.util.MathUtils",
+  "org.apache.commons.math.util.Precision",
+  "org.apache.commons.math.util.FastMath"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math.stat.descriptive",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Return a {@link StatisticalSummaryValues} instance reporting current\n     * statistics.\n     * @return Current values of statistics\n     */",
+   "name": "getSummary"
+  },
+  {
+   "javadoc": "/**\n     * Add a value to the data\n     * @param value the value to add\n     */",
+   "name": "addValue"
+  },
+  {
+   "javadoc": "/**\n     * Returns the number of available values\n     * @return The number of available values\n     */",
+   "name": "getN"
+  },
+  {
+   "javadoc": "/**\n     * Returns the sum of the values that have been added\n     * @return The sum or <code>Double.NaN</code> if no values have been added\n     */",
+   "name": "getSum"
+  },
+  {
+   "javadoc": "/**\n     * Returns the sum of the squares of the values that have been added.\n     * <p>\n     * Double.NaN is returned if no values have been added.\n     * </p>\n     * @return The sum of squares\n     */",
+   "name": "getSumsq"
+  },
+  {
+   "javadoc": "/**\n     * Returns the mean of the values that have been added.\n     * <p>\n     * Double.NaN is returned if no values have been added.\n     * </p>\n     * @return the mean\n     */",
+   "name": "getMean"
+  },
+  {
+   "javadoc": "/**\n     * Returns the standard deviation of the values that have been added.\n     * <p>\n     * Double.NaN is returned if no values have been added.\n     * </p>\n     * @return the standard deviation\n     */",
+   "name": "getStandardDeviation"
+  },
+  {
+   "javadoc": "/**\n     * Returns the (sample) variance of the available values.\n     *\n     * <p>This method returns the bias-corrected sample variance (using {@code n - 1} in\n     * the denominator).  Use {@link #getPopulationVariance()} for the non-bias-corrected\n     * population variance.</p>\n     *\n     * <p>Double.NaN is returned if no values have been added.</p>\n     *\n     * @return the variance\n     */",
+   "name": "getVariance"
+  },
+  {
+   "javadoc": "/**\n     * Returns the <a href=\"http://en.wikibooks.org/wiki/Statistics/Summary/Variance\">\n     * population variance</a> of the values that have been added.\n     *\n     * <p>Double.NaN is returned if no values have been added.</p>\n     *\n     * @return the population variance\n     */",
+   "name": "getPopulationVariance"
+  },
+  {
+   "javadoc": "/**\n     * Returns the maximum of the values that have been added.\n     * <p>\n     * Double.NaN is returned if no values have been added.\n     * </p>\n     * @return the maximum\n     */",
+   "name": "getMax"
+  },
+  {
+   "javadoc": "/**\n     * Returns the minimum of the values that have been added.\n     * <p>\n     * Double.NaN is returned if no values have been added.\n     * </p>\n     * @return the minimum\n     */",
+   "name": "getMin"
+  },
+  {
+   "javadoc": "/**\n     * Returns the geometric mean of the values that have been added.\n     * <p>\n     * Double.NaN is returned if no values have been added.\n     * </p>\n     * @return the geometric mean\n     */",
+   "name": "getGeometricMean"
+  },
+  {
+   "javadoc": "/**\n     * Returns the sum of the logs of the values that have been added.\n     * <p>\n     * Double.NaN is returned if no values have been added.\n     * </p>\n     * @return the sum of logs\n     * @since 1.2\n     */",
+   "name": "getSumOfLogs"
+  },
+  {
+   "javadoc": "/**\n     * Returns a statistic related to the Second Central Moment.  Specifically,\n     * what is returned is the sum of squared deviations from the sample mean\n     * among the values that have been added.\n     * <p>\n     * Returns <code>Double.NaN</code> if no data values have been added and\n     * returns <code>0</code> if there is just one value in the data set.</p>\n     * <p>\n     * @return second central moment statistic\n     * @since 2.0\n     */",
+   "name": "getSecondMoment"
+  },
+  {
+   "javadoc": "/**\n     * Resets all statistics and storage\n     */",
+   "name": "clear"
+  },
+  {
+   "javadoc": "/**\n     * Returns true iff <code>object</code> is a\n     * <code>SummaryStatistics</code> instance and all statistics have the\n     * same values as this.\n     * @param object the object to test equality against.\n     * @return true if object equals this\n     */",
+   "name": "equals"
+  },
+  {
+   "javadoc": "/**\n     * Returns hash code based on values of statistics\n     * @return hash code\n     */",
+   "name": "hashCode"
+  },
+  {
+   "javadoc": "/**\n     * Returns the currently configured Sum implementation\n     * @return the StorelessUnivariateStatistic implementing the sum\n     * @since 1.2\n     */",
+   "name": "getSumImpl"
+  },
+  {
+   "javadoc": "/**\n     * <p>\n     * Sets the implementation for the Sum.\n     * </p>\n     * <p>\n     * This method must be activated before any data has been added - i.e.,\n     * before {@link #addValue(double) addValue} has been used to add data;\n     * otherwise an IllegalStateException will be thrown.\n     * </p>\n     * @param sumImpl the StorelessUnivariateStatistic instance to use for\n     *        computing the Sum\n     * @throws IllegalStateException if data has already been added (i.e if n >\n     *         0)\n     * @since 1.2\n     */",
+   "name": "setSumImpl"
+  },
+  {
+   "javadoc": "/**\n     * Returns the currently configured sum of squares implementation\n     * @return the StorelessUnivariateStatistic implementing the sum of squares\n     * @since 1.2\n     */",
+   "name": "getSumsqImpl"
+  },
+  {
+   "javadoc": "/**\n     * <p>\n     * Sets the implementation for the sum of squares.\n     * </p>\n     * <p>\n     * This method must be activated before any data has been added - i.e.,\n     * before {@link #addValue(double) addValue} has been used to add data;\n     * otherwise an IllegalStateException will be thrown.\n     * </p>\n     * @param sumsqImpl the StorelessUnivariateStatistic instance to use for\n     *        computing the sum of squares\n     * @throws IllegalStateException if data has already been added (i.e if n >\n     *         0)\n     * @since 1.2\n     */",
+   "name": "setSumsqImpl"
+  },
+  {
+   "javadoc": "/**\n     * Returns the currently configured minimum implementation\n     * @return the StorelessUnivariateStatistic implementing the minimum\n     * @since 1.2\n     */",
+   "name": "getMinImpl"
+  },
+  {
+   "javadoc": "/**\n     * <p>\n     * Sets the implementation for the minimum.\n     * </p>\n     * <p>\n     * This method must be activated before any data has been added - i.e.,\n     * before {@link #addValue(double) addValue} has been used to add data;\n     * otherwise an IllegalStateException will be thrown.\n     * </p>\n     * @param minImpl the StorelessUnivariateStatistic instance to use for\n     *        computing the minimum\n     * @throws IllegalStateException if data has already been added (i.e if n >\n     *         0)\n     * @since 1.2\n     */",
+   "name": "setMinImpl"
+  },
+  {
+   "javadoc": "/**\n     * Returns the currently configured maximum implementation\n     * @return the StorelessUnivariateStatistic implementing the maximum\n     * @since 1.2\n     */",
+   "name": "getMaxImpl"
+  },
+  {
+   "javadoc": "/**\n     * <p>\n     * Sets the implementation for the maximum.\n     * </p>\n     * <p>\n     * This method must be activated before any data has been added - i.e.,\n     * before {@link #addValue(double) addValue} has been used to add data;\n     * otherwise an IllegalStateException will be thrown.\n     * </p>\n     * @param maxImpl the StorelessUnivariateStatistic instance to use for\n     *        computing the maximum\n     * @throws IllegalStateException if data has already been added (i.e if n >\n     *         0)\n     * @since 1.2\n     */",
+   "name": "setMaxImpl"
+  },
+  {
+   "javadoc": "/**\n     * Returns the currently configured sum of logs implementation\n     * @return the StorelessUnivariateStatistic implementing the log sum\n     * @since 1.2\n     */",
+   "name": "getSumLogImpl"
+  },
+  {
+   "javadoc": "/**\n     * <p>\n     * Sets the implementation for the sum of logs.\n     * </p>\n     * <p>\n     * This method must be activated before any data has been added - i.e.,\n     * before {@link #addValue(double) addValue} has been used to add data;\n     * otherwise an IllegalStateException will be thrown.\n     * </p>\n     * @param sumLogImpl the StorelessUnivariateStatistic instance to use for\n     *        computing the log sum\n     * @throws IllegalStateException if data has already been added (i.e if n >\n     *         0)\n     * @since 1.2\n     */",
+   "name": "setSumLogImpl"
+  },
+  {
+   "javadoc": "/**\n     * Returns the currently configured geometric mean implementation\n     * @return the StorelessUnivariateStatistic implementing the geometric mean\n     * @since 1.2\n     */",
+   "name": "getGeoMeanImpl"
+  },
+  {
+   "javadoc": "/**\n     * <p>\n     * Sets the implementation for the geometric mean.\n     * </p>\n     * <p>\n     * This method must be activated before any data has been added - i.e.,\n     * before {@link #addValue(double) addValue} has been used to add data;\n     * otherwise an IllegalStateException will be thrown.\n     * </p>\n     * @param geoMeanImpl the StorelessUnivariateStatistic instance to use for\n     *        computing the geometric mean\n     * @throws IllegalStateException if data has already been added (i.e if n >\n     *         0)\n     * @since 1.2\n     */",
+   "name": "setGeoMeanImpl"
+  },
+  {
+   "javadoc": "/**\n     * Returns the currently configured mean implementation\n     * @return the StorelessUnivariateStatistic implementing the mean\n     * @since 1.2\n     */",
+   "name": "getMeanImpl"
+  },
+  {
+   "javadoc": "/**\n     * <p>\n     * Sets the implementation for the mean.\n     * </p>\n     * <p>\n     * This method must be activated before any data has been added - i.e.,\n     * before {@link #addValue(double) addValue} has been used to add data;\n     * otherwise an IllegalStateException will be thrown.\n     * </p>\n     * @param meanImpl the StorelessUnivariateStatistic instance to use for\n     *        computing the mean\n     * @throws IllegalStateException if data has already been added (i.e if n >\n     *         0)\n     * @since 1.2\n     */",
+   "name": "setMeanImpl"
+  },
+  {
+   "javadoc": "/**\n     * Returns the currently configured variance implementation\n     * @return the StorelessUnivariateStatistic implementing the variance\n     * @since 1.2\n     */",
+   "name": "getVarianceImpl"
+  },
+  {
+   "javadoc": "/**\n     * <p>\n     * Sets the implementation for the variance.\n     * </p>\n     * <p>\n     * This method must be activated before any data has been added - i.e.,\n     * before {@link #addValue(double) addValue} has been used to add data;\n     * otherwise an IllegalStateException will be thrown.\n     * </p>\n     * @param varianceImpl the StorelessUnivariateStatistic instance to use for\n     *        computing the variance\n     * @throws IllegalStateException if data has already been added (i.e if n >\n     *         0)\n     * @since 1.2\n     */",
+   "name": "setVarianceImpl"
+  },
+  {
+   "javadoc": "/**\n     * Returns a copy of this SummaryStatistics instance with the same internal state.\n     *\n     * @return a copy of this\n     */",
+   "name": "copy"
+  },
+  {
+   "javadoc": "/**\n     * Copies source to dest.\n     * <p>Neither source nor dest can be null.</p>\n     *\n     * @param source SummaryStatistics to copy\n     * @param dest SummaryStatistics to copy to\n     * @throws NullArgumentException if either source or dest is null\n     */",
+   "name": "copy"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class SummaryStatistics implements StatisticalSummary, Serializable",
+  "constructors": [
+   "public SummaryStatistics();",
+   "public SummaryStatistics(SummaryStatistics original);"
+  ],
+  "focal_signature": "public String toString()",
+  "methods": [
+   "public StatisticalSummary getSummary();",
+   "public void addValue(double value);",
+   "public long getN();",
+   "public double getSum();",
+   "public double getSumsq();",
+   "public double getMean();",
+   "public double getStandardDeviation();",
+   "public double getVariance();",
+   "public double getPopulationVariance();",
+   "public double getMax();",
+   "public double getMin();",
+   "public double getGeometricMean();",
+   "public double getSumOfLogs();",
+   "public double getSecondMoment();",
+   "public void clear();",
+   "public boolean equals(Object object);",
+   "public int hashCode();",
+   "public StorelessUnivariateStatistic getSumImpl();",
+   "public void setSumImpl(StorelessUnivariateStatistic sumImpl);",
+   "public StorelessUnivariateStatistic getSumsqImpl();",
+   "public void setSumsqImpl(StorelessUnivariateStatistic sumsqImpl);",
+   "public StorelessUnivariateStatistic getMinImpl();",
+   "public void setMinImpl(StorelessUnivariateStatistic minImpl);",
+   "public StorelessUnivariateStatistic getMaxImpl();",
+   "public void setMaxImpl(StorelessUnivariateStatistic maxImpl);",
+   "public StorelessUnivariateStatistic getSumLogImpl();",
+   "public void setSumLogImpl(StorelessUnivariateStatistic sumLogImpl);",
+   "public StorelessUnivariateStatistic getGeoMeanImpl();",
+   "public void setGeoMeanImpl(StorelessUnivariateStatistic geoMeanImpl);",
+   "public StorelessUnivariateStatistic getMeanImpl();",
+   "public void setMeanImpl(StorelessUnivariateStatistic meanImpl);",
+   "public StorelessUnivariateStatistic getVarianceImpl();",
+   "public void setVarianceImpl(StorelessUnivariateStatistic varianceImpl);",
+   "public SummaryStatistics copy();",
+   "public static void copy(SummaryStatistics source, SummaryStatistics dest) throws NullArgumentException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

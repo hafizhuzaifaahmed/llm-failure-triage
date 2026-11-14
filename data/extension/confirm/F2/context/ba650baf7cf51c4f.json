@@ -1,0 +1,120 @@
+{
+ "bug_name": "JacksonDatabind_61",
+ "call_sites": [
+  {
+   "line": 210,
+   "lines": [
+    205,
+    206,
+    207,
+    208,
+    209,
+    210,
+    211,
+    212,
+    213,
+    214,
+    215
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java",
+   "snippet": "\n        @Override\n        public TypeDeserializer buildTypeDeserializer(DeserializationConfig config,\n                JavaType baseType, Collection<NamedType> subtypes)\n        {\n            return useForType(baseType) ? super.buildTypeDeserializer(config, baseType, subtypes) : null;\n        }\n\n        @Override\n        public TypeSerializer buildTypeSerializer(SerializationConfig config,\n                JavaType baseType, Collection<NamedType> subtypes)"
+  },
+  {
+   "line": 217,
+   "lines": [
+    212,
+    213,
+    214,
+    215,
+    216,
+    217,
+    218,
+    219,
+    220,
+    221,
+    222
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java",
+   "snippet": "\n        @Override\n        public TypeSerializer buildTypeSerializer(SerializationConfig config,\n                JavaType baseType, Collection<NamedType> subtypes)\n        {\n            return useForType(baseType) ? super.buildTypeSerializer(config, baseType, subtypes) : null;            \n        }\n\n        /**\n         * Method called to check if the default type handler should be\n         * used for given type."
+  }
+ ],
+ "class_simple": "DefaultTypeResolverBuilder",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * ObjectMapper provides functionality for reading and writing JSON,\n * either to and from basic POJOs (Plain Old Java Objects), or to and from\n * a general-purpose JSON Tree Model ({@link JsonNode}), as well as\n * related functionality for performing conversions.\n * It is also highly customizable to work both with different styles of JSON\n * content, and to support more advanced Object concepts such as\n * polymorphism and Object identity.\n * <code>ObjectMapper</code> also acts as a factory for more advanced {@link ObjectReader}\n * and {@link ObjectWriter} classes.\n * Mapper (and {@link ObjectReader}s, {@link ObjectWriter}s it constructs) will\n * use instances of {@link JsonParser} and {@link JsonGenerator}\n * for implementing actual reading/writing of JSON.\n * Note that although most read and write methods are exposed through this class,\n * some of the functionality is only exposed via {@link ObjectReader} and\n * {@link ObjectWriter}: specifically, reading/writing of longer sequences of\n * values is only available through {@link ObjectReader#readValues(InputStream)}\n * and {@link ObjectWriter#writeValues(OutputStream)}.\n *<p>\nSimplest usage is of form:\n<pre>\n  final ObjectMapper mapper = new ObjectMapper(); // can use static singleton, inject: just make sure to reuse!\n  MyValue value = new MyValue();\n  // ... and configure\n  File newState = new File(\"my-stuff.json\");\n  mapper.writeValue(newState, value); // writes JSON serialization of MyValue instance\n  // or, read\n  MyValue older = mapper.readValue(new File(\"my-older-stuff.json\"), MyValue.class);\n\n  // Or if you prefer JSON Tree representation:\n  JsonNode root = mapper.readTree(newState);\n  // and find values by, for example, using a {@link com.fasterxml.jackson.core.JsonPointer} expression:\n  int age = root.at(\"/personal/age\").getValueAsInt(); \n</pre>\n *<p>\n * The main conversion API is defined in {@link ObjectCodec}, so that\n * implementation details of this class need not be exposed to\n * streaming parser and generator classes. Usage via {@link ObjectCodec} is,\n * however, usually only for cases where dependency to {@link ObjectMapper} is\n * either not possible (from Streaming API), or undesireable (when only relying\n * on Streaming API).\n *<p> \n * Mapper instances are fully thread-safe provided that ALL configuration of the\n * instance occurs before ANY read or write calls. If configuration of a mapper\n * is modified after first usage, changes may or may not take effect, and configuration\n * calls themselves may fail.\n * If you need to use different configuration, you have two main possibilities:\n *<ul>\n * <li>Construct and use {@link ObjectReader} for reading, {@link ObjectWriter} for writing.\n *    Both types are fully immutable and you can freely create new instances with different\n *    configuration using either factory methods of {@link ObjectMapper}, or readers/writers\n *    themselves. Construction of new {@link ObjectReader}s and {@link ObjectWriter}s is\n *    a very light-weight operation so it is usually appropriate to create these on per-call\n *    basis, as needed, for configuring things like optional indentation of JSON.\n *  </li>\n * <li>If the specific kind of configurability is not available via {@link ObjectReader} and\n *   {@link ObjectWriter}, you may need to use multiple {@link ObjectMapper} instead (for example:\n *   you can not change mix-in annotations on-the-fly; or, set of custom (de)serializers).\n *   To help with this usage, you may want to use method {@link #copy()} which creates a clone\n *   of the mapper with specific configuration, and allows configuration of the copied instance\n *   before it gets used. Note that {@link #copy} operation is as expensive as constructing\n *   a new {@link ObjectMapper} instance: if possible, you should still pool and reuse mappers\n *   if you intend to use them for multiple operations.\n *  </li>\n * </ul>\n *<p>\n * Note on caching: root-level deserializers are always cached, and accessed\n * using full (generics-aware) type information. This is different from\n * caching of referenced types, which is more limited and is done only\n * for a subset of all deserializer types. The main reason for difference\n * is that at root-level there is no incoming reference (and hence no\n * referencing property, no referral information or annotations to\n * produce differing deserializers), and that the performance impact\n * greatest at root level (since it'll essentially cache the full\n * graph of deserializers involved).\n */\npublic class ObjectMapper\n    extends ObjectCodec\n    implements Versioned,\n        java.io.Serializable // as of 2.1\n{\n    private static final long serialVersionUID = 1L;\n\n    /*\n    /**********************************************************\n    /* Helper classes, enums\n    /**********************************************************\n     */\n\n    /**\n     * Enumeration used with {@link ObjectMapper#enableDefaultTyping()}\n     * to specify what kind of types (classes) default typing should\n     * be used for. It will only be used if no explicit type information\n     * is found, but this enumeration further limits subset of those types.\n     *<p>\n     * Since 2.4 there are special exceptions for JSON Tree model\n     * types (sub-types of {@link TreeNode}: default typing is never\n     * applied to them\n     * (see <a href=\"https://github.com/FasterXML/jackson-databind/issues/88\">databind#88</a> for details)\n     *<p>\n     * Since 2.8(.4) additional checks are made to avoid attempts at default\n     * typing primitive-valued properties.\n     */\n    public enum DefaultTyping {\n        /**\n         * This value means that only properties that have\n         * {@link java.lang.Object} as declared type (including\n         * generic types without explicit type) will use default\n         * typing.\n         */\n        JAVA_LANG_OBJECT,\n        \n        /**\n         * Value that means that default typing will be used for\n         * properties with declared type of {@link java.lang.Object}\n         * or an abstract type (abstract class or interface).\n         * Note that this does <b>not</b> include array types.\n         *<p>\n         * Since 2.4, this does NOT apply to {@link TreeNode} and its subtypes.\n         */\n        OBJECT_AND_NON_CONCRETE,\n\n        /**\n         * Value that means that default typing will be used for\n         * all types covered by {@link #OBJECT_AND_NON_CONCRETE}\n         * plus all array types for them.\n         *<p>\n         * Since 2.4, this does NOT apply to {@link TreeNode} and its subtypes.\n         */\n        NON_CONCRETE_AND_ARRAYS,\n        \n        /**\n         * Value that means that default typing will be used for\n         * all non-final types, with exception of small number of\n         * \"natural\" types (String, Boolean, Integer, Double), which\n         * can be correctly inferred from JSON; as well as for\n         * all arrays of non-final types.\n         *<p>\n         * Since 2.4, this does NOT apply to {@link TreeNode} and its subtypes.\n         */\n        NON_FINAL\n    }\n\n    /**\n     * Customized {@link TypeResolverBuilder} that provides type resolver builders\n     * used with so-called \"default typing\"\n     * (see {@link ObjectMapper#enableDefaultTyping()} for details).\n     *<p>\n     * Type resolver construction is based on configuration: implementation takes care\n     * of only providing builders in cases where type information should be applied.\n     * This is important since build calls may be sent for any and all types, and\n     * type information should NOT be applied to all of them.\n     */\n    public static",
+  "method_javadoc": "/**\n         * Method called to check if the default type handler should be\n         * used for given type.\n         * Note: \"natural types\" (String, Boolean, Integer, Double) will never\n         * use typing; that is both due to them being concrete and final,\n         * and since actual serializers and deserializers will also ignore any\n         * attempts to enforce typing.\n         */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "protected final DefaultTyping _appliesFor"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.ObjectMapper.DefaultTypeResolverBuilder",
+ "focal_id": "JacksonDatabind_61::com.fasterxml.jackson.databind.ObjectMapper$DefaultTypeResolverBuilder::useForType(JavaType)",
+ "focal_method_name": "useForType",
+ "generations": 3,
+ "impl_B": "public boolean useForType(JavaType t)\n        {\n            // 03-Oct-2016, tatu: As per [databind#1395], need to skip\n            //  primitive types too, regardless\n\n            switch (_appliesFor) {\n            case NON_CONCRETE_AND_ARRAYS:\n                while (t.isArrayType()) {\n                    t = t.getContentType();\n                }\n                // fall through\n            case OBJECT_AND_NON_CONCRETE:\n                // 19-Apr-2016, tatu: ReferenceType like Optional also requires similar handling:\n                while (t.isReferenceType()) {\n                    t = t.getReferencedType();\n                }\n                return t.isJavaLangObject()\n                        || (!t.isConcrete()\n                                // [databind#88] Should not apply to JSON tree models:\n                                && !TreeNode.class.isAssignableFrom(t.getRawClass()));\n\n            case NON_FINAL:\n                while (t.isArrayType()) {\n                    t = t.getContentType();\n                }\n                // 19-Apr-2016, tatu: ReferenceType like Optional also requires similar handling:\n                while (t.isReferenceType()) {\n                    t = t.getReferencedType();\n                }\n                // [databind#88] Should not apply to JSON tree models:\n                return !t.isFinal() && !TreeNode.class.isAssignableFrom(t.getRawClass());\n            default:\n            //case JAVA_LANG_OBJECT:\n                return t.isJavaLangObject();\n            }\n        }",
+ "imports": [
+  "java.io.*",
+  "java.lang.reflect.Type",
+  "java.net.URL",
+  "java.text.DateFormat",
+  "java.util.*",
+  "java.util.concurrent.ConcurrentHashMap",
+  "java.util.concurrent.atomic.AtomicReference",
+  "com.fasterxml.jackson.annotation.*",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.core.io.CharacterEscapes",
+  "com.fasterxml.jackson.core.io.SegmentedStringWriter",
+  "com.fasterxml.jackson.core.type.ResolvedType",
+  "com.fasterxml.jackson.core.type.TypeReference",
+  "com.fasterxml.jackson.core.util.*",
+  "com.fasterxml.jackson.databind.cfg.BaseSettings",
+  "com.fasterxml.jackson.databind.cfg.ContextAttributes",
+  "com.fasterxml.jackson.databind.cfg.HandlerInstantiator",
+  "com.fasterxml.jackson.databind.cfg.MapperConfig",
+  "com.fasterxml.jackson.databind.cfg.MutableConfigOverride",
+  "com.fasterxml.jackson.databind.cfg.ConfigOverrides",
+  "com.fasterxml.jackson.databind.deser.*",
+  "com.fasterxml.jackson.databind.introspect.*",
+  "com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper",
+  "com.fasterxml.jackson.databind.jsontype.*",
+  "com.fasterxml.jackson.databind.jsontype.impl.StdSubtypeResolver",
+  "com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder",
+  "com.fasterxml.jackson.databind.node.*",
+  "com.fasterxml.jackson.databind.ser.*",
+  "com.fasterxml.jackson.databind.type.*",
+  "com.fasterxml.jackson.databind.util.ClassUtil",
+  "com.fasterxml.jackson.databind.util.RootNameLookup",
+  "com.fasterxml.jackson.databind.util.StdDateFormat",
+  "com.fasterxml.jackson.databind.util.TokenBuffer"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "buildTypeDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "buildTypeSerializer"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public static class DefaultTypeResolverBuilder extends StdTypeResolverBuilder implements java.io.Serializable",
+  "constructors": [
+   "public DefaultTypeResolverBuilder(DefaultTyping t);"
+  ],
+  "focal_signature": "public boolean useForType(JavaType t)",
+  "methods": [
+   "public TypeDeserializer buildTypeDeserializer(DeserializationConfig config, JavaType baseType, Collection<NamedType> subtypes);",
+   "public TypeSerializer buildTypeSerializer(SerializationConfig config, JavaType baseType, Collection<NamedType> subtypes);"
+  ],
+  "type_signatures": [
+   "public abstract class JavaType extends ResolvedType implements java.io.Serializable, java.lang.reflect.Type { protected JavaType(Class<?> raw, int additionalHash, Object valueHandler, Object typeHandler, boolean asStatic); protected JavaType(JavaType base); public abstract JavaType withTypeHandler(Object h); public abstract JavaType withContentTypeHandler(Object h); public abstract JavaType withValueHandler(Object h); public abstract JavaType withContentValueHandler(Object h); public JavaType withHandlersFrom(JavaType src); public abstract JavaType withContentType(JavaType contentType); public abstract JavaType withStaticTyping(); public abstract JavaType refine(Class<?> rawType, TypeBindings bindings, JavaType superClass, JavaType[] superInterfaces); public JavaType forcedNarrowBy(Class<?> subclass); // since 2.7 protected abstract JavaType _narrow(Class<?> subclass); public final Class<?> getRawClass(); public final boolean hasRawClass(Class<?> clz); public boolean hasContentType(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

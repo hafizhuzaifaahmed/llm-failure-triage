@@ -1,0 +1,183 @@
+{
+ "bug_name": "JacksonDatabind_62",
+ "call_sites": [
+  {
+   "line": 774,
+   "lines": [
+    769,
+    770,
+    771,
+    772,
+    773,
+    774,
+    775,
+    776,
+    777,
+    778,
+    779
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "    public <T> T readValue(JsonParser p, JavaType type) throws IOException {\n        JsonDeserializer<Object> deser = findRootValueDeserializer(type);\n        if (deser == null) {\n            throw mappingException(\"Could not find JsonDeserializer for type %s\", type);\n        }\n        return (T) deser.deserialize(p, this);\n    }\n\n    /**\n     * Convenience method that may be used by composite or container deserializers,\n     * for reading one-off values for the composite type, taking into account"
+  },
+  {
+   "line": 800,
+   "lines": [
+    795,
+    796,
+    797,
+    798,
+    799,
+    800,
+    801,
+    802,
+    803,
+    804,
+    805
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "        if (deser == null) {\n            String propName = (prop == null) ? \"NULL\" : (\"'\"+prop.getName()+\"'\");\n            throw mappingException(\"Could not find JsonDeserializer for type %s (via property %s)\",\n                    type, propName);\n        }\n        return (T) deser.deserialize(p, this);\n    }\n\n    /*\n    /**********************************************************\n    /* Methods for problem handling, reporting"
+  },
+  {
+   "line": 277,
+   "lines": [
+    272,
+    273,
+    274,
+    275,
+    276,
+    277,
+    278,
+    279,
+    280,
+    281,
+    282
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/MappingIterator.java",
+   "snippet": "\n        int nextState = STATE_NEED_RESYNC;\n        try {\n            T value;\n            if (_updatedValue == null) {\n                value = _deserializer.deserialize(_parser, _context);\n            } else{\n                _deserializer.deserialize(_parser, _context, _updatedValue);\n                value = _updatedValue;\n            }\n            nextState = STATE_MAY_HAVE_VALUE;"
+  },
+  {
+   "line": 279,
+   "lines": [
+    274,
+    275,
+    276,
+    277,
+    278,
+    279,
+    280,
+    281,
+    282,
+    283,
+    284
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/MappingIterator.java",
+   "snippet": "        try {\n            T value;\n            if (_updatedValue == null) {\n                value = _deserializer.deserialize(_parser, _context);\n            } else{\n                _deserializer.deserialize(_parser, _context, _updatedValue);\n                value = _updatedValue;\n            }\n            nextState = STATE_MAY_HAVE_VALUE;\n            return value;\n        } finally {"
+  },
+  {
+   "line": 3525,
+   "lines": [
+    3520,
+    3521,
+    3522,
+    3523,
+    3524,
+    3525,
+    3526,
+    3527,
+    3528,
+    3529,
+    3530
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java",
+   "snippet": "                result = null;\n            } else { // pointing to event other than null\n                DeserializationContext ctxt = createDeserializationContext(jp, deserConfig);\n                JsonDeserializer<Object> deser = _findRootDeserializer(ctxt, toValueType);\n                // note: no handling of unwarpping\n                result = deser.deserialize(jp, ctxt);\n            }\n            jp.close();\n            return result;\n        } catch (IOException e) { // should not occur, no real i/o...\n            throw new IllegalArgumentException(e.getMessage(), e);"
+  }
+ ],
+ "class_simple": "CollectionDeserializer",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Basic serializer that can take JSON \"Array\" structure and\n * construct a {@link java.util.Collection} instance, with typed contents.\n *<p>\n * Note: for untyped content (one indicated by passing Object.class\n * as the type), {@link UntypedObjectDeserializer} is used instead.\n * It can also construct {@link java.util.List}s, but not with specific\n * POJO types, only other containers and primitives/wrappers.\n */\n@JacksonStdImpl\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "protected final JavaType _collectionType",
+  "protected final JsonDeserializer<Object> _valueDeserializer",
+  "protected final TypeDeserializer _valueTypeDeserializer",
+  "protected final ValueInstantiator _valueInstantiator",
+  "protected final JsonDeserializer<Object> _delegateDeserializer",
+  "protected final Boolean _unwrapSingle"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.deser.std.CollectionDeserializer",
+ "focal_id": "JacksonDatabind_62::com.fasterxml.jackson.databind.deser.std.CollectionDeserializer::deserialize(JsonParser,DeserializationContext,Collection<Object>)",
+ "focal_method_name": "deserialize",
+ "generations": 3,
+ "impl_B": "@Override\n    public Collection<Object> deserialize(JsonParser p, DeserializationContext ctxt,\n            Collection<Object> result)\n        throws IOException\n    {\n        // Ok: must point to START_ARRAY (or equivalent)\n        if (!p.isExpectedStartArrayToken()) {\n            return handleNonArray(p, ctxt, result);\n        }\n        // [databind#631]: Assign current value, to be accessible by custom serializers\n        p.setCurrentValue(result);\n\n        JsonDeserializer<Object> valueDes = _valueDeserializer;\n        final TypeDeserializer typeDeser = _valueTypeDeserializer;\n        CollectionReferringAccumulator referringAccumulator =\n            (valueDes.getObjectIdReader() == null) ? null :\n                new CollectionReferringAccumulator(_collectionType.getContentType().getRawClass(), result);\n\n        JsonToken t;\n        while ((t = p.nextToken()) != JsonToken.END_ARRAY) {\n            try {\n                Object value;\n                if (t == JsonToken.VALUE_NULL) {\n                    value = valueDes.getNullValue(ctxt);\n                } else if (typeDeser == null) {\n                    value = valueDes.deserialize(p, ctxt);\n                } else {\n                    value = valueDes.deserializeWithType(p, ctxt, typeDeser);\n                }\n                if (referringAccumulator != null) {\n                    referringAccumulator.add(value);\n                } else {\n                    result.add(value);\n                }\n            } catch (UnresolvedForwardReference reference) {\n                if (referringAccumulator == null) {\n                    throw JsonMappingException\n                            .from(p, \"Unresolved forward reference but no identity info\", reference);\n                }\n                Referring ref = referringAccumulator.handleUnresolvedReference(reference);\n                reference.getRoid().appendReferring(ref);\n            } catch (Exception e) {\n                boolean wrap = (ctxt == null) || ctxt.isEnabled(DeserializationFeature.WRAP_EXCEPTIONS);\n                if (!wrap && e instanceof RuntimeException) {\n                    throw (RuntimeException)e;\n                }\n                throw JsonMappingException.wrapWithPath(e, result, result.size());\n            }\n        }\n        return result;\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.util.*",
+  "com.fasterxml.jackson.annotation.JsonFormat",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.annotation.JacksonStdImpl",
+  "com.fasterxml.jackson.databind.deser.ContextualDeserializer",
+  "com.fasterxml.jackson.databind.deser.UnresolvedForwardReference",
+  "com.fasterxml.jackson.databind.deser.ValueInstantiator",
+  "com.fasterxml.jackson.databind.deser.impl.ReadableObjectId.Referring",
+  "com.fasterxml.jackson.databind.deser.std.ContainerDeserializerBase",
+  "com.fasterxml.jackson.databind.jsontype.TypeDeserializer"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.deser.std",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * @deprecated Since 2.7 as it does not pass `unwrapSingle`\n     */",
+   "name": "withResolved"
+  },
+  {
+   "javadoc": "",
+   "name": "isCachable"
+  },
+  {
+   "javadoc": "/**\n     * Method called to finalize setup of this deserializer,\n     * when it is known for which property deserializer is needed\n     * for.\n     */",
+   "name": "createContextual"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getContentType"
+  },
+  {
+   "javadoc": "",
+   "name": "getContentDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "deserializeWithType"
+  },
+  {
+   "javadoc": "/**\n     * Helper method called when current token is no START_ARRAY. Will either\n     * throw an exception, or try to handle value as if member of implicit\n     * array, depending on configuration.\n     */",
+   "name": "handleNonArray"
+  }
+ ],
+ "sig": {
+  "class_declaration": "@JacksonStdImpl public class CollectionDeserializer extends ContainerDeserializerBase<Collection<Object>> implements ContextualDeserializer",
+  "constructors": [
+   "public CollectionDeserializer(JavaType collectionType, JsonDeserializer<Object> valueDeser, TypeDeserializer valueTypeDeser, ValueInstantiator valueInstantiator);",
+   "protected CollectionDeserializer(JavaType collectionType, JsonDeserializer<Object> valueDeser, TypeDeserializer valueTypeDeser, ValueInstantiator valueInstantiator, JsonDeserializer<Object> delegateDeser, Boolean unwrapSingle);",
+   "protected CollectionDeserializer(CollectionDeserializer src);"
+  ],
+  "focal_signature": "public Collection<Object> deserialize(JsonParser p, DeserializationContext ctxt, Collection<Object> result) throws IOException",
+  "methods": [
+   "// since 2.7 -- will not retain \"unwrapSingle\" setting protected CollectionDeserializer withResolved(JsonDeserializer<?> dd, JsonDeserializer<?> vd, TypeDeserializer vtd);",
+   "// since 2.5 public boolean isCachable();",
+   "public CollectionDeserializer createContextual(DeserializationContext ctxt, BeanProperty property) throws JsonMappingException;",
+   "public JavaType getContentType();",
+   "public JsonDeserializer<Object> getContentDeserializer();",
+   "public Object deserializeWithType(JsonParser jp, DeserializationContext ctxt, TypeDeserializer typeDeserializer) throws IOException;",
+   "protected final Collection<Object> handleNonArray(JsonParser p, DeserializationContext ctxt, Collection<Object> result) throws IOException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

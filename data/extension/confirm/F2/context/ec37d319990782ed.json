@@ -1,0 +1,207 @@
+{
+ "bug_name": "JacksonDatabind_90",
+ "call_sites": [
+  {
+   "line": 284,
+   "lines": [
+    279,
+    280,
+    281,
+    282,
+    283,
+    284,
+    285,
+    286,
+    287,
+    288,
+    289
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerFactory.java",
+   "snippet": "                builder = mod.updateBuilder(config, beanDesc, builder);\n            }\n        }\n        JsonDeserializer<?> deserializer;\n\n        if (type.isAbstract() && !valueInstantiator.canInstantiate()) {\n            deserializer = builder.buildAbstract();\n        } else {\n            deserializer = builder.build();\n        }\n"
+  }
+ ],
+ "class_simple": "ValueInstantiator",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Class that defines simple API implemented by objects that create value\n * instances.  Some or all of properties of value instances may \n * be initialized by instantiator, rest being populated by deserializer,\n * to which value instance is passed.\n * Since different kinds of JSON values (structured and scalar)\n * may be bound to Java values, in some cases instantiator\n * fully defines resulting value; this is the case when JSON value\n * is a scalar value (String, number, boolean).\n *<p>\n * Note that this type is not parameterized (even though it would seemingly\n * make sense), because such type information can not be use effectively\n * during runtime: access is always using either wildcard type, or just\n * basic {@link java.lang.Object}; and so adding type parameter seems\n * like unnecessary extra work.\n *<p>\n * Actual implementations are strongly recommended to be based on\n * {@link com.fasterxml.jackson.databind.deser.std.StdValueInstantiator}\n * which implements all methods, and as such will be compatible\n * across versions even if new methods were added to this interface.\n */\npublic abstract",
+  "method_javadoc": "/**\n     * Method that will return true if any of <code>canCreateXxx</code> method\n     * returns true: that is, if there is any way that an instance could\n     * be created.\n     */"
+ },
+ "fields": [],
+ "focal_class": "com.fasterxml.jackson.databind.deser.ValueInstantiator",
+ "focal_id": "JacksonDatabind_90::com.fasterxml.jackson.databind.deser.ValueInstantiator::canInstantiate()",
+ "focal_method_name": "canInstantiate",
+ "generations": 3,
+ "impl_B": "public boolean canInstantiate() {\n        return canCreateUsingDefault()\n                || canCreateUsingDelegate() \n                || canCreateFromObjectWith() || canCreateFromString()\n                || canCreateFromInt() || canCreateFromLong()\n                || canCreateFromDouble() || canCreateFromBoolean();\n    }",
+ "imports": [
+  "java.io.IOException",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.deser.impl.PropertyValueBuffer",
+  "com.fasterxml.jackson.databind.introspect.AnnotatedParameter",
+  "com.fasterxml.jackson.databind.introspect.AnnotatedWithParams"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.deser",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Accessor for raw (type-erased) type of instances to create.\n     *<p>\n     * NOTE: since this method has not existed since beginning of\n     * Jackson 2.0 series, default implementation will just return\n     * <code>Object.class</code>; implementations are expected\n     * to override it with real value.\n     *\n     * @since 2.8\n     */",
+   "name": "getValueClass"
+  },
+  {
+   "javadoc": "/**\n     * Method that returns description of the value type this instantiator\n     * handles. Used for error messages, diagnostics.\n     */",
+   "name": "getValueTypeDesc"
+  },
+  {
+   "javadoc": "/**\n     * Method that can be called to check whether a String-based creator\n     * is available for this instantiator\n     */",
+   "name": "canCreateFromString"
+  },
+  {
+   "javadoc": "/**\n     * Method that can be called to check whether an integer (int, Integer) based\n     * creator is available to use (to call {@link #createFromInt}).\n     */",
+   "name": "canCreateFromInt"
+  },
+  {
+   "javadoc": "/**\n     * Method that can be called to check whether a long (long, Long) based\n     * creator is available to use (to call {@link #createFromLong}).\n     */",
+   "name": "canCreateFromLong"
+  },
+  {
+   "javadoc": "/**\n     * Method that can be called to check whether a double (double / Double) based\n     * creator is available to use (to call {@link #createFromDouble}).\n     */",
+   "name": "canCreateFromDouble"
+  },
+  {
+   "javadoc": "/**\n     * Method that can be called to check whether a double (boolean / Boolean) based\n     * creator is available to use (to call {@link #createFromDouble}).\n     */",
+   "name": "canCreateFromBoolean"
+  },
+  {
+   "javadoc": "/**\n     * Method that can be called to check whether a default creator (constructor,\n     * or no-arg static factory method)\n     * is available for this instantiator\n     */",
+   "name": "canCreateUsingDefault"
+  },
+  {
+   "javadoc": "/**\n     * Method that can be called to check whether a delegate-based creator (single-arg\n     * constructor or factory method)\n     * is available for this instantiator\n     */",
+   "name": "canCreateUsingDelegate"
+  },
+  {
+   "javadoc": "/**\n     * Method that can be called to check whether a array-delegate-based creator\n     * (single-arg constructor or factory method)\n     * is available for this instantiator\n     *\n     * @since 2.7\n     */",
+   "name": "canCreateUsingArrayDelegate"
+  },
+  {
+   "javadoc": "/**\n     * Method that can be called to check whether a property-based creator\n     * (argument-taking constructor or factory method)\n     * is available to instantiate values from JSON Object\n     */",
+   "name": "canCreateFromObjectWith"
+  },
+  {
+   "javadoc": "/**\n     * Method called to determine types of instantiation arguments\n     * to use when creating instances with creator arguments\n     * (when {@link #canCreateFromObjectWith()} returns  true).\n     * These arguments are bound from JSON, using specified\n     * property types to locate deserializers.\n     *<p>\n     * NOTE: all properties will be of type\n     * {@link com.fasterxml.jackson.databind.deser.CreatorProperty}.\n     */",
+   "name": "getFromObjectArguments"
+  },
+  {
+   "javadoc": "/**\n     * Method that can be used to determine what is the type of delegate\n     * type to use, if any; if no delegates are used, will return null.\n     * If non-null type is returned, deserializer will bind JSON into\n     * specified type (using standard deserializer for that type), and\n     * pass that to instantiator.\n     */",
+   "name": "getDelegateType"
+  },
+  {
+   "javadoc": "/**\n     * Method that can be used to determine what is the type of array delegate\n     * type to use, if any; if no delegates are used, will return null. If\n     * non-null type is returned, deserializer will bind JSON into specified\n     * type (using standard deserializer for that type), and pass that to\n     * instantiator.\n     *\n     * @since 2.7\n     */",
+   "name": "getArrayDelegateType"
+  },
+  {
+   "javadoc": "/**\n     * Method called to create value instance from a JSON value when\n     * no data needs to passed to creator (constructor, factory method);\n     * typically this will call the default constructor of the value object.\n     * It will only be used if more specific creator methods are not\n     * applicable; hence \"default\".\n     *<p>\n     * This method is called if {@link #getFromObjectArguments} returns\n     * null or empty List.\n     */",
+   "name": "createUsingDefault"
+  },
+  {
+   "javadoc": "/**\n     * Method called to create value instance from JSON Object when\n     * instantiation arguments are passed; this is done, for example when passing information\n     * specified with \"Creator\" annotations.\n     *<p>\n     * This method is called if {@link #getFromObjectArguments} returns\n     * a non-empty List of arguments.\n     */",
+   "name": "createFromObjectWith"
+  },
+  {
+   "javadoc": "/**\n     * Method that delegates to\n     * {@link #createFromObjectWith(DeserializationContext, Object[])} by\n     * default, but can be overridden if the application should have customized\n     * behavior with respect to missing properties.\n     *<p>\n     * The default implementation of this method uses\n     * {@link PropertyValueBuffer#getParameters(SettableBeanProperty[])} to read\n     * and validate all properties in bulk, possibly substituting defaults for\n     * missing properties or throwing exceptions for missing properties.  An\n     * overridden implementation of this method could, for example, use\n     * {@link PropertyValueBuffer#hasParameter(SettableBeanProperty)} and\n     * {@link PropertyValueBuffer#getParameter(SettableBeanProperty)} to safely\n     * read the present properties only, and to have some other behavior for the\n     * missing properties.\n     * \n     * @since 2.8\n     */",
+   "name": "createFromObjectWith"
+  },
+  {
+   "javadoc": "/**\n     * Method to called to create value instance from JSON Object using\n     * an intermediate \"delegate\" value to pass to createor method\n     */",
+   "name": "createUsingDelegate"
+  },
+  {
+   "javadoc": "/**\n     * Method to called to create value instance from JSON Array using\n     * an intermediate \"delegate\" value to pass to createor method\n     */",
+   "name": "createUsingArrayDelegate"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "createFromString"
+  },
+  {
+   "javadoc": "",
+   "name": "createFromInt"
+  },
+  {
+   "javadoc": "",
+   "name": "createFromLong"
+  },
+  {
+   "javadoc": "",
+   "name": "createFromDouble"
+  },
+  {
+   "javadoc": "",
+   "name": "createFromBoolean"
+  },
+  {
+   "javadoc": "/**\n     * Method that can be called to try to access member (constructor,\n     * static factory method) that is used as the \"default creator\"\n     * (creator that is called without arguments; typically default\n     * [zero-argument] constructor of the type).\n     * Note that implementations not required to return actual object\n     * they use (or, they may use some other instantiation) method.\n     * That is, even if {@link #canCreateUsingDefault()} returns true,\n     * this method may return null .\n     */",
+   "name": "getDefaultCreator"
+  },
+  {
+   "javadoc": "/**\n     * Method that can be called to try to access member (constructor,\n     * static factory method) that is used as the \"delegate creator\".\n     * Note that implementations not required to return actual object\n     * they use (or, they may use some other instantiation) method.\n     * That is, even if {@link #canCreateUsingDelegate()} returns true,\n     * this method may return null .\n     */",
+   "name": "getDelegateCreator"
+  },
+  {
+   "javadoc": "/**\n     * Method that can be called to try to access member (constructor,\n     * static factory method) that is used as the \"array delegate creator\".\n     * Note that implementations not required to return actual object\n     * they use (or, they may use some other instantiation) method.\n     * That is, even if {@link #canCreateUsingArrayDelegate()} returns true,\n     * this method may return null .\n     */",
+   "name": "getArrayDelegateCreator"
+  },
+  {
+   "javadoc": "/**\n     * Method that can be called to try to access member (constructor,\n     * static factory method) that is used as the \"non-default creator\"\n     * (constructor or factory method that takes one or more arguments).\n     * Note that implementations not required to return actual object\n     * they use (or, they may use some other instantiation) method.\n     * That is, even if {@link #canCreateFromObjectWith()} returns true,\n     * this method may return null .\n     */",
+   "name": "getWithArgsCreator"
+  },
+  {
+   "javadoc": "/**\n     * If an incomplete creator was found, this is the first parameter that\n     * needs further annotation to help make the creator complete.\n     */",
+   "name": "getIncompleteParameter"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.4 (demoted from <code>StdValueInstantiator</code>)\n     */",
+   "name": "_createFromStringFallbacks"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public abstract class ValueInstantiator",
+  "constructors": [],
+  "focal_signature": "public boolean canInstantiate()",
+  "methods": [
+   "public Class<?> getValueClass();",
+   "public String getValueTypeDesc();",
+   "public boolean canCreateFromString();",
+   "public boolean canCreateFromInt();",
+   "public boolean canCreateFromLong();",
+   "public boolean canCreateFromDouble();",
+   "public boolean canCreateFromBoolean();",
+   "public boolean canCreateUsingDefault();",
+   "public boolean canCreateUsingDelegate();",
+   "public boolean canCreateUsingArrayDelegate();",
+   "public boolean canCreateFromObjectWith();",
+   "public SettableBeanProperty[] getFromObjectArguments(DeserializationConfig config);",
+   "public JavaType getDelegateType(DeserializationConfig config);",
+   "public JavaType getArrayDelegateType(DeserializationConfig config);",
+   "public Object createUsingDefault(DeserializationContext ctxt) throws IOException;",
+   "public Object createFromObjectWith(DeserializationContext ctxt, Object[] args) throws IOException;",
+   "public Object createFromObjectWith(DeserializationContext ctxt, SettableBeanProperty[] props, PropertyValueBuffer buffer) throws IOException;",
+   "public Object createUsingDelegate(DeserializationContext ctxt, Object delegate) throws IOException;",
+   "public Object createUsingArrayDelegate(DeserializationContext ctxt, Object delegate) throws IOException;",
+   "public Object createFromString(DeserializationContext ctxt, String value) throws IOException;",
+   "public Object createFromInt(DeserializationContext ctxt, int value) throws IOException;",
+   "public Object createFromLong(DeserializationContext ctxt, long value) throws IOException;",
+   "public Object createFromDouble(DeserializationContext ctxt, double value) throws IOException;",
+   "public Object createFromBoolean(DeserializationContext ctxt, boolean value) throws IOException;",
+   "public AnnotatedWithParams getDefaultCreator();",
+   "public AnnotatedWithParams getDelegateCreator();",
+   "public AnnotatedWithParams getArrayDelegateCreator();",
+   "public AnnotatedWithParams getWithArgsCreator();",
+   "public AnnotatedParameter getIncompleteParameter();",
+   "protected Object _createFromStringFallbacks(DeserializationContext ctxt, String value) throws IOException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

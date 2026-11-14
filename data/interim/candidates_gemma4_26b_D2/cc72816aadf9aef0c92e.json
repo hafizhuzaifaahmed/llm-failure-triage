@@ -1,0 +1,13 @@
+{
+  "assembled": true,
+  "call_key": "9390463e318c6b544d66de42999b0d54fd03ea0ebc1554a897209fd09967d831",
+  "candidate_id": "cc72816aadf9aef0c92e",
+  "class_name": "MutableDateTime_addHours_TriageGen1Test",
+  "dataset": "D2",
+  "focal_id": "Time_3::org.joda.time.MutableDateTime::addHours(int)#m103",
+  "generation": 1,
+  "model_returned": "gemma4:26b",
+  "n_tests": 5,
+  "package": "org.joda.time",
+  "source": "package org.joda.time;\n\nimport java.io.*;\nimport java.io.IOException;\nimport java.io.ObjectInputStream;\nimport java.io.ObjectOutputStream;\nimport java.io.Serializable;\nimport java.math.*;\nimport java.util.*;\nimport java.util.Locale;\nimport org.joda.convert.FromString;\nimport org.joda.convert.ToString;\nimport org.joda.time.base.BaseDateTime;\nimport org.joda.time.chrono.ISOChronology;\nimport org.joda.time.field.AbstractReadableInstantFieldProperty;\nimport org.joda.time.field.FieldUtils;\nimport org.joda.time.format.DateTimeFormatter;\nimport org.joda.time.format.ISODateTimeFormat;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class MutableDateTime_addHours_TriageGen1Test {\n\n    @Test\n    public void testAddHours_Positive() {\n        // Initialize with a known time: 2023-01-01T10:00:00\n        MutableDateTime dt = new MutableDateTime(2023, 1, 1, 10, 0, 0, 0);\n        dt.addHours(5);\n        assertEquals(15, dt.getHourOfDay());\n    }\n\n    @Test\n    public void testAddHours_Negative() {\n        // Initialize with a known time: 2023-01-01T10:00:00\n        MutableDateTime dt = new MutableDateTime(2023, 1, 1, 10, 0, 0, 0);\n        dt.addHours(-5);\n        assertEquals(5, dt.getHourOfDay());\n    }\n\n    @Test\n    public void testAddHours_Zero() {\n        // This tests the branch where hours == 0\n        MutableDateTime dt = new MutableDateTime(2023, 1, 1, 10, 0, 0, 0);\n        int originalHour = dt.getHourOfDay();\n        dt.addHours(0);\n        assertEquals(originalHour, dt.getHourOfDay());\n    }\n\n    @Test\n    public void testAddHours_OverflowDays() {\n        // Test that adding hours rolls over the day correctly\n        // 2023-01-01T22:00:00 + 4 hours = 2023-01-02T02:00:00\n        MutableDateTime dt = new MutableDateTime(2023, 1, 1, 22, 0, 0, 0);\n        dt.addHours(4);\n        assertEquals(2, dt.getDayOfMonth());\n        assertEquals(2, dt.getHourOfDay());\n    }\n\n    @Test\n    public void testAddHours_LargeValue() {\n        // Test adding a large number of hours (e.g., 48 hours = 2 days)\n        MutableDateTime dt = new MutableDateTime(2023, 1, 1, 10, 0, 0, 0);\n        dt.addHours(48);\n        assertEquals(3, dt.getDayOfMonth());\n        assertEquals(10, dt.getHourOfDay());\n    }\n}\n"
+}

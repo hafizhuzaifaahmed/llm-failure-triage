@@ -1,0 +1,271 @@
+{
+ "bug_name": "Math_27",
+ "call_sites": [
+  {
+   "line": 67,
+   "lines": [
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72
+   ],
+   "path": "src/main/java/org/apache/commons/math3/FieldElement.java",
+   "snippet": "\n    /** Compute this &divide; a.\n     * @param a element to add\n     * @return a new element representing this &divide; a\n     */\n    T divide(T a);\n\n    /**\n     * Returns the multiplicative inverse of {@code this} element.\n     * @return the inverse of {@code this}.\n     */"
+  },
+  {
+   "line": 109,
+   "lines": [
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114
+   ],
+   "path": "src/main/java/org/apache/commons/math3/analysis/integration/gauss/LegendreHighPrecisionRuleFactory.java",
+   "snippet": "                BigDecimal tmp1 = a.multiply(b_two_j_p_1, mContext);\n                tmp1 = pa.multiply(tmp1, mContext);\n                BigDecimal tmp2 = pma.multiply(b_j, mContext);\n                // P[j+1](a)\n                BigDecimal ppa = tmp1.subtract(tmp2, mContext);\n                ppa = ppa.divide(b_j_p_1, mContext);\n\n                // Compute P[j+1](b)\n                // ppb = ((2 * j + 1) * b * pb - j * pmb) / (j + 1);\n\n                tmp1 = b.multiply(b_two_j_p_1, mContext);"
+  },
+  {
+   "line": 119,
+   "lines": [
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122,
+    123,
+    124
+   ],
+   "path": "src/main/java/org/apache/commons/math3/analysis/integration/gauss/LegendreHighPrecisionRuleFactory.java",
+   "snippet": "                tmp1 = b.multiply(b_two_j_p_1, mContext);\n                tmp1 = pb.multiply(tmp1, mContext);\n                tmp2 = pmb.multiply(b_j, mContext);\n                // P[j+1](b)\n                BigDecimal ppb = tmp1.subtract(tmp2, mContext);\n                ppb = ppb.divide(b_j_p_1, mContext);\n\n                pma = pa;\n                pa = ppa;\n                pmb = pb;\n                pb = ppb;"
+  },
+  {
+   "line": 151,
+   "lines": [
+    146,
+    147,
+    148,
+    149,
+    150,
+    151,
+    152,
+    153,
+    154,
+    155,
+    156
+   ],
+   "path": "src/main/java/org/apache/commons/math3/analysis/integration/gauss/LegendreHighPrecisionRuleFactory.java",
+   "snippet": "                    tmp1 = c.multiply(b_two_j_p_1, mContext);\n                    tmp1 = pc.multiply(tmp1, mContext);\n                    tmp2 = pmc.multiply(b_j, mContext);\n                    // P[j+1](c)\n                    BigDecimal ppc = tmp1.subtract(tmp2, mContext);\n                    ppc = ppc.divide(b_j_p_1, mContext);\n\n                    pmc = pc;\n                    pc = ppc;\n                }\n                // Now pc = P[n+1](c) and pmc = P[n](c)."
+  },
+  {
+   "line": 177,
+   "lines": [
+    172,
+    173,
+    174,
+    175,
+    176,
+    177,
+    178,
+    179,
+    180,
+    181,
+    182
+   ],
+   "path": "src/main/java/org/apache/commons/math3/analysis/integration/gauss/LegendreHighPrecisionRuleFactory.java",
+   "snippet": "            tmp1 = tmp1.multiply(nP);\n            tmp1 = tmp1.pow(2, mContext);\n            BigDecimal tmp2 = c.pow(2, mContext);\n            tmp2 = BigDecimal.ONE.subtract(tmp2, mContext);\n            tmp2 = tmp2.multiply(two, mContext);\n            tmp2 = tmp2.divide(tmp1, mContext);\n\n            points[i] = c;\n            weights[i] = tmp2;\n\n            final int idx = numberOfPoints - i - 1;"
+  }
+ ],
+ "class_simple": "Fraction",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Representation of a rational number.\n *\n * implements Serializable since 2.0\n *\n * @since 1.1\n * @version $Id$\n */\npublic",
+  "method_javadoc": "/**\n     * <p>Divide the value of this fraction by another.</p>\n     *\n     * @param fraction  the fraction to divide by, must not be {@code null}\n     * @return a {@code Fraction} instance with the resulting values\n     * @throws IllegalArgumentException if the fraction is {@code null}\n     * @throws MathArithmeticException if the fraction to divide by is zero\n     * @throws MathArithmeticException if the resulting numerator or denominator exceeds\n     *  {@code Integer.MAX_VALUE}\n     */"
+ },
+ "fields": [
+  "public static final Fraction TWO",
+  "public static final Fraction ONE",
+  "public static final Fraction ZERO",
+  "public static final Fraction FOUR_FIFTHS",
+  "public static final Fraction ONE_FIFTH",
+  "public static final Fraction ONE_HALF",
+  "public static final Fraction ONE_QUARTER",
+  "public static final Fraction ONE_THIRD",
+  "public static final Fraction THREE_FIFTHS",
+  "public static final Fraction THREE_QUARTERS",
+  "public static final Fraction TWO_FIFTHS",
+  "public static final Fraction TWO_QUARTERS",
+  "public static final Fraction TWO_THIRDS",
+  "public static final Fraction MINUS_ONE",
+  "private static final long serialVersionUID",
+  "private final int denominator",
+  "private final int numerator"
+ ],
+ "focal_class": "org.apache.commons.math3.fraction.Fraction",
+ "focal_id": "Math_27::org.apache.commons.math3.fraction.Fraction::divide(Fraction)",
+ "focal_method_name": "divide",
+ "generations": 3,
+ "impl_B": "public Fraction divide(Fraction fraction) {\n        if (fraction == null) {\n            throw new NullArgumentException(LocalizedFormats.FRACTION);\n        }\n        if (fraction.numerator == 0) {\n            throw new MathArithmeticException(LocalizedFormats.ZERO_FRACTION_TO_DIVIDE_BY,\n                                              fraction.numerator, fraction.denominator);\n        }\n        return multiply(fraction.reciprocal());\n    }",
+ "imports": [
+  "java.io.Serializable",
+  "java.math.BigInteger",
+  "org.apache.commons.math3.FieldElement",
+  "org.apache.commons.math3.exception.util.LocalizedFormats",
+  "org.apache.commons.math3.exception.MathArithmeticException",
+  "org.apache.commons.math3.exception.NullArgumentException",
+  "org.apache.commons.math3.util.ArithmeticUtils",
+  "org.apache.commons.math3.util.FastMath"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math3.fraction",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Returns the absolute value of this fraction.\n     * @return the absolute value.\n     */",
+   "name": "abs"
+  },
+  {
+   "javadoc": "/**\n     * Compares this object to another based on size.\n     * @param object the object to compare to\n     * @return -1 if this is less than <tt>object</tt>, +1 if this is greater\n     *         than <tt>object</tt>, 0 if they are equal.\n     */",
+   "name": "compareTo"
+  },
+  {
+   "javadoc": "/**\n     * Gets the fraction as a <tt>double</tt>. This calculates the fraction as\n     * the numerator divided by denominator.\n     * @return the fraction as a <tt>double</tt>\n     */",
+   "name": "doubleValue"
+  },
+  {
+   "javadoc": "/**\n     * Test for the equality of two fractions.  If the lowest term\n     * numerator and denominators are the same for both fractions, the two\n     * fractions are considered to be equal.\n     * @param other fraction to test for equality to this fraction\n     * @return true if two fractions are equal, false if object is\n     *         <tt>null</tt>, not an instance of {@link Fraction}, or not equal\n     *         to this fraction instance.\n     */",
+   "name": "equals"
+  },
+  {
+   "javadoc": "/**\n     * Gets the fraction as a <tt>float</tt>. This calculates the fraction as\n     * the numerator divided by denominator.\n     * @return the fraction as a <tt>float</tt>\n     */",
+   "name": "floatValue"
+  },
+  {
+   "javadoc": "/**\n     * Access the denominator.\n     * @return the denominator.\n     */",
+   "name": "getDenominator"
+  },
+  {
+   "javadoc": "/**\n     * Access the numerator.\n     * @return the numerator.\n     */",
+   "name": "getNumerator"
+  },
+  {
+   "javadoc": "/**\n     * Gets a hashCode for the fraction.\n     * @return a hash code value for this object\n     */",
+   "name": "hashCode"
+  },
+  {
+   "javadoc": "/**\n     * Gets the fraction as an <tt>int</tt>. This returns the whole number part\n     * of the fraction.\n     * @return the whole number fraction part\n     */",
+   "name": "intValue"
+  },
+  {
+   "javadoc": "/**\n     * Gets the fraction as a <tt>long</tt>. This returns the whole number part\n     * of the fraction.\n     * @return the whole number fraction part\n     */",
+   "name": "longValue"
+  },
+  {
+   "javadoc": "/**\n     * Return the additive inverse of this fraction.\n     * @return the negation of this fraction.\n     */",
+   "name": "negate"
+  },
+  {
+   "javadoc": "/**\n     * Return the multiplicative inverse of this fraction.\n     * @return the reciprocal fraction\n     */",
+   "name": "reciprocal"
+  },
+  {
+   "javadoc": "/**\n     * <p>Adds the value of this fraction to another, returning the result in reduced form.\n     * The algorithm follows Knuth, 4.5.1.</p>\n     *\n     * @param fraction  the fraction to add, must not be {@code null}\n     * @return a {@code Fraction} instance with the resulting values\n     * @throws NullArgumentException if the fraction is {@code null}\n     * @throws MathArithmeticException if the resulting numerator or denominator exceeds\n     *  {@code Integer.MAX_VALUE}\n     */",
+   "name": "add"
+  },
+  {
+   "javadoc": "/**\n     * Add an integer to the fraction.\n     * @param i the <tt>integer</tt> to add.\n     * @return this + i\n     */",
+   "name": "add"
+  },
+  {
+   "javadoc": "/**\n     * <p>Subtracts the value of another fraction from the value of this one,\n     * returning the result in reduced form.</p>\n     *\n     * @param fraction  the fraction to subtract, must not be {@code null}\n     * @return a {@code Fraction} instance with the resulting values\n     * @throws NullArgumentException if the fraction is {@code null}\n     * @throws MathArithmeticException if the resulting numerator or denominator\n     *   cannot be represented in an {@code int}.\n     */",
+   "name": "subtract"
+  },
+  {
+   "javadoc": "/**\n     * Subtract an integer from the fraction.\n     * @param i the <tt>integer</tt> to subtract.\n     * @return this - i\n     */",
+   "name": "subtract"
+  },
+  {
+   "javadoc": "/**\n     * <p>Multiplies the value of this fraction by another, returning the\n     * result in reduced form.</p>\n     *\n     * @param fraction  the fraction to multiply by, must not be {@code null}\n     * @return a {@code Fraction} instance with the resulting values\n     * @throws NullArgumentException if the fraction is {@code null}\n     * @throws MathArithmeticException if the resulting numerator or denominator exceeds\n     *  {@code Integer.MAX_VALUE}\n     */",
+   "name": "multiply"
+  },
+  {
+   "javadoc": "/**\n     * Multiply the fraction by an integer.\n     * @param i the <tt>integer</tt> to multiply by.\n     * @return this * i\n     */",
+   "name": "multiply"
+  },
+  {
+   "javadoc": "/**\n     * Divide the fraction by an integer.\n     * @param i the <tt>integer</tt> to divide by.\n     * @return this * i\n     */",
+   "name": "divide"
+  },
+  {
+   "javadoc": "/**\n     * <p>\n     * Gets the fraction percentage as a <tt>double</tt>. This calculates the\n     * fraction as the numerator divided by denominator multiplied by 100.\n     * </p>\n     *\n     * @return the fraction percentage as a <tt>double</tt>.\n     */",
+   "name": "percentageValue"
+  },
+  {
+   "javadoc": "/**\n     * <p>Creates a {@code Fraction} instance with the 2 parts\n     * of a fraction Y/Z.</p>\n     *\n     * <p>Any negative signs are resolved to be on the numerator.</p>\n     *\n     * @param numerator  the numerator, for example the three in 'three sevenths'\n     * @param denominator  the denominator, for example the seven in 'three sevenths'\n     * @return a new fraction instance, with the numerator and denominator reduced\n     * @throws MathArithmeticException if the denominator is {@code zero}\n     */",
+   "name": "getReducedFraction"
+  },
+  {
+   "javadoc": "/**\n     * <p>\n     * Returns the {@code String} representing this fraction, ie\n     * \"num / dem\" or just \"num\" if the denominator is one.\n     * </p>\n     *\n     * @return a string representation of the fraction.\n     * @see java.lang.Object#toString()\n     */",
+   "name": "toString"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "getField"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class Fraction extends Number implements FieldElement<Fraction>, Comparable<Fraction>, Serializable",
+  "constructors": [
+   "public Fraction(double value) throws FractionConversionException;",
+   "public Fraction(double value, double epsilon, int maxIterations) throws FractionConversionException;",
+   "public Fraction(double value, int maxDenominator) throws FractionConversionException;",
+   "public Fraction(int num);",
+   "public Fraction(int num, int den);"
+  ],
+  "focal_signature": "public Fraction divide(Fraction fraction)",
+  "methods": [
+   "public Fraction abs();",
+   "public int compareTo(Fraction object);",
+   "public double doubleValue();",
+   "public boolean equals(Object other);",
+   "public float floatValue();",
+   "public int getDenominator();",
+   "public int getNumerator();",
+   "public int hashCode();",
+   "public int intValue();",
+   "public long longValue();",
+   "public Fraction negate();",
+   "public Fraction reciprocal();",
+   "public Fraction add(Fraction fraction);",
+   "public Fraction add(final int i);",
+   "public Fraction subtract(Fraction fraction);",
+   "public Fraction subtract(final int i);",
+   "public Fraction multiply(Fraction fraction);",
+   "public Fraction multiply(final int i);",
+   "public Fraction divide(final int i);",
+   "public double percentageValue();",
+   "public static Fraction getReducedFraction(int numerator, int denominator);",
+   "public String toString();",
+   "public FractionField getField();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

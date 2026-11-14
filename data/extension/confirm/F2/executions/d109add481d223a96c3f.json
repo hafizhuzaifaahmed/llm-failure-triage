@@ -1,0 +1,561 @@
+{
+ "candidate_id": "d109add481d223a96c3f",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testParsePlainDate",
+   "testParseZuluWithMissingMilliseconds",
+   "testParseZuluWithMilliseconds",
+   "testParseWithTimeZoneOffsetAndColon",
+   "testParseWithTimeZoneOffsetMissingMinutes",
+   "testParseWithTimeZoneOffsetAndMissingMilliseconds",
+   "testParseWithoutTimeZoneIndicator",
+   "testParsePlainDateWithShortTime",
+   "testParseWithAlreadyIncludedMillisecondsAndNoZ"
+  ],
+  "nc_both": [],
+  "nc_one_version": [],
+  "passes": 0
+ },
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "JacksonDatabind_6::com.fasterxml.jackson.databind.util.StdDateFormat::parseAsISO8601(String,ParsePosition)",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testParsePlainDate",
+   "runs_b": [
+    {
+     "duration_s": 0.098,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.097,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.097,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.089,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.093,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.104,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.databind.util;\n\nimport com.fasterxml.jackson.core.io.NumberInput;\nimport java.io.*;\nimport java.math.*;\nimport java.text.DateFormat;\nimport java.text.FieldPosition;\nimport java.text.ParseException;\nimport java.text.ParsePosition;\nimport java.text.SimpleDateFormat;\nimport java.util.*;\nimport java.util.Calendar;\nimport java.util.Date;\nimport java.util.Locale;\nimport java.util.TimeZone;\nimport org.junit.*;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\nimport static org.junit.Assert.assertNotNull;\n\npublic class StdDateFormat_parseAsISO8601_TriageGen0Test {\n\n    private StdDateFormat stdDateFormat;\n    private TimeZone utc;\n\n    @Before\n    public void setUp() {\n        utc = TimeZone.getTimeZone(\"UTC\");\n        stdDateFormat = new StdDateFormat(utc, Locale.ENGLISH);\n    }\n\n    /**\n     * Helper to bypass protected access for testing.\n     * Since the target method is protected, we use a subclass or \n     * rely on the fact that StdDateFormat's public parse() calls it.\n     * However, to test the specific logic of parseAsISO8601 with ParsePosition,\n     * we use the public parse(String, ParsePosition) method which delegates to it.\n     */\n    private Date parse(String dateStr, ParsePosition pos) {\n        return stdDateFormat.parse(dateStr, pos);\n    }\n\n    @Test\n    public void testParsePlainDate() throws Exception {\n        // len <= 10 && Character.isDigit(c)\n        String dateStr = \"2023-10-01\";\n        Date result = parse(dateStr, new ParsePosition(0));\n        assertNotNull(result);\n        \n        Calendar cal = Calendar.getInstance(utc);\n        cal.setTime(result);\n        assertEquals(2023, cal.get(Calendar.YEAR));\n        assertEquals(Calendar.OCTOBER, cal.get(Calendar.MONTH));\n        assertEquals(1, cal.get(Calendar.DAY_OF_MONTH));\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testParseZuluWithMissingMilliseconds",
+   "runs_b": [
+    {
+     "duration_s": 0.128,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.112,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.104,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.09,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.104,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.101,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.databind.util;\n\nimport com.fasterxml.jackson.core.io.NumberInput;\nimport java.io.*;\nimport java.math.*;\nimport java.text.DateFormat;\nimport java.text.FieldPosition;\nimport java.text.ParseException;\nimport java.text.ParsePosition;\nimport java.text.SimpleDateFormat;\nimport java.util.*;\nimport java.util.Calendar;\nimport java.util.Date;\nimport java.util.Locale;\nimport java.util.TimeZone;\nimport org.junit.*;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\nimport static org.junit.Assert.assertNotNull;\n\npublic class StdDateFormat_parseAsISO8601_TriageGen0Test {\n\n    private StdDateFormat stdDateFormat;\n    private TimeZone utc;\n\n    @Before\n    public void setUp() {\n        utc = TimeZone.getTimeZone(\"UTC\");\n        stdDateFormat = new StdDateFormat(utc, Locale.ENGLISH);\n    }\n\n    /**\n     * Helper to bypass protected access for testing.\n     * Since the target method is protected, we use a subclass or \n     * rely on the fact that StdDateFormat's public parse() calls it.\n     * However, to test the specific logic of parseAsISO8601 with ParsePosition,\n     * we use the public parse(String, ParsePosition) method which delegates to it.\n     */\n    private Date parse(String dateStr, ParsePosition pos) {\n        return stdDateFormat.parse(dateStr, pos);\n    }\n\n    \n\n    @Test\n    public void testParseZuluWithMissingMilliseconds() throws Exception {\n        // c == 'Z' and dateStr.charAt(len-4) == ':'\n        // Tests the sb.insert(len-1, \".000\") logic\n        String dateStr = \"2023-10-01T12:00:00Z\";\n        Date result = parse(dateStr, new ParsePosition(0));\n        assertNotNull(result);\n        \n        Calendar cal = Calendar.getInstance(utc);\n        cal.setTime(result);\n        assertEquals(12, cal.get(Calendar.HOUR_OF_DAY));\n        assertEquals(0, cal.get(Calendar.MINUTE));\n        assertEquals(0, cal.get(Calendar.SECOND));\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testParseZuluWithMilliseconds",
+   "runs_b": [
+    {
+     "duration_s": 0.129,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.134,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.129,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.144,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.15,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.153,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.databind.util;\n\nimport com.fasterxml.jackson.core.io.NumberInput;\nimport java.io.*;\nimport java.math.*;\nimport java.text.DateFormat;\nimport java.text.FieldPosition;\nimport java.text.ParseException;\nimport java.text.ParsePosition;\nimport java.text.SimpleDateFormat;\nimport java.util.*;\nimport java.util.Calendar;\nimport java.util.Date;\nimport java.util.Locale;\nimport java.util.TimeZone;\nimport org.junit.*;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\nimport static org.junit.Assert.assertNotNull;\n\npublic class StdDateFormat_parseAsISO8601_TriageGen0Test {\n\n    private StdDateFormat stdDateFormat;\n    private TimeZone utc;\n\n    @Before\n    public void setUp() {\n        utc = TimeZone.getTimeZone(\"UTC\");\n        stdDateFormat = new StdDateFormat(utc, Locale.ENGLISH);\n    }\n\n    /**\n     * Helper to bypass protected access for testing.\n     * Since the target method is protected, we use a subclass or \n     * rely on the fact that StdDateFormat's public parse() calls it.\n     * However, to test the specific logic of parseAsISO8601 with ParsePosition,\n     * we use the public parse(String, ParsePosition) method which delegates to it.\n     */\n    private Date parse(String dateStr, ParsePosition pos) {\n        return stdDateFormat.parse(dateStr, pos);\n    }\n\n    \n\n    \n\n    @Test\n    public void testParseZuluWithMilliseconds() throws Exception {\n        // c == 'Z' but no colon at len-4\n        String dateStr = \"2023-10-01T12:00:00.123Z\";\n        Date result = parse(dateStr, new ParsePosition(0));\n        assertNotNull(result);\n        \n        Calendar cal = Calendar.getInstance(utc);\n        cal.setTime(result);\n        assertEquals(12, cal.get(Calendar.HOUR_OF_DAY));\n        assertEquals(123, cal.get(Calendar.MILLISECOND));\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testParseWithTimeZoneOffsetAndColon",
+   "runs_b": [
+    {
+     "duration_s": 0.121,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.118,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.117,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.126,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.103,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.122,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.databind.util;\n\nimport com.fasterxml.jackson.core.io.NumberInput;\nimport java.io.*;\nimport java.math.*;\nimport java.text.DateFormat;\nimport java.text.FieldPosition;\nimport java.text.ParseException;\nimport java.text.ParsePosition;\nimport java.text.SimpleDateFormat;\nimport java.util.*;\nimport java.util.Calendar;\nimport java.util.Date;\nimport java.util.Locale;\nimport java.util.TimeZone;\nimport org.junit.*;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\nimport static org.junit.Assert.assertNotNull;\n\npublic class StdDateFormat_parseAsISO8601_TriageGen0Test {\n\n    private StdDateFormat stdDateFormat;\n    private TimeZone utc;\n\n    @Before\n    public void setUp() {\n        utc = TimeZone.getTimeZone(\"UTC\");\n        stdDateFormat = new StdDateFormat(utc, Locale.ENGLISH);\n    }\n\n    /**\n     * Helper to bypass protected access for testing.\n     * Since the target method is protected, we use a subclass or \n     * rely on the fact that StdDateFormat's public parse() calls it.\n     * However, to test the specific logic of parseAsISO8601 with ParsePosition,\n     * we use the public parse(String, ParsePosition) method which delegates to it.\n     */\n    private Date parse(String dateStr, ParsePosition pos) {\n        return stdDateFormat.parse(dateStr, pos);\n    }\n\n    \n\n    \n\n    \n\n    @Test\n    public void testParseWithTimeZoneOffsetAndColon() throws Exception {\n        // hasTimeZone(dateStr) is true, c == ':' at len-3\n        // Tests sb.delete(len-3, len-2)\n        String dateStr = \"2023-10-01T12:00:00+05:00\";\n        Date result = parse(dateStr, new ParsePosition(0));\n        assertNotNull(result);\n\n        Calendar cal = Calendar.getInstance(utc);\n        cal.setTime(result);\n        // 12:00 +05:00 is 07:00 UTC\n        assertEquals(7, cal.get(Calendar.HOUR_OF_DAY));\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testParseWithTimeZoneOffsetMissingMinutes",
+   "runs_b": [
+    {
+     "duration_s": 0.111,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.131,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.13,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.16,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.146,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.129,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.databind.util;\n\nimport com.fasterxml.jackson.core.io.NumberInput;\nimport java.io.*;\nimport java.math.*;\nimport java.text.DateFormat;\nimport java.text.FieldPosition;\nimport java.text.ParseException;\nimport java.text.ParsePosition;\nimport java.text.SimpleDateFormat;\nimport java.util.*;\nimport java.util.Calendar;\nimport java.util.Date;\nimport java.util.Locale;\nimport java.util.TimeZone;\nimport org.junit.*;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\nimport static org.junit.Assert.assertNotNull;\n\npublic class StdDateFormat_parseAsISO8601_TriageGen0Test {\n\n    private StdDateFormat stdDateFormat;\n    private TimeZone utc;\n\n    @Before\n    public void setUp() {\n        utc = TimeZone.getTimeZone(\"UTC\");\n        stdDateFormat = new StdDateFormat(utc, Locale.ENGLISH);\n    }\n\n    /**\n     * Helper to bypass protected access for testing.\n     * Since the target method is protected, we use a subclass or \n     * rely on the fact that StdDateFormat's public parse() calls it.\n     * However, to test the specific logic of parseAsISO8601 with ParsePosition,\n     * we use the public parse(String, ParsePosition) method which delegates to it.\n     */\n    private Date parse(String dateStr, ParsePosition pos) {\n        return stdDateFormat.parse(dateStr, pos);\n    }\n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testParseWithTimeZoneOffsetMissingMinutes() throws Exception {\n        // hasTimeZone(dateStr) is true, c == '+' or '-' at len-3\n        // Tests dateStr += \"00\"\n        String dateStr = \"2023-10-01T12:00:00+05\";\n        Date result = parse(dateStr, new ParsePosition(0));\n        assertNotNull(result);\n\n        Calendar cal = Calendar.getInstance(utc);\n        cal.setTime(result);\n        assertEquals(7, cal.get(Calendar.HOUR_OF_DAY));\n    }\n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testParseWithTimeZoneOffsetAndMissingMilliseconds",
+   "runs_b": [
+    {
+     "duration_s": 0.078,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.084,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.101,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.097,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.091,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.109,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.databind.util;\n\nimport com.fasterxml.jackson.core.io.NumberInput;\nimport java.io.*;\nimport java.math.*;\nimport java.text.DateFormat;\nimport java.text.FieldPosition;\nimport java.text.ParseException;\nimport java.text.ParsePosition;\nimport java.text.SimpleDateFormat;\nimport java.util.*;\nimport java.util.Calendar;\nimport java.util.Date;\nimport java.util.Locale;\nimport java.util.TimeZone;\nimport org.junit.*;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\nimport static org.junit.Assert.assertNotNull;\n\npublic class StdDateFormat_parseAsISO8601_TriageGen0Test {\n\n    private StdDateFormat stdDateFormat;\n    private TimeZone utc;\n\n    @Before\n    public void setUp() {\n        utc = TimeZone.getTimeZone(\"UTC\");\n        stdDateFormat = new StdDateFormat(utc, Locale.ENGLISH);\n    }\n\n    /**\n     * Helper to bypass protected access for testing.\n     * Since the target method is protected, we use a subclass or \n     * rely on the fact that StdDateFormat's public parse() calls it.\n     * However, to test the specific logic of parseAsISO8601 with ParsePosition,\n     * we use the public parse(String, ParsePosition) method which delegates to it.\n     */\n    private Date parse(String dateStr, ParsePosition pos) {\n        return stdDateFormat.parse(dateStr, pos);\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testParseWithTimeZoneOffsetAndMissingMilliseconds() throws Exception {\n        // hasTimeZone(dateStr) is true, c is digit at len-9\n        // Tests sb.insert(len-5, \".000\")\n        // Format: 2023-10-01T12:00:00+0500 (len 25, len-9 is '0' at index 16)\n        String dateStr = \"2023-10-01T12:00:00+0500\";\n        Date result = parse(dateStr, new ParsePosition(0));\n        assertNotNull(result);\n        \n        Calendar cal = Calendar.getInstance(utc);\n        cal.setTime(result);\n        assertEquals(7, cal.get(Calendar.HOUR_OF_DAY));\n    }\n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testParseWithoutTimeZoneIndicator",
+   "runs_b": [
+    {
+     "duration_s": 0.078,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.085,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.101,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.082,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.096,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.096,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.databind.util;\n\nimport com.fasterxml.jackson.core.io.NumberInput;\nimport java.io.*;\nimport java.math.*;\nimport java.text.DateFormat;\nimport java.text.FieldPosition;\nimport java.text.ParseException;\nimport java.text.ParsePosition;\nimport java.text.SimpleDateFormat;\nimport java.util.*;\nimport java.util.Calendar;\nimport java.util.Date;\nimport java.util.Locale;\nimport java.util.TimeZone;\nimport org.junit.*;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\nimport static org.junit.Assert.assertNotNull;\n\npublic class StdDateFormat_parseAsISO8601_TriageGen0Test {\n\n    private StdDateFormat stdDateFormat;\n    private TimeZone utc;\n\n    @Before\n    public void setUp() {\n        utc = TimeZone.getTimeZone(\"UTC\");\n        stdDateFormat = new StdDateFormat(utc, Locale.ENGLISH);\n    }\n\n    /**\n     * Helper to bypass protected access for testing.\n     * Since the target method is protected, we use a subclass or \n     * rely on the fact that StdDateFormat's public parse() calls it.\n     * However, to test the specific logic of parseAsISO8601 with ParsePosition,\n     * we use the public parse(String, ParsePosition) method which delegates to it.\n     */\n    private Date parse(String dateStr, ParsePosition pos) {\n        return stdDateFormat.parse(dateStr, pos);\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testParseWithoutTimeZoneIndicator() throws Exception {\n        // hasTimeZone(dateStr) is false\n        // Tests appending \".000\" and \"Z\"\n        String dateStr = \"2023-10-01T12:00:00\";\n        Date result = parse(dateStr, new ParsePosition(0));\n        assertNotNull(result);\n\n        Calendar cal = Calendar.getInstance(utc);\n        cal.setTime(result);\n        // Since it appends Z, it should be treated as UTC\n        assertEquals(12, cal.get(Calendar.HOUR_OF_DAY));\n    }\n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testParsePlainDateWithShortTime",
+   "runs_b": [
+    {
+     "duration_s": 0.117,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 68,
+     "message": "expected:<2023> but was:<1970>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<2023> but was:<1970>\n\tat org.junit.Assert.fail(Assert.java:91)\n\tat org.junit.Assert.failNotEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:126)\n\tat org.junit.Assert.assertEquals(Assert.java:470)\n\tat org.junit.Assert.assertEquals(Assert.java:454)\n\tat com.fasterxml.jackson.databind.util.StdDateFormat_parseAsISO8601_TriageGen0Test.testParsePlainDateWithShortTime(StdDateFormat_parseAsISO8601_TriageGen0Test.java:68)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runNotIgnored(BlockJUnit4ClassRunner.java:79)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:71)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:49)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:193)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:52)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:191)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:42)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:184)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:236)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.122,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 68,
+     "message": "expected:<2023> but was:<1970>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<2023> but was:<1970>\n\tat org.junit.Assert.fail(Assert.java:91)\n\tat org.junit.Assert.failNotEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:126)\n\tat org.junit.Assert.assertEquals(Assert.java:470)\n\tat org.junit.Assert.assertEquals(Assert.java:454)\n\tat com.fasterxml.jackson.databind.util.StdDateFormat_parseAsISO8601_TriageGen0Test.testParsePlainDateWithShortTime(StdDateFormat_parseAsISO8601_TriageGen0Test.java:68)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runNotIgnored(BlockJUnit4ClassRunner.java:79)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:71)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:49)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:193)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:52)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:191)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:42)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:184)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:236)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.12,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 68,
+     "message": "expected:<2023> but was:<1970>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<2023> but was:<1970>\n\tat org.junit.Assert.fail(Assert.java:91)\n\tat org.junit.Assert.failNotEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:126)\n\tat org.junit.Assert.assertEquals(Assert.java:470)\n\tat org.junit.Assert.assertEquals(Assert.java:454)\n\tat com.fasterxml.jackson.databind.util.StdDateFormat_parseAsISO8601_TriageGen0Test.testParsePlainDateWithShortTime(StdDateFormat_parseAsISO8601_TriageGen0Test.java:68)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runNotIgnored(BlockJUnit4ClassRunner.java:79)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:71)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:49)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:193)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:52)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:191)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:42)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:184)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:236)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.117,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 68,
+     "message": "expected:<2023> but was:<1970>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<2023> but was:<1970>\n\tat org.junit.Assert.fail(Assert.java:91)\n\tat org.junit.Assert.failNotEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:126)\n\tat org.junit.Assert.assertEquals(Assert.java:470)\n\tat org.junit.Assert.assertEquals(Assert.java:454)\n\tat com.fasterxml.jackson.databind.util.StdDateFormat_parseAsISO8601_TriageGen0Test.testParsePlainDateWithShortTime(StdDateFormat_parseAsISO8601_TriageGen0Test.java:68)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runNotIgnored(BlockJUnit4ClassRunner.java:79)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:71)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:49)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:193)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:52)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:191)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:42)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:184)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:236)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.125,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 68,
+     "message": "expected:<2023> but was:<1970>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<2023> but was:<1970>\n\tat org.junit.Assert.fail(Assert.java:91)\n\tat org.junit.Assert.failNotEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:126)\n\tat org.junit.Assert.assertEquals(Assert.java:470)\n\tat org.junit.Assert.assertEquals(Assert.java:454)\n\tat com.fasterxml.jackson.databind.util.StdDateFormat_parseAsISO8601_TriageGen0Test.testParsePlainDateWithShortTime(StdDateFormat_parseAsISO8601_TriageGen0Test.java:68)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runNotIgnored(BlockJUnit4ClassRunner.java:79)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:71)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:49)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:193)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:52)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:191)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:42)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:184)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:236)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.104,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 68,
+     "message": "expected:<2023> but was:<1970>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<2023> but was:<1970>\n\tat org.junit.Assert.fail(Assert.java:91)\n\tat org.junit.Assert.failNotEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:126)\n\tat org.junit.Assert.assertEquals(Assert.java:470)\n\tat org.junit.Assert.assertEquals(Assert.java:454)\n\tat com.fasterxml.jackson.databind.util.StdDateFormat_parseAsISO8601_TriageGen0Test.testParsePlainDateWithShortTime(StdDateFormat_parseAsISO8601_TriageGen0Test.java:68)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runNotIgnored(BlockJUnit4ClassRunner.java:79)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:71)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:49)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:193)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:52)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:191)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:42)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:184)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:236)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.databind.util;\n\nimport com.fasterxml.jackson.core.io.NumberInput;\nimport java.io.*;\nimport java.math.*;\nimport java.text.DateFormat;\nimport java.text.FieldPosition;\nimport java.text.ParseException;\nimport java.text.ParsePosition;\nimport java.text.SimpleDateFormat;\nimport java.util.*;\nimport java.util.Calendar;\nimport java.util.Date;\nimport java.util.Locale;\nimport java.util.TimeZone;\nimport org.junit.*;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\nimport static org.junit.Assert.assertNotNull;\n\npublic class StdDateFormat_parseAsISO8601_TriageGen0Test {\n\n    private StdDateFormat stdDateFormat;\n    private TimeZone utc;\n\n    @Before\n    public void setUp() {\n        utc = TimeZone.getTimeZone(\"UTC\");\n        stdDateFormat = new StdDateFormat(utc, Locale.ENGLISH);\n    }\n\n    /**\n     * Helper to bypass protected access for testing.\n     * Since the target method is protected, we use a subclass or \n     * rely on the fact that StdDateFormat's public parse() calls it.\n     * However, to test the specific logic of parseAsISO8601 with ParsePosition,\n     * we use the public parse(String, ParsePosition) method which delegates to it.\n     */\n    private Date parse(String dateStr, ParsePosition pos) {\n        return stdDateFormat.parse(dateStr, pos);\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testParsePlainDateWithShortTime() throws Exception {\n        // len <= 10 and ends with digit\n        String dateStr = \"20231001\";\n        Date result = parse(dateStr, new ParsePosition(0));\n        assertNotNull(result);\n        \n        Calendar cal = Calendar.getInstance(utc);\n        cal.setTime(result);\n        assertEquals(2023, cal.get(Calendar.YEAR));\n    }\n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testParseWithAlreadyIncludedMillisecondsAndNoZ",
+   "runs_b": [
+    {
+     "duration_s": 0.107,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.092,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.103,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.116,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.117,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.103,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.databind.util;\n\nimport com.fasterxml.jackson.core.io.NumberInput;\nimport java.io.*;\nimport java.math.*;\nimport java.text.DateFormat;\nimport java.text.FieldPosition;\nimport java.text.ParseException;\nimport java.text.ParsePosition;\nimport java.text.SimpleDateFormat;\nimport java.util.*;\nimport java.util.Calendar;\nimport java.util.Date;\nimport java.util.Locale;\nimport java.util.TimeZone;\nimport org.junit.*;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\nimport static org.junit.Assert.assertNotNull;\n\npublic class StdDateFormat_parseAsISO8601_TriageGen0Test {\n\n    private StdDateFormat stdDateFormat;\n    private TimeZone utc;\n\n    @Before\n    public void setUp() {\n        utc = TimeZone.getTimeZone(\"UTC\");\n        stdDateFormat = new StdDateFormat(utc, Locale.ENGLISH);\n    }\n\n    /**\n     * Helper to bypass protected access for testing.\n     * Since the target method is protected, we use a subclass or \n     * rely on the fact that StdDateFormat's public parse() calls it.\n     * However, to test the specific logic of parseAsISO8601 with ParsePosition,\n     * we use the public parse(String, ParsePosition) method which delegates to it.\n     */\n    private Date parse(String dateStr, ParsePosition pos) {\n        return stdDateFormat.parse(dateStr, pos);\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testParseWithAlreadyIncludedMillisecondsAndNoZ() throws Exception {\n        // hasTimeZone is false, but timeLen is not <= 8\n        // This tests the branch where we don't append .000 because it's already there\n        String dateStr = \"2023-10-01T12:00:00.123\";\n        Date result = parse(dateStr, new ParsePosition(0));\n        assertNotNull(result);\n        \n        Calendar cal = Calendar.getInstance(utc);\n        cal.setTime(result);\n        assertEquals(12, cal.get(Calendar.HOUR_OF_DAY));\n        assertEquals(123, cal.get(Calendar.MILLISECOND));\n    }\n}\n"
+  }
+ ],
+ "source_sha256": "b410905bee06bcdc6a15bf9ebae5601195f9934f145eb1fd501af7eeb852540e",
+ "utc": "2026-11-13T06:31:03Z"
+}

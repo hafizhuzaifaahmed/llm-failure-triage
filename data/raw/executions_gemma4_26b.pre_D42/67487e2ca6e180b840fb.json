@@ -1,0 +1,325 @@
+{
+ "candidate_id": "67487e2ca6e180b840fb",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testCreateReturnsNonNull",
+   "testNewInstanceWithSimpleClass",
+   "testNewInstanceWithNoNoArgsConstructor",
+   "testNewInstanceWithInterfaceThrowsException",
+   "testAllocatorBehaviorIsConsistent"
+  ],
+  "nc_both": [],
+  "nc_one_version": [],
+  "passes": 0
+ },
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "Gson_8::com.google.gson.internal.UnsafeAllocator::create()",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testCreateReturnsNonNull",
+   "runs_b": [
+    {
+     "duration_s": 0.07,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.07,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.08,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.085,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.072,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.072,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.google.gson.internal;\n\nimport java.io.*;\nimport java.io.ObjectInputStream;\nimport java.io.ObjectStreamClass;\nimport java.lang.reflect.Field;\nimport java.lang.reflect.Method;\nimport java.math.*;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for UnsafeAllocator.create().\n * Since the method relies heavily on internal JVM/Android APIs (sun.misc.Unsafe, ObjectStreamClass, etc.),\n * the actual path taken depends on the environment the test runs in.\n * We test the behavior of the returned allocator to ensure it complies with the expected contract.\n */\npublic class UnsafeAllocator_create_TriageGen2Test {\n\n    // A simple class with no no-arg constructor to test if \"unsafe\" allocation works.\n    // Unsafe allocation bypasses the constructor.\n    private static class NoNoArgsConstructor {\n        private final String value;\n        private NoNoArgsConstructor(String value) {\n            this.value = value;\n        }\n    }\n\n    // A simple class with a no-arg constructor.\n    private static class SimpleClass {\n        public int field = 42;\n    }\n\n    @Test\n    public void testCreateReturnsNonNull() {\n        UnsafeAllocator allocator = UnsafeAllocator.create();\n        assertNotNull(\"Allocator should not be null\", allocator);\n    }\n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testNewInstanceWithSimpleClass",
+   "runs_b": [
+    {
+     "duration_s": 0.086,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 44,
+     "message": "Field should be initialized to default if unsafe allocation is used expected:<42> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Field should be initialized to default if unsafe allocation is used expected:<42> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat com.google.gson.internal.UnsafeAllocator_create_TriageGen2Test.testNewInstanceWithSimpleClass(UnsafeAllocator_create_TriageGen2Test.java:44)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.074,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 44,
+     "message": "Field should be initialized to default if unsafe allocation is used expected:<42> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Field should be initialized to default if unsafe allocation is used expected:<42> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat com.google.gson.internal.UnsafeAllocator_create_TriageGen2Test.testNewInstanceWithSimpleClass(UnsafeAllocator_create_TriageGen2Test.java:44)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.083,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 44,
+     "message": "Field should be initialized to default if unsafe allocation is used expected:<42> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Field should be initialized to default if unsafe allocation is used expected:<42> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat com.google.gson.internal.UnsafeAllocator_create_TriageGen2Test.testNewInstanceWithSimpleClass(UnsafeAllocator_create_TriageGen2Test.java:44)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.074,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 44,
+     "message": "Field should be initialized to default if unsafe allocation is used expected:<42> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Field should be initialized to default if unsafe allocation is used expected:<42> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat com.google.gson.internal.UnsafeAllocator_create_TriageGen2Test.testNewInstanceWithSimpleClass(UnsafeAllocator_create_TriageGen2Test.java:44)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.076,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 44,
+     "message": "Field should be initialized to default if unsafe allocation is used expected:<42> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Field should be initialized to default if unsafe allocation is used expected:<42> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat com.google.gson.internal.UnsafeAllocator_create_TriageGen2Test.testNewInstanceWithSimpleClass(UnsafeAllocator_create_TriageGen2Test.java:44)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.081,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 44,
+     "message": "Field should be initialized to default if unsafe allocation is used expected:<42> but was:<0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Field should be initialized to default if unsafe allocation is used expected:<42> but was:<0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat com.google.gson.internal.UnsafeAllocator_create_TriageGen2Test.testNewInstanceWithSimpleClass(UnsafeAllocator_create_TriageGen2Test.java:44)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package com.google.gson.internal;\n\nimport java.io.*;\nimport java.io.ObjectInputStream;\nimport java.io.ObjectStreamClass;\nimport java.lang.reflect.Field;\nimport java.lang.reflect.Method;\nimport java.math.*;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for UnsafeAllocator.create().\n * Since the method relies heavily on internal JVM/Android APIs (sun.misc.Unsafe, ObjectStreamClass, etc.),\n * the actual path taken depends on the environment the test runs in.\n * We test the behavior of the returned allocator to ensure it complies with the expected contract.\n */\npublic class UnsafeAllocator_create_TriageGen2Test {\n\n    // A simple class with no no-arg constructor to test if \"unsafe\" allocation works.\n    // Unsafe allocation bypasses the constructor.\n    private static class NoNoArgsConstructor {\n        private final String value;\n        private NoNoArgsConstructor(String value) {\n            this.value = value;\n        }\n    }\n\n    // A simple class with a no-arg constructor.\n    private static class SimpleClass {\n        public int field = 42;\n    }\n\n    \n\n    @Test\n    public void testNewInstanceWithSimpleClass() throws Exception {\n        UnsafeAllocator allocator = UnsafeAllocator.create();\n        SimpleClass instance = allocator.newInstance(SimpleClass.class);\n        \n        assertNotNull(\"Instance should be created\", instance);\n        assertEquals(\"Field should be initialized to default if unsafe allocation is used\", 42, instance.field);\n    }\n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testNewInstanceWithNoNoArgsConstructor",
+   "runs_b": [
+    {
+     "duration_s": 0.081,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.077,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.086,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.068,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.076,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.079,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.google.gson.internal;\n\nimport java.io.*;\nimport java.io.ObjectInputStream;\nimport java.io.ObjectStreamClass;\nimport java.lang.reflect.Field;\nimport java.lang.reflect.Method;\nimport java.math.*;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for UnsafeAllocator.create().\n * Since the method relies heavily on internal JVM/Android APIs (sun.misc.Unsafe, ObjectStreamClass, etc.),\n * the actual path taken depends on the environment the test runs in.\n * We test the behavior of the returned allocator to ensure it complies with the expected contract.\n */\npublic class UnsafeAllocator_create_TriageGen2Test {\n\n    // A simple class with no no-arg constructor to test if \"unsafe\" allocation works.\n    // Unsafe allocation bypasses the constructor.\n    private static class NoNoArgsConstructor {\n        private final String value;\n        private NoNoArgsConstructor(String value) {\n            this.value = value;\n        }\n    }\n\n    // A simple class with a no-arg constructor.\n    private static class SimpleClass {\n        public int field = 42;\n    }\n\n    \n\n    \n\n    @Test\n    public void testNewInstanceWithNoNoArgsConstructor() throws Exception {\n        UnsafeAllocator allocator = UnsafeAllocator.create();\n        \n        // If the allocator is working via Unsafe (JVM or Android), \n        // it should be able to allocate this class without calling the constructor.\n        try {\n            NoNoArgsConstructor instance = allocator.newInstance(NoNoArgsConstructor.class);\n            assertNotNull(\"Instance should be created even without no-arg constructor\", instance);\n        } catch (UnsupportedOperationException e) {\n            // If we are in an environment where all three strategies failed, \n            // it will throw UnsupportedOperationException.\n            assertTrue(e.getMessage().contains(\"Cannot allocate\"));\n        } catch (Exception e) {\n            // If the environment doesn't support unsafe allocation for this specific class\n            // but the allocator itself is valid.\n            fail(\"Unexpected exception type: \" + e.getClass().getName());\n        }\n    }\n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testNewInstanceWithInterfaceThrowsException",
+   "runs_b": [
+    {
+     "duration_s": 0.077,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.079,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.103,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.089,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.089,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.082,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.google.gson.internal;\n\nimport java.io.*;\nimport java.io.ObjectInputStream;\nimport java.io.ObjectStreamClass;\nimport java.lang.reflect.Field;\nimport java.lang.reflect.Method;\nimport java.math.*;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for UnsafeAllocator.create().\n * Since the method relies heavily on internal JVM/Android APIs (sun.misc.Unsafe, ObjectStreamClass, etc.),\n * the actual path taken depends on the environment the test runs in.\n * We test the behavior of the returned allocator to ensure it complies with the expected contract.\n */\npublic class UnsafeAllocator_create_TriageGen2Test {\n\n    // A simple class with no no-arg constructor to test if \"unsafe\" allocation works.\n    // Unsafe allocation bypasses the constructor.\n    private static class NoNoArgsConstructor {\n        private final String value;\n        private NoNoArgsConstructor(String value) {\n            this.value = value;\n        }\n    }\n\n    // A simple class with a no-arg constructor.\n    private static class SimpleClass {\n        public int field = 42;\n    }\n\n    \n\n    \n\n    \n\n    @Test(expected = Exception.class)\n    public void testNewInstanceWithInterfaceThrowsException() throws Exception {\n        UnsafeAllocator allocator = UnsafeAllocator.create();\n        // Attempting to instantiate an interface should fail in any allocation strategy.\n        allocator.newInstance(Runnable.class);\n    }\n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testAllocatorBehaviorIsConsistent",
+   "runs_b": [
+    {
+     "duration_s": 0.071,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.077,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.08,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.081,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.085,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.101,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.google.gson.internal;\n\nimport java.io.*;\nimport java.io.ObjectInputStream;\nimport java.io.ObjectStreamClass;\nimport java.lang.reflect.Field;\nimport java.lang.reflect.Method;\nimport java.math.*;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for UnsafeAllocator.create().\n * Since the method relies heavily on internal JVM/Android APIs (sun.misc.Unsafe, ObjectStreamClass, etc.),\n * the actual path taken depends on the environment the test runs in.\n * We test the behavior of the returned allocator to ensure it complies with the expected contract.\n */\npublic class UnsafeAllocator_create_TriageGen2Test {\n\n    // A simple class with no no-arg constructor to test if \"unsafe\" allocation works.\n    // Unsafe allocation bypasses the constructor.\n    private static class NoNoArgsConstructor {\n        private final String value;\n        private NoNoArgsConstructor(String value) {\n            this.value = value;\n        }\n    }\n\n    // A simple class with a no-arg constructor.\n    private static class SimpleClass {\n        public int field = 42;\n    }\n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testAllocatorBehaviorIsConsistent() throws Exception {\n        UnsafeAllocator allocator = UnsafeAllocator.create();\n        \n        // Test multiple allocations to ensure the internal method references are stable\n        SimpleClass instance1 = allocator.newInstance(SimpleClass.class);\n        SimpleClass instance2 = allocator.newInstance(SimpleClass.class);\n        \n        assertNotNull(instance1);\n        assertNotNull(instance2);\n        assertNotSame(\"Each call should return a new instance\", instance1, instance2);\n    }\n}\n"
+  }
+ ],
+ "source_sha256": "9e6989bffed596d83ffcc201be285b38ce81a63a6ef9c26f2fabf8c311a8874d",
+ "utc": "2026-11-01T11:59:59Z"
+}

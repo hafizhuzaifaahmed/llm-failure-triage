@@ -1,0 +1,260 @@
+{
+ "bug_name": "JacksonCore_2",
+ "call_sites": [
+  {
+   "line": 610,
+   "lines": [
+    605,
+    606,
+    607,
+    608,
+    609,
+    610,
+    611,
+    612,
+    613,
+    614,
+    615
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/json/ReaderBasedJsonParser.java",
+   "snippet": "         * state is never retained.\n         */\n        boolean inObject = _parsingContext.inObject();\n        if (inObject) {\n           // First, field name itself:\n            String name = _parseName(i);\n            _parsingContext.setCurrentName(name);\n            _currToken = JsonToken.FIELD_NAME;\n            i = _skipWS();\n            if (i != INT_COLON) {\n                _reportUnexpectedChar(i, \"was expecting a colon to separate field name and value\");"
+  }
+ ],
+ "class_simple": "ReaderBasedJsonParser",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * This is a concrete implementation of {@link JsonParser}, which is\n * based on a {@link java.io.Reader} to handle low-level character\n * conversion tasks.\n */\npublic final",
+  "method_javadoc": "/**********************************************************\n     */"
+ },
+ "fields": [
+  "protected final static int[] _icLatin1",
+  "private final static int[] _icWS",
+  "protected Reader _reader",
+  "protected char[] _inputBuffer",
+  "protected ObjectCodec _objectCodec",
+  "final protected CharsToNameCanonicalizer _symbols",
+  "final protected int _hashSeed",
+  "protected boolean _tokenIncomplete"
+ ],
+ "focal_class": "com.fasterxml.jackson.core.json.ReaderBasedJsonParser",
+ "focal_id": "JacksonCore_2::com.fasterxml.jackson.core.json.ReaderBasedJsonParser::_parseName(int)",
+ "focal_method_name": "_parseName",
+ "generations": 3,
+ "impl_B": "protected String _parseName(int i) throws IOException\n    {\n        if (i != INT_QUOTE) {\n            return _handleOddName(i);\n        }\n        /* First: let's try to see if we have a simple name: one that does\n         * not cross input buffer boundary, and does not contain escape\n         * sequences.\n         */\n        int ptr = _inputPtr;\n        int hash = _hashSeed;\n        final int inputLen = _inputEnd;\n\n        if (ptr < inputLen) {\n            final int[] codes = _icLatin1;\n            final int maxCode = codes.length;\n\n            do {\n                int ch = _inputBuffer[ptr];\n                if (ch < maxCode && codes[ch] != 0) {\n                    if (ch == '\"') {\n                        int start = _inputPtr;\n                        _inputPtr = ptr+1; // to skip the quote\n                        return _symbols.findSymbol(_inputBuffer, start, ptr - start, hash);\n                    }\n                    break;\n                }\n                hash = (hash * CharsToNameCanonicalizer.HASH_MULT) + ch;\n                ++ptr;\n            } while (ptr < inputLen);\n        }\n\n        int start = _inputPtr;\n        _inputPtr = ptr;\n        return _parseName2(start, hash, INT_QUOTE);\n    }",
+ "imports": [
+  "java.io.*",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.core.base.ParserBase",
+  "com.fasterxml.jackson.core.io.CharTypes",
+  "com.fasterxml.jackson.core.io.IOContext",
+  "com.fasterxml.jackson.core.sym.CharsToNameCanonicalizer",
+  "com.fasterxml.jackson.core.util.*"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.core.json",
+ "project": "JacksonCore",
+ "siblings": [
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getCodec"
+  },
+  {
+   "javadoc": "",
+   "name": "setCodec"
+  },
+  {
+   "javadoc": "",
+   "name": "releaseBuffered"
+  },
+  {
+   "javadoc": "",
+   "name": "getInputSource"
+  },
+  {
+   "javadoc": "",
+   "name": "loadMore"
+  },
+  {
+   "javadoc": "",
+   "name": "getNextChar"
+  },
+  {
+   "javadoc": "",
+   "name": "_closeInput"
+  },
+  {
+   "javadoc": "/**\n     * Method called to release internal buffers owned by the base\n     * reader. This may be called along with {@link #_closeInput} (for\n     * example, when explicitly closing this reader instance), or\n     * separately (if need be).\n     */",
+   "name": "_releaseBuffers"
+  },
+  {
+   "javadoc": "/**\n     * Method for accessing textual representation of the current event;\n     * if no current event (before first call to {@link #nextToken}, or\n     * after encountering end-of-input), returns null.\n     * Method can be called for any event.\n     */",
+   "name": "getText"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueAsString"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueAsString"
+  },
+  {
+   "javadoc": "",
+   "name": "_getText2"
+  },
+  {
+   "javadoc": "",
+   "name": "getTextCharacters"
+  },
+  {
+   "javadoc": "",
+   "name": "getTextLength"
+  },
+  {
+   "javadoc": "",
+   "name": "getTextOffset"
+  },
+  {
+   "javadoc": "",
+   "name": "getBinaryValue"
+  },
+  {
+   "javadoc": "",
+   "name": "readBinaryValue"
+  },
+  {
+   "javadoc": "",
+   "name": "_readBinary"
+  },
+  {
+   "javadoc": "/**\n     * @return Next token from the stream, if any found, or null\n     *   to indicate end-of-input\n     */",
+   "name": "nextToken"
+  },
+  {
+   "javadoc": "",
+   "name": "nextTextValue"
+  },
+  {
+   "javadoc": "",
+   "name": "nextIntValue"
+  },
+  {
+   "javadoc": "",
+   "name": "nextLongValue"
+  },
+  {
+   "javadoc": "",
+   "name": "nextBooleanValue"
+  },
+  {
+   "javadoc": "",
+   "name": "close"
+  },
+  {
+   "javadoc": "/**\n     * Initial parsing method for number values. It needs to be able\n     * to parse enough input to be able to determine whether the\n     * value is to be considered a simple integer value, or a more\n     * generic decimal value: latter of which needs to be expressed\n     * as a floating point number. The basic rule is that if the number\n     * has no fractional or exponential part, it is an integer; otherwise\n     * a floating point number.\n     *<p>\n     * Because much of input has to be processed in any case, no partial\n     * parsing is done: all input text will be stored for further\n     * processing. However, actual numeric value conversion will be\n     * deferred, since it is usually the most complicated and costliest\n     * part of processing.\n     */",
+   "name": "_parseNumber"
+  },
+  {
+   "javadoc": "/**\n     * Method called if expected numeric value (due to leading sign) does not\n     * look like a number\n     */",
+   "name": "_handleInvalidNumberStart"
+  },
+  {
+   "javadoc": "/**\n     * Method called when we see non-white space character other\n     * than double quote, when expecting a field name.\n     * In standard mode will just throw an expection; but\n     * in non-standard modes may be able to parse name.\n     */",
+   "name": "_handleOddName"
+  },
+  {
+   "javadoc": "",
+   "name": "_parseAposName"
+  },
+  {
+   "javadoc": "/**\n     * Method for handling cases where first non-space character\n     * of an expected value token is not legal for standard JSON content.\n     */",
+   "name": "_handleOddValue"
+  },
+  {
+   "javadoc": "",
+   "name": "_handleApos"
+  },
+  {
+   "javadoc": "",
+   "name": "_finishString"
+  },
+  {
+   "javadoc": "",
+   "name": "_finishString2"
+  },
+  {
+   "javadoc": "/**\n     * Method called to skim through rest of unparsed String value,\n     * if it is not needed. This can be done bit faster if contents\n     * need not be stored for future access.\n     */",
+   "name": "_skipString"
+  },
+  {
+   "javadoc": "/**\n     * We actually need to check the character value here\n     * (to see if we have \\n following \\r).\n     */",
+   "name": "_skipCR"
+  },
+  {
+   "javadoc": "",
+   "name": "_decodeEscaped"
+  },
+  {
+   "javadoc": "/**\n     * Helper method for checking whether input matches expected token\n     */",
+   "name": "_matchToken"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_reportInvalidToken"
+  },
+  {
+   "javadoc": "",
+   "name": "_reportInvalidToken"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public final class ReaderBasedJsonParser extends ParserBase",
+  "constructors": [
+   "public ReaderBasedJsonParser(IOContext ctxt, int features, Reader r, ObjectCodec codec, CharsToNameCanonicalizer st);"
+  ],
+  "focal_signature": "protected String _parseName(int i) throws IOException",
+  "methods": [
+   "public ObjectCodec getCodec();",
+   "public void setCodec(ObjectCodec c);",
+   "public int releaseBuffered(Writer w) throws IOException;",
+   "public Object getInputSource();",
+   "protected boolean loadMore() throws IOException;",
+   "protected char getNextChar(String eofMsg) throws IOException, JsonParseException;",
+   "protected void _closeInput() throws IOException;",
+   "protected void _releaseBuffers() throws IOException;",
+   "public String getText() throws IOException, JsonParseException;",
+   "public String getValueAsString() throws IOException, JsonParseException;",
+   "public String getValueAsString(String defValue) throws IOException, JsonParseException;",
+   "protected String _getText2(JsonToken t);",
+   "public char[] getTextCharacters() throws IOException, JsonParseException;",
+   "public int getTextLength() throws IOException, JsonParseException;",
+   "public int getTextOffset() throws IOException, JsonParseException;",
+   "public byte[] getBinaryValue(Base64Variant b64variant) throws IOException, JsonParseException;",
+   "public int readBinaryValue(Base64Variant b64variant, OutputStream out) throws IOException, JsonParseException;",
+   "protected int _readBinary(Base64Variant b64variant, OutputStream out, byte[] buffer) throws IOException, JsonParseException;",
+   "public JsonToken nextToken() throws IOException, JsonParseException;",
+   "public String nextTextValue() throws IOException, JsonParseException;",
+   "public int nextIntValue(int defaultValue) throws IOException, JsonParseException;",
+   "public long nextLongValue(long defaultValue) throws IOException, JsonParseException;",
+   "public Boolean nextBooleanValue() throws IOException, JsonParseException;",
+   "public void close() throws IOException;",
+   "protected JsonToken _parseNumber(int ch) throws IOException;",
+   "protected JsonToken _handleInvalidNumberStart(int ch, boolean negative) throws IOException;",
+   "protected String _handleOddName(int i) throws IOException;",
+   "protected String _parseAposName() throws IOException;",
+   "protected JsonToken _handleOddValue(int i) throws IOException;",
+   "protected JsonToken _handleApos() throws IOException;",
+   "protected void _finishString() throws IOException;",
+   "protected void _finishString2() throws IOException;",
+   "protected void _skipString() throws IOException;",
+   "protected void _skipCR() throws IOException;",
+   "protected char _decodeEscaped() throws IOException;",
+   "protected void _matchToken(String matchStr, int i) throws IOException;",
+   "protected void _reportInvalidToken(String matchedPart) throws IOException;",
+   "protected void _reportInvalidToken(String matchedPart, String msg) throws IOException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

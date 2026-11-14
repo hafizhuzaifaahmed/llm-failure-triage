@@ -1,0 +1,203 @@
+{
+ "bug_name": "JacksonDatabind_97",
+ "call_sites": [
+  {
+   "line": 293,
+   "lines": [
+    288,
+    289,
+    290,
+    291,
+    292,
+    293,
+    294,
+    295,
+    296,
+    297,
+    298
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationConfig.java",
+   "snippet": "    public DeserializationConfig withRootName(PropertyName rootName) {\n        if (rootName == null) {\n            if (_rootName == null) {\n                return this;\n            }\n        } else if (rootName.equals(_rootName)) {\n            return this;\n        }\n        return new DeserializationConfig(this, rootName);\n    }\n"
+  },
+  {
+   "line": 4086,
+   "lines": [
+    4081,
+    4082,
+    4083,
+    4084,
+    4085,
+    4086,
+    4087,
+    4088,
+    4089,
+    4090,
+    4091
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java",
+   "snippet": "            ctxt.reportWrongTokenException(rootType, JsonToken.FIELD_NAME,\n                    \"Current token not FIELD_NAME (to contain expected root name '%s'), but %s\",\n                    expSimpleName, p.getCurrentToken());\n        }\n        String actualName = p.getCurrentName();\n        if (!expSimpleName.equals(actualName)) {\n            ctxt.reportInputMismatch(rootType,\n                    \"Root name '%s' does not match expected ('%s') for type %s\",\n                    actualName, expSimpleName, rootType);\n        }\n        // ok, then move to value itself...."
+  },
+  {
+   "line": 674,
+   "lines": [
+    669,
+    670,
+    671,
+    672,
+    673,
+    674,
+    675,
+    676,
+    677,
+    678,
+    679
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectReader.java",
+   "snippet": "     * \n     * @since 2.5\n     */\n    public ObjectReader forType(JavaType valueType)\n    {\n        if (valueType != null && valueType.equals(_valueType)) {\n            return this;\n        }\n        JsonDeserializer<Object> rootDeser = _prefetchRootDeserializer(valueType);\n        // type is stored here, no need to make a copy of config\n        DataFormatReaders det = _dataFormatReaders;"
+  },
+  {
+   "line": 1694,
+   "lines": [
+    1689,
+    1690,
+    1691,
+    1692,
+    1693,
+    1694,
+    1695,
+    1696,
+    1697,
+    1698,
+    1699
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectReader.java",
+   "snippet": "            ctxt.reportWrongTokenException(rootType, JsonToken.FIELD_NAME,\n                    \"Current token not FIELD_NAME (to contain expected root name '%s'), but %s\", \n                    expSimpleName, p.getCurrentToken());\n        }\n        String actualName = p.getCurrentName();\n        if (!expSimpleName.equals(actualName)) {\n            ctxt.reportInputMismatch(rootType,\n                    \"Root name '%s' does not match expected ('%s') for type %s\",\n                    actualName, expSimpleName, rootType);\n        }\n        // ok, then move to value itself...."
+  },
+  {
+   "line": 1243,
+   "lines": [
+    1238,
+    1239,
+    1240,
+    1241,
+    1242,
+    1243,
+    1244,
+    1245,
+    1246,
+    1247,
+    1248
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectWriter.java",
+   "snippet": "                if (rootValueSeparator == null) {\n                    return this;\n                }\n                return new GeneratorSettings(prettyPrinter, schema, characterEscapes, null);\n            }\n            if (sep.equals(_rootValueSeparatorAsString())) {\n                return this;\n            }\n            return new GeneratorSettings(prettyPrinter, schema, characterEscapes,\n                    new SerializedString(sep));\n        }"
+  }
+ ],
+ "class_simple": "POJONode",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Value node that contains a wrapped POJO, to be serialized as\n * a JSON constructed through data mapping (usually done by\n * calling {@link com.fasterxml.jackson.databind.ObjectMapper}).\n */\npublic",
+  "method_javadoc": "/**********************************************************\n     */"
+ },
+ "fields": [
+  "protected final Object _value"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.node.POJONode",
+ "focal_id": "JacksonDatabind_97::com.fasterxml.jackson.databind.node.POJONode::equals(Object)",
+ "focal_method_name": "equals",
+ "generations": 3,
+ "impl_B": "@Override\n    public boolean equals(Object o)\n    {\n        if (o == this) return true;\n        if (o == null) return false;\n        if (o instanceof POJONode) {\n            return _pojoEquals((POJONode) o);\n        }\n        return false;\n    }",
+ "imports": [
+  "java.io.IOException",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.databind.JsonSerializable",
+  "com.fasterxml.jackson.databind.SerializerProvider",
+  "com.fasterxml.jackson.databind.util.RawValue"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.node",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getNodeType"
+  },
+  {
+   "javadoc": "",
+   "name": "asToken"
+  },
+  {
+   "javadoc": "/**\n     * As it is possible that some implementations embed byte[] as POJONode\n     * (despite optimal being {@link BinaryNode}), let's add support for exposing\n     * binary data here too.\n     */",
+   "name": "binaryValue"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "asText"
+  },
+  {
+   "javadoc": "",
+   "name": "asText"
+  },
+  {
+   "javadoc": "",
+   "name": "asBoolean"
+  },
+  {
+   "javadoc": "",
+   "name": "asInt"
+  },
+  {
+   "javadoc": "",
+   "name": "asLong"
+  },
+  {
+   "javadoc": "",
+   "name": "asDouble"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "serialize"
+  },
+  {
+   "javadoc": "/**\n     * Method that can be used to access the POJO this node wraps.\n     */",
+   "name": "getPojo"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.3\n     */",
+   "name": "_pojoEquals"
+  },
+  {
+   "javadoc": "",
+   "name": "hashCode"
+  },
+  {
+   "javadoc": "",
+   "name": "toString"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class POJONode extends ValueNode",
+  "constructors": [
+   "public POJONode(Object v);"
+  ],
+  "focal_signature": "public boolean equals(Object o)",
+  "methods": [
+   "public JsonNodeType getNodeType();",
+   "public JsonToken asToken();",
+   "public byte[] binaryValue() throws IOException;",
+   "public String asText();",
+   "public String asText(String defaultValue);",
+   "public boolean asBoolean(boolean defaultValue);",
+   "public int asInt(int defaultValue);",
+   "public long asLong(long defaultValue);",
+   "public double asDouble(double defaultValue);",
+   "public final void serialize(JsonGenerator gen, SerializerProvider ctxt) throws IOException;",
+   "public Object getPojo();",
+   "protected boolean _pojoEquals(POJONode other);",
+   "public int hashCode();",
+   "public String toString();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

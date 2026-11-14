@@ -1,0 +1,14 @@
+{
+  "assembled": true,
+  "call_key": "d79630dfbf9f2e441b3e4a7edffb042a7639ed1a46ecbc3a3beb4af73685f228",
+  "candidate_id": "93618dc14171ccf3f822",
+  "class_name": "LocaleUtils_isAvailableLocale_TriageGen3Test",
+  "dataset": "D1C_F1",
+  "focal_id": "Lang_57::org.apache.commons.lang.LocaleUtils::isAvailableLocale(Locale)",
+  "generation": 3,
+  "model_returned": "gemma4:26b",
+  "n_tests": 4,
+  "package": "org.apache.commons.lang",
+  "source": "package org.apache.commons.lang;\n\nimport java.io.*;\nimport java.math.*;\nimport java.util.*;\nimport java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.Collections;\nimport java.util.HashMap;\nimport java.util.HashSet;\nimport java.util.List;\nimport java.util.Locale;\nimport java.util.Map;\nimport java.util.Set;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertFalse;\nimport static org.junit.Assert.assertTrue;\n\npublic class LocaleUtils_isAvailableLocale_TriageGen3Test {\n\n    @Test\n    public void testIsAvailableLocale_WithExistingLocale() {\n        // Get a known available locale from the set to ensure true result\n        Set<Locale> availableSet = LocaleUtils.availableLocaleSet();\n        if (!availableSet.isEmpty()) {\n            Locale existingLocale = availableSet.iterator().next();\n            assertTrue(\"Expected locale should be available\", LocaleUtils.isAvailableLocale(existingLocale));\n        }\n    }\n\n    @Test\n    public void testIsAvailableLocale_WithNonExistingLocale() {\n        // Use a locale that is highly unlikely to be in the available set\n        Locale nonExistingLocale = Locale.forLanguageTag(\"xx-YY\");\n        assertFalse(\"Expected locale should not be available\", LocaleUtils.isAvailableLocale(nonExistingLocale));\n    }\n\n    @Test\n    public void testIsAvailableLocale_WithNull() {\n        // Testing null behavior. Depending on implementation of cAvailableLocaleSet.contains(null)\n        // Usually HashSet.contains(null) returns false if null is not in set.\n        assertFalse(\"Expected null to return false\", LocaleUtils.isAvailableLocale(null));\n    }\n\n    @Test\n    public void testIsAvailableLocale_WithCommonLocales() {\n        // Test standard constants\n        // We check if they are available; if they aren't in the specific set, the test still passes the logic check\n        Locale us = Locale.US;\n        boolean result = LocaleUtils.isAvailableLocale(us);\n        \n        // We don't assert true/false here because the available set is environment/library dependent,\n        // but we ensure the method executes without exception for valid Locale objects.\n    }\n}\n",
+  "tranche": "F1"
+}

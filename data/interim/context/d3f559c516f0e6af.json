@@ -1,0 +1,148 @@
+{
+  "bug_name": "Jsoup_89",
+  "call_sites": [
+    {
+      "line": 530,
+      "lines": [
+        525,
+        526,
+        527,
+        528,
+        529,
+        530,
+        531,
+        532,
+        533,
+        534,
+        535
+      ],
+      "path": "src/main/java/org/jsoup/safety/Whitelist.java",
+      "snippet": "        // rels without a baseuri get removed\n        String value = el.absUrl(attr.getKey());\n        if (value.length() == 0)\n            value = attr.getValue(); // if it could not be made abs, run as-is to allow custom unknown protocols\n        if (!preserveRelativeLinks)\n            attr.setValue(value);\n        \n        for (Protocol protocol : protocols) {\n            String prot = protocol.toString();\n\n            if (prot.equals(\"#\")) { // allows anchor links"
+    }
+  ],
+  "class_simple": "Attribute",
+  "doc": {
+    "class_javadoc": "/**\n A single key + value attribute. (Only used for presentation.)\n */\npublic",
+    "method_javadoc": "/**\n     Set the attribute value.\n     @param val the new attribute value; must not be null\n     */"
+  },
+  "fields": [
+    "private static final String[] booleanAttributes",
+    "private String key",
+    "private String val",
+    "Attributes parent"
+  ],
+  "focal_class": "org.jsoup.nodes.Attribute",
+  "focal_id": "Jsoup_89::org.jsoup.nodes.Attribute::setValue(String)",
+  "focal_method_name": "setValue",
+  "impl_B": "public String setValue(String val) {\n        String oldVal = parent.get(this.key);\n        if (parent != null) {\n            int i = parent.indexOfKey(this.key);\n            if (i != Attributes.NotFound)\n                parent.vals[i] = val;\n        }\n        this.val = val;\n        return Attributes.checkNotNull(oldVal);\n    }",
+  "imports": [
+    "org.jsoup.SerializationException",
+    "org.jsoup.internal.StringUtil",
+    "org.jsoup.helper.Validate",
+    "java.io.IOException",
+    "java.util.Arrays",
+    "java.util.Map"
+  ],
+  "javadoc_edited_by_fix": false,
+  "package": "org.jsoup.nodes",
+  "project": "Jsoup",
+  "siblings": [
+    {
+      "javadoc": "/**\n     Get the attribute key.\n     @return the attribute key\n     */",
+      "name": "getKey"
+    },
+    {
+      "javadoc": "/**\n     Set the attribute key; case is preserved.\n     @param key the new key; must not be null\n     */",
+      "name": "setKey"
+    },
+    {
+      "javadoc": "/**\n     Get the attribute value.\n     @return the attribute value\n     */",
+      "name": "getValue"
+    },
+    {
+      "javadoc": "/**\n     Get the HTML representation of this attribute; e.g. {@code href=\"index.html\"}.\n     @return HTML\n     */",
+      "name": "html"
+    },
+    {
+      "javadoc": "",
+      "name": "html"
+    },
+    {
+      "javadoc": "",
+      "name": "html"
+    },
+    {
+      "javadoc": "/**\n     Get the string representation of this attribute, implemented as {@link #html()}.\n     @return string\n     */",
+      "name": "toString"
+    },
+    {
+      "javadoc": "/**\n     * Create a new Attribute from an unencoded key and a HTML attribute encoded value.\n     * @param unencodedKey assumes the key is not encoded, as can be only run of simple \\w chars.\n     * @param encodedValue HTML attribute encoded value\n     * @return attribute\n     */",
+      "name": "createFromEncoded"
+    },
+    {
+      "javadoc": "",
+      "name": "isDataAttribute"
+    },
+    {
+      "javadoc": "",
+      "name": "isDataAttribute"
+    },
+    {
+      "javadoc": "/**\n     * Collapsible if it's a boolean attribute and value is empty or same as name\n     * \n     * @param out output settings\n     * @return  Returns whether collapsible or not\n     */",
+      "name": "shouldCollapseAttribute"
+    },
+    {
+      "javadoc": "",
+      "name": "shouldCollapseAttribute"
+    },
+    {
+      "javadoc": "/**\n     * @deprecated\n     */",
+      "name": "isBooleanAttribute"
+    },
+    {
+      "javadoc": "/**\n     * Checks if this attribute name is defined as a boolean attribute in HTML5\n     */",
+      "name": "isBooleanAttribute"
+    },
+    {
+      "javadoc": "",
+      "name": "equals"
+    },
+    {
+      "javadoc": "",
+      "name": "hashCode"
+    },
+    {
+      "javadoc": "",
+      "name": "clone"
+    }
+  ],
+  "sig": {
+    "class_declaration": "public class Attribute implements Map.Entry<String, String>, Cloneable",
+    "constructors": [
+      "public Attribute(String key, String value);",
+      "public Attribute(String key, String val, Attributes parent);"
+    ],
+    "focal_signature": "public String setValue(String val)",
+    "methods": [
+      "public String getKey();",
+      "public void setKey(String key);",
+      "public String getValue();",
+      "public String html();",
+      "protected static void html(String key, String val, Appendable accum, Document.OutputSettings out) throws IOException;",
+      "protected void html(Appendable accum, Document.OutputSettings out) throws IOException;",
+      "public String toString();",
+      "public static Attribute createFromEncoded(String unencodedKey, String encodedValue);",
+      "protected boolean isDataAttribute();",
+      "protected static boolean isDataAttribute(String key);",
+      "protected final boolean shouldCollapseAttribute(Document.OutputSettings out);",
+      "protected static boolean shouldCollapseAttribute(final String key, final String val, final Document.OutputSettings out);",
+      "protected boolean isBooleanAttribute();",
+      "protected static boolean isBooleanAttribute(final String key);",
+      "public boolean equals(Object o);",
+      "public int hashCode();",
+      "public Attribute clone();"
+    ],
+    "type_signatures": []
+  },
+  "split": "dev"
+}

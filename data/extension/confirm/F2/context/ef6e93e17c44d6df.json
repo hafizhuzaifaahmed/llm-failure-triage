@@ -1,0 +1,139 @@
+{
+ "bug_name": "JacksonDatabind_23",
+ "call_sites": [
+  {
+   "line": 874,
+   "lines": [
+    869,
+    870,
+    871,
+    872,
+    873,
+    874,
+    875,
+    876,
+    877,
+    878,
+    879
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectWriter.java",
+   "snippet": "        if (_config.isEnabled(SerializationFeature.CLOSE_CLOSEABLE)\n                && (value instanceof Closeable)) {\n\n            Closeable toClose = (Closeable) value;\n            try {\n                _prefetch.serialize(gen, value, _serializerProvider());\n                if (_config.isEnabled(SerializationFeature.FLUSH_AFTER_WRITE_VALUE)) {\n                    gen.flush();\n                }\n                Closeable tmpToClose = toClose;\n                toClose = null;"
+  },
+  {
+   "line": 889,
+   "lines": [
+    884,
+    885,
+    886,
+    887,
+    888,
+    889,
+    890,
+    891,
+    892,
+    893,
+    894
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectWriter.java",
+   "snippet": "                        toClose.close();\n                    } catch (IOException ioe) { }\n                }\n            }\n        } else {\n            _prefetch.serialize(gen, value, _serializerProvider());\n            if (_config.isEnabled(SerializationFeature.FLUSH_AFTER_WRITE_VALUE)) {\n                gen.flush();\n            }\n        }\n    }"
+  },
+  {
+   "line": 1088,
+   "lines": [
+    1083,
+    1084,
+    1085,
+    1086,
+    1087,
+    1088,
+    1089,
+    1090,
+    1091,
+    1092,
+    1093
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectWriter.java",
+   "snippet": "            _writeCloseable(gen, value);\n            return;\n        }\n        boolean closed = false;\n        try {\n            _prefetch.serialize(gen, value, _serializerProvider());\n            closed = true;\n            gen.close();\n        } finally {\n            // won't try to close twice; also, must catch exception (so it \n            // will not mask exception that is pending)"
+  },
+  {
+   "line": 1115,
+   "lines": [
+    1110,
+    1111,
+    1112,
+    1113,
+    1114,
+    1115,
+    1116,
+    1117,
+    1118,
+    1119,
+    1120
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectWriter.java",
+   "snippet": "    private final void _writeCloseable(JsonGenerator gen, Object value)\n        throws IOException\n    {\n        Closeable toClose = (Closeable) value;\n        try {\n            _prefetch.serialize(gen, value, _serializerProvider());\n            JsonGenerator tmpGen = gen;\n            gen = null;\n            tmpGen.close();\n            Closeable tmpToClose = toClose;\n            toClose = null;"
+  },
+  {
+   "line": 961,
+   "lines": [
+    956,
+    957,
+    958,
+    959,
+    960,
+    961,
+    962,
+    963,
+    964,
+    965,
+    966
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/SerializerProvider.java",
+   "snippet": "    {\n        if (value == null) {\n            if (_stdNullValueSerializer) { // minor perf optimization\n                jgen.writeNull();\n            } else {\n                _nullValueSerializer.serialize(null, jgen, this);\n            }\n        } else {\n            Class<?> cls = value.getClass();\n            findTypedValueSerializer(cls, true, null).serialize(value, jgen, this);\n        }"
+  }
+ ],
+ "class_simple": "LongSerializer",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Container class for serializers used for handling standard JDK-provided types.\n */\n@SuppressWarnings(\"serial\")\npublic class NumberSerializers\n{\n    protected NumberSerializers() { }\n\n    public static void addAll(Map<String, JsonSerializer<?>> allDeserializers)\n    {\n        final JsonSerializer<?> intS = new IntegerSerializer();\n        allDeserializers.put(Integer.class.getName(), intS);\n        allDeserializers.put(Integer.TYPE.getName(), intS);\n        allDeserializers.put(Long.class.getName(), LongSerializer.instance);\n        allDeserializers.put(Long.TYPE.getName(), LongSerializer.instance);\n        allDeserializers.put(Byte.class.getName(), IntLikeSerializer.instance);\n        allDeserializers.put(Byte.TYPE.getName(), IntLikeSerializer.instance);\n        allDeserializers.put(Short.class.getName(), ShortSerializer.instance);\n        allDeserializers.put(Short.TYPE.getName(), ShortSerializer.instance);\n\n        // Numbers, limited length floating point\n        allDeserializers.put(Float.class.getName(), FloatSerializer.instance);\n        allDeserializers.put(Float.TYPE.getName(), FloatSerializer.instance);\n        allDeserializers.put(Double.class.getName(), DoubleSerializer.instance);\n        allDeserializers.put(Double.TYPE.getName(), DoubleSerializer.instance);\n    }\n\n    /*\n    /**********************************************************\n    /* Shared base class\n    /**********************************************************\n     */\n\n    protected abstract static class Base<T> extends StdScalarSerializer<T>\n        implements ContextualSerializer\n    {\n\n        protected final JsonParser.NumberType _numberType;\n        protected final String _schemaType;\n        protected final boolean _isInt;\n\n        protected Base(Class<?> cls, JsonParser.NumberType numberType, String schemaType) {\n            super(cls, false);\n            _numberType = numberType;\n            _schemaType = schemaType;\n            _isInt = (numberType == JsonParser.NumberType.INT)\n                    || (numberType == JsonParser.NumberType.LONG)\n                    || (numberType == JsonParser.NumberType.BIG_INTEGER)\n                    ;\n        }\n\n        @Override\n        public JsonNode getSchema(SerializerProvider provider, Type typeHint) {\n            return createSchemaNode(_schemaType, true);\n        }\n\n        @Override\n        public void acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint) throws JsonMappingException\n        {\n            if (_isInt) {\n                JsonIntegerFormatVisitor v2 = visitor.expectIntegerFormat(typeHint);\n                if (v2 != null) {\n                    v2.numberType(_numberType);\n                }\n            } else {\n                JsonNumberFormatVisitor v2 = visitor.expectNumberFormat(typeHint);\n                if (v2 != null) {\n                    v2.numberType(_numberType);\n                }\n            }\n        }\n\n        @Override\n        public JsonSerializer<?> createContextual(SerializerProvider prov,\n                BeanProperty property) throws JsonMappingException\n        {\n            if (property != null) {\n                AnnotatedMember m = property.getMember();\n                if (m != null) {\n                    JsonFormat.Value format = prov.getAnnotationIntrospector().findFormat(m);\n                    if (format != null) {\n                        switch (format.getShape()) {\n                        case STRING:\n                            return ToStringSerializer.instance;\n                        default:\n                        }\n                    }\n                }\n            }\n            return this;\n        }\n    }\n    \n    /*\n    /**********************************************************\n    /* Concrete serializers, numerics\n    /**********************************************************\n     */\n\n    @JacksonStdImpl\n    public final static class ShortSerializer extends Base<Short>\n    {\n        final static ShortSerializer instance = new ShortSerializer();\n\n        public ShortSerializer() { super(Short.class, JsonParser.NumberType.INT, \"number\"); }\n\n\n        @Override\n        public void serialize(Short value, JsonGenerator gen, SerializerProvider provider) throws IOException {\n            gen.writeNumber(value.shortValue());\n        }\n    }\n\n    /**\n     * This is the special serializer for regular {@link java.lang.Integer}s\n     * (and primitive ints)\n     *<p>\n     * Since this is one of \"native\" types, no type information is ever\n     * included on serialization (unlike for most scalar types)\n     *<p>\n     * NOTE: as of 2.6, generic signature changed to Object, to avoid generation\n     * of bridge methods.\n     */\n    @JacksonStdImpl\n    public final static class IntegerSerializer extends Base<Object>\n    {\n        public IntegerSerializer() { super(Integer.class, JsonParser.NumberType.INT ,\"integer\"); }\n    \n        @Override\n        public void serialize(Object value, JsonGenerator gen, SerializerProvider provider) throws IOException {\n            gen.writeNumber(((Integer) value).intValue());\n        }\n        \n        // IMPORTANT: copied from `NonTypedScalarSerializerBase`\n        @Override\n        public void serializeWithType(Object value, JsonGenerator gen,\n                SerializerProvider provider, TypeSerializer typeSer) throws IOException {\n            // no type info, just regular serialization\n            serialize(value, gen, provider);            \n        }\n\n    }\n\n    /**\n     * Similar to {@link IntegerSerializer}, but will not cast to Integer:\n     * instead, cast is to {@link java.lang.Number}, and conversion is\n     * by calling {@link java.lang.Number#intValue}.\n     */\n    @JacksonStdImpl\n    public final static class IntLikeSerializer extends Base<Number>\n    {\n        final static IntLikeSerializer instance = new IntLikeSerializer();\n\n        public IntLikeSerializer() {\n            super(Number.class, JsonParser.NumberType.INT, \"integer\");\n        }\n\n\n        @Override\n        public void serialize(Number value, JsonGenerator gen, SerializerProvider provider) throws IOException {\n            gen.writeNumber(value.intValue());\n        }\n    }\n\n    @JacksonStdImpl\n    public final static",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "final static LongSerializer instance"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.ser.std.NumberSerializers.LongSerializer",
+ "focal_id": "JacksonDatabind_23::com.fasterxml.jackson.databind.ser.std.NumberSerializers$LongSerializer::serialize(Object,JsonGenerator,SerializerProvider)",
+ "focal_method_name": "serialize",
+ "generations": 3,
+ "impl_B": "@Override\n        public void serialize(Object value, JsonGenerator gen, SerializerProvider provider) throws IOException {\n            gen.writeNumber(((Long) value).longValue());\n        }",
+ "imports": [
+  "java.io.IOException",
+  "java.lang.reflect.Type",
+  "java.util.Map",
+  "com.fasterxml.jackson.annotation.JsonFormat",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.annotation.JacksonStdImpl",
+  "com.fasterxml.jackson.databind.introspect.AnnotatedMember",
+  "com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper",
+  "com.fasterxml.jackson.databind.jsonFormatVisitors.JsonIntegerFormatVisitor",
+  "com.fasterxml.jackson.databind.jsonFormatVisitors.JsonNumberFormatVisitor",
+  "com.fasterxml.jackson.databind.jsontype.TypeSerializer",
+  "com.fasterxml.jackson.databind.ser.ContextualSerializer"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.ser.std",
+ "project": "JacksonDatabind",
+ "siblings": [],
+ "sig": {
+  "class_declaration": "@JacksonStdImpl public final static class LongSerializer extends Base<Object>",
+  "constructors": [
+   "public LongSerializer();"
+  ],
+  "focal_signature": "public void serialize(Object value, JsonGenerator gen, SerializerProvider provider) throws IOException",
+  "methods": [],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

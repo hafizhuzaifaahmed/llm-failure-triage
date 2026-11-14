@@ -1,0 +1,88 @@
+{
+ "bug_name": "Math_21",
+ "call_sites": [
+  {
+   "line": 97,
+   "lines": [
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102
+   ],
+   "path": "src/main/java/org/apache/commons/math3/random/CorrelatedRandomVectorGenerator.java",
+   "snippet": "            throw new DimensionMismatchException(mean.length, order);\n        }\n        this.mean = mean.clone();\n\n        final RectangularCholeskyDecomposition decomposition =\n            new RectangularCholeskyDecomposition(covariance, small);\n        root = decomposition.getRootMatrix();\n\n        this.generator = generator;\n        normalized = new double[decomposition.getRank()];\n"
+  },
+  {
+   "line": 126,
+   "lines": [
+    121,
+    122,
+    123,
+    124,
+    125,
+    126,
+    127,
+    128,
+    129,
+    130,
+    131
+   ],
+   "path": "src/main/java/org/apache/commons/math3/random/CorrelatedRandomVectorGenerator.java",
+   "snippet": "        for (int i = 0; i < order; ++i) {\n            mean[i] = 0;\n        }\n\n        final RectangularCholeskyDecomposition decomposition =\n            new RectangularCholeskyDecomposition(covariance, small);\n        root = decomposition.getRootMatrix();\n\n        this.generator = generator;\n        normalized = new double[decomposition.getRank()];\n"
+  }
+ ],
+ "class_simple": "RectangularCholeskyDecomposition",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Calculates the rectangular Cholesky decomposition of a matrix.\n * <p>The rectangular Cholesky decomposition of a real symmetric positive\n * semidefinite matrix A consists of a rectangular matrix B with the same\n * number of rows such that: A is almost equal to BB<sup>T</sup>, depending\n * on a user-defined tolerance. In a sense, this is the square root of A.</p>\n * <p>The difference with respect to the regular {@link CholeskyDecomposition}\n * is that rows/columns may be permuted (hence the rectangular shape instead\n * of the traditional triangular shape) and there is a threshold to ignore\n * small diagonal elements. This is used for example to generate {@link\n * org.apache.commons.math3.random.CorrelatedRandomVectorGenerator correlated\n * random n-dimensions vectors} in a p-dimension subspace (p < n).\n * In other words, it allows generating random vectors from a covariance\n * matrix that is only positive semidefinite, and not positive definite.</p>\n * <p>Rectangular Cholesky decomposition is <em>not</em> suited for solving\n * linear systems, so it does not provide any {@link DecompositionSolver\n * decomposition solver}.</p>\n *\n * @see <a href=\"http://mathworld.wolfram.com/CholeskyDecomposition.html\">MathWorld</a>\n * @see <a href=\"http://en.wikipedia.org/wiki/Cholesky_decomposition\">Wikipedia</a>\n * @version $Id$\n * @since 2.0 (changed to concrete class in 3.0)\n */\npublic",
+  "method_javadoc": "/**\n     * Decompose a symmetric positive semidefinite matrix.\n     *\n     * @param matrix Symmetric positive semidefinite matrix.\n     * @param small Diagonal elements threshold under which  column are\n     * considered to be dependent on previous ones and are discarded.\n     * @exception NonPositiveDefiniteMatrixException if the matrix is not\n     * positive semidefinite.\n     */"
+ },
+ "fields": [
+  "private final RealMatrix root",
+  "private int rank"
+ ],
+ "focal_class": "org.apache.commons.math3.linear.RectangularCholeskyDecomposition",
+ "focal_id": "Math_21::org.apache.commons.math3.linear.RectangularCholeskyDecomposition::RectangularCholeskyDecomposition(RealMatrix,double)",
+ "focal_method_name": "RectangularCholeskyDecomposition",
+ "generations": 3,
+ "impl_B": "public RectangularCholeskyDecomposition(RealMatrix matrix, double small)\n        throws NonPositiveDefiniteMatrixException {\n\n        final int order = matrix.getRowDimension();\n        final double[][] c = matrix.getData();\n        final double[][] b = new double[order][order];\n\n        int[] swap  = new int[order];\n        int[] index = new int[order];\n        for (int i = 0; i < order; ++i) {\n            index[i] = i;\n        }\n\n        int r = 0;\n        for (boolean loop = true; loop;) {\n\n            // find maximal diagonal element\n            swap[r] = r;\n            for (int i = r + 1; i < order; ++i) {\n                int ii  = index[i];\n                int isi = index[swap[i]];\n                if (c[ii][ii] > c[isi][isi]) {\n                    swap[r] = i;\n                }\n            }\n\n\n            // swap elements\n            if (swap[r] != r) {\n                int tmp = index[r];\n                index[r] = index[swap[r]];\n                index[swap[r]] = tmp;\n            }\n\n            // check diagonal element\n            int ir = index[r];\n            if (c[ir][ir] < small) {\n\n                if (r == 0) {\n                    throw new NonPositiveDefiniteMatrixException(c[ir][ir], ir, small);\n                }\n\n                // check remaining diagonal elements\n                for (int i = r; i < order; ++i) {\n                    if (c[index[i]][index[i]] < -small) {\n                        // there is at least one sufficiently negative diagonal element,\n                        // the symmetric positive semidefinite matrix is wrong\n                        throw new NonPositiveDefiniteMatrixException(c[index[i]][index[i]], i, small);\n                    }\n                }\n\n                // all remaining diagonal elements are close to zero, we consider we have\n                // found the rank of the symmetric positive semidefinite matrix\n                ++r;\n                loop = false;\n\n            } else {\n\n                // transform the matrix\n                final double sqrt = FastMath.sqrt(c[ir][ir]);\n                b[r][r] = sqrt;\n                final double inverse  = 1 / sqrt;\n                for (int i = r + 1; i < order; ++i) {\n                    final int ii = index[i];\n                    final double e = inverse * c[ii][ir];\n                    b[i][r] = e;\n                    c[ii][ii] -= e * e;\n                    for (int j = r + 1; j < i; ++j) {\n                        final int ij = index[j];\n                        final double f = c[ii][ij] - e * b[j][r];\n                        c[ii][ij] = f;\n                        c[ij][ii] = f;\n                    }\n                }\n\n                // prepare next iteration\n                loop = ++r < order;\n            }\n        }\n\n        // build the root matrix\n        rank = r;\n        root = MatrixUtils.createRealMatrix(order, r);\n        for (int i = 0; i < order; ++i) {\n            for (int j = 0; j < r; ++j) {\n                root.setEntry(index[i], j, b[i][j]);\n            }\n        }\n\n    }",
+ "imports": [
+  "org.apache.commons.math3.util.FastMath"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math3.linear",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/** Get the root of the covariance matrix.\n     * The root is the rectangular matrix <code>B</code> such that\n     * the covariance matrix is equal to <code>B.B<sup>T</sup></code>\n     * @return root of the square matrix\n     * @see #getRank()\n     */",
+   "name": "getRootMatrix"
+  },
+  {
+   "javadoc": "/** Get the rank of the symmetric positive semidefinite matrix.\n     * The r is the number of independent rows in the symmetric positive semidefinite\n     * matrix, it is also the number of columns of the rectangular\n     * matrix of the decomposition.\n     * @return r of the square matrix.\n     * @see #getRootMatrix()\n     */",
+   "name": "getRank"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class RectangularCholeskyDecomposition",
+  "constructors": [
+   "public RectangularCholeskyDecomposition(RealMatrix matrix, double small) throws NonPositiveDefiniteMatrixException;"
+  ],
+  "focal_signature": "public RectangularCholeskyDecomposition(RealMatrix matrix, double small) throws NonPositiveDefiniteMatrixException",
+  "methods": [
+   "public RealMatrix getRootMatrix();",
+   "public int getRank();"
+  ],
+  "type_signatures": [
+   "public interface RealMatrix extends AnyMatrix {  }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

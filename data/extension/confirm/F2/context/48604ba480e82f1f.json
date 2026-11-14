@@ -1,0 +1,128 @@
+{
+ "bug_name": "Closure_131",
+ "call_sites": [
+  {
+   "line": 605,
+   "lines": [
+    600,
+    601,
+    602,
+    603,
+    604,
+    605,
+    606,
+    607,
+    608,
+    609,
+    610
+   ],
+   "path": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java",
+   "snippet": "   * @param name The module name\n   * @throws FlagUsageException if the validation fails\n   */\n  protected void checkModuleName(String name)\n      throws FlagUsageException {\n    if (!TokenStream.isJSIdentifier(name)) {\n      throw new FlagUsageException(\"Invalid module name: '\" + name + \"'\");\n    }\n  }\n\n  /**"
+  },
+  {
+   "line": 353,
+   "lines": [
+    348,
+    349,
+    350,
+    351,
+    352,
+    353,
+    354,
+    355,
+    356,
+    357,
+    358
+   ],
+   "path": "src/com/google/javascript/jscomp/CodeGenerator.java",
+   "snippet": "        Node parameters = fn.getChildAtIndex(1);\n        Node body = fn.getLastChild();\n\n        // Add the property name.\n        if (!n.isQuotedString() &&\n            TokenStream.isJSIdentifier(name) &&\n            // do not encode literally any non-literal characters that were\n            // Unicode escaped.\n            NodeUtil.isLatin(name)) {\n          add(name);\n        } else {"
+  },
+  {
+   "line": 687,
+   "lines": [
+    682,
+    683,
+    684,
+    685,
+    686,
+    687,
+    688,
+    689,
+    690,
+    691,
+    692
+   ],
+   "path": "src/com/google/javascript/jscomp/CodeGenerator.java",
+   "snippet": "            String key = c.getString();\n            // Object literal property names don't have to be quoted if they\n            // are not JavaScript keywords\n            if (!c.isQuotedString() &&\n                !TokenStream.isKeyword(key) &&\n                TokenStream.isJSIdentifier(key) &&\n                // do not encode literally any non-literal characters that\n                // were Unicode escaped.\n                NodeUtil.isLatin(key)) {\n              add(key);\n            } else {"
+  },
+  {
+   "line": 852,
+   "lines": [
+    847,
+    848,
+    849,
+    850,
+    851,
+    852,
+    853,
+    854,
+    855,
+    856,
+    857
+   ],
+   "path": "src/com/google/javascript/jscomp/CollapseProperties.java",
+   "snippet": "      // identifiers, since those keys are never referenced. (If they were,\n      // this object literal's child names wouldn't be collapsible.) The only\n      // reason that we don't eliminate them entirely is the off chance that\n      // their values are expressions that have side effects.\n      boolean isJsIdentifier = !key.isNumber() &&\n                               TokenStream.isJSIdentifier(key.getString());\n      String propName = isJsIdentifier ?\n          key.getString() : String.valueOf(++arbitraryNameCounter);\n\n      // If the name cannot be collapsed, skip it.\n      String qName = objlitName.getFullName() + '.' + propName;"
+  },
+  {
+   "line": 503,
+   "lines": [
+    498,
+    499,
+    500,
+    501,
+    502,
+    503,
+    504,
+    505,
+    506,
+    507,
+    508
+   ],
+   "path": "src/com/google/javascript/jscomp/GlobalNamespace.java",
+   "snippet": "        default:\n          return null;\n      }\n      if (name != null) {\n        String key = n.getString();\n        if (TokenStream.isJSIdentifier(key)) {\n          return name + '.' + key;\n        }\n      }\n      return null;\n    }"
+  }
+ ],
+ "class_simple": "TokenStream",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * This class implements the JavaScript scanner.\n *\n * It is based on the C source files jsscan.c and jsscan.h\n * in the jsref package.\n *\n */\n\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [],
+ "focal_class": "com.google.javascript.rhino.TokenStream",
+ "focal_id": "Closure_131::com.google.javascript.rhino.TokenStream::isJSIdentifier(String)",
+ "focal_method_name": "isJSIdentifier",
+ "generations": 3,
+ "impl_B": "public static boolean isJSIdentifier(String s) {\n      int length = s.length();\n\n      if (length == 0 ||\n          !Character.isJavaIdentifierStart(s.charAt(0))) {\n        return false;\n      }\n\n      for (int i = 1; i < length; i++) {\n        if (\n            !Character.isJavaIdentifierPart(s.charAt(i))) {\n          return false;\n        }\n      }\n\n      return true;\n    }",
+ "imports": [],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.rhino",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "isKeyword"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class TokenStream",
+  "constructors": [],
+  "focal_signature": "public static boolean isJSIdentifier(String s)",
+  "methods": [
+   "public static boolean isKeyword(String name);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

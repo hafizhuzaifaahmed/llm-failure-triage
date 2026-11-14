@@ -1,0 +1,148 @@
+{
+ "bug_name": "JacksonDatabind_102",
+ "call_sites": [
+  {
+   "line": 46,
+   "lines": [
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ser/std/CalendarSerializer.java",
+   "snippet": "    {\n        if (_asTimestamp(provider)) {\n            g.writeNumber(_timestamp(value));\n            return;\n        }\n        _serializeAsString(value.getTime(), g, provider);\n    }\n}\n"
+  },
+  {
+   "line": 51,
+   "lines": [
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ser/std/DateSerializer.java",
+   "snippet": "    {\n        if (_asTimestamp(provider)) {\n            g.writeNumber(_timestamp(value));\n            return;\n        }\n        _serializeAsString(value, g, provider);\n    }\n}\n"
+  },
+  {
+   "line": 56,
+   "lines": [
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ser/std/SqlDateSerializer.java",
+   "snippet": "            //    the awful standard JDK serialization via `sqlDate.toString()`... this\n            //    is problematic in multiple ways (including using arbitrary timezone...)\n            g.writeString(value.toString());\n            return;\n        }\n        _serializeAsString(value, g, provider);\n    }\n}\n"
+  }
+ ],
+ "class_simple": "DateTimeSerializerBase",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "",
+  "method_javadoc": "/**\n     * @since 2.9\n     */"
+ },
+ "fields": [
+  "protected final Boolean _useTimestamp",
+  "protected final DateFormat _customFormat",
+  "protected final AtomicReference<DateFormat> _reusedCustomFormat"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.ser.std.DateTimeSerializerBase",
+ "focal_id": "JacksonDatabind_102::com.fasterxml.jackson.databind.ser.std.DateTimeSerializerBase::_serializeAsString(Date,JsonGenerator,SerializerProvider)",
+ "focal_method_name": "_serializeAsString",
+ "generations": 3,
+ "impl_B": "protected void _serializeAsString(Date value, JsonGenerator g, SerializerProvider provider) throws IOException\n    {\n        if (_customFormat == null) {\n            provider.defaultSerializeDateValue(value, g);\n            return;\n        }\n\n        // 19-Jul-2017, tatu: Here we will try a simple but (hopefully) effective mechanism for\n        //    reusing formatter instance. This is our second attempt, after initially trying simple\n        //    synchronization (which turned out to be bottleneck for some users in production...).\n        //    While `ThreadLocal` could alternatively be used, it is likely that it would lead to\n        //    higher memory footprint, but without much upside -- if we can not reuse, we'll just\n        //    clone(), which has some overhead but not drastic one.\n        \n        DateFormat f = _reusedCustomFormat.getAndSet(null);\n        if (f == null) {\n            f = (DateFormat) _customFormat.clone();\n        }\n        g.writeString(f.format(value));\n        _reusedCustomFormat.compareAndSet(null, f);\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.lang.reflect.Type",
+  "java.text.DateFormat",
+  "java.text.SimpleDateFormat",
+  "java.util.Date",
+  "java.util.Locale",
+  "java.util.TimeZone",
+  "java.util.concurrent.atomic.AtomicReference",
+  "com.fasterxml.jackson.annotation.JsonFormat",
+  "com.fasterxml.jackson.core.JsonGenerator",
+  "com.fasterxml.jackson.core.JsonParser",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.jsonFormatVisitors.*",
+  "com.fasterxml.jackson.databind.ser.ContextualSerializer",
+  "com.fasterxml.jackson.databind.util.StdDateFormat"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.ser.std",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "withFormat"
+  },
+  {
+   "javadoc": "",
+   "name": "createContextual"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "isEmpty"
+  },
+  {
+   "javadoc": "",
+   "name": "_timestamp"
+  },
+  {
+   "javadoc": "",
+   "name": "getSchema"
+  },
+  {
+   "javadoc": "",
+   "name": "acceptJsonFormatVisitor"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "serialize"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_asTimestamp"
+  },
+  {
+   "javadoc": "",
+   "name": "_acceptJsonFormatVisitor"
+  }
+ ],
+ "sig": {
+  "class_declaration": "@SuppressWarnings(\"serial\") public abstract class DateTimeSerializerBase<T> extends StdScalarSerializer<T> implements ContextualSerializer",
+  "constructors": [
+   "protected DateTimeSerializerBase(Class<T> type, Boolean useTimestamp, DateFormat customFormat);"
+  ],
+  "focal_signature": "protected void _serializeAsString(Date value, JsonGenerator g, SerializerProvider provider) throws IOException",
+  "methods": [
+   "public abstract DateTimeSerializerBase<T> withFormat(Boolean timestamp, DateFormat customFormat);",
+   "public JsonSerializer<?> createContextual(SerializerProvider serializers, BeanProperty property) throws JsonMappingException;",
+   "public boolean isEmpty(SerializerProvider serializers, T value);",
+   "protected abstract long _timestamp(T value);",
+   "public JsonNode getSchema(SerializerProvider serializers, Type typeHint);",
+   "public void acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint) throws JsonMappingException;",
+   "public abstract void serialize(T value, JsonGenerator gen, SerializerProvider serializers) throws IOException;",
+   "protected boolean _asTimestamp(SerializerProvider serializers);",
+   "protected void _acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint, boolean asNumber) throws JsonMappingException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

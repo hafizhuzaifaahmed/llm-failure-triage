@@ -1,0 +1,288 @@
+{
+ "bug_name": "Closure_166",
+ "call_sites": [
+  {
+   "line": 391,
+   "lines": [
+    386,
+    387,
+    388,
+    389,
+    390,
+    391,
+    392,
+    393,
+    394,
+    395,
+    396
+   ],
+   "path": "src/com/google/javascript/jscomp/CheckAccessControls.java",
+   "snippet": "\n      ObjectType oType = objectType;\n      while (oType != null) {\n        if (oType.hasReferenceName()) {\n          if (initializedConstantProperties.containsEntry(\n                  oType.getReferenceName(), propertyName)) {\n            compiler.report(\n                t.makeError(getprop, CONST_PROPERTY_REASSIGNED_VALUE,\n                    propertyName));\n            break;\n          }"
+  },
+  {
+   "line": 402,
+   "lines": [
+    397,
+    398,
+    399,
+    400,
+    401,
+    402,
+    403,
+    404,
+    405,
+    406,
+    407
+   ],
+   "path": "src/com/google/javascript/jscomp/CheckAccessControls.java",
+   "snippet": "        }\n        oType = oType.getImplicitPrototype();\n      }\n\n      Preconditions.checkState(objectType.hasReferenceName());\n      initializedConstantProperties.put(objectType.getReferenceName(),\n          propertyName);\n\n      // Add the prototype when we're looking at an instance object\n      if (objectType.isInstanceType()) {\n        ObjectType prototype = objectType.getImplicitPrototype();"
+  },
+  {
+   "line": 411,
+   "lines": [
+    406,
+    407,
+    408,
+    409,
+    410,
+    411,
+    412,
+    413,
+    414,
+    415,
+    416
+   ],
+   "path": "src/com/google/javascript/jscomp/CheckAccessControls.java",
+   "snippet": "      if (objectType.isInstanceType()) {\n        ObjectType prototype = objectType.getImplicitPrototype();\n        if (prototype != null) {\n          if (prototype.hasProperty(propertyName)\n              && prototype.hasReferenceName()) {\n            initializedConstantProperties.put(prototype.getReferenceName(),\n                propertyName);\n          }\n        }\n      }\n    }"
+  },
+  {
+   "line": 208,
+   "lines": [
+    203,
+    204,
+    205,
+    206,
+    207,
+    208,
+    209,
+    210,
+    211,
+    212,
+    213
+   ],
+   "path": "src/com/google/javascript/jscomp/InferJSDocInfo.java",
+   "snippet": "    if (objType.isConstructor() ||\n        objType.isEnumType() ||\n        objType.isInterface()) {\n      // Named types.\n      if (objType.hasReferenceName() &&\n          objType.getReferenceName().equals(qName)) {\n        objType.setJSDocInfo(docInfo);\n\n        if (objType.isConstructor() || objType.isInterface()) {\n          JSType.toMaybeFunctionType(objType).getInstanceType().setJSDocInfo(\n              docInfo);"
+  },
+  {
+   "line": 412,
+   "lines": [
+    407,
+    408,
+    409,
+    410,
+    411,
+    412,
+    413,
+    414,
+    415,
+    416,
+    417
+   ],
+   "path": "src/com/google/javascript/jscomp/NameReferenceGraphConstruction.java",
+   "snippet": "      String className = null;\n\n      if (constructor != null && constructor.isConstructor()) {\n        // Case where the class has been properly declared with @constructor\n        classType = constructor.toMaybeFunctionType();\n        className = classType.getReferenceName();\n      } else {\n        // We'll guess it is a constructor even if it didn't have @constructor\n        classType = compiler.getTypeRegistry().getNativeFunctionType(\n            JSTypeNative.U2U_CONSTRUCTOR_TYPE);\n        className = NodeUtil.getPrototypeClassName(qName).getQualifiedName();"
+  }
+ ],
+ "class_simple": "PrototypeObjectType",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * The object type represents instances of JavaScript objects such as\n * {@code Object}, {@code Date}, {@code Function}.<p>\n *\n * Objects in JavaScript are unordered collections of properties.\n * Each property consists of a name, a value and a set of attributes.<p>\n *\n * Each instance has an implicit prototype property ({@code [[Prototype]]})\n * pointing to an object instance, which itself has an implicit property, thus\n * forming a chain.<p>\n *\n * A class begins life with no name.  Later, a name may be provided once it\n * can be inferred.  Note that the name in this case is strictly for\n * debugging purposes.  Looking up type name references goes through the\n * {@link JSTypeRegistry}.<p>\n */",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "private final String className",
+  "private final Map<String, Property> properties",
+  "private final boolean nativeType",
+  "private ObjectType implicitPrototypeFallback",
+  "private FunctionType ownerFunction",
+  "private boolean prettyPrint",
+  "private static final int MAX_PRETTY_PRINTED_PROPERTIES"
+ ],
+ "focal_class": "com.google.javascript.rhino.jstype.PrototypeObjectType",
+ "focal_id": "Closure_166::com.google.javascript.rhino.jstype.PrototypeObjectType::getReferenceName()",
+ "focal_method_name": "getReferenceName",
+ "generations": 3,
+ "impl_B": "@Override\n  public String getReferenceName() {\n    if (className != null) {\n      return className;\n    } else if (ownerFunction != null) {\n      return ownerFunction.getReferenceName() + \".prototype\";\n    } else {\n      return null;\n    }\n  }",
+ "imports": [
+  "static com.google.common.base.Preconditions.checkState",
+  "com.google.common.base.Preconditions",
+  "com.google.common.collect.ImmutableList",
+  "com.google.common.collect.Maps",
+  "com.google.common.collect.Sets",
+  "com.google.javascript.rhino.ErrorReporter",
+  "com.google.javascript.rhino.JSDocInfo",
+  "com.google.javascript.rhino.Node",
+  "java.util.Map",
+  "java.util.Set"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.rhino.jstype",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "getSlot"
+  },
+  {
+   "javadoc": "/**\n   * Gets the number of properties of this object.\n   */",
+   "name": "getPropertiesCount"
+  },
+  {
+   "javadoc": "",
+   "name": "hasProperty"
+  },
+  {
+   "javadoc": "",
+   "name": "hasOwnProperty"
+  },
+  {
+   "javadoc": "",
+   "name": "getOwnPropertyNames"
+  },
+  {
+   "javadoc": "",
+   "name": "isPropertyTypeDeclared"
+  },
+  {
+   "javadoc": "",
+   "name": "isPropertyTypeInferred"
+  },
+  {
+   "javadoc": "",
+   "name": "getPropertyType"
+  },
+  {
+   "javadoc": "",
+   "name": "isPropertyInExterns"
+  },
+  {
+   "javadoc": "",
+   "name": "removeProperty"
+  },
+  {
+   "javadoc": "",
+   "name": "getPropertyNode"
+  },
+  {
+   "javadoc": "",
+   "name": "getOwnPropertyJSDocInfo"
+  },
+  {
+   "javadoc": "",
+   "name": "setPropertyJSDocInfo"
+  },
+  {
+   "javadoc": "",
+   "name": "matchesNumberContext"
+  },
+  {
+   "javadoc": "",
+   "name": "matchesStringContext"
+  },
+  {
+   "javadoc": "",
+   "name": "unboxesTo"
+  },
+  {
+   "javadoc": "",
+   "name": "matchesObjectContext"
+  },
+  {
+   "javadoc": "",
+   "name": "canBeCalled"
+  },
+  {
+   "javadoc": "",
+   "name": "getConstructor"
+  },
+  {
+   "javadoc": "",
+   "name": "getImplicitPrototype"
+  },
+  {
+   "javadoc": "",
+   "name": "hasReferenceName"
+  },
+  {
+   "javadoc": "",
+   "name": "isSubtype"
+  },
+  {
+   "javadoc": "",
+   "name": "hasCachedValues"
+  },
+  {
+   "javadoc": "/** Whether this is a built-in object. */",
+   "name": "isNativeObjectType"
+  },
+  {
+   "javadoc": "",
+   "name": "getOwnerFunction"
+  },
+  {
+   "javadoc": "",
+   "name": "getCtorImplementedInterfaces"
+  },
+  {
+   "javadoc": "",
+   "name": "getCtorExtendedInterfaces"
+  },
+  {
+   "javadoc": "",
+   "name": "matchConstraint"
+  },
+  {
+   "javadoc": "",
+   "name": "matchRecordTypeConstraint"
+  }
+ ],
+ "sig": {
+  "class_declaration": "class PrototypeObjectType extends ObjectType",
+  "constructors": [],
+  "focal_signature": "public String getReferenceName()",
+  "methods": [
+   "public Property getSlot(String name);",
+   "public int getPropertiesCount();",
+   "public boolean hasProperty(String propertyName);",
+   "public boolean hasOwnProperty(String propertyName);",
+   "public Set<String> getOwnPropertyNames();",
+   "public boolean isPropertyTypeDeclared(String property);",
+   "public boolean isPropertyTypeInferred(String property);",
+   "public JSType getPropertyType(String property);",
+   "public boolean isPropertyInExterns(String propertyName);",
+   "public boolean removeProperty(String name);",
+   "public Node getPropertyNode(String propertyName);",
+   "public JSDocInfo getOwnPropertyJSDocInfo(String propertyName);",
+   "public void setPropertyJSDocInfo(String propertyName, JSDocInfo info);",
+   "public boolean matchesNumberContext();",
+   "public boolean matchesStringContext();",
+   "public JSType unboxesTo();",
+   "public boolean matchesObjectContext();",
+   "public boolean canBeCalled();",
+   "public FunctionType getConstructor();",
+   "public ObjectType getImplicitPrototype();",
+   "public boolean hasReferenceName();",
+   "public boolean isSubtype(JSType that);",
+   "public boolean hasCachedValues();",
+   "public boolean isNativeObjectType();",
+   "public FunctionType getOwnerFunction();",
+   "public Iterable<ObjectType> getCtorImplementedInterfaces();",
+   "public Iterable<ObjectType> getCtorExtendedInterfaces();",
+   "public void matchConstraint(JSType constraint);",
+   "public void matchRecordTypeConstraint(ObjectType constraintObj);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

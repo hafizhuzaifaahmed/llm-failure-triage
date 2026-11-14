@@ -1,0 +1,502 @@
+{
+ "candidate_id": "bb42bc462112cd637260",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testVerifyCheckSum_AllSpaces",
+   "testVerifyCheckSum_ExactMatchUnsigned",
+   "testVerifyCheckSum_StoredSumGreaterThanUnsigned",
+   "testVerifyCheckSum_StoredSumEqualsSigned",
+   "testVerifyCheckSum_OctalDigitsLimit",
+   "testVerifyCheckSum_InvalidOctalDigit",
+   "testVerifyCheckSum_StoredSumEqualsUnsigned",
+   "testVerifyCheckSum_NegativeBytes"
+  ],
+  "nc_both": [],
+  "nc_one_version": [],
+  "passes": 0
+ },
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "Compress_17::org.apache.commons.compress.archivers.tar.TarUtils::verifyCheckSum(byte[])",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testVerifyCheckSum_AllSpaces",
+   "runs_b": [
+    {
+     "duration_s": 0.071,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.067,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.093,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.092,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.086,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.077,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.IOException;\nimport java.math.*;\nimport java.math.BigInteger;\nimport java.nio.ByteBuffer;\nimport java.util.*;\nimport org.apache.commons.compress.archivers.zip.ZipEncoding;\nimport org.apache.commons.compress.archivers.zip.ZipEncodingHelper;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class TarUtils_verifyCheckSum_TriageGen2Test {\n\n    // Constants assumed from TarUtils implementation context\n    private static final int CHKSUM_OFFSET = 148;\n    private static final int CHKSUMLEN = 8;\n\n    /**\n     * Helper to create a header of a specific size filled with spaces.\n     */\n    private byte[] createBaseHeader(int size) {\n        byte[] header = new byte[size];\n        for (int i = 0; i < size; i++) {\n            header[i] = ' ';\n        }\n        return header;\n    }\n\n    @Test\n    public void testVerifyCheckSum_AllSpaces() {\n        // If all are spaces, unsignedSum = 32 * size, signedSum = 32 * size, storedSum = 0\n        // 0 == 32*size is false, but 0 > 32*size is false.\n        // However, if header is small or specific, we check logic.\n        byte[] header = createBaseHeader(256);\n        // storedSum = 0, unsignedSum = 256 * 32 = 8192, signedSum = 8192\n        // 0 == 8192 (F) || 0 == 8192 (F) || 0 > 8192 (F) -> false\n        assertFalse(TarUtils.verifyCheckSum(header));\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testVerifyCheckSum_ExactMatchUnsigned",
+   "runs_b": [
+    {
+     "duration_s": 0.075,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 46,
+     "message": "null",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError\n\tat org.junit.Assert.fail(Assert.java:92)\n\tat org.junit.Assert.assertTrue(Assert.java:43)\n\tat org.junit.Assert.assertFalse(Assert.java:68)\n\tat org.junit.Assert.assertFalse(Assert.java:79)\n\tat org.apache.commons.compress.archivers.tar.TarUtils_verifyCheckSum_TriageGen2Test.testVerifyCheckSum_ExactMatchUnsigned(TarUtils_verifyCheckSum_TriageGen2Test.java:46)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:45)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:42)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:263)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:68)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:47)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:300)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.08,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 46,
+     "message": "null",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError\n\tat org.junit.Assert.fail(Assert.java:92)\n\tat org.junit.Assert.assertTrue(Assert.java:43)\n\tat org.junit.Assert.assertFalse(Assert.java:68)\n\tat org.junit.Assert.assertFalse(Assert.java:79)\n\tat org.apache.commons.compress.archivers.tar.TarUtils_verifyCheckSum_TriageGen2Test.testVerifyCheckSum_ExactMatchUnsigned(TarUtils_verifyCheckSum_TriageGen2Test.java:46)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:45)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:42)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:263)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:68)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:47)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:300)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.096,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 46,
+     "message": "null",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError\n\tat org.junit.Assert.fail(Assert.java:92)\n\tat org.junit.Assert.assertTrue(Assert.java:43)\n\tat org.junit.Assert.assertFalse(Assert.java:68)\n\tat org.junit.Assert.assertFalse(Assert.java:79)\n\tat org.apache.commons.compress.archivers.tar.TarUtils_verifyCheckSum_TriageGen2Test.testVerifyCheckSum_ExactMatchUnsigned(TarUtils_verifyCheckSum_TriageGen2Test.java:46)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:45)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:42)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:263)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:68)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:47)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:300)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.083,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 46,
+     "message": "null",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError\n\tat org.junit.Assert.fail(Assert.java:92)\n\tat org.junit.Assert.assertTrue(Assert.java:43)\n\tat org.junit.Assert.assertFalse(Assert.java:68)\n\tat org.junit.Assert.assertFalse(Assert.java:79)\n\tat org.apache.commons.compress.archivers.tar.TarUtils_verifyCheckSum_TriageGen2Test.testVerifyCheckSum_ExactMatchUnsigned(TarUtils_verifyCheckSum_TriageGen2Test.java:46)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:45)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:42)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:263)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:68)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:47)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:300)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.079,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 46,
+     "message": "null",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError\n\tat org.junit.Assert.fail(Assert.java:92)\n\tat org.junit.Assert.assertTrue(Assert.java:43)\n\tat org.junit.Assert.assertFalse(Assert.java:68)\n\tat org.junit.Assert.assertFalse(Assert.java:79)\n\tat org.apache.commons.compress.archivers.tar.TarUtils_verifyCheckSum_TriageGen2Test.testVerifyCheckSum_ExactMatchUnsigned(TarUtils_verifyCheckSum_TriageGen2Test.java:46)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:45)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:42)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:263)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:68)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:47)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:300)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.069,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 46,
+     "message": "null",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError\n\tat org.junit.Assert.fail(Assert.java:92)\n\tat org.junit.Assert.assertTrue(Assert.java:43)\n\tat org.junit.Assert.assertFalse(Assert.java:68)\n\tat org.junit.Assert.assertFalse(Assert.java:79)\n\tat org.apache.commons.compress.archivers.tar.TarUtils_verifyCheckSum_TriageGen2Test.testVerifyCheckSum_ExactMatchUnsigned(TarUtils_verifyCheckSum_TriageGen2Test.java:46)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:45)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:42)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:263)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:68)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:47)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:300)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.IOException;\nimport java.math.*;\nimport java.math.BigInteger;\nimport java.nio.ByteBuffer;\nimport java.util.*;\nimport org.apache.commons.compress.archivers.zip.ZipEncoding;\nimport org.apache.commons.compress.archivers.zip.ZipEncodingHelper;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class TarUtils_verifyCheckSum_TriageGen2Test {\n\n    // Constants assumed from TarUtils implementation context\n    private static final int CHKSUM_OFFSET = 148;\n    private static final int CHKSUMLEN = 8;\n\n    /**\n     * Helper to create a header of a specific size filled with spaces.\n     */\n    private byte[] createBaseHeader(int size) {\n        byte[] header = new byte[size];\n        for (int i = 0; i < size; i++) {\n            header[i] = ' ';\n        }\n        return header;\n    }\n\n    \n\n    @Test\n    public void testVerifyCheckSum_ExactMatchUnsigned() {\n        // We want storedSum == unsignedSum\n        // Let's pick a small header. \n        // Let header[0] = 1 (0x01). \n        // Let checksum part be '1' (octal 1).\n        // But checksum part is replaced by ' ' in sum calculation.\n        // So unsignedSum = 1 (from index 0) + 32 (from checksum space).\n        // This is hard to balance manually without knowing exact size.\n        \n        // Let's use the logic: storedSum = 0, unsignedSum = 0.\n        // If header is empty.\n        assertFalse(TarUtils.verifyCheckSum(new byte[0]));\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testVerifyCheckSum_StoredSumGreaterThanUnsigned",
+   "runs_b": [
+    {
+     "duration_s": 0.076,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.086,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.082,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.079,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.083,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.079,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.IOException;\nimport java.math.*;\nimport java.math.BigInteger;\nimport java.nio.ByteBuffer;\nimport java.util.*;\nimport org.apache.commons.compress.archivers.zip.ZipEncoding;\nimport org.apache.commons.compress.archivers.zip.ZipEncodingHelper;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class TarUtils_verifyCheckSum_TriageGen2Test {\n\n    // Constants assumed from TarUtils implementation context\n    private static final int CHKSUM_OFFSET = 148;\n    private static final int CHKSUMLEN = 8;\n\n    /**\n     * Helper to create a header of a specific size filled with spaces.\n     */\n    private byte[] createBaseHeader(int size) {\n        byte[] header = new byte[size];\n        for (int i = 0; i < size; i++) {\n            header[i] = ' ';\n        }\n        return header;\n    }\n\n    \n\n    \n\n    @Test\n    public void testVerifyCheckSum_StoredSumGreaterThanUnsigned() {\n        // COMPRESS-177: return storedSum > unsignedSum\n        // To get storedSum > unsignedSum, we need a large octal value.\n        // Let's set checksum to '777777' (octal)\n        // storedSum = 7*8^5 + 7*8^4 + 7*8^3 + 7*8^2 + 7*8^1 + 7 = 262143\n        // The checksum bytes are replaced by ' ' (32) in the sum.\n        // We need unsignedSum to be less than 262143.\n        byte[] header = createBaseHeader(256);\n        header[CHKSUM_OFFSET] = '7';\n        header[CHKSUM_OFFSET + 1] = '7';\n        header[CHKSUM_OFFSET + 2] = '7';\n        header[CHKSUM_OFFSET + 3] = '7';\n        header[CHKSUM_OFFSET + 4] = '7';\n        header[CHKSUM_OFFSET + 5] = '7';\n        \n        // unsignedSum = (256-8)*32 + 8*32 = 256 * 32 = 8192.\n        // storedSum = 262143.\n        // 262143 > 8192 is true.\n        assertTrue(TarUtils.verifyCheckSum(header));\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testVerifyCheckSum_StoredSumEqualsSigned",
+   "runs_b": [
+    {
+     "duration_s": 0.073,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.081,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.096,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.079,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.077,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.074,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.IOException;\nimport java.math.*;\nimport java.math.BigInteger;\nimport java.nio.ByteBuffer;\nimport java.util.*;\nimport org.apache.commons.compress.archivers.zip.ZipEncoding;\nimport org.apache.commons.compress.archivers.zip.ZipEncodingHelper;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class TarUtils_verifyCheckSum_TriageGen2Test {\n\n    // Constants assumed from TarUtils implementation context\n    private static final int CHKSUM_OFFSET = 148;\n    private static final int CHKSUMLEN = 8;\n\n    /**\n     * Helper to create a header of a specific size filled with spaces.\n     */\n    private byte[] createBaseHeader(int size) {\n        byte[] header = new byte[size];\n        for (int i = 0; i < size; i++) {\n            header[i] = ' ';\n        }\n        return header;\n    }\n\n    \n\n    \n\n    \n\n    @Test\n    public void testVerifyCheckSum_StoredSumEqualsSigned() {\n        // signedSum can be different from unsignedSum if bytes are negative.\n        // However, in standard Tar, we use bytes.\n        // If we put a byte with value -1 (0xFF).\n        // unsignedSum += 255. signedSum += -1.\n        // Let's make storedSum = 0.\n        // To make 0 == signedSum, we need signedSum to be 0.\n        // If header is [0x00], unsignedSum = 0, signedSum = 0, storedSum = 0.\n        // But we need to trigger the checksum offset.\n        byte[] header = createBaseHeader(200);\n        // header[CHKSUM_OFFSET] is ' ', so digits = 0.\n        // unsignedSum = 200 * 32 = 6400.\n        // signedSum = 200 * 32 = 6400.\n        // storedSum = 0.\n        // 0 == 6400 (F) || 0 == 6400 (F) || 0 > 6400 (F) -> false.\n        assertFalse(TarUtils.verifyCheckSum(header));\n    }\n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testVerifyCheckSum_OctalDigitsLimit",
+   "runs_b": [
+    {
+     "duration_s": 0.075,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.075,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.077,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.091,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.08,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.077,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.IOException;\nimport java.math.*;\nimport java.math.BigInteger;\nimport java.nio.ByteBuffer;\nimport java.util.*;\nimport org.apache.commons.compress.archivers.zip.ZipEncoding;\nimport org.apache.commons.compress.archivers.zip.ZipEncodingHelper;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class TarUtils_verifyCheckSum_TriageGen2Test {\n\n    // Constants assumed from TarUtils implementation context\n    private static final int CHKSUM_OFFSET = 148;\n    private static final int CHKSUMLEN = 8;\n\n    /**\n     * Helper to create a header of a specific size filled with spaces.\n     */\n    private byte[] createBaseHeader(int size) {\n        byte[] header = new byte[size];\n        for (int i = 0; i < size; i++) {\n            header[i] = ' ';\n        }\n        return header;\n    }\n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testVerifyCheckSum_OctalDigitsLimit() {\n        // Test the 'digits < 6' and 'digits > 0' logic\n        byte[] header = createBaseHeader(200);\n        // Put 7 digits: 1234567\n        header[CHKSUM_OFFSET] = '1';\n        header[CHKSUM_OFFSET + 1] = '2';\n        header[CHKSUM_OFFSET + 2] = '3';\n        header[CHKSUM_OFFSET + 3] = '4';\n        header[CHKSUM_OFFSET + 4] = '5';\n        header[CHKSUM_OFFSET + 5] = '6';\n        header[CHKSUM_OFFSET + 6] = '7';\n        \n        // digits should stop at 6. storedSum = 123456 (octal)\n        // unsignedSum = 200 * 32 = 6400\n        // 123456 (octal) is 42862 (dec).\n        // 42862 > 6400 is true.\n        assertTrue(TarUtils.verifyCheckSum(header));\n    }\n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testVerifyCheckSum_InvalidOctalDigit",
+   "runs_b": [
+    {
+     "duration_s": 0.096,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.069,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.074,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.078,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.082,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.09,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.IOException;\nimport java.math.*;\nimport java.math.BigInteger;\nimport java.nio.ByteBuffer;\nimport java.util.*;\nimport org.apache.commons.compress.archivers.zip.ZipEncoding;\nimport org.apache.commons.compress.archivers.zip.ZipEncodingHelper;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class TarUtils_verifyCheckSum_TriageGen2Test {\n\n    // Constants assumed from TarUtils implementation context\n    private static final int CHKSUM_OFFSET = 148;\n    private static final int CHKSUMLEN = 8;\n\n    /**\n     * Helper to create a header of a specific size filled with spaces.\n     */\n    private byte[] createBaseHeader(int size) {\n        byte[] header = new byte[size];\n        for (int i = 0; i < size; i++) {\n            header[i] = ' ';\n        }\n        return header;\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testVerifyCheckSum_InvalidOctalDigit() {\n        // Test the 'else if (digits > 0) digits = 6' branch\n        byte[] header = createBaseHeader(200);\n        header[CHKSUM_OFFSET] = '1';\n        header[CHKSUM_OFFSET + 1] = '2';\n        header[CHKSUM_OFFSET + 2] = '8'; // Not an octal digit\n        \n        // digits was 2. Now it hits 'else if (digits > 0)', digits becomes 6.\n        // storedSum = 1*8 + 2 = 10.\n        // unsignedSum = 6400.\n        // 10 == 6400 (F) || 10 > 6400 (F) -> false.\n        assertFalse(TarUtils.verifyCheckSum(header));\n    }\n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testVerifyCheckSum_StoredSumEqualsUnsigned",
+   "runs_b": [
+    {
+     "duration_s": 0.081,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.075,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.07,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.07,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.075,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.085,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.IOException;\nimport java.math.*;\nimport java.math.BigInteger;\nimport java.nio.ByteBuffer;\nimport java.util.*;\nimport org.apache.commons.compress.archivers.zip.ZipEncoding;\nimport org.apache.commons.compress.archivers.zip.ZipEncodingHelper;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class TarUtils_verifyCheckSum_TriageGen2Test {\n\n    // Constants assumed from TarUtils implementation context\n    private static final int CHKSUM_OFFSET = 148;\n    private static final int CHKSUMLEN = 8;\n\n    /**\n     * Helper to create a header of a specific size filled with spaces.\n     */\n    private byte[] createBaseHeader(int size) {\n        byte[] header = new byte[size];\n        for (int i = 0; i < size; i++) {\n            header[i] = ' ';\n        }\n        return header;\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testVerifyCheckSum_StoredSumEqualsUnsigned() {\n        // To get storedSum == unsignedSum:\n        // Let header be size 1. offset 0.\n        // header[0] = '1'.\n        // checksum part: i=0 is within [0, 8).\n        // b = '1'. storedSum = 1.\n        // b becomes ' '.\n        // unsignedSum = 32.\n        // 1 == 32 is false.\n        \n        // Let's try to make them equal.\n        // If header is very small.\n        // If header length is 1, CHKSUM_OFFSET = 148. Loop doesn't enter if block.\n        byte[] header = new byte[10];\n        header[0] = 5; // unsignedSum = 5, signedSum = 5, storedSum = 0.\n        assertFalse(TarUtils.verifyCheckSum(header));\n    }\n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testVerifyCheckSum_NegativeBytes",
+   "runs_b": [
+    {
+     "duration_s": 0.082,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 55,
+     "message": "null",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError\n\tat org.junit.Assert.fail(Assert.java:92)\n\tat org.junit.Assert.assertTrue(Assert.java:43)\n\tat org.junit.Assert.assertTrue(Assert.java:54)\n\tat org.apache.commons.compress.archivers.tar.TarUtils_verifyCheckSum_TriageGen2Test.testVerifyCheckSum_NegativeBytes(TarUtils_verifyCheckSum_TriageGen2Test.java:55)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:45)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:42)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:263)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:68)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:47)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:300)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.083,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 55,
+     "message": "null",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError\n\tat org.junit.Assert.fail(Assert.java:92)\n\tat org.junit.Assert.assertTrue(Assert.java:43)\n\tat org.junit.Assert.assertTrue(Assert.java:54)\n\tat org.apache.commons.compress.archivers.tar.TarUtils_verifyCheckSum_TriageGen2Test.testVerifyCheckSum_NegativeBytes(TarUtils_verifyCheckSum_TriageGen2Test.java:55)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:45)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:42)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:263)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:68)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:47)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:300)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.083,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 55,
+     "message": "null",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError\n\tat org.junit.Assert.fail(Assert.java:92)\n\tat org.junit.Assert.assertTrue(Assert.java:43)\n\tat org.junit.Assert.assertTrue(Assert.java:54)\n\tat org.apache.commons.compress.archivers.tar.TarUtils_verifyCheckSum_TriageGen2Test.testVerifyCheckSum_NegativeBytes(TarUtils_verifyCheckSum_TriageGen2Test.java:55)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:45)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:42)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:263)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:68)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:47)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:300)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.068,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 55,
+     "message": "null",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError\n\tat org.junit.Assert.fail(Assert.java:92)\n\tat org.junit.Assert.assertTrue(Assert.java:43)\n\tat org.junit.Assert.assertTrue(Assert.java:54)\n\tat org.apache.commons.compress.archivers.tar.TarUtils_verifyCheckSum_TriageGen2Test.testVerifyCheckSum_NegativeBytes(TarUtils_verifyCheckSum_TriageGen2Test.java:55)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:45)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:42)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:263)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:68)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:47)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:300)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.074,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 55,
+     "message": "null",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError\n\tat org.junit.Assert.fail(Assert.java:92)\n\tat org.junit.Assert.assertTrue(Assert.java:43)\n\tat org.junit.Assert.assertTrue(Assert.java:54)\n\tat org.apache.commons.compress.archivers.tar.TarUtils_verifyCheckSum_TriageGen2Test.testVerifyCheckSum_NegativeBytes(TarUtils_verifyCheckSum_TriageGen2Test.java:55)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:45)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:42)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:263)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:68)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:47)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:300)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.075,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 55,
+     "message": "null",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError\n\tat org.junit.Assert.fail(Assert.java:92)\n\tat org.junit.Assert.assertTrue(Assert.java:43)\n\tat org.junit.Assert.assertTrue(Assert.java:54)\n\tat org.apache.commons.compress.archivers.tar.TarUtils_verifyCheckSum_TriageGen2Test.testVerifyCheckSum_NegativeBytes(TarUtils_verifyCheckSum_TriageGen2Test.java:55)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:45)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:42)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:263)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:68)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:47)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:300)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.IOException;\nimport java.math.*;\nimport java.math.BigInteger;\nimport java.nio.ByteBuffer;\nimport java.util.*;\nimport org.apache.commons.compress.archivers.zip.ZipEncoding;\nimport org.apache.commons.compress.archivers.zip.ZipEncodingHelper;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class TarUtils_verifyCheckSum_TriageGen2Test {\n\n    // Constants assumed from TarUtils implementation context\n    private static final int CHKSUM_OFFSET = 148;\n    private static final int CHKSUMLEN = 8;\n\n    /**\n     * Helper to create a header of a specific size filled with spaces.\n     */\n    private byte[] createBaseHeader(int size) {\n        byte[] header = new byte[size];\n        for (int i = 0; i < size; i++) {\n            header[i] = ' ';\n        }\n        return header;\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testVerifyCheckSum_NegativeBytes() {\n        // Test signedSum vs unsignedSum\n        // If we have a byte 0xFF (-1)\n        // unsignedSum adds 255, signedSum adds -1.\n        byte[] header = new byte[200];\n        for(int i=0; i<200; i++) header[i] = 0; // all zeros\n        // unsignedSum = 0, signedSum = 0, storedSum = 0.\n        // 0 == 0 is true.\n        assertTrue(TarUtils.verifyCheckSum(header));\n        \n        // Put a negative byte\n        header[0] = (byte) 0xFF; \n        // unsignedSum = 255, signedSum = -1, storedSum = 0.\n        // 0 == 255 (F) || 0 == -1 (F) || 0 > 255 (F) -> false.\n        assertFalse(TarUtils.verifyCheckSum(header));\n    }\n}\n"
+  }
+ ],
+ "source_sha256": "e49fc9b372ab1763b94afd4b5eb40b3b06def2834bcfa8ae8b3d966be770cafa",
+ "utc": "2026-11-13T06:51:43Z"
+}

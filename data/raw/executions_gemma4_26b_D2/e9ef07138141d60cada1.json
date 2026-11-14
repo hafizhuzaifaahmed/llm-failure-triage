@@ -1,0 +1,386 @@
+{
+ "candidate_id": "e9ef07138141d60cada1",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testParseOctal_ValidSimple",
+   "testParseOctal_ZeroBufferStart",
+   "testParseOctal_InvalidDigit",
+   "testParseOctal_LengthConstraint",
+   "testParseOctal_LeadingZero",
+   "testParseOctal_UnreachableLoop"
+  ],
+  "nc_both": [],
+  "nc_one_version": [],
+  "passes": 0
+ },
+ "dataset": "D2",
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "Compress_27::org.apache.commons.compress.archivers.tar.TarUtils::parseOctal(byte[],int,int)#m25",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testParseOctal_ValidSimple",
+   "runs_b": [
+    {
+     "duration_s": 0.071,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.084,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.084,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.074,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.074,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.081,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.IOException;\nimport java.math.*;\nimport java.math.BigInteger;\nimport java.nio.ByteBuffer;\nimport java.util.*;\nimport org.apache.commons.compress.archivers.zip.ZipEncoding;\nimport org.apache.commons.compress.archivers.zip.ZipEncodingHelper;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\nimport static org.junit.Assert.fail;\n\n/**\n * Unit tests for TarUtils.parseOctal\n */\npublic class TarUtils_parseOctal_TriageGen1Test {\n\n    @Test\n    public void testParseOctal_ValidSimple() {\n        byte[] buffer = \"000123\".getBytes();\n        // offset 0, length 6\n        // Note: The logic 'int end = offset % length' in the provided code is highly unusual \n        // for a standard parser, but we must test according to the provided implementation.\n        // If offset=0, length=6, end = 0 % 6 = 0.\n        // If end <= start, the loop won't execute.\n        \n        // To make the loop execute with the provided logic:\n        // end must be > start. \n        // Since end = offset % length, and start = offset.\n        // For end > start, (offset % length) > offset. \n        // This only happens if offset is 0 and length > 0. \n        // But if offset is 0, end = 0 % length = 0. So end is NOT > start.\n        \n        // WAIT: Looking at the provided code:\n        // int end = offset % length; \n        // int start = offset;\n        // If offset = 0, end = 0. Loop (start < end) will never run.\n        // If offset = 1, length = 10, end = 1. Loop (start < end) will never run.\n        \n        // However, I must write tests based on the logic provided. \n        // Given the implementation: result will likely always be 0 unless the logic is broken \n        // or there is a specific mathematical condition met.\n        // Let's test the IllegalArgumentException for length < 2.\n        try {\n            TarUtils.parseOctal(new byte[]{0, 0}, 0, 1);\n            fail(\"Should have thrown IllegalArgumentException for length < 2\");\n        } catch (IllegalArgumentException e) {\n            assertEquals(\"Length 1 must be at least 2\", e.getMessage());\n        }\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testParseOctal_ZeroBufferStart",
+   "runs_b": [
+    {
+     "duration_s": 0.083,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.078,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.073,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.069,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.07,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.073,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.IOException;\nimport java.math.*;\nimport java.math.BigInteger;\nimport java.nio.ByteBuffer;\nimport java.util.*;\nimport org.apache.commons.compress.archivers.zip.ZipEncoding;\nimport org.apache.commons.compress.archivers.zip.ZipEncodingHelper;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\nimport static org.junit.Assert.fail;\n\n/**\n * Unit tests for TarUtils.parseOctal\n */\npublic class TarUtils_parseOctal_TriageGen1Test {\n\n    \n\n    @Test\n    public void testParseOctal_ZeroBufferStart() {\n        byte[] buffer = new byte[]{0, '1', '2', '3'};\n        // offset 0, length 4. end = 0 % 4 = 0.\n        // buffer[start] is buffer[0] which is 0.\n        assertEquals(0L, TarUtils.parseOctal(buffer, 0, 4));\n    }\n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testParseOctal_InvalidDigit",
+   "runs_b": [
+    {
+     "duration_s": 0.083,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.078,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.081,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.082,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.079,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.078,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.IOException;\nimport java.math.*;\nimport java.math.BigInteger;\nimport java.nio.ByteBuffer;\nimport java.util.*;\nimport org.apache.commons.compress.archivers.zip.ZipEncoding;\nimport org.apache.commons.compress.archivers.zip.ZipEncodingHelper;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\nimport static org.junit.Assert.fail;\n\n/**\n * Unit tests for TarUtils.parseOctal\n */\npublic class TarUtils_parseOctal_TriageGen1Test {\n\n    \n\n    \n\n    @Test\n    public void testParseOctal_InvalidDigit() {\n        // To enter the loop, we need end > start.\n        // With end = offset % length and start = offset, \n        // the only way end > start is impossible for positive offset.\n        // If offset is 0, end = 0, start = 0. 0 is not < 0.\n        \n        // There might be a bug in the provided source code (offset % length), \n        // but a professional tester tests the code as-is.\n        // If we assume the code meant 'end = offset + length':\n        // But I will test the code provided.\n        \n        // Since the loop 'while (start < end)' can never be entered if end = offset % length \n        // and start = offset (because offset % length is always <= offset for positive length),\n        // the only way to hit the 'IllegalArgumentException' inside the loop is if the loop runs.\n        // The loop only runs if start < end.\n        // This is mathematically impossible for non-negative offset and positive length.\n        \n        // Let's provide tests that cover the branches that ARE reachable.\n        // Reachable branches:\n        // 1. length < 2 throw\n        // 2. buffer[start] == 0 return 0\n        // 3. the loop (if it were possible)\n    }\n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testParseOctal_LengthConstraint",
+   "runs_b": [
+    {
+     "duration_s": 0.07,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.079,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.074,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.077,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.084,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.076,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.IOException;\nimport java.math.*;\nimport java.math.BigInteger;\nimport java.nio.ByteBuffer;\nimport java.util.*;\nimport org.apache.commons.compress.archivers.zip.ZipEncoding;\nimport org.apache.commons.compress.archivers.zip.ZipEncodingHelper;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\nimport static org.junit.Assert.fail;\n\n/**\n * Unit tests for TarUtils.parseOctal\n */\npublic class TarUtils_parseOctal_TriageGen1Test {\n\n    \n\n    \n\n    \n\n    @Test\n    public void testParseOctal_LengthConstraint() {\n        byte[] buffer = new byte[]{1, 2};\n        try {\n            TarUtils.parseOctal(buffer, 0, 1);\n            fail(\"Expected IllegalArgumentException\");\n        } catch (IllegalArgumentException e) {\n            assertEquals(\"Length 1 must be at least 2\", e.getMessage());\n        }\n    }\n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testParseOctal_LeadingZero",
+   "runs_b": [
+    {
+     "duration_s": 0.084,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.087,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.083,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.08,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.074,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.079,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.IOException;\nimport java.math.*;\nimport java.math.BigInteger;\nimport java.nio.ByteBuffer;\nimport java.util.*;\nimport org.apache.commons.compress.archivers.zip.ZipEncoding;\nimport org.apache.commons.compress.archivers.zip.ZipEncodingHelper;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\nimport static org.junit.Assert.fail;\n\n/**\n * Unit tests for TarUtils.parseOctal\n */\npublic class TarUtils_parseOctal_TriageGen1Test {\n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testParseOctal_LeadingZero() {\n        byte[] buffer = new byte[]{0, 1, 2, 3};\n        // start = 0, length = 4 -> end = 0 % 4 = 0.\n        // buffer[0] is 0.\n        assertEquals(0L, TarUtils.parseOctal(buffer, 0, 4));\n    }\n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testParseOctal_UnreachableLoop",
+   "runs_b": [
+    {
+     "duration_s": 0.074,
+     "exception": "java.lang.ArrayIndexOutOfBoundsException",
+     "failing_test_line": 46,
+     "message": "Index -1 out of bounds for length 6",
+     "outcome": "exception",
+     "trace": "java.lang.ArrayIndexOutOfBoundsException: Index -1 out of bounds for length 6\n\tat org.apache.commons.compress.archivers.tar.TarUtils.parseOctal(TarUtils.java:128)\n\tat org.apache.commons.compress.archivers.tar.TarUtils_parseOctal_TriageGen1Test.testParseOctal_UnreachableLoop(TarUtils_parseOctal_TriageGen1Test.java:46)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:160)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:138)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.076,
+     "exception": "java.lang.ArrayIndexOutOfBoundsException",
+     "failing_test_line": 46,
+     "message": "Index -1 out of bounds for length 6",
+     "outcome": "exception",
+     "trace": "java.lang.ArrayIndexOutOfBoundsException: Index -1 out of bounds for length 6\n\tat org.apache.commons.compress.archivers.tar.TarUtils.parseOctal(TarUtils.java:128)\n\tat org.apache.commons.compress.archivers.tar.TarUtils_parseOctal_TriageGen1Test.testParseOctal_UnreachableLoop(TarUtils_parseOctal_TriageGen1Test.java:46)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:160)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:138)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.09,
+     "exception": "java.lang.ArrayIndexOutOfBoundsException",
+     "failing_test_line": 46,
+     "message": "Index -1 out of bounds for length 6",
+     "outcome": "exception",
+     "trace": "java.lang.ArrayIndexOutOfBoundsException: Index -1 out of bounds for length 6\n\tat org.apache.commons.compress.archivers.tar.TarUtils.parseOctal(TarUtils.java:128)\n\tat org.apache.commons.compress.archivers.tar.TarUtils_parseOctal_TriageGen1Test.testParseOctal_UnreachableLoop(TarUtils_parseOctal_TriageGen1Test.java:46)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:160)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:138)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.085,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 46,
+     "message": "expected:<0> but was:<493>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<0> but was:<493>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:743)\n\tat org.junit.Assert.assertEquals(Assert.java:118)\n\tat org.junit.Assert.assertEquals(Assert.java:555)\n\tat org.junit.Assert.assertEquals(Assert.java:542)\n\tat org.apache.commons.compress.archivers.tar.TarUtils_parseOctal_TriageGen1Test.testParseOctal_UnreachableLoop(TarUtils_parseOctal_TriageGen1Test.java:46)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:160)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:138)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.074,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 46,
+     "message": "expected:<0> but was:<493>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<0> but was:<493>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:743)\n\tat org.junit.Assert.assertEquals(Assert.java:118)\n\tat org.junit.Assert.assertEquals(Assert.java:555)\n\tat org.junit.Assert.assertEquals(Assert.java:542)\n\tat org.apache.commons.compress.archivers.tar.TarUtils_parseOctal_TriageGen1Test.testParseOctal_UnreachableLoop(TarUtils_parseOctal_TriageGen1Test.java:46)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:160)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:138)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.087,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 46,
+     "message": "expected:<0> but was:<493>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<0> but was:<493>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:743)\n\tat org.junit.Assert.assertEquals(Assert.java:118)\n\tat org.junit.Assert.assertEquals(Assert.java:555)\n\tat org.junit.Assert.assertEquals(Assert.java:542)\n\tat org.apache.commons.compress.archivers.tar.TarUtils_parseOctal_TriageGen1Test.testParseOctal_UnreachableLoop(TarUtils_parseOctal_TriageGen1Test.java:46)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:160)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:138)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.IOException;\nimport java.math.*;\nimport java.math.BigInteger;\nimport java.nio.ByteBuffer;\nimport java.util.*;\nimport org.apache.commons.compress.archivers.zip.ZipEncoding;\nimport org.apache.commons.compress.archivers.zip.ZipEncodingHelper;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\nimport static org.junit.Assert.fail;\n\n/**\n * Unit tests for TarUtils.parseOctal\n */\npublic class TarUtils_parseOctal_TriageGen1Test {\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    /**\n     * Note: The provided implementation of parseOctal contains a logic error:\n     * 'int end = offset % length;' \n     * In standard parsers, this should be 'int end = offset + length;'.\n     * Because 'offset % length' is always <= 'offset', the condition 'start < end' \n     * (where start = offset) will always be false.\n     * \n     * Therefore, the loop and the digit validation are unreachable.\n     * I will write tests that confirm this behavior.\n     */\n    @Test\n    public void testParseOctal_UnreachableLoop() {\n        byte[] buffer = \"000755\".getBytes();\n        // offset 0, length 6. end = 0 % 6 = 0. Loop doesn't run.\n        assertEquals(0L, TarUtils.parseOctal(buffer, 0, 6));\n        \n        // offset 1, length 6. end = 1 % 6 = 1. Loop doesn't run.\n        assertEquals(0L, TarUtils.parseOctal(buffer, 1, 6));\n    }\n}\n"
+  }
+ ],
+ "mutant_version": "m25",
+ "source_sha256": "510f3cbe6907bb80dfd9f759818da4efcdb0afcf22e10da4db953015fc3ad76a",
+ "utc": "2026-11-03T00:29:01Z"
+}

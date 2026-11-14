@@ -1,0 +1,188 @@
+{
+ "bug_name": "JacksonDatabind_69",
+ "call_sites": [
+  {
+   "line": 323,
+   "lines": [
+    318,
+    319,
+    320,
+    321,
+    322,
+    323,
+    324,
+    325,
+    326,
+    327,
+    328
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java",
+   "snippet": "        _addDeserializerFactoryMethods(ctxt, beanDesc, vchecker, intr, creators, creatorDefs);\n        // constructors only usable on concrete types:\n        if (beanDesc.getType().isConcrete()) {\n            _addDeserializerConstructors(ctxt, beanDesc, vchecker, intr, creators, creatorDefs);\n        }\n        return creators.constructValueInstantiator(config);\n    }\n\n    protected Map<AnnotatedWithParams,BeanPropertyDefinition[]> _findCreatorsFromProperties(DeserializationContext ctxt,\n            BeanDescription beanDesc) throws JsonMappingException\n    {"
+  }
+ ],
+ "class_simple": "CreatorCollector",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Container class for storing information on creators (based on annotations,\n * visibility), to be able to build actual instantiator later on.\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "protected final static int C_DEFAULT",
+  "protected final static int C_STRING",
+  "protected final static int C_INT",
+  "protected final static int C_LONG",
+  "protected final static int C_DOUBLE",
+  "protected final static int C_BOOLEAN",
+  "protected final static int C_DELEGATE",
+  "protected final static int C_PROPS",
+  "protected final static int C_ARRAY_DELEGATE",
+  "protected final static String[] TYPE_DESCS",
+  "final protected BeanDescription _beanDesc",
+  "final protected boolean _canFixAccess",
+  "final protected boolean _forceAccess",
+  "protected final AnnotatedWithParams[] _creators",
+  "protected int _explicitCreators",
+  "protected boolean _hasNonDefaultCreator",
+  "protected SettableBeanProperty[] _delegateArgs",
+  "protected SettableBeanProperty[] _arrayDelegateArgs",
+  "protected SettableBeanProperty[] _propertyBasedArgs",
+  "protected AnnotatedParameter _incompleteParameter"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.deser.impl.CreatorCollector",
+ "focal_id": "JacksonDatabind_69::com.fasterxml.jackson.databind.deser.impl.CreatorCollector::constructValueInstantiator(DeserializationConfig)",
+ "focal_method_name": "constructValueInstantiator",
+ "generations": 3,
+ "impl_B": "public ValueInstantiator constructValueInstantiator(DeserializationConfig config)\n    {\n        final JavaType delegateType = _computeDelegateType(_creators[C_DELEGATE], _delegateArgs);\n        final JavaType arrayDelegateType = _computeDelegateType(_creators[C_ARRAY_DELEGATE], _arrayDelegateArgs);\n        final JavaType type = _beanDesc.getType();\n\n        // Any non-standard creator will prevent; with one exception: int-valued constructor\n        // that standard containers have can be ignored\n        if (!_hasNonDefaultCreator) {\n            /* 10-May-2014, tatu: If we have nothing special, and we are dealing with one\n             *   of \"well-known\" types, can create a non-reflection-based instantiator.\n             */\n            final Class<?> rawType = type.getRawClass();\n            if (rawType == Collection.class || rawType == List.class || rawType == ArrayList.class) {\n                return new Vanilla(Vanilla.TYPE_COLLECTION);\n            }\n            if (rawType == Map.class || rawType == LinkedHashMap.class) {\n                return new Vanilla(Vanilla.TYPE_MAP);\n            }\n            if (rawType == HashMap.class) {\n                return new Vanilla(Vanilla.TYPE_HASH_MAP);\n            }\n        }\n        \n        StdValueInstantiator inst = new StdValueInstantiator(config, type);\n        inst.configureFromObjectSettings(_creators[C_DEFAULT],\n                _creators[C_DELEGATE], delegateType, _delegateArgs,\n                _creators[C_PROPS], _propertyBasedArgs);\n        inst.configureFromArraySettings(_creators[C_ARRAY_DELEGATE], arrayDelegateType, _arrayDelegateArgs);\n        inst.configureFromStringCreator(_creators[C_STRING]);\n        inst.configureFromIntCreator(_creators[C_INT]);\n        inst.configureFromLongCreator(_creators[C_LONG]);\n        inst.configureFromDoubleCreator(_creators[C_DOUBLE]);\n        inst.configureFromBooleanCreator(_creators[C_BOOLEAN]);\n        inst.configureIncompleteParameter(_incompleteParameter);\n        return inst;\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.lang.reflect.Member",
+  "java.util.*",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.cfg.MapperConfig",
+  "com.fasterxml.jackson.databind.deser.CreatorProperty",
+  "com.fasterxml.jackson.databind.deser.SettableBeanProperty",
+  "com.fasterxml.jackson.databind.deser.ValueInstantiator",
+  "com.fasterxml.jackson.databind.deser.std.StdValueInstantiator",
+  "com.fasterxml.jackson.databind.introspect.*",
+  "com.fasterxml.jackson.databind.util.ClassUtil"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.deser.impl",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Method called to indicate the default creator: no-arguments\n     * constructor or factory method that is called to instantiate\n     * a value before populating it with data. Default creator is\n     * only used if no other creators are indicated.\n     * \n     * @param creator Creator method; no-arguments constructor or static\n     *   factory method.\n     */",
+   "name": "setDefaultCreator"
+  },
+  {
+   "javadoc": "",
+   "name": "addStringCreator"
+  },
+  {
+   "javadoc": "",
+   "name": "addIntCreator"
+  },
+  {
+   "javadoc": "",
+   "name": "addLongCreator"
+  },
+  {
+   "javadoc": "",
+   "name": "addDoubleCreator"
+  },
+  {
+   "javadoc": "",
+   "name": "addBooleanCreator"
+  },
+  {
+   "javadoc": "",
+   "name": "addDelegatingCreator"
+  },
+  {
+   "javadoc": "",
+   "name": "addPropertyCreator"
+  },
+  {
+   "javadoc": "",
+   "name": "addIncompeteParameter"
+  },
+  {
+   "javadoc": "",
+   "name": "addStringCreator"
+  },
+  {
+   "javadoc": "",
+   "name": "addIntCreator"
+  },
+  {
+   "javadoc": "",
+   "name": "addLongCreator"
+  },
+  {
+   "javadoc": "",
+   "name": "addDoubleCreator"
+  },
+  {
+   "javadoc": "",
+   "name": "addBooleanCreator"
+  },
+  {
+   "javadoc": "",
+   "name": "addDelegatingCreator"
+  },
+  {
+   "javadoc": "",
+   "name": "addPropertyCreator"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.1\n     */",
+   "name": "hasDefaultCreator"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.6\n     */",
+   "name": "hasDelegatingCreator"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.6\n     */",
+   "name": "hasPropertyBasedCreator"
+  },
+  {
+   "javadoc": "/**\n     * @return True if specified Creator is to be used\n     */",
+   "name": "verifyNonDup"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class CreatorCollector",
+  "constructors": [
+   "public CreatorCollector(BeanDescription beanDesc, MapperConfig<?> config);"
+  ],
+  "focal_signature": "public ValueInstantiator constructValueInstantiator(DeserializationConfig config)",
+  "methods": [
+   "public void setDefaultCreator(AnnotatedWithParams creator);",
+   "public void addStringCreator(AnnotatedWithParams creator, boolean explicit);",
+   "public void addIntCreator(AnnotatedWithParams creator, boolean explicit);",
+   "public void addLongCreator(AnnotatedWithParams creator, boolean explicit);",
+   "public void addDoubleCreator(AnnotatedWithParams creator, boolean explicit);",
+   "public void addBooleanCreator(AnnotatedWithParams creator, boolean explicit);",
+   "public void addDelegatingCreator(AnnotatedWithParams creator, boolean explicit, SettableBeanProperty[] injectables);",
+   "public void addPropertyCreator(AnnotatedWithParams creator, boolean explicit, SettableBeanProperty[] properties);",
+   "public void addIncompeteParameter(AnnotatedParameter parameter);",
+   "// since 2.5 public void addStringCreator(AnnotatedWithParams creator);",
+   "// since 2.5 public void addIntCreator(AnnotatedWithParams creator);",
+   "// since 2.5 public void addLongCreator(AnnotatedWithParams creator);",
+   "// since 2.5 public void addDoubleCreator(AnnotatedWithParams creator);",
+   "// since 2.5 public void addBooleanCreator(AnnotatedWithParams creator);",
+   "// since 2.5 public void addDelegatingCreator(AnnotatedWithParams creator, CreatorProperty[] injectables);",
+   "// since 2.5 public void addPropertyCreator(AnnotatedWithParams creator, CreatorProperty[] properties);",
+   "public boolean hasDefaultCreator();",
+   "public boolean hasDelegatingCreator();",
+   "public boolean hasPropertyBasedCreator();",
+   "protected void verifyNonDup(AnnotatedWithParams newOne, int typeIndex, boolean explicit);"
+  ],
+  "type_signatures": [
+   "public abstract class ValueInstantiator { public abstract String getValueTypeDesc(); public boolean canInstantiate(); public boolean canCreateFromString(); public boolean canCreateFromInt(); public boolean canCreateFromLong(); public boolean canCreateFromDouble(); public boolean canCreateFromBoolean(); public boolean canCreateUsingDefault(); public boolean canCreateUsingDelegate(); public boolean canCreateUsingArrayDelegate(); public boolean canCreateFromObjectWith(); public SettableBeanProperty[] getFromObjectArguments(DeserializationConfig config); public JavaType getDelegateType(DeserializationConfig config); public JavaType getArrayDelegateType(DeserializationConfig config); public Object createUsingDefault(DeserializationContext ctxt) throws IOException; }"
+  ]
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

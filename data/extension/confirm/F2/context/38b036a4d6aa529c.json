@@ -1,0 +1,138 @@
+{
+ "bug_name": "JxPath_13",
+ "call_sites": [
+  {
+   "line": 646,
+   "lines": [
+    641,
+    642,
+    643,
+    644,
+    645,
+    646,
+    647,
+    648,
+    649,
+    650,
+    651
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/JXPathContextReferenceImpl.java",
+   "snippet": "        throw new JXPathFunctionNotFoundException(\n            \"Undefined function: \" + functionName.toString());\n    }\n\n    public void registerNamespace(String prefix, String namespaceURI) {\n        if (namespaceResolver.isSealed()) {\n            namespaceResolver = (NamespaceResolver) namespaceResolver.clone();\n        }\n        namespaceResolver.registerNamespace(prefix, namespaceURI);\n    }\n"
+  },
+  {
+   "line": 665,
+   "lines": [
+    660,
+    661,
+    662,
+    663,
+    664,
+    665,
+    666,
+    667,
+    668,
+    669,
+    670
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/JXPathContextReferenceImpl.java",
+   "snippet": "    public String getPrefix(String namespaceURI) {\n        return namespaceResolver.getPrefix(namespaceURI);\n    }\n\n    public void setNamespaceContextPointer(Pointer pointer) {\n        if (namespaceResolver.isSealed()) {\n            namespaceResolver = (NamespaceResolver) namespaceResolver.clone();\n        }\n        namespaceResolver.setNamespaceContextPointer((NodePointer) pointer);\n    }\n"
+  },
+  {
+   "line": 70,
+   "lines": [
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/NamespaceResolver.java",
+   "snippet": "     * \n     * @param prefix A namespace prefix\n     * @param namespaceURI A URI for that prefix\n     */\n    public synchronized void registerNamespace(String prefix, String namespaceURI) {\n        if (isSealed()) {\n            throw new IllegalStateException(\n                    \"Cannot register namespaces on a sealed NamespaceResolver\");\n        }\n        namespaceMap.put(prefix, namespaceURI);\n        reverseMap = null;"
+  }
+ ],
+ "class_simple": "NamespaceResolver",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Namespace resolver for JXPathContextReferenceImpl.\n *\n * @author Dmitri Plotnikov\n * @version $Revision$ $Date$\n */\npublic",
+  "method_javadoc": "/**\n     * Learn whether this NamespaceResolver has been sealed.\n     * @return\n     */"
+ },
+ "fields": [
+  "final protected NamespaceResolver parent",
+  "protected HashMap namespaceMap",
+  "protected HashMap reverseMap",
+  "protected NodePointer pointer",
+  "private boolean sealed"
+ ],
+ "focal_class": "org.apache.commons.jxpath.ri.NamespaceResolver",
+ "focal_id": "JxPath_13::org.apache.commons.jxpath.ri.NamespaceResolver::isSealed()",
+ "focal_method_name": "isSealed",
+ "generations": 3,
+ "impl_B": "public boolean isSealed() {\n        return sealed;\n    }",
+ "imports": [
+  "java.util.HashMap",
+  "java.util.Iterator",
+  "java.util.Map",
+  "org.apache.commons.jxpath.Pointer",
+  "org.apache.commons.jxpath.ri.model.NodeIterator",
+  "org.apache.commons.jxpath.ri.model.NodePointer"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.jxpath.ri",
+ "project": "JxPath",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Registers a namespace prefix.\n     * \n     * @param prefix A namespace prefix\n     * @param namespaceURI A URI for that prefix\n     */",
+   "name": "registerNamespace"
+  },
+  {
+   "javadoc": "/**\n     * Register a namespace for the expression context.\n     * @param pointer the Pointer to set.\n     */",
+   "name": "setNamespaceContextPointer"
+  },
+  {
+   "javadoc": "/**\n     * Get the namespace context pointer.\n     * @return Pointer\n     */",
+   "name": "getNamespaceContextPointer"
+  },
+  {
+   "javadoc": "/**\n     * Given a prefix, returns a registered namespace URI. If the requested\n     * prefix was not defined explicitly using the registerNamespace method,\n     * JXPathContext will then check the context node to see if the prefix is\n     * defined there. See\n     * {@link #setNamespaceContextPointer(NodePointer) setNamespaceContextPointer}.\n     * \n     * @param prefix The namespace prefix to look up\n     * @return namespace URI or null if the prefix is undefined.\n     */",
+   "name": "getNamespaceURI"
+  },
+  {
+   "javadoc": "/**\n     * Get the prefix associated with the specifed namespace URI.\n     * @param namespaceURI the ns URI to check.\n     * @return String prefix\n     */",
+   "name": "getPrefix"
+  },
+  {
+   "javadoc": "/**\n     * Seal this {@link NamespaceResolver}.\n     */",
+   "name": "seal"
+  },
+  {
+   "javadoc": "/**\n     * {@inheritDoc}\n     * @see java.lang.Object#clone()\n     */",
+   "name": "clone"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class NamespaceResolver implements Cloneable",
+  "constructors": [
+   "public NamespaceResolver();",
+   "public NamespaceResolver(NamespaceResolver parent);"
+  ],
+  "focal_signature": "public boolean isSealed()",
+  "methods": [
+   "public synchronized void registerNamespace(String prefix, String namespaceURI);",
+   "public void setNamespaceContextPointer(NodePointer pointer);",
+   "public Pointer getNamespaceContextPointer();",
+   "public synchronized String getNamespaceURI(String prefix);",
+   "public synchronized String getPrefix(String namespaceURI);",
+   "public void seal();",
+   "public Object clone();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

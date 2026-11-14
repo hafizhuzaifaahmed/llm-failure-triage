@@ -1,0 +1,118 @@
+{
+ "base_focal_id": "Compress_39::org.apache.commons.compress.utils.ArchiveUtils::sanitize(String)",
+ "bug_name": "Compress_39",
+ "call_sites": [
+  {
+   "line": 658,
+   "lines": [
+    653,
+    654,
+    655,
+    656,
+    657,
+    658,
+    659,
+    660,
+    661,
+    662,
+    663
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java",
+   "snippet": "        long remaining = current.entry.getCompressedSize() - current.bytesReadFromStream;\n        while (remaining > 0) {\n            final long n = in.read(buf.array(), 0, (int) Math.min(buf.capacity(), remaining));\n            if (n < 0) {\n                throw new EOFException(\"Truncated ZIP entry: \"\n                                       + ArchiveUtils.sanitize(current.entry.getName()));\n            }\n            count(n);\n            remaining -= n;\n        }\n    }"
+  }
+ ],
+ "class_simple": "ArchiveUtils",
+ "dataset": "D2",
+ "doc": {
+  "class_javadoc": "/**\n * Generic Archive utilities\n */\npublic",
+  "method_javadoc": "/**\n     * Returns a \"sanitized\" version of the string given as arguments,\n     * where sanitized means non-printable characters have been\n     * replaced with a question mark and the outcome is not longer\n     * than 255 chars.\n     *\n     * <p>This method is used to clean up file names when they are\n     * used in exception messages as they may end up in log files or\n     * as console output and may have been read from a corrupted\n     * input.</p>\n     *\n     * @param s the string to sanitize\n     * @return a sanitized version of the argument\n     * @since Compress 1.12\n     */"
+ },
+ "fields": [
+  "private static final int MAX_SANITIZED_NAME_LENGTH"
+ ],
+ "focal_class": "org.apache.commons.compress.utils.ArchiveUtils",
+ "focal_id": "Compress_39::org.apache.commons.compress.utils.ArchiveUtils::sanitize(String)#m109",
+ "focal_method_name": "sanitize",
+ "impl_B": "public static String sanitize(String s) {\n        final char[] cs = s.toCharArray();\n        final char[] chars = cs.length <= MAX_SANITIZED_NAME_LENGTH ? cs : Arrays.copyOf(cs, MAX_SANITIZED_NAME_LENGTH);\n        if (cs.length > MAX_SANITIZED_NAME_LENGTH) {\n            for (int i = MAX_SANITIZED_NAME_LENGTH / 3; i < MAX_SANITIZED_NAME_LENGTH; i++) {\n                chars[i] = '.';\n            }\n        }\n        final int len = chars.length;\n        final StringBuilder sb = new StringBuilder();\n        for (int i = 0; i < len; i++) {\n            final char c = chars[i];\n            if (!Character.isISOControl(c)) {\n                Character.UnicodeBlock block = Character.UnicodeBlock.of(c);\n                if (block != null && block != Character.UnicodeBlock.SPECIALS) {\n                    sb.append(c);\n                    continue;\n                }\n            }\n            sb.append('?');\n        }\n        return sb.toString();\n    }",
+ "imports": [
+  "java.io.UnsupportedEncodingException",
+  "java.util.Arrays",
+  "org.apache.commons.compress.archivers.ArchiveEntry"
+ ],
+ "javadoc_edited_by_fix": false,
+ "mutant_id": 109,
+ "operator": "AOR",
+ "package": "org.apache.commons.compress.utils",
+ "project": "Compress",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Generates a string containing the name, isDirectory setting and size of an entry.\n     * <p>\n     * For example:\n     * <pre>\n     * -    2000 main.c\n     * d     100 testfiles\n     * </pre>\n     * \n     * @param entry the entry\n     * @return the representation of the entry\n     */",
+   "name": "toString"
+  },
+  {
+   "javadoc": "/**\n     * Check if buffer contents matches Ascii String.\n     * \n     * @param expected expected string\n     * @param buffer the buffer\n     * @param offset offset to read from\n     * @param length length of the buffer\n     * @return {@code true} if buffer is the same as the expected string\n     */",
+   "name": "matchAsciiBuffer"
+  },
+  {
+   "javadoc": "/**\n     * Check if buffer contents matches Ascii String.\n     * \n     * @param expected the expected strin\n     * @param buffer the buffer\n     * @return {@code true} if buffer is the same as the expected string\n     */",
+   "name": "matchAsciiBuffer"
+  },
+  {
+   "javadoc": "/**\n     * Convert a string to Ascii bytes.\n     * Used for comparing \"magic\" strings which need to be independent of the default Locale.\n     * \n     * @param inputString string to convert\n     * @return the bytes\n     */",
+   "name": "toAsciiBytes"
+  },
+  {
+   "javadoc": "/**\n     * Convert an input byte array to a String using the ASCII character set.\n     * \n     * @param inputBytes bytes to convert\n     * @return the bytes, interpreted as an Ascii string\n     */",
+   "name": "toAsciiString"
+  },
+  {
+   "javadoc": "/**\n     * Convert an input byte array to a String using the ASCII character set.\n     * \n     * @param inputBytes input byte array\n     * @param offset offset within array\n     * @param length length of array\n     * @return the bytes, interpreted as an Ascii string\n     */",
+   "name": "toAsciiString"
+  },
+  {
+   "javadoc": "/**\n     * Compare byte buffers, optionally ignoring trailing nulls\n     * \n     * @param buffer1 first buffer\n     * @param offset1 first offset\n     * @param length1 first length\n     * @param buffer2 second buffer\n     * @param offset2 second offset\n     * @param length2 second length\n     * @param ignoreTrailingNulls whether to ignore trailing nulls\n     * @return {@code true} if buffer1 and buffer2 have same contents, having regard to trailing nulls\n     */",
+   "name": "isEqual"
+  },
+  {
+   "javadoc": "/**\n     * Compare byte buffers\n     * \n     * @param buffer1 the first buffer\n     * @param offset1 the first offset\n     * @param length1 the first length\n     * @param buffer2 the second buffer\n     * @param offset2 the second offset\n     * @param length2 the second length\n     * @return {@code true} if buffer1 and buffer2 have same contents\n     */",
+   "name": "isEqual"
+  },
+  {
+   "javadoc": "/**\n     * Compare byte buffers\n     * \n     * @param buffer1 the first buffer\n     * @param buffer2 the second buffer\n     * @return {@code true} if buffer1 and buffer2 have same contents\n     */",
+   "name": "isEqual"
+  },
+  {
+   "javadoc": "/**\n     * Compare byte buffers, optionally ignoring trailing nulls\n     * \n     * @param buffer1 the first buffer\n     * @param buffer2 the second buffer \n     * @param ignoreTrailingNulls whether to ignore tariling nulls\n     * @return {@code true} if buffer1 and buffer2 have same contents\n     */",
+   "name": "isEqual"
+  },
+  {
+   "javadoc": "/**\n     * Compare byte buffers, ignoring trailing nulls\n     * \n     * @param buffer1 the first buffer\n     * @param offset1 the first offset\n     * @param length1 the first length\n     * @param buffer2 the second buffer\n     * @param offset2 the second offset\n     * @param length2 the second length\n     * @return {@code true} if buffer1 and buffer2 have same contents, having regard to trailing nulls\n     */",
+   "name": "isEqualWithNull"
+  },
+  {
+   "javadoc": "/**\n     * Returns true if the first N bytes of an array are all zero\n     * \n     * @param a\n     *            The array to check\n     * @param size\n     *            The number of characters to check (not the size of the array)\n     * @return true if the first N bytes are zero\n     */",
+   "name": "isArrayZero"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class ArchiveUtils",
+  "constructors": [],
+  "focal_signature": "public static String sanitize(String s)",
+  "methods": [
+   "public static String toString(final ArchiveEntry entry);",
+   "public static boolean matchAsciiBuffer( final String expected, final byte[] buffer, final int offset, final int length);",
+   "public static boolean matchAsciiBuffer(final String expected, final byte[] buffer);",
+   "public static byte[] toAsciiBytes(final String inputString);",
+   "public static String toAsciiString(final byte[] inputBytes);",
+   "public static String toAsciiString(final byte[] inputBytes, final int offset, final int length);",
+   "public static boolean isEqual( final byte[] buffer1, final int offset1, final int length1, final byte[] buffer2, final int offset2, final int length2, final boolean ignoreTrailingNulls);",
+   "public static boolean isEqual( final byte[] buffer1, final int offset1, final int length1, final byte[] buffer2, final int offset2, final int length2);",
+   "public static boolean isEqual(final byte[] buffer1, final byte[] buffer2 );",
+   "public static boolean isEqual(final byte[] buffer1, final byte[] buffer2, final boolean ignoreTrailingNulls);",
+   "public static boolean isEqualWithNull( final byte[] buffer1, final int offset1, final int length1, final byte[] buffer2, final int offset2, final int length2);",
+   "public static boolean isArrayZero(final byte[] a, final int size);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test"
+}

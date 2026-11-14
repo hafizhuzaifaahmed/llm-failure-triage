@@ -1,0 +1,200 @@
+{
+ "bug_name": "JacksonDatabind_103",
+ "call_sites": [
+  {
+   "line": 133,
+   "lines": [
+    128,
+    129,
+    130,
+    131,
+    132,
+    133,
+    134,
+    135,
+    136,
+    137,
+    138
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/SettableAnyProperty.java",
+   "snippet": "            Object instance, String propName)\n        throws IOException\n    {\n        try {\n            Object key = (_keyDeserializer == null) ? propName\n                    : _keyDeserializer.deserializeKey(propName, ctxt);\n            set(instance, key, deserialize(p, ctxt));\n        } catch (UnresolvedForwardReference reference) {\n            if (!(_valueDeserializer.getObjectIdReader() != null)) {\n                throw JsonMappingException.from(p, \"Unresolved forward reference but no identity info.\", reference);\n            }"
+  },
+  {
+   "line": 278,
+   "lines": [
+    273,
+    274,
+    275,
+    276,
+    277,
+    278,
+    279,
+    280,
+    281,
+    282,
+    283
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/std/EnumMapDeserializer.java",
+   "snippet": "            keyStr = p.getCurrentName();\n        }\n\n        for (; keyStr != null; keyStr = p.nextFieldName()) {\n            // but we need to let key deserializer handle it separately, nonetheless\n            Enum<?> key = (Enum<?>) _keyDeserializer.deserializeKey(keyStr, ctxt);\n            JsonToken t = p.nextToken();\n            if (key == null) {\n                if (!ctxt.isEnabled(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL)) {\n                    return (EnumMap<?,?>) ctxt.handleWeirdStringValue(_enumClass, keyStr,\n                            \"value not one of declared Enum instance names for %s\","
+  },
+  {
+   "line": 375,
+   "lines": [
+    370,
+    371,
+    372,
+    373,
+    374,
+    375,
+    376,
+    377,
+    378,
+    379,
+    380
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/std/EnumMapDeserializer.java",
+   "snippet": "                }\n                continue;\n            }\n            // other property? needs buffering\n            // but we need to let key deserializer handle it separately, nonetheless\n            Enum<?> key = (Enum<?>) _keyDeserializer.deserializeKey(keyName, ctxt);\n            if (key == null) {\n                if (!ctxt.isEnabled(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL)) {\n                    return (EnumMap<?,?>) ctxt.handleWeirdStringValue(_enumClass, keyName,\n                            \"value not one of declared Enum instance names for %s\",\n                            _containerType.getKeyType());"
+  },
+  {
+   "line": 449,
+   "lines": [
+    444,
+    445,
+    446,
+    447,
+    448,
+    449,
+    450,
+    451,
+    452,
+    453,
+    454
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/std/MapDeserializer.java",
+   "snippet": "            }\n            keyStr = p.getCurrentName();\n        }\n        \n        for (; keyStr != null; keyStr = p.nextFieldName()) {\n            Object key = keyDes.deserializeKey(keyStr, ctxt);\n            // And then the value...\n            JsonToken t = p.nextToken();\n            if (_ignorableProperties != null && _ignorableProperties.contains(keyStr)) {\n                p.skipChildren();\n                continue;"
+  },
+  {
+   "line": 588,
+   "lines": [
+    583,
+    584,
+    585,
+    586,
+    587,
+    588,
+    589,
+    590,
+    591,
+    592,
+    593
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/std/MapDeserializer.java",
+   "snippet": "                    return result;\n                }\n                continue;\n            }\n            // other property? needs buffering\n            Object actualKey = _keyDeserializer.deserializeKey(key, ctxt);\n            Object value; \n\n            try {\n                if (t == JsonToken.VALUE_NULL) {\n                    if (_skipNullValues) {"
+  }
+ ],
+ "class_simple": "StdKeyDeserializer",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Default {@link KeyDeserializer} implementation used for most {@link java.util.Map}\n * types Jackson supports.\n * Implemented as \"chameleon\" (or swiss pocket knife) class; not particularly elegant,\n * but helps reduce number of classes and jar size (class metadata adds significant\n * per-class overhead; much more than bytecode).\n */\n@JacksonStdImpl\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "public final static int TYPE_BOOLEAN",
+  "public final static int TYPE_BYTE",
+  "public final static int TYPE_SHORT",
+  "public final static int TYPE_CHAR",
+  "public final static int TYPE_INT",
+  "public final static int TYPE_LONG",
+  "public final static int TYPE_FLOAT",
+  "public final static int TYPE_DOUBLE",
+  "public final static int TYPE_LOCALE",
+  "public final static int TYPE_DATE",
+  "public final static int TYPE_CALENDAR",
+  "public final static int TYPE_UUID",
+  "public final static int TYPE_URI",
+  "public final static int TYPE_URL",
+  "public final static int TYPE_CLASS",
+  "public final static int TYPE_CURRENCY",
+  "public final static int TYPE_BYTE_ARRAY",
+  "final protected int _kind",
+  "final protected Class<?> _keyClass",
+  "protected final FromStringDeserializer<?> _deser"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.deser.std.StdKeyDeserializer",
+ "focal_id": "JacksonDatabind_103::com.fasterxml.jackson.databind.deser.std.StdKeyDeserializer::deserializeKey(String,DeserializationContext)",
+ "focal_method_name": "deserializeKey",
+ "generations": 3,
+ "impl_B": "@Override\n    public Object deserializeKey(String key, DeserializationContext ctxt)\n        throws IOException\n    {\n        if (key == null) { // is this even legal call?\n            return null;\n        }\n        try {\n            Object result = _parse(key, ctxt);\n            if (result != null) {\n                return result;\n            }\n        } catch (Exception re) {\n            return ctxt.handleWeirdKey(_keyClass, key, \"not a valid representation, problem: (%s) %s\",\n                    re.getClass().getName(),\n                    re.getMessage());\n        }\n        if (_keyClass.isEnum() && ctxt.getConfig().isEnabled(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL)) {\n            return null;\n        }\n        return ctxt.handleWeirdKey(_keyClass, key, \"not a valid representation\");\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.lang.reflect.Constructor",
+  "java.lang.reflect.Method",
+  "java.net.MalformedURLException",
+  "java.net.URI",
+  "java.net.URL",
+  "java.util.*",
+  "com.fasterxml.jackson.core.JsonParser",
+  "com.fasterxml.jackson.core.JsonProcessingException",
+  "com.fasterxml.jackson.core.io.NumberInput",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.annotation.JacksonStdImpl",
+  "com.fasterxml.jackson.databind.introspect.AnnotatedMethod",
+  "com.fasterxml.jackson.databind.util.ClassUtil",
+  "com.fasterxml.jackson.databind.util.EnumResolver",
+  "com.fasterxml.jackson.databind.util.TokenBuffer"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.deser.std",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "forType"
+  },
+  {
+   "javadoc": "",
+   "name": "getKeyClass"
+  },
+  {
+   "javadoc": "",
+   "name": "_parse"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_parseInt"
+  },
+  {
+   "javadoc": "",
+   "name": "_parseLong"
+  },
+  {
+   "javadoc": "",
+   "name": "_parseDouble"
+  },
+  {
+   "javadoc": "",
+   "name": "_weirdKey"
+  }
+ ],
+ "sig": {
+  "class_declaration": "@JacksonStdImpl public class StdKeyDeserializer extends KeyDeserializer implements java.io.Serializable",
+  "constructors": [
+   "protected StdKeyDeserializer(int kind, Class<?> cls);",
+   "protected StdKeyDeserializer(int kind, Class<?> cls, FromStringDeserializer<?> deser);"
+  ],
+  "focal_signature": "public Object deserializeKey(String key, DeserializationContext ctxt) throws IOException",
+  "methods": [
+   "public static StdKeyDeserializer forType(Class<?> raw);",
+   "public Class<?> getKeyClass();",
+   "protected Object _parse(String key, DeserializationContext ctxt) throws Exception;",
+   "protected int _parseInt(String key) throws IllegalArgumentException;",
+   "protected long _parseLong(String key) throws IllegalArgumentException;",
+   "protected double _parseDouble(String key) throws IllegalArgumentException;",
+   "protected Object _weirdKey(DeserializationContext ctxt, String key, Exception e) throws IOException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

@@ -1,0 +1,14 @@
+{
+  "assembled": true,
+  "call_key": "04b670039e0d7673aa67952902a416576c473407d41113a415f81ea0d1d21254",
+  "candidate_id": "15c03875a89dbac50d4e",
+  "class_name": "CSVPrinter_CSVPrinter_TriageGen1Test",
+  "dataset": "D1C_F2",
+  "focal_id": "Csv_10::org.apache.commons.csv.CSVPrinter::CSVPrinter(Appendable,CSVFormat)",
+  "generation": 1,
+  "model_returned": "gemma4:26b",
+  "n_tests": 4,
+  "package": "org.apache.commons.csv",
+  "source": "package org.apache.commons.csv;\n\nimport java.io.*;\nimport java.io.Closeable;\nimport java.io.Flushable;\nimport java.io.IOException;\nimport java.io.StringWriter;\nimport java.math.*;\nimport java.sql.ResultSet;\nimport java.sql.SQLException;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\npublic class CSVPrinter_CSVPrinter_TriageGen1Test {\n\n    @Test\n    public void testConstructorValidParameters() throws IOException {\n        Appendable out = new StringWriter();\n        CSVFormat format = CSVFormat.DEFAULT;\n        \n        CSVPrinter printer = new CSVPrinter(out, format);\n        \n        assertEquals(out, printer.getOut());\n        printer.close();\n    }\n\n    @Test(expected = NullPointerException.class)\n    public void testConstructorNullOut() throws IOException {\n        CSVFormat format = CSVFormat.DEFAULT;\n        new CSVPrinter(null, format);\n    }\n\n    @Test(expected = NullPointerException.class)\n    public void testConstructorNullFormat() throws IOException {\n        Appendable out = new StringWriter();\n        new CSVPrinter(out, null);\n    }\n\n    @Test(expected = IllegalArgumentException.class)\n    public void testConstructorInvalidFormat() throws IOException {\n        Appendable out = new StringWriter();\n        // Creating an invalid format that throws exception during validate()\n        // CSVFormat is immutable, so we simulate an invalid state if possible \n        // or use a known edge case if the library allows.\n        // Since we cannot easily force validate() to fail without internal access, \n        // we assume a format that violates constraints would be passed.\n        // For the purpose of coverage on the format.validate() line:\n        CSVFormat invalidFormat = new CSVFormat.Builder()\n                .setDelimiter(null) // This should trigger validation error in validate()\n                .build();\n        \n        new CSVPrinter(out, invalidFormat);\n    }\n}\n",
+  "tranche": "F2"
+}

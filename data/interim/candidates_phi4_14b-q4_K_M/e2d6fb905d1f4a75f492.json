@@ -1,0 +1,12 @@
+{
+  "assembled": true,
+  "call_key": "80a46688025434c0fb2cbfe0e490c240d66fd798f27bc1e29f9872c34f7358e3",
+  "candidate_id": "e2d6fb905d1f4a75f492",
+  "class_name": "JsonWriter_value_TriageGen0Test",
+  "focal_id": "Gson_15::com.google.gson.stream.JsonWriter::value(double)",
+  "generation": 0,
+  "model_returned": "phi4:14b-q4_K_M",
+  "n_tests": 7,
+  "package": "com.google.gson.stream",
+  "source": "package com.google.gson.stream;\n\nimport java.io.*;\nimport java.io.Closeable;\nimport java.io.Flushable;\nimport java.io.IOException;\nimport java.io.StringWriter;\nimport java.io.Writer;\nimport java.math.*;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class JsonWriter_value_TriageGen0Test {\n\n    private StringWriter writer;\n    private JsonWriter jsonWriter;\n\n    @Before\n    public void setUp() {\n        writer = new StringWriter();\n        jsonWriter = new JsonWriter(writer);\n    }\n\n    @Test(expected = IllegalArgumentException.class)\n    public void testValueWithNaN() throws IOException {\n        jsonWriter.value(Double.NaN);\n    }\n\n    @Test(expected = IllegalArgumentException.class)\n    public void testValueWithPositiveInfinity() throws IOException {\n        jsonWriter.value(Double.POSITIVE_INFINITY);\n    }\n\n    @Test(expected = IllegalArgumentException.class)\n    public void testValueWithNegativeInfinity() throws IOException {\n        jsonWriter.value(Double.NEGATIVE_INFINITY);\n    }\n\n    @Test\n    public void testValueWithFiniteNumber() throws IOException {\n        jsonWriter.value(42.0);\n        assertEquals(\"42.0\", writer.toString().trim());\n    }\n\n    @Test\n    public void testValueWithNegativeFiniteNumber() throws IOException {\n        jsonWriter.value(-42.0);\n        assertEquals(\"-42.0\", writer.toString().trim());\n    }\n\n    @Test\n    public void testValueWithZero() throws IOException {\n        jsonWriter.value(0.0);\n        assertEquals(\"0.0\", writer.toString().trim());\n    }\n\n    @Test\n    public void testValueWithDecimal() throws IOException {\n        jsonWriter.value(42.42);\n        assertEquals(\"42.42\", writer.toString().trim());\n    }\n}\n"
+}

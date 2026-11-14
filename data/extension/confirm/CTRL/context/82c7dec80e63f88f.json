@@ -1,0 +1,268 @@
+{
+ "bug_name": "JacksonDatabind_5",
+ "call_sites": [
+  {
+   "line": 703,
+   "lines": [
+    698,
+    699,
+    700,
+    701,
+    702,
+    703,
+    704,
+    705,
+    706,
+    707,
+    708
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/introspect/AnnotatedClass.java",
+   "snippet": "            }\n            // And then... any mix-in overrides?\n            if (_mixInResolver != null) {\n                Class<?> mixin = _mixInResolver.findMixInClassFor(c);\n                if (mixin != null) {\n                    _addFieldMixIns(parent, mixin, fields);\n                }\n            }\n        }\n        return fields;\n    }"
+  }
+ ],
+ "class_simple": "AnnotatedClass",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "",
+  "method_javadoc": "/**\n     * Method called to add field mix-ins from given mix-in class (and its fields)\n     * into already collected actual fields (from introspected classes and their\n     * super-classes)\n     */"
+ },
+ "fields": [
+  "private final static AnnotationMap[] NO_ANNOTATION_MAPS",
+  "final protected Class<?> _class",
+  "final protected List<Class<?>> _superTypes",
+  "final protected AnnotationIntrospector _annotationIntrospector",
+  "final protected MixInResolver _mixInResolver",
+  "final protected Class<?> _primaryMixIn",
+  "protected AnnotationMap _classAnnotations",
+  "protected boolean _creatorsResolved",
+  "protected AnnotatedConstructor _defaultConstructor",
+  "protected List<AnnotatedConstructor> _constructors",
+  "protected List<AnnotatedMethod> _creatorMethods",
+  "protected AnnotatedMethodMap _memberMethods",
+  "protected List<AnnotatedField> _fields"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.introspect.AnnotatedClass",
+ "focal_id": "JacksonDatabind_5::com.fasterxml.jackson.databind.introspect.AnnotatedClass::_addFieldMixIns(Class<?>,Class<?>,Map<String,AnnotatedField>)",
+ "focal_method_name": "_addFieldMixIns",
+ "generations": 3,
+ "impl_B": "protected void _addFieldMixIns(Class<?> targetClass, Class<?> mixInCls,\n            Map<String,AnnotatedField> fields)\n    {\n        List<Class<?>> parents = new ArrayList<Class<?>>();\n        parents.add(mixInCls);\n        ClassUtil.findSuperTypes(mixInCls, targetClass, parents);\n        for (Class<?> mixin : parents) {\n            for (Field mixinField : mixin.getDeclaredFields()) {\n                // there are some dummy things (static, synthetic); better ignore\n                if (!_isIncludableField(mixinField)) {\n                    continue;\n                }\n                String name = mixinField.getName();\n                // anything to mask? (if not, quietly ignore)\n                AnnotatedField maskedField = fields.get(name);\n                if (maskedField != null) {\n                    _addOrOverrideAnnotations(maskedField, mixinField.getDeclaredAnnotations());\n                }\n            }\n        }\n    }",
+ "imports": [
+  "java.lang.annotation.Annotation",
+  "java.lang.reflect.*",
+  "java.util.*",
+  "com.fasterxml.jackson.databind.AnnotationIntrospector",
+  "com.fasterxml.jackson.databind.introspect.ClassIntrospector.MixInResolver",
+  "com.fasterxml.jackson.databind.util.Annotations",
+  "com.fasterxml.jackson.databind.util.ClassUtil"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.introspect",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "withAnnotations"
+  },
+  {
+   "javadoc": "/**\n     * Factory method that instantiates an instance. Returned instance\n     * will only be initialized with class annotations, but not with\n     * any method information.\n     */",
+   "name": "construct"
+  },
+  {
+   "javadoc": "/**\n     * Method similar to {@link #construct}, but that will NOT include\n     * information from supertypes; only class itself and any direct\n     * mix-ins it may have.\n     */",
+   "name": "constructWithoutSuperTypes"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getAnnotated"
+  },
+  {
+   "javadoc": "",
+   "name": "getModifiers"
+  },
+  {
+   "javadoc": "",
+   "name": "getName"
+  },
+  {
+   "javadoc": "",
+   "name": "getAnnotation"
+  },
+  {
+   "javadoc": "",
+   "name": "getGenericType"
+  },
+  {
+   "javadoc": "",
+   "name": "getRawType"
+  },
+  {
+   "javadoc": "",
+   "name": "annotations"
+  },
+  {
+   "javadoc": "",
+   "name": "getAllAnnotations"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getAnnotations"
+  },
+  {
+   "javadoc": "",
+   "name": "hasAnnotations"
+  },
+  {
+   "javadoc": "",
+   "name": "getDefaultConstructor"
+  },
+  {
+   "javadoc": "",
+   "name": "getConstructors"
+  },
+  {
+   "javadoc": "",
+   "name": "getStaticMethods"
+  },
+  {
+   "javadoc": "",
+   "name": "memberMethods"
+  },
+  {
+   "javadoc": "",
+   "name": "getMemberMethodCount"
+  },
+  {
+   "javadoc": "",
+   "name": "findMethod"
+  },
+  {
+   "javadoc": "",
+   "name": "getFieldCount"
+  },
+  {
+   "javadoc": "",
+   "name": "fields"
+  },
+  {
+   "javadoc": "/**\n     * Helper method for adding any mix-in annotations specified\n     * class might have.\n     */",
+   "name": "_addClassMixIns"
+  },
+  {
+   "javadoc": "",
+   "name": "_addClassMixIns"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_addConstructorMixIns"
+  },
+  {
+   "javadoc": "",
+   "name": "_addFactoryMixIns"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_addMemberMethods"
+  },
+  {
+   "javadoc": "",
+   "name": "_addMethodMixIns"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_findFields"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_constructMethod"
+  },
+  {
+   "javadoc": "",
+   "name": "_constructConstructor"
+  },
+  {
+   "javadoc": "",
+   "name": "_constructCreatorMethod"
+  },
+  {
+   "javadoc": "",
+   "name": "_constructField"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_isIncludableMemberMethod"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_collectRelevantAnnotations"
+  },
+  {
+   "javadoc": "",
+   "name": "_collectRelevantAnnotations"
+  },
+  {
+   "javadoc": "/**\n     * @param addParamAnnotations Whether parameter annotations are to be\n     *   added as well\n     */",
+   "name": "_addMixOvers"
+  },
+  {
+   "javadoc": "/**\n     * @param addParamAnnotations Whether parameter annotations are to be\n     *   added as well\n     */",
+   "name": "_addMixOvers"
+  },
+  {
+   "javadoc": "/**\n     * Method that will add annotations from specified source method to target method,\n     * but only if target does not yet have them.\n     */",
+   "name": "_addMixUnders"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "toString"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public final class AnnotatedClass extends Annotated",
+  "constructors": [],
+  "focal_signature": "protected void _addFieldMixIns(Class<?> targetClass, Class<?> mixInCls, Map<String,AnnotatedField> fields)",
+  "methods": [
+   "public AnnotatedClass withAnnotations(AnnotationMap ann);",
+   "public static AnnotatedClass construct(Class<?> cls, AnnotationIntrospector aintr, MixInResolver mir);",
+   "public static AnnotatedClass constructWithoutSuperTypes(Class<?> cls, AnnotationIntrospector aintr, MixInResolver mir);",
+   "public Class<?> getAnnotated();",
+   "public int getModifiers();",
+   "public String getName();",
+   "public <A extends Annotation> A getAnnotation(Class<A> acls);",
+   "public Type getGenericType();",
+   "public Class<?> getRawType();",
+   "public Iterable<Annotation> annotations();",
+   "protected AnnotationMap getAllAnnotations();",
+   "public Annotations getAnnotations();",
+   "public boolean hasAnnotations();",
+   "public AnnotatedConstructor getDefaultConstructor();",
+   "public List<AnnotatedConstructor> getConstructors();",
+   "public List<AnnotatedMethod> getStaticMethods();",
+   "public Iterable<AnnotatedMethod> memberMethods();",
+   "public int getMemberMethodCount();",
+   "public AnnotatedMethod findMethod(String name, Class<?>[] paramTypes);",
+   "public int getFieldCount();",
+   "public Iterable<AnnotatedField> fields();",
+   "protected void _addClassMixIns(AnnotationMap annotations, Class<?> toMask);",
+   "protected void _addClassMixIns(AnnotationMap annotations, Class<?> toMask, Class<?> mixin);",
+   "protected void _addConstructorMixIns(Class<?> mixin);",
+   "protected void _addFactoryMixIns(Class<?> mixin);",
+   "protected void _addMemberMethods(Class<?> cls, AnnotatedMethodMap methods, Class<?> mixInCls, AnnotatedMethodMap mixIns);",
+   "protected void _addMethodMixIns(Class<?> targetClass, AnnotatedMethodMap methods, Class<?> mixInCls, AnnotatedMethodMap mixIns);",
+   "protected Map<String,AnnotatedField> _findFields(Class<?> c, Map<String,AnnotatedField> fields);",
+   "protected AnnotatedMethod _constructMethod(Method m);",
+   "protected AnnotatedConstructor _constructConstructor(Constructor<?> ctor, boolean defaultCtor);",
+   "protected AnnotatedMethod _constructCreatorMethod(Method m);",
+   "protected AnnotatedField _constructField(Field f);",
+   "protected boolean _isIncludableMemberMethod(Method m);",
+   "protected AnnotationMap[] _collectRelevantAnnotations(Annotation[][] anns);",
+   "protected AnnotationMap _collectRelevantAnnotations(Annotation[] anns);",
+   "protected void _addMixOvers(Constructor<?> mixin, AnnotatedConstructor target, boolean addParamAnnotations);",
+   "protected void _addMixOvers(Method mixin, AnnotatedMethod target, boolean addParamAnnotations);",
+   "protected void _addMixUnders(Method src, AnnotatedMethod target);",
+   "public String toString();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

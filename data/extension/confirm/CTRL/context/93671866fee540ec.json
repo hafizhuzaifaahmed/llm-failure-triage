@@ -1,0 +1,157 @@
+{
+ "bug_name": "Math_8",
+ "call_sites": [
+  {
+   "line": 114,
+   "lines": [
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119
+   ],
+   "path": "src/main/java/org/apache/commons/math3/distribution/DiscreteIntegerDistribution.java",
+   "snippet": "     * {@inheritDoc}\n     */\n    public double cumulativeProbability(final int x) {\n        double probability = 0;\n\n        for (final Pair<Integer, Double> sample : innerDistribution.getSamples()) {\n            if (sample.getKey() <= x) {\n                probability += sample.getValue();\n            }\n        }\n"
+  },
+  {
+   "line": 131,
+   "lines": [
+    126,
+    127,
+    128,
+    129,
+    130,
+    131,
+    132,
+    133,
+    134,
+    135,
+    136
+   ],
+   "path": "src/main/java/org/apache/commons/math3/distribution/DiscreteIntegerDistribution.java",
+   "snippet": "     * @return {@code sum(singletons[i] * probabilities[i])}\n     */\n    public double getNumericalMean() {\n        double mean = 0;\n\n        for (final Pair<Integer, Double> sample : innerDistribution.getSamples()) {\n            mean += sample.getValue() * sample.getKey();\n        }\n\n        return mean;\n    }"
+  },
+  {
+   "line": 147,
+   "lines": [
+    142,
+    143,
+    144,
+    145,
+    146,
+    147,
+    148,
+    149,
+    150,
+    151,
+    152
+   ],
+   "path": "src/main/java/org/apache/commons/math3/distribution/DiscreteIntegerDistribution.java",
+   "snippet": "     */\n    public double getNumericalVariance() {\n        double mean = 0;\n        double meanOfSquares = 0;\n\n        for (final Pair<Integer, Double> sample : innerDistribution.getSamples()) {\n            mean += sample.getValue() * sample.getKey();\n            meanOfSquares += sample.getValue() * sample.getKey() * sample.getKey();\n        }\n\n        return meanOfSquares - mean * mean;"
+  },
+  {
+   "line": 164,
+   "lines": [
+    159,
+    160,
+    161,
+    162,
+    163,
+    164,
+    165,
+    166,
+    167,
+    168,
+    169
+   ],
+   "path": "src/main/java/org/apache/commons/math3/distribution/DiscreteIntegerDistribution.java",
+   "snippet": "     *\n     * @return the lowest value with non-zero probability.\n     */\n    public int getSupportLowerBound() {\n        int min = Integer.MAX_VALUE;\n        for (final Pair<Integer, Double> sample : innerDistribution.getSamples()) {\n            if (sample.getKey() < min && sample.getValue() > 0) {\n                min = sample.getKey();\n            }\n        }\n"
+  },
+  {
+   "line": 182,
+   "lines": [
+    177,
+    178,
+    179,
+    180,
+    181,
+    182,
+    183,
+    184,
+    185,
+    186,
+    187
+   ],
+   "path": "src/main/java/org/apache/commons/math3/distribution/DiscreteIntegerDistribution.java",
+   "snippet": "     *\n     * @return the highest value with non-zero probability.\n     */\n    public int getSupportUpperBound() {\n        int max = Integer.MIN_VALUE;\n        for (final Pair<Integer, Double> sample : innerDistribution.getSamples()) {\n            if (sample.getKey() > max && sample.getValue() > 0) {\n                max = sample.getKey();\n            }\n        }\n"
+  }
+ ],
+ "class_simple": "DiscreteDistribution",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Generic implementation of the discrete distribution.\n *\n * @param <T> type of the random variable.\n * @see <a href=\"http://en.wikipedia.org/wiki/Probability_distribution#Discrete_probability_distribution\">Discrete probability distribution (Wikipedia)</a>\n * @see <a href=\"http://mathworld.wolfram.com/DiscreteDistribution.html\">Discrete Distribution (MathWorld)</a>\n * @version $Id: DiscreteDistribution.java 169 2013-03-08 09:02:38Z wydrych $\n */\npublic",
+  "method_javadoc": "/**\n     * Return the definition of probability mass function in the format of list\n     * of pairs.\n     *\n     * @return definition of probability mass function.\n     */"
+ },
+ "fields": [
+  "protected final RandomGenerator random",
+  "private final List<T> singletons",
+  "private final double[] probabilities"
+ ],
+ "focal_class": "org.apache.commons.math3.distribution.DiscreteDistribution",
+ "focal_id": "Math_8::org.apache.commons.math3.distribution.DiscreteDistribution::getSamples()",
+ "focal_method_name": "getSamples",
+ "generations": 3,
+ "impl_B": "public List<Pair<T, Double>> getSamples() {\n        final List<Pair<T, Double>> samples = new ArrayList<Pair<T, Double>>(probabilities.length);\n\n        for (int i = 0; i < probabilities.length; i++) {\n            samples.add(new Pair<T, Double>(singletons.get(i), probabilities[i]));\n        }\n\n        return samples;\n    }",
+ "imports": [
+  "java.util.ArrayList",
+  "java.util.List",
+  "org.apache.commons.math3.exception.MathArithmeticException",
+  "org.apache.commons.math3.exception.MathIllegalArgumentException",
+  "org.apache.commons.math3.exception.NotPositiveException",
+  "org.apache.commons.math3.exception.NotStrictlyPositiveException",
+  "org.apache.commons.math3.exception.util.LocalizedFormats",
+  "org.apache.commons.math3.random.RandomGenerator",
+  "org.apache.commons.math3.random.Well19937c",
+  "org.apache.commons.math3.util.MathArrays",
+  "org.apache.commons.math3.util.Pair"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math3.distribution",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Reseed the random generator used to generate samples.\n     *\n     * @param seed the new seed\n     */",
+   "name": "reseedRandomGenerator"
+  },
+  {
+   "javadoc": "/**\n     * Generate a random value sampled from this distribution.\n     *\n     * @return a random value.\n     */",
+   "name": "sample"
+  },
+  {
+   "javadoc": "/**\n     * Generate a random sample from the distribution.\n     *\n     * @param sampleSize the number of random values to generate.\n     * @return an array representing the random sample.\n     * @throws NotStrictlyPositiveException if {@code sampleSize} is not\n     * positive.\n     */",
+   "name": "sample"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class DiscreteDistribution<T>",
+  "constructors": [
+   "public DiscreteDistribution(final List<Pair<T, Double>> samples) throws NotPositiveException, MathArithmeticException, MathIllegalArgumentException;",
+   "public DiscreteDistribution(final RandomGenerator rng, final List<Pair<T, Double>> samples) throws NotPositiveException, MathArithmeticException, MathIllegalArgumentException;"
+  ],
+  "focal_signature": "public List<Pair<T, Double>> getSamples()",
+  "methods": [
+   "public void reseedRandomGenerator(long seed);",
+   "public T sample();",
+   "public T[] sample(int sampleSize) throws NotStrictlyPositiveException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

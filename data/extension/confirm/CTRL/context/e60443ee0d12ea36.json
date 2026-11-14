@@ -1,0 +1,209 @@
+{
+ "bug_name": "JacksonDatabind_44",
+ "call_sites": [
+  {
+   "line": 1305,
+   "lines": [
+    1300,
+    1301,
+    1302,
+    1303,
+    1304,
+    1305,
+    1306,
+    1307,
+    1308,
+    1309,
+    1310
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java",
+   "snippet": "     *<pre>\n     *  setPropertyInclusion(JsonInclude.Value.construct(incl, Include.ALWAYS));\n     *</pre>\n     */\n    public ObjectMapper setSerializationInclusion(JsonInclude.Include incl) {\n        setPropertyInclusion(JsonInclude.Value.construct(incl, JsonInclude.Include.USE_DEFAULTS));\n        return this;\n    }\n\n    /**\n     * Method for setting default POJO property inclusion strategy for serialization."
+  },
+  {
+   "line": 72,
+   "lines": [
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/PropertyMetadata.java",
+   "snippet": "    /**\n     * @since 2.4 Use variant that takes more arguments.\n     */\n    @Deprecated\n    public static PropertyMetadata construct(boolean req, String desc) {\n        return construct(req, desc, null, null);\n    }\n\n    public static PropertyMetadata construct(boolean req, String desc, Integer index,\n            String defaultValue) {\n        if (desc != null || index != null || defaultValue != null) {"
+  },
+  {
+   "line": 305,
+   "lines": [
+    300,
+    301,
+    302,
+    303,
+    304,
+    305,
+    306,
+    307,
+    308,
+    309,
+    310
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/cfg/MapperConfigBase.java",
+   "snippet": "\n    public T withRootName(String rootName) {\n        if (rootName == null) {\n            return withRootName((PropertyName) null);\n        }\n        return withRootName(PropertyName.construct(rootName));\n    }\n    \n    /**\n     * Method for constructing and returning a new instance with different\n     * {@link SubtypeResolver}"
+  },
+  {
+   "line": 576,
+   "lines": [
+    571,
+    572,
+    573,
+    574,
+    575,
+    576,
+    577,
+    578,
+    579,
+    580,
+    581
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java",
+   "snippet": "            BasicBeanDescription bbd = (BasicBeanDescription) beanDesc;\n            // Also: add properties, to keep error messages complete wrt known properties...\n            for (SettableBeanProperty prop : foundProps) {\n                PropertyName pn = prop.getFullName();\n                if (!bbd.hasProperty(pn)) {\n                    BeanPropertyDefinition newDef = SimpleBeanPropertyDefinition.construct(\n                            ctxt.getConfig(), prop.getMember(), pn);\n                    bbd.addProperty(newDef);\n                }\n            }\n        }"
+  },
+  {
+   "line": 835,
+   "lines": [
+    830,
+    831,
+    832,
+    833,
+    834,
+    835,
+    836,
+    837,
+    838,
+    839,
+    840
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java",
+   "snippet": "                Boolean b = intr.hasRequiredMarker(param);\n                boolean req = (b != null && b.booleanValue());\n                String desc = intr.findPropertyDescription(param);\n                Integer idx = intr.findPropertyIndex(param);\n                String def = intr.findPropertyDefaultValue(param);\n                metadata = PropertyMetadata.construct(req, desc, idx, def);\n            }\n        }\n        // 15-Oct-2015, tatu: Not 100% if context needed; removing it does not make any\n        //    existing unit tests fail. Still seems like the right thing to do.\n        JavaType t0 = beanDesc.resolveType(param.getParameterType());"
+  }
+ ],
+ "class_simple": "SimpleType",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Simple types are defined as anything other than one of recognized\n * container types (arrays, Collections, Maps). For our needs we\n * need not know anything further, since we have no way of dealing\n * with generic types other than Collections and Maps.\n */\npublic",
+  "method_javadoc": "/**\n     * Method that should NOT to be used by application code:\n     * it does NOT properly handle inspection of super-types, so neither parent\n     * Classes nor implemented Interfaces are accessible with resulting type\n     * instance. Instead, please use {@link TypeFactory}'s <code>constructType</code>\n     * methods which handle introspection appropriately.\n     *<p>\n     * Note that prior to 2.7, method usage was not limited and would typically\n     * have worked acceptably: the problem comes from inability to resolve super-type\n     * information, for which {@link TypeFactory} is needed.\n     * \n     * @deprecated Since 2.7\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.type.SimpleType",
+ "focal_id": "JacksonDatabind_44::com.fasterxml.jackson.databind.type.SimpleType::construct(Class<?>)",
+ "focal_method_name": "construct",
+ "generations": 3,
+ "impl_B": "@Deprecated\n    public static SimpleType construct(Class<?> cls)\n    {\n        /* Let's add sanity checks, just to ensure no\n         * Map/Collection entries are constructed\n         */\n        if (Map.class.isAssignableFrom(cls)) {\n            throw new IllegalArgumentException(\"Can not construct SimpleType for a Map (class: \"+cls.getName()+\")\");\n        }\n        if (Collection.class.isAssignableFrom(cls)) {\n            throw new IllegalArgumentException(\"Can not construct SimpleType for a Collection (class: \"+cls.getName()+\")\");\n        }\n        // ... and while we are at it, not array types either\n        if (cls.isArray()) {\n            throw new IllegalArgumentException(\"Can not construct SimpleType for an array (class: \"+cls.getName()+\")\");\n        }\n        TypeBindings b = TypeBindings.emptyBindings();\n        return new SimpleType(cls, b,\n                _buildSuperClass(cls.getSuperclass(), b), null, null, null, false);\n    }",
+ "imports": [
+  "java.util.*",
+  "com.fasterxml.jackson.databind.JavaType"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.type",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Method used by core Jackson classes: NOT to be used by application code:\n     * it does NOT properly handle inspection of super-types, so neither parent\n     * Classes nor implemented Interfaces are accessible with resulting type\n     * instance.\n     *<p>\n     * NOTE: public only because it is called by <code>ObjectMapper</code> which is\n     * not in same package\n     */",
+   "name": "constructUnsafe"
+  },
+  {
+   "javadoc": "",
+   "name": "_narrow"
+  },
+  {
+   "javadoc": "",
+   "name": "withContentType"
+  },
+  {
+   "javadoc": "",
+   "name": "withTypeHandler"
+  },
+  {
+   "javadoc": "",
+   "name": "withContentTypeHandler"
+  },
+  {
+   "javadoc": "",
+   "name": "withValueHandler"
+  },
+  {
+   "javadoc": "",
+   "name": "withContentValueHandler"
+  },
+  {
+   "javadoc": "",
+   "name": "withStaticTyping"
+  },
+  {
+   "javadoc": "",
+   "name": "refine"
+  },
+  {
+   "javadoc": "",
+   "name": "buildCanonicalName"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "isContainerType"
+  },
+  {
+   "javadoc": "",
+   "name": "getErasedSignature"
+  },
+  {
+   "javadoc": "",
+   "name": "getGenericSignature"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "toString"
+  },
+  {
+   "javadoc": "",
+   "name": "equals"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class SimpleType extends TypeBase",
+  "constructors": [
+   "protected SimpleType(Class<?> cls);",
+   "protected SimpleType(Class<?> cls, TypeBindings bindings, JavaType superClass, JavaType[] superInts);",
+   "protected SimpleType(TypeBase base);",
+   "protected SimpleType(Class<?> cls, TypeBindings bindings, JavaType superClass, JavaType[] superInts, Object valueHandler, Object typeHandler, boolean asStatic);",
+   "protected SimpleType(Class<?> cls, TypeBindings bindings, JavaType superClass, JavaType[] superInts, int extraHash, Object valueHandler, Object typeHandler, boolean asStatic);"
+  ],
+  "focal_signature": "public static SimpleType construct(Class<?> cls)",
+  "methods": [
+   "public static SimpleType constructUnsafe(Class<?> raw);",
+   "protected JavaType _narrow(Class<?> subclass);",
+   "public JavaType withContentType(JavaType contentType);",
+   "public SimpleType withTypeHandler(Object h);",
+   "public JavaType withContentTypeHandler(Object h);",
+   "public SimpleType withValueHandler(Object h);",
+   "public SimpleType withContentValueHandler(Object h);",
+   "public SimpleType withStaticTyping();",
+   "public JavaType refine(Class<?> rawType, TypeBindings bindings, JavaType superClass, JavaType[] superInterfaces);",
+   "protected String buildCanonicalName();",
+   "public boolean isContainerType();",
+   "public StringBuilder getErasedSignature(StringBuilder sb);",
+   "public StringBuilder getGenericSignature(StringBuilder sb);",
+   "public String toString();",
+   "public boolean equals(Object o);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

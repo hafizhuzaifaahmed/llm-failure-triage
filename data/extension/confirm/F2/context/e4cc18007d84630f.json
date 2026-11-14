@@ -1,0 +1,458 @@
+{
+ "bug_name": "Compress_38",
+ "call_sites": [
+  {
+   "line": 50,
+   "lines": [
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/ArchiveEntry.java",
+   "snippet": "    /**\n     * Returns true if this entry refers to a directory.\n     * \n     * @return true if this entry refers to a directory.\n     */\n    boolean isDirectory();\n\n    /**\n     * Gets the last modified date of this entry.\n     * \n     * @return the last modified date of this entry."
+  },
+  {
+   "line": 340,
+   "lines": [
+    335,
+    336,
+    337,
+    338,
+    339,
+    340,
+    341,
+    342,
+    343,
+    344,
+    345
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveEntry.java",
+   "snippet": "     * @since 1.1\n     */\n    public CpioArchiveEntry(final short format, final File inputFile,\n                            final String entryName) {\n        this(format, entryName, inputFile.isFile() ? inputFile.length() : 0);\n        if (inputFile.isDirectory()){\n            setMode(C_ISDIR);\n        } else if (inputFile.isFile()){\n            setMode(C_ISREG);\n        } else {\n            throw new IllegalArgumentException(\"Cannot determine type of file \""
+  },
+  {
+   "line": 534,
+   "lines": [
+    529,
+    530,
+    531,
+    532,
+    533,
+    534,
+    535,
+    536,
+    537,
+    538,
+    539
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveEntry.java",
+   "snippet": "     * \n     * @return Returns the number of links.\n     */\n    public long getNumberOfLinks() {\n        return nlink == 0 ?\n            isDirectory() ? 2 : 1\n            : nlink;\n    }\n\n    /**\n     * Get the remote device id."
+  },
+  {
+   "line": 586,
+   "lines": [
+    581,
+    582,
+    583,
+    584,
+    585,
+    586,
+    587,
+    588,
+    589,
+    590,
+    591
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/dump/DumpArchiveEntry.java",
+   "snippet": "     * @param name the name\n     */\n    public final void setName(String name) {\n        this.originalName = name;\n        if (name != null) {\n            if (isDirectory() && !name.endsWith(\"/\")) {\n                name += \"/\";\n            }\n            if (name.startsWith(\"./\")) {\n                name = name.substring(2);\n            }"
+  },
+  {
+   "line": 701,
+   "lines": [
+    696,
+    697,
+    698,
+    699,
+    700,
+    701,
+    702,
+    703,
+    704,
+    705,
+    706
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/dump/DumpArchiveEntry.java",
+   "snippet": "     * Returns the size of the entry.\n     * @return the size\n     */\n    @Override\n    public long getSize() {\n        return isDirectory() ? SIZE_UNKNOWN : size;\n    }\n\n    /**\n     * Returns the size of the entry as read from the archive.\n     */"
+  }
+ ],
+ "class_simple": "TarArchiveEntry",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * This class represents an entry in a Tar archive. It consists\n * of the entry's header, as well as the entry's File. Entries\n * can be instantiated in one of three ways, depending on how\n * they are to be used.\n * <p>\n * TarEntries that are created from the header bytes read from\n * an archive are instantiated with the TarEntry( byte[] )\n * constructor. These entries will be used when extracting from\n * or listing the contents of an archive. These entries have their\n * header filled in using the header bytes. They also set the File\n * to null, since they reference an archive entry not a file.\n * <p>\n * TarEntries that are created from Files that are to be written\n * into an archive are instantiated with the TarEntry( File )\n * constructor. These entries have their header filled in using\n * the File's information. They also keep a reference to the File\n * for convenience when writing entries.\n * <p>\n * Finally, TarEntries can be constructed from nothing but a name.\n * This allows the programmer to construct the entry by hand, for\n * instance when only an InputStream is available for writing to\n * the archive, and the header information is constructed from\n * other information. In this case the header fields are set to\n * defaults and the File is set to null.\n *\n * <p>\n * The C structure for a Tar Entry's header is:\n * <pre>\n * struct header {\n * char name[100];     // TarConstants.NAMELEN    - offset   0\n * char mode[8];       // TarConstants.MODELEN    - offset 100\n * char uid[8];        // TarConstants.UIDLEN     - offset 108\n * char gid[8];        // TarConstants.GIDLEN     - offset 116\n * char size[12];      // TarConstants.SIZELEN    - offset 124\n * char mtime[12];     // TarConstants.MODTIMELEN - offset 136\n * char chksum[8];     // TarConstants.CHKSUMLEN  - offset 148\n * char linkflag[1];   //                         - offset 156\n * char linkname[100]; // TarConstants.NAMELEN    - offset 157\n * The following fields are only present in new-style POSIX tar archives:\n * char magic[6];      // TarConstants.MAGICLEN   - offset 257\n * char version[2];    // TarConstants.VERSIONLEN - offset 263\n * char uname[32];     // TarConstants.UNAMELEN   - offset 265\n * char gname[32];     // TarConstants.GNAMELEN   - offset 297\n * char devmajor[8];   // TarConstants.DEVLEN     - offset 329\n * char devminor[8];   // TarConstants.DEVLEN     - offset 337\n * char prefix[155];   // TarConstants.PREFIXLEN  - offset 345\n * // Used if \"name\" field is not long enough to hold the path\n * char pad[12];       // NULs                    - offset 500\n * } header;\n * All unused bytes are set to null.\n * New-style GNU tar files are slightly different from the above.\n * For values of size larger than 077777777777L (11 7s)\n * or uid and gid larger than 07777777L (7 7s)\n * the sign bit of the first byte is set, and the rest of the\n * field is the binary representation of the number.\n * See TarUtils.parseOctalOrBinary.\n * </pre>\n *\n * <p>\n * The C structure for a old GNU Tar Entry's header is:\n * <pre>\n * struct oldgnu_header {\n * char unused_pad1[345]; // TarConstants.PAD1LEN_GNU       - offset 0\n * char atime[12];        // TarConstants.ATIMELEN_GNU      - offset 345\n * char ctime[12];        // TarConstants.CTIMELEN_GNU      - offset 357\n * char offset[12];       // TarConstants.OFFSETLEN_GNU     - offset 369\n * char longnames[4];     // TarConstants.LONGNAMESLEN_GNU  - offset 381\n * char unused_pad2;      // TarConstants.PAD2LEN_GNU       - offset 385\n * struct sparse sp[4];   // TarConstants.SPARSELEN_GNU     - offset 386\n * char isextended;       // TarConstants.ISEXTENDEDLEN_GNU - offset 482\n * char realsize[12];     // TarConstants.REALSIZELEN_GNU   - offset 483\n * char unused_pad[17];   // TarConstants.PAD3LEN_GNU       - offset 495\n * };\n * </pre>\n * Whereas, \"struct sparse\" is:\n * <pre>\n * struct sparse {\n * char offset[12];   // offset 0\n * char numbytes[12]; // offset 12\n * };\n * </pre>\n *\n * <p>\n * The C structure for a xstar (J\u00f6rg Schilling star) Tar Entry's header is:\n * <pre>\n * struct star_header {\n *  char name[100];\t\t// offset   0\n *  char mode[8];\t\t// offset 100\n *  char uid[8];\t\t// offset 108\n *  char gid[8];\t\t// offset 116\n *  char size[12];\t\t// offset 124\n *  char mtime[12];\t\t// offset 136\n *  char chksum[8];\t\t// offset 148\n *  char typeflag;\t\t// offset 156\n *  char linkname[100];\t\t// offset 157\n *  char magic[6];\t\t// offset 257\n *  char version[2];\t\t// offset 263\n *  char uname[32];\t\t// offset 265\n *  char gname[32];\t\t// offset 297\n *  char devmajor[8];\t\t// offset 329\n *  char devminor[8];\t\t// offset 337\n *  char prefix[131];\t\t// offset 345\n *  char atime[12];             // offset 476\n *  char ctime[12];             // offset 488\n *  char mfill[8];              // offset 500 \n *  char xmagic[4];             // offset 508  \"tar\"\n * };\n * </pre>\n * <p>which is identical to new-style POSIX up to the first 130 bytes of the prefix.</p>\n *\n * @NotThreadSafe\n */\n\npublic",
+  "method_javadoc": "/**\n     * Return whether or not this entry represents a directory.\n     *\n     * @return True if this entry is a directory.\n     */"
+ },
+ "fields": [
+  "private static final TarArchiveEntry[] EMPTY_TAR_ARCHIVE_ENTRIES",
+  "private String name",
+  "private boolean preserveLeadingSlashes",
+  "private int mode",
+  "private long userId",
+  "private long groupId",
+  "private long size",
+  "private long modTime",
+  "private boolean checkSumOK",
+  "private byte linkFlag",
+  "private String linkName",
+  "private String magic",
+  "private String version",
+  "private String userName",
+  "private String groupName",
+  "private int devMajor",
+  "private int devMinor",
+  "private boolean isExtended",
+  "private long realSize",
+  "private boolean paxGNUSparse",
+  "private boolean starSparse",
+  "private final File file",
+  "public static final int MAX_NAMELEN",
+  "public static final int DEFAULT_DIR_MODE",
+  "public static final int DEFAULT_FILE_MODE",
+  "public static final int MILLIS_PER_SECOND"
+ ],
+ "focal_class": "org.apache.commons.compress.archivers.tar.TarArchiveEntry",
+ "focal_id": "Compress_38::org.apache.commons.compress.archivers.tar.TarArchiveEntry::isDirectory()",
+ "focal_method_name": "isDirectory",
+ "generations": 3,
+ "impl_B": "@Override\n    public boolean isDirectory() {\n        if (file != null) {\n            return file.isDirectory();\n        }\n\n        if (linkFlag == LF_DIR) {\n            return true;\n        }\n\n        if (getName().endsWith(\"/\")) {\n            return true;\n        }\n\n        return false;\n    }",
+ "imports": [
+  "java.io.File",
+  "java.io.IOException",
+  "java.util.Date",
+  "java.util.Locale",
+  "java.util.Map",
+  "org.apache.commons.compress.archivers.ArchiveEntry",
+  "org.apache.commons.compress.archivers.zip.ZipEncoding",
+  "org.apache.commons.compress.utils.ArchiveUtils"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.compress.archivers.tar",
+ "project": "Compress",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Determine if the two entries are equal. Equality is determined\n     * by the header names being equal.\n     *\n     * @param it Entry to be checked for equality.\n     * @return True if the entries are equal.\n     */",
+   "name": "equals"
+  },
+  {
+   "javadoc": "/**\n     * Determine if the two entries are equal. Equality is determined\n     * by the header names being equal.\n     *\n     * @param it Entry to be checked for equality.\n     * @return True if the entries are equal.\n     */",
+   "name": "equals"
+  },
+  {
+   "javadoc": "/**\n     * Hashcodes are based on entry names.\n     *\n     * @return the entry hashcode\n     */",
+   "name": "hashCode"
+  },
+  {
+   "javadoc": "/**\n     * Determine if the given entry is a descendant of this entry.\n     * Descendancy is determined by the name of the descendant\n     * starting with this entry's name.\n     *\n     * @param desc Entry to be checked as a descendent of this.\n     * @return True if entry is a descendant of this.\n     */",
+   "name": "isDescendent"
+  },
+  {
+   "javadoc": "/**\n     * Get this entry's name.\n     *\n     * @return This entry's name.\n     */",
+   "name": "getName"
+  },
+  {
+   "javadoc": "/**\n     * Set this entry's name.\n     *\n     * @param name This entry's new name.\n     */",
+   "name": "setName"
+  },
+  {
+   "javadoc": "/**\n     * Set the mode for this entry\n     *\n     * @param mode the mode for this entry\n     */",
+   "name": "setMode"
+  },
+  {
+   "javadoc": "/**\n     * Get this entry's link name.\n     *\n     * @return This entry's link name.\n     */",
+   "name": "getLinkName"
+  },
+  {
+   "javadoc": "/**\n     * Set this entry's link name.\n     *\n     * @param link the link name to use.\n     *\n     * @since 1.1\n     */",
+   "name": "setLinkName"
+  },
+  {
+   "javadoc": "/**\n     * Get this entry's user id.\n     *\n     * @return This entry's user id.\n     * @deprecated use #getLongUserId instead as user ids can be\n     * bigger than {@link Integer#MAX_VALUE}\n     */",
+   "name": "getUserId"
+  },
+  {
+   "javadoc": "/**\n     * Set this entry's user id.\n     *\n     * @param userId This entry's new user id.\n     */",
+   "name": "setUserId"
+  },
+  {
+   "javadoc": "/**\n     * Get this entry's user id.\n     *\n     * @return This entry's user id.\n     * @since 1.10\n     */",
+   "name": "getLongUserId"
+  },
+  {
+   "javadoc": "/**\n     * Set this entry's user id.\n     *\n     * @param userId This entry's new user id.\n     * @since 1.10\n     */",
+   "name": "setUserId"
+  },
+  {
+   "javadoc": "/**\n     * Get this entry's group id.\n     *\n     * @return This entry's group id.\n     * @deprecated use #getLongGroupId instead as group ids can be\n     * bigger than {@link Integer#MAX_VALUE}\n     */",
+   "name": "getGroupId"
+  },
+  {
+   "javadoc": "/**\n     * Set this entry's group id.\n     *\n     * @param groupId This entry's new group id.\n     */",
+   "name": "setGroupId"
+  },
+  {
+   "javadoc": "/**\n     * Get this entry's group id.\n     *\n     * @since 1.10\n     * @return This entry's group id.\n     */",
+   "name": "getLongGroupId"
+  },
+  {
+   "javadoc": "/**\n     * Set this entry's group id.\n     *\n     * @since 1.10\n     * @param groupId This entry's new group id.\n     */",
+   "name": "setGroupId"
+  },
+  {
+   "javadoc": "/**\n     * Get this entry's user name.\n     *\n     * @return This entry's user name.\n     */",
+   "name": "getUserName"
+  },
+  {
+   "javadoc": "/**\n     * Set this entry's user name.\n     *\n     * @param userName This entry's new user name.\n     */",
+   "name": "setUserName"
+  },
+  {
+   "javadoc": "/**\n     * Get this entry's group name.\n     *\n     * @return This entry's group name.\n     */",
+   "name": "getGroupName"
+  },
+  {
+   "javadoc": "/**\n     * Set this entry's group name.\n     *\n     * @param groupName This entry's new group name.\n     */",
+   "name": "setGroupName"
+  },
+  {
+   "javadoc": "/**\n     * Convenience method to set this entry's group and user ids.\n     *\n     * @param userId This entry's new user id.\n     * @param groupId This entry's new group id.\n     */",
+   "name": "setIds"
+  },
+  {
+   "javadoc": "/**\n     * Convenience method to set this entry's group and user names.\n     *\n     * @param userName This entry's new user name.\n     * @param groupName This entry's new group name.\n     */",
+   "name": "setNames"
+  },
+  {
+   "javadoc": "/**\n     * Set this entry's modification time. The parameter passed\n     * to this method is in \"Java time\".\n     *\n     * @param time This entry's new modification time.\n     */",
+   "name": "setModTime"
+  },
+  {
+   "javadoc": "/**\n     * Set this entry's modification time.\n     *\n     * @param time This entry's new modification time.\n     */",
+   "name": "setModTime"
+  },
+  {
+   "javadoc": "/**\n     * Set this entry's modification time.\n     *\n     * @return time This entry's new modification time.\n     */",
+   "name": "getModTime"
+  },
+  {
+   "javadoc": "",
+   "name": "getLastModifiedDate"
+  },
+  {
+   "javadoc": "/**\n     * Get this entry's checksum status.\n     *\n     * @return if the header checksum is reasonably correct\n     * @see TarUtils#verifyCheckSum(byte[])\n     * @since 1.5\n     */",
+   "name": "isCheckSumOK"
+  },
+  {
+   "javadoc": "/**\n     * Get this entry's file.\n     *\n     * @return This entry's file.\n     */",
+   "name": "getFile"
+  },
+  {
+   "javadoc": "/**\n     * Get this entry's mode.\n     *\n     * @return This entry's mode.\n     */",
+   "name": "getMode"
+  },
+  {
+   "javadoc": "/**\n     * Get this entry's file size.\n     *\n     * @return This entry's file size.\n     */",
+   "name": "getSize"
+  },
+  {
+   "javadoc": "/**\n     * Set this entry's file size.\n     *\n     * @param size This entry's new file size.\n     * @throws IllegalArgumentException if the size is &lt; 0.\n     */",
+   "name": "setSize"
+  },
+  {
+   "javadoc": "/**\n     * Get this entry's major device number.\n     *\n     * @return This entry's major device number.\n     * @since 1.4\n     */",
+   "name": "getDevMajor"
+  },
+  {
+   "javadoc": "/**\n     * Set this entry's major device number.\n     *\n     * @param devNo This entry's major device number.\n     * @throws IllegalArgumentException if the devNo is &lt; 0.\n     * @since 1.4\n     */",
+   "name": "setDevMajor"
+  },
+  {
+   "javadoc": "/**\n     * Get this entry's minor device number.\n     *\n     * @return This entry's minor device number.\n     * @since 1.4\n     */",
+   "name": "getDevMinor"
+  },
+  {
+   "javadoc": "/**\n     * Set this entry's minor device number.\n     *\n     * @param devNo This entry's minor device number.\n     * @throws IllegalArgumentException if the devNo is &lt; 0.\n     * @since 1.4\n     */",
+   "name": "setDevMinor"
+  },
+  {
+   "javadoc": "/**\n     * Indicates in case of an oldgnu sparse file if an extension\n     * sparse header follows.\n     *\n     * @return true if an extension oldgnu sparse header follows.\n     */",
+   "name": "isExtended"
+  },
+  {
+   "javadoc": "/**\n     * Get this entry's real file size in case of a sparse file.\n     *\n     * @return This entry's real file size.\n     */",
+   "name": "getRealSize"
+  },
+  {
+   "javadoc": "/**\n     * Indicate if this entry is a GNU sparse block.\n     *\n     * @return true if this is a sparse extension provided by GNU tar\n     */",
+   "name": "isGNUSparse"
+  },
+  {
+   "javadoc": "/**\n     * Indicate if this entry is a GNU or star sparse block using the\n     * oldgnu format.\n     *\n     * @return true if this is a sparse extension provided by GNU tar or star\n     * @since 1.11\n     */",
+   "name": "isOldGNUSparse"
+  },
+  {
+   "javadoc": "/**\n     * Indicate if this entry is a GNU sparse block using one of the\n     * PAX formats.\n     *\n     * @return true if this is a sparse extension provided by GNU tar\n     * @since 1.11\n     */",
+   "name": "isPaxGNUSparse"
+  },
+  {
+   "javadoc": "/**\n     * Indicate if this entry is a star sparse block using PAX headers.\n     *\n     * @return true if this is a sparse extension provided by star\n     * @since 1.11\n     */",
+   "name": "isStarSparse"
+  },
+  {
+   "javadoc": "/**\n     * Indicate if this entry is a GNU long linkname block\n     *\n     * @return true if this is a long name extension provided by GNU tar\n     */",
+   "name": "isGNULongLinkEntry"
+  },
+  {
+   "javadoc": "/**\n     * Indicate if this entry is a GNU long name block\n     *\n     * @return true if this is a long name extension provided by GNU tar\n     */",
+   "name": "isGNULongNameEntry"
+  },
+  {
+   "javadoc": "/**\n     * Check if this is a Pax header.\n     *\n     * @return {@code true} if this is a Pax header.\n     *\n     * @since 1.1\n     *\n     */",
+   "name": "isPaxHeader"
+  },
+  {
+   "javadoc": "/**\n     * Check if this is a Pax header.\n     *\n     * @return {@code true} if this is a Pax header.\n     *\n     * @since 1.1\n     */",
+   "name": "isGlobalPaxHeader"
+  },
+  {
+   "javadoc": "/**\n     * Check if this is a \"normal file\"\n     *\n     * @since 1.2\n     * @return whether this is a \"normal file\"\n     */",
+   "name": "isFile"
+  },
+  {
+   "javadoc": "/**\n     * Check if this is a symbolic link entry.\n     *\n     * @since 1.2\n     * @return whether this is a symbolic link\n     */",
+   "name": "isSymbolicLink"
+  },
+  {
+   "javadoc": "/**\n     * Check if this is a link entry.\n     *\n     * @since 1.2\n     * @return whether this is a link entry\n     */",
+   "name": "isLink"
+  },
+  {
+   "javadoc": "/**\n     * Check if this is a character device entry.\n     *\n     * @since 1.2\n     * @return whether this is a character device\n     */",
+   "name": "isCharacterDevice"
+  },
+  {
+   "javadoc": "/**\n     * Check if this is a block device entry.\n     *\n     * @since 1.2\n     * @return whether this is a block device\n     */",
+   "name": "isBlockDevice"
+  },
+  {
+   "javadoc": "/**\n     * Check if this is a FIFO (pipe) entry.\n     *\n     * @since 1.2\n     * @return whether this is a FIFO entry\n     */",
+   "name": "isFIFO"
+  },
+  {
+   "javadoc": "/**\n     * Check whether this is a sparse entry.\n     *\n     * @return whether this is a sparse entry\n     * @since 1.11\n     */",
+   "name": "isSparse"
+  },
+  {
+   "javadoc": "/**\n     * If this entry represents a file, and the file is a directory, return\n     * an array of TarEntries for this entry's children.\n     *\n     * @return An array of TarEntry's for this entry's children.\n     */",
+   "name": "getDirectoryEntries"
+  },
+  {
+   "javadoc": "/**\n     * Write an entry's header information to a header buffer.\n     *\n     * <p>This method does not use the star/GNU tar/BSD tar extensions.</p>\n     *\n     * @param outbuf The tar entry header buffer to fill in.\n     */",
+   "name": "writeEntryHeader"
+  },
+  {
+   "javadoc": "/**\n     * Write an entry's header information to a header buffer.\n     *\n     * @param outbuf The tar entry header buffer to fill in.\n     * @param encoding encoding to use when writing the file name.\n     * @param starMode whether to use the star/GNU tar/BSD tar\n     * extension for numeric fields if their value doesn't fit in the\n     * maximum size of standard tar archives\n     * @since 1.4\n     * @throws IOException on error\n     */",
+   "name": "writeEntryHeader"
+  },
+  {
+   "javadoc": "/**\n     * Parse an entry's header information from a header buffer.\n     *\n     * @param header The tar entry header buffer to get information from.\n     * @throws IllegalArgumentException if any of the numeric fields have an invalid format\n     */",
+   "name": "parseTarHeader"
+  },
+  {
+   "javadoc": "/**\n     * Parse an entry's header information from a header buffer.\n     *\n     * @param header The tar entry header buffer to get information from.\n     * @param encoding encoding to use for file names\n     * @since 1.4\n     * @throws IllegalArgumentException if any of the numeric fields\n     * have an invalid format\n     * @throws IOException on error\n     */",
+   "name": "parseTarHeader"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class TarArchiveEntry implements TarConstants, ArchiveEntry",
+  "constructors": [
+   "public TarArchiveEntry(final String name);",
+   "public TarArchiveEntry(String name, final boolean preserveLeadingSlashes);",
+   "public TarArchiveEntry(final String name, final byte linkFlag);",
+   "public TarArchiveEntry(final String name, final byte linkFlag, final boolean preserveLeadingSlashes);",
+   "public TarArchiveEntry(final File file);",
+   "public TarArchiveEntry(final File file, final String fileName);",
+   "public TarArchiveEntry(final byte[] headerBuf);",
+   "public TarArchiveEntry(final byte[] headerBuf, final ZipEncoding encoding) throws IOException;"
+  ],
+  "focal_signature": "public boolean isDirectory()",
+  "methods": [
+   "public boolean equals(final TarArchiveEntry it);",
+   "public boolean equals(final Object it);",
+   "public int hashCode();",
+   "public boolean isDescendent(final TarArchiveEntry desc);",
+   "public String getName();",
+   "public void setName(final String name);",
+   "public void setMode(final int mode);",
+   "public String getLinkName();",
+   "public void setLinkName(final String link);",
+   "public int getUserId();",
+   "public void setUserId(final int userId);",
+   "public long getLongUserId();",
+   "public void setUserId(final long userId);",
+   "public int getGroupId();",
+   "public void setGroupId(final int groupId);",
+   "public long getLongGroupId();",
+   "public void setGroupId(final long groupId);",
+   "public String getUserName();",
+   "public void setUserName(final String userName);",
+   "public String getGroupName();",
+   "public void setGroupName(final String groupName);",
+   "public void setIds(final int userId, final int groupId);",
+   "public void setNames(final String userName, final String groupName);",
+   "public void setModTime(final long time);",
+   "public void setModTime(final Date time);",
+   "public Date getModTime();",
+   "public Date getLastModifiedDate();",
+   "public boolean isCheckSumOK();",
+   "public File getFile();",
+   "public int getMode();",
+   "public long getSize();",
+   "public void setSize(final long size);",
+   "public int getDevMajor();",
+   "public void setDevMajor(final int devNo);",
+   "public int getDevMinor();",
+   "public void setDevMinor(final int devNo);",
+   "public boolean isExtended();",
+   "public long getRealSize();",
+   "public boolean isGNUSparse();",
+   "public boolean isOldGNUSparse();",
+   "public boolean isPaxGNUSparse();",
+   "public boolean isStarSparse();",
+   "public boolean isGNULongLinkEntry();",
+   "public boolean isGNULongNameEntry();",
+   "public boolean isPaxHeader();",
+   "public boolean isGlobalPaxHeader();",
+   "public boolean isFile();",
+   "public boolean isSymbolicLink();",
+   "public boolean isLink();",
+   "public boolean isCharacterDevice();",
+   "public boolean isBlockDevice();",
+   "public boolean isFIFO();",
+   "public boolean isSparse();",
+   "public TarArchiveEntry[] getDirectoryEntries();",
+   "public void writeEntryHeader(final byte[] outbuf);",
+   "public void writeEntryHeader(final byte[] outbuf, final ZipEncoding encoding, final boolean starMode) throws IOException;",
+   "public void parseTarHeader(final byte[] header);",
+   "public void parseTarHeader(final byte[] header, final ZipEncoding encoding) throws IOException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

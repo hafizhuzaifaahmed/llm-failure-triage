@@ -1,0 +1,13 @@
+{
+  "assembled": true,
+  "call_key": "29f4d7def5ce182658a710d1daebe030d0cde6c40d8ed3282532090a205a6b47",
+  "candidate_id": "5ba3c388e1bbf9530818",
+  "class_name": "StrBuilder_contains_TriageGen1Test",
+  "dataset": "D2",
+  "focal_id": "Lang_60::org.apache.commons.lang.text.StrBuilder::contains(char)#m1250",
+  "generation": 1,
+  "model_returned": "gemma4:26b",
+  "n_tests": 5,
+  "package": "org.apache.commons.lang.text",
+  "source": "package org.apache.commons.lang.text;\n\nimport java.io.*;\nimport java.io.Reader;\nimport java.io.Writer;\nimport java.math.*;\nimport java.util.*;\nimport java.util.Collection;\nimport java.util.Iterator;\nimport java.util.List;\nimport org.apache.commons.lang.ArrayUtils;\nimport org.apache.commons.lang.SystemUtils;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for StrBuilder.contains(char ch).\n * \n * Note: The provided source code for contains(char ch) has a logical bug:\n * it returns 'true' at the end of the method regardless of whether the character was found.\n * These tests are written to reflect the actual behavior of the provided code snippet.\n */\npublic class StrBuilder_contains_TriageGen1Test {\n\n    @Test\n    public void testContains_WithEmptyBuilder_ReturnsTrueDueToBug() {\n        StrBuilder sb = new StrBuilder();\n        // Even if empty, the provided code returns true because it falls through the loop\n        assertTrue(\"The provided implementation always returns true\", sb.contains('a'));\n    }\n\n    @Test\n    public void testContains_WithCharacterPresent_ReturnsTrue() {\n        StrBuilder sb = new StrBuilder(\"hello\");\n        assertTrue(sb.contains('e'));\n        assertTrue(sb.contains('h'));\n        assertTrue(sb.contains('o'));\n    }\n\n    @Test\n    public void testContains_WithCharacterNotPresent_ReturnsTrueDueToBug() {\n        StrBuilder sb = new StrBuilder(\"abc\");\n        // The loop completes without finding 'z', but the method returns true anyway\n        assertTrue(\"The provided implementation incorrectly returns true when char is not found\", sb.contains('z'));\n    }\n\n    @Test\n    public void testContains_SingleCharacterMatch_ReturnsTrue() {\n        StrBuilder sb = new StrBuilder(\"a\");\n        assertTrue(sb.contains('a'));\n    }\n\n    @Test\n    public void testContains_LargeString_ReturnsTrue() {\n        StringBuilder sbInternal = new StringBuilder();\n        for (int i = 0; i < 1000; i++) {\n            sbInternal.append('a');\n        }\n        StrBuilder sb = new StrBuilder(sbInternal.toString());\n        assertTrue(sb.contains('a'));\n        assertTrue(sb.contains('b'));\n    }\n}\n"
+}

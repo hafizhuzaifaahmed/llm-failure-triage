@@ -1,0 +1,111 @@
+You review a failing unit test of a Java method. The implementation of the method is intentionally not shown.
+Using only the evidence package below, decide whether the failure is caused by a fault in the program under test or by a fault in the test.
+PROGRAM_FAULT: the method under test behaves incorrectly for what the test gives it - it returns a wrong value, throws an exception it should not, or does not do what its name, signature or documentation promise.
+TEST_FAULT: the test is wrong - its expected value is wrong, its set-up is invalid, or it uses the API in a way the interface does not allow.
+Do not presume that the implementation is correct, nor that its documentation is complete or up to date. Decide which side is more likely wrong from all the evidence; do not default to either label.
+
+=== [T] Failing test ===
+[T0] imports: java.io.*; java.io.Closeable; java.io.Flushable; java.io.IOException; java.io.StringWriter; java.io.Writer; java.math.*; java.util.*; org.junit.*; org.junit.Test; static org.junit.Assert.*
+[T1] @Test
+[T2]     public void testNullValue_WithDeferredName_AndSerializeNullsTrue() throws IOException {
+[T3]         StringWriter out = new StringWriter();
+[T4]         JsonWriter writer = new JsonWriter(out);
+[T5]         writer.setSerializeNulls(true);
+[T6] 
+[T7]         // Use name() to set deferredName
+[T8]         writer.name("testKey");
+[T9]         writer.nullValue();
+[T10] 
+[T11]         // Expected: "testKey":null
+[T12]         assertEquals("{\"testKey\":null}", out.toString());
+[T13]     }
+
+=== [F] Failure evidence (program version under test) ===
+[F1] outcome=exception; exception=java.lang.IllegalStateException
+[F2] message: Nesting problem.
+[F3] failing test line: writer.nullValue();
+[F4] at com.google.gson.stream.JsonWriter.beforeName(JsonWriter.java:601)
+[F5] at com.google.gson.stream.JsonWriter.writeDeferredName(JsonWriter.java:401)
+[F6] at com.google.gson.stream.JsonWriter.nullValue(JsonWriter.java:448)
+[F7] at com.google.gson.stream.JsonWriter_nullValue_TriageGen0Test.testNullValue_WithDeferredName_AndSerializeNullsTrue(JsonWriter_nullValue_TriageGen0Test.java:27)
+
+=== [Sig] Interface ===
+[Sig1] public JsonWriter nullValue() throws IOException
+[Sig2] public class JsonWriter implements Closeable, Flushable
+[Sig3] public JsonWriter(Writer out);
+[Sig4] public final void setIndent(String indent);
+[Sig5] public final void setLenient(boolean lenient);
+[Sig6] public boolean isLenient();
+[Sig7] public final void setHtmlSafe(boolean htmlSafe);
+[Sig8] public final boolean isHtmlSafe();
+[Sig9] public final void setSerializeNulls(boolean serializeNulls);
+[Sig10] public final boolean getSerializeNulls();
+[Sig11] public JsonWriter beginArray() throws IOException;
+[Sig12] public JsonWriter endArray() throws IOException;
+[Sig13] public JsonWriter beginObject() throws IOException;
+[Sig14] public JsonWriter endObject() throws IOException;
+[Sig15] public JsonWriter name(String name) throws IOException;
+[Sig16] public JsonWriter value(String value) throws IOException;
+[Sig17] public JsonWriter jsonValue(String value) throws IOException;
+[Sig18] public JsonWriter value(boolean value) throws IOException;
+[Sig19] public JsonWriter value(double value) throws IOException;
+[Sig20] public JsonWriter value(long value) throws IOException;
+[Sig21] public JsonWriter value(Number value) throws IOException;
+[Sig22] public void flush() throws IOException;
+[Sig23] public void close() throws IOException;
+
+=== [Doc] Documentation ===
+[Doc1] /**
+ * Encodes null.
+ *
+ * @return this writer.
+ */
+[Doc2] /**
+ * Writes a JSON ( RFC 7159 )
+ * encoded value to a stream, one token at a time. The stream includes both
+ * literal values (strings, numbers, booleans and nulls) as well as the begin
+ * and end delimiters of objects and arrays.
+ *
+ * Encoding JSON 
+ * To encode your data as JSON, create a new JsonWriter. Each JSON
+ * document must contain one top-level array or object. Call methods on the
+ * writer as you walk the structure's contents, nesting arrays and objects as
+ * necessary:
+ * 
+ * To write arrays , first call #beginArray().
+ * Write each of the array's elements with the appropriate #value
+ * methods or by nesting other arrays and objects. Finally close the array
+ * using #endArray().
+ * To write objects , first call #beginObject().
+ * Write each of the object's properties by alternating calls to
+ * #name with the property's value. Write property values with the
+ * appropriate #value method or by nesting other objects or arrays.
+ * Finally close the object using #endObject().
+ * 
+ *
+ * Example 
+ * Suppose we'd like to encode a stream of messages such as the following: * [
+ * {
+ * "id": 912345678901,
+ * "text": "How do I stream JSON in Java?",
+ * "geo": null,
+ * "user": {
+ * "name": "json_newb",
+ * "followers_count": 41
+ * 
+ * },
+ * {
+ * "id": 912345678902,
+ * "text": "@json_newb just use Js …[truncated]
+
+Return only one JSON object with exactly these fields:
+{"label": "PROGRAM_FAULT" | "TEST_FAULT",
+ "reason_category": "WRONG_EXPECTED_VALUE" | "INVALID_SETUP_OR_API_MISUSE" | "SPEC_VIOLATED_BY_PROGRAM" | "UNEXPECTED_EXCEPTION_IN_PROGRAM" | "OTHER",
+ "evidence_ids": [ids of the evidence items that support the decision, e.g. "T4", "F2", "Doc1"],
+ "summary": "at most 60 words",
+ "confidence": integer 0-100}
+Cite evidence ids. Do not write step-by-step reasoning.
+Examples of the expected form (values are illustrative only):
+{"label": "PROGRAM_FAULT", "reason_category": "SPEC_VIOLATED_BY_PROGRAM", "evidence_ids": ["Doc1", "F2"], "summary": "The documented result for this input is 3 but the method returned 4.", "confidence": 70}
+{"label": "TEST_FAULT", "reason_category": "WRONG_EXPECTED_VALUE", "evidence_ids": ["T3", "F2"], "summary": "The assertion expects 4 but the documented result is 3; the expectation is wrong.", "confidence": 70}
+Keep the summary to one or two short sentences and end the JSON object immediately after the confidence value.

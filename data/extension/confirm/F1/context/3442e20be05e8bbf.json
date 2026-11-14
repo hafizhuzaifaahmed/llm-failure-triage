@@ -1,0 +1,163 @@
+{
+ "bug_name": "Math_11",
+ "call_sites": [
+  {
+   "line": 97,
+   "lines": [
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102
+   ],
+   "path": "src/main/java/org/apache/commons/math3/distribution/ChiSquaredDistribution.java",
+   "snippet": "        return gamma.getShape() * 2.0;\n    }\n\n    /** {@inheritDoc} */\n    public double density(double x) {\n        return gamma.density(x);\n    }\n\n    /** {@inheritDoc} */\n    public double cumulativeProbability(double x)  {\n        return gamma.cumulativeProbability(x);"
+  },
+  {
+   "line": 102,
+   "lines": [
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107
+   ],
+   "path": "src/main/java/org/apache/commons/math3/distribution/MixtureMultivariateRealDistribution.java",
+   "snippet": "\n    /** {@inheritDoc} */\n    public double density(final double[] values) {\n        double p = 0;\n        for (int i = 0; i < weight.length; i++) {\n            p += weight[i] * distribution.get(i).density(values);\n        }\n        return p;\n    }\n\n    /** {@inheritDoc} */"
+  },
+  {
+   "line": 43,
+   "lines": [
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48
+   ],
+   "path": "src/main/java/org/apache/commons/math3/distribution/MultivariateRealDistribution.java",
+   "snippet": "     * the limit inferior or limit superior of the difference quotient.\n     *\n     * @param x Point at which the PDF is evaluated.\n     * @return the value of the probability density function at point {@code x}.\n     */\n    double density(double[] x);\n\n    /**\n     * Reseeds the random generator used to generate samples.\n     *\n     * @param seed Seed with which to initialize the random number generator."
+  },
+  {
+   "line": 52,
+   "lines": [
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57
+   ],
+   "path": "src/main/java/org/apache/commons/math3/distribution/RealDistribution.java",
+   "snippet": "     * difference quotient.\n     *\n     * @param x the point at which the PDF is evaluated\n     * @return the value of the probability density function at point {@code x}\n     */\n    double density(double x);\n\n    /**\n     * For a random variable {@code X} whose values are distributed according\n     * to this distribution, this method returns {@code P(X <= x)}. In other\n     * words, this method represents the (cumulative) distribution function"
+  },
+  {
+   "line": 622,
+   "lines": [
+    617,
+    618,
+    619,
+    620,
+    621,
+    622,
+    623,
+    624,
+    625,
+    626,
+    627
+   ],
+   "path": "src/main/java/org/apache/commons/math3/random/EmpiricalDistribution.java",
+   "snippet": "        if (x < min || x > max) {\n            return 0d;\n        }\n        final int binIndex = findBin(x);\n        final RealDistribution kernel = getKernel(binStats.get(binIndex));\n        return kernel.density(x) * pB(binIndex) / kB(binIndex);\n    }\n\n    /**\n     * {@inheritDoc}\n     *"
+  }
+ ],
+ "class_simple": "MultivariateNormalDistribution",
+ "dataset": "D1C_F1",
+ "doc": {
+  "class_javadoc": "/**\n * Implementation of the multivariate normal (Gaussian) distribution.\n *\n * @see <a href=\"http://en.wikipedia.org/wiki/Multivariate_normal_distribution\">\n * Multivariate normal distribution (Wikipedia)</a>\n * @see <a href=\"http://mathworld.wolfram.com/MultivariateNormalDistribution.html\">\n * Multivariate normal distribution (MathWorld)</a>\n *\n * @version $Id$\n * @since 3.1\n */\npublic",
+  "method_javadoc": "/** {@inheritDoc} */"
+ },
+ "fields": [
+  "private final double[] means",
+  "private final RealMatrix covarianceMatrix",
+  "private final RealMatrix covarianceMatrixInverse",
+  "private final double covarianceMatrixDeterminant",
+  "private final RealMatrix samplingMatrix"
+ ],
+ "focal_class": "org.apache.commons.math3.distribution.MultivariateNormalDistribution",
+ "focal_id": "Math_11::org.apache.commons.math3.distribution.MultivariateNormalDistribution::density(double[])",
+ "focal_method_name": "density",
+ "generations": 6,
+ "impl_B": "public double density(final double[] vals) throws DimensionMismatchException {\n        final int dim = getDimension();\n        if (vals.length != dim) {\n            throw new DimensionMismatchException(vals.length, dim);\n        }\n\n        return FastMath.pow(2 * FastMath.PI, -dim / 2) *\n            FastMath.pow(covarianceMatrixDeterminant, -0.5) *\n            getExponentTerm(vals);\n    }",
+ "imports": [
+  "org.apache.commons.math3.exception.DimensionMismatchException",
+  "org.apache.commons.math3.linear.Array2DRowRealMatrix",
+  "org.apache.commons.math3.linear.EigenDecomposition",
+  "org.apache.commons.math3.linear.NonPositiveDefiniteMatrixException",
+  "org.apache.commons.math3.linear.RealMatrix",
+  "org.apache.commons.math3.linear.SingularMatrixException",
+  "org.apache.commons.math3.random.RandomGenerator",
+  "org.apache.commons.math3.random.Well19937c",
+  "org.apache.commons.math3.util.FastMath",
+  "org.apache.commons.math3.util.MathArrays"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math3.distribution",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Gets the mean vector.\n     *\n     * @return the mean vector.\n     */",
+   "name": "getMeans"
+  },
+  {
+   "javadoc": "/**\n     * Gets the covariance matrix.\n     *\n     * @return the covariance matrix.\n     */",
+   "name": "getCovariances"
+  },
+  {
+   "javadoc": "/**\n     * Gets the square root of each element on the diagonal of the covariance\n     * matrix.\n     *\n     * @return the standard deviations.\n     */",
+   "name": "getStandardDeviations"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "sample"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class MultivariateNormalDistribution extends AbstractMultivariateRealDistribution",
+  "constructors": [
+   "public MultivariateNormalDistribution(final double[] means, final double[][] covariances) throws SingularMatrixException, DimensionMismatchException, NonPositiveDefiniteMatrixException;",
+   "public MultivariateNormalDistribution(RandomGenerator rng, final double[] means, final double[][] covariances) throws SingularMatrixException, DimensionMismatchException, NonPositiveDefiniteMatrixException;"
+  ],
+  "focal_signature": "public double density(final double[] vals) throws DimensionMismatchException",
+  "methods": [
+   "public double[] getMeans();",
+   "public RealMatrix getCovariances();",
+   "public double[] getStandardDeviations();",
+   "public double[] sample();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F1"
+}

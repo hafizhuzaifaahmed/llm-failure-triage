@@ -1,0 +1,563 @@
+{
+ "candidate_id": "49f00389a01885cab57c",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testRead_WhenClosed",
+   "testRead_WhenFinishedOrNullEntry",
+   "testRead_InvalidBufferIndices",
+   "testRead_NegativeLength",
+   "testRead_OverflowLength",
+   "testRead_DeflatedEntry",
+   "testRead_StoredEntry",
+   "testRead_EndOfStreamStored",
+   "testRead_TruncatedZip"
+  ],
+  "nc_both": [],
+  "nc_one_version": [],
+  "passes": 0
+ },
+ "dataset": "D2",
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "Compress_5::org.apache.commons.compress.archivers.zip.ZipArchiveInputStream::read(byte[],int,int)#m189",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_WhenClosed",
+   "runs_b": [
+    {
+     "duration_s": 0.086,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.095,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.095,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.078,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.08,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.081,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport java.util.zip.ZipOutputStream;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_read_TriageGen0Test {\n\n    @Test(expected = IOException.class)\n    public void testRead_WhenClosed() throws IOException {\n        ByteArrayInputStream bais = new ByteArrayInputStream(new byte[0]);\n        ZipArchiveInputStream zais = new ZipArchiveInputStream(bais);\n        zais.close();\n        zais.read(new byte[10], 0, 10);\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    private byte[] createZipWithEntry(String name, byte[] content) throws IOException {\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            ZipEntry entry = new ZipEntry(name);\n            zos.putNextEntry(entry);\n            zos.write(content);\n            zos.closeEntry();\n        }\n        return baos.toByteArray();\n    }\n\n    private byte[] createStoredZipWithEntry(String name, byte[] content) throws IOException {\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            ZipEntry entry = new ZipEntry(name);\n            entry.setMethod(ZipEntry.STORED);\n            entry.setSize(content.length);\n            entry.setCrc(calculateCRC(content));\n            zos.putNextEntry(entry);\n            zos.write(content);\n            zos.closeEntry();\n        }\n        return baos.toByteArray();\n    }\n\n    private long calculateCRC(byte[] content) {\n        CRC32 crc = new CRC32();\n        crc.update(content);\n        return crc.getValue();\n    }\n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_WhenFinishedOrNullEntry",
+   "runs_b": [
+    {
+     "duration_s": 0.085,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.095,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.097,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.092,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.083,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.089,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport java.util.zip.ZipOutputStream;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_read_TriageGen0Test {\n\n    \n\n    @Test\n    public void testRead_WhenFinishedOrNullEntry() throws IOException {\n        ByteArrayInputStream bais = new ByteArrayInputStream(new byte[0]);\n        ZipArchiveInputStream zais = new ZipArchiveInputStream(bais);\n        \n        // current is null initially\n        Assert.assertEquals(-1, zais.read(new byte[10], 0, 10));\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    private byte[] createZipWithEntry(String name, byte[] content) throws IOException {\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            ZipEntry entry = new ZipEntry(name);\n            zos.putNextEntry(entry);\n            zos.write(content);\n            zos.closeEntry();\n        }\n        return baos.toByteArray();\n    }\n\n    private byte[] createStoredZipWithEntry(String name, byte[] content) throws IOException {\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            ZipEntry entry = new ZipEntry(name);\n            entry.setMethod(ZipEntry.STORED);\n            entry.setSize(content.length);\n            entry.setCrc(calculateCRC(content));\n            zos.putNextEntry(entry);\n            zos.write(content);\n            zos.closeEntry();\n        }\n        return baos.toByteArray();\n    }\n\n    private long calculateCRC(byte[] content) {\n        CRC32 crc = new CRC32();\n        crc.update(content);\n        return crc.getValue();\n    }\n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_InvalidBufferIndices",
+   "runs_b": [
+    {
+     "duration_s": 0.12,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.111,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.1,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.121,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.116,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.12,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport java.util.zip.ZipOutputStream;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_read_TriageGen0Test {\n\n    \n\n    \n\n    @Test(expected = ArrayIndexOutOfBoundsException.class)\n    public void testRead_InvalidBufferIndices() throws IOException {\n        byte[] content = createZipWithEntry(\"test\", \"hello\".getBytes());\n        ZipArchiveInputStream zais = new ZipArchiveInputStream(new ByteArrayInputStream(content));\n        zais.getNextZipEntry();\n        \n        // start > buffer.length\n        zais.read(new byte[5], 10, 1);\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    private byte[] createZipWithEntry(String name, byte[] content) throws IOException {\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            ZipEntry entry = new ZipEntry(name);\n            zos.putNextEntry(entry);\n            zos.write(content);\n            zos.closeEntry();\n        }\n        return baos.toByteArray();\n    }\n\n    private byte[] createStoredZipWithEntry(String name, byte[] content) throws IOException {\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            ZipEntry entry = new ZipEntry(name);\n            entry.setMethod(ZipEntry.STORED);\n            entry.setSize(content.length);\n            entry.setCrc(calculateCRC(content));\n            zos.putNextEntry(entry);\n            zos.write(content);\n            zos.closeEntry();\n        }\n        return baos.toByteArray();\n    }\n\n    private long calculateCRC(byte[] content) {\n        CRC32 crc = new CRC32();\n        crc.update(content);\n        return crc.getValue();\n    }\n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_NegativeLength",
+   "runs_b": [
+    {
+     "duration_s": 0.121,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.12,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.116,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.12,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.131,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.118,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport java.util.zip.ZipOutputStream;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_read_TriageGen0Test {\n\n    \n\n    \n\n    \n\n    @Test(expected = ArrayIndexOutOfBoundsException.class)\n    public void testRead_NegativeLength() throws IOException {\n        byte[] content = createZipWithEntry(\"test\", \"hello\".getBytes());\n        ZipArchiveInputStream zais = new ZipArchiveInputStream(new ByteArrayInputStream(content));\n        zais.getNextZipEntry();\n        \n        zais.read(new byte[5], 0, -1);\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    private byte[] createZipWithEntry(String name, byte[] content) throws IOException {\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            ZipEntry entry = new ZipEntry(name);\n            zos.putNextEntry(entry);\n            zos.write(content);\n            zos.closeEntry();\n        }\n        return baos.toByteArray();\n    }\n\n    private byte[] createStoredZipWithEntry(String name, byte[] content) throws IOException {\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            ZipEntry entry = new ZipEntry(name);\n            entry.setMethod(ZipEntry.STORED);\n            entry.setSize(content.length);\n            entry.setCrc(calculateCRC(content));\n            zos.putNextEntry(entry);\n            zos.write(content);\n            zos.closeEntry();\n        }\n        return baos.toByteArray();\n    }\n\n    private long calculateCRC(byte[] content) {\n        CRC32 crc = new CRC32();\n        crc.update(content);\n        return crc.getValue();\n    }\n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_OverflowLength",
+   "runs_b": [
+    {
+     "duration_s": 0.114,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.111,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.135,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.117,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.116,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.112,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport java.util.zip.ZipOutputStream;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_read_TriageGen0Test {\n\n    \n\n    \n\n    \n\n    \n\n    @Test(expected = ArrayIndexOutOfBoundsException.class)\n    public void testRead_OverflowLength() throws IOException {\n        byte[] content = createZipWithEntry(\"test\", \"hello\".getBytes());\n        ZipArchiveInputStream zais = new ZipArchiveInputStream(new ByteArrayInputStream(content));\n        zais.getNextZipEntry();\n        \n        // start + length > buffer.length\n        zais.read(new byte[5], 2, 4);\n    }\n\n    \n\n    \n\n    \n\n    \n\n    private byte[] createZipWithEntry(String name, byte[] content) throws IOException {\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            ZipEntry entry = new ZipEntry(name);\n            zos.putNextEntry(entry);\n            zos.write(content);\n            zos.closeEntry();\n        }\n        return baos.toByteArray();\n    }\n\n    private byte[] createStoredZipWithEntry(String name, byte[] content) throws IOException {\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            ZipEntry entry = new ZipEntry(name);\n            entry.setMethod(ZipEntry.STORED);\n            entry.setSize(content.length);\n            entry.setCrc(calculateCRC(content));\n            zos.putNextEntry(entry);\n            zos.write(content);\n            zos.closeEntry();\n        }\n        return baos.toByteArray();\n    }\n\n    private long calculateCRC(byte[] content) {\n        CRC32 crc = new CRC32();\n        crc.update(content);\n        return crc.getValue();\n    }\n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_DeflatedEntry",
+   "runs_b": [
+    {
+     "duration_s": 0.123,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.115,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.129,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.1,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.1,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.126,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport java.util.zip.ZipOutputStream;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_read_TriageGen0Test {\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testRead_DeflatedEntry() throws IOException {\n        String data = \"This is a test string for deflation\";\n        byte[] content = createZipWithEntry(\"test\", data.getBytes());\n        \n        try (ZipArchiveInputStream zais = new ZipArchiveInputStream(new ByteArrayInputStream(content))) {\n            zais.getNextZipEntry();\n            byte[] buffer = new byte[10];\n            int read = zais.read(buffer, 0, 10);\n            Assert.assertTrue(read > 0);\n            Assert.assertTrue(read <= 10);\n        }\n    }\n\n    \n\n    \n\n    \n\n    private byte[] createZipWithEntry(String name, byte[] content) throws IOException {\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            ZipEntry entry = new ZipEntry(name);\n            zos.putNextEntry(entry);\n            zos.write(content);\n            zos.closeEntry();\n        }\n        return baos.toByteArray();\n    }\n\n    private byte[] createStoredZipWithEntry(String name, byte[] content) throws IOException {\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            ZipEntry entry = new ZipEntry(name);\n            entry.setMethod(ZipEntry.STORED);\n            entry.setSize(content.length);\n            entry.setCrc(calculateCRC(content));\n            zos.putNextEntry(entry);\n            zos.write(content);\n            zos.closeEntry();\n        }\n        return baos.toByteArray();\n    }\n\n    private long calculateCRC(byte[] content) {\n        CRC32 crc = new CRC32();\n        crc.update(content);\n        return crc.getValue();\n    }\n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_StoredEntry",
+   "runs_b": [
+    {
+     "duration_s": 0.126,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.101,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.112,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.107,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.098,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.107,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport java.util.zip.ZipOutputStream;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_read_TriageGen0Test {\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testRead_StoredEntry() throws IOException {\n        // Using a manual ZIP construction to ensure STORED method is triggered\n        byte[] content = createStoredZipWithEntry(\"stored\", \"hello\".getBytes());\n        \n        try (ZipArchiveInputStream zais = new ZipArchiveInputStream(new ByteArrayInputStream(content))) {\n            zais.getNextZipEntry();\n            byte[] buffer = new byte[10];\n            \n            // First read\n            int read1 = zais.read(buffer, 0, 2);\n            Assert.assertEquals(2, read1);\n            \n            // Second read (triggering offsetInBuffer logic)\n            int read2 = zais.read(buffer, 0, 2);\n            Assert.assertEquals(2, read2);\n            \n            // Read remaining\n            int read3 = zais.read(buffer, 0, 10);\n            Assert.assertTrue(read3 <= 1);\n        }\n    }\n\n    \n\n    \n\n    private byte[] createZipWithEntry(String name, byte[] content) throws IOException {\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            ZipEntry entry = new ZipEntry(name);\n            zos.putNextEntry(entry);\n            zos.write(content);\n            zos.closeEntry();\n        }\n        return baos.toByteArray();\n    }\n\n    private byte[] createStoredZipWithEntry(String name, byte[] content) throws IOException {\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            ZipEntry entry = new ZipEntry(name);\n            entry.setMethod(ZipEntry.STORED);\n            entry.setSize(content.length);\n            entry.setCrc(calculateCRC(content));\n            zos.putNextEntry(entry);\n            zos.write(content);\n            zos.closeEntry();\n        }\n        return baos.toByteArray();\n    }\n\n    private long calculateCRC(byte[] content) {\n        CRC32 crc = new CRC32();\n        crc.update(content);\n        return crc.getValue();\n    }\n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_EndOfStreamStored",
+   "runs_b": [
+    {
+     "duration_s": 0.115,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.113,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.096,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.106,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.116,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.113,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport java.util.zip.ZipOutputStream;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_read_TriageGen0Test {\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testRead_EndOfStreamStored() throws IOException {\n        byte[] content = createStoredZipWithEntry(\"stored\", \"a\".getBytes());\n        try (ZipArchiveInputStream zais = new ZipArchiveInputStream(new ByteArrayInputStream(content))) {\n            zais.getNextZipEntry();\n            byte[] buffer = new byte[10];\n            zais.read(buffer, 0, 1); // read 'a'\n            int read2 = zais.read(buffer, 0, 1);\n            Assert.assertEquals(-1, read2);\n        }\n    }\n\n    \n\n    private byte[] createZipWithEntry(String name, byte[] content) throws IOException {\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            ZipEntry entry = new ZipEntry(name);\n            zos.putNextEntry(entry);\n            zos.write(content);\n            zos.closeEntry();\n        }\n        return baos.toByteArray();\n    }\n\n    private byte[] createStoredZipWithEntry(String name, byte[] content) throws IOException {\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            ZipEntry entry = new ZipEntry(name);\n            entry.setMethod(ZipEntry.STORED);\n            entry.setSize(content.length);\n            entry.setCrc(calculateCRC(content));\n            zos.putNextEntry(entry);\n            zos.write(content);\n            zos.closeEntry();\n        }\n        return baos.toByteArray();\n    }\n\n    private long calculateCRC(byte[] content) {\n        CRC32 crc = new CRC32();\n        crc.update(content);\n        return crc.getValue();\n    }\n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_TruncatedZip",
+   "runs_b": [
+    {
+     "duration_s": 0.11,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": null,
+     "message": "Expected exception: java.io.IOException",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Expected exception: java.io.IOException\n\tat org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:32)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.119,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": null,
+     "message": "Expected exception: java.io.IOException",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Expected exception: java.io.IOException\n\tat org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:32)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.106,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": null,
+     "message": "Expected exception: java.io.IOException",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Expected exception: java.io.IOException\n\tat org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:32)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.123,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": null,
+     "message": "Expected exception: java.io.IOException",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Expected exception: java.io.IOException\n\tat org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:32)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.122,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": null,
+     "message": "Expected exception: java.io.IOException",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Expected exception: java.io.IOException\n\tat org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:32)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.128,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": null,
+     "message": "Expected exception: java.io.IOException",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Expected exception: java.io.IOException\n\tat org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:32)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport java.util.zip.ZipOutputStream;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.utils.IOUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_read_TriageGen0Test {\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test(expected = IOException.class)\n    public void testRead_TruncatedZip() throws IOException {\n        // Create a zip but provide incomplete data for the deflate stream\n        byte[] content = createZipWithEntry(\"test\", \"some data\".getBytes());\n        // Truncate the content to break the deflate stream\n        byte[] truncated = new byte[content.length - 5];\n        System.arraycopy(content, 0, truncated, 0, truncated.length);\n        \n        try (ZipArchiveInputStream zais = new ZipArchiveInputStream(new ByteArrayInputStream(truncated))) {\n            zais.getNextZipEntry();\n            byte[] buffer = new byte[10];\n            zais.read(buffer, 0, 10);\n        }\n    }\n\n    private byte[] createZipWithEntry(String name, byte[] content) throws IOException {\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            ZipEntry entry = new ZipEntry(name);\n            zos.putNextEntry(entry);\n            zos.write(content);\n            zos.closeEntry();\n        }\n        return baos.toByteArray();\n    }\n\n    private byte[] createStoredZipWithEntry(String name, byte[] content) throws IOException {\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            ZipEntry entry = new ZipEntry(name);\n            entry.setMethod(ZipEntry.STORED);\n            entry.setSize(content.length);\n            entry.setCrc(calculateCRC(content));\n            zos.putNextEntry(entry);\n            zos.write(content);\n            zos.closeEntry();\n        }\n        return baos.toByteArray();\n    }\n\n    private long calculateCRC(byte[] content) {\n        CRC32 crc = new CRC32();\n        crc.update(content);\n        return crc.getValue();\n    }\n}\n"
+  }
+ ],
+ "mutant_version": "m189",
+ "source_sha256": "54a4760ab2b07be108ffe40553d883ebf5bcdf993656de84a86cf70ff640a20f",
+ "utc": "2026-11-03T00:30:23Z"
+}

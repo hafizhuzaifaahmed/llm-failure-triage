@@ -1,0 +1,146 @@
+{
+ "bug_name": "Closure_138",
+ "call_sites": [
+  {
+   "line": 98,
+   "lines": [
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103
+   ],
+   "path": "src/com/google/javascript/jscomp/ChainableReverseAbstractInterpreter.java",
+   "snippet": "  /**\n   * Calculates the preciser scope starting with the first link.\n   */\n  protected FlowScope firstPreciserScopeKnowingConditionOutcome(Node condition,\n      FlowScope blindScope, boolean outcome) {\n    return firstLink.getPreciserScopeKnowingConditionOutcome(\n        condition, blindScope, outcome);\n  }\n\n  /**\n   * Delegates the calculation of the preciser scope to the next link."
+  },
+  {
+   "line": 108,
+   "lines": [
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112,
+    113
+   ],
+   "path": "src/com/google/javascript/jscomp/ChainableReverseAbstractInterpreter.java",
+   "snippet": "   * Delegates the calculation of the preciser scope to the next link.\n   * If there is no next link, returns the blind scope.\n   */\n  protected FlowScope nextPreciserScopeKnowingConditionOutcome(Node condition,\n      FlowScope blindScope, boolean outcome) {\n    return nextLink != null ? nextLink.getPreciserScopeKnowingConditionOutcome(\n        condition, blindScope, outcome) : blindScope;\n  }\n\n  /**\n   * Returns the type of a node in the given scope if the node corresponds to a"
+  },
+  {
+   "line": 42,
+   "lines": [
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45
+   ],
+   "path": "src/com/google/javascript/jscomp/ReverseAbstractInterpreter.java",
+   "snippet": "   *  @param condition the condition's expression\n   *  @param blindScope the scope without knowledge about the outcome of the\n   *  condition\n   *  @param outcome the outcome of the condition\n   */\n  FlowScope getPreciserScopeKnowingConditionOutcome(Node condition,\n      FlowScope blindScope, boolean outcome);\n}\n"
+  },
+  {
+   "line": 253,
+   "lines": [
+    248,
+    249,
+    250,
+    251,
+    252,
+    253,
+    254,
+    255,
+    256,
+    257,
+    258
+   ],
+   "path": "src/com/google/javascript/jscomp/TypeInference.java",
+   "snippet": "                conditionOutcomes = condition.getType() == Token.AND ?\n                    traverseAnd(condition, output.createChildFlowScope()) :\n                    traverseOr(condition, output.createChildFlowScope());\n              }\n              newScope =\n                  reverseInterpreter.getPreciserScopeKnowingConditionOutcome(\n                      condition,\n                      conditionOutcomes.getOutcomeFlowScope(\n                          condition.getType(), branch == Branch.ON_TRUE),\n                      branch == Branch.ON_TRUE);\n            } else {"
+  },
+  {
+   "line": 266,
+   "lines": [
+    261,
+    262,
+    263,
+    264,
+    265,
+    266,
+    267,
+    268,
+    269,
+    270,
+    271
+   ],
+   "path": "src/com/google/javascript/jscomp/TypeInference.java",
+   "snippet": "              if (conditionFlowScope == null) {\n                conditionFlowScope =\n                    traverse(condition, output.createChildFlowScope());\n              }\n              newScope =\n                  reverseInterpreter.getPreciserScopeKnowingConditionOutcome(\n                      condition, conditionFlowScope, branch == Branch.ON_TRUE);\n            }\n          }\n          break;\n      }"
+  }
+ ],
+ "class_simple": "ClosureReverseAbstractInterpreter",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * A reverse abstract interpreter (RAI) for specific closure patterns such as\n * {@code goog.isDef}.\n *\n*\n */",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private final Visitor<JSType> restrictToArrayVisitor",
+  "private final Visitor<JSType> restrictToNotArrayVisitor",
+  "private final Visitor<JSType> restrictToObjectVisitor",
+  "private final Visitor<JSType> restrictToNotObjectVisitor",
+  "private Map<String, Function<TypeRestriction, JSType>> restricters"
+ ],
+ "focal_class": "com.google.javascript.jscomp.ClosureReverseAbstractInterpreter",
+ "focal_id": "Closure_138::com.google.javascript.jscomp.ClosureReverseAbstractInterpreter::getPreciserScopeKnowingConditionOutcome(Node,FlowScope,boolean)",
+ "focal_method_name": "getPreciserScopeKnowingConditionOutcome",
+ "generations": 3,
+ "impl_B": "@Override\n  public FlowScope getPreciserScopeKnowingConditionOutcome(Node condition,\n      FlowScope blindScope, boolean outcome) {\n    if (condition.getType() == CALL && condition.getChildCount() == 2) {\n      Node callee = condition.getFirstChild();\n      Node param = condition.getLastChild();\n      if (callee.getType() == GETPROP && param.isQualifiedName()) {\n        JSType paramType =  getTypeIfRefinable(param, blindScope);\n        if (paramType != null) {\n        Node left = callee.getFirstChild();\n        Node right = callee.getLastChild();\n        if (left.getType() == NAME && \"goog\".equals(left.getString()) &&\n            right.getType() == STRING) {\n          Function<TypeRestriction, JSType> restricter =\n              restricters.get(right.getString());\n          if (restricter != null) {\n            return restrictParameter(param, paramType, blindScope, restricter,\n                outcome);\n            }\n          }\n        }\n      }\n    }\n    return nextPreciserScopeKnowingConditionOutcome(\n        condition, blindScope, outcome);\n  }",
+ "imports": [
+  "static com.google.javascript.rhino.Token.CALL",
+  "static com.google.javascript.rhino.Token.GETPROP",
+  "static com.google.javascript.rhino.Token.NAME",
+  "static com.google.javascript.rhino.Token.STRING",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.ARRAY_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.NO_OBJECT_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.NULL_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.OBJECT_TYPE",
+  "com.google.common.base.Function",
+  "com.google.common.collect.ImmutableMap",
+  "com.google.javascript.rhino.jstype.JSType",
+  "com.google.javascript.rhino.jstype.JSTypeRegistry",
+  "com.google.javascript.rhino.jstype.FunctionType",
+  "com.google.javascript.rhino.jstype.ObjectType",
+  "com.google.javascript.rhino.jstype.Visitor",
+  "com.google.javascript.rhino.Node",
+  "java.util.Map"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [],
+ "sig": {
+  "class_declaration": "class ClosureReverseAbstractInterpreter extends ChainableReverseAbstractInterpreter",
+  "constructors": [],
+  "focal_signature": "public FlowScope getPreciserScopeKnowingConditionOutcome(Node condition, FlowScope blindScope, boolean outcome)",
+  "methods": [],
+  "type_signatures": [
+   "public class Node implements Cloneable, Serializable { public Node(int nodeType); public Node(int nodeType, Node child); public Node(int nodeType, Node left, Node right); public Node(int nodeType, Node left, Node mid, Node right); public Node(int nodeType, Node left, Node mid, Node mid2, Node right); public Node(int nodeType, int lineno, int charno); public Node(int nodeType, Node child, int lineno, int charno); public Node(int nodeType, Node left, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node mid2, Node right, int lineno, int charno); public Node(int nodeType, Node[] children, int lineno, int charno); public Node(int nodeType, Node[] children); public static Node newNumber(double number); public static Node newNumber(double number, int lineno, int charno); public static Node newString(String str); }",
+   "interface FlowScope extends StaticScope<JSType>, LatticeElement {  }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

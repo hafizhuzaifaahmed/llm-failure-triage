@@ -1,0 +1,195 @@
+{
+ "bug_name": "JacksonDatabind_71",
+ "call_sites": [
+  {
+   "line": 679,
+   "lines": [
+    674,
+    675,
+    676,
+    677,
+    678,
+    679,
+    680,
+    681,
+    682,
+    683,
+    684
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectReader.java",
+   "snippet": "     * rather construct and returns a newly configured instance.\n     *\n     * @since 2.5\n     */\n    public ObjectReader forType(Class<?> valueType) {\n        return forType(_config.constructType(valueType));\n    }    \n\n    /**\n     * Method for constructing a new reader instance that is configured\n     * to data bind into specified type."
+  },
+  {
+   "line": 692,
+   "lines": [
+    687,
+    688,
+    689,
+    690,
+    691,
+    692,
+    693,
+    694,
+    695,
+    696,
+    697
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectReader.java",
+   "snippet": "     * rather construct and returns a newly configured instance.\n     *\n     * @since 2.5\n     */\n    public ObjectReader forType(TypeReference<?> valueTypeRef) {\n        return forType(_config.getTypeFactory().constructType(valueTypeRef.getType()));\n    }    \n\n    /**\n     * @deprecated since 2.5 Use {@link #forType(JavaType)} instead\n     */"
+  },
+  {
+   "line": 700,
+   "lines": [
+    695,
+    696,
+    697,
+    698,
+    699,
+    700,
+    701,
+    702,
+    703,
+    704,
+    705
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectReader.java",
+   "snippet": "    /**\n     * @deprecated since 2.5 Use {@link #forType(JavaType)} instead\n     */\n    @Deprecated\n    public ObjectReader withType(JavaType valueType) {\n        return forType(valueType);\n    }\n\n    /**\n     * @deprecated since 2.5 Use {@link #forType(Class)} instead\n     */"
+  },
+  {
+   "line": 708,
+   "lines": [
+    703,
+    704,
+    705,
+    706,
+    707,
+    708,
+    709,
+    710,
+    711,
+    712,
+    713
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectReader.java",
+   "snippet": "    /**\n     * @deprecated since 2.5 Use {@link #forType(Class)} instead\n     */\n    @Deprecated\n    public ObjectReader withType(Class<?> valueType) {\n        return forType(_config.constructType(valueType));\n    }    \n\n    /**\n     * @deprecated since 2.5 Use {@link #forType(Class)} instead\n     */"
+  },
+  {
+   "line": 716,
+   "lines": [
+    711,
+    712,
+    713,
+    714,
+    715,
+    716,
+    717,
+    718,
+    719,
+    720,
+    721
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectReader.java",
+   "snippet": "    /**\n     * @deprecated since 2.5 Use {@link #forType(Class)} instead\n     */\n    @Deprecated\n    public ObjectReader withType(java.lang.reflect.Type valueType) {\n        return forType(_config.getTypeFactory().constructType(valueType));\n    }\n\n    /**\n     * @deprecated since 2.5 Use {@link #forType(TypeReference)} instead\n     */"
+  }
+ ],
+ "class_simple": "StdKeyDeserializer",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Default {@link KeyDeserializer} implementation used for most {@link java.util.Map}\n * types Jackson supports.\n * Implemented as \"chameleon\" (or swiss pocket knife) class; not particularly elegant,\n * but helps reduce number of classes and jar size (class metadata adds significant\n * per-class overhead; much more than bytecode).\n */\n@JacksonStdImpl\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "public final static int TYPE_BOOLEAN",
+  "public final static int TYPE_BYTE",
+  "public final static int TYPE_SHORT",
+  "public final static int TYPE_CHAR",
+  "public final static int TYPE_INT",
+  "public final static int TYPE_LONG",
+  "public final static int TYPE_FLOAT",
+  "public final static int TYPE_DOUBLE",
+  "public final static int TYPE_LOCALE",
+  "public final static int TYPE_DATE",
+  "public final static int TYPE_CALENDAR",
+  "public final static int TYPE_UUID",
+  "public final static int TYPE_URI",
+  "public final static int TYPE_URL",
+  "public final static int TYPE_CLASS",
+  "public final static int TYPE_CURRENCY",
+  "final protected int _kind",
+  "final protected Class<?> _keyClass",
+  "protected final FromStringDeserializer<?> _deser"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.deser.std.StdKeyDeserializer",
+ "focal_id": "JacksonDatabind_71::com.fasterxml.jackson.databind.deser.std.StdKeyDeserializer::forType(Class<?>)",
+ "focal_method_name": "forType",
+ "generations": 3,
+ "impl_B": "public static StdKeyDeserializer forType(Class<?> raw)\n    {\n        int kind;\n\n        // first common types:\n        if (raw == String.class || raw == Object.class) {\n            return StringKD.forType(raw);\n        } else if (raw == UUID.class) {\n            kind = TYPE_UUID;\n        } else if (raw == Integer.class) {\n            kind = TYPE_INT;\n        } else if (raw == Long.class) {\n            kind = TYPE_LONG;\n        } else if (raw == Date.class) {\n            kind = TYPE_DATE;\n        } else if (raw == Calendar.class) {\n            kind = TYPE_CALENDAR;\n        // then less common ones...\n        } else if (raw == Boolean.class) {\n            kind = TYPE_BOOLEAN;\n        } else if (raw == Byte.class) {\n            kind = TYPE_BYTE;\n        } else if (raw == Character.class) {\n            kind = TYPE_CHAR;\n        } else if (raw == Short.class) {\n            kind = TYPE_SHORT;\n        } else if (raw == Float.class) {\n            kind = TYPE_FLOAT;\n        } else if (raw == Double.class) {\n            kind = TYPE_DOUBLE;\n        } else if (raw == URI.class) {\n            kind = TYPE_URI;\n        } else if (raw == URL.class) {\n            kind = TYPE_URL;\n        } else if (raw == Class.class) {\n            kind = TYPE_CLASS;\n        } else if (raw == Locale.class) {\n            FromStringDeserializer<?> deser = FromStringDeserializer.findDeserializer(Locale.class);\n            return new StdKeyDeserializer(TYPE_LOCALE, raw, deser);\n        } else if (raw == Currency.class) {\n            FromStringDeserializer<?> deser = FromStringDeserializer.findDeserializer(Currency.class);\n            return new StdKeyDeserializer(TYPE_CURRENCY, raw, deser);\n        } else {\n            return null;\n        }\n        return new StdKeyDeserializer(kind, raw);\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.lang.reflect.Constructor",
+  "java.lang.reflect.Method",
+  "java.net.URI",
+  "java.net.URL",
+  "java.util.Calendar",
+  "java.util.Currency",
+  "java.util.Date",
+  "java.util.Locale",
+  "java.util.UUID",
+  "com.fasterxml.jackson.core.JsonProcessingException",
+  "com.fasterxml.jackson.core.io.NumberInput",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.annotation.JacksonStdImpl",
+  "com.fasterxml.jackson.databind.introspect.AnnotatedMethod",
+  "com.fasterxml.jackson.databind.util.ClassUtil",
+  "com.fasterxml.jackson.databind.util.EnumResolver"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.deser.std",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "deserializeKey"
+  },
+  {
+   "javadoc": "",
+   "name": "getKeyClass"
+  },
+  {
+   "javadoc": "",
+   "name": "_parse"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_parseInt"
+  },
+  {
+   "javadoc": "",
+   "name": "_parseLong"
+  },
+  {
+   "javadoc": "",
+   "name": "_parseDouble"
+  }
+ ],
+ "sig": {
+  "class_declaration": "@JacksonStdImpl public class StdKeyDeserializer extends KeyDeserializer implements java.io.Serializable",
+  "constructors": [
+   "protected StdKeyDeserializer(int kind, Class<?> cls);",
+   "protected StdKeyDeserializer(int kind, Class<?> cls, FromStringDeserializer<?> deser);"
+  ],
+  "focal_signature": "public static StdKeyDeserializer forType(Class<?> raw)",
+  "methods": [
+   "public Object deserializeKey(String key, DeserializationContext ctxt) throws IOException;",
+   "public Class<?> getKeyClass();",
+   "protected Object _parse(String key, DeserializationContext ctxt) throws Exception;",
+   "protected int _parseInt(String key) throws IllegalArgumentException;",
+   "protected long _parseLong(String key) throws IllegalArgumentException;",
+   "protected double _parseDouble(String key) throws IllegalArgumentException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

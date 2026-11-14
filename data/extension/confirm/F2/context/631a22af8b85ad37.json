@@ -1,0 +1,135 @@
+{
+ "bug_name": "Closure_158",
+ "call_sites": [
+  {
+   "line": 599,
+   "lines": [
+    594,
+    595,
+    596,
+    597,
+    598,
+    599,
+    600,
+    601,
+    602,
+    603,
+    604
+   ],
+   "path": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java",
+   "snippet": "  protected int doRun() throws FlagUsageException, IOException {\n    Compiler.setLoggingLevel(Level.parse(config.loggingLevel));\n\n    List<JSSourceFile> externs = createExterns();\n\n    compiler = createCompiler();\n    B options = createOptions();\n\n    List<JSModule> modules = null;\n    Result result;\n"
+  },
+  {
+   "line": 198,
+   "lines": [
+    193,
+    194,
+    195,
+    196,
+    197,
+    198,
+    199,
+    200,
+    201,
+    202,
+    203
+   ],
+   "path": "src/com/google/javascript/jscomp/ant/CompileTask.java",
+   "snippet": "    }\n\n    Compiler.setLoggingLevel(Level.OFF);\n\n    CompilerOptions options = createCompilerOptions();\n    Compiler compiler = createCompiler(options);\n\n    JSSourceFile[] externs = findExternFiles();\n    JSSourceFile[] sources = findSourceFiles();\n\n    if (isStale()) {"
+  }
+ ],
+ "class_simple": "CommandLineRunner",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * CommandLineRunner translates flags into Java API calls on the Compiler.\n *\n * This class may be extended and used to create other Java classes\n * that behave the same as running the Compiler from the command line. If you\n * want to run the compiler in-process in Java, you should look at this class\n * for hints on what API calls to make, but you should not use this class\n * directly.\n *\n * Example:\n * <pre>\n * class MyCommandLineRunner extends CommandLineRunner {\n *   MyCommandLineRunner(String[] args) {\n *     super(args);\n *   }\n *\n *   {@code @Override} protected CompilerOptions createOptions() {\n *     CompilerOptions options = super.createOptions();\n *     addMyCrazyCompilerPassThatOutputsAnExtraFile(options);\n *     return options;\n *   }\n *\n *   public static void main(String[] args) {\n *     MyCommandLineRunner runner = new MyCommandLineRunner(args);\n *     if (runner.shouldRunCompiler()) {\n *       runner.run();\n *     } else {\n *       System.exit(-1);\n *     }\n *   }\n * }\n * </pre>\n *\n * This class is totally not thread-safe.\n *\n * @author bolinfest@google.com (Michael Bolin)\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private final Flags flags",
+  "private static final String configResource",
+  "private boolean isConfigValid",
+  "private static final List<String> DEFAULT_EXTERNS_NAMES"
+ ],
+ "focal_class": "com.google.javascript.jscomp.CommandLineRunner",
+ "focal_id": "Closure_158::com.google.javascript.jscomp.CommandLineRunner::createCompiler()",
+ "focal_method_name": "createCompiler",
+ "generations": 3,
+ "impl_B": "@Override\n  protected Compiler createCompiler() {\n    return new Compiler(getErrorPrintStream());\n  }",
+ "imports": [
+  "com.google.common.base.Preconditions",
+  "com.google.common.collect.ImmutableList",
+  "com.google.common.collect.Lists",
+  "com.google.common.collect.Maps",
+  "com.google.common.collect.Sets",
+  "com.google.common.io.Files",
+  "com.google.common.io.LimitInputStream",
+  "org.kohsuke.args4j.CmdLineException",
+  "org.kohsuke.args4j.CmdLineParser",
+  "org.kohsuke.args4j.Option",
+  "org.kohsuke.args4j.OptionDef",
+  "org.kohsuke.args4j.spi.OptionHandler",
+  "org.kohsuke.args4j.spi.Parameters",
+  "org.kohsuke.args4j.spi.Setter",
+  "org.kohsuke.args4j.spi.StringOptionHandler",
+  "java.io.File",
+  "java.io.IOException",
+  "java.io.InputStream",
+  "java.io.PrintStream",
+  "java.nio.charset.Charset",
+  "java.util.List",
+  "java.util.Map",
+  "java.util.ResourceBundle",
+  "java.util.Set",
+  "java.util.StringTokenizer",
+  "java.util.logging.Level",
+  "java.util.regex.Matcher",
+  "java.util.regex.Pattern",
+  "java.util.zip.ZipEntry",
+  "java.util.zip.ZipInputStream"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "createOptions"
+  },
+  {
+   "javadoc": "",
+   "name": "createExterns"
+  },
+  {
+   "javadoc": "/**\n   * @return a mutable list\n   * @throws IOException\n   */",
+   "name": "getDefaultExterns"
+  },
+  {
+   "javadoc": "/**\n   * @return Whether the configuration is valid.\n   */",
+   "name": "shouldRunCompiler"
+  },
+  {
+   "javadoc": "/**\n   * Runs the Compiler. Exits cleanly in the event of an error.\n   */",
+   "name": "main"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class CommandLineRunner extends AbstractCommandLineRunner<Compiler, CompilerOptions>",
+  "constructors": [
+   "protected CommandLineRunner(String[] args);",
+   "protected CommandLineRunner(String[] args, PrintStream out, PrintStream err);"
+  ],
+  "focal_signature": "protected Compiler createCompiler()",
+  "methods": [
+   "protected CompilerOptions createOptions();",
+   "protected List<JSSourceFile> createExterns() throws FlagUsageException, IOException;",
+   "public static List<JSSourceFile> getDefaultExterns() throws IOException;",
+   "public boolean shouldRunCompiler();",
+   "public static void main(String[] args);"
+  ],
+  "type_signatures": [
+   "public class Compiler extends AbstractCompiler { public Compiler(); public Compiler(PrintStream stream); public Compiler(ErrorManager errorManager); public void setErrorManager(ErrorManager errorManager); public void initOptions(CompilerOptions options); public void init(JSSourceFile[] externs, JSSourceFile[] inputs, CompilerOptions options); public void init(List<JSSourceFile> externs, List<JSSourceFile> inputs, CompilerOptions options); public void init(JSSourceFile[] externs, JSModule[] modules, CompilerOptions options); public void initModules( List<JSSourceFile> externs, List<JSModule> modules, CompilerOptions options); public void rebuildInputsFromModules(); public Result compile( JSSourceFile extern, JSSourceFile input, CompilerOptions options); public Result compile( JSSourceFile extern, JSSourceFile[] input, CompilerOptions options); public Result compile( JSSourceFile extern, JSModule[] modules, CompilerOptions options); public Result compile(JSSourceFile[] externs, JSSourceFile[] inputs, CompilerOptions options); public Result compile(List<JSSourceFile> externs, List<JSSourceFile> inputs, CompilerOptions options); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

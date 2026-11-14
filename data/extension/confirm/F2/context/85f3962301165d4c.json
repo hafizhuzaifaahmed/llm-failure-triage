@@ -1,0 +1,199 @@
+{
+ "bug_name": "JacksonDatabind_15",
+ "call_sites": [
+  {
+   "line": 466,
+   "lines": [
+    461,
+    462,
+    463,
+    464,
+    465,
+    466,
+    467,
+    468,
+    469,
+    470,
+    471
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "            BeanProperty prop) throws JsonMappingException {\n        KeyDeserializer kd = _cache.findKeyDeserializer(this,\n                _factory, keyType);\n        // Second: contextualize?\n        if (kd instanceof ContextualKeyDeserializer) {\n            kd = ((ContextualKeyDeserializer) kd).createContextual(this, prop);\n        }\n        return kd;\n    }\n    \n    /*"
+  },
+  {
+   "line": 614,
+   "lines": [
+    609,
+    610,
+    611,
+    612,
+    613,
+    614,
+    615,
+    616,
+    617,
+    618,
+    619
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "        throws JsonMappingException\n    {\n        if (deser instanceof ContextualDeserializer) {\n            _currentType = new LinkedNode<JavaType>(type, _currentType);\n            try {\n                deser = ((ContextualDeserializer) deser).createContextual(this, prop);\n            } finally {\n                _currentType = _currentType.next();\n            }\n        }\n        return deser;"
+  },
+  {
+   "line": 653,
+   "lines": [
+    648,
+    649,
+    650,
+    651,
+    652,
+    653,
+    654,
+    655,
+    656,
+    657,
+    658
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "        throws JsonMappingException\n    {\n        if (deser instanceof ContextualDeserializer) {\n            _currentType = new LinkedNode<JavaType>(type, _currentType);\n            try {\n                deser = ((ContextualDeserializer) deser).createContextual(this, prop);\n            } finally {\n                _currentType = _currentType.next();\n            }\n        }\n        return deser;"
+  },
+  {
+   "line": 667,
+   "lines": [
+    662,
+    663,
+    664,
+    665,
+    666,
+    667,
+    668,
+    669,
+    670,
+    671,
+    672
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "    public JsonDeserializer<?> handleSecondaryContextualization(JsonDeserializer<?> deser,\n            BeanProperty prop)\n        throws JsonMappingException\n    {\n        if (deser instanceof ContextualDeserializer) {\n            deser = ((ContextualDeserializer) deser).createContextual(this, prop);\n        }\n        return deser;\n    }\n\n    /*"
+  },
+  {
+   "line": 875,
+   "lines": [
+    870,
+    871,
+    872,
+    873,
+    874,
+    875,
+    876,
+    877,
+    878,
+    879,
+    880
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/SerializerProvider.java",
+   "snippet": "            BeanProperty property)\n        throws JsonMappingException\n    {\n        if (ser != null) {\n            if (ser instanceof ContextualSerializer) {\n                ser = ((ContextualSerializer) ser).createContextual(this, property);\n            }\n        }\n        return ser;\n    }\n"
+  }
+ ],
+ "class_simple": "StdDelegatingSerializer",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Serializer implementation where given Java type is first converted\n * to an intermediate \"delegate type\" (using a configured\n * {@link Converter}, and then this delegate value is serialized by Jackson.\n *<p>\n * Note that although types may be related, they must not be same; trying\n * to do this will result in an exception.\n *\n * @since 2.1\n */\n@SuppressWarnings(\"serial\")\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "protected final Converter<Object,?> _converter",
+  "protected final JavaType _delegateType",
+  "protected final JsonSerializer<Object> _delegateSerializer"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.ser.std.StdDelegatingSerializer",
+ "focal_id": "JacksonDatabind_15::com.fasterxml.jackson.databind.ser.std.StdDelegatingSerializer::createContextual(SerializerProvider,BeanProperty)",
+ "focal_method_name": "createContextual",
+ "generations": 3,
+ "impl_B": "@Override\n    public JsonSerializer<?> createContextual(SerializerProvider provider, BeanProperty property)\n        throws JsonMappingException\n    {\n        JsonSerializer<?> delSer = _delegateSerializer;\n        JavaType delegateType = _delegateType;\n\n        if (delSer == null) {\n            // Otherwise, need to locate serializer to delegate to. For that we need type information...\n            if (delegateType == null) {\n                delegateType = _converter.getOutputType(provider.getTypeFactory());\n            }\n            /* 02-Apr-2015, tatu: For \"dynamic case\", where type is only specified as\n             *    java.lang.Object (or missing generic), [databind#731]\n             */\n                delSer = provider.findValueSerializer(delegateType);\n        }\n        if (delSer instanceof ContextualSerializer) {\n            delSer = provider.handleSecondaryContextualization(delSer, property);\n        }\n        return (delSer == _delegateSerializer) ? this\n                : withDelegate(_converter, delegateType, delSer);\n    }",
+ "imports": [
+  "com.fasterxml.jackson.core.JsonGenerator",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitable",
+  "com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper",
+  "com.fasterxml.jackson.databind.jsonschema.SchemaAware",
+  "com.fasterxml.jackson.databind.jsontype.TypeSerializer",
+  "com.fasterxml.jackson.databind.ser.ContextualSerializer",
+  "com.fasterxml.jackson.databind.ser.ResolvableSerializer",
+  "com.fasterxml.jackson.databind.util.Converter",
+  "java.io.IOException",
+  "java.lang.reflect.Type"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.ser.std",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Method used for creating resolved contextual instances. Must be\n     * overridden when sub-classing.\n     */",
+   "name": "withDelegate"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "resolve"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getConverter"
+  },
+  {
+   "javadoc": "",
+   "name": "getDelegatee"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "serialize"
+  },
+  {
+   "javadoc": "",
+   "name": "serializeWithType"
+  },
+  {
+   "javadoc": "",
+   "name": "isEmpty"
+  },
+  {
+   "javadoc": "",
+   "name": "isEmpty"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getSchema"
+  },
+  {
+   "javadoc": "",
+   "name": "getSchema"
+  },
+  {
+   "javadoc": "",
+   "name": "acceptJsonFormatVisitor"
+  },
+  {
+   "javadoc": "/**\n     * Method called to convert from source Java value into delegate\n     * value (which will be serialized using standard Jackson serializer for delegate type)\n     *<P>\n     * The default implementation uses configured {@link Converter} to do\n     * conversion.\n     * \n     * @param value Value to convert\n     * \n     * @return Result of conversion\n     */",
+   "name": "convertValue"
+  }
+ ],
+ "sig": {
+  "class_declaration": "@SuppressWarnings(\"serial\") public class StdDelegatingSerializer extends StdSerializer<Object> implements ContextualSerializer, ResolvableSerializer, JsonFormatVisitable, SchemaAware",
+  "constructors": [],
+  "focal_signature": "public JsonSerializer<?> createContextual(SerializerProvider provider, BeanProperty property) throws JsonMappingException",
+  "methods": [
+   "protected StdDelegatingSerializer withDelegate(Converter<Object,?> converter, JavaType delegateType, JsonSerializer<?> delegateSerializer);",
+   "public void resolve(SerializerProvider provider) throws JsonMappingException;",
+   "protected Converter<Object, ?> getConverter();",
+   "public JsonSerializer<?> getDelegatee();",
+   "public void serialize(Object value, JsonGenerator gen, SerializerProvider provider) throws IOException;",
+   "public void serializeWithType(Object value, JsonGenerator gen, SerializerProvider provider, TypeSerializer typeSer) throws IOException;",
+   "// since 2.5 public boolean isEmpty(Object value);",
+   "public boolean isEmpty(SerializerProvider prov, Object value);",
+   "public JsonNode getSchema(SerializerProvider provider, Type typeHint) throws JsonMappingException;",
+   "public JsonNode getSchema(SerializerProvider provider, Type typeHint, boolean isOptional) throws JsonMappingException;",
+   "public void acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint) throws JsonMappingException;",
+   "protected Object convertValue(Object value);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

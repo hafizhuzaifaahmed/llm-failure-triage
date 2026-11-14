@@ -1,0 +1,172 @@
+{
+ "bug_name": "JacksonCore_1",
+ "call_sites": [
+  {
+   "line": 753,
+   "lines": [
+    748,
+    749,
+    750,
+    751,
+    752,
+    753,
+    754,
+    755,
+    756,
+    757,
+    758
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/base/ParserBase.java",
+   "snippet": "                _numberInt = _numberNegative ? -i : i;\n                _numTypesValid = NR_INT;\n                return;\n            }\n            if (len <= 18) { // definitely fits AND is easy to parse using 2 int parse calls\n                long l = NumberInput.parseLong(buf, offset, len);\n                if (_numberNegative) {\n                    l = -l;\n                }\n                // [JACKSON-230] Could still fit in int, need to check\n                if (len == 10) {"
+  },
+  {
+   "line": 820,
+   "lines": [
+    815,
+    816,
+    817,
+    818,
+    819,
+    820,
+    821,
+    822,
+    823,
+    824,
+    825
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/base/ParserBase.java",
+   "snippet": "        String numStr = _textBuffer.contentsAsString();\n        try {\n            // [JACKSON-230] Some long cases still...\n            if (NumberInput.inLongRange(buf, offset, len, _numberNegative)) {\n                // Probably faster to construct a String, call parse, than to use BigInteger\n                _numberLong = Long.parseLong(numStr);\n                _numTypesValid = NR_LONG;\n            } else {\n                // nope, need the heavy guns... (rare case)\n                _numberBigInt = new BigInteger(numStr);\n                _numTypesValid = NR_BIGINT;"
+  },
+  {
+   "line": 135,
+   "lines": [
+    130,
+    131,
+    132,
+    133,
+    134,
+    135,
+    136,
+    137,
+    138,
+    139,
+    140
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/io/NumberInput.java",
+   "snippet": "        int length = str.length();\n        if (length <= 9) {\n            return (long) parseInt(str);\n        }\n        // !!! TODO: implement efficient 2-int parsing...\n        return Long.parseLong(str);\n    }\n    \n    /**\n     * Helper method for determining if given String representation of\n     * an integral number would fit in 64-bit Java long or not."
+  },
+  {
+   "line": 260,
+   "lines": [
+    255,
+    256,
+    257,
+    258,
+    259,
+    260,
+    261,
+    262,
+    263,
+    264,
+    265
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/io/NumberInput.java",
+   "snippet": "                    return defaultValue;\n                }\n            }\n        }\n        try {\n            return Long.parseLong(input);\n        } catch (NumberFormatException e) { }\n        return defaultValue;\n    }\n    \n    public static double parseAsDouble(String input, double defaultValue)"
+  }
+ ],
+ "class_simple": "NumberInput",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "public final static String NASTY_SMALL_DOUBLE",
+  "final static long L_BILLION",
+  "final static String MIN_LONG_STR_NO_SIGN",
+  "final static String MAX_LONG_STR"
+ ],
+ "focal_class": "com.fasterxml.jackson.core.io.NumberInput",
+ "focal_id": "JacksonCore_1::com.fasterxml.jackson.core.io.NumberInput::parseLong(String)",
+ "focal_method_name": "parseLong",
+ "generations": 3,
+ "impl_B": "public static long parseLong(String str)\n    {\n        /* Ok, now; as the very first thing, let's just optimize case of \"fake longs\";\n         * that is, if we know they must be ints, call int parsing\n         */\n        int length = str.length();\n        if (length <= 9) {\n            return (long) parseInt(str);\n        }\n        // !!! TODO: implement efficient 2-int parsing...\n        return Long.parseLong(str);\n    }",
+ "imports": [
+  "java.math.BigDecimal"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.core.io",
+ "project": "JacksonCore",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Fast method for parsing integers that are known to fit into\n     * regular 32-bit signed int type. This means that length is\n     * between 1 and 9 digits (inclusive)\n     *<p>\n     * Note: public to let unit tests call it\n     */",
+   "name": "parseInt"
+  },
+  {
+   "javadoc": "/**\n     * Helper method to (more) efficiently parse integer numbers from\n     * String values.\n     */",
+   "name": "parseInt"
+  },
+  {
+   "javadoc": "",
+   "name": "parseLong"
+  },
+  {
+   "javadoc": "/**\n     * Helper method for determining if given String representation of\n     * an integral number would fit in 64-bit Java long or not.\n     * Note that input String must NOT contain leading minus sign (even\n     * if 'negative' is set to true).\n     *\n     * @param negative Whether original number had a minus sign (which is\n     *    NOT passed to this method) or not\n     */",
+   "name": "inLongRange"
+  },
+  {
+   "javadoc": "/**\n     * Similar to {@link #inLongRange(char[],int,int,boolean)}, but\n     * with String argument\n     *\n     * @param negative Whether original number had a minus sign (which is\n     *    NOT passed to this method) or not\n     */",
+   "name": "inLongRange"
+  },
+  {
+   "javadoc": "",
+   "name": "parseAsInt"
+  },
+  {
+   "javadoc": "",
+   "name": "parseAsLong"
+  },
+  {
+   "javadoc": "",
+   "name": "parseAsDouble"
+  },
+  {
+   "javadoc": "",
+   "name": "parseDouble"
+  },
+  {
+   "javadoc": "",
+   "name": "parseBigDecimal"
+  },
+  {
+   "javadoc": "",
+   "name": "parseBigDecimal"
+  },
+  {
+   "javadoc": "",
+   "name": "parseBigDecimal"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public final class NumberInput",
+  "constructors": [],
+  "focal_signature": "public static long parseLong(String str)",
+  "methods": [
+   "public static int parseInt(char[] digitChars, int offset, int len);",
+   "public static int parseInt(String str);",
+   "public static long parseLong(char[] digitChars, int offset, int len);",
+   "public static boolean inLongRange(char[] digitChars, int offset, int len, boolean negative);",
+   "public static boolean inLongRange(String numberStr, boolean negative);",
+   "public static int parseAsInt(String input, int defaultValue);",
+   "public static long parseAsLong(String input, long defaultValue);",
+   "public static double parseAsDouble(String input, double defaultValue);",
+   "public static double parseDouble(String numStr) throws NumberFormatException;",
+   "public static BigDecimal parseBigDecimal(String numStr) throws NumberFormatException;",
+   "public static BigDecimal parseBigDecimal(char[] buffer) throws NumberFormatException;",
+   "public static BigDecimal parseBigDecimal(char[] buffer, int offset, int len) throws NumberFormatException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

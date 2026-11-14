@@ -1,0 +1,198 @@
+{
+ "bug_name": "Closure_19",
+ "call_sites": [
+  {
+   "line": 239,
+   "lines": [
+    234,
+    235,
+    236,
+    237,
+    238,
+    239,
+    240,
+    241,
+    242,
+    243,
+    244
+   ],
+   "path": "src/com/google/javascript/jscomp/type/ClosureReverseAbstractInterpreter.java",
+   "snippet": "    type = restriction.apply(new TypeRestriction(type, outcome));\n\n    // changing the scope\n    if (type != null) {\n      FlowScope informed = blindScope.createChildFlowScope();\n      declareNameInScope(informed, parameter, type);\n      return informed;\n    } else {\n      return blindScope;\n    }\n  }"
+  },
+  {
+   "line": 303,
+   "lines": [
+    298,
+    299,
+    300,
+    301,
+    302,
+    303,
+    304,
+    305,
+    306,
+    307,
+    308
+   ],
+   "path": "src/com/google/javascript/jscomp/type/SemanticReverseAbstractInterpreter.java",
+   "snippet": "    if (merged != null &&\n        ((leftIsRefineable && merged.typeA != null) ||\n         (rightIsRefineable && merged.typeB != null))) {\n      FlowScope informed = blindScope.createChildFlowScope();\n      if (leftIsRefineable && merged.typeA != null) {\n        declareNameInScope(informed, left, merged.typeA);\n      }\n      if (rightIsRefineable && merged.typeB != null) {\n        declareNameInScope(informed, right, merged.typeB);\n      }\n      return informed;"
+  },
+  {
+   "line": 306,
+   "lines": [
+    301,
+    302,
+    303,
+    304,
+    305,
+    306,
+    307,
+    308,
+    309,
+    310,
+    311
+   ],
+   "path": "src/com/google/javascript/jscomp/type/SemanticReverseAbstractInterpreter.java",
+   "snippet": "      FlowScope informed = blindScope.createChildFlowScope();\n      if (leftIsRefineable && merged.typeA != null) {\n        declareNameInScope(informed, left, merged.typeA);\n      }\n      if (rightIsRefineable && merged.typeB != null) {\n        declareNameInScope(informed, right, merged.typeB);\n      }\n      return informed;\n    }\n    return blindScope;\n  }"
+  },
+  {
+   "line": 356,
+   "lines": [
+    351,
+    352,
+    353,
+    354,
+    355,
+    356,
+    357,
+    358,
+    359,
+    360,
+    361
+   ],
+   "path": "src/com/google/javascript/jscomp/type/SemanticReverseAbstractInterpreter.java",
+   "snippet": "      // creating new scope\n      if ((leftType != null && leftIsRefineable) ||\n          (rightType != null && rightIsRefineable)) {\n        FlowScope informed = blindScope.createChildFlowScope();\n        if (leftIsRefineable && leftType != null) {\n          declareNameInScope(informed, left, leftType);\n        }\n        if (rightIsRefineable && rightType != null) {\n          declareNameInScope(informed, right, rightType);\n        }\n        return informed;"
+  },
+  {
+   "line": 359,
+   "lines": [
+    354,
+    355,
+    356,
+    357,
+    358,
+    359,
+    360,
+    361,
+    362,
+    363,
+    364
+   ],
+   "path": "src/com/google/javascript/jscomp/type/SemanticReverseAbstractInterpreter.java",
+   "snippet": "        FlowScope informed = blindScope.createChildFlowScope();\n        if (leftIsRefineable && leftType != null) {\n          declareNameInScope(informed, left, leftType);\n        }\n        if (rightIsRefineable && rightType != null) {\n          declareNameInScope(informed, right, rightType);\n        }\n        return informed;\n      }\n    }\n    return blindScope;"
+  }
+ ],
+ "class_simple": "ChainableReverseAbstractInterpreter",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Chainable reverse abstract interpreter providing basic functionality.\n *\n */\npublic abstract",
+  "method_javadoc": "/**\n   * Declares a refined type in {@code scope} for the name represented by\n   * {@code node}. It must be possible to refine the type of the given node in\n   * the given scope, as determined by {@link #getTypeIfRefinable}.\n   */"
+ },
+ "fields": [
+  "protected final CodingConvention convention",
+  "final JSTypeRegistry typeRegistry",
+  "private ChainableReverseAbstractInterpreter firstLink",
+  "private ChainableReverseAbstractInterpreter nextLink",
+  "private final Visitor<JSType> restrictUndefinedVisitor",
+  "private final Visitor<JSType> restrictNullVisitor"
+ ],
+ "focal_class": "com.google.javascript.jscomp.type.ChainableReverseAbstractInterpreter",
+ "focal_id": "Closure_19::com.google.javascript.jscomp.type.ChainableReverseAbstractInterpreter::declareNameInScope(FlowScope,Node,JSType)",
+ "focal_method_name": "declareNameInScope",
+ "generations": 3,
+ "impl_B": "protected void declareNameInScope(FlowScope scope, Node node, JSType type) {\n    switch (node.getType()) {\n      case Token.NAME:\n        scope.inferSlotType(node.getString(), type);\n        break;\n\n      case Token.GETPROP:\n        String qualifiedName = node.getQualifiedName();\n        Preconditions.checkNotNull(qualifiedName);\n\n        JSType origType = node.getJSType();\n        origType = origType == null ? getNativeType(UNKNOWN_TYPE) : origType;\n        scope.inferQualifiedSlot(node, qualifiedName, origType, type);\n        break;\n\n        // \"this\" references aren't currently modeled in the CFG.\n\n      default:\n        throw new IllegalArgumentException(\"Node cannot be refined. \\n\" +\n            node.toStringTree());\n    }\n  }",
+ "imports": [
+  "static com.google.javascript.rhino.jstype.JSTypeNative.ALL_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.BOOLEAN_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.NO_OBJECT_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.NO_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.NULL_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.NUMBER_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.OBJECT_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.STRING_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.U2U_CONSTRUCTOR_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.UNKNOWN_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.VOID_TYPE",
+  "com.google.common.base.Preconditions",
+  "com.google.javascript.jscomp.CodingConvention",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.Token",
+  "com.google.javascript.rhino.jstype.EnumElementType",
+  "com.google.javascript.rhino.jstype.FunctionType",
+  "com.google.javascript.rhino.jstype.JSType",
+  "com.google.javascript.rhino.jstype.JSTypeNative",
+  "com.google.javascript.rhino.jstype.JSTypeRegistry",
+  "com.google.javascript.rhino.jstype.ObjectType",
+  "com.google.javascript.rhino.jstype.ParameterizedType",
+  "com.google.javascript.rhino.jstype.StaticSlot",
+  "com.google.javascript.rhino.jstype.TemplateType",
+  "com.google.javascript.rhino.jstype.UnionType",
+  "com.google.javascript.rhino.jstype.Visitor"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp.type",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "/**\n   * Appends a link to {@code this}, returning the updated last link.\n   * <p>\n   * The pattern {@code new X().append(new Y())...append(new Z())} forms a\n   * chain starting with X, then Y, then ... Z.\n   * @param lastLink a chainable interpreter, with no next link\n   * @return the updated last link\n   */",
+   "name": "append"
+  },
+  {
+   "javadoc": "/**\n   * Gets the first link of this chain.\n   */",
+   "name": "getFirst"
+  },
+  {
+   "javadoc": "/**\n   * Calculates the preciser scope starting with the first link.\n   */",
+   "name": "firstPreciserScopeKnowingConditionOutcome"
+  },
+  {
+   "javadoc": "/**\n   * Delegates the calculation of the preciser scope to the next link.\n   * If there is no next link, returns the blind scope.\n   */",
+   "name": "nextPreciserScopeKnowingConditionOutcome"
+  },
+  {
+   "javadoc": "/**\n   * Returns the type of a node in the given scope if the node corresponds to a\n   * name whose type is capable of being refined.\n   * @return The current type of the node if it can be refined, null otherwise.\n   */",
+   "name": "getTypeIfRefinable"
+  },
+  {
+   "javadoc": "/**\n   * Returns a version of type where undefined is not present.\n   */",
+   "name": "getRestrictedWithoutUndefined"
+  },
+  {
+   "javadoc": "/**\n   * Returns a version of type where null is not present.\n   */",
+   "name": "getRestrictedWithoutNull"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public abstract class ChainableReverseAbstractInterpreter implements ReverseAbstractInterpreter",
+  "constructors": [
+   "public ChainableReverseAbstractInterpreter(CodingConvention convention, JSTypeRegistry typeRegistry);"
+  ],
+  "focal_signature": "protected void declareNameInScope(FlowScope scope, Node node, JSType type)",
+  "methods": [
+   "public ChainableReverseAbstractInterpreter append( ChainableReverseAbstractInterpreter lastLink);",
+   "public ChainableReverseAbstractInterpreter getFirst();",
+   "protected FlowScope firstPreciserScopeKnowingConditionOutcome(Node condition, FlowScope blindScope, boolean outcome);",
+   "protected FlowScope nextPreciserScopeKnowingConditionOutcome(Node condition, FlowScope blindScope, boolean outcome);",
+   "protected JSType getTypeIfRefinable(Node node, FlowScope scope);",
+   "protected final JSType getRestrictedWithoutUndefined(JSType type);",
+   "protected final JSType getRestrictedWithoutNull(JSType type);"
+  ],
+  "type_signatures": [
+   "public interface FlowScope extends StaticScope<JSType>, LatticeElement {  }",
+   "public class Node implements Cloneable, Serializable { public Node(int nodeType); public Node(int nodeType, Node child); public Node(int nodeType, Node left, Node right); public Node(int nodeType, Node left, Node mid, Node right); public Node(int nodeType, Node left, Node mid, Node mid2, Node right); public Node(int nodeType, int lineno, int charno); public Node(int nodeType, Node child, int lineno, int charno); public Node(int nodeType, Node left, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node mid2, Node right, int lineno, int charno); public Node(int nodeType, Node[] children, int lineno, int charno); public Node(int nodeType, Node[] children); public static Node newNumber(double number); public static Node newNumber(double number, int lineno, int charno); public static Node newString(String str); }",
+   "public abstract class JSType implements Serializable { public JSDocInfo getJSDocInfo(); public String getDisplayName(); public boolean hasDisplayName(); public boolean isNoType(); public boolean isNoResolvedType(); public boolean isNoObjectType(); public final boolean isEmptyType(); public boolean isNumberObjectType(); public boolean isNumberValueType(); public boolean isFunctionPrototypeType(); public boolean isStringObjectType(); public boolean isStringValueType(); public final boolean isString(); public final boolean isNumber(); public boolean isArrayType(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

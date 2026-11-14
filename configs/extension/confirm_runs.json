@@ -1,0 +1,55 @@
+{
+ "decision": "D-140",
+ "prompt_set": "local_m1b",
+ "datasets": {
+  "F1": "D1C_F1",
+  "F2": "D1C_F2",
+  "CTRL": "D1C_CTRL"
+ },
+ "base_dir": "data/extension/confirm",
+ "per_tranche_layout": {
+  "context": "context/",
+  "label_side": "label_side/fixed_bodies.jsonl",
+  "call_log": "llm_calls/",
+  "candidates": "candidates/",
+  "executions": "executions/",
+  "labels": "labels.jsonl",
+  "instances": "instances.jsonl",
+  "leakage_guard": "guard.jsonl"
+ },
+ "runs": {
+  "generation": {
+   "F1": "GEN_CONF_F1",
+   "F2": "GEN_CONF_F2",
+   "CTRL": "GEN_CONF_CTRL"
+  },
+  "execution": {
+   "F1": "EXEC_CONF_F1",
+   "F2": "EXEC_CONF_F2",
+   "CTRL": "EXEC_CONF_CTRL"
+  },
+  "probes": {
+   "F1": "CFP_CONF_F1",
+   "F2": "CFP_CONF_F2",
+   "CTRL": "CFP_CONF_CTRL"
+  },
+  "votes": {
+   "F1": {
+    "M1": "LOCAL_CONF_VOTE_M1_F1",
+    "M2": "LOCAL_CONF_VOTE_M2_F1",
+    "M3": "LOCAL_CONF_VOTE_E6B_F1"
+   },
+   "F2": {
+    "M1": "LOCAL_CONF_VOTE_M1_F2",
+    "M2": "LOCAL_CONF_VOTE_M2_F2",
+    "M3": "LOCAL_CONF_VOTE_E6B_F2"
+   }
+  },
+  "analysis": "CFP_CONF_ALL"
+ },
+ "notes": [
+  "Votes are collected on F1 and F2 failures only; the control group is not judged.",
+  "CFP_CONF_ALL is a read-only concatenation of the three tranche ledgers, instance files and label files, assembled for the frozen analysis script; the per-tranche records are the originals.",
+  "Judge predictions are stored apart from probe ledgers and are read only by the analysis script."
+ ]
+}

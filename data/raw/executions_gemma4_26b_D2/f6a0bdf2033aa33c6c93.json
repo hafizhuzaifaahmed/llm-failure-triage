@@ -1,0 +1,386 @@
+{
+ "candidate_id": "f6a0bdf2033aa33c6c93",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testRead_ClosedStream",
+   "testRead_FinishedOrNullEntry",
+   "testRead_InvalidParameters",
+   "testRead_DeflatedContent",
+   "testRead_StoredContent",
+   "testRead_TruncatedFile"
+  ],
+  "nc_both": [],
+  "nc_one_version": [],
+  "passes": 0
+ },
+ "dataset": "D2",
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "Compress_5::org.apache.commons.compress.archivers.zip.ZipArchiveInputStream::read(byte[],int,int)#m166",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_ClosedStream",
+   "runs_b": [
+    {
+     "duration_s": 0.119,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.124,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.122,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.135,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.125,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.109,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport java.util.zip.ZipOutputStream;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_read_TriageGen0Test {\n\n    /**\n     * Helper to create a valid ZIP byte array in memory.\n     */\n    private byte[] createZipWithContent(String content) throws IOException {\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            ZipEntry entry = new ZipEntry(\"test.txt\");\n            zos.putNextEntry(entry);\n            zos.write(content.getBytes());\n            zos.closeEntry();\n        }\n        return baos.toByteArray();\n    }\n\n    @Test\n    public void testRead_ClosedStream() throws IOException {\n        byte[] zipData = createZipWithContent(\"hello\");\n        ZipArchiveInputStream zais = new ZipArchiveInputStream(new ByteArrayInputStream(zipData));\n        zais.getNextZipEntry();\n        zais.close();\n\n        byte[] buffer = new byte[10];\n        try {\n            zais.read(buffer, 0, 5);\n            Assert.fail(\"Should have thrown IOException because stream is closed\");\n        } catch (IOException e) {\n            Assert.assertEquals(\"The stream is closed\", e.getMessage());\n        }\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_FinishedOrNullEntry",
+   "runs_b": [
+    {
+     "duration_s": 0.12,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.13,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.113,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.118,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.108,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.115,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport java.util.zip.ZipOutputStream;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_read_TriageGen0Test {\n\n    /**\n     * Helper to create a valid ZIP byte array in memory.\n     */\n    private byte[] createZipWithContent(String content) throws IOException {\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            ZipEntry entry = new ZipEntry(\"test.txt\");\n            zos.putNextEntry(entry);\n            zos.write(content.getBytes());\n            zos.closeEntry();\n        }\n        return baos.toByteArray();\n    }\n\n    \n\n    @Test\n    public void testRead_FinishedOrNullEntry() throws IOException {\n        byte[] zipData = createZipWithContent(\"hello\");\n        ZipArchiveInputStream zais = new ZipArchiveInputStream(new ByteArrayInputStream(zipData));\n        \n        // Case: current == null (no entry selected)\n        byte[] buffer = new byte[10];\n        Assert.assertEquals(-1, zais.read(buffer, 0, 5));\n\n        // Case: inf.finished() (after reading all entries)\n        zais.getNextZipEntry(); // Select first entry\n        // Exhaust the stream logic via internal state is hard without reflection, \n        // but calling getNextEntry again when done should trigger finished state.\n        zais.getNextZipEntry(); \n        Assert.assertEquals(-1, zais.read(buffer, 0, 5));\n    }\n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_InvalidParameters",
+   "runs_b": [
+    {
+     "duration_s": 0.119,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.119,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.112,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.111,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.114,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.115,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport java.util.zip.ZipOutputStream;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_read_TriageGen0Test {\n\n    /**\n     * Helper to create a valid ZIP byte array in memory.\n     */\n    private byte[] createZipWithContent(String content) throws IOException {\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            ZipEntry entry = new ZipEntry(\"test.txt\");\n            zos.putNextEntry(entry);\n            zos.write(content.getBytes());\n            zos.closeEntry();\n        }\n        return baos.toByteArray();\n    }\n\n    \n\n    \n\n    @Test\n    public void testRead_InvalidParameters() throws IOException {\n        byte[] zipData = createZipWithContent(\"hello\");\n        ZipArchiveInputStream zais = new ZipArchiveInputStream(new ByteArrayInputStream(zipData));\n        zais.getNextZipEntry();\n        byte[] buffer = new byte[5];\n\n        // start < 0\n        try {\n            zais.read(buffer, -1, 2);\n            Assert.fail();\n        } catch (ArrayIndexOutOfBoundsException e) {}\n\n        // length < 0\n        try {\n            zais.read(buffer, 0, -1);\n            Assert.fail();\n        } catch (ArrayIndexOutOfBoundsException e) {}\n\n        // start > buffer.length\n        try {\n            zais.read(buffer, 10, 1);\n            Assert.fail();\n        } catch (ArrayIndexOutOfBoundsException e) {}\n\n        // buffer overflow (start + length > buffer.length)\n        try {\n            zais.read(buffer, 3, 3);\n            Assert.fail();\n        } catch (ArrayIndexOutOfBoundsException e) {}\n    }\n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_DeflatedContent",
+   "runs_b": [
+    {
+     "duration_s": 0.112,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.114,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.124,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.127,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.115,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.11,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport java.util.zip.ZipOutputStream;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_read_TriageGen0Test {\n\n    /**\n     * Helper to create a valid ZIP byte array in memory.\n     */\n    private byte[] createZipWithContent(String content) throws IOException {\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            ZipEntry entry = new ZipEntry(\"test.txt\");\n            zos.putNextEntry(entry);\n            zos.write(content.getBytes());\n            zos.closeEntry();\n        }\n        return baos.toByteArray();\n    }\n\n    \n\n    \n\n    \n\n    @Test\n    public void testRead_DeflatedContent() throws IOException {\n        String content = \"This is a test string for inflation\";\n        byte[] zipData = createZipWithContent(content);\n        ZipArchiveInputStream zais = new ZipArchiveInputStream(new ByteArrayInputStream(zipData));\n        \n        zais.getNextZipEntry();\n        byte[] buffer = new byte[10];\n        \n        int read = zais.read(buffer, 0, 5);\n        Assert.assertEquals(5, read);\n        Assert.assertEquals(content.substring(0, 5), new String(buffer, 0, 5));\n\n        int read2 = zais.read(buffer, 0, 10);\n        Assert.assertTrue(read2 > 0);\n        \n        // Read until end\n        int lastRead;\n        while ((lastRead = zais.read(buffer, 0, buffer.length)) != -1) {\n            // consuming\n        }\n    }\n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_StoredContent",
+   "runs_b": [
+    {
+     "duration_s": 0.115,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.131,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.126,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.12,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.131,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.142,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport java.util.zip.ZipOutputStream;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_read_TriageGen0Test {\n\n    /**\n     * Helper to create a valid ZIP byte array in memory.\n     */\n    private byte[] createZipWithContent(String content) throws IOException {\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            ZipEntry entry = new ZipEntry(\"test.txt\");\n            zos.putNextEntry(entry);\n            zos.write(content.getBytes());\n            zos.closeEntry();\n        }\n        return baos.toByteArray();\n    }\n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testRead_StoredContent() throws IOException {\n        // To trigger STORED mode, we need to manually construct a ZIP with STORED entry\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            ZipEntry entry = new ZipEntry(\"stored.txt\");\n            entry.setMethod(ZipEntry.STORED);\n            // For STORED, we must provide CRC and Size\n            byte[] data = \"stored data\".getBytes();\n            CRC32 crc = new CRC32();\n            crc.update(data);\n            entry.setCrc(crc.getValue());\n            entry.setSize(data.length);\n            \n            zos.putNextEntry(entry);\n            zos.write(data);\n            zos.closeEntry();\n        }\n        \n        ZipArchiveInputStream zais = new ZipArchiveInputStream(new ByteArrayInputStream(baos.toByteArray()));\n        zais.getNextZipEntry();\n        \n        byte[] buffer = new byte[5];\n        // Test partial read\n        int read1 = zais.read(buffer, 0, 4);\n        Assert.assertEquals(4, read1);\n        Assert.assertEquals(\"stor\", new String(buffer, 0, 4));\n\n        // Test reading across the internal buffer boundary (triggering offsetInBuffer reset)\n        // We need to read enough to trigger the (offsetInBuffer >= lengthOfLastRead) condition\n        byte[] largeBuffer = new byte[20];\n        int read2 = zais.read(largeBuffer, 0, 15);\n        Assert.assertTrue(read2 > 0);\n    }\n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testRead_TruncatedFile",
+   "runs_b": [
+    {
+     "duration_s": 0.115,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.121,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.113,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.122,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.136,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.109,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.EOFException;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.PushbackInputStream;\nimport java.math.*;\nimport java.util.*;\nimport java.util.zip.CRC32;\nimport java.util.zip.DataFormatException;\nimport java.util.zip.Inflater;\nimport java.util.zip.ZipEntry;\nimport java.util.zip.ZipException;\nimport java.util.zip.ZipOutputStream;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class ZipArchiveInputStream_read_TriageGen0Test {\n\n    /**\n     * Helper to create a valid ZIP byte array in memory.\n     */\n    private byte[] createZipWithContent(String content) throws IOException {\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        try (ZipOutputStream zos = new ZipOutputStream(baos)) {\n            ZipEntry entry = new ZipEntry(\"test.txt\");\n            zos.putNextEntry(entry);\n            zos.write(content.getBytes());\n            zos.closeEntry();\n        }\n        return baos.toByteArray();\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testRead_TruncatedFile() throws IOException {\n        // Create a corrupted zip where the stream ends abruptly\n        byte[] zipData = createZipWithContent(\"some content\");\n        // Truncate the array mid-way\n        byte[] truncated = new byte[zipData.length / 2];\n        System.arraycopy(zipData, 0, truncated, 0, truncated.length);\n        \n        ZipArchiveInputStream zais = new ZipArchiveInputStream(new ByteArrayInputStream(truncated));\n        zais.getNextZipEntry();\n        \n        byte[] buffer = new byte[10];\n        try {\n            // Depending on where it's truncated, it might throw IOException for \"Truncated ZIP file\"\n            // or just return -1 if the inflater finishes.\n            zais.read(buffer, 0, 10);\n        } catch (IOException e) {\n            // This is an acceptable outcome for a corrupted file\n        }\n    }\n}\n"
+  }
+ ],
+ "mutant_version": "m166",
+ "source_sha256": "076b64cdde47b05460daa47eb7f21fd59dc38c6411c38a69d55cb9345eb6f567",
+ "utc": "2026-11-03T00:30:05Z"
+}

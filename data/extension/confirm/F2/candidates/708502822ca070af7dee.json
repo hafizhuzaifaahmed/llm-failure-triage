@@ -1,0 +1,14 @@
+{
+  "assembled": true,
+  "call_key": "d3a53943be56c5bcfe524045ea02634a117e876e77b8d66158fc0e438dac2e23",
+  "candidate_id": "708502822ca070af7dee",
+  "class_name": "TokenStream_isJSIdentifier_TriageGen2Test",
+  "dataset": "D1C_F2",
+  "focal_id": "Closure_131::com.google.javascript.rhino.TokenStream::isJSIdentifier(String)",
+  "generation": 2,
+  "model_returned": "gemma4:26b",
+  "n_tests": 6,
+  "package": "com.google.javascript.rhino",
+  "source": "package com.google.javascript.rhino;\n\nimport java.io.*;\nimport java.math.*;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertFalse;\nimport static org.junit.Assert.assertTrue;\n\npublic class TokenStream_isJSIdentifier_TriageGen2Test {\n\n    @Test\n    public void testIsJSIdentifier_EmptyString() {\n        assertFalse(TokenStream.isJSIdentifier(\"\"));\n    }\n\n    @Test\n    public void testIsJSIdentifier_InvalidStartChar() {\n        // Starts with a digit (not a valid identifier start)\n        assertFalse(TokenStream.isJSIdentifier(\"1abc\"));\n        // Starts with a special character\n        assertFalse(TokenStream.isJSIdentifier(\"$#abc\")); // Note: depends on Character.isJavaIdentifierStart\n        // Note: In Java, '$' and '_' are valid identifier starts. \n        // Let's use a space or symbol that definitely isn't.\n        assertFalse(TokenStream.isJSIdentifier(\" abc\"));\n        assertFalse(TokenStream.isJSIdentifier(\"!abc\"));\n    }\n\n    @Test\n    public void testIsJSIdentifier_ValidSingleChar() {\n        assertTrue(TokenStream.isJSIdentifier(\"a\"));\n        assertTrue(TokenStream.isJSIdentifier(\"_\"));\n        assertTrue(TokenStream.isJSIdentifier(\"$\"));\n    }\n\n    @Test\n    public void testIsJSIdentifier_ValidMultiChar() {\n        assertTrue(TokenStream.isJSIdentifier(\"abc\"));\n        assertTrue(TokenStream.isJSIdentifier(\"var123\"));\n        assertTrue(TokenStream.isJSIdentifier(\"_variable\"));\n        assertTrue(TokenStream.isJSIdentifier(\"$foo\"));\n    }\n\n    @Test\n    public void testIsJSIdentifier_InvalidPartChar() {\n        // Valid start, but invalid part (contains a hyphen or space)\n        assertFalse(TokenStream.isJSIdentifier(\"a-b\"));\n        assertFalse(TokenStream.isJSIdentifier(\"a b\"));\n        assertFalse(TokenStream.isJSIdentifier(\"a.b\"));\n        assertFalse(TokenStream.isJSIdentifier(\"abc!\"));\n    }\n\n    @Test\n    public void testIsJSIdentifier_UnicodeValid() {\n        // Testing Unicode characters that are valid Java identifiers\n        assertTrue(TokenStream.isJSIdentifier(\"π\"));\n        assertTrue(TokenStream.isJSIdentifier(\"变量\"));\n    }\n}\n",
+  "tranche": "F2"
+}

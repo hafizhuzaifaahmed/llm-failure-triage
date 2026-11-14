@@ -1,0 +1,175 @@
+{
+ "bug_name": "JacksonDatabind_75",
+ "call_sites": [
+  {
+   "line": 503,
+   "lines": [
+    498,
+    499,
+    500,
+    501,
+    502,
+    503,
+    504,
+    505,
+    506,
+    507,
+    508
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "            BeanProperty prop) throws JsonMappingException {\n        KeyDeserializer kd = _cache.findKeyDeserializer(this,\n                _factory, keyType);\n        // Second: contextualize?\n        if (kd instanceof ContextualKeyDeserializer) {\n            kd = ((ContextualKeyDeserializer) kd).createContextual(this, prop);\n        }\n        return kd;\n    }\n    \n    /*"
+  },
+  {
+   "line": 650,
+   "lines": [
+    645,
+    646,
+    647,
+    648,
+    649,
+    650,
+    651,
+    652,
+    653,
+    654,
+    655
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "        throws JsonMappingException\n    {\n        if (deser instanceof ContextualDeserializer) {\n            _currentType = new LinkedNode<JavaType>(type, _currentType);\n            try {\n                deser = ((ContextualDeserializer) deser).createContextual(this, prop);\n            } finally {\n                _currentType = _currentType.next();\n            }\n        }\n        return deser;"
+  },
+  {
+   "line": 681,
+   "lines": [
+    676,
+    677,
+    678,
+    679,
+    680,
+    681,
+    682,
+    683,
+    684,
+    685,
+    686
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "        throws JsonMappingException\n    {\n        if (deser instanceof ContextualDeserializer) {\n            _currentType = new LinkedNode<JavaType>(type, _currentType);\n            try {\n                deser = ((ContextualDeserializer) deser).createContextual(this, prop);\n            } finally {\n                _currentType = _currentType.next();\n            }\n        }\n        return deser;"
+  },
+  {
+   "line": 697,
+   "lines": [
+    692,
+    693,
+    694,
+    695,
+    696,
+    697,
+    698,
+    699,
+    700,
+    701,
+    702
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "    }\n\n    @Deprecated // since 2.5; remove from 2.9\n    public JsonDeserializer<?> handleSecondaryContextualization(JsonDeserializer<?> deser, BeanProperty prop) throws JsonMappingException {\n        if (deser instanceof ContextualDeserializer) {\n            deser = ((ContextualDeserializer) deser).createContextual(this, prop);\n        }\n        return deser;\n    }\n\n    /*"
+  },
+  {
+   "line": 938,
+   "lines": [
+    933,
+    934,
+    935,
+    936,
+    937,
+    938,
+    939,
+    940,
+    941,
+    942,
+    943
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/SerializerProvider.java",
+   "snippet": "            BeanProperty property)\n        throws JsonMappingException\n    {\n        if (ser != null) {\n            if (ser instanceof ContextualSerializer) {\n                ser = ((ContextualSerializer) ser).createContextual(this, property);\n            }\n        }\n        return ser;\n    }\n"
+  }
+ ],
+ "class_simple": "EnumSerializer",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Standard serializer used for {@link java.lang.Enum} types.\n *<p>\n * Based on {@link StdScalarSerializer} since the JSON value is\n * scalar (String).\n */\n@JacksonStdImpl\npublic",
+  "method_javadoc": "/**\n     * To support some level of per-property configuration, we will need\n     * to make things contextual. We are limited to \"textual vs index\"\n     * choice here, however.\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "protected final EnumValues _values",
+  "protected final Boolean _serializeAsIndex"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.ser.std.EnumSerializer",
+ "focal_id": "JacksonDatabind_75::com.fasterxml.jackson.databind.ser.std.EnumSerializer::createContextual(SerializerProvider,BeanProperty)",
+ "focal_method_name": "createContextual",
+ "generations": 3,
+ "impl_B": "@Override\n    public JsonSerializer<?> createContextual(SerializerProvider serializers,\n            BeanProperty property) throws JsonMappingException\n    {\n        if (property != null) {\n            JsonFormat.Value format = findFormatOverrides(serializers,\n                    property, handledType());\n            if (format != null) {\n                Boolean serializeAsIndex = _isShapeWrittenUsingIndex(property.getType().getRawClass(),\n                        format, false);\n                if (serializeAsIndex != _serializeAsIndex) {\n                    return new EnumSerializer(_values, serializeAsIndex);\n                }\n            }\n        }\n        return this;\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.lang.reflect.Type",
+  "java.util.*",
+  "com.fasterxml.jackson.annotation.JsonFormat",
+  "com.fasterxml.jackson.annotation.JsonFormat.Shape",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.annotation.JacksonStdImpl",
+  "com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper",
+  "com.fasterxml.jackson.databind.jsonFormatVisitors.JsonStringFormatVisitor",
+  "com.fasterxml.jackson.databind.node.ArrayNode",
+  "com.fasterxml.jackson.databind.node.ObjectNode",
+  "com.fasterxml.jackson.databind.ser.ContextualSerializer",
+  "com.fasterxml.jackson.databind.util.EnumValues"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.ser.std",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getEnumValues"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "serialize"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getSchema"
+  },
+  {
+   "javadoc": "",
+   "name": "acceptJsonFormatVisitor"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_serializeAsIndex"
+  },
+  {
+   "javadoc": "/**\n     * Helper method called to check whether serialization should be done using\n     * index (number) or not.\n     */",
+   "name": "_isShapeWrittenUsingIndex"
+  }
+ ],
+ "sig": {
+  "class_declaration": "@JacksonStdImpl public class EnumSerializer extends StdScalarSerializer<Enum<?>> implements ContextualSerializer",
+  "constructors": [
+   "public EnumSerializer(EnumValues v);",
+   "public EnumSerializer(EnumValues v, Boolean serializeAsIndex);"
+  ],
+  "focal_signature": "public JsonSerializer<?> createContextual(SerializerProvider serializers, BeanProperty property) throws JsonMappingException",
+  "methods": [
+   "public EnumValues getEnumValues();",
+   "public final void serialize(Enum<?> en, JsonGenerator gen, SerializerProvider serializers) throws IOException;",
+   "public JsonNode getSchema(SerializerProvider provider, Type typeHint);",
+   "public void acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint) throws JsonMappingException;",
+   "protected final boolean _serializeAsIndex(SerializerProvider serializers);",
+   "protected static Boolean _isShapeWrittenUsingIndex(Class<?> enumClass, JsonFormat.Value format, boolean fromClass);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

@@ -1,0 +1,73 @@
+{
+  "bug_name": "Mockito_37",
+  "call_sites": [
+    {
+      "line": 68,
+      "lines": [
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73
+      ],
+      "path": "src/org/mockito/internal/progress/MockingProgressImpl.java",
+      "snippet": "    }\n\n    public void validateState() {\n        //State is cool when GlobalConfiguration is already loaded\n        //this cannot really be tested functionally because I cannot dynamically mess up org.mockito.configuration.MockitoConfiguration class \n        GlobalConfiguration.validate();\n        \n        if (verificationMode != null) {\n            Location location = verificationMode.getLocation();\n            verificationMode = null;\n            reporter.unfinishedVerificationException(location);"
+    },
+    {
+      "line": 48,
+      "lines": [
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53
+      ],
+      "path": "src/org/mockito/internal/stubbing/MockitoStubber.java",
+      "snippet": "    \n    private void addAnswer(Answer answer, boolean isConsecutive) {\n        Invocation invocation = invocationForStubbing.getInvocation();\n        mockingProgress.stubbingCompleted(invocation);\n        AnswersValidator answersValidator = new AnswersValidator();\n        answersValidator.validate(answer, invocation);\n        \n        if (isConsecutive) {\n            stubbed.getFirst().addAnswer(answer);\n        } else {\n            stubbed.addFirst(new StubbedInvocationMatcher(invocationForStubbing, answer));"
+    }
+  ],
+  "class_simple": "AnswersValidator",
+  "doc": {
+    "class_javadoc": "",
+    "method_javadoc": ""
+  },
+  "fields": [
+    "private Reporter reporter"
+  ],
+  "focal_class": "org.mockito.internal.stubbing.answers.AnswersValidator",
+  "focal_id": "Mockito_37::org.mockito.internal.stubbing.answers.AnswersValidator::validate(Answer<?>,Invocation)",
+  "focal_method_name": "validate",
+  "impl_B": "public void validate(Answer<?> answer, Invocation invocation) {\n        if (answer instanceof ThrowsException) {\n            validateException((ThrowsException) answer, invocation);\n        }\n        \n        if (answer instanceof Returns) {\n            validateReturnValue((Returns) answer, invocation);\n        }\n        \n        if (answer instanceof DoesNothing) {\n            validateDoNothing((DoesNothing) answer, invocation);\n        }\n        \n    }",
+  "imports": [
+    "org.mockito.exceptions.Reporter",
+    "org.mockito.internal.invocation.Invocation",
+    "org.mockito.stubbing.Answer"
+  ],
+  "javadoc_edited_by_fix": false,
+  "package": "org.mockito.internal.stubbing.answers",
+  "project": "Mockito",
+  "siblings": [],
+  "sig": {
+    "class_declaration": "public class AnswersValidator",
+    "constructors": [],
+    "focal_signature": "public void validate(Answer<?> answer, Invocation invocation)",
+    "methods": [],
+    "type_signatures": [
+      "public interface Answer<T> extends Serializable {  }",
+      "@SuppressWarnings(\"unchecked\") public class Invocation implements PrintableInvocation, InvocationOnMock, PrintingFriendlyInvocation { public Invocation(Object mock, MockitoMethod mockitoMethod, Object[] args, int sequenceNumber, RealMethod realMethod); public Object getMock(); public MockitoMethod getMethod(); public Object[] getArguments(); public boolean isVerified(); public Integer getSequenceNumber(); public boolean isVerifiedInOrder(); public boolean equals(Object o); public int hashCode(); public String toString(); protected String toString(List<Matcher> matchers, PrintSettings printSettings); protected List<Matcher> argumentsToMatchers(); public static boolean isToString(InvocationOnMock invocation); public boolean isValidException(Throwable throwable); public boolean isValidReturnType(Class clazz); }"
+    ]
+  },
+  "split": "test"
+}

@@ -1,0 +1,292 @@
+{
+ "bug_name": "JacksonDatabind_1",
+ "call_sites": [
+  {
+   "line": 183,
+   "lines": [
+    178,
+    179,
+    180,
+    181,
+    182,
+    183,
+    184,
+    185,
+    186,
+    187,
+    188
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ser/impl/BeanAsArraySerializer.java",
+   "snippet": "            for (final int len = props.length; i < len; ++i) {\n                BeanPropertyWriter prop = props[i];\n                if (prop == null) { // can have nulls in filtered list; but if so, MUST write placeholders\n                    jgen.writeNull();\n                } else {\n                    prop.serializeAsColumn(bean, jgen, provider);\n                }\n            }\n            // NOTE: any getters can not be supported either\n            //if (_anyGetterWriter != null) {\n            //    _anyGetterWriter.getAndSerialize(bean, jgen, provider);"
+  },
+  {
+   "line": 74,
+   "lines": [
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ser/impl/FilteredBeanPropertyWriter.java",
+   "snippet": "        public void serializeAsColumn(Object bean, JsonGenerator jgen, SerializerProvider prov)\n            throws Exception\n        {\n            Class<?> activeView = prov.getActiveView();\n            if (activeView == null || _view.isAssignableFrom(activeView)) {\n                _delegate.serializeAsColumn(bean, jgen, prov);\n            } else {\n                _delegate.serializeAsPlaceholder(bean, jgen, prov);\n            }\n        }\n    }"
+  },
+  {
+   "line": 143,
+   "lines": [
+    138,
+    139,
+    140,
+    141,
+    142,
+    143,
+    144,
+    145,
+    146,
+    147
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ser/impl/FilteredBeanPropertyWriter.java",
+   "snippet": "                if (i == len) {\n                    _delegate.serializeAsPlaceholder(bean, jgen, prov);\n                    return;\n                }\n            }\n            _delegate.serializeAsColumn(bean, jgen, prov);\n        }\n    }\n}\n"
+  }
+ ],
+ "class_simple": "BeanPropertyWriter",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Base bean property handler class, which implements common parts of\n * reflection-based functionality for accessing a property value\n * and serializing it.\n *<p> \n * Note that current design tries to keep instances immutable (semi-functional\n * style); mostly because these instances are exposed to application\n * code and this is to reduce likelihood of data corruption and\n * synchronization issues.\n */\npublic",
+  "method_javadoc": "/**\n     * Alternative to {@link #serializeAsField} that is used when a POJO\n     * is serialized as JSON Array; the difference is that no field names\n     * are written.\n     * \n     * @since 2.1\n     */"
+ },
+ "fields": [
+  "public final static Object MARKER_FOR_EMPTY",
+  "protected final AnnotatedMember _member",
+  "protected final Annotations _contextAnnotations",
+  "protected final JavaType _declaredType",
+  "protected final Method _accessorMethod",
+  "protected final Field _field",
+  "protected HashMap<Object,Object> _internalSettings",
+  "protected final SerializedString _name",
+  "protected final PropertyName _wrapperName",
+  "protected final JavaType _cfgSerializationType",
+  "protected JsonSerializer<Object> _serializer",
+  "protected JsonSerializer<Object> _nullSerializer",
+  "protected PropertySerializerMap _dynamicSerializers",
+  "protected final boolean _suppressNulls",
+  "protected final Object _suppressableValue",
+  "protected final Class<?>[] _includeInViews",
+  "protected TypeSerializer _typeSerializer",
+  "protected JavaType _nonTrivialBaseType",
+  "protected final boolean _isRequired"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.ser.BeanPropertyWriter",
+ "focal_id": "JacksonDatabind_1::com.fasterxml.jackson.databind.ser.BeanPropertyWriter::serializeAsColumn(Object,JsonGenerator,SerializerProvider)",
+ "focal_method_name": "serializeAsColumn",
+ "generations": 3,
+ "impl_B": "public void serializeAsColumn(Object bean, JsonGenerator jgen, SerializerProvider prov)\n        throws Exception\n    {\n        Object value = get(bean);\n        if (value == null) { // nulls need specialized handling\n            if (_nullSerializer != null) {\n                _nullSerializer.serialize(null, jgen, prov);\n            } else { // can NOT suppress entries in tabular output\n                jgen.writeNull();\n            }\n        }\n        // otherwise find serializer to use\n        JsonSerializer<Object> ser = _serializer;\n        if (ser == null) {\n            Class<?> cls = value.getClass();\n            PropertySerializerMap map = _dynamicSerializers;\n            ser = map.serializerFor(cls);\n            if (ser == null) {\n                ser = _findAndAddDynamic(map, cls, prov);\n            }\n        }\n        // and then see if we must suppress certain values (default, empty)\n        if (_suppressableValue != null) {\n            if (MARKER_FOR_EMPTY == _suppressableValue) {\n                if (ser.isEmpty(value)) { // can NOT suppress entries in tabular output\n                    serializeAsPlaceholder(bean, jgen, prov);\n                    return;\n                }\n            } else if (_suppressableValue.equals(value)) { // can NOT suppress entries in tabular output\n                serializeAsPlaceholder(bean, jgen, prov);\n                return;\n            }\n        }\n        // For non-nulls: simple check for direct cycles\n        if (value == bean) {\n            _handleSelfReference(bean, ser);\n        }\n        if (_typeSerializer == null) {\n            ser.serialize(value, jgen, prov);\n        } else {\n            ser.serializeWithType(value, jgen, prov, _typeSerializer);\n        }\n    }",
+ "imports": [
+  "java.lang.annotation.Annotation",
+  "java.lang.reflect.Field",
+  "java.lang.reflect.Method",
+  "java.lang.reflect.Type",
+  "java.util.HashMap",
+  "com.fasterxml.jackson.core.JsonGenerator",
+  "com.fasterxml.jackson.core.io.SerializedString",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.introspect.*",
+  "com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor",
+  "com.fasterxml.jackson.databind.jsonschema.SchemaAware",
+  "com.fasterxml.jackson.databind.jsontype.TypeSerializer",
+  "com.fasterxml.jackson.databind.node.ObjectNode",
+  "com.fasterxml.jackson.databind.ser.impl.PropertySerializerMap",
+  "com.fasterxml.jackson.databind.ser.impl.UnwrappingBeanPropertyWriter",
+  "com.fasterxml.jackson.databind.util.Annotations",
+  "com.fasterxml.jackson.databind.util.NameTransformer"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.ser",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "rename"
+  },
+  {
+   "javadoc": "/**\n     * Method called to assign value serializer for property\n     * \n     * @since 2.0\n     */",
+   "name": "assignSerializer"
+  },
+  {
+   "javadoc": "/**\n     * Method called to assign null value serializer for property\n     * \n     * @since 2.0\n     */",
+   "name": "assignNullSerializer"
+  },
+  {
+   "javadoc": "/**\n     * Method called create an instance that handles details of unwrapping\n     * contained value.\n     */",
+   "name": "unwrappingWriter"
+  },
+  {
+   "javadoc": "/**\n     * Method called to define type to consider as \"non-trivial\" basetype,\n     * needed for dynamic serialization resolution for complex (usually container)\n     * types\n     */",
+   "name": "setNonTrivialBaseType"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getName"
+  },
+  {
+   "javadoc": "",
+   "name": "getType"
+  },
+  {
+   "javadoc": "",
+   "name": "getWrapperName"
+  },
+  {
+   "javadoc": "",
+   "name": "isRequired"
+  },
+  {
+   "javadoc": "",
+   "name": "getAnnotation"
+  },
+  {
+   "javadoc": "",
+   "name": "getContextAnnotation"
+  },
+  {
+   "javadoc": "",
+   "name": "getMember"
+  },
+  {
+   "javadoc": "",
+   "name": "depositSchemaProperty"
+  },
+  {
+   "javadoc": "/**\n     * Method for accessing value of specified internal setting.\n     * \n     * @return Value of the setting, if any; null if none.\n     */",
+   "name": "getInternalSetting"
+  },
+  {
+   "javadoc": "/**\n     * Method for setting specific internal setting to given value\n     * \n     * @return Old value of the setting, if any (null if none)\n     */",
+   "name": "setInternalSetting"
+  },
+  {
+   "javadoc": "/**\n     * Method for removing entry for specified internal setting.\n     * \n     * @return Existing value of the setting, if any (null if none)\n     */",
+   "name": "removeInternalSetting"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getSerializedName"
+  },
+  {
+   "javadoc": "",
+   "name": "hasSerializer"
+  },
+  {
+   "javadoc": "",
+   "name": "hasNullSerializer"
+  },
+  {
+   "javadoc": "",
+   "name": "willSuppressNulls"
+  },
+  {
+   "javadoc": "",
+   "name": "getSerializer"
+  },
+  {
+   "javadoc": "",
+   "name": "getSerializationType"
+  },
+  {
+   "javadoc": "",
+   "name": "getRawSerializationType"
+  },
+  {
+   "javadoc": "",
+   "name": "getPropertyType"
+  },
+  {
+   "javadoc": "/**\n     * Get the generic property type of this property writer.\n     *\n     * @return The property type, or null if not found.\n     */",
+   "name": "getGenericPropertyType"
+  },
+  {
+   "javadoc": "",
+   "name": "getViews"
+  },
+  {
+   "javadoc": "/**\n     *<p>\n     * NOTE: due to introspection, this is a <b>slow</b> method to call\n     * and should never be called during actual serialization or filtering\n     * of the property. Rather it is needed for traversal needed for things\n     * like constructing JSON Schema instances.\n     * \n     * @since 2.1\n     * \n     * @deprecated since 2.2, use {@link #isRequired()} instead.\n     */",
+   "name": "isRequired"
+  },
+  {
+   "javadoc": "/**\n     * Method called to access property that this bean stands for, from\n     * within given bean, and to serialize it as a JSON Object field\n     * using appropriate serializer.\n     */",
+   "name": "serializeAsField"
+  },
+  {
+   "javadoc": "/**\n     * Method called to serialize a placeholder used in tabular output when\n     * real value is not to be included (is filtered out), but when we need\n     * an entry so that field indexes will not be off. Typically this should\n     * output null or empty String, depending on datatype.\n     * \n     * @since 2.1\n     */",
+   "name": "serializeAsPlaceholder"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_findAndAddDynamic"
+  },
+  {
+   "javadoc": "/**\n     * Method that can be used to access value of the property this\n     * Object describes, from given bean instance.\n     *<p>\n     * Note: method is final as it should not need to be overridden -- rather,\n     * calling method(s) ({@link #serializeAsField}) should be overridden\n     * to change the behavior\n     */",
+   "name": "get"
+  },
+  {
+   "javadoc": "",
+   "name": "_handleSelfReference"
+  },
+  {
+   "javadoc": "",
+   "name": "toString"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class BeanPropertyWriter implements BeanProperty",
+  "constructors": [
+   "protected BeanPropertyWriter(BeanPropertyWriter base);",
+   "protected BeanPropertyWriter(BeanPropertyWriter base, SerializedString name);"
+  ],
+  "focal_signature": "public void serializeAsColumn(Object bean, JsonGenerator jgen, SerializerProvider prov) throws Exception",
+  "methods": [
+   "public BeanPropertyWriter rename(NameTransformer transformer);",
+   "public void assignSerializer(JsonSerializer<Object> ser);",
+   "public void assignNullSerializer(JsonSerializer<Object> nullSer);",
+   "public BeanPropertyWriter unwrappingWriter(NameTransformer unwrapper);",
+   "public void setNonTrivialBaseType(JavaType t);",
+   "public String getName();",
+   "public JavaType getType();",
+   "public PropertyName getWrapperName();",
+   "public boolean isRequired();",
+   "public <A extends Annotation> A getAnnotation(Class<A> acls);",
+   "public <A extends Annotation> A getContextAnnotation(Class<A> acls);",
+   "public AnnotatedMember getMember();",
+   "public void depositSchemaProperty(JsonObjectFormatVisitor objectVisitor) throws JsonMappingException;",
+   "public Object getInternalSetting(Object key);",
+   "public Object setInternalSetting(Object key, Object value);",
+   "public Object removeInternalSetting(Object key);",
+   "public SerializedString getSerializedName();",
+   "public boolean hasSerializer();",
+   "public boolean hasNullSerializer();",
+   "public boolean willSuppressNulls();",
+   "public JsonSerializer<Object> getSerializer();",
+   "public JavaType getSerializationType();",
+   "public Class<?> getRawSerializationType();",
+   "public Class<?> getPropertyType();",
+   "public Type getGenericPropertyType();",
+   "public Class<?>[] getViews();",
+   "protected boolean isRequired(AnnotationIntrospector intr);",
+   "public void serializeAsField(Object bean, JsonGenerator jgen, SerializerProvider prov) throws Exception;",
+   "public void serializeAsPlaceholder(Object bean, JsonGenerator jgen, SerializerProvider prov) throws Exception;",
+   "protected JsonSerializer<Object> _findAndAddDynamic(PropertySerializerMap map, Class<?> type, SerializerProvider provider) throws JsonMappingException;",
+   "public final Object get(Object bean) throws Exception;",
+   "protected void _handleSelfReference(Object bean, JsonSerializer<?> ser) throws JsonMappingException;",
+   "public String toString();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

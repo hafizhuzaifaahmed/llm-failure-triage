@@ -1,0 +1,136 @@
+{
+ "base_focal_id": "Math_97::org.apache.commons.math.analysis.BrentSolver::solve(double,double)",
+ "bug_name": "Math_97",
+ "call_sites": [
+  {
+   "line": 59,
+   "lines": [
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64
+   ],
+   "path": "src/java/org/apache/commons/math/analysis/BisectionSolver.java",
+   "snippet": "     * @throws IllegalArgumentException if min is not less than max\n     */\n    public double solve(double min, double max, double initial)\n        throws MaxIterationsExceededException, FunctionEvaluationException {\n          \n        return solve(min, max);\n    }\n    \n    /**\n     * Find a zero root in the given interval.\n     * "
+  },
+  {
+   "line": 89,
+   "lines": [
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94
+   ],
+   "path": "src/java/org/apache/commons/math/analysis/BrentSolver.java",
+   "snippet": "            return result;\n        }\n\n        // reduce interval if min and initial bracket the root\n        if (yInitial * yMin < 0) {\n            return solve(min, yMin, initial, yInitial, min, yMin);\n        }\n\n        // return the second endpoint if it is good enough\n        double yMax = f.value(max);\n        if (Math.abs(yMax) <= functionValueAccuracy) {"
+  },
+  {
+   "line": 101,
+   "lines": [
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106
+   ],
+   "path": "src/java/org/apache/commons/math/analysis/BrentSolver.java",
+   "snippet": "            return result;\n        }\n\n        // reduce interval if initial and max bracket the root\n        if (yInitial * yMax < 0) {\n            return solve(initial, yInitial, max, yMax, initial, yInitial);\n        }\n\n        // full Brent algorithm starting with provided initial guess\n        return solve(min, yMin, max, yMax, initial, yInitial);\n"
+  },
+  {
+   "line": 105,
+   "lines": [
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110
+   ],
+   "path": "src/java/org/apache/commons/math/analysis/BrentSolver.java",
+   "snippet": "        if (yInitial * yMax < 0) {\n            return solve(initial, yInitial, max, yMax, initial, yInitial);\n        }\n\n        // full Brent algorithm starting with provided initial guess\n        return solve(min, yMin, max, yMax, initial, yInitial);\n\n    }\n    \n    /**\n     * Find a zero in the given interval."
+  },
+  {
+   "line": 155,
+   "lines": [
+    150,
+    151,
+    152,
+    153,
+    154,
+    155,
+    156,
+    157,
+    158,
+    159,
+    160
+   ],
+   "path": "src/java/org/apache/commons/math/analysis/BrentSolver.java",
+   "snippet": "                        \"  Endpoints: [\" + min + \",\" + max + \"]\" + \n                        \"  Values: [\" + yMin + \",\" + yMax + \"]\");\n            }\n        } else if (sign < 0){\n            // solve using only the first endpoint as initial guess\n            ret = solve(min, yMin, max, yMax, min, yMin);\n        } else {\n            // either min or max is a root\n            if (yMin == 0.0) {\n                ret = min;\n            } else {"
+  }
+ ],
+ "class_simple": "BrentSolver",
+ "dataset": "D2",
+ "doc": {
+  "class_javadoc": "/**\n * Implements the <a href=\"http://mathworld.wolfram.com/BrentsMethod.html\">\n * Brent algorithm</a> for  finding zeros of real univariate functions.\n * <p>\n * The function should be continuous but not necessarily smooth.</p>\n *  \n * @version $Revision:670469 $ $Date:2008-06-23 10:01:38 +0200 (lun., 23 juin 2008) $\n */\npublic",
+  "method_javadoc": "/**\n     * Find a zero in the given interval.\n     * <p>\n     * Requires that the values of the function at the endpoints have opposite\n     * signs. An <code>IllegalArgumentException</code> is thrown if this is not\n     * the case.</p>\n     * \n     * @param min the lower bound for the interval.\n     * @param max the upper bound for the interval.\n     * @return the value where the function is zero\n     * @throws MaxIterationsExceededException if the maximum iteration count is exceeded\n     * @throws FunctionEvaluationException if an error occurs evaluating the\n     * function \n     * @throws IllegalArgumentException if min is not less than max or the\n     * signs of the values of the function at the endpoints are not opposites\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID"
+ ],
+ "focal_class": "org.apache.commons.math.analysis.BrentSolver",
+ "focal_id": "Math_97::org.apache.commons.math.analysis.BrentSolver::solve(double,double)#m77",
+ "focal_method_name": "solve",
+ "impl_B": "public double solve(double min, double max) throws MaxIterationsExceededException, \n        FunctionEvaluationException {\n        \n        clearResult();\n        verifyInterval(min, max);\n        \n        double ret = Double.NaN;\n        \n        double yMin = f.value(min);\n        double yMax = f.value(max);\n        \n        // Verify bracketing\n        double sign = yMin * yMax;\n        if (sign > 0) {\n            // check if either value is close to a zero\n            if (Math.abs(yMin) <= functionValueAccuracy) {\n                setResult(min, 0);\n                ret = min;\n            } else if (Math.abs(yMax) == functionValueAccuracy) {\n                setResult(max, 0);\n                ret = max;\n            } else {\n                // neither value is close to zero and min and max do not bracket root.\n                throw new IllegalArgumentException\n                (\"Function values at endpoints do not have different signs.\" +\n                        \"  Endpoints: [\" + min + \",\" + max + \"]\" + \n                        \"  Values: [\" + yMin + \",\" + yMax + \"]\");\n            }\n        } else if (sign < 0){\n            // solve using only the first endpoint as initial guess\n            ret = solve(min, yMin, max, yMax, min, yMin);\n        } else {\n            // either min or max is a root\n            if (yMin == 0.0) {\n                ret = min;\n            } else {\n                ret = max;\n            }\n        }\n\n        return ret;\n    }",
+ "imports": [
+  "org.apache.commons.math.FunctionEvaluationException",
+  "org.apache.commons.math.MaxIterationsExceededException"
+ ],
+ "javadoc_edited_by_fix": false,
+ "mutant_id": 77,
+ "operator": "ROR",
+ "package": "org.apache.commons.math.analysis",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Find a zero in the given interval with an initial guess.\n     * <p>Throws <code>IllegalArgumentException</code> if the values of the\n     * function at the three points have the same sign (note that it is\n     * allowed to have endpoints with the same sign if the initial point has\n     * opposite sign function-wise).</p>\n     * \n     * @param min the lower bound for the interval.\n     * @param max the upper bound for the interval.\n     * @param initial the start value to use (must be set to min if no\n     * initial point is known).\n     * @return the value where the function is zero\n     * @throws MaxIterationsExceededException the maximum iteration count\n     * is exceeded \n     * @throws FunctionEvaluationException if an error occurs evaluating\n     *  the function\n     * @throws IllegalArgumentException if initial is not between min and max\n     * (even if it <em>is</em> a root)\n     */",
+   "name": "solve"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class BrentSolver extends UnivariateRealSolverImpl",
+  "constructors": [
+   "public BrentSolver(UnivariateRealFunction f);"
+  ],
+  "focal_signature": "public double solve(double min, double max) throws MaxIterationsExceededException, FunctionEvaluationException",
+  "methods": [
+   "public double solve(double min, double max, double initial) throws MaxIterationsExceededException, FunctionEvaluationException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test"
+}

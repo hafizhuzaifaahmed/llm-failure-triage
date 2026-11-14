@@ -1,0 +1,386 @@
+{
+ "candidate_id": "64b6b35cde284cb5d76f",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testSolve_BracketedRoot",
+   "testSolve_MinIsRoot",
+   "testSolve_MaxIsRoot",
+   "testSolve_SignPositive_MinCloseToZero",
+   "testSolve_SignPositive_MaxBranch",
+   "testSolve_VerifyInterval_Throws"
+  ],
+  "nc_both": [],
+  "nc_one_version": [],
+  "passes": 0
+ },
+ "dataset": "D2",
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "Math_97::org.apache.commons.math.analysis.BrentSolver::solve(double,double)#m78",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testSolve_BracketedRoot",
+   "runs_b": [
+    {
+     "duration_s": 0.084,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.091,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.096,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.08,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.082,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.095,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.math.analysis;\n\nimport java.io.*;\nimport java.math.*;\nimport java.util.*;\nimport org.apache.commons.math.FunctionEvaluationException;\nimport org.apache.commons.math.MaxIterationsExceededException;\nimport org.apache.commons.math.analysis.UnivariateRealFunction;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\n/**\n * Unit tests for BrentSolver.solve(double, double)\n */\npublic class BrentSolver_solve_TriageGen2Test {\n\n    /**\n     * Mock function to control return values for testing different branches.\n     */\n    private static class MockFunction implements UnivariateRealFunction {\n        private final double minVal;\n        private final double maxVal;\n\n        public MockFunction(double minVal, double maxVal) {\n            this.minVal = minVal;\n            this.maxVal = maxVal;\n        }\n\n        @Override\n        public double value(double x) {\n            // In a real scenario, we'd map x to specific values, \n            // but for this triage, we simulate the return based on the logic.\n            // However, since the solve method calls f.value(min) and f.value(max),\n            // we need a way to return different values for different inputs.\n            return 0; // Placeholder\n        }\n    }\n\n    /**\n     * A more flexible mock to handle specific input values.\n     */\n    private static class FlexibleMockFunction implements UnivariateRealFunction {\n        private double minVal;\n        private double maxVal;\n\n        public void setValues(double minVal, double maxVal) {\n            this.minVal = minVal;\n            this.maxVal = maxVal;\n        }\n\n        @Override\n        public double value(double x) {\n            // This is a simplification; in actual testing we'd use a Map or conditional logic\n            // But for the purpose of testing the solve logic branches:\n            if (x == 0.0) return minVal; // We use 0.0 as a sentinel for 'min'\n            if (x == 1.0) return maxVal; // We use 1.0 as a sentinel for 'max'\n            return 0;\n        }\n    }\n\n    @Test\n    public void testSolve_BracketedRoot() throws MaxIterationsExceededException, FunctionEvaluationException {\n        // sign < 0 case\n        UnivariateRealFunction f = x -> x - 0.5; // f(0) = -0.5, f(1) = 0.5\n        BrentSolver solver = new BrentSolver(f);\n        double result = solver.solve(0.0, 1.0);\n        assertEquals(0.5, result, 1e-10);\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testSolve_MinIsRoot",
+   "runs_b": [
+    {
+     "duration_s": 0.087,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.102,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.09,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.089,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.086,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.109,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.math.analysis;\n\nimport java.io.*;\nimport java.math.*;\nimport java.util.*;\nimport org.apache.commons.math.FunctionEvaluationException;\nimport org.apache.commons.math.MaxIterationsExceededException;\nimport org.apache.commons.math.analysis.UnivariateRealFunction;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\n/**\n * Unit tests for BrentSolver.solve(double, double)\n */\npublic class BrentSolver_solve_TriageGen2Test {\n\n    /**\n     * Mock function to control return values for testing different branches.\n     */\n    private static class MockFunction implements UnivariateRealFunction {\n        private final double minVal;\n        private final double maxVal;\n\n        public MockFunction(double minVal, double maxVal) {\n            this.minVal = minVal;\n            this.maxVal = maxVal;\n        }\n\n        @Override\n        public double value(double x) {\n            // In a real scenario, we'd map x to specific values, \n            // but for this triage, we simulate the return based on the logic.\n            // However, since the solve method calls f.value(min) and f.value(max),\n            // we need a way to return different values for different inputs.\n            return 0; // Placeholder\n        }\n    }\n\n    /**\n     * A more flexible mock to handle specific input values.\n     */\n    private static class FlexibleMockFunction implements UnivariateRealFunction {\n        private double minVal;\n        private double maxVal;\n\n        public void setValues(double minVal, double maxVal) {\n            this.minVal = minVal;\n            this.maxVal = maxVal;\n        }\n\n        @Override\n        public double value(double x) {\n            // This is a simplification; in actual testing we'd use a Map or conditional logic\n            // But for the purpose of testing the solve logic branches:\n            if (x == 0.0) return minVal; // We use 0.0 as a sentinel for 'min'\n            if (x == 1.0) return maxVal; // We use 1.0 as a sentinel for 'max'\n            return 0;\n        }\n    }\n\n    \n\n    @Test\n    public void testSolve_MinIsRoot() throws MaxIterationsExceededException, FunctionEvaluationException {\n        // sign == 0 case (yMin == 0)\n        UnivariateRealFunction f = x -> (x == 0.0) ? 0.0 : 1.0;\n        BrentSolver solver = new BrentSolver(f);\n        double result = solver.solve(0.0, 1.0);\n        assertEquals(0.0, result, 1e-10);\n    }\n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testSolve_MaxIsRoot",
+   "runs_b": [
+    {
+     "duration_s": 0.086,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.092,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.078,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.085,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.097,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.097,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.math.analysis;\n\nimport java.io.*;\nimport java.math.*;\nimport java.util.*;\nimport org.apache.commons.math.FunctionEvaluationException;\nimport org.apache.commons.math.MaxIterationsExceededException;\nimport org.apache.commons.math.analysis.UnivariateRealFunction;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\n/**\n * Unit tests for BrentSolver.solve(double, double)\n */\npublic class BrentSolver_solve_TriageGen2Test {\n\n    /**\n     * Mock function to control return values for testing different branches.\n     */\n    private static class MockFunction implements UnivariateRealFunction {\n        private final double minVal;\n        private final double maxVal;\n\n        public MockFunction(double minVal, double maxVal) {\n            this.minVal = minVal;\n            this.maxVal = maxVal;\n        }\n\n        @Override\n        public double value(double x) {\n            // In a real scenario, we'd map x to specific values, \n            // but for this triage, we simulate the return based on the logic.\n            // However, since the solve method calls f.value(min) and f.value(max),\n            // we need a way to return different values for different inputs.\n            return 0; // Placeholder\n        }\n    }\n\n    /**\n     * A more flexible mock to handle specific input values.\n     */\n    private static class FlexibleMockFunction implements UnivariateRealFunction {\n        private double minVal;\n        private double maxVal;\n\n        public void setValues(double minVal, double maxVal) {\n            this.minVal = minVal;\n            this.maxVal = maxVal;\n        }\n\n        @Override\n        public double value(double x) {\n            // This is a simplification; in actual testing we'd use a Map or conditional logic\n            // But for the purpose of testing the solve logic branches:\n            if (x == 0.0) return minVal; // We use 0.0 as a sentinel for 'min'\n            if (x == 1.0) return maxVal; // We use 1.0 as a sentinel for 'max'\n            return 0;\n        }\n    }\n\n    \n\n    \n\n    @Test\n    public void testSolve_MaxIsRoot() throws MaxIterationsExceededException, FunctionEvaluationException {\n        // sign == 0 case (yMax == 0)\n        UnivariateRealFunction f = x -> (x == 1.0) ? 0.0 : 1.0;\n        BrentSolver solver = new BrentSolver(f);\n        double result = solver.solve(0.0, 1.0);\n        assertEquals(1.0, result, 1e-10);\n    }\n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testSolve_SignPositive_MinCloseToZero",
+   "runs_b": [
+    {
+     "duration_s": 0.107,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 79,
+     "message": "expected:<0.0> but was:<1.0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<0.0> but was:<1.0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:553)\n\tat org.junit.Assert.assertEquals(Assert.java:683)\n\tat org.apache.commons.math.analysis.BrentSolver_solve_TriageGen2Test.testSolve_SignPositive_MinCloseToZero(BrentSolver_solve_TriageGen2Test.java:79)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.105,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 79,
+     "message": "expected:<0.0> but was:<1.0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<0.0> but was:<1.0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:553)\n\tat org.junit.Assert.assertEquals(Assert.java:683)\n\tat org.apache.commons.math.analysis.BrentSolver_solve_TriageGen2Test.testSolve_SignPositive_MinCloseToZero(BrentSolver_solve_TriageGen2Test.java:79)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.093,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 79,
+     "message": "expected:<0.0> but was:<1.0>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<0.0> but was:<1.0>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:553)\n\tat org.junit.Assert.assertEquals(Assert.java:683)\n\tat org.apache.commons.math.analysis.BrentSolver_solve_TriageGen2Test.testSolve_SignPositive_MinCloseToZero(BrentSolver_solve_TriageGen2Test.java:79)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.082,
+     "exception": "java.lang.IllegalArgumentException",
+     "failing_test_line": 78,
+     "message": "Function values at endpoints do not have different signs.  Endpoints: [0.0,1.0]  Values: [5.0E-11,1.0]",
+     "outcome": "exception",
+     "trace": "java.lang.IllegalArgumentException: Function values at endpoints do not have different signs.  Endpoints: [0.0,1.0]  Values: [5.0E-11,1.0]\n\tat org.apache.commons.math.analysis.BrentSolver.solve(BrentSolver.java:148)\n\tat org.apache.commons.math.analysis.BrentSolver_solve_TriageGen2Test.testSolve_SignPositive_MinCloseToZero(BrentSolver_solve_TriageGen2Test.java:78)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.093,
+     "exception": "java.lang.IllegalArgumentException",
+     "failing_test_line": 78,
+     "message": "Function values at endpoints do not have different signs.  Endpoints: [0.0,1.0]  Values: [5.0E-11,1.0]",
+     "outcome": "exception",
+     "trace": "java.lang.IllegalArgumentException: Function values at endpoints do not have different signs.  Endpoints: [0.0,1.0]  Values: [5.0E-11,1.0]\n\tat org.apache.commons.math.analysis.BrentSolver.solve(BrentSolver.java:148)\n\tat org.apache.commons.math.analysis.BrentSolver_solve_TriageGen2Test.testSolve_SignPositive_MinCloseToZero(BrentSolver_solve_TriageGen2Test.java:78)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.1,
+     "exception": "java.lang.IllegalArgumentException",
+     "failing_test_line": 78,
+     "message": "Function values at endpoints do not have different signs.  Endpoints: [0.0,1.0]  Values: [5.0E-11,1.0]",
+     "outcome": "exception",
+     "trace": "java.lang.IllegalArgumentException: Function values at endpoints do not have different signs.  Endpoints: [0.0,1.0]  Values: [5.0E-11,1.0]\n\tat org.apache.commons.math.analysis.BrentSolver.solve(BrentSolver.java:148)\n\tat org.apache.commons.math.analysis.BrentSolver_solve_TriageGen2Test.testSolve_SignPositive_MinCloseToZero(BrentSolver_solve_TriageGen2Test.java:78)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package org.apache.commons.math.analysis;\n\nimport java.io.*;\nimport java.math.*;\nimport java.util.*;\nimport org.apache.commons.math.FunctionEvaluationException;\nimport org.apache.commons.math.MaxIterationsExceededException;\nimport org.apache.commons.math.analysis.UnivariateRealFunction;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\n/**\n * Unit tests for BrentSolver.solve(double, double)\n */\npublic class BrentSolver_solve_TriageGen2Test {\n\n    /**\n     * Mock function to control return values for testing different branches.\n     */\n    private static class MockFunction implements UnivariateRealFunction {\n        private final double minVal;\n        private final double maxVal;\n\n        public MockFunction(double minVal, double maxVal) {\n            this.minVal = minVal;\n            this.maxVal = maxVal;\n        }\n\n        @Override\n        public double value(double x) {\n            // In a real scenario, we'd map x to specific values, \n            // but for this triage, we simulate the return based on the logic.\n            // However, since the solve method calls f.value(min) and f.value(max),\n            // we need a way to return different values for different inputs.\n            return 0; // Placeholder\n        }\n    }\n\n    /**\n     * A more flexible mock to handle specific input values.\n     */\n    private static class FlexibleMockFunction implements UnivariateRealFunction {\n        private double minVal;\n        private double maxVal;\n\n        public void setValues(double minVal, double maxVal) {\n            this.minVal = minVal;\n            this.maxVal = maxVal;\n        }\n\n        @Override\n        public double value(double x) {\n            // This is a simplification; in actual testing we'd use a Map or conditional logic\n            // But for the purpose of testing the solve logic branches:\n            if (x == 0.0) return minVal; // We use 0.0 as a sentinel for 'min'\n            if (x == 1.0) return maxVal; // We use 1.0 as a sentinel for 'max'\n            return 0;\n        }\n    }\n\n    \n\n    \n\n    \n\n    @Test\n    public void testSolve_SignPositive_MinCloseToZero() throws MaxIterationsExceededException, FunctionEvaluationException {\n        // sign > 0 case, Math.abs(yMin) <= functionValueAccuracy\n        // Note: functionValueAccuracy is internal, assuming it's a small positive value like 1e-10\n        double accuracy = 1e-10; \n        UnivariateRealFunction f = x -> (x == 0.0) ? accuracy / 2.0 : 1.0;\n        BrentSolver solver = new BrentSolver(f);\n        // We can't set accuracy directly, but we can provide a value that satisfies the condition\n        double result = solver.solve(0.0, 1.0);\n        assertEquals(0.0, result, 1e-10);\n    }\n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testSolve_SignPositive_MaxBranch",
+   "runs_b": [
+    {
+     "duration_s": 0.094,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.081,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.084,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.086,
+     "exception": "java.lang.IllegalArgumentException",
+     "failing_test_line": 78,
+     "message": "Function values at endpoints do not have different signs.  Endpoints: [0.0,1.0]  Values: [1.0,1.0]",
+     "outcome": "exception",
+     "trace": "java.lang.IllegalArgumentException: Function values at endpoints do not have different signs.  Endpoints: [0.0,1.0]  Values: [1.0,1.0]\n\tat org.apache.commons.math.analysis.BrentSolver.solve(BrentSolver.java:148)\n\tat org.apache.commons.math.analysis.BrentSolver_solve_TriageGen2Test.testSolve_SignPositive_MaxBranch(BrentSolver_solve_TriageGen2Test.java:78)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.1,
+     "exception": "java.lang.IllegalArgumentException",
+     "failing_test_line": 78,
+     "message": "Function values at endpoints do not have different signs.  Endpoints: [0.0,1.0]  Values: [1.0,1.0]",
+     "outcome": "exception",
+     "trace": "java.lang.IllegalArgumentException: Function values at endpoints do not have different signs.  Endpoints: [0.0,1.0]  Values: [1.0,1.0]\n\tat org.apache.commons.math.analysis.BrentSolver.solve(BrentSolver.java:148)\n\tat org.apache.commons.math.analysis.BrentSolver_solve_TriageGen2Test.testSolve_SignPositive_MaxBranch(BrentSolver_solve_TriageGen2Test.java:78)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.099,
+     "exception": "java.lang.IllegalArgumentException",
+     "failing_test_line": 78,
+     "message": "Function values at endpoints do not have different signs.  Endpoints: [0.0,1.0]  Values: [1.0,1.0]",
+     "outcome": "exception",
+     "trace": "java.lang.IllegalArgumentException: Function values at endpoints do not have different signs.  Endpoints: [0.0,1.0]  Values: [1.0,1.0]\n\tat org.apache.commons.math.analysis.BrentSolver.solve(BrentSolver.java:148)\n\tat org.apache.commons.math.analysis.BrentSolver_solve_TriageGen2Test.testSolve_SignPositive_MaxBranch(BrentSolver_solve_TriageGen2Test.java:78)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package org.apache.commons.math.analysis;\n\nimport java.io.*;\nimport java.math.*;\nimport java.util.*;\nimport org.apache.commons.math.FunctionEvaluationException;\nimport org.apache.commons.math.MaxIterationsExceededException;\nimport org.apache.commons.math.analysis.UnivariateRealFunction;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\n/**\n * Unit tests for BrentSolver.solve(double, double)\n */\npublic class BrentSolver_solve_TriageGen2Test {\n\n    /**\n     * Mock function to control return values for testing different branches.\n     */\n    private static class MockFunction implements UnivariateRealFunction {\n        private final double minVal;\n        private final double maxVal;\n\n        public MockFunction(double minVal, double maxVal) {\n            this.minVal = minVal;\n            this.maxVal = maxVal;\n        }\n\n        @Override\n        public double value(double x) {\n            // In a real scenario, we'd map x to specific values, \n            // but for this triage, we simulate the return based on the logic.\n            // However, since the solve method calls f.value(min) and f.value(max),\n            // we need a way to return different values for different inputs.\n            return 0; // Placeholder\n        }\n    }\n\n    /**\n     * A more flexible mock to handle specific input values.\n     */\n    private static class FlexibleMockFunction implements UnivariateRealFunction {\n        private double minVal;\n        private double maxVal;\n\n        public void setValues(double minVal, double maxVal) {\n            this.minVal = minVal;\n            this.maxVal = maxVal;\n        }\n\n        @Override\n        public double value(double x) {\n            // This is a simplification; in actual testing we'd use a Map or conditional logic\n            // But for the purpose of testing the solve logic branches:\n            if (x == 0.0) return minVal; // We use 0.0 as a sentinel for 'min'\n            if (x == 1.0) return maxVal; // We use 1.0 as a sentinel for 'max'\n            return 0;\n        }\n    }\n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testSolve_SignPositive_MaxBranch() throws MaxIterationsExceededException, FunctionEvaluationException {\n        // sign > 0 case, enters the 'else if (true)' branch\n        // In the provided code, there is an 'else if (true)' which forces this branch.\n        UnivariateRealFunction f = x -> 1.0; \n        BrentSolver solver = new BrentSolver(f);\n        double result = solver.solve(0.0, 1.0);\n        assertEquals(1.0, result, 1e-10);\n    }\n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testSolve_VerifyInterval_Throws",
+   "runs_b": [
+    {
+     "duration_s": 0.079,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.08,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.091,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.091,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.083,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.081,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.math.analysis;\n\nimport java.io.*;\nimport java.math.*;\nimport java.util.*;\nimport org.apache.commons.math.FunctionEvaluationException;\nimport org.apache.commons.math.MaxIterationsExceededException;\nimport org.apache.commons.math.analysis.UnivariateRealFunction;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\n/**\n * Unit tests for BrentSolver.solve(double, double)\n */\npublic class BrentSolver_solve_TriageGen2Test {\n\n    /**\n     * Mock function to control return values for testing different branches.\n     */\n    private static class MockFunction implements UnivariateRealFunction {\n        private final double minVal;\n        private final double maxVal;\n\n        public MockFunction(double minVal, double maxVal) {\n            this.minVal = minVal;\n            this.maxVal = maxVal;\n        }\n\n        @Override\n        public double value(double x) {\n            // In a real scenario, we'd map x to specific values, \n            // but for this triage, we simulate the return based on the logic.\n            // However, since the solve method calls f.value(min) and f.value(max),\n            // we need a way to return different values for different inputs.\n            return 0; // Placeholder\n        }\n    }\n\n    /**\n     * A more flexible mock to handle specific input values.\n     */\n    private static class FlexibleMockFunction implements UnivariateRealFunction {\n        private double minVal;\n        private double maxVal;\n\n        public void setValues(double minVal, double maxVal) {\n            this.minVal = minVal;\n            this.maxVal = maxVal;\n        }\n\n        @Override\n        public double value(double x) {\n            // This is a simplification; in actual testing we'd use a Map or conditional logic\n            // But for the purpose of testing the solve logic branches:\n            if (x == 0.0) return minVal; // We use 0.0 as a sentinel for 'min'\n            if (x == 1.0) return maxVal; // We use 1.0 as a sentinel for 'max'\n            return 0;\n        }\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test(expected = IllegalArgumentException.class)\n    public void testSolve_VerifyInterval_Throws() throws MaxIterationsExceededException, FunctionEvaluationException {\n        // This tests the verifyInterval(min, max) call which usually throws if min >= max\n        UnivariateRealFunction f = x -> x;\n        BrentSolver solver = new BrentSolver(f);\n        solver.solve(1.0, 0.0);\n    }\n}\n"
+  }
+ ],
+ "mutant_version": "m78",
+ "source_sha256": "f469a982b1282839489a892fb2058ebe5e145302e6f71b136047b9a87186ba3d",
+ "utc": "2026-11-03T00:43:15Z"
+}

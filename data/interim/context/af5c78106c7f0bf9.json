@@ -1,0 +1,131 @@
+{
+  "bug_name": "Jsoup_58",
+  "call_sites": [
+    {
+      "line": 250,
+      "lines": [
+        245,
+        246,
+        247,
+        248,
+        249,
+        250,
+        251,
+        252,
+        253,
+        254
+      ],
+      "patch_lines_removed": true,
+      "path": "src/main/java/org/jsoup/Jsoup.java",
+      "snippet": "     @param whitelist whitelist to test against\n     @return true if no tags or attributes were removed; false otherwise\n     @see #clean(String, org.jsoup.safety.Whitelist) \n     */\n    public static boolean isValid(String bodyHtml, Whitelist whitelist) {\n    \n}\n"
+    }
+  ],
+  "class_simple": "Jsoup",
+  "doc": {
+    "class_javadoc": "/**\n The core public access point to the jsoup functionality.\n\n @author Jonathan Hedley */\npublic",
+    "method_javadoc": "/**\n     Test if the input body HTML has only tags and attributes allowed by the Whitelist. Useful for form validation.\n     <p>The input HTML should still be run through the cleaner to set up enforced attributes, and to tidy the output.\n     <p>Assumes the HTML is a body fragment (i.e. will be used in an existing HTML document body.)\n     @param bodyHtml HTML to test\n     @param whitelist whitelist to test against\n     @return true if no tags or attributes were removed; false otherwise\n     @see #clean(String, org.jsoup.safety.Whitelist) \n     */"
+  },
+  "fields": [],
+  "focal_class": "org.jsoup.Jsoup",
+  "focal_id": "Jsoup_58::org.jsoup.Jsoup::isValid(String,Whitelist)",
+  "focal_method_name": "isValid",
+  "impl_B": "public static boolean isValid(String bodyHtml, Whitelist whitelist) {\n        return new Cleaner(whitelist).isValid(parseBodyFragment(bodyHtml, \"\"));\n    }",
+  "imports": [
+    "org.jsoup.nodes.Document",
+    "org.jsoup.parser.Parser",
+    "org.jsoup.safety.Cleaner",
+    "org.jsoup.safety.Whitelist",
+    "org.jsoup.helper.DataUtil",
+    "org.jsoup.helper.HttpConnection",
+    "java.io.File",
+    "java.io.IOException",
+    "java.io.InputStream",
+    "java.net.URL"
+  ],
+  "javadoc_edited_by_fix": false,
+  "package": "org.jsoup",
+  "project": "Jsoup",
+  "siblings": [
+    {
+      "javadoc": "/**\n     Parse HTML into a Document. The parser will make a sensible, balanced document tree out of any HTML.\n\n     @param html    HTML to parse\n     @param baseUri The URL where the HTML was retrieved from. Used to resolve relative URLs to absolute URLs, that occur\n     before the HTML declares a {@code <base href>} tag.\n     @return sane HTML\n     */",
+      "name": "parse"
+    },
+    {
+      "javadoc": "/**\n     Parse HTML into a Document, using the provided Parser. You can provide an alternate parser, such as a simple XML\n     (non-HTML) parser.\n\n     @param html    HTML to parse\n     @param baseUri The URL where the HTML was retrieved from. Used to resolve relative URLs to absolute URLs, that occur\n     before the HTML declares a {@code <base href>} tag.\n     @param parser alternate {@link Parser#xmlParser() parser} to use.\n     @return sane HTML\n     */",
+      "name": "parse"
+    },
+    {
+      "javadoc": "/**\n     Parse HTML into a Document. As no base URI is specified, absolute URL detection relies on the HTML including a\n     {@code <base href>} tag.\n\n     @param html HTML to parse\n     @return sane HTML\n\n     @see #parse(String, String)\n     */",
+      "name": "parse"
+    },
+    {
+      "javadoc": "/**\n     * Creates a new {@link Connection} to a URL. Use to fetch and parse a HTML page.\n     * <p>\n     * Use examples:\n     * <ul>\n     *  <li><code>Document doc = Jsoup.connect(\"http://example.com\").userAgent(\"Mozilla\").data(\"name\", \"jsoup\").get();</code></li>\n     *  <li><code>Document doc = Jsoup.connect(\"http://example.com\").cookie(\"auth\", \"token\").post();</code></li>\n     * </ul>\n     * @param url URL to connect to. The protocol must be {@code http} or {@code https}.\n     * @return the connection. You can add data, cookies, and headers; set the user-agent, referrer, method; and then execute.\n     */",
+      "name": "connect"
+    },
+    {
+      "javadoc": "/**\n     Parse the contents of a file as HTML.\n\n     @param in          file to load HTML from\n     @param charsetName (optional) character set of file contents. Set to {@code null} to determine from {@code http-equiv} meta tag, if\n     present, or fall back to {@code UTF-8} (which is often safe to do).\n     @param baseUri     The URL where the HTML was retrieved from, to resolve relative links against.\n     @return sane HTML\n\n     @throws IOException if the file could not be found, or read, or if the charsetName is invalid.\n     */",
+      "name": "parse"
+    },
+    {
+      "javadoc": "/**\n     Parse the contents of a file as HTML. The location of the file is used as the base URI to qualify relative URLs.\n\n     @param in          file to load HTML from\n     @param charsetName (optional) character set of file contents. Set to {@code null} to determine from {@code http-equiv} meta tag, if\n     present, or fall back to {@code UTF-8} (which is often safe to do).\n     @return sane HTML\n\n     @throws IOException if the file could not be found, or read, or if the charsetName is invalid.\n     @see #parse(File, String, String)\n     */",
+      "name": "parse"
+    },
+    {
+      "javadoc": "/**\n     Read an input stream, and parse it to a Document.\n\n     @param in          input stream to read. Make sure to close it after parsing.\n     @param charsetName (optional) character set of file contents. Set to {@code null} to determine from {@code http-equiv} meta tag, if\n     present, or fall back to {@code UTF-8} (which is often safe to do).\n     @param baseUri     The URL where the HTML was retrieved from, to resolve relative links against.\n     @return sane HTML\n\n     @throws IOException if the file could not be found, or read, or if the charsetName is invalid.\n     */",
+      "name": "parse"
+    },
+    {
+      "javadoc": "/**\n     Read an input stream, and parse it to a Document. You can provide an alternate parser, such as a simple XML\n     (non-HTML) parser.\n\n     @param in          input stream to read. Make sure to close it after parsing.\n     @param charsetName (optional) character set of file contents. Set to {@code null} to determine from {@code http-equiv} meta tag, if\n     present, or fall back to {@code UTF-8} (which is often safe to do).\n     @param baseUri     The URL where the HTML was retrieved from, to resolve relative links against.\n     @param parser alternate {@link Parser#xmlParser() parser} to use.\n     @return sane HTML\n\n     @throws IOException if the file could not be found, or read, or if the charsetName is invalid.\n     */",
+      "name": "parse"
+    },
+    {
+      "javadoc": "/**\n     Parse a fragment of HTML, with the assumption that it forms the {@code body} of the HTML.\n\n     @param bodyHtml body HTML fragment\n     @param baseUri  URL to resolve relative URLs against.\n     @return sane HTML document\n\n     @see Document#body()\n     */",
+      "name": "parseBodyFragment"
+    },
+    {
+      "javadoc": "/**\n     Parse a fragment of HTML, with the assumption that it forms the {@code body} of the HTML.\n\n     @param bodyHtml body HTML fragment\n     @return sane HTML document\n\n     @see Document#body()\n     */",
+      "name": "parseBodyFragment"
+    },
+    {
+      "javadoc": "/**\n     Fetch a URL, and parse it as HTML. Provided for compatibility; in most cases use {@link #connect(String)} instead.\n     <p>\n     The encoding character set is determined by the content-type header or http-equiv meta tag, or falls back to {@code UTF-8}.\n\n     @param url           URL to fetch (with a GET). The protocol must be {@code http} or {@code https}.\n     @param timeoutMillis Connection and read timeout, in milliseconds. If exceeded, IOException is thrown.\n     @return The parsed HTML.\n\n     @throws java.net.MalformedURLException if the request URL is not a HTTP or HTTPS URL, or is otherwise malformed\n     @throws HttpStatusException if the response is not OK and HTTP response errors are not ignored\n     @throws UnsupportedMimeTypeException if the response mime type is not supported and those errors are not ignored\n     @throws java.net.SocketTimeoutException if the connection times out\n     @throws IOException if a connection or read error occurs\n\n     @see #connect(String)\n     */",
+      "name": "parse"
+    },
+    {
+      "javadoc": "/**\n     Get safe HTML from untrusted input HTML, by parsing input HTML and filtering it through a white-list of permitted\n     tags and attributes.\n\n     @param bodyHtml  input untrusted HTML (body fragment)\n     @param baseUri   URL to resolve relative URLs against\n     @param whitelist white-list of permitted HTML elements\n     @return safe HTML (body fragment)\n\n     @see Cleaner#clean(Document)\n     */",
+      "name": "clean"
+    },
+    {
+      "javadoc": "/**\n     Get safe HTML from untrusted input HTML, by parsing input HTML and filtering it through a white-list of permitted\n     tags and attributes.\n\n     @param bodyHtml  input untrusted HTML (body fragment)\n     @param whitelist white-list of permitted HTML elements\n     @return safe HTML (body fragment)\n\n     @see Cleaner#clean(Document)\n     */",
+      "name": "clean"
+    },
+    {
+      "javadoc": "/**\n     * Get safe HTML from untrusted input HTML, by parsing input HTML and filtering it through a white-list of\n     * permitted tags and attributes.\n     * <p>The HTML is treated as a body fragment; it's expected the cleaned HTML will be used within the body of an\n     * existing document. If you want to clean full documents, use {@link Cleaner#clean(Document)} instead, and add\n     * structural tags (<code>html, head, body</code> etc) to the whitelist.\n     *\n     * @param bodyHtml input untrusted HTML (body fragment)\n     * @param baseUri URL to resolve relative URLs against\n     * @param whitelist white-list of permitted HTML elements\n     * @param outputSettings document output settings; use to control pretty-printing and entity escape modes\n     * @return safe HTML (body fragment)\n     * @see Cleaner#clean(Document)\n     */",
+      "name": "clean"
+    }
+  ],
+  "sig": {
+    "class_declaration": "public class Jsoup",
+    "constructors": [],
+    "focal_signature": "public static boolean isValid(String bodyHtml, Whitelist whitelist)",
+    "methods": [
+      "public static Document parse(String html, String baseUri);",
+      "public static Document parse(String html, String baseUri, Parser parser);",
+      "public static Document parse(String html);",
+      "public static Connection connect(String url);",
+      "public static Document parse(File in, String charsetName, String baseUri) throws IOException;",
+      "public static Document parse(File in, String charsetName) throws IOException;",
+      "public static Document parse(InputStream in, String charsetName, String baseUri) throws IOException;",
+      "public static Document parse(InputStream in, String charsetName, String baseUri, Parser parser) throws IOException;",
+      "public static Document parseBodyFragment(String bodyHtml, String baseUri);",
+      "public static Document parseBodyFragment(String bodyHtml);",
+      "public static Document parse(URL url, int timeoutMillis) throws IOException;",
+      "public static String clean(String bodyHtml, String baseUri, Whitelist whitelist);",
+      "public static String clean(String bodyHtml, Whitelist whitelist);",
+      "public static String clean(String bodyHtml, String baseUri, Whitelist whitelist, Document.OutputSettings outputSettings);"
+    ],
+    "type_signatures": [
+      "public class Whitelist { public static Whitelist none(); public static Whitelist simpleText(); public static Whitelist basic(); public static Whitelist basicWithImages(); public static Whitelist relaxed(); public Whitelist(); public Whitelist addTags(String... tags); public Whitelist removeTags(String... tags); public Whitelist addAttributes(String tag, String... attributes); public Whitelist removeAttributes(String tag, String... attributes); public Whitelist addEnforcedAttribute(String tag, String attribute, String value); public Whitelist removeEnforcedAttribute(String tag, String attribute); public Whitelist preserveRelativeLinks(boolean preserve); public Whitelist addProtocols(String tag, String attribute, String... protocols); public Whitelist removeProtocols(String tag, String attribute, String... removeProtocols); }"
+    ]
+  },
+  "split": "dev"
+}

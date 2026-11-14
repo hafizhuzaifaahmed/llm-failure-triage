@@ -1,0 +1,252 @@
+{
+  "bug_name": "Math_90",
+  "call_sites": [
+    {
+      "line": 268,
+      "lines": [
+        263,
+        264,
+        265,
+        266,
+        267,
+        268,
+        269,
+        270,
+        271,
+        272,
+        273
+      ],
+      "path": "src/java/org/apache/commons/math/random/EmpiricalDistributionImpl.java",
+      "snippet": "            String str = null;\n            double val = 0.0d;\n            while ((str = inputStream.readLine()) != null) {\n                val = Double.parseDouble(str);\n                SummaryStatistics stats = binStats.get(findBin(min, val, delta));\n                stats.addValue(val);\n            }\n\n            inputStream.close();\n            inputStream = null;\n        }"
+    },
+    {
+      "line": 286,
+      "lines": [
+        281,
+        282,
+        283,
+        284,
+        285,
+        286,
+        287,
+        288,
+        289,
+        290,
+        291
+      ],
+      "path": "src/java/org/apache/commons/math/random/EmpiricalDistributionImpl.java",
+      "snippet": "            String str = null;\n            double val = 0.0;\n            sampleStats = new SummaryStatistics();\n            while ((str = inputStream.readLine()) != null) {\n                val = Double.valueOf(str).doubleValue();\n                sampleStats.addValue(val);\n            }\n            inputStream.close();\n            inputStream = null;\n        }\n    }"
+    },
+    {
+      "line": 319,
+      "lines": [
+        314,
+        315,
+        316,
+        317,
+        318,
+        319,
+        320,
+        321,
+        322,
+        323,
+        324
+      ],
+      "path": "src/java/org/apache/commons/math/random/EmpiricalDistributionImpl.java",
+      "snippet": "         */\n        @Override\n        public void computeStats() throws IOException {\n            sampleStats = new SummaryStatistics();\n            for (int i = 0; i < inputArray.length; i++) {\n                sampleStats.addValue(inputArray[i]);\n            }\n        }\n        /**\n         * Computes binStats\n         * "
+    },
+    {
+      "line": 335,
+      "lines": [
+        330,
+        331,
+        332,
+        333,
+        334,
+        335,
+        336,
+        337,
+        338,
+        339,
+        340
+      ],
+      "path": "src/java/org/apache/commons/math/random/EmpiricalDistributionImpl.java",
+      "snippet": "        public void computeBinStats(double min, double delta)\n            throws IOException {\n            for (int i = 0; i < inputArray.length; i++) {\n                SummaryStatistics stats =\n                    binStats.get(findBin(min, inputArray[i], delta));\n                stats.addValue(inputArray[i]);\n            }\n        }\n    }\n\n    /**"
+    },
+    {
+      "line": 144,
+      "lines": [
+        139,
+        140,
+        141,
+        142,
+        143,
+        144,
+        145,
+        146,
+        147,
+        148,
+        149
+      ],
+      "path": "src/java/org/apache/commons/math/stat/Frequency.java",
+      "snippet": "     * Adds 1 to the frequency count for v.\n     * \n     * @param v the value to add.\n     */\n    public void addValue(int v) {\n        addValue(Long.valueOf(v));\n    }\n    \n    /**\n     * Adds 1 to the frequency count for v.\n     * "
+    }
+  ],
+  "class_simple": "Frequency",
+  "doc": {
+    "class_javadoc": "/** \n * Maintains a frequency distribution.\n * <p>\n * Accepts int, long, char or Object values.  New values added must be \n * comparable to those that have been added, otherwise the add method will \n * throw an IllegalArgumentException.</p>\n * <p>\n * Integer values (int, long, Integer, Long) are not distinguished by type -- \n * i.e. <code>addValue(Long.valueOf(2)), addValue(2), addValue(2l)</code> all have\n * the same effect (similarly for arguments to <code>getCount,</code> etc.).</p>\n * <p>\n * char values are converted by <code>addValue</code> to Character instances.\n * As such, these values are not comparable to integral values, so attempts\n * to combine integral types with chars in a frequency distribution will fail.\n * </p>\n * <p>\n * The values are ordered using the default (natural order), unless a  \n * <code>Comparator</code> is supplied in the constructor.</p>\n *\n * @version $Revision$ $Date$\n */\npublic",
+    "method_javadoc": "/**\n     * Adds 1 to the frequency count for v.\n     * <p>\n     * If other objects have already been added to this Frequency, v must\n     * be comparable to those that have already been added.\n     * </p>\n     * \n     * @param v the value to add.\n     * @throws IllegalArgumentException if <code>v</code> is not comparable with previous entries\n     * @throws ClassCastException if <code>v</code> is not Comparable\n     * @deprecated use {@link #addValue(Comparable)} instead\n     */"
+  },
+  "fields": [
+    "private static final long serialVersionUID",
+    "private final TreeMap freqTable"
+  ],
+  "focal_class": "org.apache.commons.math.stat.Frequency",
+  "focal_id": "Math_90::org.apache.commons.math.stat.Frequency::addValue(Object)",
+  "focal_method_name": "addValue",
+  "impl_B": "@Deprecated\n    public void addValue(Object v) {\n    \n    /**\n     * Adds 1 to the frequency count for v.\n     * <p>\n     * If other objects have already been added to this Frequency, v must\n     * be comparable to those that have already been added.\n     * </p>\n     * \n     * @param v the value to add.\n     * @throws IllegalArgumentException if <code>v</code> is not comparable with previous entries\n     */\n        Object obj = v;\n        if (v instanceof Integer) {\n           obj = Long.valueOf(((Integer) v).longValue());\n        }\n        try {\n            Long count = (Long) freqTable.get(obj);\n            if (count == null) {\n                freqTable.put(obj, Long.valueOf(1));\n            } else {\n                freqTable.put(obj, Long.valueOf(count.longValue() + 1));\n            }\n        } catch (ClassCastException ex) {   \n            //TreeMap will throw ClassCastException if v is not comparable\n            throw new IllegalArgumentException(\"Value not comparable to existing values.\");\n        }\n    }",
+  "imports": [
+    "java.io.Serializable",
+    "java.text.NumberFormat",
+    "java.util.Iterator",
+    "java.util.Comparator",
+    "java.util.TreeMap"
+  ],
+  "javadoc_edited_by_fix": false,
+  "package": "org.apache.commons.math.stat",
+  "project": "Math",
+  "siblings": [
+    {
+      "javadoc": "/**\n     * Return a string representation of this frequency\n     * distribution.\n     * \n     * @return a string representation.\n     */",
+      "name": "toString"
+    },
+    {
+      "javadoc": "/**\n     * Adds 1 to the frequency count for v.\n     * \n     * @param v the value to add.\n     */",
+      "name": "addValue"
+    },
+    {
+      "javadoc": "/**\n     * Adds 1 to the frequency count for v.\n     * \n     * @param v the value to add.\n     */",
+      "name": "addValue"
+    },
+    {
+      "javadoc": "/**\n     * Adds 1 to the frequency count for v.\n     * \n     * @param v the value to add.\n     */",
+      "name": "addValue"
+    },
+    {
+      "javadoc": "/**\n     * Adds 1 to the frequency count for v.\n     * \n     * @param v the value to add.\n     */",
+      "name": "addValue"
+    },
+    {
+      "javadoc": "/** Clears the frequency table */",
+      "name": "clear"
+    },
+    {
+      "javadoc": "/**\n     * Returns an Iterator over the set of values that have been added.\n     * <p>\n     * If added values are integral (i.e., integers, longs, Integers, or Longs), \n     * they are converted to Longs when they are added, so the objects returned\n     * by the Iterator will in this case be Longs.</p>\n     * \n     * @return values Iterator\n     */",
+      "name": "valuesIterator"
+    },
+    {
+      "javadoc": "/**\n     * Returns the sum of all frequencies.\n     * \n     * @return the total frequency count.\n     */",
+      "name": "getSumFreq"
+    },
+    {
+      "javadoc": "/**\n     * Returns the number of values = v.\n     * Returns 0 if the value is not comparable.\n     * \n     * @param v the value to lookup.\n     * @return the frequency of v.\n     */",
+      "name": "getCount"
+    },
+    {
+      "javadoc": "/**\n     * Returns the number of values = v.\n     * \n     * @param v the value to lookup.\n     * @return the frequency of v.\n     */",
+      "name": "getCount"
+    },
+    {
+      "javadoc": "/**\n     * Returns the number of values = v.\n     * \n     * @param v the value to lookup.\n     * @return the frequency of v.\n     */",
+      "name": "getCount"
+    },
+    {
+      "javadoc": "/**\n     * Returns the number of values = v.\n     * \n     * @param v the value to lookup.\n     * @return the frequency of v.\n     */",
+      "name": "getCount"
+    },
+    {
+      "javadoc": "/**\n      * Returns the percentage of values that are equal to v\n     * (as a proportion between 0 and 1).\n     * <p>\n     * Returns <code>Double.NaN</code> if no values have been added.</p>\n     * \n     * @param v the value to lookup\n     * @return the proportion of values equal to v\n     */",
+      "name": "getPct"
+    },
+    {
+      "javadoc": "/**\n     * Returns the percentage of values that are equal to v\n     * (as a proportion between 0 and 1).\n     * \n     * @param v the value to lookup\n     * @return the proportion of values equal to v\n     */",
+      "name": "getPct"
+    },
+    {
+      "javadoc": "/**\n     * Returns the percentage of values that are equal to v\n     * (as a proportion between 0 and 1).\n     * \n     * @param v the value to lookup\n     * @return the proportion of values equal to v\n     */",
+      "name": "getPct"
+    },
+    {
+      "javadoc": "/**\n     * Returns the percentage of values that are equal to v\n     * (as a proportion between 0 and 1).\n     * \n     * @param v the value to lookup\n     * @return the proportion of values equal to v\n     */",
+      "name": "getPct"
+    },
+    {
+      "javadoc": "/**\n     * Returns the cumulative frequency of values less than or equal to v.\n     * <p>\n     * Returns 0 if v is not comparable to the values set.</p>\n     * \n     * @param v the value to lookup.\n     * @return the proportion of values equal to v\n     */",
+      "name": "getCumFreq"
+    },
+    {
+      "javadoc": "/**\n     * Returns the cumulative frequency of values less than or equal to v.\n     * <p>\n     * Returns 0 if v is not comparable to the values set.</p>\n     * \n     * @param v the value to lookup\n     * @return the proportion of values equal to v\n     */",
+      "name": "getCumFreq"
+    },
+    {
+      "javadoc": "/**\n     * Returns the cumulative frequency of values less than or equal to v.\n     * <p>\n     * Returns 0 if v is not comparable to the values set.</p>\n     * \n     * @param v the value to lookup\n     * @return the proportion of values equal to v\n     */",
+      "name": "getCumFreq"
+    },
+    {
+      "javadoc": "/**\n     * Returns the cumulative frequency of values less than or equal to v.\n     * <p>\n     * Returns 0 if v is not comparable to the values set.</p>\n     * \n     * @param v the value to lookup\n     * @return the proportion of values equal to v\n     */",
+      "name": "getCumFreq"
+    },
+    {
+      "javadoc": "/**\n     * Returns the cumulative percentage of values less than or equal to v\n     * (as a proportion between 0 and 1).\n     * <p>\n     * Returns <code>Double.NaN</code> if no values have been added.\n     * Returns 0 if at least one value has been added, but v is not comparable\n     * to the values set.</p>\n     * \n     * @param v the value to lookup\n     * @return the proportion of values less than or equal to v\n     */",
+      "name": "getCumPct"
+    },
+    {
+      "javadoc": "/**\n     * Returns the cumulative percentage of values less than or equal to v\n     * (as a proportion between 0 and 1).\n     * <p>\n     * Returns 0 if v is not comparable to the values set.</p>\n     * \n     * @param v the value to lookup\n     * @return the proportion of values less than or equal to v\n     */",
+      "name": "getCumPct"
+    },
+    {
+      "javadoc": "/**\n     * Returns the cumulative percentage of values less than or equal to v\n     * (as a proportion between 0 and 1).\n     * <p>\n     * Returns 0 if v is not comparable to the values set.</p>\n     * \n     * @param v the value to lookup\n     * @return the proportion of values less than or equal to v\n     */",
+      "name": "getCumPct"
+    },
+    {
+      "javadoc": "/**\n     * Returns the cumulative percentage of values less than or equal to v\n     * (as a proportion between 0 and 1).\n     * <p>\n     * Returns 0 if v is not comparable to the values set.</p>\n     * \n     * @param v the value to lookup\n     * @return the proportion of values less than or equal to v\n     */",
+      "name": "getCumPct"
+    }
+  ],
+  "sig": {
+    "class_declaration": "public class Frequency implements Serializable",
+    "constructors": [
+      "public Frequency();",
+      "public Frequency(Comparator comparator);"
+    ],
+    "focal_signature": "public void addValue(Object v)",
+    "methods": [
+      "public String toString();",
+      "public void addValue(int v);",
+      "public void addValue(Integer v);",
+      "public void addValue(long v);",
+      "public void addValue(char v);",
+      "public void clear();",
+      "public Iterator valuesIterator();",
+      "public long getSumFreq();",
+      "public long getCount(Object v);",
+      "public long getCount(int v);",
+      "public long getCount(long v);",
+      "public long getCount(char v);",
+      "public double getPct(Object v);",
+      "public double getPct(int v);",
+      "public double getPct(long v);",
+      "public double getPct(char v);",
+      "public long getCumFreq(Object v);",
+      "public long getCumFreq(int v);",
+      "public long getCumFreq(long v);",
+      "public long getCumFreq(char v);",
+      "public double getCumPct(Object v);",
+      "public double getCumPct(int v);",
+      "public double getCumPct(long v);",
+      "public double getCumPct(char v);"
+    ],
+    "type_signatures": []
+  },
+  "split": "test"
+}

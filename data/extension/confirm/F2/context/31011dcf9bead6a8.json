@@ -1,0 +1,206 @@
+{
+ "bug_name": "JacksonDatabind_87",
+ "call_sites": [
+  {
+   "line": 290,
+   "lines": [
+    285,
+    286,
+    287,
+    288,
+    289,
+    290,
+    291,
+    292,
+    293,
+    294,
+    295
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/util/StdDateFormat.java",
+   "snippet": "        ParsePosition pos = new ParsePosition(0);\n\n        Date dt;\n\n        if (looksLikeISO8601(dateStr)) { // also includes \"plain\"\n            dt = parseAsISO8601(dateStr, pos, true);\n        } else {\n            // Also consider \"stringified\" simple time stamp\n            int i = dateStr.length();\n            while (--i >= 0) {\n                char ch = dateStr.charAt(i);"
+  },
+  {
+   "line": 336,
+   "lines": [
+    331,
+    332,
+    333,
+    334,
+    335,
+    336,
+    337,
+    338,
+    339,
+    340,
+    341
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/util/StdDateFormat.java",
+   "snippet": "    @Override\n    public Date parse(String dateStr, ParsePosition pos)\n    {\n        if (looksLikeISO8601(dateStr)) { // also includes \"plain\"\n            try {\n                return parseAsISO8601(dateStr, pos, false);\n            } catch (ParseException e) { // will NOT be thrown due to false but is declared...\n                return null;\n            }\n        }\n        // Also consider \"stringified\" simple time stamp"
+  }
+ ],
+ "class_simple": "StdDateFormat",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Default {@link DateFormat} implementation used by standard Date\n * serializers and deserializers. For serialization defaults to using\n * an ISO-8601 compliant format (format String \"yyyy-MM-dd'T'HH:mm:ss.SSSZ\")\n * and for deserialization, both ISO-8601 and RFC-1123.\n */\n@SuppressWarnings(\"serial\")\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "public final static String DATE_FORMAT_STR_ISO8601",
+  "protected final static String DATE_FORMAT_STR_ISO8601_Z",
+  "protected final static String DATE_FORMAT_STR_PLAIN",
+  "protected final static String DATE_FORMAT_STR_RFC1123",
+  "protected final static String[] ALL_FORMATS",
+  "private final static TimeZone DEFAULT_TIMEZONE",
+  "private final static Locale DEFAULT_LOCALE",
+  "protected final static DateFormat DATE_FORMAT_RFC1123",
+  "protected final static DateFormat DATE_FORMAT_ISO8601",
+  "protected final static DateFormat DATE_FORMAT_ISO8601_Z",
+  "protected final static DateFormat DATE_FORMAT_PLAIN",
+  "public final static StdDateFormat instance",
+  "protected transient TimeZone _timezone",
+  "protected final Locale _locale",
+  "protected Boolean _lenient",
+  "protected transient DateFormat _formatRFC1123",
+  "protected transient DateFormat _formatISO8601",
+  "protected transient DateFormat _formatISO8601_z",
+  "protected transient DateFormat _formatPlain"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.util.StdDateFormat",
+ "focal_id": "JacksonDatabind_87::com.fasterxml.jackson.databind.util.StdDateFormat::parseAsISO8601(String,ParsePosition,boolean)",
+ "focal_method_name": "parseAsISO8601",
+ "generations": 3,
+ "impl_B": "protected Date parseAsISO8601(String dateStr, ParsePosition pos, boolean throwErrors)\n            throws ParseException\n    {\n        /* 21-May-2009, tatu: DateFormat has very strict handling of\n         * timezone  modifiers for ISO-8601. So we need to do some scrubbing.\n         */\n\n        /* First: do we have \"zulu\" format ('Z' == \"UTC\")? If yes, that's\n         * quite simple because we already set date format timezone to be\n         * UTC, and hence can just strip out 'Z' altogether\n         */\n        int len = dateStr.length();\n        char c = dateStr.charAt(len-1);\n        DateFormat df;\n        String formatStr;\n\n        // Need to support \"plain\" date...\n        if (len <= 10 && Character.isDigit(c)) {\n            df = _formatPlain;\n            formatStr = DATE_FORMAT_STR_PLAIN;\n            if (df == null) {\n                df = _formatPlain = _cloneFormat(DATE_FORMAT_PLAIN, formatStr,\n                        _timezone, _locale, _lenient);\n            }\n        } else if (c == 'Z') {\n            df = _formatISO8601_z;\n            formatStr = DATE_FORMAT_STR_ISO8601_Z;\n            if (df == null) {\n                // 10-Jun-2017, tatu: As per [databind#1651], when using this format,\n                //    must use UTC, not whatever is configured as default timezone\n                //    (because we know `Z` identifier is used)\n                df = _formatISO8601_z = _cloneFormat(DATE_FORMAT_ISO8601_Z, formatStr,\n                        DEFAULT_TIMEZONE, _locale, _lenient);\n            }\n            // may be missing milliseconds... if so, add\n            if (dateStr.charAt(len-4) == ':') {\n                StringBuilder sb = new StringBuilder(dateStr);\n                sb.insert(len-1, \".000\");\n                dateStr = sb.toString();\n            }\n        } else {\n            // Let's see if we have timezone indicator or not...\n            if (hasTimeZone(dateStr)) {\n                c = dateStr.charAt(len-3);\n                if (c == ':') { // remove optional colon\n                    // remove colon\n                    StringBuilder sb = new StringBuilder(dateStr);\n                    sb.delete(len-3, len-2);\n                    dateStr = sb.toString();\n                } else if (c == '+' || c == '-') { // missing minutes\n                    // let's just append '00'\n                    dateStr += \"00\";\n                }\n                // Milliseconds partial or missing; and even seconds are optional\n                len = dateStr.length();\n                // remove 'T', '+'/'-' and 4-digit timezone-offset\n                int timeLen = len - dateStr.lastIndexOf('T') - 6;\n                if (timeLen < 12) { // 8 for hh:mm:ss, 4 for .sss\n                    int offset = len - 5; // insertion offset, before tz-offset\n                    StringBuilder sb = new StringBuilder(dateStr);\n                    switch (timeLen) {\n                    case 11:\n                        sb.insert(offset, '0'); break;\n                    case 10:\n                        sb.insert(offset, \"00\"); break;\n                    case 9: // is this legal? (just second fraction marker)\n                        sb.insert(offset, \"000\"); break;\n                    case 8:\n                        sb.insert(offset, \".000\"); break;\n                    case 7: // not legal to have single-digit second\n                        break;\n                    case 6: // probably not legal, but let's allow\n                        sb.insert(offset, \"00.000\");\n                    case 5: // is legal to omit seconds\n                        sb.insert(offset, \":00.000\");\n                    }\n                    dateStr = sb.toString();\n                }\n                df = _formatISO8601;\n                formatStr = DATE_FORMAT_STR_ISO8601;\n                if (_formatISO8601 == null) {\n                    df = _formatISO8601 = _cloneFormat(DATE_FORMAT_ISO8601, formatStr,\n                            _timezone, _locale, _lenient);\n                }\n            } else {\n                // If not, plain date, no timezone\n                StringBuilder sb = new StringBuilder(dateStr);\n                int timeLen = len - dateStr.lastIndexOf('T') - 1;\n                // And possible also millisecond part if missing\n                if (timeLen < 12) { // missing, or partial\n                    switch (timeLen) {\n                    case 11: sb.append('0');\n                    case 10: sb.append('0');\n                    case 9: sb.append('0');\n                        break;\n                    default:\n                        sb.append(\".000\");\n                    }\n                }\n                sb.append('Z');\n                dateStr = sb.toString();\n                df = _formatISO8601_z;\n                formatStr = DATE_FORMAT_STR_ISO8601_Z;\n                if (df == null) {\n                    // 10-Jun-2017, tatu: As per [databind#1651], when using this format,\n                    //    must use UTC, not whatever is configured as default timezone\n                    //    (because we know `Z` identifier is used)\n                    df = _formatISO8601_z = _cloneFormat(DATE_FORMAT_ISO8601_Z, formatStr,\n                            DEFAULT_TIMEZONE, _locale, _lenient);\n                }\n            }\n        }\n        Date dt = df.parse(dateStr, pos);\n        // 22-Dec-2015, tatu: With non-lenient, may get null\n        if (dt == null) {\n            throw new ParseException\n            (String.format(\"Can not parse date \\\"%s\\\": while it seems to fit format '%s', parsing fails (leniency? %s)\",\n                           dateStr, formatStr, _lenient),\n               pos.getErrorIndex());\n        }\n        return dt;\n    }",
+ "imports": [
+  "java.text.DateFormat",
+  "java.text.FieldPosition",
+  "java.text.ParseException",
+  "java.text.ParsePosition",
+  "java.text.SimpleDateFormat",
+  "java.util.*",
+  "com.fasterxml.jackson.core.io.NumberInput"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.util",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "getDefaultTimeZone"
+  },
+  {
+   "javadoc": "/**\n     * Method used for creating a new instance with specified timezone;\n     * if no timezone specified, defaults to the default timezone (UTC).\n     */",
+   "name": "withTimeZone"
+  },
+  {
+   "javadoc": "",
+   "name": "withLocale"
+  },
+  {
+   "javadoc": "",
+   "name": "clone"
+  },
+  {
+   "javadoc": "/**\n     * @deprecated Since 2.4; use variant that takes Locale\n     */",
+   "name": "getISO8601Format"
+  },
+  {
+   "javadoc": "/**\n     * Method for getting a non-shared DateFormat instance\n     * that uses specified timezone and can handle simple ISO-8601\n     * compliant date format.\n     * \n     * @since 2.4\n     */",
+   "name": "getISO8601Format"
+  },
+  {
+   "javadoc": "/**\n     * Method for getting a non-shared DateFormat instance\n     * that uses specific timezone and can handle RFC-1123\n     * compliant date format.\n     * \n     * @since 2.4\n     */",
+   "name": "getRFC1123Format"
+  },
+  {
+   "javadoc": "/**\n     * @deprecated Since 2.4; use variant that takes Locale\n     */",
+   "name": "getRFC1123Format"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getTimeZone"
+  },
+  {
+   "javadoc": "",
+   "name": "setTimeZone"
+  },
+  {
+   "javadoc": "/**\n     * Need to override since we need to keep track of leniency locally,\n     * and not via underlying {@link Calendar} instance like base class\n     * does.\n     */",
+   "name": "setLenient"
+  },
+  {
+   "javadoc": "",
+   "name": "isLenient"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "parse"
+  },
+  {
+   "javadoc": "",
+   "name": "parse"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "format"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "toString"
+  },
+  {
+   "javadoc": "",
+   "name": "equals"
+  },
+  {
+   "javadoc": "",
+   "name": "hashCode"
+  },
+  {
+   "javadoc": "/**\n     * Overridable helper method used to figure out which of supported\n     * formats is the likeliest match.\n     */",
+   "name": "looksLikeISO8601"
+  },
+  {
+   "javadoc": "",
+   "name": "parseAsRFC1123"
+  },
+  {
+   "javadoc": "",
+   "name": "_clearFormats"
+  }
+ ],
+ "sig": {
+  "class_declaration": "@SuppressWarnings(\"serial\") public class StdDateFormat extends DateFormat",
+  "constructors": [
+   "public StdDateFormat();",
+   "// since 2.7 public StdDateFormat(TimeZone tz, Locale loc);",
+   "protected StdDateFormat(TimeZone tz, Locale loc, Boolean lenient);"
+  ],
+  "focal_signature": "protected Date parseAsISO8601(String dateStr, ParsePosition pos, boolean throwErrors) throws ParseException",
+  "methods": [
+   "public static TimeZone getDefaultTimeZone();",
+   "public StdDateFormat withTimeZone(TimeZone tz);",
+   "public StdDateFormat withLocale(Locale loc);",
+   "public StdDateFormat clone();",
+   "public static DateFormat getISO8601Format(TimeZone tz);",
+   "public static DateFormat getISO8601Format(TimeZone tz, Locale loc);",
+   "public static DateFormat getRFC1123Format(TimeZone tz, Locale loc);",
+   "public static DateFormat getRFC1123Format(TimeZone tz);",
+   "// since 2.6 public TimeZone getTimeZone();",
+   "public void setTimeZone(TimeZone tz);",
+   "// since 2.7 public void setLenient(boolean enabled);",
+   "// since 2.7 public boolean isLenient();",
+   "public Date parse(String dateStr) throws ParseException;",
+   "public Date parse(String dateStr, ParsePosition pos);",
+   "public StringBuffer format(Date date, StringBuffer toAppendTo, FieldPosition fieldPosition);",
+   "public String toString();",
+   "// since 2.7[.2], as per [databind#1130] public boolean equals(Object o);",
+   "// since 2.7[.2], as per [databind#1130] public int hashCode();",
+   "protected boolean looksLikeISO8601(String dateStr);",
+   "protected Date parseAsRFC1123(String dateStr, ParsePosition pos);",
+   "protected void _clearFormats();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

@@ -1,0 +1,151 @@
+{
+ "bug_name": "Closure_102",
+ "call_sites": [
+  {
+   "line": 58,
+   "lines": [
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63
+   ],
+   "path": "src/com/google/javascript/jscomp/AnalyzeNameReferences.java",
+   "snippet": "\n  @Override\n  public void process(Node externs, Node root) {\n    NameReferenceGraphConstruction gc =\n        new NameReferenceGraphConstruction(compiler);\n    gc.process(externs, root);\n    graph = gc.getNameReferenceGraph();\n    FixedPointGraphTraversal<Name, Reference> t =\n        FixedPointGraphTraversal.newTraversal(new PropagateReferences());\n    getInfo(graph.MAIN).markReference(null);\n    t.computeFixedPoint(graph, Sets.newHashSet(graph.MAIN));"
+  },
+  {
+   "line": 52,
+   "lines": [
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57
+   ],
+   "path": "src/com/google/javascript/jscomp/ChainCalls.java",
+   "snippet": "  }\n\n  @Override\n  public void process(Node externs, Node root) {\n    defFinder = new SimpleDefinitionFinder(compiler);\n    defFinder.process(externs, root);\n\n    NodeTraversal.traverse(compiler, root, new GatherCallSites());\n\n    for (CallSite callSite : callSites) {\n      callSite.parent.removeChild(callSite.n);"
+  },
+  {
+   "line": 608,
+   "lines": [
+    603,
+    604,
+    605,
+    606,
+    607,
+    608,
+    609,
+    610,
+    611,
+    612,
+    613
+   ],
+   "path": "src/com/google/javascript/jscomp/Compiler.java",
+   "snippet": "    PhaseOptimizer phaseOptimizer = new PhaseOptimizer(this, tracker);\n    if (options_.devMode == DevMode.EVERY_PASS) {\n      phaseOptimizer.setSanityCheck(sanityCheck);\n    }\n    phaseOptimizer.consume(getPassConfig().getChecks());\n    phaseOptimizer.process(externsRoot, jsRoot);\n    if (hasErrors()) {\n      return;\n    }\n\n    // TODO(nicksantos): clean this up. The flow here is too hard to follow."
+  },
+  {
+   "line": 645,
+   "lines": [
+    640,
+    641,
+    642,
+    643,
+    644,
+    645,
+    646,
+    647,
+    648,
+    649,
+    650
+   ],
+   "path": "src/com/google/javascript/jscomp/Compiler.java",
+   "snippet": "  private void externExports() {\n    logger_.info(\"Creating extern file for exports\");\n    startPass(\"externExports\");\n\n    ExternExportsPass pass = new ExternExportsPass(this);\n    process(pass);\n\n    externExports_ = pass.getGeneratedExterns();\n\n    endPass();\n  }"
+  },
+  {
+   "line": 652,
+   "lines": [
+    647,
+    648,
+    649,
+    650,
+    651,
+    652,
+    653,
+    654,
+    655,
+    656,
+    657
+   ],
+   "path": "src/com/google/javascript/jscomp/Compiler.java",
+   "snippet": "    externExports_ = pass.getGeneratedExterns();\n\n    endPass();\n  }\n\n  void process(CompilerPass p) {\n    p.process(externsRoot, jsRoot);\n  }\n\n  private final PassFactory sanityCheck =\n      new PassFactory(\"sanityCheck\", false) {"
+  }
+ ],
+ "class_simple": "Normalize",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private final AbstractCompiler compiler",
+  "private final boolean assertOnChange",
+  "private static final boolean CONVERT_WHILE_TO_FOR",
+  "static final boolean MAKE_LOCAL_NAMES_UNIQUE"
+ ],
+ "focal_class": "com.google.javascript.jscomp.Normalize",
+ "focal_id": "Closure_102::com.google.javascript.jscomp.Normalize::process(Node,Node)",
+ "focal_method_name": "process",
+ "generations": 3,
+ "impl_B": "@Override\n  public void process(Node externs, Node root) {\n    NodeTraversal.traverse(compiler, root, this);\n    if (MAKE_LOCAL_NAMES_UNIQUE) {\n      MakeDeclaredNamesUnique renamer = new MakeDeclaredNamesUnique();\n      NodeTraversal t = new NodeTraversal(compiler, renamer);\n      t.traverseRoots(externs, root);\n    }\n    removeDuplicateDeclarations(root);\n    new PropogateConstantAnnotations(compiler, assertOnChange)\n        .process(externs, root);\n  }",
+ "imports": [
+  "com.google.common.base.Preconditions",
+  "com.google.common.collect.Lists",
+  "com.google.common.collect.Maps",
+  "com.google.javascript.jscomp.NodeTraversal.AbstractPostOrderCallback",
+  "com.google.javascript.jscomp.NodeTraversal.Callback",
+  "com.google.javascript.jscomp.Scope.Var",
+  "com.google.javascript.rhino.JSDocInfo",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.Token",
+  "java.util.Map"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "shouldTraverse"
+  },
+  {
+   "javadoc": "",
+   "name": "visit"
+  }
+ ],
+ "sig": {
+  "class_declaration": "class Normalize implements CompilerPass, Callback",
+  "constructors": [],
+  "focal_signature": "public void process(Node externs, Node root)",
+  "methods": [
+   "public boolean shouldTraverse(NodeTraversal t, Node n, Node parent);",
+   "public void visit(NodeTraversal t, Node n, Node parent);"
+  ],
+  "type_signatures": [
+   "public class Node implements Cloneable, Serializable { public Node(int nodeType); public Node(int nodeType, Node child); public Node(int nodeType, Node left, Node right); public Node(int nodeType, Node left, Node mid, Node right); public Node(int nodeType, Node left, Node mid, Node mid2, Node right); public Node(int nodeType, int lineno, int charno); public Node(int nodeType, Node child, int lineno, int charno); public Node(int nodeType, Node left, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node mid2, Node right, int lineno, int charno); public Node(int nodeType, Node[] children, int lineno, int charno); public Node(int nodeType, Node[] children); public static Node newNumber(double number); public static Node newNumber(double number, int lineno, int charno); public static Node newString(String str); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

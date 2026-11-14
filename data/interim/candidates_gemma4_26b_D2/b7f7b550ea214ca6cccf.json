@@ -1,0 +1,13 @@
+{
+  "assembled": true,
+  "call_key": "73bea6e305dc1e5a9d522d05f371d9aa4f2d1cbc9d957c22aa1901f7394a97c5",
+  "candidate_id": "b7f7b550ea214ca6cccf",
+  "class_name": "MathUtils_factorialDouble_TriageGen2Test",
+  "dataset": "D2",
+  "focal_id": "Math_93::org.apache.commons.math.util.MathUtils::factorialDouble(int)#m265",
+  "generation": 2,
+  "model_returned": "gemma4:26b",
+  "n_tests": 5,
+  "package": "org.apache.commons.math.util",
+  "source": "package org.apache.commons.math.util;\n\nimport java.io.*;\nimport java.math.*;\nimport java.math.BigDecimal;\nimport java.util.*;\nimport java.util.Arrays;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\npublic class MathUtils_factorialDouble_TriageGen2Test {\n\n    private static final double DELTA = 1e-10;\n\n    @Test\n    public void testFactorialDouble_NegativeInputThrowsException() {\n        try {\n            MathUtils.factorialDouble(-1);\n            org.junit.Assert.fail(\"Expected IllegalArgumentException to be thrown\");\n        } catch (IllegalArgumentException e) {\n            assertEquals(\"must have n >= 0 for n!\", e.getMessage());\n        }\n    }\n\n    @Test\n    public void testFactorialDouble_Zero() {\n        // 0! = 1\n        assertEquals(1.0, MathUtils.factorialDouble(0), DELTA);\n    }\n\n    @Test\n    public void testFactorialDouble_SmallPositive() {\n        // 5! = 120\n        assertEquals(120.0, MathUtils.factorialDouble(5), DELTA);\n    }\n\n    @Test\n    public void testFactorialDouble_LargePositive() {\n        // 10! = 3628800\n        assertEquals(3628800.0, MathUtils.factorialDouble(10), DELTA);\n    }\n\n    /**\n     * Note: The implementation provided contains a logical contradiction:\n     * if (n < 0) throw exception;\n     * if (n < -21) return factorial(n);\n     * The second condition (n < -21) is unreachable because n < 0 is caught first.\n     * However, to maximize branch coverage for the provided code structure, \n     * we test the paths that are reachable.\n     */\n    @Test\n    public void testFactorialDouble_BranchCoverage() {\n        // Test n >= 0 path\n        assertEquals(1.0, MathUtils.factorialDouble(0), DELTA);\n        assertEquals(2.0, MathUtils.factorialDouble(2), DELTA);\n        \n        // Test n < 0 path (which triggers the exception)\n        try {\n            MathUtils.factorialDouble(-5);\n        } catch (IllegalArgumentException e) {\n            // Expected\n        }\n    }\n}\n"
+}

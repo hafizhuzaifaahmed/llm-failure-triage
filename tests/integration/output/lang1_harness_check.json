@@ -1,0 +1,529 @@
+{
+  "labels": {
+    "expectPF": {
+      "label": "PF",
+      "reason": "fails deterministically on B, passes deterministically on F",
+      "sigma_B": [
+        "exception",
+        "java.lang.NumberFormatException",
+        25
+      ],
+      "sigma_F": [
+        "pass",
+        null,
+        null
+      ]
+    },
+    "expectTF": {
+      "label": "TF",
+      "reason": "fails on B and F with identical failure signatures",
+      "sigma_B": [
+        "assertion_failure",
+        "java.lang.AssertionError",
+        27
+      ],
+      "sigma_F": [
+        "assertion_failure",
+        "java.lang.AssertionError",
+        27
+      ]
+    },
+    "expectPass": {
+      "label": "PASS",
+      "reason": "passes on B and F",
+      "sigma_B": [
+        "pass",
+        null,
+        null
+      ],
+      "sigma_F": [
+        "pass",
+        null,
+        null
+      ]
+    },
+    "expectMisguided": {
+      "label": "MISGUIDED",
+      "reason": "passes on B, fails on F (asserts the buggy behaviour)",
+      "sigma_B": [
+        "pass",
+        null,
+        null
+      ],
+      "sigma_F": [
+        "assertion_failure",
+        "java.lang.AssertionError",
+        null
+      ]
+    },
+    "expectAmb": {
+      "label": "AMB",
+      "reason": "fails on B and F with different failure signatures",
+      "sigma_B": [
+        "exception",
+        "java.lang.NumberFormatException",
+        33
+      ],
+      "sigma_F": [
+        "assertion_failure",
+        "java.lang.AssertionError",
+        34
+      ]
+    },
+    "expectTimeout": {
+      "label": "TIMEOUT",
+      "reason": "a run exceeded the per-test timeout"
+    },
+    "expectFlaky": {
+      "label": "FLAKY",
+      "reason": "non-deterministic on B",
+      "sigma_B": null,
+      "sigma_F": null
+    }
+  },
+  "execution": {
+    "candidate_id": "fixture-lang1",
+    "source_sha256": "4781d3bd4787741e9437b22e71a709b83b96255222bb7ff4226ae9f3fe44d062",
+    "compilation": {
+      "compiled": [
+        "expectPF",
+        "expectTF",
+        "expectPass",
+        "expectMisguided",
+        "expectAmb",
+        "expectTimeout",
+        "expectFlaky"
+      ],
+      "nc_both": [
+        "expectNC"
+      ],
+      "nc_one_version": [],
+      "class_error": null,
+      "passes": 1
+    },
+    "methods": [
+      {
+        "method": "expectPF",
+        "source_class": "package org.apache.commons.lang3.math;\n\n// PIPELINE-VALIDATION FIXTURE \u2014 hand-written by the implementation assistant, NOT a generated test and\n// NOT research data. Each method is designed to exercise one ground-truth rule on Defects4J Lang-1\n// (NumberUtils.createNumber(\"0x80000000\") throws NumberFormatException on 1b and returns a Long on 1f).\n\nimport static org.junit.Assert.*;\n\nimport java.io.File;\nimport java.nio.file.Files;\n\nimport org.junit.Test;\n\npublic class HarnessFixtureTest {\n\n    private static int bump(String name) throws Exception {\n        File f = new File(System.getProperty(\"java.io.tmpdir\"), \"triage-fixture-\" + name);\n        int n = f.exists() ? Integer.parseInt(new String(Files.readAllBytes(f.toPath())).trim()) : 0;\n        Files.write(f.toPath(), String.valueOf(n + 1).getBytes());\n        return n;\n    }\n\n    @Test // expected PF: fails on B (NumberFormatException), passes on F\n    public void expectPF() {\n        assertEquals(Long.valueOf(0x80000000L), NumberUtils.createNumber(\"0x80000000\"));\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n}\n",
+        "compile_b": true,
+        "compile_f": true,
+        "runs_b": [
+          {
+            "outcome": "exception",
+            "exception": "java.lang.NumberFormatException",
+            "message": "For input string: \"80000000\"",
+            "trace": "java.lang.NumberFormatException: For input string: \"80000000\"\n\tat java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:65)\n\tat java.base/java.lang.Integer.parseInt(Integer.java:652)\n\tat java.base/java.lang.Integer.valueOf(Integer.java:957)\n\tat java.base/java.lang.Integer.decode(Integer.java:1436)\n\tat org.apache.commons.lang3.math.NumberUtils.createInteger(NumberUtils.java:684)\n\tat org.apache.commons.lang3.math.NumberUtils.createNumber(NumberUtils.java:474)\n\tat org.apache.commons.lang3.math.HarnessFixtureTest.expectPF(HarnessFixtureTest.java:25)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n",
+            "duration_s": 0.083,
+            "failing_test_line": 25
+          },
+          {
+            "outcome": "exception",
+            "exception": "java.lang.NumberFormatException",
+            "message": "For input string: \"80000000\"",
+            "trace": "java.lang.NumberFormatException: For input string: \"80000000\"\n\tat java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:65)\n\tat java.base/java.lang.Integer.parseInt(Integer.java:652)\n\tat java.base/java.lang.Integer.valueOf(Integer.java:957)\n\tat java.base/java.lang.Integer.decode(Integer.java:1436)\n\tat org.apache.commons.lang3.math.NumberUtils.createInteger(NumberUtils.java:684)\n\tat org.apache.commons.lang3.math.NumberUtils.createNumber(NumberUtils.java:474)\n\tat org.apache.commons.lang3.math.HarnessFixtureTest.expectPF(HarnessFixtureTest.java:25)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n",
+            "duration_s": 0.085,
+            "failing_test_line": 25
+          },
+          {
+            "outcome": "exception",
+            "exception": "java.lang.NumberFormatException",
+            "message": "For input string: \"80000000\"",
+            "trace": "java.lang.NumberFormatException: For input string: \"80000000\"\n\tat java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:65)\n\tat java.base/java.lang.Integer.parseInt(Integer.java:652)\n\tat java.base/java.lang.Integer.valueOf(Integer.java:957)\n\tat java.base/java.lang.Integer.decode(Integer.java:1436)\n\tat org.apache.commons.lang3.math.NumberUtils.createInteger(NumberUtils.java:684)\n\tat org.apache.commons.lang3.math.NumberUtils.createNumber(NumberUtils.java:474)\n\tat org.apache.commons.lang3.math.HarnessFixtureTest.expectPF(HarnessFixtureTest.java:25)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n",
+            "duration_s": 0.084,
+            "failing_test_line": 25
+          }
+        ],
+        "runs_f": [
+          {
+            "outcome": "pass",
+            "exception": "",
+            "message": "",
+            "trace": "",
+            "duration_s": 0.073,
+            "failing_test_line": null
+          },
+          {
+            "outcome": "pass",
+            "exception": "",
+            "message": "",
+            "trace": "",
+            "duration_s": 0.072,
+            "failing_test_line": null
+          },
+          {
+            "outcome": "pass",
+            "exception": "",
+            "message": "",
+            "trace": "",
+            "duration_s": 0.077,
+            "failing_test_line": null
+          }
+        ]
+      },
+      {
+        "method": "expectTF",
+        "source_class": "package org.apache.commons.lang3.math;\n\n// PIPELINE-VALIDATION FIXTURE \u2014 hand-written by the implementation assistant, NOT a generated test and\n// NOT research data. Each method is designed to exercise one ground-truth rule on Defects4J Lang-1\n// (NumberUtils.createNumber(\"0x80000000\") throws NumberFormatException on 1b and returns a Long on 1f).\n\nimport static org.junit.Assert.*;\n\nimport java.io.File;\nimport java.nio.file.Files;\n\nimport org.junit.Test;\n\npublic class HarnessFixtureTest {\n\n    private static int bump(String name) throws Exception {\n        File f = new File(System.getProperty(\"java.io.tmpdir\"), \"triage-fixture-\" + name);\n        int n = f.exists() ? Integer.parseInt(new String(Files.readAllBytes(f.toPath())).trim()) : 0;\n        Files.write(f.toPath(), String.valueOf(n + 1).getBytes());\n        return n;\n    }\n\n    \n\n    @Test // expected TF: wrong expected value, identical assertion failure on B and F\n    public void expectTF() {\n        assertEquals(Integer.valueOf(5), NumberUtils.createNumber(\"4\"));\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n}\n",
+        "compile_b": true,
+        "compile_f": true,
+        "runs_b": [
+          {
+            "outcome": "assertion_failure",
+            "exception": "java.lang.AssertionError",
+            "message": "expected:<5> but was:<4>",
+            "trace": "java.lang.AssertionError: expected:<5> but was:<4>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:118)\n\tat org.junit.Assert.assertEquals(Assert.java:144)\n\tat org.apache.commons.lang3.math.HarnessFixtureTest.expectTF(HarnessFixtureTest.java:27)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n",
+            "duration_s": 0.093,
+            "failing_test_line": 27
+          },
+          {
+            "outcome": "assertion_failure",
+            "exception": "java.lang.AssertionError",
+            "message": "expected:<5> but was:<4>",
+            "trace": "java.lang.AssertionError: expected:<5> but was:<4>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:118)\n\tat org.junit.Assert.assertEquals(Assert.java:144)\n\tat org.apache.commons.lang3.math.HarnessFixtureTest.expectTF(HarnessFixtureTest.java:27)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n",
+            "duration_s": 0.098,
+            "failing_test_line": 27
+          },
+          {
+            "outcome": "assertion_failure",
+            "exception": "java.lang.AssertionError",
+            "message": "expected:<5> but was:<4>",
+            "trace": "java.lang.AssertionError: expected:<5> but was:<4>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:118)\n\tat org.junit.Assert.assertEquals(Assert.java:144)\n\tat org.apache.commons.lang3.math.HarnessFixtureTest.expectTF(HarnessFixtureTest.java:27)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n",
+            "duration_s": 0.093,
+            "failing_test_line": 27
+          }
+        ],
+        "runs_f": [
+          {
+            "outcome": "assertion_failure",
+            "exception": "java.lang.AssertionError",
+            "message": "expected:<5> but was:<4>",
+            "trace": "java.lang.AssertionError: expected:<5> but was:<4>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:118)\n\tat org.junit.Assert.assertEquals(Assert.java:144)\n\tat org.apache.commons.lang3.math.HarnessFixtureTest.expectTF(HarnessFixtureTest.java:27)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n",
+            "duration_s": 0.085,
+            "failing_test_line": 27
+          },
+          {
+            "outcome": "assertion_failure",
+            "exception": "java.lang.AssertionError",
+            "message": "expected:<5> but was:<4>",
+            "trace": "java.lang.AssertionError: expected:<5> but was:<4>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:118)\n\tat org.junit.Assert.assertEquals(Assert.java:144)\n\tat org.apache.commons.lang3.math.HarnessFixtureTest.expectTF(HarnessFixtureTest.java:27)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n",
+            "duration_s": 0.088,
+            "failing_test_line": 27
+          },
+          {
+            "outcome": "assertion_failure",
+            "exception": "java.lang.AssertionError",
+            "message": "expected:<5> but was:<4>",
+            "trace": "java.lang.AssertionError: expected:<5> but was:<4>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:118)\n\tat org.junit.Assert.assertEquals(Assert.java:144)\n\tat org.apache.commons.lang3.math.HarnessFixtureTest.expectTF(HarnessFixtureTest.java:27)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n",
+            "duration_s": 0.086,
+            "failing_test_line": 27
+          }
+        ]
+      },
+      {
+        "method": "expectPass",
+        "source_class": "package org.apache.commons.lang3.math;\n\n// PIPELINE-VALIDATION FIXTURE \u2014 hand-written by the implementation assistant, NOT a generated test and\n// NOT research data. Each method is designed to exercise one ground-truth rule on Defects4J Lang-1\n// (NumberUtils.createNumber(\"0x80000000\") throws NumberFormatException on 1b and returns a Long on 1f).\n\nimport static org.junit.Assert.*;\n\nimport java.io.File;\nimport java.nio.file.Files;\n\nimport org.junit.Test;\n\npublic class HarnessFixtureTest {\n\n    private static int bump(String name) throws Exception {\n        File f = new File(System.getProperty(\"java.io.tmpdir\"), \"triage-fixture-\" + name);\n        int n = f.exists() ? Integer.parseInt(new String(Files.readAllBytes(f.toPath())).trim()) : 0;\n        Files.write(f.toPath(), String.valueOf(n + 1).getBytes());\n        return n;\n    }\n\n    \n\n    \n\n    @Test // expected PASS\n    public void expectPass() {\n        assertEquals(Integer.valueOf(4), NumberUtils.createNumber(\"4\"));\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n}\n",
+        "compile_b": true,
+        "compile_f": true,
+        "runs_b": [
+          {
+            "outcome": "pass",
+            "exception": "",
+            "message": "",
+            "trace": "",
+            "duration_s": 0.091,
+            "failing_test_line": null
+          },
+          {
+            "outcome": "pass",
+            "exception": "",
+            "message": "",
+            "trace": "",
+            "duration_s": 0.083,
+            "failing_test_line": null
+          },
+          {
+            "outcome": "pass",
+            "exception": "",
+            "message": "",
+            "trace": "",
+            "duration_s": 0.074,
+            "failing_test_line": null
+          }
+        ],
+        "runs_f": [
+          {
+            "outcome": "pass",
+            "exception": "",
+            "message": "",
+            "trace": "",
+            "duration_s": 0.074,
+            "failing_test_line": null
+          },
+          {
+            "outcome": "pass",
+            "exception": "",
+            "message": "",
+            "trace": "",
+            "duration_s": 0.086,
+            "failing_test_line": null
+          },
+          {
+            "outcome": "pass",
+            "exception": "",
+            "message": "",
+            "trace": "",
+            "duration_s": 0.078,
+            "failing_test_line": null
+          }
+        ]
+      },
+      {
+        "method": "expectMisguided",
+        "source_class": "package org.apache.commons.lang3.math;\n\n// PIPELINE-VALIDATION FIXTURE \u2014 hand-written by the implementation assistant, NOT a generated test and\n// NOT research data. Each method is designed to exercise one ground-truth rule on Defects4J Lang-1\n// (NumberUtils.createNumber(\"0x80000000\") throws NumberFormatException on 1b and returns a Long on 1f).\n\nimport static org.junit.Assert.*;\n\nimport java.io.File;\nimport java.nio.file.Files;\n\nimport org.junit.Test;\n\npublic class HarnessFixtureTest {\n\n    private static int bump(String name) throws Exception {\n        File f = new File(System.getProperty(\"java.io.tmpdir\"), \"triage-fixture-\" + name);\n        int n = f.exists() ? Integer.parseInt(new String(Files.readAllBytes(f.toPath())).trim()) : 0;\n        Files.write(f.toPath(), String.valueOf(n + 1).getBytes());\n        return n;\n    }\n\n    \n\n    \n\n    \n\n    @Test(expected = NumberFormatException.class) // expected MISGUIDED: asserts the buggy behaviour\n    public void expectMisguided() {\n        NumberUtils.createNumber(\"0x80000000\");\n    }\n\n    \n\n    \n\n    \n\n    \n}\n",
+        "compile_b": true,
+        "compile_f": true,
+        "runs_b": [
+          {
+            "outcome": "pass",
+            "exception": "",
+            "message": "",
+            "trace": "",
+            "duration_s": 0.081,
+            "failing_test_line": null
+          },
+          {
+            "outcome": "pass",
+            "exception": "",
+            "message": "",
+            "trace": "",
+            "duration_s": 0.085,
+            "failing_test_line": null
+          },
+          {
+            "outcome": "pass",
+            "exception": "",
+            "message": "",
+            "trace": "",
+            "duration_s": 0.083,
+            "failing_test_line": null
+          }
+        ],
+        "runs_f": [
+          {
+            "outcome": "assertion_failure",
+            "exception": "java.lang.AssertionError",
+            "message": "Expected exception: java.lang.NumberFormatException",
+            "trace": "java.lang.AssertionError: Expected exception: java.lang.NumberFormatException\n\tat org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:32)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n",
+            "duration_s": 0.072,
+            "failing_test_line": null
+          },
+          {
+            "outcome": "assertion_failure",
+            "exception": "java.lang.AssertionError",
+            "message": "Expected exception: java.lang.NumberFormatException",
+            "trace": "java.lang.AssertionError: Expected exception: java.lang.NumberFormatException\n\tat org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:32)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n",
+            "duration_s": 0.08,
+            "failing_test_line": null
+          },
+          {
+            "outcome": "assertion_failure",
+            "exception": "java.lang.AssertionError",
+            "message": "Expected exception: java.lang.NumberFormatException",
+            "trace": "java.lang.AssertionError: Expected exception: java.lang.NumberFormatException\n\tat org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:32)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n",
+            "duration_s": 0.076,
+            "failing_test_line": null
+          }
+        ]
+      },
+      {
+        "method": "expectAmb",
+        "source_class": "package org.apache.commons.lang3.math;\n\n// PIPELINE-VALIDATION FIXTURE \u2014 hand-written by the implementation assistant, NOT a generated test and\n// NOT research data. Each method is designed to exercise one ground-truth rule on Defects4J Lang-1\n// (NumberUtils.createNumber(\"0x80000000\") throws NumberFormatException on 1b and returns a Long on 1f).\n\nimport static org.junit.Assert.*;\n\nimport java.io.File;\nimport java.nio.file.Files;\n\nimport org.junit.Test;\n\npublic class HarnessFixtureTest {\n\n    private static int bump(String name) throws Exception {\n        File f = new File(System.getProperty(\"java.io.tmpdir\"), \"triage-fixture-\" + name);\n        int n = f.exists() ? Integer.parseInt(new String(Files.readAllBytes(f.toPath())).trim()) : 0;\n        Files.write(f.toPath(), String.valueOf(n + 1).getBytes());\n        return n;\n    }\n\n    \n\n    \n\n    \n\n    \n\n    @Test // expected AMB: exception on B, assertion failure (different sigma) on F\n    public void expectAmb() {\n        Number n = NumberUtils.createNumber(\"0x80000000\");\n        assertNull(n);\n    }\n\n    \n\n    \n\n    \n}\n",
+        "compile_b": true,
+        "compile_f": true,
+        "runs_b": [
+          {
+            "outcome": "exception",
+            "exception": "java.lang.NumberFormatException",
+            "message": "For input string: \"80000000\"",
+            "trace": "java.lang.NumberFormatException: For input string: \"80000000\"\n\tat java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:65)\n\tat java.base/java.lang.Integer.parseInt(Integer.java:652)\n\tat java.base/java.lang.Integer.valueOf(Integer.java:957)\n\tat java.base/java.lang.Integer.decode(Integer.java:1436)\n\tat org.apache.commons.lang3.math.NumberUtils.createInteger(NumberUtils.java:684)\n\tat org.apache.commons.lang3.math.NumberUtils.createNumber(NumberUtils.java:474)\n\tat org.apache.commons.lang3.math.HarnessFixtureTest.expectAmb(HarnessFixtureTest.java:33)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n",
+            "duration_s": 0.087,
+            "failing_test_line": 33
+          },
+          {
+            "outcome": "exception",
+            "exception": "java.lang.NumberFormatException",
+            "message": "For input string: \"80000000\"",
+            "trace": "java.lang.NumberFormatException: For input string: \"80000000\"\n\tat java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:65)\n\tat java.base/java.lang.Integer.parseInt(Integer.java:652)\n\tat java.base/java.lang.Integer.valueOf(Integer.java:957)\n\tat java.base/java.lang.Integer.decode(Integer.java:1436)\n\tat org.apache.commons.lang3.math.NumberUtils.createInteger(NumberUtils.java:684)\n\tat org.apache.commons.lang3.math.NumberUtils.createNumber(NumberUtils.java:474)\n\tat org.apache.commons.lang3.math.HarnessFixtureTest.expectAmb(HarnessFixtureTest.java:33)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n",
+            "duration_s": 0.084,
+            "failing_test_line": 33
+          },
+          {
+            "outcome": "exception",
+            "exception": "java.lang.NumberFormatException",
+            "message": "For input string: \"80000000\"",
+            "trace": "java.lang.NumberFormatException: For input string: \"80000000\"\n\tat java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:65)\n\tat java.base/java.lang.Integer.parseInt(Integer.java:652)\n\tat java.base/java.lang.Integer.valueOf(Integer.java:957)\n\tat java.base/java.lang.Integer.decode(Integer.java:1436)\n\tat org.apache.commons.lang3.math.NumberUtils.createInteger(NumberUtils.java:684)\n\tat org.apache.commons.lang3.math.NumberUtils.createNumber(NumberUtils.java:474)\n\tat org.apache.commons.lang3.math.HarnessFixtureTest.expectAmb(HarnessFixtureTest.java:33)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n",
+            "duration_s": 0.084,
+            "failing_test_line": 33
+          }
+        ],
+        "runs_f": [
+          {
+            "outcome": "assertion_failure",
+            "exception": "java.lang.AssertionError",
+            "message": "expected null, but was:<2147483648>",
+            "trace": "java.lang.AssertionError: expected null, but was:<2147483648>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotNull(Assert.java:755)\n\tat org.junit.Assert.assertNull(Assert.java:737)\n\tat org.junit.Assert.assertNull(Assert.java:747)\n\tat org.apache.commons.lang3.math.HarnessFixtureTest.expectAmb(HarnessFixtureTest.java:34)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n",
+            "duration_s": 0.086,
+            "failing_test_line": 34
+          },
+          {
+            "outcome": "assertion_failure",
+            "exception": "java.lang.AssertionError",
+            "message": "expected null, but was:<2147483648>",
+            "trace": "java.lang.AssertionError: expected null, but was:<2147483648>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotNull(Assert.java:755)\n\tat org.junit.Assert.assertNull(Assert.java:737)\n\tat org.junit.Assert.assertNull(Assert.java:747)\n\tat org.apache.commons.lang3.math.HarnessFixtureTest.expectAmb(HarnessFixtureTest.java:34)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n",
+            "duration_s": 0.077,
+            "failing_test_line": 34
+          },
+          {
+            "outcome": "assertion_failure",
+            "exception": "java.lang.AssertionError",
+            "message": "expected null, but was:<2147483648>",
+            "trace": "java.lang.AssertionError: expected null, but was:<2147483648>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotNull(Assert.java:755)\n\tat org.junit.Assert.assertNull(Assert.java:737)\n\tat org.junit.Assert.assertNull(Assert.java:747)\n\tat org.apache.commons.lang3.math.HarnessFixtureTest.expectAmb(HarnessFixtureTest.java:34)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n",
+            "duration_s": 0.087,
+            "failing_test_line": 34
+          }
+        ]
+      },
+      {
+        "method": "expectTimeout",
+        "source_class": "package org.apache.commons.lang3.math;\n\n// PIPELINE-VALIDATION FIXTURE \u2014 hand-written by the implementation assistant, NOT a generated test and\n// NOT research data. Each method is designed to exercise one ground-truth rule on Defects4J Lang-1\n// (NumberUtils.createNumber(\"0x80000000\") throws NumberFormatException on 1b and returns a Long on 1f).\n\nimport static org.junit.Assert.*;\n\nimport java.io.File;\nimport java.nio.file.Files;\n\nimport org.junit.Test;\n\npublic class HarnessFixtureTest {\n\n    private static int bump(String name) throws Exception {\n        File f = new File(System.getProperty(\"java.io.tmpdir\"), \"triage-fixture-\" + name);\n        int n = f.exists() ? Integer.parseInt(new String(Files.readAllBytes(f.toPath())).trim()) : 0;\n        Files.write(f.toPath(), String.valueOf(n + 1).getBytes());\n        return n;\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test // expected TIMEOUT\n    public void expectTimeout() {\n        while (true) {\n            Thread.yield();\n        }\n    }\n\n    \n\n    \n}\n",
+        "compile_b": true,
+        "compile_f": true,
+        "runs_b": [
+          {
+            "outcome": "timeout",
+            "exception": "",
+            "message": "",
+            "trace": "",
+            "duration_s": 30,
+            "failing_test_line": null
+          },
+          {
+            "outcome": "timeout",
+            "exception": "",
+            "message": "",
+            "trace": "",
+            "duration_s": 30,
+            "failing_test_line": null
+          },
+          {
+            "outcome": "timeout",
+            "exception": "",
+            "message": "",
+            "trace": "",
+            "duration_s": 30,
+            "failing_test_line": null
+          }
+        ],
+        "runs_f": [
+          {
+            "outcome": "timeout",
+            "exception": "",
+            "message": "",
+            "trace": "",
+            "duration_s": 30,
+            "failing_test_line": null
+          },
+          {
+            "outcome": "timeout",
+            "exception": "",
+            "message": "",
+            "trace": "",
+            "duration_s": 30,
+            "failing_test_line": null
+          },
+          {
+            "outcome": "timeout",
+            "exception": "",
+            "message": "",
+            "trace": "",
+            "duration_s": 30,
+            "failing_test_line": null
+          }
+        ]
+      },
+      {
+        "method": "expectFlaky",
+        "source_class": "package org.apache.commons.lang3.math;\n\n// PIPELINE-VALIDATION FIXTURE \u2014 hand-written by the implementation assistant, NOT a generated test and\n// NOT research data. Each method is designed to exercise one ground-truth rule on Defects4J Lang-1\n// (NumberUtils.createNumber(\"0x80000000\") throws NumberFormatException on 1b and returns a Long on 1f).\n\nimport static org.junit.Assert.*;\n\nimport java.io.File;\nimport java.nio.file.Files;\n\nimport org.junit.Test;\n\npublic class HarnessFixtureTest {\n\n    private static int bump(String name) throws Exception {\n        File f = new File(System.getProperty(\"java.io.tmpdir\"), \"triage-fixture-\" + name);\n        int n = f.exists() ? Integer.parseInt(new String(Files.readAllBytes(f.toPath())).trim()) : 0;\n        Files.write(f.toPath(), String.valueOf(n + 1).getBytes());\n        return n;\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test // expected FLAKY: alternates fail/pass across runs via a counter file\n    public void expectFlaky() throws Exception {\n        assertTrue(bump(\"flaky\") % 2 == 1);\n    }\n\n    \n}\n",
+        "compile_b": true,
+        "compile_f": true,
+        "runs_b": [
+          {
+            "outcome": "assertion_failure",
+            "exception": "java.lang.AssertionError",
+            "message": "null",
+            "trace": "java.lang.AssertionError\n\tat org.junit.Assert.fail(Assert.java:86)\n\tat org.junit.Assert.assertTrue(Assert.java:41)\n\tat org.junit.Assert.assertTrue(Assert.java:52)\n\tat org.apache.commons.lang3.math.HarnessFixtureTest.expectFlaky(HarnessFixtureTest.java:37)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n",
+            "duration_s": 0.089,
+            "failing_test_line": 37
+          },
+          {
+            "outcome": "pass",
+            "exception": "",
+            "message": "",
+            "trace": "",
+            "duration_s": 0.076,
+            "failing_test_line": null
+          },
+          {
+            "outcome": "assertion_failure",
+            "exception": "java.lang.AssertionError",
+            "message": "null",
+            "trace": "java.lang.AssertionError\n\tat org.junit.Assert.fail(Assert.java:86)\n\tat org.junit.Assert.assertTrue(Assert.java:41)\n\tat org.junit.Assert.assertTrue(Assert.java:52)\n\tat org.apache.commons.lang3.math.HarnessFixtureTest.expectFlaky(HarnessFixtureTest.java:37)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n",
+            "duration_s": 0.106,
+            "failing_test_line": 37
+          }
+        ],
+        "runs_f": [
+          {
+            "outcome": "pass",
+            "exception": "",
+            "message": "",
+            "trace": "",
+            "duration_s": 0.085,
+            "failing_test_line": null
+          },
+          {
+            "outcome": "assertion_failure",
+            "exception": "java.lang.AssertionError",
+            "message": "null",
+            "trace": "java.lang.AssertionError\n\tat org.junit.Assert.fail(Assert.java:86)\n\tat org.junit.Assert.assertTrue(Assert.java:41)\n\tat org.junit.Assert.assertTrue(Assert.java:52)\n\tat org.apache.commons.lang3.math.HarnessFixtureTest.expectFlaky(HarnessFixtureTest.java:37)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n",
+            "duration_s": 0.071,
+            "failing_test_line": 37
+          },
+          {
+            "outcome": "pass",
+            "exception": "",
+            "message": "",
+            "trace": "",
+            "duration_s": 0.089,
+            "failing_test_line": null
+          }
+        ]
+      }
+    ],
+    "env": {
+      "tz": "America/Los_Angeles",
+      "jvm_flags": [
+        "-Duser.language=en",
+        "-Duser.country=US",
+        "-Duser.timezone=America/Los_Angeles",
+        "-Dfile.encoding=UTF-8",
+        "-Xmx1g",
+        "-XX:+UseSerialGC",
+        "-XX:TieredStopAtLevel=1"
+      ],
+      "timeout_s": 30,
+      "runs_per_version": 3
+    }
+  },
+  "wall_s": 205.8,
+  "passed": true
+}

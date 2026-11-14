@@ -1,0 +1,94 @@
+{
+ "bug_name": "Math_6",
+ "call_sites": [],
+ "class_simple": "BaseOptimizer",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Base class for implementing optimizers.\n * It contains the boiler-plate code for counting the number of evaluations\n * of the objective function and the number of iterations of the algorithm,\n * and storing the convergence checker.\n * <em>It is not a \"user\" class.</em>\n *\n * @param <PAIR> Type of the point/value pair returned by the optimization\n * algorithm.\n *\n * @version $Id$\n * @since 3.1\n */\npublic abstract",
+  "method_javadoc": "/**\n     * @param checker Convergence checker.\n     */"
+ },
+ "fields": [
+  "protected final Incrementor evaluations",
+  "protected final Incrementor iterations",
+  "private ConvergenceChecker<PAIR> checker"
+ ],
+ "focal_class": "org.apache.commons.math3.optim.BaseOptimizer",
+ "focal_id": "Math_6::org.apache.commons.math3.optim.BaseOptimizer::BaseOptimizer(ConvergenceChecker<PAIR>)",
+ "focal_method_name": "BaseOptimizer",
+ "generations": 3,
+ "impl_B": "protected BaseOptimizer(ConvergenceChecker<PAIR> checker) {\n        this.checker = checker;\n\n        evaluations = new Incrementor(0, new MaxEvalCallback());\n        iterations = new Incrementor(0, new MaxIterCallback());\n    }",
+ "imports": [
+  "org.apache.commons.math3.util.Incrementor",
+  "org.apache.commons.math3.exception.TooManyEvaluationsException",
+  "org.apache.commons.math3.exception.TooManyIterationsException"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math3.optim",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Gets the maximal number of function evaluations.\n     *\n     * @return the maximal number of function evaluations.\n     */",
+   "name": "getMaxEvaluations"
+  },
+  {
+   "javadoc": "/**\n     * Gets the number of evaluations of the objective function.\n     * The number of evaluations corresponds to the last call to the\n     * {@code optimize} method. It is 0 if the method has not been\n     * called yet.\n     *\n     * @return the number of evaluations of the objective function.\n     */",
+   "name": "getEvaluations"
+  },
+  {
+   "javadoc": "/**\n     * Gets the maximal number of iterations.\n     *\n     * @return the maximal number of iterations.\n     */",
+   "name": "getMaxIterations"
+  },
+  {
+   "javadoc": "/**\n     * Gets the number of iterations performed by the algorithm.\n     * The number iterations corresponds to the last call to the\n     * {@code optimize} method. It is 0 if the method has not been\n     * called yet.\n     *\n     * @return the number of evaluations of the objective function.\n     */",
+   "name": "getIterations"
+  },
+  {
+   "javadoc": "/**\n     * Gets the convergence checker.\n     *\n     * @return the object used to check for convergence.\n     */",
+   "name": "getConvergenceChecker"
+  },
+  {
+   "javadoc": "/**\n     * Stores data and performs the optimization.\n     * <br/>\n     * The list of parameters is open-ended so that sub-classes can extend it\n     * with arguments specific to their concrete implementations.\n     * <br/>\n     * When the method is called multiple times, instance data is overwritten\n     * only when actually present in the list of arguments: when not specified,\n     * data set in a previous call is retained (and thus is optional in\n     * subsequent calls).\n     * <br/>\n     * Important note: Subclasses <em>must</em> override\n     * {@link #parseOptimizationData(OptimizationData[])} if they need to register\n     * their own options; but then, they <em>must</em> also call\n     * {@code super.parseOptimizationData(optData)} within that method.\n     *\n     * @param optData Optimization data.\n     * This method will register the following data:\n     * <ul>\n     *  <li>{@link MaxEval}</li>\n     *  <li>{@link MaxIter}</li>\n     * </ul>\n     * @return a point/value pair that satifies the convergence criteria.\n     * @throws TooManyEvaluationsException if the maximal number of\n     * evaluations is exceeded.\n     * @throws TooManyIterationsException if the maximal number of\n     * iterations is exceeded.\n     */",
+   "name": "optimize"
+  },
+  {
+   "javadoc": "/**\n     * Performs the bulk of the optimization algorithm.\n     *\n     * @return the point/value pair giving the optimal value of the\n     * objective function.\n     */",
+   "name": "doOptimize"
+  },
+  {
+   "javadoc": "/**\n     * Increment the evaluation count.\n     *\n     * @throws TooManyEvaluationsException if the allowed evaluations\n     * have been exhausted.\n     */",
+   "name": "incrementEvaluationCount"
+  },
+  {
+   "javadoc": "/**\n     * Increment the iteration count.\n     *\n     * @throws TooManyIterationsException if the allowed iterations\n     * have been exhausted.\n     */",
+   "name": "incrementIterationCount"
+  },
+  {
+   "javadoc": "/**\n     * Scans the list of (required and optional) optimization data that\n     * characterize the problem.\n     *\n     * @param optData Optimization data.\n     * The following data will be looked for:\n     * <ul>\n     *  <li>{@link MaxEval}</li>\n     *  <li>{@link MaxIter}</li>\n     * </ul>\n     */",
+   "name": "parseOptimizationData"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public abstract class BaseOptimizer<PAIR>",
+  "constructors": [
+   "protected BaseOptimizer(ConvergenceChecker<PAIR> checker);"
+  ],
+  "focal_signature": "protected BaseOptimizer(ConvergenceChecker<PAIR> checker)",
+  "methods": [
+   "public int getMaxEvaluations();",
+   "public int getEvaluations();",
+   "public int getMaxIterations();",
+   "public int getIterations();",
+   "public ConvergenceChecker<PAIR> getConvergenceChecker();",
+   "public PAIR optimize(OptimizationData... optData) throws TooManyEvaluationsException, TooManyIterationsException;",
+   "protected abstract PAIR doOptimize();",
+   "protected void incrementEvaluationCount() throws TooManyEvaluationsException;",
+   "protected void incrementIterationCount() throws TooManyIterationsException;",
+   "protected void parseOptimizationData(OptimizationData... optData);"
+  ],
+  "type_signatures": [
+   "public interface ConvergenceChecker<PAIR> {  }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

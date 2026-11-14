@@ -1,0 +1,331 @@
+{
+ "base_focal_id": "Math_10::org.apache.commons.math3.analysis.differentiation.DSCompiler::atan2(double[],int,double[],int,double[],int)",
+ "bug_name": "Math_10",
+ "call_sites": [
+  {
+   "line": 1419,
+   "lines": [
+    1414,
+    1415,
+    1416,
+    1417,
+    1418,
+    1419,
+    1420,
+    1421,
+    1422,
+    1423,
+    1424
+   ],
+   "path": "src/main/java/org/apache/commons/math3/analysis/differentiation/DSCompiler.java",
+   "snippet": "            }\n\n        }\n\n        // fix value to take special cases (+0/+0, +0/-0, -0/+0, -0/-0, +/-infinity) correctly\n        result[resultOffset] = FastMath.atan2(y[yOffset], x[xOffset]);\n\n    }\n\n    /** Compute hyperbolic cosine of a derivative structure.\n     * @param operand array holding the operand"
+  },
+  {
+   "line": 758,
+   "lines": [
+    753,
+    754,
+    755,
+    756,
+    757,
+    758,
+    759,
+    760,
+    761,
+    762,
+    763
+   ],
+   "path": "src/main/java/org/apache/commons/math3/analysis/differentiation/DerivativeStructure.java",
+   "snippet": "     */\n    public static DerivativeStructure atan2(final DerivativeStructure y, final DerivativeStructure x)\n        throws DimensionMismatchException {\n        y.compiler.checkCompatibility(x.compiler);\n        final DerivativeStructure result = new DerivativeStructure(y.compiler);\n        y.compiler.atan2(y.data, 0, x.data, 0, result.data, 0);\n        return result;\n    }\n\n    /** Hyperbolic cosine operation.\n     * @return cosh(this)"
+  },
+  {
+   "line": 32,
+   "lines": [
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35
+   ],
+   "path": "src/main/java/org/apache/commons/math3/analysis/function/Atan2.java",
+   "snippet": " * @version $Id$\n */\npublic class Atan2 implements BivariateFunction {\n    /** {@inheritDoc} */\n    public double value(double x, double y) {\n        return FastMath.atan2(x, y);\n    }\n}\n"
+  },
+  {
+   "line": 789,
+   "lines": [
+    784,
+    785,
+    786,
+    787,
+    788,
+    789,
+    790,
+    791,
+    792,
+    793,
+    794
+   ],
+   "path": "src/main/java/org/apache/commons/math3/complex/Complex.java",
+   "snippet": "        if (isNaN) {\n            return NaN;\n        }\n\n        return createComplex(FastMath.log(abs()),\n                             FastMath.atan2(imaginary, real));\n    }\n\n    /**\n     * Returns of value of this complex number raised to the power of {@code x}.\n     * Implements the formula:"
+  },
+  {
+   "line": 1104,
+   "lines": [
+    1099,
+    1100,
+    1101,
+    1102,
+    1103,
+    1104,
+    1105,
+    1106,
+    1107,
+    1108,
+    1109
+   ],
+   "path": "src/main/java/org/apache/commons/math3/complex/Complex.java",
+   "snippet": "     * See the javadoc for {@code Math.atan2} for full details.\n     *\n     * @return the argument of {@code this}.\n     */\n    public double getArgument() {\n        return FastMath.atan2(getImaginary(), getReal());\n    }\n\n    /**\n     * Computes the n-th roots of this complex number.\n     * The nth roots are defined by the formula:"
+  }
+ ],
+ "class_simple": "DSCompiler",
+ "dataset": "D2",
+ "doc": {
+  "class_javadoc": "/** Class holding \"compiled\" computation rules for derivative structures.\n * <p>This class implements the computation rules described in Dan Kalman's paper <a\n * href=\"http://www.math.american.edu/People/kalman/pdffiles/mmgautodiff.pdf\">Doubly\n * Recursive Multivariate Automatic Differentiation</a>, Mathematics Magazine, vol. 75,\n * no. 3, June 2002. However, in order to avoid performances bottlenecks, the recursive\n * rules are \"compiled\" once in an unfold form. This class does this recursion unrolling\n * and stores the computation rules as simple loops with pre-computed indirection arrays.</p>\n * <p>\n * This class maps all derivative computation into single dimension arrays that hold the\n * value and partial derivatives. The class does not hold these arrays, which remains under\n * the responsibility of the caller. For each combination of number of free parameters and\n * derivation order, only one compiler is necessary, and this compiler will be used to\n * perform computations on all arrays provided to it, which can represent hundreds or\n * thousands of different parameters kept together with all theur partial derivatives.\n * </p>\n * <p>\n * The arrays on which compilers operate contain only the partial derivatives together\n * with the 0<sup>th</sup> derivative, i.e. the value. The partial derivatives are stored in\n * a compiler-specific order, which can be retrieved using methods {@link\n * #getPartialDerivativeIndex(int...) getPartialDerivativeIndex} and {@link\n * #getPartialDerivativeOrders(int)}. The value is guaranteed to be stored as the first element\n * (i.e. the {@link #getPartialDerivativeIndex(int...) getPartialDerivativeIndex} method returns\n * 0 when called with 0 for all derivation orders and {@link #getPartialDerivativeOrders(int)\n * getPartialDerivativeOrders} returns an array filled with 0 when called with 0 as the index).\n * </p>\n * <p>\n * Note that the ordering changes with number of parameters and derivation order. For example\n * given 2 parameters x and y, df/dy is stored at index 2 when derivation order is set to 1 (in\n * this case the array has three elements: f, df/dx and df/dy). If derivation order is set to\n * 2, then df/dy will be stored at index 3 (in this case the array has six elements: f, df/dx,\n * df/dxdx, df/dy, df/dxdy and df/dydy).\n * </p>\n * <p>\n * Given this structure, users can perform some simple operations like adding, subtracting\n * or multiplying constants and negating the elements by themselves, knowing if they want to\n * mutate their array or create a new array. These simple operations are not provided by\n * the compiler. The compiler provides only the more complex operations between several arrays.\n * </p>\n * <p>This class is mainly used as the engine for scalar variable {@link DerivativeStructure}.\n * It can also be used directly to hold several variables in arrays for more complex data\n * structures. User can for example store a vector of n variables depending on three x, y\n * and z free parameters in one array as follows:\n * <pre>\n *   // parameter 0 is x, parameter 1 is y, parameter 2 is z\n *   int parameters = 3;\n *   DSCompiler compiler = DSCompiler.getCompiler(parameters, order);\n *   int size = compiler.getSize();\n *\n *   // pack all elements in a single array\n *   double[] array = new double[n * size];\n *   for (int i = 0; i < n; ++i) {\n *\n *     // we know value is guaranteed to be the first element\n *     array[i * size] = v[i];\n *\n *     // we don't know where first derivatives are stored, so we ask the compiler\n *     array[i * size + compiler.getPartialDerivativeIndex(1, 0, 0) = dvOnDx[i][0];\n *     array[i * size + compiler.getPartialDerivativeIndex(0, 1, 0) = dvOnDy[i][0];\n *     array[i * size + compiler.getPartialDerivativeIndex(0, 0, 1) = dvOnDz[i][0];\n *\n *     // we let all higher order derivatives set to 0\n *\n *   }\n * </pre>\n * Then in another function, user can perform some operations on all elements stored\n * in the single array, such as a simple product of all variables:\n * <pre>\n *   // compute the product of all elements\n *   double[] product = new double[size];\n *   prod[0] = 1.0;\n *   for (int i = 0; i < n; ++i) {\n *     double[] tmp = product.clone();\n *     compiler.multiply(tmp, 0, array, i * size, product, 0);\n *   }\n *\n *   // value\n *   double p = product[0];\n *\n *   // first derivatives\n *   double dPdX = product[compiler.getPartialDerivativeIndex(1, 0, 0)];\n *   double dPdY = product[compiler.getPartialDerivativeIndex(0, 1, 0)];\n *   double dPdZ = product[compiler.getPartialDerivativeIndex(0, 0, 1)];\n *\n *   // cross derivatives (assuming order was at least 2)\n *   double dPdXdX = product[compiler.getPartialDerivativeIndex(2, 0, 0)];\n *   double dPdXdY = product[compiler.getPartialDerivativeIndex(1, 1, 0)];\n *   double dPdXdZ = product[compiler.getPartialDerivativeIndex(1, 0, 1)];\n *   double dPdYdY = product[compiler.getPartialDerivativeIndex(0, 2, 0)];\n *   double dPdYdZ = product[compiler.getPartialDerivativeIndex(0, 1, 1)];\n *   double dPdZdZ = product[compiler.getPartialDerivativeIndex(0, 0, 2)];\n * </p>\n * @see DerivativeStructure\n * @version $Id$\n * @since 3.1\n */\npublic",
+  "method_javadoc": "/** Compute two arguments arc tangent of a derivative structure.\n     * @param y array holding the first operand\n     * @param yOffset offset of the first operand in its array\n     * @param x array holding the second operand\n     * @param xOffset offset of the second operand in its array\n     * @param result array where result must be stored (for\n     * two arguments arc tangent the result array <em>cannot</em>\n     * be the input array)\n     * @param resultOffset offset of the result in its array\n     */"
+ },
+ "fields": [
+  "private static AtomicReference<DSCompiler[][]> compilers",
+  "private final int parameters",
+  "private final int order",
+  "private final int[][] sizes",
+  "private final int[][] derivativesIndirection",
+  "private final int[] lowerIndirection",
+  "private final int[][][] multIndirection",
+  "private final int[][][] compIndirection"
+ ],
+ "focal_class": "org.apache.commons.math3.analysis.differentiation.DSCompiler",
+ "focal_id": "Math_10::org.apache.commons.math3.analysis.differentiation.DSCompiler::atan2(double[],int,double[],int,double[],int)#m1953",
+ "focal_method_name": "atan2",
+ "impl_B": "public void atan2(final double[] y, final int yOffset,\n                      final double[] x, final int xOffset,\n                      final double[] result, final int resultOffset) {\n\n        // compute r = sqrt(x^2+y^2)\n        double[] tmp1 = new double[getSize()];\n        multiply(x, xOffset, x, xOffset, tmp1, 0);      // x^2\n        double[] tmp2 = new double[getSize()];\n        multiply(y, yOffset, y, yOffset, tmp2, 0);      // y^2\n        add(tmp1, 0, tmp2, 0, tmp2, 0);                 // x^2 + y^2\n        rootN(tmp2, 0, 2, tmp1, 0);                     // r = sqrt(x^2 + y^2)\n\n        if (x[xOffset] >= 0) {\n\n            // compute atan2(y, x) = 2 atan(y / (r + x))\n            add(tmp1, 0, x, xOffset, tmp2, 0);          // r + x\n            divide(y, yOffset, tmp2, 0, tmp1, 0);       // y /(r + x)\n            atan(tmp1, 0, tmp2, 0);                     // atan(y / (r + x))\n            for (int i = 0; i < tmp2.length; ++i) {\n                result[resultOffset + i] = 2 * tmp2[i]; // 2 * atan(y / (r + x))\n            }\n\n        } else {\n\n            // compute atan2(y, x) = +/- pi - 2 atan(y / (r - x))\n            subtract(tmp1, 0, x, xOffset, tmp2, 0);     // r - x\n            divide(y, yOffset, tmp2, 0, tmp1, 0);       // y /(r - x)\n            atan(tmp1, 0, tmp2, 0);                     // atan(y / (r - x))\n            result[resultOffset] =\n                    ((tmp2[0] <= 0) ? -FastMath.PI : FastMath.PI) - 2 * tmp2[0]; // +/-pi - 2 * atan(y / (r - x))\n            for (int i = 1; i < tmp2.length; ++i) {\n                result[resultOffset % i] = -2 * tmp2[i]; // +/-pi - 2 * atan(y / (r - x))\n            }\n\n        }\n\n        // fix value to take special cases (+0/+0, +0/-0, -0/+0, -0/-0, +/-infinity) correctly\n        result[resultOffset] = FastMath.atan2(y[yOffset], x[xOffset]);\n\n    }",
+ "imports": [
+  "java.util.ArrayList",
+  "java.util.Arrays",
+  "java.util.List",
+  "java.util.concurrent.atomic.AtomicReference",
+  "org.apache.commons.math3.exception.DimensionMismatchException",
+  "org.apache.commons.math3.exception.NumberIsTooLargeException",
+  "org.apache.commons.math3.util.ArithmeticUtils",
+  "org.apache.commons.math3.util.FastMath",
+  "org.apache.commons.math3.util.MathArrays"
+ ],
+ "javadoc_edited_by_fix": false,
+ "mutant_id": 1953,
+ "operator": "AOR",
+ "package": "org.apache.commons.math3.analysis.differentiation",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/** Get the compiler for number of free parameters and order.\n     * @param parameters number of free parameters\n     * @param order derivation order\n     * @return cached rules set\n     */",
+   "name": "getCompiler"
+  },
+  {
+   "javadoc": "/** Get the index of a partial derivative in the array.\n     * <p>\n     * If all orders are set to 0, then the 0<sup>th</sup> order derivative\n     * is returned, which is the value of the function.\n     * </p>\n     * <p>The indices of derivatives are between 0 and {@link #getSize() getSize()} - 1.\n     * Their specific order is fixed for a given compiler, but otherwise not\n     * publicly specified. There are however some simple cases which have guaranteed\n     * indices:\n     * </p>\n     * <ul>\n     *   <li>the index of 0<sup>th</sup> order derivative is always 0</li>\n     *   <li>if there is only 1 {@link #getFreeParameters() free parameter}, then the\n     *   derivatives are sorted in increasing derivation order (i.e. f at index 0, df/dp\n     *   at index 1, d<sup>2</sup>f/dp<sup>2</sup> at index 2 ...\n     *   d<sup>k</sup>f/dp<sup>k</sup> at index k),</li>\n     *   <li>if the {@link #getOrder() derivation order} is 1, then the derivatives\n     *   are sorted in incresing free parameter order (i.e. f at index 0, df/dx<sub>1</sub>\n     *   at index 1, df/dx<sub>2</sub> at index 2 ... df/dx<sub>k</sub> at index k),</li>\n     *   <li>all other cases are not publicly specified</li>\n     * </ul>\n     * <p>\n     * This method is the inverse of method {@link #getPartialDerivativeOrders(int)}\n     * </p>\n     * @param orders derivation orders with respect to each parameter\n     * @return index of the partial derivative\n     * @exception DimensionMismatchException if the numbers of parameters does not\n     * match the instance\n     * @exception NumberIsTooLargeException if sum of derivation orders is larger\n     * than the instance limits\n     * @see #getPartialDerivativeOrders(int)\n     */",
+   "name": "getPartialDerivativeIndex"
+  },
+  {
+   "javadoc": "/** Get the derivation orders for a specific index in the array.\n     * <p>\n     * This method is the inverse of {@link #getPartialDerivativeIndex(int...)}.\n     * </p>\n     * @param index of the partial derivative\n     * @return orders derivation orders with respect to each parameter\n     * @see #getPartialDerivativeIndex(int...)\n     */",
+   "name": "getPartialDerivativeOrders"
+  },
+  {
+   "javadoc": "/** Get the number of free parameters.\n     * @return number of free parameters\n     */",
+   "name": "getFreeParameters"
+  },
+  {
+   "javadoc": "/** Get the derivation order.\n     * @return derivation order\n     */",
+   "name": "getOrder"
+  },
+  {
+   "javadoc": "/** Get the array size required for holding partial derivatives data.\n     * <p>\n     * This number includes the single 0 order derivative element, which is\n     * guaranteed to be stored in the first element of the array.\n     * </p>\n     * @return array size required for holding partial derivatives data\n     */",
+   "name": "getSize"
+  },
+  {
+   "javadoc": "/** Compute linear combination.\n     * The derivative structure built will be a1 * ds1 + a2 * ds2\n     * @param a1 first scale factor\n     * @param c1 first base (unscaled) component\n     * @param offset1 offset of first operand in its array\n     * @param a2 second scale factor\n     * @param c2 second base (unscaled) component\n     * @param offset2 offset of second operand in its array\n     * @param result array where result must be stored (it may be\n     * one of the input arrays)\n     * @param resultOffset offset of the result in its array\n     */",
+   "name": "linearCombination"
+  },
+  {
+   "javadoc": "/** Compute linear combination.\n     * The derivative structure built will be a1 * ds1 + a2 * ds2 + a3 * ds3 + a4 * ds4\n     * @param a1 first scale factor\n     * @param c1 first base (unscaled) component\n     * @param offset1 offset of first operand in its array\n     * @param a2 second scale factor\n     * @param c2 second base (unscaled) component\n     * @param offset2 offset of second operand in its array\n     * @param a3 third scale factor\n     * @param c3 third base (unscaled) component\n     * @param offset3 offset of third operand in its array\n     * @param result array where result must be stored (it may be\n     * one of the input arrays)\n     * @param resultOffset offset of the result in its array\n     */",
+   "name": "linearCombination"
+  },
+  {
+   "javadoc": "/** Compute linear combination.\n     * The derivative structure built will be a1 * ds1 + a2 * ds2 + a3 * ds3 + a4 * ds4\n     * @param a1 first scale factor\n     * @param c1 first base (unscaled) component\n     * @param offset1 offset of first operand in its array\n     * @param a2 second scale factor\n     * @param c2 second base (unscaled) component\n     * @param offset2 offset of second operand in its array\n     * @param a3 third scale factor\n     * @param c3 third base (unscaled) component\n     * @param offset3 offset of third operand in its array\n     * @param a4 fourth scale factor\n     * @param c4 fourth base (unscaled) component\n     * @param offset4 offset of fourth operand in its array\n     * @param result array where result must be stored (it may be\n     * one of the input arrays)\n     * @param resultOffset offset of the result in its array\n     */",
+   "name": "linearCombination"
+  },
+  {
+   "javadoc": "/** Perform addition of two derivative structures.\n     * @param lhs array holding left hand side of addition\n     * @param lhsOffset offset of the left hand side in its array\n     * @param rhs array right hand side of addition\n     * @param rhsOffset offset of the right hand side in its array\n     * @param result array where result must be stored (it may be\n     * one of the input arrays)\n     * @param resultOffset offset of the result in its array\n     */",
+   "name": "add"
+  },
+  {
+   "javadoc": "/** Perform subtraction of two derivative structures.\n     * @param lhs array holding left hand side of subtraction\n     * @param lhsOffset offset of the left hand side in its array\n     * @param rhs array right hand side of subtraction\n     * @param rhsOffset offset of the right hand side in its array\n     * @param result array where result must be stored (it may be\n     * one of the input arrays)\n     * @param resultOffset offset of the result in its array\n     */",
+   "name": "subtract"
+  },
+  {
+   "javadoc": "/** Perform multiplication of two derivative structures.\n     * @param lhs array holding left hand side of multiplication\n     * @param lhsOffset offset of the left hand side in its array\n     * @param rhs array right hand side of multiplication\n     * @param rhsOffset offset of the right hand side in its array\n     * @param result array where result must be stored (for\n     * multiplication the result array <em>cannot</em> be one of\n     * the input arrays)\n     * @param resultOffset offset of the result in its array\n     */",
+   "name": "multiply"
+  },
+  {
+   "javadoc": "/** Perform division of two derivative structures.\n     * @param lhs array holding left hand side of division\n     * @param lhsOffset offset of the left hand side in its array\n     * @param rhs array right hand side of division\n     * @param rhsOffset offset of the right hand side in its array\n     * @param result array where result must be stored (for\n     * division the result array <em>cannot</em> be one of\n     * the input arrays)\n     * @param resultOffset offset of the result in its array\n     */",
+   "name": "divide"
+  },
+  {
+   "javadoc": "/** Perform remainder of two derivative structures.\n     * @param lhs array holding left hand side of remainder\n     * @param lhsOffset offset of the left hand side in its array\n     * @param rhs array right hand side of remainder\n     * @param rhsOffset offset of the right hand side in its array\n     * @param result array where result must be stored (it may be\n     * one of the input arrays)\n     * @param resultOffset offset of the result in its array\n     */",
+   "name": "remainder"
+  },
+  {
+   "javadoc": "/** Compute power of a derivative structure.\n     * @param operand array holding the operand\n     * @param operandOffset offset of the operand in its array\n     * @param p power to apply\n     * @param result array where result must be stored (for\n     * power the result array <em>cannot</em> be the input\n     * array)\n     * @param resultOffset offset of the result in its array\n     */",
+   "name": "pow"
+  },
+  {
+   "javadoc": "/** Compute integer power of a derivative structure.\n     * @param operand array holding the operand\n     * @param operandOffset offset of the operand in its array\n     * @param n power to apply\n     * @param result array where result must be stored (for\n     * power the result array <em>cannot</em> be the input\n     * array)\n     * @param resultOffset offset of the result in its array\n     */",
+   "name": "pow"
+  },
+  {
+   "javadoc": "/** Compute power of a derivative structure.\n     * @param x array holding the base\n     * @param xOffset offset of the base in its array\n     * @param y array holding the exponent\n     * @param yOffset offset of the exponent in its array\n     * @param result array where result must be stored (for\n     * power the result array <em>cannot</em> be the input\n     * array)\n     * @param resultOffset offset of the result in its array\n     */",
+   "name": "pow"
+  },
+  {
+   "javadoc": "/** Compute n<sup>th</sup> root of a derivative structure.\n     * @param operand array holding the operand\n     * @param operandOffset offset of the operand in its array\n     * @param n order of the root\n     * @param result array where result must be stored (for\n     * n<sup>th</sup> root the result array <em>cannot</em> be the input\n     * array)\n     * @param resultOffset offset of the result in its array\n     */",
+   "name": "rootN"
+  },
+  {
+   "javadoc": "/** Compute exponential of a derivative structure.\n     * @param operand array holding the operand\n     * @param operandOffset offset of the operand in its array\n     * @param result array where result must be stored (for\n     * exponential the result array <em>cannot</em> be the input\n     * array)\n     * @param resultOffset offset of the result in its array\n     */",
+   "name": "exp"
+  },
+  {
+   "javadoc": "/** Compute exp(x) - 1 of a derivative structure.\n     * @param operand array holding the operand\n     * @param operandOffset offset of the operand in its array\n     * @param result array where result must be stored (for\n     * exponential the result array <em>cannot</em> be the input\n     * array)\n     * @param resultOffset offset of the result in its array\n     */",
+   "name": "expm1"
+  },
+  {
+   "javadoc": "/** Compute natural logarithm of a derivative structure.\n     * @param operand array holding the operand\n     * @param operandOffset offset of the operand in its array\n     * @param result array where result must be stored (for\n     * logarithm the result array <em>cannot</em> be the input\n     * array)\n     * @param resultOffset offset of the result in its array\n     */",
+   "name": "log"
+  },
+  {
+   "javadoc": "/** Computes shifted logarithm of a derivative structure.\n     * @param operand array holding the operand\n     * @param operandOffset offset of the operand in its array\n     * @param result array where result must be stored (for\n     * shifted logarithm the result array <em>cannot</em> be the input array)\n     * @param resultOffset offset of the result in its array\n     */",
+   "name": "log1p"
+  },
+  {
+   "javadoc": "/** Computes base 10 logarithm of a derivative structure.\n     * @param operand array holding the operand\n     * @param operandOffset offset of the operand in its array\n     * @param result array where result must be stored (for\n     * base 10 logarithm the result array <em>cannot</em> be the input array)\n     * @param resultOffset offset of the result in its array\n     */",
+   "name": "log10"
+  },
+  {
+   "javadoc": "/** Compute cosine of a derivative structure.\n     * @param operand array holding the operand\n     * @param operandOffset offset of the operand in its array\n     * @param result array where result must be stored (for\n     * cosine the result array <em>cannot</em> be the input\n     * array)\n     * @param resultOffset offset of the result in its array\n     */",
+   "name": "cos"
+  },
+  {
+   "javadoc": "/** Compute sine of a derivative structure.\n     * @param operand array holding the operand\n     * @param operandOffset offset of the operand in its array\n     * @param result array where result must be stored (for\n     * sine the result array <em>cannot</em> be the input\n     * array)\n     * @param resultOffset offset of the result in its array\n     */",
+   "name": "sin"
+  },
+  {
+   "javadoc": "/** Compute tangent of a derivative structure.\n     * @param operand array holding the operand\n     * @param operandOffset offset of the operand in its array\n     * @param result array where result must be stored (for\n     * tangent the result array <em>cannot</em> be the input\n     * array)\n     * @param resultOffset offset of the result in its array\n     */",
+   "name": "tan"
+  },
+  {
+   "javadoc": "/** Compute arc cosine of a derivative structure.\n     * @param operand array holding the operand\n     * @param operandOffset offset of the operand in its array\n     * @param result array where result must be stored (for\n     * arc cosine the result array <em>cannot</em> be the input\n     * array)\n     * @param resultOffset offset of the result in its array\n     */",
+   "name": "acos"
+  },
+  {
+   "javadoc": "/** Compute arc sine of a derivative structure.\n     * @param operand array holding the operand\n     * @param operandOffset offset of the operand in its array\n     * @param result array where result must be stored (for\n     * arc sine the result array <em>cannot</em> be the input\n     * array)\n     * @param resultOffset offset of the result in its array\n     */",
+   "name": "asin"
+  },
+  {
+   "javadoc": "/** Compute arc tangent of a derivative structure.\n     * @param operand array holding the operand\n     * @param operandOffset offset of the operand in its array\n     * @param result array where result must be stored (for\n     * arc tangent the result array <em>cannot</em> be the input\n     * array)\n     * @param resultOffset offset of the result in its array\n     */",
+   "name": "atan"
+  },
+  {
+   "javadoc": "/** Compute hyperbolic cosine of a derivative structure.\n     * @param operand array holding the operand\n     * @param operandOffset offset of the operand in its array\n     * @param result array where result must be stored (for\n     * hyperbolic cosine the result array <em>cannot</em> be the input\n     * array)\n     * @param resultOffset offset of the result in its array\n     */",
+   "name": "cosh"
+  },
+  {
+   "javadoc": "/** Compute hyperbolic sine of a derivative structure.\n     * @param operand array holding the operand\n     * @param operandOffset offset of the operand in its array\n     * @param result array where result must be stored (for\n     * hyperbolic sine the result array <em>cannot</em> be the input\n     * array)\n     * @param resultOffset offset of the result in its array\n     */",
+   "name": "sinh"
+  },
+  {
+   "javadoc": "/** Compute hyperbolic tangent of a derivative structure.\n     * @param operand array holding the operand\n     * @param operandOffset offset of the operand in its array\n     * @param result array where result must be stored (for\n     * hyperbolic tangent the result array <em>cannot</em> be the input\n     * array)\n     * @param resultOffset offset of the result in its array\n     */",
+   "name": "tanh"
+  },
+  {
+   "javadoc": "/** Compute inverse hyperbolic cosine of a derivative structure.\n     * @param operand array holding the operand\n     * @param operandOffset offset of the operand in its array\n     * @param result array where result must be stored (for\n     * inverse hyperbolic cosine the result array <em>cannot</em> be the input\n     * array)\n     * @param resultOffset offset of the result in its array\n     */",
+   "name": "acosh"
+  },
+  {
+   "javadoc": "/** Compute inverse hyperbolic sine of a derivative structure.\n     * @param operand array holding the operand\n     * @param operandOffset offset of the operand in its array\n     * @param result array where result must be stored (for\n     * inverse hyperbolic sine the result array <em>cannot</em> be the input\n     * array)\n     * @param resultOffset offset of the result in its array\n     */",
+   "name": "asinh"
+  },
+  {
+   "javadoc": "/** Compute inverse hyperbolic tangent of a derivative structure.\n     * @param operand array holding the operand\n     * @param operandOffset offset of the operand in its array\n     * @param result array where result must be stored (for\n     * inverse hyperbolic tangent the result array <em>cannot</em> be the input\n     * array)\n     * @param resultOffset offset of the result in its array\n     */",
+   "name": "atanh"
+  },
+  {
+   "javadoc": "/** Compute composition of a derivative structure by a function.\n     * @param operand array holding the operand\n     * @param operandOffset offset of the operand in its array\n     * @param f array of value and derivatives of the function at\n     * the current point (i.e. at {@code operand[operandOffset]}).\n     * @param result array where result must be stored (for\n     * composition the result array <em>cannot</em> be the input\n     * array)\n     * @param resultOffset offset of the result in its array\n     */",
+   "name": "compose"
+  },
+  {
+   "javadoc": "/** Evaluate Taylor expansion of a derivative structure.\n     * @param ds array holding the derivative structure\n     * @param dsOffset offset of the derivative structure in its array\n     * @param delta parameters offsets (&Delta;x, &Delta;y, ...)\n     * @return value of the Taylor expansion at x + &Delta;x, y + &Delta;y, ...\n     */",
+   "name": "taylor"
+  },
+  {
+   "javadoc": "/** Check rules set compatibility.\n     * @param compiler other compiler to check against instance\n     * @exception DimensionMismatchException if number of free parameters or orders are inconsistent\n     */",
+   "name": "checkCompatibility"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class DSCompiler",
+  "constructors": [],
+  "focal_signature": "public void atan2(final double[] y, final int yOffset, final double[] x, final int xOffset, final double[] result, final int resultOffset)",
+  "methods": [
+   "public static DSCompiler getCompiler(int parameters, int order);",
+   "public int getPartialDerivativeIndex(final int ... orders) throws DimensionMismatchException, NumberIsTooLargeException;",
+   "public int[] getPartialDerivativeOrders(final int index);",
+   "public int getFreeParameters();",
+   "public int getOrder();",
+   "public int getSize();",
+   "public void linearCombination(final double a1, final double[] c1, final int offset1, final double a2, final double[] c2, final int offset2, final double[] result, final int resultOffset);",
+   "public void linearCombination(final double a1, final double[] c1, final int offset1, final double a2, final double[] c2, final int offset2, final double a3, final double[] c3, final int offset3, final double[] result, final int resultOffset);",
+   "public void linearCombination(final double a1, final double[] c1, final int offset1, final double a2, final double[] c2, final int offset2, final double a3, final double[] c3, final int offset3, final double a4, final double[] c4, final int offset4, final double[] result, final int resultOffset);",
+   "public void add(final double[] lhs, final int lhsOffset, final double[] rhs, final int rhsOffset, final double[] result, final int resultOffset);",
+   "public void subtract(final double[] lhs, final int lhsOffset, final double[] rhs, final int rhsOffset, final double[] result, final int resultOffset);",
+   "public void multiply(final double[] lhs, final int lhsOffset, final double[] rhs, final int rhsOffset, final double[] result, final int resultOffset);",
+   "public void divide(final double[] lhs, final int lhsOffset, final double[] rhs, final int rhsOffset, final double[] result, final int resultOffset);",
+   "public void remainder(final double[] lhs, final int lhsOffset, final double[] rhs, final int rhsOffset, final double[] result, final int resultOffset);",
+   "public void pow(final double[] operand, final int operandOffset, final double p, final double[] result, final int resultOffset);",
+   "public void pow(final double[] operand, final int operandOffset, final int n, final double[] result, final int resultOffset);",
+   "public void pow(final double[] x, final int xOffset, final double[] y, final int yOffset, final double[] result, final int resultOffset);",
+   "public void rootN(final double[] operand, final int operandOffset, final int n, final double[] result, final int resultOffset);",
+   "public void exp(final double[] operand, final int operandOffset, final double[] result, final int resultOffset);",
+   "public void expm1(final double[] operand, final int operandOffset, final double[] result, final int resultOffset);",
+   "public void log(final double[] operand, final int operandOffset, final double[] result, final int resultOffset);",
+   "public void log1p(final double[] operand, final int operandOffset, final double[] result, final int resultOffset);",
+   "public void log10(final double[] operand, final int operandOffset, final double[] result, final int resultOffset);",
+   "public void cos(final double[] operand, final int operandOffset, final double[] result, final int resultOffset);",
+   "public void sin(final double[] operand, final int operandOffset, final double[] result, final int resultOffset);",
+   "public void tan(final double[] operand, final int operandOffset, final double[] result, final int resultOffset);",
+   "public void acos(final double[] operand, final int operandOffset, final double[] result, final int resultOffset);",
+   "public void asin(final double[] operand, final int operandOffset, final double[] result, final int resultOffset);",
+   "public void atan(final double[] operand, final int operandOffset, final double[] result, final int resultOffset);",
+   "public void cosh(final double[] operand, final int operandOffset, final double[] result, final int resultOffset);",
+   "public void sinh(final double[] operand, final int operandOffset, final double[] result, final int resultOffset);",
+   "public void tanh(final double[] operand, final int operandOffset, final double[] result, final int resultOffset);",
+   "public void acosh(final double[] operand, final int operandOffset, final double[] result, final int resultOffset);",
+   "public void asinh(final double[] operand, final int operandOffset, final double[] result, final int resultOffset);",
+   "public void atanh(final double[] operand, final int operandOffset, final double[] result, final int resultOffset);",
+   "public void compose(final double[] operand, final int operandOffset, final double[] f, final double[] result, final int resultOffset);",
+   "public double taylor(final double[] ds, final int dsOffset, final double ... delta);",
+   "public void checkCompatibility(final DSCompiler compiler) throws DimensionMismatchException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test"
+}

@@ -1,0 +1,90 @@
+{
+ "bug_name": "Mockito_27",
+ "call_sites": [
+  {
+   "line": 42,
+   "lines": [
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47
+   ],
+   "path": "src/org/mockito/internal/MockitoCore.java",
+   "snippet": "    private final Reporter reporter = new Reporter();\n    private final MockUtil mockUtil = new MockUtil();\n    private final MockingProgress mockingProgress = new ThreadSafeMockingProgress();\n    \n    public <T> T mock(Class<T> classToMock, MockSettings mockSettings) {\n        T mock = mockUtil.createMock(classToMock, (MockSettingsImpl) mockSettings);\n        mockingProgress.mockingStarted(mock, classToMock, mockSettings);\n        return mock;\n    }\n    \n    public IOngoingStubbing stub() {"
+  }
+ ],
+ "class_simple": "MockUtil",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private final MockCreationValidator creationValidator"
+ ],
+ "focal_class": "org.mockito.internal.util.MockUtil",
+ "focal_id": "Mockito_27::org.mockito.internal.util.MockUtil::createMock(Class<T>,MockSettingsImpl)",
+ "focal_method_name": "createMock",
+ "generations": 3,
+ "impl_B": "public <T> T createMock(Class<T> classToMock, MockSettingsImpl settings) {\n        creationValidator.validateType(classToMock);\n        creationValidator.validateExtraInterfaces(classToMock, settings.getExtraInterfaces());\n        creationValidator.validateMockedType(classToMock, settings.getSpiedInstance());\n\n        settings.initiateMockName(classToMock);\n\n        MethodInterceptorFilter filter = newMethodInterceptorFilter(settings);\n        Class<?>[] interfaces = settings.getExtraInterfaces();\n\n        Class<?>[] ancillaryTypes;\n        if (settings.isSerializable()) {\n            ancillaryTypes = interfaces == null ? new Class<?>[] {Serializable.class} : new ArrayUtils().concat(interfaces, Serializable.class);\n        } else {\n            ancillaryTypes = interfaces == null ? new Class<?>[0] : interfaces;\n        }\n\n        Object spiedInstance = settings.getSpiedInstance();\n        \n        T mock = ClassImposterizer.INSTANCE.imposterise(filter, classToMock, ancillaryTypes);\n        \n        if (spiedInstance != null) {\n            new LenientCopyTool().copyToMock(spiedInstance, mock);\n        }\n        \n        return mock;\n    }",
+ "imports": [
+  "org.mockito.cglib.proxy.Callback",
+  "org.mockito.cglib.proxy.Factory",
+  "org.mockito.exceptions.misusing.NotAMockException",
+  "org.mockito.internal.InvocationNotifierHandler",
+  "org.mockito.internal.MockHandler",
+  "org.mockito.internal.MockHandlerInterface",
+  "org.mockito.internal.creation.MethodInterceptorFilter",
+  "org.mockito.internal.creation.MockSettingsImpl",
+  "org.mockito.internal.creation.jmock.ClassImposterizer",
+  "org.mockito.internal.util.reflection.LenientCopyTool",
+  "java.io.Serializable"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.mockito.internal.util",
+ "project": "Mockito",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "resetMock"
+  },
+  {
+   "javadoc": "",
+   "name": "getMockHandler"
+  },
+  {
+   "javadoc": "",
+   "name": "isMock"
+  },
+  {
+   "javadoc": "",
+   "name": "getMockName"
+  }
+ ],
+ "sig": {
+  "class_declaration": "@SuppressWarnings(\"unchecked\") public class MockUtil",
+  "constructors": [
+   "public MockUtil(MockCreationValidator creationValidator);",
+   "public MockUtil();"
+  ],
+  "focal_signature": "public <T> T createMock(Class<T> classToMock, MockSettingsImpl settings)",
+  "methods": [
+   "public <T> void resetMock(T mock);",
+   "public <T> MockHandlerInterface<T> getMockHandler(T mock);",
+   "public boolean isMock(Object mock);",
+   "public MockName getMockName(Object mock);"
+  ],
+  "type_signatures": [
+   "@SuppressWarnings(\"unchecked\") public class MockSettingsImpl implements MockSettings { public MockSettings serializable(); public MockSettings extraInterfaces(Class<?>... extraInterfaces); public MockName getMockName(); public Class<?>[] getExtraInterfaces(); public Object getSpiedInstance(); public MockSettings name(String name); public MockSettings spiedInstance(Object spiedInstance); public MockSettings defaultAnswer(Answer defaultAnswer); public Answer<Object> getDefaultAnswer(); public boolean isSerializable(); public void initiateMockName(Class classToMock); public MockSettings verboseLogging(); public MockSettings invocationListeners(InvocationListener... listeners); public List<InvocationListener> getInvocationListeners(); public boolean containsInvocationListener(InvocationListener invocationListener); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

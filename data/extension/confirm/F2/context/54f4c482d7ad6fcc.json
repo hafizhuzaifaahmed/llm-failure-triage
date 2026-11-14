@@ -1,0 +1,78 @@
+{
+ "bug_name": "Math_51",
+ "call_sites": [
+  {
+   "line": 190,
+   "lines": [
+    185,
+    186,
+    187,
+    188,
+    189,
+    190,
+    191,
+    192,
+    193,
+    194,
+    195
+   ],
+   "path": "src/main/java/org/apache/commons/math/analysis/solvers/BaseAbstractUnivariateRealSolver.java",
+   "snippet": "    public double solve(int maxEval, FUNC f, double min, double max, double startValue) {\n        // Initialization.\n        setup(maxEval, f, min, max, startValue);\n\n        // Perform computation.\n        return doSolve();\n    }\n\n    /** {@inheritDoc} */\n    public double solve(int maxEval, FUNC f, double min, double max) {\n        return solve(maxEval, f, min, max, min + 0.5 * (max - min));"
+  }
+ ],
+ "class_simple": "BaseSecantSolver",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Base class for all bracketing <em>Secant</em>-based methods for root-finding\n * (approximating a zero of a univariate real function).\n *\n * <p>Implementation of the {@link RegulaFalsiSolver <em>Regula Falsi</em>} and\n * {@link IllinoisSolver <em>Illinois</em>} methods is based on the\n * following article: M. Dowell and P. Jarratt,\n * <em>A modified regula falsi method for computing the root of an\n * equation</em>, BIT Numerical Mathematics, volume 11, number 2,\n * pages 168-174, Springer, 1971.</p>\n *\n * <p>Implementation of the {@link PegasusSolver <em>Pegasus</em>} method is\n * based on the following article: M. Dowell and P. Jarratt,\n * <em>The \"Pegasus\" method for computing the root of an equation</em>,\n * BIT Numerical Mathematics, volume 12, number 4, pages 503-508, Springer,\n * 1972.</p>\n *\n * <p>The {@link SecantSolver <em>Secant</em>} method is <em>not</em> a\n * bracketing method, so it is not implemented here. It has a separate\n * implementation.</p>\n *\n * @since 3.0\n * @version $Id$\n */\npublic abstract",
+  "method_javadoc": "/** {@inheritDoc} */"
+ },
+ "fields": [
+  "protected static final double DEFAULT_ABSOLUTE_ACCURACY",
+  "private AllowedSolution allowed",
+  "private final Method method"
+ ],
+ "focal_class": "org.apache.commons.math.analysis.solvers.BaseSecantSolver",
+ "focal_id": "Math_51::org.apache.commons.math.analysis.solvers.BaseSecantSolver::doSolve()",
+ "focal_method_name": "doSolve",
+ "generations": 3,
+ "impl_B": "protected final double doSolve() {\n        // Get initial solution\n        double x0 = getMin();\n        double x1 = getMax();\n        double f0 = computeObjectiveValue(x0);\n        double f1 = computeObjectiveValue(x1);\n\n        // If one of the bounds is the exact root, return it. Since these are\n        // not under-approximations or over-approximations, we can return them\n        // regardless of the allowed solutions.\n        if (f0 == 0.0) {\n            return x0;\n        }\n        if (f1 == 0.0) {\n            return x1;\n        }\n\n        // Verify bracketing of initial solution.\n        verifyBracketing(x0, x1);\n\n        // Get accuracies.\n        final double ftol = getFunctionValueAccuracy();\n        final double atol = getAbsoluteAccuracy();\n        final double rtol = getRelativeAccuracy();\n\n        // Keep track of inverted intervals, meaning that the left bound is\n        // larger than the right bound.\n        boolean inverted = false;\n\n        // Keep finding better approximations.\n        while (true) {\n            // Calculate the next approximation.\n            final double x = x1 - ((f1 * (x1 - x0)) / (f1 - f0));\n            final double fx = computeObjectiveValue(x);\n\n            // If the new approximation is the exact root, return it. Since\n            // this is not an under-approximation or an over-approximation,\n            // we can return it regardless of the allowed solutions.\n            if (fx == 0.0) {\n                return x;\n            }\n\n            // Update the bounds with the new approximation.\n            if (f1 * fx < 0) {\n                // The value of x1 has switched to the other bound, thus inverting\n                // the interval.\n                x0 = x1;\n                f0 = f1;\n                inverted = !inverted;\n            } else {\n                switch (method) {\n                case ILLINOIS:\n                    f0 *= 0.5;\n                    break;\n                case PEGASUS:\n                    f0 *= f1 / (f1 + fx);\n                    break;\n                        // Update formula cannot make any progress: Update the\n                        // search interval.\n                default:\n                    // Should never happen.\n                }\n            }\n            // Update from [x0, x1] to [x0, x].\n            x1 = x;\n            f1 = fx;\n\n            // If the function value of the last approximation is too small,\n            // given the function value accuracy, then we can't get closer to\n            // the root than we already are.\n            if (FastMath.abs(f1) <= ftol) {\n                switch (allowed) {\n                case ANY_SIDE:\n                    return x1;\n                case LEFT_SIDE:\n                    if (inverted) {\n                        return x1;\n                    }\n                    break;\n                case RIGHT_SIDE:\n                    if (!inverted) {\n                        return x1;\n                    }\n                    break;\n                case BELOW_SIDE:\n                    if (f1 <= 0) {\n                        return x1;\n                    }\n                    break;\n                case ABOVE_SIDE:\n                    if (f1 >= 0) {\n                        return x1;\n                    }\n                    break;\n                default:\n                    throw new MathInternalError();\n                }\n            }\n\n            // If the current interval is within the given accuracies, we\n            // are satisfied with the current approximation.\n            if (FastMath.abs(x1 - x0) < FastMath.max(rtol * FastMath.abs(x1),\n                                                     atol)) {\n                switch (allowed) {\n                case ANY_SIDE:\n                    return x1;\n                case LEFT_SIDE:\n                    return inverted ? x1 : x0;\n                case RIGHT_SIDE:\n                    return inverted ? x0 : x1;\n                case BELOW_SIDE:\n                    return (f1 <= 0) ? x1 : x0;\n                case ABOVE_SIDE:\n                    return (f1 >= 0) ? x1 : x0;\n                default:\n                    throw new MathInternalError();\n                }\n            }\n        }\n    }",
+ "imports": [
+  "org.apache.commons.math.util.FastMath",
+  "org.apache.commons.math.analysis.UnivariateRealFunction",
+  "org.apache.commons.math.exception.MathInternalError"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math.analysis.solvers",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "solve"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "solve"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "solve"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public abstract class BaseSecantSolver extends AbstractUnivariateRealSolver implements BracketedUnivariateRealSolver<UnivariateRealFunction>",
+  "constructors": [
+   "protected BaseSecantSolver(final double absoluteAccuracy, final Method method);",
+   "protected BaseSecantSolver(final double relativeAccuracy, final double absoluteAccuracy, final Method method);",
+   "protected BaseSecantSolver(final double relativeAccuracy, final double absoluteAccuracy, final double functionValueAccuracy, final Method method);"
+  ],
+  "focal_signature": "protected final double doSolve()",
+  "methods": [
+   "public double solve(final int maxEval, final UnivariateRealFunction f, final double min, final double max, final AllowedSolution allowedSolution);",
+   "public double solve(final int maxEval, final UnivariateRealFunction f, final double min, final double max, final double startValue, final AllowedSolution allowedSolution);",
+   "public double solve(final int maxEval, final UnivariateRealFunction f, final double min, final double max, final double startValue);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

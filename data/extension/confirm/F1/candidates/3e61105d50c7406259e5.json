@@ -1,0 +1,14 @@
+{
+  "assembled": true,
+  "call_key": "06696c1b33a2504fa8042a92c8b2a6b802577dc6519a662356b52fd1a95d7eef",
+  "candidate_id": "3e61105d50c7406259e5",
+  "class_name": "Fraction_reduce_TriageGen4Test",
+  "dataset": "D1C_F1",
+  "focal_id": "Lang_49::org.apache.commons.lang.math.Fraction::reduce()",
+  "generation": 4,
+  "model_returned": "gemma4:26b",
+  "n_tests": 5,
+  "package": "org.apache.commons.lang.math",
+  "source": "package org.apache.commons.lang.math;\n\nimport java.io.*;\nimport java.math.*;\nimport java.math.BigInteger;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class Fraction_reduce_TriageGen4Test {\n\n    @Test\n    public void testReduce_AlreadyReduced() {\n        // GCD is 1, should return this (same instance or equivalent)\n        Fraction fraction = Fraction.getFraction(3, 5);\n        Fraction reduced = fraction.reduce();\n        \n        assertEquals(3, reduced.getNumerator());\n        assertEquals(5, reduced.getDenominator());\n        assertSame(\"Should return the same instance when GCD is 1\", fraction, reduced);\n    }\n\n    @Test\n    public void testReduce_NeedsReduction() {\n        // GCD of 4 and 8 is 4. Expected: 1/2\n        Fraction fraction = Fraction.getFraction(4, 8);\n        Fraction reduced = fraction.reduce();\n        \n        assertEquals(1, reduced.getNumerator());\n        assertEquals(2, reduced.getDenominator());\n    }\n\n    @Test\n    public void testReduce_WithNegativeNumerator() {\n        // GCD of abs(-6) and 9 is 3. Expected: -2/3\n        Fraction fraction = Fraction.getFraction(-6, 9);\n        Fraction reduced = fraction.reduce();\n        \n        assertEquals(-2, reduced.getNumerator());\n        assertEquals(3, reduced.getDenominator());\n    }\n\n    @Test\n    public void testReduce_LargeNumbers() {\n        // GCD of 100 and 1000 is 100. Expected: 1/10\n        Fraction fraction = Fraction.getFraction(100, 1000);\n        Fraction reduced = fraction.reduce();\n        \n        assertEquals(1, reduced.getNumerator());\n        assertEquals(10, reduced.getDenominator());\n    }\n\n    @Test\n    public void testReduce_Identity() {\n        // GCD of 1 and 1 is 1.\n        Fraction fraction = Fraction.getFraction(1, 1);\n        Fraction reduced = fraction.reduce();\n        \n        assertEquals(1, reduced.getNumerator());\n        assertEquals(1, reduced.getDenominator());\n        assertSame(fraction, reduced);\n    }\n}\n",
+  "tranche": "F1"
+}

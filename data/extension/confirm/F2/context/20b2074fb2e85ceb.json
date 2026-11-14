@@ -1,0 +1,172 @@
+{
+ "bug_name": "Closure_174",
+ "call_sites": [
+  {
+   "line": 187,
+   "lines": [
+    182,
+    183,
+    184,
+    185,
+    186,
+    187,
+    188,
+    189,
+    190,
+    191,
+    192
+   ],
+   "path": "src/com/google/javascript/jscomp/ProcessClosurePrimitives.java",
+   "snippet": "    Node parent = n.getParent();\n    Preconditions.checkState(parent.isExprResult());\n    String name = n.getChildAtIndex(1).getString();\n    Node value = n.getChildAtIndex(2).detachFromParent();\n\n    Node replacement = NodeUtil.newQualifiedNameNodeDeclaration(\n        compiler.getCodingConvention(), name, value, n.getJSDocInfo());\n    replacement.useSourceInfoIfMissingFromForTree(n);\n    parent.getParent().replaceChild(parent, replacement);\n    compiler.reportCodeChange();\n  }"
+  },
+  {
+   "line": 377,
+   "lines": [
+    372,
+    373,
+    374,
+    375,
+    376,
+    377,
+    378,
+    379,
+    380,
+    381,
+    382
+   ],
+   "patch_lines_removed": true,
+   "path": "src/com/google/javascript/jscomp/ScopedAliases.java",
+   "snippet": "\n          compiler.ensureLibraryInjected(\"base\");\n\n          // Add $jscomp.scope.name = EXPR;\n          // Make sure we copy over all the jsdoc and debug info.\n            Node newDecl = NodeUtil.newQualifiedNameNodeDeclaration(\n                compiler.getCodingConvention(),\n                value,\n                v.getJSDocInfo())\n                .useSourceInfoIfMissingFromForTree(n);"
+  }
+ ],
+ "class_simple": "NodeUtil",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * NodeUtil contains generally useful AST utilities.\n *\n */\npublic final",
+  "method_javadoc": "/**\n   * Creates a node representing a qualified name.\n   *\n   * @param name A qualified name (e.g. \"foo\" or \"foo.bar.baz\")\n   * @return A NAME or GETPROP node\n   */"
+ },
+ "fields": [
+  "static final long MAX_POSITIVE_INTEGER_NUMBER",
+  "static final String JSC_PROPERTY_NAME_FN",
+  "static final char LARGEST_BASIC_LATIN",
+  "private static final Set<String> CONSTRUCTORS_WITHOUT_SIDE_EFFECTS",
+  "private static final Set<String> BUILTIN_FUNCTIONS_WITHOUT_SIDEEFFECTS",
+  "private static final Set<String> OBJECT_METHODS_WITHOUT_SIDEEFFECTS",
+  "private static final Set<String> REGEXP_METHODS",
+  "private static final Set<String> STRING_REGEXP_METHODS",
+  "static final Predicate<Node> IMMUTABLE_PREDICATE",
+  "static final NumbericResultPredicate NUMBERIC_RESULT_PREDICATE",
+  "static final BooleanResultPredicate BOOLEAN_RESULT_PREDICATE",
+  "static final MayBeStringResultPredicate MAY_BE_STRING_PREDICATE",
+  "static final Predicate<Node> MATCH_NOT_FUNCTION"
+ ],
+ "focal_class": "com.google.javascript.jscomp.NodeUtil",
+ "focal_id": "Closure_174::com.google.javascript.jscomp.NodeUtil::newQualifiedNameNodeDeclaration(CodingConvention,String,Node,JSDocInfo)",
+ "focal_method_name": "newQualifiedNameNodeDeclaration",
+ "generations": 3,
+ "impl_B": "public static Node newQualifiedNameNodeDeclaration(\n      CodingConvention convention, String name, Node value, JSDocInfo info) {\n    Node result;\n    Node nameNode = newQualifiedNameNode(convention, name);\n    if (nameNode.isName()) {\n      result = IR.var(nameNode, value);\n      result.setJSDocInfo(info);\n    } else {\n      result = IR.exprResult(IR.assign(nameNode, value));\n      result.getFirstChild().setJSDocInfo(info);\n    }\n    return result;\n  }",
+ "imports": [
+  "com.google.common.base.Preconditions",
+  "com.google.common.base.Predicate",
+  "com.google.common.base.Predicates",
+  "com.google.common.collect.ImmutableSet",
+  "com.google.common.collect.Maps",
+  "com.google.javascript.rhino.IR",
+  "com.google.javascript.rhino.InputId",
+  "com.google.javascript.rhino.JSDocInfo",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.Token",
+  "com.google.javascript.rhino.TokenStream",
+  "com.google.javascript.rhino.jstype.FunctionType",
+  "com.google.javascript.rhino.jstype.JSType",
+  "com.google.javascript.rhino.jstype.StaticSourceFile",
+  "com.google.javascript.rhino.jstype.TernaryValue",
+  "java.util.Arrays",
+  "java.util.Collection",
+  "java.util.Collections",
+  "java.util.HashMap",
+  "java.util.HashSet",
+  "java.util.Map",
+  "java.util.Set",
+  "javax.annotation.Nullable"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "/**\n   * Copied from Rhino's ScriptRuntime\n   */",
+   "name": "isStrWhiteSpaceChar"
+  },
+  {
+   "javadoc": "/**\n   * Gets the function's name. This method recognizes the forms:\n   * <ul>\n   * <li>{@code &#123;'name': function() ...&#125;}</li>\n   * <li>{@code &#123;name: function() ...&#125;}</li>\n   * <li>{@code function name() ...}</li>\n   * <li>{@code var name = function() ...}</li>\n   * <li>{@code qualified.name = function() ...}</li>\n   * <li>{@code var name2 = function name1() ...}</li>\n   * <li>{@code qualified.name2 = function name1() ...}</li>\n   * </ul>\n   *\n   * @param n a node whose type is {@link Token#FUNCTION}\n   * @return the function's name, or {@code null} if it has no name\n   */",
+   "name": "getNearestFunctionName"
+  },
+  {
+   "javadoc": "/**\n   * Determines whether this node is used as an L-value. Notice that sometimes\n   * names are used as both L-values and R-values.\n   *\n   * We treat \"var x;\" as a pseudo-L-value, which kind of makes sense if you\n   * treat it as \"assignment to 'undefined' at the top of the scope\". But if\n   * we're honest with ourselves, it doesn't make sense, and we only do this\n   * because it makes sense to treat this as syntactically similar to\n   * \"var x = 0;\".\n   *\n   * @param n The node\n   * @return True if n is an L-value.\n   */",
+   "name": "isLValue"
+  },
+  {
+   "javadoc": "/**\n   * Creates a node representing a qualified name.\n   *\n   * @param name A qualified name (e.g. \"foo\" or \"foo.bar.baz\")\n   * @return A NAME or GETPROP node\n   */",
+   "name": "newQualifiedNameNode"
+  },
+  {
+   "javadoc": "",
+   "name": "isValidQualifiedName"
+  },
+  {
+   "javadoc": "/**\n    * @param fnNode The function.\n    * @return The Node containing the Function parameters.\n    */",
+   "name": "getFunctionParameters"
+  },
+  {
+   "javadoc": "/**\n   * Get the JSDocInfo for a function.\n   */",
+   "name": "getFunctionJSDocInfo"
+  },
+  {
+   "javadoc": "/**\n   * @param n The node.\n   * @return The source name property on the node or its ancestors.\n   */",
+   "name": "getSourceName"
+  },
+  {
+   "javadoc": "/**\n   * @param n The node.\n   * @return The source name property on the node or its ancestors.\n   */",
+   "name": "getSourceFile"
+  },
+  {
+   "javadoc": "/**\n   * @param n The node.\n   * @return The InputId property on the node or its ancestors.\n   */",
+   "name": "getInputId"
+  },
+  {
+   "javadoc": "/**\n   * Given an AST and its copy, map the root node of each scope of main to the\n   * corresponding root node of clone\n   */",
+   "name": "mapMainToClone"
+  },
+  {
+   "javadoc": "/** Checks that the scope roots marked as changed have indeed changed */",
+   "name": "verifyScopeChanges"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public final class NodeUtil",
+  "constructors": [],
+  "focal_signature": "public static Node newQualifiedNameNodeDeclaration( CodingConvention convention, String name, Node value, JSDocInfo info)",
+  "methods": [
+   "public static TernaryValue isStrWhiteSpaceChar(int c);",
+   "public static String getNearestFunctionName(Node n);",
+   "public static boolean isLValue(Node n);",
+   "public static Node newQualifiedNameNode( CodingConvention convention, String name);",
+   "public static boolean isValidQualifiedName(String name);",
+   "public static Node getFunctionParameters(Node fnNode);",
+   "public static JSDocInfo getFunctionJSDocInfo(Node n);",
+   "public static String getSourceName(Node n);",
+   "public static StaticSourceFile getSourceFile(Node n);",
+   "public static InputId getInputId(Node n);",
+   "public static Map<Node, Node> mapMainToClone(Node main, Node clone);",
+   "public static void verifyScopeChanges(Map<Node, Node> map, Node main, boolean verifyUnchangedNodes, AbstractCompiler compiler);"
+  ],
+  "type_signatures": [
+   "public interface CodingConvention extends Serializable { public boolean isConstant(String variableName); public boolean isConstantKey(String keyName); public boolean isValidEnumKey(String key); public boolean isOptionalParameter(Node parameter); public boolean isVarArgsParameter(Node parameter); public boolean isExported(String name, boolean local); public boolean isExported(String name); public boolean isPrivate(String name); public SubclassRelationship getClassesDefinedByCall(Node callNode); public boolean isSuperClassReference(String propertyName); public String extractClassNameIfProvide(Node node, Node parent); public String extractClassNameIfRequire(Node node, Node parent); public String getExportPropertyFunction(); public String getExportSymbolFunction(); public List<String> identifyTypeDeclarationCall(Node n); }",
+   "public class Node implements Cloneable, Serializable { public Node(int nodeType); public Node(int nodeType, Node child); public Node(int nodeType, Node left, Node right); public Node(int nodeType, Node left, Node mid, Node right); public Node(int nodeType, Node left, Node mid, Node mid2, Node right); public Node(int nodeType, int lineno, int charno); public Node(int nodeType, Node child, int lineno, int charno); public Node(int nodeType, Node left, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node mid2, Node right, int lineno, int charno); public Node(int nodeType, Node[] children, int lineno, int charno); public Node(int nodeType, Node[] children); public static Node newNumber(double number); public static Node newNumber(double number, int lineno, int charno); public static Node newString(String str); }",
+   "public class JSDocInfo implements Serializable { public JSDocInfo(); public void setDeprecated(boolean value); public boolean isConsistentIdGenerator(); public boolean isStableIdGenerator(); public boolean isMappedIdGenerator(); public boolean isConstant(); public boolean isConstructor(); public boolean makesStructs(); public boolean makesDicts(); public boolean isDefine(); public boolean isHidden(); public boolean isNoTypeCheck(); public boolean shouldPreserveTry(); public boolean isOverride(); public boolean isNoAlias(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

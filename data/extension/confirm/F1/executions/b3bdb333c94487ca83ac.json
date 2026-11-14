@@ -1,0 +1,384 @@
+{
+ "candidate_id": "b3bdb333c94487ca83ac",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testEbeMultiply_StandardCase",
+   "testEbeMultiply_ZeroMultiplier",
+   "testEbeMultiply_EmptySparseVector",
+   "testEbeMultiply_DimensionMismatch",
+   "testEbeMultiply_LargeDimension",
+   "testEbeMultiply_NegativeValues"
+  ],
+  "nc_both": [],
+  "nc_one_version": [],
+  "passes": 0
+ },
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "Math_49::org.apache.commons.math.linear.OpenMapRealVector::ebeMultiply(double[])",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testEbeMultiply_StandardCase",
+   "runs_b": [
+    {
+     "duration_s": 0.209,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.239,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.226,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.245,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.237,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.247,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.math.linear;\n\nimport java.io.*;\nimport java.io.Serializable;\nimport java.math.*;\nimport java.util.*;\nimport org.apache.commons.math.exception.MathArithmeticException;\nimport org.apache.commons.math.exception.util.LocalizedFormats;\nimport org.apache.commons.math.util.FastMath;\nimport org.apache.commons.math.util.OpenIntToDoubleHashMap.Iterator;\nimport org.apache.commons.math.util.OpenIntToDoubleHashMap;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for OpenMapRealVector.ebeMultiply(double[] v)\n */\npublic class OpenMapRealVector_ebeMultiply_TriageGen4Test {\n\n    @Test\n    public void testEbeMultiply_StandardCase() {\n        // Setup a sparse vector: [0.0, 5.0, 0.0, 10.0]\n        OpenMapRealVector vector = new OpenMapRealVector(4);\n        vector.setEntry(1, 5.0);\n        vector.setEntry(3, 10.0);\n\n        // Multiplier array: [1.0, 2.0, 3.0, 4.0]\n        double[] multiplier = {1.0, 2.0, 3.0, 4.0};\n\n        // Expected result: [0.0, 5.0 * 2.0, 0.0, 10.0 * 4.0] = [0.0, 10.0, 0.0, 40.0]\n        OpenMapRealVector result = vector.ebeMultiply(multiplier);\n\n        Assert.assertEquals(4, result.getDimension());\n        Assert.assertEquals(10.0, result.getEntry(1), 1e-10);\n        Assert.assertEquals(40.0, result.getEntry(3), 1e-10);\n        Assert.assertEquals(0.0, result.getEntry(0), 1e-10);\n        Assert.assertEquals(0.0, result.getEntry(2), 1e-10);\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testEbeMultiply_ZeroMultiplier",
+   "runs_b": [
+    {
+     "duration_s": 0.266,
+     "exception": "org.apache.commons.math.MathRuntimeException$6",
+     "failing_test_line": 35,
+     "message": "map has been modified while iterating",
+     "outcome": "exception",
+     "trace": "org.apache.commons.math.MathRuntimeException$6: map has been modified while iterating\n\tat org.apache.commons.math.MathRuntimeException.createConcurrentModificationException(MathRuntimeException.java:373)\n\tat org.apache.commons.math.util.OpenIntToDoubleHashMap$Iterator.advance(OpenIntToDoubleHashMap.java:564)\n\tat org.apache.commons.math.linear.OpenMapRealVector.ebeMultiply(OpenMapRealVector.java:385)\n\tat org.apache.commons.math.linear.OpenMapRealVector_ebeMultiply_TriageGen4Test.testEbeMultiply_ZeroMultiplier(OpenMapRealVector_ebeMultiply_TriageGen4Test.java:35)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.287,
+     "exception": "org.apache.commons.math.MathRuntimeException$6",
+     "failing_test_line": 35,
+     "message": "map has been modified while iterating",
+     "outcome": "exception",
+     "trace": "org.apache.commons.math.MathRuntimeException$6: map has been modified while iterating\n\tat org.apache.commons.math.MathRuntimeException.createConcurrentModificationException(MathRuntimeException.java:373)\n\tat org.apache.commons.math.util.OpenIntToDoubleHashMap$Iterator.advance(OpenIntToDoubleHashMap.java:564)\n\tat org.apache.commons.math.linear.OpenMapRealVector.ebeMultiply(OpenMapRealVector.java:385)\n\tat org.apache.commons.math.linear.OpenMapRealVector_ebeMultiply_TriageGen4Test.testEbeMultiply_ZeroMultiplier(OpenMapRealVector_ebeMultiply_TriageGen4Test.java:35)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.285,
+     "exception": "org.apache.commons.math.MathRuntimeException$6",
+     "failing_test_line": 35,
+     "message": "map has been modified while iterating",
+     "outcome": "exception",
+     "trace": "org.apache.commons.math.MathRuntimeException$6: map has been modified while iterating\n\tat org.apache.commons.math.MathRuntimeException.createConcurrentModificationException(MathRuntimeException.java:373)\n\tat org.apache.commons.math.util.OpenIntToDoubleHashMap$Iterator.advance(OpenIntToDoubleHashMap.java:564)\n\tat org.apache.commons.math.linear.OpenMapRealVector.ebeMultiply(OpenMapRealVector.java:385)\n\tat org.apache.commons.math.linear.OpenMapRealVector_ebeMultiply_TriageGen4Test.testEbeMultiply_ZeroMultiplier(OpenMapRealVector_ebeMultiply_TriageGen4Test.java:35)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.256,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.273,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.221,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.math.linear;\n\nimport java.io.*;\nimport java.io.Serializable;\nimport java.math.*;\nimport java.util.*;\nimport org.apache.commons.math.exception.MathArithmeticException;\nimport org.apache.commons.math.exception.util.LocalizedFormats;\nimport org.apache.commons.math.util.FastMath;\nimport org.apache.commons.math.util.OpenIntToDoubleHashMap.Iterator;\nimport org.apache.commons.math.util.OpenIntToDoubleHashMap;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for OpenMapRealVector.ebeMultiply(double[] v)\n */\npublic class OpenMapRealVector_ebeMultiply_TriageGen4Test {\n\n    \n\n    @Test\n    public void testEbeMultiply_ZeroMultiplier() {\n        OpenMapRealVector vector = new OpenMapRealVector(3);\n        vector.setEntry(0, 1.0);\n        vector.setEntry(2, 2.0);\n\n        double[] multiplier = {0.0, 5.0, 0.0};\n\n        // Result should have entries set to 0.0. \n        // Note: In OpenMapRealVector, setEntry(i, 0.0) might still keep the entry or remove it depending on implementation,\n        // but the value must be 0.0.\n        OpenMapRealVector result = vector.ebeMultiply(multiplier);\n\n        Assert.assertEquals(0.0, result.getEntry(0), 1e-10);\n        Assert.assertEquals(0.0, result.getEntry(2), 1e-10);\n    }\n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testEbeMultiply_EmptySparseVector",
+   "runs_b": [
+    {
+     "duration_s": 0.269,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.257,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.242,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.264,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.24,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.269,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.math.linear;\n\nimport java.io.*;\nimport java.io.Serializable;\nimport java.math.*;\nimport java.util.*;\nimport org.apache.commons.math.exception.MathArithmeticException;\nimport org.apache.commons.math.exception.util.LocalizedFormats;\nimport org.apache.commons.math.util.FastMath;\nimport org.apache.commons.math.util.OpenIntToDoubleHashMap.Iterator;\nimport org.apache.commons.math.util.OpenIntToDoubleHashMap;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for OpenMapRealVector.ebeMultiply(double[] v)\n */\npublic class OpenMapRealVector_ebeMultiply_TriageGen4Test {\n\n    \n\n    \n\n    @Test\n    public void testEbeMultiply_EmptySparseVector() {\n        OpenMapRealVector vector = new OpenMapRealVector(5);\n        // Vector is all zeros (empty entries)\n        double[] multiplier = {1.0, 2.0, 3.0, 4.0, 5.0};\n\n        OpenMapRealVector result = vector.ebeMultiply(multiplier);\n\n        Assert.assertEquals(5, result.getDimension());\n        // Sparsity should be 0 as no entries were non-zero\n        Assert.assertEquals(0.0, result.getSparsity(), 1e-10);\n    }\n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testEbeMultiply_DimensionMismatch",
+   "runs_b": [
+    {
+     "duration_s": 0.262,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.264,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.255,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.229,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.218,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.223,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.math.linear;\n\nimport java.io.*;\nimport java.io.Serializable;\nimport java.math.*;\nimport java.util.*;\nimport org.apache.commons.math.exception.MathArithmeticException;\nimport org.apache.commons.math.exception.util.LocalizedFormats;\nimport org.apache.commons.math.util.FastMath;\nimport org.apache.commons.math.util.OpenIntToDoubleHashMap.Iterator;\nimport org.apache.commons.math.util.OpenIntToDoubleHashMap;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for OpenMapRealVector.ebeMultiply(double[] v)\n */\npublic class OpenMapRealVector_ebeMultiply_TriageGen4Test {\n\n    \n\n    \n\n    \n\n    @Test(expected = IllegalArgumentException.class)\n    public void testEbeMultiply_DimensionMismatch() {\n        OpenMapRealVector vector = new OpenMapRealVector(3);\n        vector.setEntry(0, 1.0);\n\n        // Multiplier array length 2 != vector dimension 3\n        double[] multiplier = {1.0, 2.0};\n\n        vector.ebeMultiply(multiplier);\n    }\n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testEbeMultiply_LargeDimension",
+   "runs_b": [
+    {
+     "duration_s": 0.22,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.212,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": -0.26,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.225,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.237,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.223,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.math.linear;\n\nimport java.io.*;\nimport java.io.Serializable;\nimport java.math.*;\nimport java.util.*;\nimport org.apache.commons.math.exception.MathArithmeticException;\nimport org.apache.commons.math.exception.util.LocalizedFormats;\nimport org.apache.commons.math.util.FastMath;\nimport org.apache.commons.math.util.OpenIntToDoubleHashMap.Iterator;\nimport org.apache.commons.math.util.OpenIntToDoubleHashMap;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for OpenMapRealVector.ebeMultiply(double[] v)\n */\npublic class OpenMapRealVector_ebeMultiply_TriageGen4Test {\n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testEbeMultiply_LargeDimension() {\n        int dim = 1000;\n        OpenMapRealVector vector = new OpenMapRealVector(dim);\n        vector.setEntry(500, 2.0);\n        vector.setEntry(999, 3.0);\n\n        double[] multiplier = new double[dim];\n        for (int i = 0; i < dim; i++) {\n            multiplier[i] = 1.5;\n        }\n\n        OpenMapRealVector result = vector.ebeMultiply(multiplier);\n\n        Assert.assertEquals(3.0, result.getEntry(500), 1e-10);\n        Assert.assertEquals(4.5, result.getEntry(999), 1e-10);\n        Assert.assertEquals(dim, result.getDimension());\n    }\n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testEbeMultiply_NegativeValues",
+   "runs_b": [
+    {
+     "duration_s": 0.268,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.26,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.263,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.277,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.279,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.276,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.math.linear;\n\nimport java.io.*;\nimport java.io.Serializable;\nimport java.math.*;\nimport java.util.*;\nimport org.apache.commons.math.exception.MathArithmeticException;\nimport org.apache.commons.math.exception.util.LocalizedFormats;\nimport org.apache.commons.math.util.FastMath;\nimport org.apache.commons.math.util.OpenIntToDoubleHashMap.Iterator;\nimport org.apache.commons.math.util.OpenIntToDoubleHashMap;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for OpenMapRealVector.ebeMultiply(double[] v)\n */\npublic class OpenMapRealVector_ebeMultiply_TriageGen4Test {\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testEbeMultiply_NegativeValues() {\n        OpenMapRealVector vector = new OpenMapRealVector(2);\n        vector.setEntry(0, -2.0);\n        vector.setEntry(1, 4.0);\n\n        double[] multiplier = {-1.0, -0.5};\n\n        // Expected: [-2.0 * -1.0, 4.0 * -0.5] = [2.0, -2.0]\n        OpenMapRealVector result = vector.ebeMultiply(multiplier);\n\n        Assert.assertEquals(2.0, result.getEntry(0), 1e-10);\n        Assert.assertEquals(-2.0, result.getEntry(1), 1e-10);\n    }\n}\n"
+  }
+ ],
+ "source_sha256": "03aaf609d5acd8cb93f45538a00974bfd8cd7fcc6032a6740d3aefa6296c8795",
+ "utc": "2026-11-13T06:00:09Z"
+}

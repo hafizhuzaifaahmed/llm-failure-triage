@@ -1,0 +1,188 @@
+{
+ "bug_name": "Compress_25",
+ "call_sites": [
+  {
+   "line": 173,
+   "lines": [
+    168,
+    169,
+    170,
+    171,
+    172,
+    173,
+    174,
+    175,
+    176,
+    177,
+    178
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java",
+   "snippet": "                return new ArjArchiveInputStream(in);\n            }\n        }\n        if (ZIP.equalsIgnoreCase(archiverName)) {\n            if (entryEncoding != null) {\n                return new ZipArchiveInputStream(in, entryEncoding);\n            } else {\n                return new ZipArchiveInputStream(in);\n            }\n        }\n        if (TAR.equalsIgnoreCase(archiverName)) {"
+  },
+  {
+   "line": 175,
+   "lines": [
+    170,
+    171,
+    172,
+    173,
+    174,
+    175,
+    176,
+    177,
+    178,
+    179,
+    180
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java",
+   "snippet": "        }\n        if (ZIP.equalsIgnoreCase(archiverName)) {\n            if (entryEncoding != null) {\n                return new ZipArchiveInputStream(in, entryEncoding);\n            } else {\n                return new ZipArchiveInputStream(in);\n            }\n        }\n        if (TAR.equalsIgnoreCase(archiverName)) {\n            if (entryEncoding != null) {\n                return new TarArchiveInputStream(in, entryEncoding);"
+  },
+  {
+   "line": 282,
+   "lines": [
+    277,
+    278,
+    279,
+    280,
+    281,
+    282,
+    283,
+    284,
+    285,
+    286,
+    287
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java",
+   "snippet": "        try {\n            int signatureLength = IOUtils.readFully(in, signature);\n            in.reset();\n            if (ZipArchiveInputStream.matches(signature, signatureLength)) {\n                if (entryEncoding != null) {\n                    return new ZipArchiveInputStream(in, entryEncoding);\n                } else {\n                    return new ZipArchiveInputStream(in);\n                }\n            } else if (JarArchiveInputStream.matches(signature, signatureLength)) {\n                return new JarArchiveInputStream(in);"
+  },
+  {
+   "line": 284,
+   "lines": [
+    279,
+    280,
+    281,
+    282,
+    283,
+    284,
+    285,
+    286,
+    287,
+    288,
+    289
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java",
+   "snippet": "            in.reset();\n            if (ZipArchiveInputStream.matches(signature, signatureLength)) {\n                if (entryEncoding != null) {\n                    return new ZipArchiveInputStream(in, entryEncoding);\n                } else {\n                    return new ZipArchiveInputStream(in);\n                }\n            } else if (JarArchiveInputStream.matches(signature, signatureLength)) {\n                return new JarArchiveInputStream(in);\n            } else if (ArArchiveInputStream.matches(signature, signatureLength)) {\n                return new ArArchiveInputStream(in);"
+  }
+ ],
+ "class_simple": "ZipArchiveInputStream",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Implements an input stream that can read Zip archives.\n *\n * <p>Note that {@link ZipArchiveEntry#getSize()} may return -1 if the\n * DEFLATE algorithm is used, as the size information is not available\n * from the header.</p>\n *\n * <p>The {@link ZipFile} class is preferred when reading from files.</p>\n *\n * <p>As of Apache Commons Compress it transparently supports Zip64\n * extensions and thus individual entries and archives larger than 4\n * GB or with more than 65536 entries.</p>\n *\n * @see ZipFile\n * @NotThreadSafe\n */\npublic",
+  "method_javadoc": "/**\n     * @param encoding the encoding to use for file names, use null\n     * for the platform's default encoding\n     * @param useUnicodeExtraFields whether to use InfoZIP Unicode\n     * Extra Fields (if present) to set the file names.\n     * @param allowStoredEntriesWithDataDescriptor whether the stream\n     * will try to read STORED entries that use a data descriptor\n     * @since 1.1\n     */"
+ },
+ "fields": [
+  "private final ZipEncoding zipEncoding",
+  "private final boolean useUnicodeExtraFields",
+  "private final InputStream in",
+  "private final Inflater inf",
+  "private final ByteBuffer buf",
+  "private CurrentEntry current",
+  "private boolean closed",
+  "private boolean hitCentralDirectory",
+  "private ByteArrayInputStream lastStoredEntry",
+  "private boolean allowStoredEntriesWithDataDescriptor",
+  "private static final int LFH_LEN",
+  "private static final int CFH_LEN",
+  "private static final long TWO_EXP_32",
+  "private final byte[] LFH_BUF",
+  "private final byte[] SKIP_BUF",
+  "private final byte[] SHORT_BUF",
+  "private final byte[] WORD_BUF",
+  "private final byte[] TWO_DWORD_BUF",
+  "private int entriesRead",
+  "private static final byte[] LFH",
+  "private static final byte[] CFH",
+  "private static final byte[] DD"
+ ],
+ "focal_class": "org.apache.commons.compress.archivers.zip.ZipArchiveInputStream",
+ "focal_id": "Compress_25::org.apache.commons.compress.archivers.zip.ZipArchiveInputStream::ZipArchiveInputStream(InputStream,String,boolean,boolean)",
+ "focal_method_name": "ZipArchiveInputStream",
+ "generations": 3,
+ "impl_B": "public ZipArchiveInputStream(InputStream inputStream,\n                                 String encoding,\n                                 boolean useUnicodeExtraFields,\n                                 boolean allowStoredEntriesWithDataDescriptor) {\n        zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);\n        this.useUnicodeExtraFields = useUnicodeExtraFields;\n        in = new PushbackInputStream(inputStream, buf.capacity());\n        this.allowStoredEntriesWithDataDescriptor =\n            allowStoredEntriesWithDataDescriptor;\n        // haven't read anything so far\n    }",
+ "imports": [
+  "java.io.ByteArrayInputStream",
+  "java.io.ByteArrayOutputStream",
+  "java.io.EOFException",
+  "java.io.IOException",
+  "java.io.InputStream",
+  "java.io.PushbackInputStream",
+  "java.nio.ByteBuffer",
+  "java.util.zip.CRC32",
+  "java.util.zip.DataFormatException",
+  "java.util.zip.Inflater",
+  "java.util.zip.ZipEntry",
+  "java.util.zip.ZipException",
+  "org.apache.commons.compress.archivers.ArchiveEntry",
+  "org.apache.commons.compress.archivers.ArchiveInputStream",
+  "org.apache.commons.compress.utils.IOUtils",
+  "static org.apache.commons.compress.archivers.zip.ZipConstants.DWORD",
+  "static org.apache.commons.compress.archivers.zip.ZipConstants.SHORT",
+  "static org.apache.commons.compress.archivers.zip.ZipConstants.WORD",
+  "static org.apache.commons.compress.archivers.zip.ZipConstants.ZIP64_MAGIC"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.compress.archivers.zip",
+ "project": "Compress",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "getNextZipEntry"
+  },
+  {
+   "javadoc": "",
+   "name": "getNextEntry"
+  },
+  {
+   "javadoc": "/**\n     * Whether this class is able to read the given entry.\n     *\n     * <p>May return false if it is set up to use encryption or a\n     * compression method that hasn't been implemented yet.</p>\n     * @since 1.1\n     */",
+   "name": "canReadEntryData"
+  },
+  {
+   "javadoc": "",
+   "name": "read"
+  },
+  {
+   "javadoc": "",
+   "name": "close"
+  },
+  {
+   "javadoc": "/**\n     * Skips over and discards value bytes of data from this input\n     * stream.\n     *\n     * <p>This implementation may end up skipping over some smaller\n     * number of bytes, possibly 0, if and only if it reaches the end\n     * of the underlying stream.</p>\n     *\n     * <p>The actual number of bytes skipped is returned.</p>\n     *\n     * @param value the number of bytes to be skipped.\n     * @return the actual number of bytes skipped.\n     * @throws IOException - if an I/O error occurs.\n     * @throws IllegalArgumentException - if value is negative.\n     */",
+   "name": "skip"
+  },
+  {
+   "javadoc": "/**\n     * Checks if the signature matches what is expected for a zip file.\n     * Does not currently handle self-extracting zips which may have arbitrary\n     * leading content.\n     *\n     * @param signature the bytes to check\n     * @param length    the number of bytes to check\n     * @return true, if this stream is a zip archive stream, false otherwise\n     */",
+   "name": "matches"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class ZipArchiveInputStream extends ArchiveInputStream",
+  "constructors": [
+   "public ZipArchiveInputStream(InputStream inputStream);",
+   "public ZipArchiveInputStream(InputStream inputStream, String encoding);",
+   "public ZipArchiveInputStream(InputStream inputStream, String encoding, boolean useUnicodeExtraFields);",
+   "public ZipArchiveInputStream(InputStream inputStream, String encoding, boolean useUnicodeExtraFields, boolean allowStoredEntriesWithDataDescriptor);"
+  ],
+  "focal_signature": "public ZipArchiveInputStream(InputStream inputStream, String encoding, boolean useUnicodeExtraFields, boolean allowStoredEntriesWithDataDescriptor)",
+  "methods": [
+   "public ZipArchiveEntry getNextZipEntry() throws IOException;",
+   "public ArchiveEntry getNextEntry() throws IOException;",
+   "public boolean canReadEntryData(ArchiveEntry ae);",
+   "public int read(byte[] buffer, int offset, int length) throws IOException;",
+   "public void close() throws IOException;",
+   "public long skip(long value) throws IOException;",
+   "public static boolean matches(byte[] signature, int length);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

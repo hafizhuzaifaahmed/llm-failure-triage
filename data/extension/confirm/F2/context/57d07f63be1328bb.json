@@ -1,0 +1,173 @@
+{
+ "bug_name": "Closure_134",
+ "call_sites": [
+  {
+   "line": 58,
+   "lines": [
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63
+   ],
+   "path": "src/com/google/javascript/jscomp/AnalyzeNameReferences.java",
+   "snippet": "\n  @Override\n  public void process(Node externs, Node root) {\n    NameReferenceGraphConstruction gc =\n        new NameReferenceGraphConstruction(compiler);\n    gc.process(externs, root);\n    graph = gc.getNameReferenceGraph();\n    FixedPointGraphTraversal<Name, Reference> t =\n        FixedPointGraphTraversal.newTraversal(new PropagateReferences());\n    getInfo(graph.MAIN).markReference(null);\n    t.computeFixedPoint(graph, Sets.newHashSet(graph.MAIN));"
+  },
+  {
+   "line": 52,
+   "lines": [
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57
+   ],
+   "path": "src/com/google/javascript/jscomp/ChainCalls.java",
+   "snippet": "  }\n\n  @Override\n  public void process(Node externs, Node root) {\n    defFinder = new SimpleDefinitionFinder(compiler);\n    defFinder.process(externs, root);\n\n    NodeTraversal.traverse(compiler, root, new GatherCallSites());\n\n    for (CallSite callSite : callSites) {\n      callSite.parent.removeChild(callSite.n);"
+  },
+  {
+   "line": 606,
+   "lines": [
+    601,
+    602,
+    603,
+    604,
+    605,
+    606,
+    607,
+    608,
+    609,
+    610,
+    611
+   ],
+   "path": "src/com/google/javascript/jscomp/Compiler.java",
+   "snippet": "    PhaseOptimizer phaseOptimizer = new PhaseOptimizer(this, tracker);\n    if (options_.devMode == DevMode.EVERY_PASS) {\n      phaseOptimizer.setSanityCheck(sanityCheck);\n    }\n    phaseOptimizer.consume(getPassConfig().getChecks());\n    phaseOptimizer.process(externsRoot, jsRoot);\n    if (hasErrors()) {\n      return;\n    }\n\n    // TODO(nicksantos): clean this up. The flow here is too hard to follow."
+  },
+  {
+   "line": 643,
+   "lines": [
+    638,
+    639,
+    640,
+    641,
+    642,
+    643,
+    644,
+    645,
+    646,
+    647,
+    648
+   ],
+   "path": "src/com/google/javascript/jscomp/Compiler.java",
+   "snippet": "  private void externExports() {\n    logger_.info(\"Creating extern file for exports\");\n    startPass(\"externExports\");\n\n    ExternExportsPass pass = new ExternExportsPass(this);\n    process(pass);\n\n    externExports_ = pass.getGeneratedExterns();\n\n    endPass();\n  }"
+  },
+  {
+   "line": 650,
+   "lines": [
+    645,
+    646,
+    647,
+    648,
+    649,
+    650,
+    651,
+    652,
+    653,
+    654,
+    655
+   ],
+   "path": "src/com/google/javascript/jscomp/Compiler.java",
+   "snippet": "    externExports_ = pass.getGeneratedExterns();\n\n    endPass();\n  }\n\n  void process(CompilerPass p) {\n    p.process(externsRoot, jsRoot);\n  }\n\n  private final PassFactory sanityCheck =\n      new PassFactory(\"sanityCheck\", false) {"
+  }
+ ],
+ "class_simple": "AmbiguateProperties",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Renames unrelated properties to the same name, using type information.\n * This allows better compression as more properties can be given short names.\n *\n * <p>Properties are considered unrelated if they are never referenced from the\n * same type or from a subtype of each others' types, thus this pass is only\n * effective if type checking is enabled.\n *\n * Example:\n * <code>\n *   Foo.fooprop = 0;\n *   Foo.fooprop2 = 0;\n *   Bar.barprop = 0;\n * </code>\n *\n * becomes:\n *\n * <code>\n *   Foo.a = 0;\n *   Foo.b = 0;\n *   Bar.a = 0;\n * </code>\n *\n*\n */",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final Logger logger",
+  "private final AbstractCompiler compiler",
+  "private final List<Node> stringNodesToRename",
+  "private final char[] reservedCharacters",
+  "private final Map<String, Property> propertyMap",
+  "private final Set<String> externedNames",
+  "private final Set<String> quotedNames",
+  "private final Map<String, String> renamingMap",
+  "private final Map<Integer, String> colorMap",
+  "private static final Comparator<Property> FREQUENCY_COMPARATOR",
+  "private BiMap<JSType, Integer> intForType",
+  "private Map<JSType, JSTypeBitSet> relatedBitsets",
+  "private final Set<JSType> invalidatingTypes",
+  "static final String SKIP_PREFIX"
+ ],
+ "focal_class": "com.google.javascript.jscomp.AmbiguateProperties",
+ "focal_id": "Closure_134::com.google.javascript.jscomp.AmbiguateProperties::process(Node,Node)",
+ "focal_method_name": "process",
+ "generations": 3,
+ "impl_B": "public void process(Node externs, Node root) {\n    NodeTraversal.traverse(compiler, externs, new ProcessExterns());\n    NodeTraversal.traverse(compiler, root, new ProcessProperties());\n\n    Set<String> reservedNames =\n        new HashSet<String>(externedNames.size() + quotedNames.size());\n    reservedNames.addAll(externedNames);\n    reservedNames.addAll(quotedNames);\n\n    int numRenamedPropertyNames = 0;\n    int numSkippedPropertyNames = 0;\n    Set<Property> propsByFreq = new TreeSet<Property>(FREQUENCY_COMPARATOR);\n    for (Property p : propertyMap.values()) {\n      if (!p.skipAmbiguating) {\n        ++numRenamedPropertyNames;\n        computeRelatedTypes(p.type);\n        propsByFreq.add(p);\n      } else {\n        ++numSkippedPropertyNames;\n        reservedNames.add(p.oldName);\n      }\n    }\n\n    PropertyGraph graph = new PropertyGraph(Lists.newLinkedList(propsByFreq));\n    GraphColoring<Property, Void> coloring =\n        new GreedyGraphColoring<Property, Void>(graph, FREQUENCY_COMPARATOR);\n    int numNewPropertyNames = coloring.color();\n\n    NameGenerator nameGen = new NameGenerator(\n        reservedNames, \"\", reservedCharacters);\n    for (int i = 0; i < numNewPropertyNames; ++i) {\n      colorMap.put(i, nameGen.generateNextName());\n    }\n    for (GraphNode<Property, Void> node : graph.getNodes()) {\n      node.getValue().newName = colorMap.get(node.getAnnotation().hashCode());\n      renamingMap.put(node.getValue().oldName, node.getValue().newName);\n    }\n\n    // Update the string nodes.\n    for (Node n : stringNodesToRename) {\n      String oldName = n.getString();\n      Property p = propertyMap.get(oldName);\n      if (p != null && p.newName != null) {\n        Preconditions.checkState(oldName.equals(p.oldName));\n        if (!p.newName.equals(oldName)) {\n          n.setString(p.newName);\n          compiler.reportCodeChange();\n        }\n      }\n    }\n\n    logger.info(\"Collapsed \" + numRenamedPropertyNames + \" properties into \"\n                + numNewPropertyNames + \" and skipped renaming \"\n                + numSkippedPropertyNames + \" properties.\");\n  }",
+ "imports": [
+  "com.google.common.base.Joiner",
+  "com.google.common.base.Preconditions",
+  "com.google.common.collect.BiMap",
+  "com.google.common.collect.HashBiMap",
+  "com.google.common.collect.Lists",
+  "com.google.common.collect.Maps",
+  "com.google.common.collect.Sets",
+  "com.google.javascript.jscomp.NodeTraversal.AbstractPostOrderCallback",
+  "com.google.javascript.jscomp.TypeValidator.TypeMismatch",
+  "com.google.javascript.jscomp.graph.AdjacencyGraph",
+  "com.google.javascript.jscomp.graph.Annotation",
+  "com.google.javascript.jscomp.graph.GraphColoring",
+  "com.google.javascript.jscomp.graph.GraphColoring.GreedyGraphColoring",
+  "com.google.javascript.jscomp.graph.GraphNode",
+  "com.google.javascript.jscomp.graph.SubGraph",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.Token",
+  "com.google.javascript.rhino.jstype.FunctionPrototypeType",
+  "com.google.javascript.rhino.jstype.FunctionType",
+  "com.google.javascript.rhino.jstype.InstanceObjectType",
+  "com.google.javascript.rhino.jstype.JSType",
+  "com.google.javascript.rhino.jstype.JSTypeNative",
+  "com.google.javascript.rhino.jstype.JSTypeRegistry",
+  "com.google.javascript.rhino.jstype.ObjectType",
+  "com.google.javascript.rhino.jstype.UnionType",
+  "java.util.BitSet",
+  "java.util.Collection",
+  "java.util.Comparator",
+  "java.util.HashSet",
+  "java.util.List",
+  "java.util.Map",
+  "java.util.Set",
+  "java.util.TreeSet",
+  "java.util.logging.Logger"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [],
+ "sig": {
+  "class_declaration": "class AmbiguateProperties implements CompilerPass",
+  "constructors": [],
+  "focal_signature": "public void process(Node externs, Node root)",
+  "methods": [],
+  "type_signatures": [
+   "public class Node implements Cloneable, Serializable { public Node(int nodeType); public Node(int nodeType, Node child); public Node(int nodeType, Node left, Node right); public Node(int nodeType, Node left, Node mid, Node right); public Node(int nodeType, Node left, Node mid, Node mid2, Node right); public Node(int nodeType, int lineno, int charno); public Node(int nodeType, Node child, int lineno, int charno); public Node(int nodeType, Node left, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node mid2, Node right, int lineno, int charno); public Node(int nodeType, Node[] children, int lineno, int charno); public Node(int nodeType, Node[] children); public static Node newNumber(double number); public static Node newNumber(double number, int lineno, int charno); public static Node newString(String str); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

@@ -1,0 +1,404 @@
+{
+ "bug_name": "JacksonCore_22",
+ "call_sites": [
+  {
+   "line": 305,
+   "lines": [
+    300,
+    301,
+    302,
+    303,
+    304,
+    305,
+    306,
+    307,
+    308,
+    309,
+    310
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/filter/FilteringParserDelegate.java",
+   "snippet": "            if (f == TokenFilter.INCLUDE_ALL) {\n                _headContext = _headContext.createChildArrayContext(f, true);\n                return (_currToken = t);\n            }\n            if (f == null) { // does this occur?\n                delegate.skipChildren();\n                break;\n            }\n            // Otherwise still iffy, need to check\n            f = _headContext.checkValue(f);\n            if (f == null) {"
+  },
+  {
+   "line": 311,
+   "lines": [
+    306,
+    307,
+    308,
+    309,
+    310,
+    311,
+    312,
+    313,
+    314,
+    315,
+    316
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/filter/FilteringParserDelegate.java",
+   "snippet": "                break;\n            }\n            // Otherwise still iffy, need to check\n            f = _headContext.checkValue(f);\n            if (f == null) {\n                delegate.skipChildren();\n                break;\n            }\n            if (f != TokenFilter.INCLUDE_ALL) {\n                f = f.filterStartArray();\n            }"
+  },
+  {
+   "line": 341,
+   "lines": [
+    336,
+    337,
+    338,
+    339,
+    340,
+    341,
+    342,
+    343,
+    344,
+    345,
+    346
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/filter/FilteringParserDelegate.java",
+   "snippet": "            if (f == TokenFilter.INCLUDE_ALL) {\n                _headContext = _headContext.createChildObjectContext(f, true);\n                return (_currToken = t);\n            }\n            if (f == null) { // does this occur?\n                delegate.skipChildren();\n                break;\n            }\n            // Otherwise still iffy, need to check\n            f = _headContext.checkValue(f);\n            if (f == null) {"
+  },
+  {
+   "line": 347,
+   "lines": [
+    342,
+    343,
+    344,
+    345,
+    346,
+    347,
+    348,
+    349,
+    350,
+    351,
+    352
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/filter/FilteringParserDelegate.java",
+   "snippet": "                break;\n            }\n            // Otherwise still iffy, need to check\n            f = _headContext.checkValue(f);\n            if (f == null) {\n                delegate.skipChildren();\n                break;\n            }\n            if (f != TokenFilter.INCLUDE_ALL) {\n                f = f.filterStartObject();\n            }"
+  },
+  {
+   "line": 406,
+   "lines": [
+    401,
+    402,
+    403,
+    404,
+    405,
+    406,
+    407,
+    408,
+    409,
+    410,
+    411
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/core/filter/FilteringParserDelegate.java",
+   "snippet": "                    }\n                    return (_currToken = t);\n                }\n                if (f == null) {\n                    delegate.nextToken();\n                    delegate.skipChildren();\n                    break;\n                }\n                f = f.includeProperty(name);\n                if (f == null) {\n                    delegate.nextToken();"
+  }
+ ],
+ "class_simple": "FilteringParserDelegate",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Specialized {@link JsonParserDelegate} that allows use of\n * {@link TokenFilter} for outputting a subset of content that\n * is visible to caller\n * \n * @since 2.6\n */\npublic",
+  "method_javadoc": "/**\n     * Need to override, re-implement similar to how method defined in\n     * {@link com.fasterxml.jackson.core.base.ParserMinimalBase}, to keep\n     * state correct here.\n     */"
+ },
+ "fields": [
+  "protected TokenFilter rootFilter",
+  "protected boolean _allowMultipleMatches",
+  "protected boolean _includePath",
+  "protected boolean _includeImmediateParent",
+  "protected JsonToken _currToken",
+  "protected JsonToken _lastClearedToken",
+  "protected TokenFilterContext _headContext",
+  "protected TokenFilterContext _exposedContext",
+  "protected TokenFilter _itemFilter",
+  "protected int _matchCount"
+ ],
+ "focal_class": "com.fasterxml.jackson.core.filter.FilteringParserDelegate",
+ "focal_id": "JacksonCore_22::com.fasterxml.jackson.core.filter.FilteringParserDelegate::skipChildren()",
+ "focal_method_name": "skipChildren",
+ "generations": 3,
+ "impl_B": "@Override\n    public JsonParser skipChildren() throws IOException\n    {\n        if ((_currToken != JsonToken.START_OBJECT)\n            && (_currToken != JsonToken.START_ARRAY)) {\n            return this;\n        }\n        int open = 1;\n\n        // Since proper matching of start/end markers is handled\n        // by nextToken(), we'll just count nesting levels here\n        while (true) {\n            JsonToken t = nextToken();\n            if (t == null) { // not ideal but for now, just return\n                return this;\n            }\n            if (t.isStructStart()) {\n                ++open;\n            } else if (t.isStructEnd()) {\n                if (--open == 0) {\n                    return this;\n                }\n            }\n        }\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.io.OutputStream",
+  "java.math.BigDecimal",
+  "java.math.BigInteger",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.core.util.JsonParserDelegate",
+  "static com.fasterxml.jackson.core.JsonTokenId.*"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.core.filter",
+ "project": "JacksonCore",
+ "siblings": [
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getFilter"
+  },
+  {
+   "javadoc": "/**\n     * Accessor for finding number of matches, where specific token and sub-tree\n     * starting (if structured type) are passed.\n     */",
+   "name": "getMatchCount"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getCurrentToken"
+  },
+  {
+   "javadoc": "",
+   "name": "currentToken"
+  },
+  {
+   "javadoc": "",
+   "name": "getCurrentTokenId"
+  },
+  {
+   "javadoc": "",
+   "name": "currentTokenId"
+  },
+  {
+   "javadoc": "",
+   "name": "hasCurrentToken"
+  },
+  {
+   "javadoc": "",
+   "name": "hasTokenId"
+  },
+  {
+   "javadoc": "",
+   "name": "hasToken"
+  },
+  {
+   "javadoc": "",
+   "name": "isExpectedStartArrayToken"
+  },
+  {
+   "javadoc": "",
+   "name": "isExpectedStartObjectToken"
+  },
+  {
+   "javadoc": "",
+   "name": "getCurrentLocation"
+  },
+  {
+   "javadoc": "",
+   "name": "getParsingContext"
+  },
+  {
+   "javadoc": "",
+   "name": "getCurrentName"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "clearCurrentToken"
+  },
+  {
+   "javadoc": "",
+   "name": "getLastClearedToken"
+  },
+  {
+   "javadoc": "",
+   "name": "overrideCurrentName"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "nextToken"
+  },
+  {
+   "javadoc": "/**\n     * Offlined handling for cases where there was no buffered token to\n     * return, and the token read next could not be returned as-is,\n     * at least not yet, but where we have not yet established that\n     * buffering is needed.\n     */",
+   "name": "_nextToken2"
+  },
+  {
+   "javadoc": "/**\n     * Method called when a new potentially included context is found.\n     */",
+   "name": "_nextTokenWithBuffering"
+  },
+  {
+   "javadoc": "",
+   "name": "nextValue"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getText"
+  },
+  {
+   "javadoc": "",
+   "name": "hasTextCharacters"
+  },
+  {
+   "javadoc": "",
+   "name": "getTextCharacters"
+  },
+  {
+   "javadoc": "",
+   "name": "getTextLength"
+  },
+  {
+   "javadoc": "",
+   "name": "getTextOffset"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getBigIntegerValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getBooleanValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getByteValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getShortValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getDecimalValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getDoubleValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getFloatValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getIntValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getLongValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getNumberType"
+  },
+  {
+   "javadoc": "",
+   "name": "getNumberValue"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getValueAsInt"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueAsInt"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueAsLong"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueAsLong"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueAsDouble"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueAsDouble"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueAsBoolean"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueAsBoolean"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueAsString"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueAsString"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getEmbeddedObject"
+  },
+  {
+   "javadoc": "",
+   "name": "getBinaryValue"
+  },
+  {
+   "javadoc": "",
+   "name": "readBinaryValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getTokenLocation"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_filterContext"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class FilteringParserDelegate extends JsonParserDelegate",
+  "constructors": [
+   "public FilteringParserDelegate(JsonParser p, TokenFilter f, boolean includePath, boolean allowMultipleMatches);"
+  ],
+  "focal_signature": "public JsonParser skipChildren() throws IOException",
+  "methods": [
+   "public TokenFilter getFilter();",
+   "public int getMatchCount();",
+   "public JsonToken getCurrentToken();",
+   "public JsonToken currentToken();",
+   "public final int getCurrentTokenId();",
+   "public final int currentTokenId();",
+   "public boolean hasCurrentToken();",
+   "public boolean hasTokenId(int id);",
+   "public final boolean hasToken(JsonToken t);",
+   "public boolean isExpectedStartArrayToken();",
+   "public boolean isExpectedStartObjectToken();",
+   "public JsonLocation getCurrentLocation();",
+   "public JsonStreamContext getParsingContext();",
+   "public String getCurrentName() throws IOException;",
+   "public void clearCurrentToken();",
+   "public JsonToken getLastClearedToken();",
+   "public void overrideCurrentName(String name);",
+   "public JsonToken nextToken() throws IOException;",
+   "protected final JsonToken _nextToken2() throws IOException;",
+   "protected final JsonToken _nextTokenWithBuffering(final TokenFilterContext buffRoot) throws IOException;",
+   "public JsonToken nextValue() throws IOException;",
+   "public String getText() throws IOException;",
+   "public boolean hasTextCharacters();",
+   "public char[] getTextCharacters() throws IOException;",
+   "public int getTextLength() throws IOException;",
+   "public int getTextOffset() throws IOException;",
+   "public BigInteger getBigIntegerValue() throws IOException;",
+   "public boolean getBooleanValue() throws IOException;",
+   "public byte getByteValue() throws IOException;",
+   "public short getShortValue() throws IOException;",
+   "public BigDecimal getDecimalValue() throws IOException;",
+   "public double getDoubleValue() throws IOException;",
+   "public float getFloatValue() throws IOException;",
+   "public int getIntValue() throws IOException;",
+   "public long getLongValue() throws IOException;",
+   "public NumberType getNumberType() throws IOException;",
+   "public Number getNumberValue() throws IOException;",
+   "public int getValueAsInt() throws IOException;",
+   "public int getValueAsInt(int defaultValue) throws IOException;",
+   "public long getValueAsLong() throws IOException;",
+   "public long getValueAsLong(long defaultValue) throws IOException;",
+   "public double getValueAsDouble() throws IOException;",
+   "public double getValueAsDouble(double defaultValue) throws IOException;",
+   "public boolean getValueAsBoolean() throws IOException;",
+   "public boolean getValueAsBoolean(boolean defaultValue) throws IOException;",
+   "public String getValueAsString() throws IOException;",
+   "public String getValueAsString(String defaultValue) throws IOException;",
+   "public Object getEmbeddedObject() throws IOException;",
+   "public byte[] getBinaryValue(Base64Variant b64variant) throws IOException;",
+   "public int readBinaryValue(Base64Variant b64variant, OutputStream out) throws IOException;",
+   "public JsonLocation getTokenLocation();",
+   "protected JsonStreamContext _filterContext();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

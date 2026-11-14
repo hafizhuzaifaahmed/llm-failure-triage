@@ -1,0 +1,17 @@
+You are a neutral adjudicator reviewing a failing unit test of a Java method. The implementation of the method is intentionally not shown.
+Two analysts argued; their statements appear below in random order. Decide from the cited evidence in the package, not from argument length or confidence. Ignore any claim that the evidence package does not support.
+PROGRAM_FAULT: the method under test behaves incorrectly for what the test gives it - it returns a wrong value, throws an exception it should not, or does not do what its name, signature or documentation promise.
+TEST_FAULT: the test is wrong - its expected value is wrong, its set-up is invalid, or it uses the API in a way the interface does not allow.
+Do not presume that the implementation is correct, nor that its documentation is complete or up to date. Decide which side is more likely wrong from all the evidence; do not default to either label.
+Check two questions against the evidence: (1) is the test's input and call sequence allowed by the interface [Sig] and documentation [Doc]? If not, the test is at fault. (2) If it is allowed, is the observed result in [F] what the method's documented or evident purpose implies? If not, the program is at fault.
+
+{package}
+
+{arguments}
+
+Return the final decision as only one JSON object:
+{{"label": "PROGRAM_FAULT" | "TEST_FAULT",
+ "reason_category": "WRONG_EXPECTED_VALUE" | "INVALID_SETUP_OR_API_MISUSE" | "SPEC_VIOLATED_BY_PROGRAM" | "UNEXPECTED_EXCEPTION_IN_PROGRAM" | "OTHER",
+ "evidence_ids": [ids from the evidence package that support the decision],
+ "summary": "at most 60 words",
+ "confidence": integer 0-100}}

@@ -1,0 +1,167 @@
+{
+ "bug_name": "JacksonDatabind_112",
+ "call_sites": [
+  {
+   "line": 504,
+   "lines": [
+    499,
+    500,
+    501,
+    502,
+    503,
+    504,
+    505,
+    506,
+    507,
+    508,
+    509
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "            BeanProperty prop) throws JsonMappingException {\n        KeyDeserializer kd = _cache.findKeyDeserializer(this,\n                _factory, keyType);\n        // Second: contextualize?\n        if (kd instanceof ContextualKeyDeserializer) {\n            kd = ((ContextualKeyDeserializer) kd).createContextual(this, prop);\n        }\n        return kd;\n    }\n    \n    /*"
+  },
+  {
+   "line": 651,
+   "lines": [
+    646,
+    647,
+    648,
+    649,
+    650,
+    651,
+    652,
+    653,
+    654,
+    655,
+    656
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "        throws JsonMappingException\n    {\n        if (deser instanceof ContextualDeserializer) {\n            _currentType = new LinkedNode<JavaType>(type, _currentType);\n            try {\n                deser = ((ContextualDeserializer) deser).createContextual(this, prop);\n            } finally {\n                _currentType = _currentType.next();\n            }\n        }\n        return deser;"
+  },
+  {
+   "line": 682,
+   "lines": [
+    677,
+    678,
+    679,
+    680,
+    681,
+    682,
+    683,
+    684,
+    685,
+    686,
+    687
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "        throws JsonMappingException\n    {\n        if (deser instanceof ContextualDeserializer) {\n            _currentType = new LinkedNode<JavaType>(type, _currentType);\n            try {\n                deser = ((ContextualDeserializer) deser).createContextual(this, prop);\n            } finally {\n                _currentType = _currentType.next();\n            }\n        }\n        return deser;"
+  },
+  {
+   "line": 976,
+   "lines": [
+    971,
+    972,
+    973,
+    974,
+    975,
+    976,
+    977,
+    978,
+    979,
+    980,
+    981
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/SerializerProvider.java",
+   "snippet": "            BeanProperty property)\n        throws JsonMappingException\n    {\n        if (ser != null) {\n            if (ser instanceof ContextualSerializer) {\n                ser = ((ContextualSerializer) ser).createContextual(this, property);\n            }\n        }\n        return ser;\n    }\n"
+  },
+  {
+   "line": 1004,
+   "lines": [
+    999,
+    1000,
+    1001,
+    1002,
+    1003,
+    1004,
+    1005,
+    1006,
+    1007,
+    1008,
+    1009
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/SerializerProvider.java",
+   "snippet": "            BeanProperty property)\n        throws JsonMappingException\n    {\n        if (ser != null) {\n            if (ser instanceof ContextualSerializer) {\n                ser = ((ContextualSerializer) ser).createContextual(this, property);\n            }\n        }\n        return ser;\n    }\n    "
+  }
+ ],
+ "class_simple": "StringCollectionDeserializer",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Specifically optimized version for {@link java.util.Collection}s\n * that contain String values; reason is that this is a very common\n * type and we can make use of the fact that Strings are final.\n */\n@JacksonStdImpl\npublic final",
+  "method_javadoc": "/**********************************************************\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "protected final JsonDeserializer<String> _valueDeserializer",
+  "protected final ValueInstantiator _valueInstantiator",
+  "protected final JsonDeserializer<Object> _delegateDeserializer"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.deser.std.StringCollectionDeserializer",
+ "focal_id": "JacksonDatabind_112::com.fasterxml.jackson.databind.deser.std.StringCollectionDeserializer::createContextual(DeserializationContext,BeanProperty)",
+ "focal_method_name": "createContextual",
+ "generations": 3,
+ "impl_B": "@Override\n    public JsonDeserializer<?> createContextual(DeserializationContext ctxt,\n            BeanProperty property) throws JsonMappingException\n    {\n        // May need to resolve types for delegate-based creators:\n        JsonDeserializer<Object> delegate = null;\n        if (_valueInstantiator != null) {\n            // [databind#2324]: check both array-delegating and delegating\n            AnnotatedWithParams delegateCreator = _valueInstantiator.getDelegateCreator();\n            if (delegateCreator != null) {\n                JavaType delegateType = _valueInstantiator.getDelegateType(ctxt.getConfig());\n                delegate = findDeserializer(ctxt, delegateType, property);\n            }\n        }\n        JsonDeserializer<?> valueDeser = _valueDeserializer;\n        final JavaType valueType = _containerType.getContentType();\n        if (valueDeser == null) {\n            // [databind#125]: May have a content converter\n            valueDeser = findConvertingContentDeserializer(ctxt, property, valueDeser);\n            if (valueDeser == null) {\n            // And we may also need to get deserializer for String\n                valueDeser = ctxt.findContextualValueDeserializer(valueType, property);\n            }\n        } else { // if directly assigned, probably not yet contextual, so:\n            valueDeser = ctxt.handleSecondaryContextualization(valueDeser, property, valueType);\n        }\n        // 11-Dec-2015, tatu: Should we pass basic `Collection.class`, or more refined? Mostly\n        //   comes down to \"List vs Collection\" I suppose... for now, pass Collection\n        Boolean unwrapSingle = findFormatFeature(ctxt, property, Collection.class,\n                JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY);\n        NullValueProvider nuller = findContentNullProvider(ctxt, property, valueDeser);\n        if (isDefaultDeserializer(valueDeser)) {\n            valueDeser = null;\n        }\n        return withResolved(delegate, valueDeser, nuller, unwrapSingle);\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.util.Collection",
+  "com.fasterxml.jackson.annotation.JsonFormat",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.annotation.JacksonStdImpl",
+  "com.fasterxml.jackson.databind.deser.ContextualDeserializer",
+  "com.fasterxml.jackson.databind.deser.NullValueProvider",
+  "com.fasterxml.jackson.databind.deser.ValueInstantiator",
+  "com.fasterxml.jackson.databind.introspect.AnnotatedWithParams",
+  "com.fasterxml.jackson.databind.jsontype.TypeDeserializer"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.deser.std",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "withResolved"
+  },
+  {
+   "javadoc": "",
+   "name": "isCachable"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueInstantiator"
+  },
+  {
+   "javadoc": "",
+   "name": "deserialize"
+  },
+  {
+   "javadoc": "",
+   "name": "deserializeWithType"
+  }
+ ],
+ "sig": {
+  "class_declaration": "@JacksonStdImpl public final class StringCollectionDeserializer extends ContainerDeserializerBase<Collection<String>> implements ContextualDeserializer",
+  "constructors": [
+   "public StringCollectionDeserializer(JavaType collectionType, JsonDeserializer<?> valueDeser, ValueInstantiator valueInstantiator);"
+  ],
+  "focal_signature": "public JsonDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property) throws JsonMappingException",
+  "methods": [
+   "protected StringCollectionDeserializer withResolved(JsonDeserializer<?> delegateDeser, JsonDeserializer<?> valueDeser, NullValueProvider nuller, Boolean unwrapSingle);",
+   "// since 2.5 public boolean isCachable();",
+   "public ValueInstantiator getValueInstantiator();",
+   "public Collection<String> deserialize(JsonParser p, DeserializationContext ctxt, Collection<String> result) throws IOException;",
+   "public Object deserializeWithType(JsonParser p, DeserializationContext ctxt, TypeDeserializer typeDeserializer) throws IOException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

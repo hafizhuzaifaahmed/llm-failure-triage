@@ -1,0 +1,14 @@
+{
+  "assembled": true,
+  "call_key": "9817608b7ea9985bb1467d7175cd4c42ae314c35ac4969a79911e655fd1431eb",
+  "candidate_id": "4298b5ebd295d89b022a",
+  "class_name": "MathUtils_equals_TriageGen1Test",
+  "dataset": "D1C_F1",
+  "focal_id": "Math_63::org.apache.commons.math.util.MathUtils::equals(double,double)",
+  "generation": 1,
+  "model_returned": "gemma4:26b",
+  "n_tests": 5,
+  "package": "org.apache.commons.math.util",
+  "source": "package org.apache.commons.math.util;\n\nimport java.io.*;\nimport java.math.*;\nimport java.math.BigDecimal;\nimport java.math.BigInteger;\nimport java.util.*;\nimport java.util.Arrays;\nimport org.apache.commons.math.MathRuntimeException;\nimport org.apache.commons.math.exception.NonMonotonousSequenceException;\nimport org.apache.commons.math.exception.util.Localizable;\nimport org.apache.commons.math.exception.util.LocalizedFormats;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertFalse;\nimport static org.junit.Assert.assertTrue;\n\n/**\n * Unit tests for {@link MathUtils#equals(double, double)}\n */\npublic class MathUtils_equals_TriageGen1Test {\n\n    @Test\n    public void testEquals_BothNaN() {\n        // Tests the (Double.isNaN(x) && Double.isNaN(y)) branch\n        assertTrue(\"Both NaN should be equal\", MathUtils.equals(Double.NaN, Double.NaN));\n    }\n\n    @Test\n    public void testEquals_IdenticalValues() {\n        // Tests the x == y branch\n        assertTrue(\"Identical positive values should be equal\", MathUtils.equals(1.0, 1.0));\n        assertTrue(\"Identical negative values should be equal\", MathUtils.equals(-5.5, -5.5));\n        assertTrue(\"Identical zero values should be equal\", MathUtils.equals(0.0, 0.0));\n        assertTrue(\"Identical infinity values should be equal\", MathUtils.equals(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY));\n    }\n\n    @Test\n    public void testEquals_DifferentValues() {\n        // Tests the case where both conditions are false\n        assertFalse(\"Different values should not be equal\", MathUtils.equals(1.0, 2.0));\n        assertFalse(\"One positive and one negative should not be equal\", MathUtils.equals(1.0, -1.0));\n    }\n\n    @Test\n    public void testEquals_OneNaN() {\n        // Tests the case where only one is NaN (isNaN(x) && isNaN(y) is false, and x == y is false)\n        assertFalse(\"One NaN and one number should not be equal\", MathUtils.equals(Double.NaN, 1.0));\n        assertFalse(\"One number and one NaN should not be equal\", MathUtils.equals(1.0, Double.NaN));\n    }\n\n    @Test\n    public void testEquals_ZeroSignDifference() {\n        // In IEEE 754, 0.0 == -0.0 is true. \n        // This tests the x == y branch for signed zeros.\n        assertTrue(\"Positive zero and negative zero should be equal per x == y\", MathUtils.equals(0.0, -0.0));\n    }\n}\n",
+  "tranche": "F1"
+}

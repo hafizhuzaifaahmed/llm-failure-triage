@@ -1,0 +1,327 @@
+{
+ "candidate_id": "e7dd929299f20bc7da00",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testGetTextBuffer_SharedInputBuffer",
+   "testGetTextBuffer_ResultArray",
+   "testGetTextBuffer_ResultString",
+   "testGetTextBuffer_CurrentSegment",
+   "testGetTextBuffer_ContentsAsArray"
+  ],
+  "nc_both": [],
+  "nc_one_version": [],
+  "passes": 0
+ },
+ "dataset": "D2",
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "JacksonCore_8::com.fasterxml.jackson.core.util.TextBuffer::getTextBuffer()#m112",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testGetTextBuffer_SharedInputBuffer",
+   "runs_b": [
+    {
+     "duration_s": 0.078,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.068,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.074,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.076,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.071,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.081,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.core.util;\n\nimport com.fasterxml.jackson.core.io.NumberInput;\nimport java.io.*;\nimport java.math.*;\nimport java.math.BigDecimal;\nimport java.util.*;\nimport java.util.ArrayList;\nimport java.util.Arrays;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for TextBuffer.getTextBuffer().\n * Goal: Maximize branch and line coverage.\n */\npublic class TextBuffer_getTextBuffer_TriageGen2Test {\n\n    private BufferRecycler recycler;\n    private TextBuffer textBuffer;\n\n    @Before\n    public void setUp() {\n        recycler = new BufferRecycler();\n        textBuffer = new TextBuffer(recycler);\n    }\n\n    @Test\n    public void testGetTextBuffer_SharedInputBuffer() {\n        char[] sharedBuf = {'a', 'b', 'c'};\n        // resetWithShared sets _inputStart to a value >= 0\n        textBuffer.resetWithShared(sharedBuf, 0, 3);\n        \n        char[] result = textBuffer.getTextBuffer();\n        \n        Assert.assertSame(\"Should return the shared input buffer\", sharedBuf, result);\n    }\n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testGetTextBuffer_ResultArray",
+   "runs_b": [
+    {
+     "duration_s": 0.087,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.081,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.076,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.071,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.073,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.076,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.core.util;\n\nimport com.fasterxml.jackson.core.io.NumberInput;\nimport java.io.*;\nimport java.math.*;\nimport java.math.BigDecimal;\nimport java.util.*;\nimport java.util.ArrayList;\nimport java.util.Arrays;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for TextBuffer.getTextBuffer().\n * Goal: Maximize branch and line coverage.\n */\npublic class TextBuffer_getTextBuffer_TriageGen2Test {\n\n    private BufferRecycler recycler;\n    private TextBuffer textBuffer;\n\n    @Before\n    public void setUp() {\n        recycler = new BufferRecycler();\n        textBuffer = new TextBuffer(recycler);\n    }\n\n    \n\n    @Test\n    public void testGetTextBuffer_ResultArray() {\n        // To reach the (_resultArray != null) branch, we need to trigger a state \n        // where _inputStart < 0 and _resultArray is already populated.\n        // This happens after a segment is finished or via contentsAsArray.\n        \n        textBuffer.append('h');\n        textBuffer.append('i');\n        // finishCurrentSegment moves content to _resultArray (or makes it non-shared)\n        textBuffer.finishCurrentSegment();\n        \n        // Ensure _inputStart is < 0 (default state for new/reset buffers)\n        // In Jackson's TextBuffer, after finishing segments, it's no longer shared.\n        char[] result1 = textBuffer.getTextBuffer();\n        char[] result2 = textBuffer.getTextBuffer();\n        \n        Assert.assertNotNull(result1);\n        Assert.assertSame(\"Should return the same cached _resultArray\", result1, result2);\n    }\n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testGetTextBuffer_ResultString",
+   "runs_b": [
+    {
+     "duration_s": 0.072,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.075,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.073,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.069,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.072,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.074,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.core.util;\n\nimport com.fasterxml.jackson.core.io.NumberInput;\nimport java.io.*;\nimport java.math.*;\nimport java.math.BigDecimal;\nimport java.util.*;\nimport java.util.ArrayList;\nimport java.util.Arrays;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for TextBuffer.getTextBuffer().\n * Goal: Maximize branch and line coverage.\n */\npublic class TextBuffer_getTextBuffer_TriageGen2Test {\n\n    private BufferRecycler recycler;\n    private TextBuffer textBuffer;\n\n    @Before\n    public void setUp() {\n        recycler = new BufferRecycler();\n        textBuffer = new TextBuffer(recycler);\n    }\n\n    \n\n    \n\n    @Test\n    public void testGetTextBuffer_ResultString() {\n        // To reach the (_resultString != null) branch, we use resetWithString.\n        // resetWithString sets _resultString and clears other buffers.\n        String input = \"hello\";\n        textBuffer.resetWithString(input);\n        \n        char[] result = textBuffer.getTextBuffer();\n        \n        Assert.assertArrayEquals(input.toCharArray(), result);\n        \n        // Verify that _resultArray is now cached by calling it again\n        char[] result2 = textBuffer.getTextBuffer();\n        Assert.assertSame(\"Should cache the char array from the string\", result, result2);\n    }\n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testGetTextBuffer_CurrentSegment",
+   "runs_b": [
+    {
+     "duration_s": 0.08,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 49,
+     "message": "null",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError\n\tat org.junit.Assert.fail(Assert.java:86)\n\tat org.junit.Assert.assertTrue(Assert.java:41)\n\tat org.junit.Assert.assertNotNull(Assert.java:621)\n\tat org.junit.Assert.assertNotNull(Assert.java:631)\n\tat com.fasterxml.jackson.core.util.TextBuffer_getTextBuffer_TriageGen2Test.testGetTextBuffer_CurrentSegment(TextBuffer_getTextBuffer_TriageGen2Test.java:49)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:160)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:138)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.079,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 49,
+     "message": "null",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError\n\tat org.junit.Assert.fail(Assert.java:86)\n\tat org.junit.Assert.assertTrue(Assert.java:41)\n\tat org.junit.Assert.assertNotNull(Assert.java:621)\n\tat org.junit.Assert.assertNotNull(Assert.java:631)\n\tat com.fasterxml.jackson.core.util.TextBuffer_getTextBuffer_TriageGen2Test.testGetTextBuffer_CurrentSegment(TextBuffer_getTextBuffer_TriageGen2Test.java:49)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:160)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:138)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.087,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 49,
+     "message": "null",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError\n\tat org.junit.Assert.fail(Assert.java:86)\n\tat org.junit.Assert.assertTrue(Assert.java:41)\n\tat org.junit.Assert.assertNotNull(Assert.java:621)\n\tat org.junit.Assert.assertNotNull(Assert.java:631)\n\tat com.fasterxml.jackson.core.util.TextBuffer_getTextBuffer_TriageGen2Test.testGetTextBuffer_CurrentSegment(TextBuffer_getTextBuffer_TriageGen2Test.java:49)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:160)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:138)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.085,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 49,
+     "message": "null",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError\n\tat org.junit.Assert.fail(Assert.java:86)\n\tat org.junit.Assert.assertTrue(Assert.java:41)\n\tat org.junit.Assert.assertNotNull(Assert.java:621)\n\tat org.junit.Assert.assertNotNull(Assert.java:631)\n\tat com.fasterxml.jackson.core.util.TextBuffer_getTextBuffer_TriageGen2Test.testGetTextBuffer_CurrentSegment(TextBuffer_getTextBuffer_TriageGen2Test.java:49)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:160)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:138)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.082,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 49,
+     "message": "null",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError\n\tat org.junit.Assert.fail(Assert.java:86)\n\tat org.junit.Assert.assertTrue(Assert.java:41)\n\tat org.junit.Assert.assertNotNull(Assert.java:621)\n\tat org.junit.Assert.assertNotNull(Assert.java:631)\n\tat com.fasterxml.jackson.core.util.TextBuffer_getTextBuffer_TriageGen2Test.testGetTextBuffer_CurrentSegment(TextBuffer_getTextBuffer_TriageGen2Test.java:49)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:160)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:138)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.076,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 49,
+     "message": "null",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError\n\tat org.junit.Assert.fail(Assert.java:86)\n\tat org.junit.Assert.assertTrue(Assert.java:41)\n\tat org.junit.Assert.assertNotNull(Assert.java:621)\n\tat org.junit.Assert.assertNotNull(Assert.java:631)\n\tat com.fasterxml.jackson.core.util.TextBuffer_getTextBuffer_TriageGen2Test.testGetTextBuffer_CurrentSegment(TextBuffer_getTextBuffer_TriageGen2Test.java:49)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:160)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:138)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.core.util;\n\nimport com.fasterxml.jackson.core.io.NumberInput;\nimport java.io.*;\nimport java.math.*;\nimport java.math.BigDecimal;\nimport java.util.*;\nimport java.util.ArrayList;\nimport java.util.Arrays;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for TextBuffer.getTextBuffer().\n * Goal: Maximize branch and line coverage.\n */\npublic class TextBuffer_getTextBuffer_TriageGen2Test {\n\n    private BufferRecycler recycler;\n    private TextBuffer textBuffer;\n\n    @Before\n    public void setUp() {\n        recycler = new BufferRecycler();\n        textBuffer = new TextBuffer(recycler);\n    }\n\n    \n\n    \n\n    \n\n    @Test\n    public void testGetTextBuffer_CurrentSegment() {\n        // To reach the (!_hasSegments && true) branch:\n        // 1. _inputStart must be < 0\n        // 2. _resultArray must be null\n        // 3. _resultString must be null\n        // 4. _hasSegments must be false\n        \n        // A fresh TextBuffer has _hasSegments = false\n        char[] result = textBuffer.getTextBuffer();\n        \n        // It should return the internal _currentSegment\n        Assert.assertNotNull(result);\n        // Since it's a fresh buffer, it should be the default segment provided by recycler/buffer\n        Assert.assertTrue(textBuffer.getCurrentSegmentSize() >= 0);\n    }\n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testGetTextBuffer_ContentsAsArray",
+   "runs_b": [
+    {
+     "duration_s": 0.081,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.084,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.082,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.076,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.078,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.081,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.core.util;\n\nimport com.fasterxml.jackson.core.io.NumberInput;\nimport java.io.*;\nimport java.math.*;\nimport java.math.BigDecimal;\nimport java.util.*;\nimport java.util.ArrayList;\nimport java.util.Arrays;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for TextBuffer.getTextBuffer().\n * Goal: Maximize branch and line coverage.\n */\npublic class TextBuffer_getTextBuffer_TriageGen2Test {\n\n    private BufferRecycler recycler;\n    private TextBuffer textBuffer;\n\n    @Before\n    public void setUp() {\n        recycler = new BufferRecycler();\n        textBuffer = new TextBuffer(recycler);\n    }\n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testGetTextBuffer_ContentsAsArray() {\n        // To reach the final return contentsAsArray():\n        // This happens if _hasSegments is true, but _inputStart < 0 and _resultArray is null.\n        \n        textBuffer.append('a');\n        textBuffer.append('b');\n        // Force _hasSegments to true by finishing the segment\n        textBuffer.finishCurrentSegment();\n        \n        // After finishCurrentSegment, if we haven't accessed the buffer via getTextBuffer yet,\n        // we need to ensure we hit the logic for a non-segmented array.\n        // Actually, finishCurrentSegment usually populates _resultArray.\n        // To force the 'contentsAsArray' fallback, we simulate a state where \n        // segments exist but we are asking for the array.\n        \n        // If we manually append enough to trigger multiple segments:\n        for (int i = 0; i < 100; i++) {\n            textBuffer.append((char) i);\n        }\n        \n        char[] result = textBuffer.getTextBuffer();\n        Assert.assertNotNull(result);\n        Assert.assertTrue(result.length > 0);\n    }\n}\n"
+  }
+ ],
+ "mutant_version": "m112",
+ "source_sha256": "365a31f047003aaee4c59f0019464bcab7816bcf48aa69e100b1169e9d522a54",
+ "utc": "2026-11-03T00:31:52Z"
+}

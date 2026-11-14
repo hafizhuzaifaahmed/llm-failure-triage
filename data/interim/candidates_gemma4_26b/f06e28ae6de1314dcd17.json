@@ -1,0 +1,12 @@
+{
+  "assembled": true,
+  "call_key": "e41dff4d5fe50106c6792c3119a655c7e4ed2b146b0093ad02d599576bcb3768",
+  "candidate_id": "f06e28ae6de1314dcd17",
+  "class_name": "MathUtils_factorial_TriageGen2Test",
+  "focal_id": "Math_93::org.apache.commons.math.util.MathUtils::factorial(int)",
+  "generation": 2,
+  "model_returned": "gemma4:26b",
+  "n_tests": 6,
+  "package": "org.apache.commons.math.util",
+  "source": "package org.apache.commons.math.util;\n\nimport java.io.*;\nimport java.math.*;\nimport java.math.BigDecimal;\nimport java.util.*;\nimport java.util.Arrays;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\n/**\n * Unit tests for MathUtils.factorial\n */\npublic class MathUtils_factorial_TriageGen2Test {\n\n    @Test\n    public void testFactorial_Zero() {\n        // 0! is 1\n        assertEquals(1L, MathUtils.factorial(0));\n    }\n\n    @Test\n    public void testFactorial_One() {\n        // 1! is 1\n        assertEquals(1L, MathUtils.factorial(1));\n    }\n\n    @Test\n    public void testFactorial_SmallValue() {\n        // 5! is 120\n        assertEquals(120L, MathUtils.factorial(5));\n    }\n\n    @Test\n    public void testFactorial_LargeValue() {\n        // 20! is 2432902008176640000L\n        // This is the largest factorial that fits in a signed long\n        assertEquals(2432902008176640000L, MathUtils.factorial(20));\n    }\n\n    @Test(expected = ArithmeticException.class)\n    public void testFactorial_Overflow() {\n        // 21! exceeds Long.MAX_VALUE\n        // Note: The implementation uses factorialDouble and checks if result == Long.MAX_VALUE\n        // or if it's too large to fit. Since 21! is ~5.109e19 and Long.MAX_VALUE is ~9.223e18,\n        // the Math.round(factorialDouble(21)) behavior or the subsequent check will trigger the exception.\n        MathUtils.factorial(21);\n    }\n\n    @Test(expected = Exception.class)\n    public void testFactorial_Negative() {\n        // Factorial for negative numbers is typically undefined in this context \n        // and likely causes issues in factorialDouble or array access\n        MathUtils.factorial(-1);\n    }\n}\n"
+}

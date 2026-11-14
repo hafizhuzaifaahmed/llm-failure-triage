@@ -1,0 +1,317 @@
+{
+ "bug_name": "JxPath_4",
+ "call_sites": [
+  {
+   "line": 70,
+   "lines": [
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/model/dom/DOMAttributeIterator.java",
+   "snippet": "        }\n    }\n\n    private boolean testAttr(Attr attr, QName testName) {\n        String nodePrefix = DOMNodePointer.getPrefix(attr);\n        String nodeLocalName = DOMNodePointer.getLocalName(attr);\n\n        if (nodePrefix != null && nodePrefix.equals(\"xmlns\")) {\n            return false;\n        }\n"
+  },
+  {
+   "line": 44,
+   "lines": [
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/model/dom/DOMAttributePointer.java",
+   "snippet": "    }\n\n    public QName getName() {\n        return new QName(\n            DOMNodePointer.getPrefix(attr),\n            DOMNodePointer.getLocalName(attr));\n    }\n\n    public String getNamespaceURI() {\n        String prefix = DOMNodePointer.getPrefix(attr);\n        return prefix == null ? null : parent.getNamespaceURI(prefix);"
+  },
+  {
+   "line": 60,
+   "lines": [
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/model/dom/DOMNamespaceIterator.java",
+   "snippet": "            NamedNodeMap map = node.getAttributes();\n            int count = map.getLength();\n            for (int i = 0; i < count; i++) {\n                Attr attr = (Attr) map.item(i);\n                String prefix = DOMNodePointer.getPrefix(attr);\n                String name = DOMNodePointer.getLocalName(attr);\n                if ((prefix != null && prefix.equals(\"xmlns\"))\n                    || (prefix == null && name.equals(\"xmlns\"))) {\n                    attributes.add(attr);\n                }\n            }"
+  },
+  {
+   "line": 84,
+   "lines": [
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/model/dom/DOMNamespaceIterator.java",
+   "snippet": "        }\n        String prefix = \"\";\n        Attr attr = (Attr) attributes.get(index);\n        String name = attr.getPrefix();\n        if (name != null && name.equals(\"xmlns\")) {\n            prefix = DOMNodePointer.getLocalName(attr);\n        }\n        return new NamespacePointer(parent, prefix, attr.getValue());\n    }\n\n    public int getPosition() {"
+  },
+  {
+   "line": 107,
+   "lines": [
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer.java",
+   "snippet": "                return true;\n            }\n\n            if (wildcard\n                || testName.getName()\n                        .equals(DOMNodePointer.getLocalName(node))) {\n                String nodeNS = DOMNodePointer.getNamespaceURI(node);\n                return equalStrings(namespaceURI, nodeNS);\n            }\n            return false;\n        }"
+  }
+ ],
+ "class_simple": "DOMNodePointer",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * A Pointer that points to a DOM node.\n *\n * @author Dmitri Plotnikov\n * @version $Revision$ $Date$\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "private Node node",
+  "private Map namespaces",
+  "private String defaultNamespace",
+  "private String id",
+  "public static final String XML_NAMESPACE_URI",
+  "public static final String XMLNS_NAMESPACE_URI"
+ ],
+ "focal_class": "org.apache.commons.jxpath.ri.model.dom.DOMNodePointer",
+ "focal_id": "JxPath_4::org.apache.commons.jxpath.ri.model.dom.DOMNodePointer::getLocalName(Node)",
+ "focal_method_name": "getLocalName",
+ "generations": 3,
+ "impl_B": "public static String getLocalName(Node node) {\n        String localName = node.getLocalName();\n        if (localName != null) {\n            return localName;\n        }\n\n        String name = node.getNodeName();\n        int index = name.lastIndexOf(':');\n        return index < 0 ? name : name.substring(index + 1);\n    }",
+ "imports": [
+  "java.util.HashMap",
+  "java.util.Locale",
+  "java.util.Map",
+  "org.apache.commons.jxpath.AbstractFactory",
+  "org.apache.commons.jxpath.JXPathAbstractFactoryException",
+  "org.apache.commons.jxpath.JXPathContext",
+  "org.apache.commons.jxpath.JXPathException",
+  "org.apache.commons.jxpath.Pointer",
+  "org.apache.commons.jxpath.ri.Compiler",
+  "org.apache.commons.jxpath.ri.QName",
+  "org.apache.commons.jxpath.ri.compiler.NodeNameTest",
+  "org.apache.commons.jxpath.ri.compiler.NodeTest",
+  "org.apache.commons.jxpath.ri.compiler.NodeTypeTest",
+  "org.apache.commons.jxpath.ri.compiler.ProcessingInstructionTest",
+  "org.apache.commons.jxpath.ri.model.NodeIterator",
+  "org.apache.commons.jxpath.ri.model.NodePointer",
+  "org.apache.commons.jxpath.ri.model.beans.NullPointer",
+  "org.apache.commons.jxpath.util.TypeUtils",
+  "org.w3c.dom.Attr",
+  "org.w3c.dom.Comment",
+  "org.w3c.dom.Document",
+  "org.w3c.dom.Element",
+  "org.w3c.dom.NamedNodeMap",
+  "org.w3c.dom.Node",
+  "org.w3c.dom.NodeList",
+  "org.w3c.dom.ProcessingInstruction"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.jxpath.ri.model.dom",
+ "project": "JxPath",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "testNode"
+  },
+  {
+   "javadoc": "",
+   "name": "testNode"
+  },
+  {
+   "javadoc": "",
+   "name": "getName"
+  },
+  {
+   "javadoc": "",
+   "name": "getNamespaceURI"
+  },
+  {
+   "javadoc": "",
+   "name": "childIterator"
+  },
+  {
+   "javadoc": "",
+   "name": "attributeIterator"
+  },
+  {
+   "javadoc": "",
+   "name": "namespacePointer"
+  },
+  {
+   "javadoc": "",
+   "name": "namespaceIterator"
+  },
+  {
+   "javadoc": "",
+   "name": "getNamespaceURI"
+  },
+  {
+   "javadoc": "",
+   "name": "getDefaultNamespaceURI"
+  },
+  {
+   "javadoc": "",
+   "name": "getBaseValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getImmediateNode"
+  },
+  {
+   "javadoc": "",
+   "name": "isActual"
+  },
+  {
+   "javadoc": "",
+   "name": "isCollection"
+  },
+  {
+   "javadoc": "",
+   "name": "getLength"
+  },
+  {
+   "javadoc": "",
+   "name": "isLeaf"
+  },
+  {
+   "javadoc": "/**\n     * Returns true if the xml:lang attribute for the current node\n     * or its parent has the specified prefix <i>lang</i>.\n     * If no node has this prefix, calls <code>super.isLanguage(lang)</code>.\n     */",
+   "name": "isLanguage"
+  },
+  {
+   "javadoc": "",
+   "name": "getLanguage"
+  },
+  {
+   "javadoc": "/**\n     * Sets contents of the node to the specified value. If the value is\n     * a String, the contents of the node are replaced with this text.\n     * If the value is an Element or Document, the children of the\n     * node are replaced with the children of the passed node.\n     */",
+   "name": "setValue"
+  },
+  {
+   "javadoc": "",
+   "name": "createChild"
+  },
+  {
+   "javadoc": "",
+   "name": "createChild"
+  },
+  {
+   "javadoc": "",
+   "name": "createAttribute"
+  },
+  {
+   "javadoc": "",
+   "name": "remove"
+  },
+  {
+   "javadoc": "",
+   "name": "asPath"
+  },
+  {
+   "javadoc": "",
+   "name": "hashCode"
+  },
+  {
+   "javadoc": "",
+   "name": "equals"
+  },
+  {
+   "javadoc": "",
+   "name": "getPrefix"
+  },
+  {
+   "javadoc": "",
+   "name": "getNamespaceURI"
+  },
+  {
+   "javadoc": "",
+   "name": "getValue"
+  },
+  {
+   "javadoc": "/**\n     * Locates a node by ID.\n     */",
+   "name": "getPointerByID"
+  },
+  {
+   "javadoc": "",
+   "name": "compareChildNodePointers"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class DOMNodePointer extends NodePointer",
+  "constructors": [
+   "public DOMNodePointer(Node node, Locale locale);",
+   "public DOMNodePointer(Node node, Locale locale, String id);",
+   "public DOMNodePointer(NodePointer parent, Node node);"
+  ],
+  "focal_signature": "public static String getLocalName(Node node)",
+  "methods": [
+   "public boolean testNode(NodeTest test);",
+   "public static boolean testNode(Node node, NodeTest test);",
+   "public QName getName();",
+   "public String getNamespaceURI();",
+   "public NodeIterator childIterator( NodeTest test, boolean reverse, NodePointer startWith);",
+   "public NodeIterator attributeIterator(QName name);",
+   "public NodePointer namespacePointer(String prefix);",
+   "public NodeIterator namespaceIterator();",
+   "public String getNamespaceURI(String prefix);",
+   "public String getDefaultNamespaceURI();",
+   "public Object getBaseValue();",
+   "public Object getImmediateNode();",
+   "public boolean isActual();",
+   "public boolean isCollection();",
+   "public int getLength();",
+   "public boolean isLeaf();",
+   "public boolean isLanguage(String lang);",
+   "protected String getLanguage();",
+   "public void setValue(Object value);",
+   "public NodePointer createChild( JXPathContext context, QName name, int index);",
+   "public NodePointer createChild(JXPathContext context, QName name, int index, Object value);",
+   "public NodePointer createAttribute(JXPathContext context, QName name);",
+   "public void remove();",
+   "public String asPath();",
+   "public int hashCode();",
+   "public boolean equals(Object object);",
+   "public static String getPrefix(Node node);",
+   "public static String getNamespaceURI(Node node);",
+   "public Object getValue();",
+   "public Pointer getPointerByID(JXPathContext context, String id);",
+   "public int compareChildNodePointers( NodePointer pointer1, NodePointer pointer2);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

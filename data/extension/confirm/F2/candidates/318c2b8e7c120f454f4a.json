@@ -1,0 +1,14 @@
+{
+  "assembled": true,
+  "call_key": "4435aff946412c5fdbb0dde4960615d0fb894d2c32461214f0f7179004417443",
+  "candidate_id": "318c2b8e7c120f454f4a",
+  "class_name": "CSVPrinter_CSVPrinter_TriageGen0Test",
+  "dataset": "D1C_F2",
+  "focal_id": "Csv_10::org.apache.commons.csv.CSVPrinter::CSVPrinter(Appendable,CSVFormat)",
+  "generation": 0,
+  "model_returned": "gemma4:26b",
+  "n_tests": 4,
+  "package": "org.apache.commons.csv",
+  "source": "package org.apache.commons.csv;\n\nimport java.io.*;\nimport java.io.Closeable;\nimport java.io.Flushable;\nimport java.io.IOException;\nimport java.io.StringWriter;\nimport java.math.*;\nimport java.sql.ResultSet;\nimport java.sql.SQLException;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\npublic class CSVPrinter_CSVPrinter_TriageGen0Test {\n\n    @Test\n    public void testConstructor_Success() throws IOException {\n        Appendable out = new StringWriter();\n        CSVFormat format = CSVFormat.DEFAULT;\n        \n        CSVPrinter printer = new CSVPrinter(out, format);\n        \n        assertEquals(out, printer.getOut());\n        printer.close();\n    }\n\n    @Test(expected = NullPointerException.class)\n    public void testConstructor_NullOut() throws IOException {\n        CSVFormat format = CSVFormat.DEFAULT;\n        new CSVPrinter(null, format);\n    }\n\n    @Test(expected = NullPointerException.class)\n    public void testConstructor_NullFormat() throws IOException {\n        Appendable out = new StringWriter();\n        new CSVPrinter(out, null);\n    }\n\n    @Test(expected = IllegalArgumentException.class)\n    public void testConstructor_InvalidFormat() throws IOException {\n        Appendable out = new StringWriter();\n        // Creating a format that fails validation if possible, \n        // or using a mock/custom format that throws exception on validate()\n        CSVFormat format = new CSVFormat.Builder()\n                .setDelimiter('\\0') // Some implementations might throw exception on invalid delimiter during validate()\n                .build();\n        \n        // If CSVFormat.validate() is called, we rely on the implementation \n        // of validate() to throw an exception for an invalid configuration.\n        // Since we cannot easily mock the final/internal behavior of CSVFormat without PowerMock,\n        // we assume a scenario where validate() is triggered.\n        new CSVPrinter(out, format) {\n            // This is a placeholder for a scenario where format.validate() throws an exception\n        };\n    }\n}\n",
+  "tranche": "F2"
+}

@@ -1,0 +1,117 @@
+{
+ "bug_name": "JacksonDatabind_17",
+ "call_sites": [
+  {
+   "line": 149,
+   "lines": [
+    144,
+    145,
+    146,
+    147,
+    148,
+    149,
+    150,
+    151,
+    152,
+    153,
+    154
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java",
+   "snippet": "\n        @Override\n        public TypeDeserializer buildTypeDeserializer(DeserializationConfig config,\n                JavaType baseType, Collection<NamedType> subtypes)\n        {\n            return useForType(baseType) ? super.buildTypeDeserializer(config, baseType, subtypes) : null;\n        }\n\n        @Override\n        public TypeSerializer buildTypeSerializer(SerializationConfig config,\n                JavaType baseType, Collection<NamedType> subtypes)"
+  },
+  {
+   "line": 156,
+   "lines": [
+    151,
+    152,
+    153,
+    154,
+    155,
+    156,
+    157,
+    158,
+    159,
+    160,
+    161
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java",
+   "snippet": "\n        @Override\n        public TypeSerializer buildTypeSerializer(SerializationConfig config,\n                JavaType baseType, Collection<NamedType> subtypes)\n        {\n            return useForType(baseType) ? super.buildTypeSerializer(config, baseType, subtypes) : null;            \n        }\n\n        /**\n         * Method called to check if the default type handler should be\n         * used for given type."
+  }
+ ],
+ "class_simple": "DefaultTypeResolverBuilder",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * This mapper (or, data binder, or codec) provides functionality for\n * converting between Java objects (instances of JDK provided core classes,\n * beans), and matching JSON constructs.\n * It will use instances of {@link JsonParser} and {@link JsonGenerator}\n * for implementing actual reading/writing of JSON.\n *<p>\n * The main conversion API is defined in {@link ObjectCodec}, so that\n * implementation details of this class need not be exposed to\n * streaming parser and generator classes.\n *<p>\n * Note on caching: root-level deserializers are always cached, and accessed\n * using full (generics-aware) type information. This is different from\n * caching of referenced types, which is more limited and is done only\n * for a subset of all deserializer types. The main reason for difference\n * is that at root-level there is no incoming reference (and hence no\n * referencing property, no referral information or annotations to\n * produce differing deserializers), and that the performance impact\n * greatest at root level (since it'll essentially cache the full\n * graph of deserializers involved).\n */\npublic class ObjectMapper\n    extends ObjectCodec\n    implements Versioned,\n        java.io.Serializable // as of 2.1\n{\n    private static final long serialVersionUID = 1L;\n\n    /*\n    /**********************************************************\n    /* Helper classes, enums\n    /**********************************************************\n     */\n\n    /**\n     * Enumeration used with {@link ObjectMapper#enableDefaultTyping()}\n     * to specify what kind of types (classes) default typing should\n     * be used for. It will only be used if no explicit type information\n     * is found, but this enumeration further limits subset of those types.\n     *<p>\n     * Since 2.4 there are special exceptions for JSON Tree model\n     * types (sub-types of {@link TreeNode}: default typing is never\n     * applied to them\n     * (see <a href=\"https://github.com/FasterXML/jackson-databind/issues/88\">Issue#88</a> for details)\n     */\n    public enum DefaultTyping {\n        /**\n         * This value means that only properties that have\n         * {@link java.lang.Object} as declared type (including\n         * generic types without explicit type) will use default\n         * typing.\n         */\n        JAVA_LANG_OBJECT,\n        \n        /**\n         * Value that means that default typing will be used for\n         * properties with declared type of {@link java.lang.Object}\n         * or an abstract type (abstract class or interface).\n         * Note that this does <b>not</b> include array types.\n         *<p>\n         * Since 2.4, this does NOT apply to {@link TreeNode} and its subtypes.\n         */\n        OBJECT_AND_NON_CONCRETE,\n\n        /**\n         * Value that means that default typing will be used for\n         * all types covered by {@link #OBJECT_AND_NON_CONCRETE}\n         * plus all array types for them.\n         *<p>\n         * Since 2.4, this does NOT apply to {@link TreeNode} and its subtypes.\n         */\n        NON_CONCRETE_AND_ARRAYS,\n        \n        /**\n         * Value that means that default typing will be used for\n         * all non-final types, with exception of small number of\n         * \"natural\" types (String, Boolean, Integer, Double), which\n         * can be correctly inferred from JSON; as well as for\n         * all arrays of non-final types.\n         *<p>\n         * Since 2.4, this does NOT apply to {@link TreeNode} and its subtypes.\n         */\n        NON_FINAL\n    }\n\n    /**\n     * Customized {@link TypeResolverBuilder} that provides type resolver builders\n     * used with so-called \"default typing\"\n     * (see {@link ObjectMapper#enableDefaultTyping()} for details).\n     *<p>\n     * Type resolver construction is based on configuration: implementation takes care\n     * of only providing builders in cases where type information should be applied.\n     * This is important since build calls may be sent for any and all types, and\n     * type information should NOT be applied to all of them.\n     */\n    public static",
+  "method_javadoc": "/**\n         * Method called to check if the default type handler should be\n         * used for given type.\n         * Note: \"natural types\" (String, Boolean, Integer, Double) will never\n         * use typing; that is both due to them being concrete and final,\n         * and since actual serializers and deserializers will also ignore any\n         * attempts to enforce typing.\n         */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "protected final DefaultTyping _appliesFor"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.ObjectMapper.DefaultTypeResolverBuilder",
+ "focal_id": "JacksonDatabind_17::com.fasterxml.jackson.databind.ObjectMapper$DefaultTypeResolverBuilder::useForType(JavaType)",
+ "focal_method_name": "useForType",
+ "generations": 3,
+ "impl_B": "public boolean useForType(JavaType t)\n        {\n            switch (_appliesFor) {\n            case NON_CONCRETE_AND_ARRAYS:\n                while (t.isArrayType()) {\n                    t = t.getContentType();\n                }\n                // fall through\n            case OBJECT_AND_NON_CONCRETE:\n//                return t.isJavaLangObject() || \n                return (t.getRawClass() == Object.class)\n                        || (!t.isConcrete()\n                                // [databind#88] Should not apply to JSON tree models:\n                        || TreeNode.class.isAssignableFrom(t.getRawClass()));\n\n            case NON_FINAL:\n                while (t.isArrayType()) {\n                    t = t.getContentType();\n                }\n                // [Issue#88] Should not apply to JSON tree models:\n                return !t.isFinal() && !TreeNode.class.isAssignableFrom(t.getRawClass());\n            default:\n            //case JAVA_LANG_OBJECT:\n//                return t.isJavaLangObject();\n                return (t.getRawClass() == Object.class);\n            }\n        }",
+ "imports": [
+  "java.io.*",
+  "java.lang.reflect.Type",
+  "java.net.URL",
+  "java.text.DateFormat",
+  "java.util.*",
+  "java.util.concurrent.ConcurrentHashMap",
+  "java.util.concurrent.atomic.AtomicReference",
+  "com.fasterxml.jackson.annotation.*",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.core.io.CharacterEscapes",
+  "com.fasterxml.jackson.core.io.SegmentedStringWriter",
+  "com.fasterxml.jackson.core.type.ResolvedType",
+  "com.fasterxml.jackson.core.type.TypeReference",
+  "com.fasterxml.jackson.core.util.*",
+  "com.fasterxml.jackson.databind.cfg.BaseSettings",
+  "com.fasterxml.jackson.databind.cfg.ContextAttributes",
+  "com.fasterxml.jackson.databind.cfg.HandlerInstantiator",
+  "com.fasterxml.jackson.databind.cfg.MapperConfig",
+  "com.fasterxml.jackson.databind.deser.*",
+  "com.fasterxml.jackson.databind.introspect.*",
+  "com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper",
+  "com.fasterxml.jackson.databind.jsontype.*",
+  "com.fasterxml.jackson.databind.jsontype.impl.StdSubtypeResolver",
+  "com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder",
+  "com.fasterxml.jackson.databind.node.*",
+  "com.fasterxml.jackson.databind.ser.*",
+  "com.fasterxml.jackson.databind.type.*",
+  "com.fasterxml.jackson.databind.util.RootNameLookup",
+  "com.fasterxml.jackson.databind.util.StdDateFormat",
+  "com.fasterxml.jackson.databind.util.TokenBuffer"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "buildTypeDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "buildTypeSerializer"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public static class DefaultTypeResolverBuilder extends StdTypeResolverBuilder implements java.io.Serializable",
+  "constructors": [
+   "public DefaultTypeResolverBuilder(DefaultTyping t);"
+  ],
+  "focal_signature": "public boolean useForType(JavaType t)",
+  "methods": [
+   "public TypeDeserializer buildTypeDeserializer(DeserializationConfig config, JavaType baseType, Collection<NamedType> subtypes);",
+   "public TypeSerializer buildTypeSerializer(SerializationConfig config, JavaType baseType, Collection<NamedType> subtypes);"
+  ],
+  "type_signatures": [
+   "public abstract class JavaType extends ResolvedType implements java.io.Serializable, java.lang.reflect.Type { protected JavaType(Class<?> raw, int additionalHash, Object valueHandler, Object typeHandler, boolean asStatic); public abstract JavaType withTypeHandler(Object h); public abstract JavaType withContentTypeHandler(Object h); public abstract JavaType withValueHandler(Object h); public abstract JavaType withContentValueHandler(Object h); public abstract JavaType withStaticTyping(); public JavaType narrowBy(Class<?> subclass); public JavaType forcedNarrowBy(Class<?> subclass); public JavaType widenBy(Class<?> superclass); protected abstract JavaType _narrow(Class<?> subclass); protected JavaType _widen(Class<?> superclass); public abstract JavaType narrowContentsBy(Class<?> contentClass); public abstract JavaType widenContentsBy(Class<?> contentClass); public final Class<?> getRawClass(); public final boolean hasRawClass(Class<?> clz); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

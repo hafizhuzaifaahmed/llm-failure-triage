@@ -1,0 +1,244 @@
+{
+ "base_focal_id": "JxPath_3::org.apache.commons.jxpath.ri.model.beans.NullPropertyPointer::createPath(JXPathContext,Object)",
+ "bug_name": "JxPath_3",
+ "call_sites": [
+  {
+   "line": 67,
+   "lines": [
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72
+   ],
+   "path": "src/java/org/apache/commons/jxpath/CompiledExpression.java",
+   "snippet": "    /**\n     * Creates intermediate elements of\n     * the path by invoking an AbstractFactory, which should first be\n     * installed on the context by calling \"setFactory\".\n     */\n    Pointer createPath(JXPathContext context);\n\n    /**\n     * The same as setValue, except it creates intermediate elements of\n     * the path by invoking an AbstractFactory, which should first be\n     * installed on the context by calling \"setFactory\"."
+  },
+  {
+   "line": 83,
+   "lines": [
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/JXPathCompiledExpression.java",
+   "snippet": "    /**\n     * @see CompiledExpression#createPath(JXPathContext)\n     */\n    public Pointer createPath(JXPathContext context) {\n        return ((JXPathContextReferenceImpl) context).\n                    createPath(xpath, expression);\n    }\n\n    /**\n     * @see CompiledExpression#createPathAndSetValue(JXPathContext, Object)\n     */"
+  },
+  {
+   "line": 442,
+   "lines": [
+    437,
+    438,
+    439,
+    440,
+    441,
+    442,
+    443,
+    444,
+    445,
+    446,
+    447
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/JXPathContextReferenceImpl.java",
+   "snippet": "                \"Exception trying to set value with xpath \" + xpath, ex);\n        }\n    }\n\n    public Pointer createPath(String xpath) {\n        return createPath(xpath, compileExpression(xpath));\n    }\n\n    public Pointer createPath(String xpath, Expression expr) {\n        try {\n            Object result = expr.computeValue(getEvalContext());"
+  },
+  {
+   "line": 462,
+   "lines": [
+    457,
+    458,
+    459,
+    460,
+    461,
+    462,
+    463,
+    464,
+    465,
+    466,
+    467
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/JXPathContextReferenceImpl.java",
+   "snippet": "            else {\n                checkSimplePath(expr);\n                // This should never happen\n                throw new JXPathException(\"Cannot create path:\" + xpath);\n            }\n            return ((NodePointer) pointer).createPath(this);\n        }\n        catch (Throwable ex) {\n            throw new JXPathException(\n                \"Exception trying to create xpath \" + xpath,\n                ex);"
+  },
+  {
+   "line": 515,
+   "lines": [
+    510,
+    511,
+    512,
+    513,
+    514,
+    515,
+    516,
+    517,
+    518,
+    519,
+    520
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/JXPathContextReferenceImpl.java",
+   "snippet": "            \n            // This should never happen\n            throw new JXPathException(\"Cannot set value for xpath: \" + xpath);\n        }\n        if (create) {\n            pointer = ((NodePointer) pointer).createPath(this, value);\n        }\n        else {\n            pointer.setValue(value);\n        }\n        return pointer;"
+  }
+ ],
+ "class_simple": "NullPropertyPointer",
+ "dataset": "D2",
+ "doc": {
+  "class_javadoc": "/**\n * @author Dmitri Plotnikov\n * @version $Revision$ $Date$\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private String propertyName",
+  "private boolean byNameAttribute"
+ ],
+ "focal_class": "org.apache.commons.jxpath.ri.model.beans.NullPropertyPointer",
+ "focal_id": "JxPath_3::org.apache.commons.jxpath.ri.model.beans.NullPropertyPointer::createPath(JXPathContext,Object)#m27",
+ "focal_method_name": "createPath",
+ "impl_B": "public NodePointer createPath(JXPathContext context, Object value) {\n        NodePointer newParent = parent.createPath(context);\n        if (true) {\n            NodePointer pointer = newParent.createAttribute(context, getName());\n            pointer.setValue(value);\n            return pointer;\n        }\n        else {\n            if (parent instanceof NullPointer && parent.equals(newParent)) {\n                throw createBadFactoryException(context.getFactory());\n            }\n            if (newParent instanceof PropertyOwnerPointer) {\n                PropertyOwnerPointer pop = (PropertyOwnerPointer) newParent;\n                newParent = pop.getPropertyPointer();\n            }\n            return newParent.createChild(context, getName(), index, value);\n        }\n    }",
+ "imports": [
+  "org.apache.commons.jxpath.AbstractFactory",
+  "org.apache.commons.jxpath.JXPathAbstractFactoryException",
+  "org.apache.commons.jxpath.JXPathContext",
+  "org.apache.commons.jxpath.JXPathInvalidAccessException",
+  "org.apache.commons.jxpath.ri.QName",
+  "org.apache.commons.jxpath.ri.model.NodePointer"
+ ],
+ "javadoc_edited_by_fix": false,
+ "mutant_id": 27,
+ "operator": "COR",
+ "package": "org.apache.commons.jxpath.ri.model.beans",
+ "project": "JxPath",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "getName"
+  },
+  {
+   "javadoc": "",
+   "name": "setPropertyIndex"
+  },
+  {
+   "javadoc": "",
+   "name": "getLength"
+  },
+  {
+   "javadoc": "",
+   "name": "getBaseValue"
+  },
+  {
+   "javadoc": "",
+   "name": "getImmediateNode"
+  },
+  {
+   "javadoc": "",
+   "name": "isLeaf"
+  },
+  {
+   "javadoc": "",
+   "name": "getValuePointer"
+  },
+  {
+   "javadoc": "",
+   "name": "isActualProperty"
+  },
+  {
+   "javadoc": "",
+   "name": "isActual"
+  },
+  {
+   "javadoc": "",
+   "name": "isContainer"
+  },
+  {
+   "javadoc": "",
+   "name": "setValue"
+  },
+  {
+   "javadoc": "",
+   "name": "createPath"
+  },
+  {
+   "javadoc": "",
+   "name": "createChild"
+  },
+  {
+   "javadoc": "",
+   "name": "createChild"
+  },
+  {
+   "javadoc": "",
+   "name": "getPropertyName"
+  },
+  {
+   "javadoc": "",
+   "name": "setPropertyName"
+  },
+  {
+   "javadoc": "",
+   "name": "setNameAttributeValue"
+  },
+  {
+   "javadoc": "",
+   "name": "isCollection"
+  },
+  {
+   "javadoc": "",
+   "name": "getPropertyCount"
+  },
+  {
+   "javadoc": "",
+   "name": "getPropertyNames"
+  },
+  {
+   "javadoc": "",
+   "name": "asPath"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class NullPropertyPointer extends PropertyPointer",
+  "constructors": [
+   "public NullPropertyPointer(NodePointer parent);"
+  ],
+  "focal_signature": "public NodePointer createPath(JXPathContext context, Object value)",
+  "methods": [
+   "public QName getName();",
+   "public void setPropertyIndex(int index);",
+   "public int getLength();",
+   "public Object getBaseValue();",
+   "public Object getImmediateNode();",
+   "public boolean isLeaf();",
+   "public NodePointer getValuePointer();",
+   "protected boolean isActualProperty();",
+   "public boolean isActual();",
+   "public boolean isContainer();",
+   "public void setValue(Object value);",
+   "public NodePointer createPath(JXPathContext context);",
+   "public NodePointer createChild( JXPathContext context, QName name, int index);",
+   "public NodePointer createChild( JXPathContext context, QName name, int index, Object value);",
+   "public String getPropertyName();",
+   "public void setPropertyName(String propertyName);",
+   "public void setNameAttributeValue(String attributeValue);",
+   "public boolean isCollection();",
+   "public int getPropertyCount();",
+   "public String[] getPropertyNames();",
+   "public String asPath();"
+  ],
+  "type_signatures": [
+   "public abstract class JXPathContext { public static JXPathContext newContext(Object contextBean); public static JXPathContext newContext( JXPathContext parentContext, Object contextBean); protected JXPathContext(JXPathContext parentContext, Object contextBean); public JXPathContext getParentContext(); public Object getContextBean(); public abstract Pointer getContextPointer(); public abstract JXPathContext getRelativeContext(Pointer pointer); public void setVariables(Variables vars); public Variables getVariables(); public void setFunctions(Functions functions); public Functions getFunctions(); public void setFactory(AbstractFactory factory); public AbstractFactory getFactory(); public void setLocale(Locale locale); public Locale getLocale(); }",
+   "public abstract class NodePointer implements Pointer { public static NodePointer newNodePointer( QName name, Object bean, Locale locale); public static NodePointer newChildNodePointer( NodePointer parent, QName name, Object bean); protected NodePointer(NodePointer parent); protected NodePointer(NodePointer parent, Locale locale); public NamespaceResolver getNamespaceResolver(); public void setNamespaceResolver(NamespaceResolver namespaceResolver); public NodePointer getParent(); public NodePointer getImmediateParentPointer(); public void setAttribute(boolean attribute); public boolean isAttribute(); public boolean isRoot(); public abstract boolean isLeaf(); public boolean isNode(); public boolean isContainer(); public int getIndex(); }"
+  ]
+ },
+ "split": "test"
+}

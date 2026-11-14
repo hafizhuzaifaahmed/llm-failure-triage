@@ -1,0 +1,14 @@
+{
+  "assembled": true,
+  "call_key": "8474aa5788ed92d588b4ad2327cc5499f5ef71b2069cbf24c7fabdb8c45d13a0",
+  "candidate_id": "d4a427eb2113128385c7",
+  "class_name": "RandomStringUtils_randomAscii_TriageGen2Test",
+  "dataset": "D1C_CTRL",
+  "focal_id": "Lang_11::org.apache.commons.lang3.RandomStringUtils::randomAscii(int)",
+  "generation": 2,
+  "model_returned": "gemma4:26b",
+  "n_tests": 5,
+  "package": "org.apache.commons.lang3",
+  "source": "package org.apache.commons.lang3;\n\nimport java.io.*;\nimport java.math.*;\nimport java.util.*;\nimport java.util.Random;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for RandomStringUtils.randomAscii(int count)\n */\npublic class RandomStringUtils_randomAscii_TriageGen2Test {\n\n    @Test\n    public void testRandomAscii_PositiveCount() {\n        int count = 10;\n        String result = RandomStringUtils.randomAscii(count);\n        assertNotNull(\"Result should not be null\", result);\n        assertEquals(\"Result length should match the requested count\", count, result.length());\n        \n        // Verify all characters are within the ASCII range (32 to 126)\n        // Note: The method signature uses 32 to 127, but 127 is DEL. \n        // We check if every character is within the specified bounds.\n        for (int i = 0; i < result.length(); i++) {\n            char c = result.charAt(i);\n            assertTrue(\"Character '\" + c + \"' should be in ASCII range [32, 126]\", c >= 32 && c <= 126);\n        }\n    }\n\n    @Test\n    public void testRandomAscii_ZeroCount() {\n        int count = 0;\n        String result = RandomStringUtils.randomAscii(count);\n        assertNotNull(result);\n        assertEquals(\"Result length should be 0 when count is 0\", 0, result.length());\n    }\n\n    @Test\n    public void testRandomAscii_NegativeCount() {\n        int count = -5;\n        String result = RandomStringUtils.randomAscii(count);\n        // Based on typical RandomStringUtils behavior, a negative count returns an empty string\n        assertNotNull(result);\n        assertEquals(\"Result length should be 0 when count is negative\", 0, result.length());\n    }\n\n    @Test\n    public void testRandomAscii_LargeCount() {\n        int count = 1000;\n        String result = RandomStringUtils.randomAscii(count);\n        assertNotNull(result);\n        assertEquals(count, result.length());\n    }\n\n    @Test\n    public void testRandomAscii_Uniqueness() {\n        // Statistical test: two calls with same count should likely produce different strings\n        int count = 20;\n        String result1 = RandomStringUtils.randomAscii(count);\n        String result2 = RandomStringUtils.randomAscii(count);\n        assertNotEquals(\"Two random strings should not be identical\", result1, result2);\n    }\n}\n",
+  "tranche": "CTRL"
+}

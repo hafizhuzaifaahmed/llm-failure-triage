@@ -1,0 +1,386 @@
+{
+ "candidate_id": "36cae8f9f9fb290035bd",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testTranslate_MatchLongestFirst",
+   "testTranslate_MatchShortestAvailable",
+   "testTranslate_NoMatch",
+   "testTranslate_IndexOutOfBounds_ClampsToLength",
+   "testTranslate_PartialMatchAtEnd",
+   "testTranslate_ExactBoundary"
+  ],
+  "nc_both": [
+   "testTranslate_ThrowsIOException"
+  ],
+  "nc_one_version": [],
+  "passes": 1
+ },
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "Lang_4::org.apache.commons.lang3.text.translate.LookupTranslator::translate(CharSequence,int,Writer)",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testTranslate_MatchLongestFirst",
+   "runs_b": [
+    {
+     "duration_s": 0.089,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.081,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.087,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.083,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.087,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.087,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.lang3.text.translate;\n\nimport java.io.*;\nimport java.io.IOException;\nimport java.io.StringWriter;\nimport java.io.Writer;\nimport java.math.*;\nimport java.util.*;\nimport java.util.HashMap;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\npublic class LookupTranslator_translate_TriageGen2Test {\n\n    @Test\n    public void testTranslate_MatchLongestFirst() throws IOException {\n        // Setup: \"ab\" -> \"1\", \"abc\" -> \"2\"\n        // Greedy algorithm should pick \"abc\" if available\n        LookupTranslator translator = new LookupTranslator(\n                new CharSequence[]{\"ab\", \"1\"},\n                new CharSequence[]{\"abc\", \"2\"}\n        );\n\n        StringWriter writer = new StringWriter();\n        String input = \"abc\";\n        \n        // Test index 0: should match \"abc\" (length 3)\n        int lengthRead = translator.translate(input, 0, writer);\n        \n        assertEquals(3, lengthRead);\n        assertEquals(\"2\", writer.toString());\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testTranslate_MatchShortestAvailable",
+   "runs_b": [
+    {
+     "duration_s": 0.086,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.086,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.09,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.088,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.082,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.078,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.lang3.text.translate;\n\nimport java.io.*;\nimport java.io.IOException;\nimport java.io.StringWriter;\nimport java.io.Writer;\nimport java.math.*;\nimport java.util.*;\nimport java.util.HashMap;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\npublic class LookupTranslator_translate_TriageGen2Test {\n\n    \n\n    @Test\n    public void testTranslate_MatchShortestAvailable() throws IOException {\n        // Setup: \"a\" -> \"1\", \"ab\" -> \"2\"\n        LookupTranslator translator = new LookupTranslator(\n                new CharSequence[]{\"a\", \"1\"},\n                new CharSequence[]{\"ab\", \"2\"}\n        );\n\n        StringWriter writer = new StringWriter();\n        String input = \"ab\";\n\n        // Test index 0: should match \"ab\" (length 2)\n        int lengthRead = translator.translate(input, 0, writer);\n\n        assertEquals(2, lengthRead);\n        assertEquals(\"2\", writer.toString());\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testTranslate_NoMatch",
+   "runs_b": [
+    {
+     "duration_s": 0.077,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.08,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.087,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.082,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.079,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.091,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.lang3.text.translate;\n\nimport java.io.*;\nimport java.io.IOException;\nimport java.io.StringWriter;\nimport java.io.Writer;\nimport java.math.*;\nimport java.util.*;\nimport java.util.HashMap;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\npublic class LookupTranslator_translate_TriageGen2Test {\n\n    \n\n    \n\n    @Test\n    public void testTranslate_NoMatch() throws IOException {\n        LookupTranslator translator = new LookupTranslator(\n                new CharSequence[]{\"x\", \"1\"}\n        );\n\n        StringWriter writer = new StringWriter();\n        String input = \"abc\";\n\n        // Test index 0: 'a' is not in map\n        int lengthRead = translator.translate(input, 0, writer);\n\n        assertEquals(0, lengthRead);\n        assertEquals(\"\", writer.toString());\n    }\n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testTranslate_IndexOutOfBounds_ClampsToLength",
+   "runs_b": [
+    {
+     "duration_s": 0.08,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.085,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.08,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.079,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.09,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.088,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.lang3.text.translate;\n\nimport java.io.*;\nimport java.io.IOException;\nimport java.io.StringWriter;\nimport java.io.Writer;\nimport java.math.*;\nimport java.util.*;\nimport java.util.HashMap;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\npublic class LookupTranslator_translate_TriageGen2Test {\n\n    \n\n    \n\n    \n\n    @Test\n    public void testTranslate_IndexOutOfBounds_ClampsToLength() throws IOException {\n        // Setup: \"abc\" -> \"1\"\n        LookupTranslator translator = new LookupTranslator(\n                new CharSequence[]{\"abc\", \"1\"}\n        );\n\n        StringWriter writer = new StringWriter();\n        String input = \"abc\";\n\n        // Test index 2: input.length() - index = 1. \n        // Max becomes 1. Loop checks subSeq(2, 3) -> \"c\". No match.\n        int lengthRead = translator.translate(input, 2, writer);\n\n        assertEquals(0, lengthRead);\n        assertEquals(\"\", writer.toString());\n    }\n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testTranslate_PartialMatchAtEnd",
+   "runs_b": [
+    {
+     "duration_s": 0.11,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.093,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.093,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.108,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.102,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.109,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.lang3.text.translate;\n\nimport java.io.*;\nimport java.io.IOException;\nimport java.io.StringWriter;\nimport java.io.Writer;\nimport java.math.*;\nimport java.util.*;\nimport java.util.HashMap;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\npublic class LookupTranslator_translate_TriageGen2Test {\n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testTranslate_PartialMatchAtEnd() throws IOException {\n        // Setup: \"bc\" -> \"2\"\n        LookupTranslator translator = new LookupTranslator(\n                new CharSequence[]{\"bc\", \"2\"}\n        );\n\n        StringWriter writer = new StringWriter();\n        String input = \"abc\";\n\n        // Test index 1: input.length() - index = 2.\n        // Max is 2. Loop checks \"bc\". Match!\n        int lengthRead = translator.translate(input, 1, writer);\n\n        assertEquals(2, lengthRead);\n        assertEquals(\"2\", writer.toString());\n    }\n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testTranslate_ExactBoundary",
+   "runs_b": [
+    {
+     "duration_s": 0.097,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.094,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.1,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.108,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.117,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.1,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.lang3.text.translate;\n\nimport java.io.*;\nimport java.io.IOException;\nimport java.io.StringWriter;\nimport java.io.Writer;\nimport java.math.*;\nimport java.util.*;\nimport java.util.HashMap;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\n\npublic class LookupTranslator_translate_TriageGen2Test {\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testTranslate_ExactBoundary() throws IOException {\n        // Setup: \"a\" -> \"1\"\n        LookupTranslator translator = new LookupTranslator(\n                new CharSequence[]{\"a\", \"1\"}\n        );\n\n        StringWriter writer = new StringWriter();\n        String input = \"a\";\n\n        // index + longest (0 + 1) is NOT > input.length (1). \n        // max stays 1.\n        int lengthRead = translator.translate(input, 0, writer);\n\n        assertEquals(1, lengthRead);\n        assertEquals(\"1\", writer.toString());\n    }\n\n    \n}\n"
+  }
+ ],
+ "source_sha256": "c826361eb32207bcdb78cf72e1888a65604896d67a6be0fb22ce06eb67242f77",
+ "utc": "2026-11-01T20:21:38Z"
+}

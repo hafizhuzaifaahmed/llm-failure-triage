@@ -1,0 +1,14 @@
+{
+  "assembled": true,
+  "call_key": "8ae95e9efc0f68ab57695c0833998044d1e12ad780be75c46869eb064abd0c21",
+  "candidate_id": "61d03cdc509ad8ae6f27",
+  "class_name": "Fraction_reduce_TriageGen1Test",
+  "dataset": "D1C_F1",
+  "focal_id": "Lang_49::org.apache.commons.lang.math.Fraction::reduce()",
+  "generation": 1,
+  "model_returned": "gemma4:26b",
+  "n_tests": 5,
+  "package": "org.apache.commons.lang.math",
+  "source": "package org.apache.commons.lang.math;\n\nimport java.io.*;\nimport java.math.*;\nimport java.math.BigInteger;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class Fraction_reduce_TriageGen1Test {\n\n    @Test\n    public void testReduce_AlreadyReduced() {\n        // gcd(3, 5) is 1. Should return 'this' (same object or equal)\n        Fraction fraction = Fraction.getFraction(3, 5);\n        Fraction reduced = fraction.reduce();\n        \n        assertSame(\"Should return the same instance when gcd is 1\", fraction, reduced);\n        assertEquals(3, reduced.getNumerator());\n        assertEquals(5, reduced.getDenominator());\n    }\n\n    @Test\n    public void testReduce_NeedsReduction() {\n        // gcd(6, 8) is 2. Should return a new Fraction(3, 4)\n        Fraction fraction = Fraction.getFraction(6, 8);\n        Fraction reduced = fraction.reduce();\n        \n        assertNotSame(\"Should return a new instance when reduction occurs\", fraction, reduced);\n        assertEquals(3, reduced.getNumerator());\n        assertEquals(4, reduced.getDenominator());\n    }\n\n    @Test\n    public void testReduce_NegativeNumerator() {\n        // gcd(abs(-10), 20) -> gcd(10, 20) is 10. Should return (-1, 2)\n        Fraction fraction = Fraction.getFraction(-10, 20);\n        Fraction reduced = fraction.reduce();\n        \n        assertEquals(-1, reduced.getNumerator());\n        assertEquals(2, reduced.getDenominator());\n    }\n\n    @Test\n    public void testReduce_LargeGCD() {\n        // gcd(100, 100) is 100. Should return (1, 1)\n        Fraction fraction = Fraction.getFraction(100, 100);\n        Fraction reduced = fraction.reduce();\n        \n        assertEquals(1, reduced.getNumerator());\n        assertEquals(1, reduced.getDenominator());\n    }\n\n    @Test\n    public void testReduce_NumeratorIsZero() {\n        // gcd(0, 5) is 5. Should return (0, 1)\n        Fraction fraction = Fraction.getFraction(0, 5);\n        Fraction reduced = fraction.reduce();\n        \n        assertEquals(0, reduced.getNumerator());\n        assertEquals(1, reduced.getDenominator());\n    }\n}\n",
+  "tranche": "F1"
+}

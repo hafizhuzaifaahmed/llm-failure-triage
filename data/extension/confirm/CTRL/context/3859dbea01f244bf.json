@@ -1,0 +1,188 @@
+{
+ "bug_name": "Codec_11",
+ "call_sites": [
+  {
+   "line": 40,
+   "lines": [
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43
+   ],
+   "path": "src/main/java/org/apache/commons/codec/BinaryDecoder.java",
+   "snippet": "     * \n     * @throws DecoderException A decoder exception is thrown\n     *          if a Decoder encounters a failure condition during\n     *          the decode process.\n     */\n    byte[] decode(byte[] source) throws DecoderException;\n}  \n\n"
+  },
+  {
+   "line": 53,
+   "lines": [
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56
+   ],
+   "path": "src/main/java/org/apache/commons/codec/Decoder.java",
+   "snippet": "     * be thrown for any number of reasons.  Some good\n     * candidates are that the parameter passed to this\n     * method is null, a param cannot be cast to the\n     * appropriate type for a specific encoder.\n     */\n    Object decode(Object source) throws DecoderException;\n}  \n\n"
+  },
+  {
+   "line": 38,
+   "lines": [
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41
+   ],
+   "path": "src/main/java/org/apache/commons/codec/StringDecoder.java",
+   "snippet": "     * @return the encoded String\n     * \n     * @throws DecoderException thrown if there is\n     *  an error condition during the Encoding process.\n     */\n    String decode(String source) throws DecoderException;\n}  \n\n"
+  },
+  {
+   "line": 282,
+   "lines": [
+    277,
+    278,
+    279,
+    280,
+    281,
+    282,
+    283,
+    284,
+    285,
+    286,
+    287
+   ],
+   "path": "src/main/java/org/apache/commons/codec/binary/Base32.java",
+   "snippet": "     *            Amount of bytes available from input for encoding.\n     *\n     * Output is written to {@link #buffer} as 8-bit octets, using {@link #pos} as the buffer position\n     */\n    @Override\n    void decode(byte[] in, int inPos, int inAvail) { // package protected for access from I/O streams\n        if (eof) {\n            return;\n        }\n        if (inAvail < 0) {\n            eof = true;"
+  },
+  {
+   "line": 416,
+   "lines": [
+    411,
+    412,
+    413,
+    414,
+    415,
+    416,
+    417,
+    418,
+    419,
+    420,
+    421
+   ],
+   "path": "src/main/java/org/apache/commons/codec/binary/Base64.java",
+   "snippet": "     *            Position to start reading data from.\n     * @param inAvail\n     *            Amount of bytes available from input for encoding.\n     */\n    @Override\n    void decode(byte[] in, int inPos, int inAvail) {\n        if (eof) {\n            return;\n        }\n        if (inAvail < 0) {\n            eof = true;"
+  }
+ ],
+ "class_simple": "QuotedPrintableCodec",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * <p>\n * Codec for the Quoted-Printable section of <a href=\"http://www.ietf.org/rfc/rfc1521.txt\">RFC 1521</a>.\n * </p>\n * <p>\n * The Quoted-Printable encoding is intended to represent data that largely consists of octets that correspond to\n * printable characters in the ASCII character set. It encodes the data in such a way that the resulting octets are\n * unlikely to be modified by mail transport. If the data being encoded are mostly ASCII text, the encoded form of the\n * data remains largely recognizable by humans. A body which is entirely ASCII may also be encoded in Quoted-Printable\n * to ensure the integrity of the data should the message pass through a character- translating, and/or line-wrapping\n * gateway.\n * </p>\n *\n * @see <a href=\"http://www.ietf.org/rfc/rfc1521.txt\"> RFC 1521 MIME (Multipurpose Internet Mail Extensions) Part One:\n *          Mechanisms for Specifying and Describing the Format of Internet Message Bodies </a>\n *\n * @author Apache Software Foundation\n * @since 1.3\n * @version $Id$\n */\npublic",
+  "method_javadoc": "/**\n     * Decodes a quoted-printable object into its original form. Escaped characters are converted back to their original\n     * representation.\n     * \n     * @param pObject\n     *                  quoted-printable object to convert into its original form\n     * @return original object\n     * @throws DecoderException\n     *                  Thrown if the argument is not a <code>String</code> or <code>byte[]</code>. Thrown if a failure condition is\n     *                  encountered during the decode process.\n     */"
+ },
+ "fields": [
+  "private final String charset",
+  "private static final BitSet PRINTABLE_CHARS",
+  "private static final byte ESCAPE_CHAR",
+  "private static final byte TAB",
+  "private static final byte SPACE"
+ ],
+ "focal_class": "org.apache.commons.codec.net.QuotedPrintableCodec",
+ "focal_id": "Codec_11::org.apache.commons.codec.net.QuotedPrintableCodec::decode(Object)",
+ "focal_method_name": "decode",
+ "generations": 3,
+ "impl_B": "public Object decode(Object pObject) throws DecoderException {\n        if (pObject == null) {\n            return null;\n        } else if (pObject instanceof byte[]) {\n            return decode((byte[]) pObject);\n        } else if (pObject instanceof String) {\n            return decode((String) pObject);\n        } else {\n            throw new DecoderException(\"Objects of type \" + \n                  pObject.getClass().getName() + \n                  \" cannot be quoted-printable decoded\");\n        }\n    }",
+ "imports": [
+  "java.io.ByteArrayOutputStream",
+  "java.io.UnsupportedEncodingException",
+  "java.util.BitSet",
+  "org.apache.commons.codec.BinaryDecoder",
+  "org.apache.commons.codec.BinaryEncoder",
+  "org.apache.commons.codec.CharEncoding",
+  "org.apache.commons.codec.DecoderException",
+  "org.apache.commons.codec.EncoderException",
+  "org.apache.commons.codec.StringDecoder",
+  "org.apache.commons.codec.StringEncoder",
+  "org.apache.commons.codec.binary.StringUtils"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.codec.net",
+ "project": "Codec",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Encodes an array of bytes into an array of quoted-printable 7-bit characters. Unsafe characters are escaped.\n     *\n     * <p>\n     * This function fully implements the quoted-printable encoding specification (rule #1 through rule #5)\n     * as defined in RFC 1521 and is suitable for encoding binary data and unformatted text.\n     * </p>\n     *\n     * @param printable\n     *                  bitset of characters deemed quoted-printable\n     * @param bytes\n     *                  array of bytes to be encoded\n     * @return array of bytes containing quoted-printable data\n     */",
+   "name": "encodeQuotedPrintable"
+  },
+  {
+   "javadoc": "/**\n     * Decodes an array quoted-printable characters into an array of original bytes. Escaped characters are\n     * converted back to their original representation.\n     *\n     * <p>\n     * This function fully implements the quoted-printable encoding specification (rule #1 through rule #5) as\n     * defined in RFC 1521.\n     * </p>\n     *\n     * @param bytes\n     *                  array of quoted-printable characters\n     * @return array of original bytes\n     * @throws DecoderException\n     *                  Thrown if quoted-printable decoding is unsuccessful\n     */",
+   "name": "decodeQuotedPrintable"
+  },
+  {
+   "javadoc": "/**\n     * Encodes an array of bytes into an array of quoted-printable 7-bit characters. Unsafe characters are escaped.\n     * \n     * <p>\n     * This function fully implements the quoted-printable encoding specification (rule #1 through rule #5)\n     * as defined in RFC 1521 and is suitable for encoding binary data and unformatted text.\n     * </p>\n     * \n     * @param bytes\n     *                  array of bytes to be encoded\n     * @return array of bytes containing quoted-printable data\n     */",
+   "name": "encode"
+  },
+  {
+   "javadoc": "/**\n     * Decodes an array of quoted-printable characters into an array of original bytes. Escaped characters are converted\n     * back to their original representation.\n     * \n     * <p>\n     * This function fully implements the quoted-printable encoding specification (rule #1 through rule #2)\n     * as defined in RFC 1521.\n     * </p>\n     * \n     * @param bytes\n     *                  array of quoted-printable characters\n     * @return array of original bytes\n     * @throws DecoderException\n     *                  Thrown if quoted-printable decoding is unsuccessful\n     */",
+   "name": "decode"
+  },
+  {
+   "javadoc": "/**\n     * Encodes a string into its quoted-printable form using the default string charset. Unsafe characters are escaped.\n     * \n     * <p>\n     * This function fully implements the quoted-printable encoding specification (rule #1 through rule #2)\n     * as defined in RFC 1521 and is suitable for encoding binary data.\n     * </p>\n     * \n     * @param pString\n     *                  string to convert to quoted-printable form\n     * @return quoted-printable string\n     * \n     * @throws EncoderException\n     *                  Thrown if quoted-printable encoding is unsuccessful\n     * \n     * @see #getDefaultCharset()\n     */",
+   "name": "encode"
+  },
+  {
+   "javadoc": "/**\n     * Decodes a quoted-printable string into its original form using the specified string charset. Escaped characters\n     * are converted back to their original representation.\n     * \n     * @param pString\n     *                  quoted-printable string to convert into its original form\n     * @param charset\n     *                  the original string charset\n     * @return original string\n     * @throws DecoderException\n     *                  Thrown if quoted-printable decoding is unsuccessful\n     * @throws UnsupportedEncodingException\n     *                  Thrown if charset is not supported\n     */",
+   "name": "decode"
+  },
+  {
+   "javadoc": "/**\n     * Decodes a quoted-printable string into its original form using the default string charset. Escaped characters are\n     * converted back to their original representation.\n     * \n     * @param pString\n     *                  quoted-printable string to convert into its original form\n     * @return original string\n     * @throws DecoderException\n     *                  Thrown if quoted-printable decoding is unsuccessful.\n     *                  Thrown if charset is not supported.\n     * @see #getDefaultCharset()\n     */",
+   "name": "decode"
+  },
+  {
+   "javadoc": "/**\n     * Encodes an object into its quoted-printable safe form. Unsafe characters are escaped.\n     * \n     * @param pObject\n     *                  string to convert to a quoted-printable form\n     * @return quoted-printable object\n     * @throws EncoderException\n     *                  Thrown if quoted-printable encoding is not applicable to objects of this type or if encoding is\n     *                  unsuccessful\n     */",
+   "name": "encode"
+  },
+  {
+   "javadoc": "/**\n     * Returns the default charset used for string decoding and encoding.\n     * \n     * @return the default string charset.\n     */",
+   "name": "getDefaultCharset"
+  },
+  {
+   "javadoc": "/**\n     * Encodes a string into its quoted-printable form using the specified charset. Unsafe characters are escaped.\n     * \n     * <p>\n     * This function fully implements the quoted-printable encoding specification (rule #1 through rule #2)\n     * as defined in RFC 1521 and is suitable for encoding binary data and unformatted text.\n     * </p>\n     * \n     * @param pString\n     *                  string to convert to quoted-printable form\n     * @param charset\n     *                  the charset for pString\n     * @return quoted-printable string\n     * \n     * @throws UnsupportedEncodingException\n     *                  Thrown if the charset is not supported\n     */",
+   "name": "encode"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class QuotedPrintableCodec implements BinaryEncoder, BinaryDecoder, StringEncoder, StringDecoder",
+  "constructors": [
+   "public QuotedPrintableCodec();",
+   "public QuotedPrintableCodec(String charset);"
+  ],
+  "focal_signature": "public Object decode(Object pObject) throws DecoderException",
+  "methods": [
+   "public static final byte[] encodeQuotedPrintable(BitSet printable, byte[] bytes);",
+   "public static final byte[] decodeQuotedPrintable(byte[] bytes) throws DecoderException;",
+   "public byte[] encode(byte[] bytes);",
+   "public byte[] decode(byte[] bytes) throws DecoderException;",
+   "public String encode(String pString) throws EncoderException;",
+   "public String decode(String pString, String charset) throws DecoderException, UnsupportedEncodingException;",
+   "public String decode(String pString) throws DecoderException;",
+   "public Object encode(Object pObject) throws EncoderException;",
+   "public String getDefaultCharset();",
+   "public String encode(String pString, String charset) throws UnsupportedEncodingException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

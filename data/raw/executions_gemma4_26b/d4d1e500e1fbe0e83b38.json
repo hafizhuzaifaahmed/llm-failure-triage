@@ -1,0 +1,325 @@
+{
+ "candidate_id": "d4d1e500e1fbe0e83b38",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testExpandCurrentSegment_GrowthBy50Percent",
+   "testExpandCurrentSegment_CapAtMaxSegmentLen",
+   "testExpandCurrentSegment_WhenAtMaxSegmentLen",
+   "testExpandCurrentSegment_SmallSegment",
+   "testExpandCurrentSegment_ZeroLength"
+  ],
+  "nc_both": [],
+  "nc_one_version": [],
+  "passes": 0
+ },
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "JacksonCore_4::com.fasterxml.jackson.core.util.TextBuffer::expandCurrentSegment()",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testExpandCurrentSegment_GrowthBy50Percent",
+   "runs_b": [
+    {
+     "duration_s": 0.091,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.078,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.07,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.074,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.09,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.088,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.core.util;\n\nimport com.fasterxml.jackson.core.io.NumberInput;\nimport java.io.*;\nimport java.lang.reflect.Field;\nimport java.math.*;\nimport java.math.BigDecimal;\nimport java.util.*;\nimport java.util.ArrayList;\nimport java.util.Arrays;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class TextBuffer_expandCurrentSegment_TriageGen1Test {\n\n    private TextBuffer textBuffer;\n    private static final int MAX_SEGMENT_LEN = 1024; // Assuming this value based on typical Jackson constants\n\n    @Before\n    public void setUp() {\n        // BufferRecycler is typically provided by Jackson's context, \n        // but we can use null or a mock if the constructor allows.\n        textBuffer = new TextBuffer(null);\n    }\n\n    /**\n     * Helper to set the private _currentSegment field via reflection \n     * to simulate specific internal states for testing.\n     */\n    private void setInternalSegment(char[] segment) throws Exception {\n        Field field = TextBuffer.class.getDeclaredField(\"_currentSegment\");\n        field.setAccessible(true);\n        field.set(textBuffer, segment);\n    }\n\n    /**\n     * Helper to set the private MAX_SEGMENT_LEN field via reflection \n     * to ensure the test is deterministic regardless of the actual library version.\n     */\n    private void setMaxSegmentLen(int value) throws Exception {\n        Field field = TextBuffer.class.getDeclaredField(\"MAX_SEGMENT_LEN\");\n        field.setAccessible(true);\n        field.set(textBuffer, value);\n    }\n\n    @Test\n    public void testExpandCurrentSegment_GrowthBy50Percent() throws Exception {\n        // Setup: segment of size 10\n        int initialLen = 10;\n        char[] initialSegment = new char[initialLen];\n        setInternalSegment(initialSegment);\n        \n        // Expected: 10 + (10 >> 1) = 10 + 5 = 15\n        int expectedLen = 15;\n        \n        char[] result = textBuffer.expandCurrentSegment();\n        \n        Assert.assertEquals(expectedLen, result.length);\n        Assert.assertEquals(expectedLen, textBuffer.getCurrentSegment().length);\n    }\n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testExpandCurrentSegment_CapAtMaxSegmentLen",
+   "runs_b": [
+    {
+     "duration_s": 0.08,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 64,
+     "message": "expected:<1024> but was:<1200>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<1024> but was:<1200>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:743)\n\tat org.junit.Assert.assertEquals(Assert.java:118)\n\tat org.junit.Assert.assertEquals(Assert.java:555)\n\tat org.junit.Assert.assertEquals(Assert.java:542)\n\tat com.fasterxml.jackson.core.util.TextBuffer_expandCurrentSegment_TriageGen1Test.testExpandCurrentSegment_CapAtMaxSegmentLen(TextBuffer_expandCurrentSegment_TriageGen1Test.java:64)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:160)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:138)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.068,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 64,
+     "message": "expected:<1024> but was:<1200>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<1024> but was:<1200>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:743)\n\tat org.junit.Assert.assertEquals(Assert.java:118)\n\tat org.junit.Assert.assertEquals(Assert.java:555)\n\tat org.junit.Assert.assertEquals(Assert.java:542)\n\tat com.fasterxml.jackson.core.util.TextBuffer_expandCurrentSegment_TriageGen1Test.testExpandCurrentSegment_CapAtMaxSegmentLen(TextBuffer_expandCurrentSegment_TriageGen1Test.java:64)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:160)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:138)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.075,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 64,
+     "message": "expected:<1024> but was:<1200>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<1024> but was:<1200>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:743)\n\tat org.junit.Assert.assertEquals(Assert.java:118)\n\tat org.junit.Assert.assertEquals(Assert.java:555)\n\tat org.junit.Assert.assertEquals(Assert.java:542)\n\tat com.fasterxml.jackson.core.util.TextBuffer_expandCurrentSegment_TriageGen1Test.testExpandCurrentSegment_CapAtMaxSegmentLen(TextBuffer_expandCurrentSegment_TriageGen1Test.java:64)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:160)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:138)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.07,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 64,
+     "message": "expected:<1024> but was:<1200>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<1024> but was:<1200>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:743)\n\tat org.junit.Assert.assertEquals(Assert.java:118)\n\tat org.junit.Assert.assertEquals(Assert.java:555)\n\tat org.junit.Assert.assertEquals(Assert.java:542)\n\tat com.fasterxml.jackson.core.util.TextBuffer_expandCurrentSegment_TriageGen1Test.testExpandCurrentSegment_CapAtMaxSegmentLen(TextBuffer_expandCurrentSegment_TriageGen1Test.java:64)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:160)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:138)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.072,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 64,
+     "message": "expected:<1024> but was:<1200>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<1024> but was:<1200>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:743)\n\tat org.junit.Assert.assertEquals(Assert.java:118)\n\tat org.junit.Assert.assertEquals(Assert.java:555)\n\tat org.junit.Assert.assertEquals(Assert.java:542)\n\tat com.fasterxml.jackson.core.util.TextBuffer_expandCurrentSegment_TriageGen1Test.testExpandCurrentSegment_CapAtMaxSegmentLen(TextBuffer_expandCurrentSegment_TriageGen1Test.java:64)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:160)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:138)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.07,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 64,
+     "message": "expected:<1024> but was:<1200>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<1024> but was:<1200>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:743)\n\tat org.junit.Assert.assertEquals(Assert.java:118)\n\tat org.junit.Assert.assertEquals(Assert.java:555)\n\tat org.junit.Assert.assertEquals(Assert.java:542)\n\tat com.fasterxml.jackson.core.util.TextBuffer_expandCurrentSegment_TriageGen1Test.testExpandCurrentSegment_CapAtMaxSegmentLen(TextBuffer_expandCurrentSegment_TriageGen1Test.java:64)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:160)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:138)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.core.util;\n\nimport com.fasterxml.jackson.core.io.NumberInput;\nimport java.io.*;\nimport java.lang.reflect.Field;\nimport java.math.*;\nimport java.math.BigDecimal;\nimport java.util.*;\nimport java.util.ArrayList;\nimport java.util.Arrays;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class TextBuffer_expandCurrentSegment_TriageGen1Test {\n\n    private TextBuffer textBuffer;\n    private static final int MAX_SEGMENT_LEN = 1024; // Assuming this value based on typical Jackson constants\n\n    @Before\n    public void setUp() {\n        // BufferRecycler is typically provided by Jackson's context, \n        // but we can use null or a mock if the constructor allows.\n        textBuffer = new TextBuffer(null);\n    }\n\n    /**\n     * Helper to set the private _currentSegment field via reflection \n     * to simulate specific internal states for testing.\n     */\n    private void setInternalSegment(char[] segment) throws Exception {\n        Field field = TextBuffer.class.getDeclaredField(\"_currentSegment\");\n        field.setAccessible(true);\n        field.set(textBuffer, segment);\n    }\n\n    /**\n     * Helper to set the private MAX_SEGMENT_LEN field via reflection \n     * to ensure the test is deterministic regardless of the actual library version.\n     */\n    private void setMaxSegmentLen(int value) throws Exception {\n        Field field = TextBuffer.class.getDeclaredField(\"MAX_SEGMENT_LEN\");\n        field.setAccessible(true);\n        field.set(textBuffer, value);\n    }\n\n    \n\n    @Test\n    public void testExpandCurrentSegment_CapAtMaxSegmentLen() throws Exception {\n        // Setup: segment is large, e.g., 800, and MAX_SEGMENT_LEN is 1024\n        int initialLen = 800;\n        char[] initialSegment = new char[initialLen];\n        setInternalSegment(initialSegment);\n        \n        // 800 + (800 >> 1) = 1200. \n        // Math.min(1024, 1200) should return 1024.\n        int expectedLen = 1024; \n        \n        char[] result = textBuffer.expandCurrentSegment();\n        \n        Assert.assertEquals(expectedLen, result.length);\n    }\n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testExpandCurrentSegment_WhenAtMaxSegmentLen",
+   "runs_b": [
+    {
+     "duration_s": 0.082,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 66,
+     "message": "expected:<1025> but was:<1536>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<1025> but was:<1536>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:743)\n\tat org.junit.Assert.assertEquals(Assert.java:118)\n\tat org.junit.Assert.assertEquals(Assert.java:555)\n\tat org.junit.Assert.assertEquals(Assert.java:542)\n\tat com.fasterxml.jackson.core.util.TextBuffer_expandCurrentSegment_TriageGen1Test.testExpandCurrentSegment_WhenAtMaxSegmentLen(TextBuffer_expandCurrentSegment_TriageGen1Test.java:66)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:160)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:138)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.082,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 66,
+     "message": "expected:<1025> but was:<1536>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<1025> but was:<1536>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:743)\n\tat org.junit.Assert.assertEquals(Assert.java:118)\n\tat org.junit.Assert.assertEquals(Assert.java:555)\n\tat org.junit.Assert.assertEquals(Assert.java:542)\n\tat com.fasterxml.jackson.core.util.TextBuffer_expandCurrentSegment_TriageGen1Test.testExpandCurrentSegment_WhenAtMaxSegmentLen(TextBuffer_expandCurrentSegment_TriageGen1Test.java:66)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:160)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:138)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.074,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 66,
+     "message": "expected:<1025> but was:<1536>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<1025> but was:<1536>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:743)\n\tat org.junit.Assert.assertEquals(Assert.java:118)\n\tat org.junit.Assert.assertEquals(Assert.java:555)\n\tat org.junit.Assert.assertEquals(Assert.java:542)\n\tat com.fasterxml.jackson.core.util.TextBuffer_expandCurrentSegment_TriageGen1Test.testExpandCurrentSegment_WhenAtMaxSegmentLen(TextBuffer_expandCurrentSegment_TriageGen1Test.java:66)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:160)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:138)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.085,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 66,
+     "message": "expected:<1025> but was:<1536>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<1025> but was:<1536>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:743)\n\tat org.junit.Assert.assertEquals(Assert.java:118)\n\tat org.junit.Assert.assertEquals(Assert.java:555)\n\tat org.junit.Assert.assertEquals(Assert.java:542)\n\tat com.fasterxml.jackson.core.util.TextBuffer_expandCurrentSegment_TriageGen1Test.testExpandCurrentSegment_WhenAtMaxSegmentLen(TextBuffer_expandCurrentSegment_TriageGen1Test.java:66)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:160)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:138)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.079,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 66,
+     "message": "expected:<1025> but was:<1536>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<1025> but was:<1536>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:743)\n\tat org.junit.Assert.assertEquals(Assert.java:118)\n\tat org.junit.Assert.assertEquals(Assert.java:555)\n\tat org.junit.Assert.assertEquals(Assert.java:542)\n\tat com.fasterxml.jackson.core.util.TextBuffer_expandCurrentSegment_TriageGen1Test.testExpandCurrentSegment_WhenAtMaxSegmentLen(TextBuffer_expandCurrentSegment_TriageGen1Test.java:66)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:160)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:138)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.081,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 66,
+     "message": "expected:<1025> but was:<1536>",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: expected:<1025> but was:<1536>\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:743)\n\tat org.junit.Assert.assertEquals(Assert.java:118)\n\tat org.junit.Assert.assertEquals(Assert.java:555)\n\tat org.junit.Assert.assertEquals(Assert.java:542)\n\tat com.fasterxml.jackson.core.util.TextBuffer_expandCurrentSegment_TriageGen1Test.testExpandCurrentSegment_WhenAtMaxSegmentLen(TextBuffer_expandCurrentSegment_TriageGen1Test.java:66)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:160)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:138)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.core.util;\n\nimport com.fasterxml.jackson.core.io.NumberInput;\nimport java.io.*;\nimport java.lang.reflect.Field;\nimport java.math.*;\nimport java.math.BigDecimal;\nimport java.util.*;\nimport java.util.ArrayList;\nimport java.util.Arrays;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class TextBuffer_expandCurrentSegment_TriageGen1Test {\n\n    private TextBuffer textBuffer;\n    private static final int MAX_SEGMENT_LEN = 1024; // Assuming this value based on typical Jackson constants\n\n    @Before\n    public void setUp() {\n        // BufferRecycler is typically provided by Jackson's context, \n        // but we can use null or a mock if the constructor allows.\n        textBuffer = new TextBuffer(null);\n    }\n\n    /**\n     * Helper to set the private _currentSegment field via reflection \n     * to simulate specific internal states for testing.\n     */\n    private void setInternalSegment(char[] segment) throws Exception {\n        Field field = TextBuffer.class.getDeclaredField(\"_currentSegment\");\n        field.setAccessible(true);\n        field.set(textBuffer, segment);\n    }\n\n    /**\n     * Helper to set the private MAX_SEGMENT_LEN field via reflection \n     * to ensure the test is deterministic regardless of the actual library version.\n     */\n    private void setMaxSegmentLen(int value) throws Exception {\n        Field field = TextBuffer.class.getDeclaredField(\"MAX_SEGMENT_LEN\");\n        field.setAccessible(true);\n        field.set(textBuffer, value);\n    }\n\n    \n\n    \n\n    @Test\n    public void testExpandCurrentSegment_WhenAtMaxSegmentLen() throws Exception {\n        // Setup: segment is exactly at MAX_SEGMENT_LEN\n        int initialLen = 1024;\n        char[] initialSegment = new char[initialLen];\n        setInternalSegment(initialSegment);\n        \n        // According to logic: (len == MAX_SEGMENT_LEN) ? (MAX_SEGMENT_LEN + 1) : ...\n        // This branch covers the ternary operator for the \"above intended maximum\" case.\n        int expectedLen = 1025;\n        \n        char[] result = textBuffer.expandCurrentSegment();\n        \n        Assert.assertEquals(expectedLen, result.length);\n    }\n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testExpandCurrentSegment_SmallSegment",
+   "runs_b": [
+    {
+     "duration_s": 0.075,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.08,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.085,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.083,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.084,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.096,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.core.util;\n\nimport com.fasterxml.jackson.core.io.NumberInput;\nimport java.io.*;\nimport java.lang.reflect.Field;\nimport java.math.*;\nimport java.math.BigDecimal;\nimport java.util.*;\nimport java.util.ArrayList;\nimport java.util.Arrays;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class TextBuffer_expandCurrentSegment_TriageGen1Test {\n\n    private TextBuffer textBuffer;\n    private static final int MAX_SEGMENT_LEN = 1024; // Assuming this value based on typical Jackson constants\n\n    @Before\n    public void setUp() {\n        // BufferRecycler is typically provided by Jackson's context, \n        // but we can use null or a mock if the constructor allows.\n        textBuffer = new TextBuffer(null);\n    }\n\n    /**\n     * Helper to set the private _currentSegment field via reflection \n     * to simulate specific internal states for testing.\n     */\n    private void setInternalSegment(char[] segment) throws Exception {\n        Field field = TextBuffer.class.getDeclaredField(\"_currentSegment\");\n        field.setAccessible(true);\n        field.set(textBuffer, segment);\n    }\n\n    /**\n     * Helper to set the private MAX_SEGMENT_LEN field via reflection \n     * to ensure the test is deterministic regardless of the actual library version.\n     */\n    private void setMaxSegmentLen(int value) throws Exception {\n        Field field = TextBuffer.class.getDeclaredField(\"MAX_SEGMENT_LEN\");\n        field.setAccessible(true);\n        field.set(textBuffer, value);\n    }\n\n    \n\n    \n\n    \n\n    @Test\n    public void testExpandCurrentSegment_SmallSegment() throws Exception {\n        // Setup: very small segment\n        int initialLen = 1;\n        char[] initialSegment = new char[initialLen];\n        setInternalSegment(initialSegment);\n        \n        // 1 + (1 >> 1) = 1 + 0 = 1. \n        // Note: In real Jackson, this might cause an infinite loop if not careful, \n        // but we are testing the code as written.\n        int expectedLen = 1;\n        \n        char[] result = textBuffer.expandCurrentSegment();\n        \n        Assert.assertEquals(expectedLen, result.length);\n    }\n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testExpandCurrentSegment_ZeroLength",
+   "runs_b": [
+    {
+     "duration_s": 0.077,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.084,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.094,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.082,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.09,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.087,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.core.util;\n\nimport com.fasterxml.jackson.core.io.NumberInput;\nimport java.io.*;\nimport java.lang.reflect.Field;\nimport java.math.*;\nimport java.math.BigDecimal;\nimport java.util.*;\nimport java.util.ArrayList;\nimport java.util.Arrays;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class TextBuffer_expandCurrentSegment_TriageGen1Test {\n\n    private TextBuffer textBuffer;\n    private static final int MAX_SEGMENT_LEN = 1024; // Assuming this value based on typical Jackson constants\n\n    @Before\n    public void setUp() {\n        // BufferRecycler is typically provided by Jackson's context, \n        // but we can use null or a mock if the constructor allows.\n        textBuffer = new TextBuffer(null);\n    }\n\n    /**\n     * Helper to set the private _currentSegment field via reflection \n     * to simulate specific internal states for testing.\n     */\n    private void setInternalSegment(char[] segment) throws Exception {\n        Field field = TextBuffer.class.getDeclaredField(\"_currentSegment\");\n        field.setAccessible(true);\n        field.set(textBuffer, segment);\n    }\n\n    /**\n     * Helper to set the private MAX_SEGMENT_LEN field via reflection \n     * to ensure the test is deterministic regardless of the actual library version.\n     */\n    private void setMaxSegmentLen(int value) throws Exception {\n        Field field = TextBuffer.class.getDeclaredField(\"MAX_SEGMENT_LEN\");\n        field.setAccessible(true);\n        field.set(textBuffer, value);\n    }\n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testExpandCurrentSegment_ZeroLength() throws Exception {\n        // Setup: segment length 0\n        int initialLen = 0;\n        char[] initialSegment = new char[initialLen];\n        setInternalSegment(initialSegment);\n        \n        // 0 + (0 >> 1) = 0\n        int expectedLen = 0;\n        \n        char[] result = textBuffer.expandCurrentSegment();\n        \n        Assert.assertEquals(expectedLen, result.length);\n    }\n}\n"
+  }
+ ],
+ "source_sha256": "5e5902cea1e3e5ffb2e9eed3e40ccb6ce520436ddf5e2453698b4a311170f9d5",
+ "utc": "2026-11-01T20:18:14Z"
+}

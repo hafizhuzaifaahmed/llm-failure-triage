@@ -1,0 +1,146 @@
+{
+  "bug_name": "Lang_64",
+  "call_sites": [
+    {
+      "line": 446,
+      "lines": [
+        441,
+        442,
+        443,
+        444,
+        445,
+        446,
+        447,
+        448,
+        449,
+        450,
+        451
+      ],
+      "path": "src/java/org/apache/commons/lang/builder/CompareToBuilder.java",
+      "snippet": "                append((Object[]) lhs, (Object[]) rhs, comparator);\n            }\n        } else {\n            // the simple case, not an array, just test the element\n            if (comparator == null) {\n                comparison = ((Comparable) lhs).compareTo(rhs);\n            } else {\n                comparison = comparator.compare(lhs, rhs);\n            }\n        }\n        return this;"
+    },
+    {
+      "line": 585,
+      "lines": [
+        580,
+        581,
+        582,
+        583,
+        584,
+        585,
+        586,
+        587,
+        588,
+        589,
+        590
+      ],
+      "path": "src/java/org/apache/commons/lang/enums/Enum.java",
+      "snippet": "        if (other == this) {\n            return 0;\n        }\n        if (other.getClass() != this.getClass()) {\n            if (other.getClass().getName().equals(this.getClass().getName())) {\n                return iName.compareTo( getNameInOtherClassLoader(other) );\n            }\n            throw new ClassCastException(\n                    \"Different enum class '\" + ClassUtils.getShortClassName(other.getClass()) + \"'\");\n        }\n        return iName.compareTo(((Enum) other).iName);"
+    },
+    {
+      "line": 590,
+      "lines": [
+        585,
+        586,
+        587,
+        588,
+        589,
+        590,
+        591,
+        592,
+        593,
+        594,
+        595
+      ],
+      "path": "src/java/org/apache/commons/lang/enums/Enum.java",
+      "snippet": "                return iName.compareTo( getNameInOtherClassLoader(other) );\n            }\n            throw new ClassCastException(\n                    \"Different enum class '\" + ClassUtils.getShortClassName(other.getClass()) + \"'\");\n        }\n        return iName.compareTo(((Enum) other).iName);\n    }\n\n    /**\n     * <p>Use reflection to return an objects class name.</p>\n     *"
+    },
+    {
+      "line": 121,
+      "lines": [
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126
+      ],
+      "path": "src/java/org/apache/commons/lang/math/NumberRange.java",
+      "snippet": "            if (((Float) num1).isNaN() || ((Float) num2).isNaN()) {\n                throw new IllegalArgumentException(\"The number must not be NaN\");\n            }\n        }\n        \n        int compare = ((Comparable) num1).compareTo(num2);\n        if (compare == 0) {\n            this.min = num1;\n            this.max = num1;\n        } else if (compare > 0) {\n            this.min = num2;"
+    },
+    {
+      "line": 175,
+      "lines": [
+        170,
+        171,
+        172,
+        173,
+        174,
+        175,
+        176,
+        177,
+        178,
+        179,
+        180
+      ],
+      "path": "src/java/org/apache/commons/lang/math/NumberRange.java",
+      "snippet": "            return false;\n        }\n        if (number.getClass() != min.getClass()) {\n            throw new IllegalArgumentException(\"The number must be of the same type as the range numbers\");\n        }\n        int compareMin = ((Comparable) min).compareTo(number);\n        int compareMax = ((Comparable) max).compareTo(number);\n        return compareMin <= 0 && compareMax >= 0;\n    }\n\n    // Range tests"
+    }
+  ],
+  "class_simple": "ValuedEnum",
+  "doc": {
+    "class_javadoc": "/**\n * <p>Abstract superclass for type-safe enums with integer values suitable\n * for use in <code>switch</code> statements.</p>\n *\n * <p><em>NOTE:</em>Due to the way in which Java ClassLoaders work, comparing\n * <code>Enum</code> objects should always be done using the equals() method,\n * not <code>==</code>. The equals() method will try <code>==</code> first so\n * in most cases the effect is the same.</p>\n *\n * <p>To use this class, it must be subclassed. For example:</p>\n *\n * <pre>\n * public final class JavaVersionEnum extends ValuedEnum {\n *   //standard enums for version of JVM\n *   public static final int  JAVA1_0_VALUE  = 100;\n *   public static final int  JAVA1_1_VALUE  = 110;\n *   public static final int  JAVA1_2_VALUE  = 120;\n *   public static final int  JAVA1_3_VALUE  = 130;\n *   public static final JavaVersionEnum  JAVA1_0  = new JavaVersionEnum( \"Java 1.0\", JAVA1_0_VALUE );\n *   public static final JavaVersionEnum  JAVA1_1  = new JavaVersionEnum( \"Java 1.1\", JAVA1_1_VALUE );\n *   public static final JavaVersionEnum  JAVA1_2  = new JavaVersionEnum( \"Java 1.2\", JAVA1_2_VALUE );\n *   public static final JavaVersionEnum  JAVA1_3  = new JavaVersionEnum( \"Java 1.3\", JAVA1_3_VALUE );\n *\n *   private JavaVersionEnum(String name, int value) {\n *     super( name, value );\n *   }\n * \n *   public static JavaVersionEnum getEnum(String javaVersion) {\n *     return (JavaVersionEnum) getEnum(JavaVersionEnum.class, javaVersion);\n *   }\n * \n *   public static JavaVersionEnum getEnum(int javaVersion) {\n *     return (JavaVersionEnum) getEnum(JavaVersionEnum.class, javaVersion);\n *   }\n * \n *   public static Map getEnumMap() {\n *     return getEnumMap(JavaVersionEnum.class);\n *   }\n * \n *   public static List getEnumList() {\n *     return getEnumList(JavaVersionEnum.class);\n *   }\n * \n *   public static Iterator iterator() {\n *     return iterator(JavaVersionEnum.class);\n *   }\n * }\n * </pre>\n *\n * <p><em>NOTE:</em>These are declared <code>final</code>, so compilers may \n * inline the code. Ensure you recompile everything when using final. </p>\n *\n * <p>The above class could then be used as follows:</p>\n *\n * <pre>\n * public void doSomething(JavaVersion ver) {\n *   switch (ver.getValue()) {\n *     case JAVA1_0_VALUE:\n *       // ...\n *       break;\n *     case JAVA1_1_VALUE:\n *       // ...\n *       break;\n *     //...\n *   }\n * }\n * </pre>\n *\n * <p>As shown, each enum has a name and a value. These can be accessed using\n * <code>getName</code> and <code>getValue</code>.</p>\n *\n * <p>The <code>getEnum</code> and <code>iterator</code> methods are recommended.\n * Unfortunately, Java restrictions require these to be coded as shown in each subclass.\n * An alternative choice is to use the {@link EnumUtils} class.</p>\n *\n * @author Apache Avalon project\n * @author Stephen Colebourne\n * @since 2.1 (class existed in enum package from v1.0)\n * @version $Id$\n */\npublic abstract",
+    "method_javadoc": "/**\n     * <p>Tests for order.</p>\n     *\n     * <p>The default ordering is numeric by value, but this\n     * can be overridden by subclasses.</p>\n     *\n     * <p>NOTE: From v2.2 the enums must be of the same type.\n     * If the parameter is in a different class loader than this instance,\n     * reflection is used to compare the values.</p>\n     *\n     * @see java.lang.Comparable#compareTo(Object)\n     * @param other  the other object to compare to\n     * @return -ve if this is less than the other object, +ve if greater than,\n     *  <code>0</code> of equal\n     * @throws ClassCastException if other is not an <code>Enum</code>\n     * @throws NullPointerException if other is <code>null</code>\n     */"
+  },
+  "fields": [
+    "private static final long serialVersionUID",
+    "private final int iValue"
+  ],
+  "focal_class": "org.apache.commons.lang.enums.ValuedEnum",
+  "focal_id": "Lang_64::org.apache.commons.lang.enums.ValuedEnum::compareTo(Object)",
+  "focal_method_name": "compareTo",
+  "impl_B": "public int compareTo(Object other) {\n        return iValue - ((ValuedEnum) other).iValue;\n    }",
+  "imports": [
+    "java.lang.reflect.InvocationTargetException",
+    "java.lang.reflect.Method",
+    "java.util.Iterator",
+    "java.util.List",
+    "org.apache.commons.lang.ClassUtils"
+  ],
+  "javadoc_edited_by_fix": false,
+  "package": "org.apache.commons.lang.enums",
+  "project": "Lang",
+  "siblings": [
+    {
+      "javadoc": "/**\n     * <p>Gets an <code>Enum</code> object by class and value.</p>\n     *\n     * <p>This method loops through the list of <code>Enum</code>,\n     * thus if there are many <code>Enum</code>s this will be\n     * slow.</p>\n     * \n     * @param enumClass  the class of the <code>Enum</code> to get\n     * @param value  the value of the <code>Enum</code> to get\n     * @return the enum object, or null if the enum does not exist\n     * @throws IllegalArgumentException if the enum class is <code>null</code>\n     */",
+      "name": "getEnum"
+    },
+    {
+      "javadoc": "/**\n     * <p>Get value of enum item.</p>\n     *\n     * @return the enum item's value.\n     */",
+      "name": "getValue"
+    },
+    {
+      "javadoc": "/**\n     * <p>Human readable description of this <code>Enum</code> item.</p>\n     *\n     * @return String in the form <code>type[name=value]</code>, for example:\n     *  <code>JavaVersion[Java 1.0=100]</code>. Note that the package name is\n     *  stripped from the type name.\n     */",
+      "name": "toString"
+    }
+  ],
+  "sig": {
+    "class_declaration": "public abstract class ValuedEnum extends Enum",
+    "constructors": [
+      "protected ValuedEnum(String name, int value);"
+    ],
+    "focal_signature": "public int compareTo(Object other)",
+    "methods": [
+      "protected static Enum getEnum(Class enumClass, int value);",
+      "public final int getValue();",
+      "public String toString();"
+    ],
+    "type_signatures": []
+  },
+  "split": "test"
+}

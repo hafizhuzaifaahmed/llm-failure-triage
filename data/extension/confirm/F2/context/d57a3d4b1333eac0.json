@@ -1,0 +1,231 @@
+{
+ "bug_name": "JacksonDatabind_53",
+ "call_sites": [
+  {
+   "line": 469,
+   "lines": [
+    464,
+    465,
+    466,
+    467,
+    468,
+    469,
+    470,
+    471,
+    472,
+    473,
+    474
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/JavaType.java",
+   "snippet": "     * angle brackets along with content inside)\n     */\n    public String getGenericSignature() {\n        StringBuilder sb = new StringBuilder(40);\n        getGenericSignature(sb);\n        return sb.toString();        \n    }\n\n    /**\n     * \n     * @param sb StringBuilder to append signature to"
+  },
+  {
+   "line": 490,
+   "lines": [
+    485,
+    486,
+    487,
+    488,
+    489,
+    490,
+    491,
+    492,
+    493,
+    494,
+    495
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/JavaType.java",
+   "snippet": "     * when generating byte code.\n     */\n    public String getErasedSignature() {\n        StringBuilder sb = new StringBuilder(40);\n        getErasedSignature(sb);\n        return sb.toString();\n    }\n\n    /**\n     * Method for accessing signature without generic\n     * type information, in form compatible with all versions"
+  },
+  {
+   "line": 147,
+   "lines": [
+    142,
+    143,
+    144,
+    145,
+    146,
+    147,
+    148,
+    149,
+    150,
+    151,
+    152
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/JsonMappingException.java",
+   "snippet": "                    sb.append(_index);\n                } else {\n                    sb.append('?');\n                }\n                sb.append(']');\n                _asString = sb.toString();\n            }\n            return _asString;\n        }\n\n        /**"
+  },
+  {
+   "line": 162,
+   "lines": [
+    157,
+    158,
+    159,
+    160,
+    161,
+    162,
+    163,
+    164,
+    165,
+    166,
+    167
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/JsonMappingException.java",
+   "snippet": "        Object writeReplace() {\n            // as per [databind#1195], reference may cause trouble, if non-serializable\n            // instance (either directly or transitively); and even use of Class would often\n            // be problematic. Because of this, clear up `_from` always, but ensure that\n            // description is preserved\n            return new Reference(this, toString(), null);\n        }\n    }\n\n    /*\n    /**********************************************************"
+  },
+  {
+   "line": 408,
+   "lines": [
+    403,
+    404,
+    405,
+    406,
+    407,
+    408,
+    409,
+    410,
+    411,
+    412,
+    413
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/JsonMappingException.java",
+   "snippet": "     * Method for accesing description of path that lead to the\n     * problem that triggered this exception\n     */\n    public String getPathReference()\n    {\n        return getPathReference(new StringBuilder()).toString();\n    }\n\n    public StringBuilder getPathReference(StringBuilder sb)\n    {\n        _appendPathDesc(sb);"
+  }
+ ],
+ "class_simple": "TypeBindings",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Helper class used for resolving type parameters for given class\n */\npublic",
+  "method_javadoc": "/**********************************************************************\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "private final static String[] NO_STRINGS",
+  "private final static JavaType[] NO_TYPES",
+  "private final static TypeBindings EMPTY",
+  "private final String[] _names",
+  "private final JavaType[] _types",
+  "private final String[] _unboundVariables",
+  "private final int _hashCode"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.type.TypeBindings",
+ "focal_id": "JacksonDatabind_53::com.fasterxml.jackson.databind.type.TypeBindings::toString()",
+ "focal_method_name": "toString",
+ "generations": 3,
+ "impl_B": "@Override public String toString()\n    {\n        if (_types.length == 0) {\n            return \"<>\";\n        }\n        StringBuilder sb = new StringBuilder();\n        sb.append('<');\n        for (int i = 0, len = _types.length; i < len; ++i) {\n            if (i > 0) {\n                sb.append(',');\n            }\n//            sb = _types[i].appendBriefDescription(sb);\n            String sig = _types[i].getGenericSignature();\n            sb.append(sig);\n        }\n        sb.append('>');\n        return sb.toString();\n    }",
+ "imports": [
+  "java.lang.reflect.*",
+  "java.util.*",
+  "com.fasterxml.jackson.databind.JavaType"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.type",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "emptyBindings"
+  },
+  {
+   "javadoc": "",
+   "name": "readResolve"
+  },
+  {
+   "javadoc": "/**\n     * Factory method for constructing bindings for given class using specified type\n     * parameters.\n     */",
+   "name": "create"
+  },
+  {
+   "javadoc": "",
+   "name": "create"
+  },
+  {
+   "javadoc": "",
+   "name": "create"
+  },
+  {
+   "javadoc": "",
+   "name": "create"
+  },
+  {
+   "javadoc": "/**\n     * Alternate factory method that may be called if it is possible that type\n     * does or does not require type parameters; this is mostly useful for\n     * collection- and map-like types.\n     */",
+   "name": "createIfNeeded"
+  },
+  {
+   "javadoc": "/**\n     * Alternate factory method that may be called if it is possible that type\n     * does or does not require type parameters; this is mostly useful for\n     * collection- and map-like types.\n     */",
+   "name": "createIfNeeded"
+  },
+  {
+   "javadoc": "/**\n     * Method for creating an instance that has same bindings as this object,\n     * plus an indicator for additional type variable that may be unbound within\n     * this context; this is needed to resolve recursive self-references.\n     */",
+   "name": "withUnboundVariable"
+  },
+  {
+   "javadoc": "/**\n     * Find type bound to specified name, if there is one; returns bound type if so, null if not.\n     */",
+   "name": "findBoundType"
+  },
+  {
+   "javadoc": "",
+   "name": "isEmpty"
+  },
+  {
+   "javadoc": "/**\n     * Returns number of bindings contained\n     */",
+   "name": "size"
+  },
+  {
+   "javadoc": "",
+   "name": "getBoundName"
+  },
+  {
+   "javadoc": "",
+   "name": "getBoundType"
+  },
+  {
+   "javadoc": "/**\n     * Accessor for getting bound types in declaration order\n     */",
+   "name": "getTypeParameters"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.3\n     */",
+   "name": "hasUnbound"
+  },
+  {
+   "javadoc": "",
+   "name": "hashCode"
+  },
+  {
+   "javadoc": "",
+   "name": "equals"
+  },
+  {
+   "javadoc": "/**********************************************************************\n     */",
+   "name": "typeParameterArray"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class TypeBindings implements java.io.Serializable",
+  "constructors": [],
+  "focal_signature": "public String toString()",
+  "methods": [
+   "public static TypeBindings emptyBindings();",
+   "protected Object readResolve();",
+   "public static TypeBindings create(Class<?> erasedType, List<JavaType> typeList);",
+   "public static TypeBindings create(Class<?> erasedType, JavaType[] types);",
+   "public static TypeBindings create(Class<?> erasedType, JavaType typeArg1);",
+   "public static TypeBindings create(Class<?> erasedType, JavaType typeArg1, JavaType typeArg2);",
+   "public static TypeBindings createIfNeeded(Class<?> erasedType, JavaType typeArg1);",
+   "public static TypeBindings createIfNeeded(Class<?> erasedType, JavaType[] types);",
+   "public TypeBindings withUnboundVariable(String name);",
+   "public JavaType findBoundType(String name);",
+   "public boolean isEmpty();",
+   "public int size();",
+   "public String getBoundName(int index);",
+   "public JavaType getBoundType(int index);",
+   "public List<JavaType> getTypeParameters();",
+   "public boolean hasUnbound(String name);",
+   "public int hashCode();",
+   "public boolean equals(Object o);",
+   "protected JavaType[] typeParameterArray();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

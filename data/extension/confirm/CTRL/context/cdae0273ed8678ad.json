@@ -1,0 +1,233 @@
+{
+ "bug_name": "Closure_162",
+ "call_sites": [
+  {
+   "line": 619,
+   "lines": [
+    614,
+    615,
+    616,
+    617,
+    618,
+    619,
+    620,
+    621,
+    622,
+    623,
+    624
+   ],
+   "path": "src/com/google/javascript/jscomp/AliasExternals.java",
+   "snippet": "        boolean aliasable = !unaliasableGlobals.contains(dest.getString()) &&\n            (docInfo == null || !docInfo.isNoAlias());\n\n        if (aliasable) {\n          String name = dest.getString();\n          Scope.Var var = t.getScope().getVar(name);\n\n          if (var != null && !var.isLocal()) {\n            globals.put(name, newSymbolForGlobalVar(dest));\n          }\n        }"
+  },
+  {
+   "line": 654,
+   "lines": [
+    649,
+    650,
+    651,
+    652,
+    653,
+    654,
+    655,
+    656,
+    657,
+    658,
+    659
+   ],
+   "path": "src/com/google/javascript/jscomp/AliasExternals.java",
+   "snippet": "  private final class GlobalGatherer extends AbstractPostOrderCallback {\n    @Override\n    public void visit(NodeTraversal t, Node n, Node parent) {\n      if (n.getType() == Token.NAME) {\n        String name = n.getString();\n        Scope.Var var = t.getScope().getVar(name);\n\n        // It's ok for var to be null since it won't be in any scope if it's\n        // an extern\n        if (var != null && var.isLocal()) {\n          return;"
+  },
+  {
+   "line": 253,
+   "lines": [
+    248,
+    249,
+    250,
+    251,
+    252,
+    253,
+    254,
+    255,
+    256,
+    257,
+    258
+   ],
+   "path": "src/com/google/javascript/jscomp/AnalyzePrototypeProperties.java",
+   "snippet": "          }\n        }\n      } else if (n.getType() == Token.NAME) {\n        String name = n.getString();\n\n        Var var = t.getScope().getVar(name);\n        if (var != null) {\n          // Only process global functions.\n          if (var.isGlobal()) {\n            if (var.getInitialValue() != null &&\n                var.getInitialValue().getType() == Token.FUNCTION) {"
+  },
+  {
+   "line": 273,
+   "lines": [
+    268,
+    269,
+    270,
+    271,
+    272,
+    273,
+    274,
+    275,
+    276,
+    277,
+    278
+   ],
+   "path": "src/com/google/javascript/jscomp/CheckAccessControls.java",
+   "snippet": "    if (parent.getType() == Token.FUNCTION || parent.getType() == Token.VAR ||\n        parent.getType() == Token.NEW) {\n      return;\n    }\n\n    Scope.Var var = t.getScope().getVar(n.getString());\n    JSDocInfo docInfo = var == null ? null : var.getJSDocInfo();\n\n    if (docInfo != null && docInfo.isDeprecated() &&\n        shouldEmitDeprecationWarning(t, n, parent)) {\n"
+  },
+  {
+   "line": 331,
+   "lines": [
+    326,
+    327,
+    328,
+    329,
+    330,
+    331,
+    332,
+    333,
+    334,
+    335,
+    336
+   ],
+   "path": "src/com/google/javascript/jscomp/CheckAccessControls.java",
+   "snippet": "   * Determines whether the given name is visible in the current context.\n   * @param t The current traversal.\n   * @param name The name node.\n   */\n  private void checkNameVisibility(NodeTraversal t, Node name, Node parent) {\n    Var var = t.getScope().getVar(name.getString());\n    if (var != null) {\n      JSDocInfo docInfo = var.getJSDocInfo();\n      if (docInfo != null) {\n        // If a name is private, make sure that we're in the same file.\n        Visibility visibility = docInfo.getVisibility();"
+  }
+ ],
+ "class_simple": "Scope",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Scope contains information about a variable scope in javascript.\n * Scopes can be nested, a scope points back to its parent scope.\n * A Scope contains information about variables defined in that scope.\n * <p>\n * A Scope is also used as a lattice element for flow-sensitive type inference.\n * As a lattice element, a Scope is viewed as a map from names to types. A name\n * not in the map is considered to have the bottom type. The join of two maps m1\n * and m2 is the map of the union of names with {@link JSType#getLeastSupertype}\n * to meet the m1 type and m2 type.\n *\n * @see NodeTraversal\n * @see DataFlowAnalysis\n *\n */\npublic",
+  "method_javadoc": "/**\n   * Returns the variable, may be null\n   */"
+ },
+ "fields": [
+  "private final Map<String, Var> vars",
+  "private final Scope parent",
+  "private final int depth",
+  "private final Node rootNode",
+  "private final ObjectType thisType",
+  "private final boolean isBottom",
+  "private Var arguments",
+  "private static final Predicate<Var> DECLARATIVELY_UNBOUND_VARS_WITHOUT_TYPES"
+ ],
+ "focal_class": "com.google.javascript.jscomp.Scope",
+ "focal_id": "Closure_162::com.google.javascript.jscomp.Scope::getVar(String)",
+ "focal_method_name": "getVar",
+ "generations": 3,
+ "impl_B": "public Var getVar(String name) {\n    Var var = vars.get(name);\n    if (var != null) {\n      return var;\n    } else if (parent != null) { // Recurse up the parent Scope\n      return parent.getVar(name);\n    } else {\n      return null;\n    }\n  }",
+ "imports": [
+  "static com.google.javascript.rhino.jstype.JSTypeNative.GLOBAL_THIS",
+  "com.google.common.base.Preconditions",
+  "com.google.common.base.Predicate",
+  "com.google.common.collect.ImmutableList",
+  "com.google.common.collect.Iterators",
+  "com.google.javascript.rhino.ErrorReporter",
+  "com.google.javascript.rhino.JSDocInfo",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.Token",
+  "com.google.javascript.rhino.jstype.JSType",
+  "com.google.javascript.rhino.jstype.ObjectType",
+  "com.google.javascript.rhino.jstype.StaticReference",
+  "com.google.javascript.rhino.jstype.StaticScope",
+  "com.google.javascript.rhino.jstype.StaticSlot",
+  "com.google.javascript.rhino.jstype.StaticSourceFile",
+  "com.google.javascript.rhino.jstype.StaticSymbolTable",
+  "java.util.Collections",
+  "java.util.Iterator",
+  "java.util.LinkedHashMap",
+  "java.util.Map"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "/**\n   * Gets the container node of the scope. This is typically the FUNCTION\n   * node or the global BLOCK/SCRIPT node.\n   */",
+   "name": "getRootNode"
+  },
+  {
+   "javadoc": "",
+   "name": "getParent"
+  },
+  {
+   "javadoc": "",
+   "name": "getParentScope"
+  },
+  {
+   "javadoc": "/**\n   * Gets the type of {@code this} in the current scope.\n   */",
+   "name": "getTypeOfThis"
+  },
+  {
+   "javadoc": "",
+   "name": "getSlot"
+  },
+  {
+   "javadoc": "",
+   "name": "getOwnSlot"
+  },
+  {
+   "javadoc": "/**\n   * Get a unique VAR object to represents \"arguments\" within this scope\n   */",
+   "name": "getArgumentsVar"
+  },
+  {
+   "javadoc": "/**\n   * Returns true if a variable is declared.\n   */",
+   "name": "isDeclared"
+  },
+  {
+   "javadoc": "/**\n   * Return an iterator over all of the variables declared in this scope.\n   */",
+   "name": "getVars"
+  },
+  {
+   "javadoc": "/**\n   * Return an iterable over all of the variables declared in this scope.\n   */",
+   "name": "getReferences"
+  },
+  {
+   "javadoc": "",
+   "name": "getScope"
+  },
+  {
+   "javadoc": "",
+   "name": "getAllSymbols"
+  },
+  {
+   "javadoc": "/**\n   * Returns number of variables in this scope\n   */",
+   "name": "getVarCount"
+  },
+  {
+   "javadoc": "/**\n   * Returns whether this is the global scope.\n   */",
+   "name": "isGlobal"
+  },
+  {
+   "javadoc": "/**\n   * Returns whether this is a local scope (i.e. not the global scope).\n   */",
+   "name": "isLocal"
+  },
+  {
+   "javadoc": "/**\n   * Gets all variables declared with \"var\" but without declared types attached.\n   */",
+   "name": "getDeclarativelyUnboundVarsWithoutTypes"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class Scope implements StaticScope<JSType>, StaticSymbolTable<Scope.Var, Scope.Var>",
+  "constructors": [],
+  "focal_signature": "public Var getVar(String name)",
+  "methods": [
+   "public Node getRootNode();",
+   "public Scope getParent();",
+   "public StaticScope<JSType> getParentScope();",
+   "public ObjectType getTypeOfThis();",
+   "public StaticSlot<JSType> getSlot(String name);",
+   "public StaticSlot<JSType> getOwnSlot(String name);",
+   "public Var getArgumentsVar();",
+   "public boolean isDeclared(String name, boolean recurse);",
+   "public Iterator<Var> getVars();",
+   "public Iterable<Var> getReferences(Var var);",
+   "public StaticScope<JSType> getScope(Var var);",
+   "public Iterable<Var> getAllSymbols();",
+   "public int getVarCount();",
+   "public boolean isGlobal();",
+   "public boolean isLocal();",
+   "public Iterator<Var> getDeclarativelyUnboundVarsWithoutTypes();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

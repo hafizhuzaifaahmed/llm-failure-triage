@@ -1,0 +1,338 @@
+{
+ "bug_name": "JacksonDatabind_73",
+ "call_sites": [
+  {
+   "line": 731,
+   "lines": [
+    726,
+    727,
+    728,
+    729,
+    730,
+    731,
+    732,
+    733,
+    734,
+    735,
+    736
+   ],
+   "patch_lines_removed": true,
+   "path": "src/main/java/com/fasterxml/jackson/databind/introspect/POJOPropertiesCollector.java",
+   "snippet": "        Iterator<POJOPropertyBuilder> it = props.values().iterator();\n\n        while (it.hasNext()) {\n            POJOPropertyBuilder prop = it.next();\n            // 26-Jan-2017, tatu: [databind#935]: need to denote removal of\n            prop.removeNonVisible(inferMutators);"
+  }
+ ],
+ "class_simple": "POJOPropertyBuilder",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Helper class used for aggregating information about a single\n * potential POJO property.\n */\npublic",
+  "method_javadoc": "/**\n     * @param inferMutators Whether mutators can be \"pulled in\" by visible\n     *    accessors or not. \n     */"
+ },
+ "fields": [
+  "protected final boolean _forSerialization",
+  "protected final MapperConfig<?> _config",
+  "protected final AnnotationIntrospector _annotationIntrospector",
+  "protected final PropertyName _name",
+  "protected final PropertyName _internalName",
+  "protected Linked<AnnotatedField> _fields",
+  "protected Linked<AnnotatedParameter> _ctorParameters",
+  "protected Linked<AnnotatedMethod> _getters",
+  "protected Linked<AnnotatedMethod> _setters"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.introspect.POJOPropertyBuilder",
+ "focal_id": "JacksonDatabind_73::com.fasterxml.jackson.databind.introspect.POJOPropertyBuilder::removeNonVisible(boolean)",
+ "focal_method_name": "removeNonVisible",
+ "generations": 3,
+ "impl_B": "public void removeNonVisible(boolean inferMutators)\n    {\n        /* 07-Jun-2015, tatu: With 2.6, we will allow optional definition\n         *  of explicit access type for property; if not \"AUTO\", it will\n         *  dictate how visibility checks are applied.\n         */\n        JsonProperty.Access acc = findAccess();\n        if (acc == null) {\n            acc = JsonProperty.Access.AUTO;\n        }\n        switch (acc) {\n        case READ_ONLY:\n            // Remove setters, creators for sure, but fields too if deserializing\n            _setters = null;\n            _ctorParameters = null;\n            if (!_forSerialization) {\n                _fields = null;\n            }\n            break;\n        case READ_WRITE:\n            // no trimming whatsoever?\n            break;\n        case WRITE_ONLY:\n            // remove getters, definitely, but also fields if serializing\n            _getters = null;\n            if (_forSerialization) {\n                _fields = null;\n            }\n            break;\n        default:\n        case AUTO: // the default case: base it on visibility\n            _getters = _removeNonVisible(_getters);\n            _ctorParameters = _removeNonVisible(_ctorParameters);\n    \n            if (!inferMutators || (_getters == null)) {\n                _fields = _removeNonVisible(_fields);\n                _setters = _removeNonVisible(_setters);\n            }\n        }\n    }",
+ "imports": [
+  "java.util.*",
+  "com.fasterxml.jackson.annotation.JsonInclude",
+  "com.fasterxml.jackson.annotation.JsonProperty",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.cfg.MapperConfig",
+  "com.fasterxml.jackson.databind.util.ClassUtil"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.introspect",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "withName"
+  },
+  {
+   "javadoc": "",
+   "name": "withSimpleName"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "compareTo"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getName"
+  },
+  {
+   "javadoc": "",
+   "name": "getFullName"
+  },
+  {
+   "javadoc": "",
+   "name": "hasName"
+  },
+  {
+   "javadoc": "",
+   "name": "getInternalName"
+  },
+  {
+   "javadoc": "",
+   "name": "getWrapperName"
+  },
+  {
+   "javadoc": "",
+   "name": "isExplicitlyIncluded"
+  },
+  {
+   "javadoc": "",
+   "name": "isExplicitlyNamed"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "hasGetter"
+  },
+  {
+   "javadoc": "",
+   "name": "hasSetter"
+  },
+  {
+   "javadoc": "",
+   "name": "hasField"
+  },
+  {
+   "javadoc": "",
+   "name": "hasConstructorParameter"
+  },
+  {
+   "javadoc": "",
+   "name": "couldDeserialize"
+  },
+  {
+   "javadoc": "",
+   "name": "couldSerialize"
+  },
+  {
+   "javadoc": "",
+   "name": "getGetter"
+  },
+  {
+   "javadoc": "",
+   "name": "getSetter"
+  },
+  {
+   "javadoc": "",
+   "name": "getField"
+  },
+  {
+   "javadoc": "",
+   "name": "getConstructorParameter"
+  },
+  {
+   "javadoc": "",
+   "name": "getConstructorParameters"
+  },
+  {
+   "javadoc": "",
+   "name": "getAccessor"
+  },
+  {
+   "javadoc": "",
+   "name": "getMutator"
+  },
+  {
+   "javadoc": "",
+   "name": "getNonConstructorMutator"
+  },
+  {
+   "javadoc": "",
+   "name": "getPrimaryMember"
+  },
+  {
+   "javadoc": "",
+   "name": "_getterPriority"
+  },
+  {
+   "javadoc": "",
+   "name": "_setterPriority"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "findViews"
+  },
+  {
+   "javadoc": "",
+   "name": "findReferenceType"
+  },
+  {
+   "javadoc": "",
+   "name": "isTypeId"
+  },
+  {
+   "javadoc": "",
+   "name": "getMetadata"
+  },
+  {
+   "javadoc": "",
+   "name": "_findRequired"
+  },
+  {
+   "javadoc": "",
+   "name": "_findDescription"
+  },
+  {
+   "javadoc": "",
+   "name": "_findIndex"
+  },
+  {
+   "javadoc": "",
+   "name": "_findDefaultValue"
+  },
+  {
+   "javadoc": "",
+   "name": "findObjectIdInfo"
+  },
+  {
+   "javadoc": "",
+   "name": "findInclusion"
+  },
+  {
+   "javadoc": "",
+   "name": "findAccess"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "addField"
+  },
+  {
+   "javadoc": "",
+   "name": "addCtor"
+  },
+  {
+   "javadoc": "",
+   "name": "addGetter"
+  },
+  {
+   "javadoc": "",
+   "name": "addSetter"
+  },
+  {
+   "javadoc": "/**\n     * Method for adding all property members from specified collector into\n     * this collector.\n     */",
+   "name": "addAll"
+  },
+  {
+   "javadoc": "/**\n     * Method called to remove all entries that are marked as\n     * ignored.\n     */",
+   "name": "removeIgnored"
+  },
+  {
+   "javadoc": "/**\n     * Mutator that will simply drop any constructor parameters property may have.\n     * \n     * @since 2.5\n     */",
+   "name": "removeConstructors"
+  },
+  {
+   "javadoc": "/**\n     * Method called to trim unnecessary entries, such as implicit\n     * getter if there is an explict one available. This is important\n     * for later stages, to avoid unnecessary conflicts.\n     */",
+   "name": "trimByVisibility"
+  },
+  {
+   "javadoc": "",
+   "name": "anyVisible"
+  },
+  {
+   "javadoc": "",
+   "name": "anyIgnorals"
+  },
+  {
+   "javadoc": "/**\n     * Method called to find out set of explicit names for accessors\n     * bound together due to implicit name.\n     * \n     * @since 2.4\n     */",
+   "name": "findExplicitNames"
+  },
+  {
+   "javadoc": "/**\n     * Method called when a previous call to {@link #findExplicitNames} found\n     * multiple distinct explicit names, and the property this builder represents\n     * basically needs to be broken apart and replaced by a set of more than\n     * one properties.\n     * \n     * @since 2.4\n     */",
+   "name": "explode"
+  },
+  {
+   "javadoc": "",
+   "name": "toString"
+  },
+  {
+   "javadoc": "/**\n     * Helper method used for finding annotation values, from accessors\n     * relevant to current usage (deserialization, serialization)\n     */",
+   "name": "fromMemberAnnotations"
+  },
+  {
+   "javadoc": "",
+   "name": "fromMemberAnnotationsExcept"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class POJOPropertyBuilder extends BeanPropertyDefinition implements Comparable<POJOPropertyBuilder>",
+  "constructors": [
+   "public POJOPropertyBuilder(MapperConfig<?> config, AnnotationIntrospector ai, boolean forSerialization, PropertyName internalName);",
+   "protected POJOPropertyBuilder(MapperConfig<?> config, AnnotationIntrospector ai, boolean forSerialization, PropertyName internalName, PropertyName name);",
+   "public POJOPropertyBuilder(POJOPropertyBuilder src, PropertyName newName);"
+  ],
+  "focal_signature": "public void removeNonVisible(boolean inferMutators)",
+  "methods": [
+   "public POJOPropertyBuilder withName(PropertyName newName);",
+   "public POJOPropertyBuilder withSimpleName(String newSimpleName);",
+   "public int compareTo(POJOPropertyBuilder other);",
+   "public String getName();",
+   "public PropertyName getFullName();",
+   "public boolean hasName(PropertyName name);",
+   "public String getInternalName();",
+   "public PropertyName getWrapperName();",
+   "public boolean isExplicitlyIncluded();",
+   "public boolean isExplicitlyNamed();",
+   "public boolean hasGetter();",
+   "public boolean hasSetter();",
+   "public boolean hasField();",
+   "public boolean hasConstructorParameter();",
+   "public boolean couldDeserialize();",
+   "public boolean couldSerialize();",
+   "public AnnotatedMethod getGetter();",
+   "public AnnotatedMethod getSetter();",
+   "public AnnotatedField getField();",
+   "public AnnotatedParameter getConstructorParameter();",
+   "public Iterator<AnnotatedParameter> getConstructorParameters();",
+   "public AnnotatedMember getAccessor();",
+   "public AnnotatedMember getMutator();",
+   "public AnnotatedMember getNonConstructorMutator();",
+   "public AnnotatedMember getPrimaryMember();",
+   "protected int _getterPriority(AnnotatedMethod m);",
+   "protected int _setterPriority(AnnotatedMethod m);",
+   "public Class<?>[] findViews();",
+   "public AnnotationIntrospector.ReferenceProperty findReferenceType();",
+   "public boolean isTypeId();",
+   "public PropertyMetadata getMetadata();",
+   "protected Boolean _findRequired();",
+   "protected String _findDescription();",
+   "protected Integer _findIndex();",
+   "protected String _findDefaultValue();",
+   "public ObjectIdInfo findObjectIdInfo();",
+   "public JsonInclude.Value findInclusion();",
+   "public JsonProperty.Access findAccess();",
+   "public void addField(AnnotatedField a, PropertyName name, boolean explName, boolean visible, boolean ignored);",
+   "public void addCtor(AnnotatedParameter a, PropertyName name, boolean explName, boolean visible, boolean ignored);",
+   "public void addGetter(AnnotatedMethod a, PropertyName name, boolean explName, boolean visible, boolean ignored);",
+   "public void addSetter(AnnotatedMethod a, PropertyName name, boolean explName, boolean visible, boolean ignored);",
+   "public void addAll(POJOPropertyBuilder src);",
+   "public void removeIgnored();",
+   "public void removeConstructors();",
+   "public void trimByVisibility();",
+   "public boolean anyVisible();",
+   "public boolean anyIgnorals();",
+   "public Set<PropertyName> findExplicitNames();",
+   "public Collection<POJOPropertyBuilder> explode(Collection<PropertyName> newNames);",
+   "public String toString();",
+   "protected <T> T fromMemberAnnotations(WithMember<T> func);",
+   "protected <T> T fromMemberAnnotationsExcept(WithMember<T> func, T defaultValue);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

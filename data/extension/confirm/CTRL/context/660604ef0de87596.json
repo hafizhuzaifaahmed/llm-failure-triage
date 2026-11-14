@@ -1,0 +1,157 @@
+{
+ "bug_name": "Time_22",
+ "call_sites": [],
+ "class_simple": "BasePeriod",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * BasePeriod is an abstract implementation of ReadablePeriod that stores\n * data in a <code>PeriodType</code> and an <code>int[]</code>.\n * <p>\n * This class should generally not be used directly by API users.\n * The {@link ReadablePeriod} interface should be used when different \n * kinds of period objects are to be referenced.\n * <p>\n * BasePeriod subclasses may be mutable and not thread-safe.\n *\n * @author Brian S O'Neill\n * @author Stephen Colebourne\n * @since 1.0\n */\npublic abstract",
+  "method_javadoc": "/**\n     * Gets the total millisecond duration of this period relative to an\n     * end instant.\n     * <p>\n     * This method subtracts the period from the specified instant in order\n     * to calculate the duration.\n     * <p>\n     * An instant must be supplied as the duration of a period varies.\n     * For example, a period of 1 month could vary between the equivalent of\n     * 28 and 31 days in milliseconds due to different length months.\n     * Similarly, a day can vary at Daylight Savings cutover, typically between\n     * 23 and 25 hours.\n     *\n     * @param endInstant  the instant to subtract the period from, thus obtaining the duration\n     * @return the total length of the period as a duration relative to the end instant\n     * @throws ArithmeticException if the millis exceeds the capacity of the duration\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "private PeriodType iType",
+  "private int[] iValues"
+ ],
+ "focal_class": "org.joda.time.base.BasePeriod",
+ "focal_id": "Time_22::org.joda.time.base.BasePeriod::toDurationTo(ReadableInstant)",
+ "focal_method_name": "toDurationTo",
+ "generations": 3,
+ "impl_B": "public Duration toDurationTo(ReadableInstant endInstant) {\n        long endMillis = DateTimeUtils.getInstantMillis(endInstant);\n        Chronology chrono = DateTimeUtils.getInstantChronology(endInstant);\n        long startMillis = chrono.add(this, endMillis, -1);\n        return new Duration(startMillis, endMillis);\n    }",
+ "imports": [
+  "java.io.Serializable",
+  "org.joda.time.Chronology",
+  "org.joda.time.DateTimeUtils",
+  "org.joda.time.Duration",
+  "org.joda.time.DurationFieldType",
+  "org.joda.time.MutablePeriod",
+  "org.joda.time.PeriodType",
+  "org.joda.time.ReadWritablePeriod",
+  "org.joda.time.ReadableDuration",
+  "org.joda.time.ReadableInstant",
+  "org.joda.time.ReadablePartial",
+  "org.joda.time.ReadablePeriod",
+  "org.joda.time.chrono.ISOChronology",
+  "org.joda.time.convert.ConverterManager",
+  "org.joda.time.convert.PeriodConverter",
+  "org.joda.time.field.FieldUtils"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.joda.time.base",
+ "project": "Time",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Validates a period type, converting nulls to a default value and\n     * checking the type is suitable for this instance.\n     * \n     * @param type  the type to check, may be null\n     * @return the validated type to use, not null\n     * @throws IllegalArgumentException if the period type is invalid\n     */",
+   "name": "checkPeriodType"
+  },
+  {
+   "javadoc": "/**\n     * Gets the period type.\n     *\n     * @return the period type\n     */",
+   "name": "getPeriodType"
+  },
+  {
+   "javadoc": "/**\n     * Gets the number of fields that this period supports.\n     *\n     * @return the number of fields supported\n     */",
+   "name": "size"
+  },
+  {
+   "javadoc": "/**\n     * Gets the field type at the specified index.\n     *\n     * @param index  the index to retrieve\n     * @return the field at the specified index\n     * @throws IndexOutOfBoundsException if the index is invalid\n     */",
+   "name": "getFieldType"
+  },
+  {
+   "javadoc": "/**\n     * Gets the value at the specified index.\n     *\n     * @param index  the index to retrieve\n     * @return the value of the field at the specified index\n     * @throws IndexOutOfBoundsException if the index is invalid\n     */",
+   "name": "getValue"
+  },
+  {
+   "javadoc": "/**\n     * Gets the total millisecond duration of this period relative to a start instant.\n     * <p>\n     * This method adds the period to the specified instant in order to\n     * calculate the duration.\n     * <p>\n     * An instant must be supplied as the duration of a period varies.\n     * For example, a period of 1 month could vary between the equivalent of\n     * 28 and 31 days in milliseconds due to different length months.\n     * Similarly, a day can vary at Daylight Savings cutover, typically between\n     * 23 and 25 hours.\n     *\n     * @param startInstant  the instant to add the period to, thus obtaining the duration\n     * @return the total length of the period as a duration relative to the start instant\n     * @throws ArithmeticException if the millis exceeds the capacity of the duration\n     */",
+   "name": "toDurationFrom"
+  },
+  {
+   "javadoc": "/**\n     * Sets all the fields of this period from another.\n     * \n     * @param period  the period to copy from, not null\n     * @throws IllegalArgumentException if an unsupported field's value is non-zero\n     */",
+   "name": "setPeriod"
+  },
+  {
+   "javadoc": "/**\n     * Sets the eight standard the fields in one go.\n     * \n     * @param years  amount of years in this period, which must be zero if unsupported\n     * @param months  amount of months in this period, which must be zero if unsupported\n     * @param weeks  amount of weeks in this period, which must be zero if unsupported\n     * @param days  amount of days in this period, which must be zero if unsupported\n     * @param hours  amount of hours in this period, which must be zero if unsupported\n     * @param minutes  amount of minutes in this period, which must be zero if unsupported\n     * @param seconds  amount of seconds in this period, which must be zero if unsupported\n     * @param millis  amount of milliseconds in this period, which must be zero if unsupported\n     * @throws IllegalArgumentException if an unsupported field's value is non-zero\n     */",
+   "name": "setPeriod"
+  },
+  {
+   "javadoc": "/**\n     * Sets the value of a field in this period.\n     * \n     * @param field  the field to set\n     * @param value  the value to set\n     * @throws IllegalArgumentException if field is is null or not supported.\n     */",
+   "name": "setField"
+  },
+  {
+   "javadoc": "/**\n     * Sets the value of a field in this period.\n     * \n     * @param values  the array of values to update\n     * @param field  the field to set\n     * @param value  the value to set\n     * @throws IllegalArgumentException if field is null or not supported.\n     */",
+   "name": "setFieldInto"
+  },
+  {
+   "javadoc": "/**\n     * Adds the value of a field in this period.\n     * \n     * @param field  the field to set\n     * @param value  the value to set\n     * @throws IllegalArgumentException if field is is null or not supported.\n     */",
+   "name": "addField"
+  },
+  {
+   "javadoc": "/**\n     * Adds the value of a field in this period.\n     * \n     * @param values  the array of values to update\n     * @param field  the field to set\n     * @param value  the value to set\n     * @throws IllegalArgumentException if field is is null or not supported.\n     */",
+   "name": "addFieldInto"
+  },
+  {
+   "javadoc": "/**\n     * Merges the fields from another period.\n     * \n     * @param period  the period to add from, not null\n     * @throws IllegalArgumentException if an unsupported field's value is non-zero\n     */",
+   "name": "mergePeriod"
+  },
+  {
+   "javadoc": "/**\n     * Merges the fields from another period.\n     * \n     * @param values  the array of values to update\n     * @param period  the period to add from, not null\n     * @return the updated values\n     * @throws IllegalArgumentException if an unsupported field's value is non-zero\n     */",
+   "name": "mergePeriodInto"
+  },
+  {
+   "javadoc": "/**\n     * Adds the fields from another period.\n     * \n     * @param period  the period to add from, not null\n     * @throws IllegalArgumentException if an unsupported field's value is non-zero\n     */",
+   "name": "addPeriod"
+  },
+  {
+   "javadoc": "/**\n     * Adds the fields from another period.\n     * \n     * @param values  the array of values to update\n     * @param period  the period to add from, not null\n     * @return the updated values\n     * @throws IllegalArgumentException if an unsupported field's value is non-zero\n     */",
+   "name": "addPeriodInto"
+  },
+  {
+   "javadoc": "/**\n     * Sets the value of the field at the specifed index.\n     * \n     * @param index  the index\n     * @param value  the value to set\n     * @throws IndexOutOfBoundsException if the index is invalid\n     */",
+   "name": "setValue"
+  },
+  {
+   "javadoc": "/**\n     * Sets the values of all fields.\n     * \n     * @param values  the array of values\n     */",
+   "name": "setValues"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public abstract class BasePeriod extends AbstractPeriod implements ReadablePeriod, Serializable",
+  "constructors": [
+   "protected BasePeriod(int years, int months, int weeks, int days, int hours, int minutes, int seconds, int millis, PeriodType type);",
+   "protected BasePeriod(long startInstant, long endInstant, PeriodType type, Chronology chrono);",
+   "protected BasePeriod(ReadableInstant startInstant, ReadableInstant endInstant, PeriodType type);",
+   "protected BasePeriod(ReadablePartial start, ReadablePartial end, PeriodType type);",
+   "protected BasePeriod(ReadableInstant startInstant, ReadableDuration duration, PeriodType type);",
+   "protected BasePeriod(ReadableDuration duration, ReadableInstant endInstant, PeriodType type);",
+   "protected BasePeriod(long duration);",
+   "protected BasePeriod(long duration, PeriodType type, Chronology chrono);",
+   "protected BasePeriod(Object period, PeriodType type, Chronology chrono);",
+   "protected BasePeriod(int[] values, PeriodType type);"
+  ],
+  "focal_signature": "public Duration toDurationTo(ReadableInstant endInstant)",
+  "methods": [
+   "protected PeriodType checkPeriodType(PeriodType type);",
+   "public PeriodType getPeriodType();",
+   "public int size();",
+   "public DurationFieldType getFieldType(int index);",
+   "public int getValue(int index);",
+   "public Duration toDurationFrom(ReadableInstant startInstant);",
+   "protected void setPeriod(ReadablePeriod period);",
+   "protected void setPeriod(int years, int months, int weeks, int days, int hours, int minutes, int seconds, int millis);",
+   "protected void setField(DurationFieldType field, int value);",
+   "protected void setFieldInto(int[] values, DurationFieldType field, int value);",
+   "protected void addField(DurationFieldType field, int value);",
+   "protected void addFieldInto(int[] values, DurationFieldType field, int value);",
+   "protected void mergePeriod(ReadablePeriod period);",
+   "protected int[] mergePeriodInto(int[] values, ReadablePeriod period);",
+   "protected void addPeriod(ReadablePeriod period);",
+   "protected int[] addPeriodInto(int[] values, ReadablePeriod period);",
+   "protected void setValue(int index, int value);",
+   "protected void setValues(int[] values);"
+  ],
+  "type_signatures": [
+   "public interface ReadableInstant extends Comparable<ReadableInstant> {  }",
+   "public final class Duration extends BaseDuration implements ReadableDuration, Serializable { public static Duration parse(String str); public static Duration standardDays(long days); public static Duration standardHours(long hours); public static Duration standardMinutes(long minutes); public static Duration standardSeconds(long seconds); public static Duration millis(long millis); public Duration(long duration); public Duration(long startInstant, long endInstant); public Duration(ReadableInstant start, ReadableInstant end); public Duration(Object duration); public long getStandardDays(); public long getStandardHours(); public long getStandardMinutes(); public long getStandardSeconds(); public Duration toDuration(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

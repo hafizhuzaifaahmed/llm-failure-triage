@@ -1,0 +1,245 @@
+{
+ "bug_name": "JacksonDatabind_73",
+ "call_sites": [
+  {
+   "line": 319,
+   "lines": [
+    314,
+    315,
+    316,
+    317,
+    318,
+    319,
+    320,
+    321,
+    322,
+    323,
+    324
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/introspect/POJOPropertiesCollector.java",
+   "snippet": "        // then merge annotations, to simplify further processing\n        for (POJOPropertyBuilder property : props.values()) {\n            property.mergeAnnotations(_forSerialization);\n        }\n        // and then remove unneeded accessors (wrt read-only, read-write)\n        _removeUnwantedAccessor(props);\n\n        // Rename remaining properties\n        _renameProperties(props);\n\n        // And use custom naming strategy, if applicable..."
+  }
+ ],
+ "class_simple": "POJOPropertiesCollector",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Helper class used for aggregating information about all possible\n * properties of a POJO.\n */\npublic",
+  "method_javadoc": "/**\n     * Method called to further get rid of unwanted individual accessors,\n     * based on read/write settings and rules for \"pulling in\" accessors\n     * (or not).\n     */"
+ },
+ "fields": [
+  "protected final MapperConfig<?> _config",
+  "protected final boolean _forSerialization",
+  "protected final boolean _stdBeanNaming",
+  "protected final JavaType _type",
+  "protected final AnnotatedClass _classDef",
+  "protected final VisibilityChecker<?> _visibilityChecker",
+  "protected final AnnotationIntrospector _annotationIntrospector",
+  "protected final String _mutatorPrefix",
+  "protected boolean _collected",
+  "protected LinkedHashMap<String, POJOPropertyBuilder> _properties",
+  "protected LinkedList<POJOPropertyBuilder> _creatorProperties",
+  "protected LinkedList<AnnotatedMember> _anyGetters",
+  "protected LinkedList<AnnotatedMethod> _anySetters",
+  "protected LinkedList<AnnotatedMember> _anySetterField",
+  "protected LinkedList<AnnotatedMethod> _jsonValueGetters",
+  "protected HashSet<String> _ignoredPropertyNames",
+  "protected LinkedHashMap<Object, AnnotatedMember> _injectables"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.introspect.POJOPropertiesCollector",
+ "focal_id": "JacksonDatabind_73::com.fasterxml.jackson.databind.introspect.POJOPropertiesCollector::_removeUnwantedAccessor(Map<String,POJOPropertyBuilder>)",
+ "focal_method_name": "_removeUnwantedAccessor",
+ "generations": 3,
+ "impl_B": "protected void _removeUnwantedAccessor(Map<String, POJOPropertyBuilder> props)\n    {\n        final boolean inferMutators = _config.isEnabled(MapperFeature.INFER_PROPERTY_MUTATORS);\n        Iterator<POJOPropertyBuilder> it = props.values().iterator();\n\n        while (it.hasNext()) {\n            POJOPropertyBuilder prop = it.next();\n            // 26-Jan-2017, tatu: [databind#935]: need to denote removal of\n            prop.removeNonVisible(inferMutators);\n        }\n    }",
+ "imports": [
+  "java.lang.reflect.Modifier",
+  "java.util.*",
+  "com.fasterxml.jackson.annotation.JsonAnySetter",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.cfg.HandlerInstantiator",
+  "com.fasterxml.jackson.databind.cfg.MapperConfig",
+  "com.fasterxml.jackson.databind.util.BeanUtil",
+  "com.fasterxml.jackson.databind.util.ClassUtil"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.introspect",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getConfig"
+  },
+  {
+   "javadoc": "",
+   "name": "getType"
+  },
+  {
+   "javadoc": "",
+   "name": "getClassDef"
+  },
+  {
+   "javadoc": "",
+   "name": "getAnnotationIntrospector"
+  },
+  {
+   "javadoc": "",
+   "name": "getProperties"
+  },
+  {
+   "javadoc": "",
+   "name": "getInjectables"
+  },
+  {
+   "javadoc": "",
+   "name": "getJsonValueMethod"
+  },
+  {
+   "javadoc": "",
+   "name": "getAnyGetter"
+  },
+  {
+   "javadoc": "",
+   "name": "getAnySetterField"
+  },
+  {
+   "javadoc": "",
+   "name": "getAnySetterMethod"
+  },
+  {
+   "javadoc": "/**\n     * Accessor for set of properties that are explicitly marked to be ignored\n     * via per-property markers (but NOT class annotations).\n     */",
+   "name": "getIgnoredPropertyNames"
+  },
+  {
+   "javadoc": "/**\n     * Accessor to find out whether type specified requires inclusion\n     * of Object Identifier.\n     */",
+   "name": "getObjectIdInfo"
+  },
+  {
+   "javadoc": "/**\n     * Method for finding Class to use as POJO builder, if any.\n     */",
+   "name": "findPOJOBuilderClass"
+  },
+  {
+   "javadoc": "",
+   "name": "getPropertyMap"
+  },
+  {
+   "javadoc": "/**\n     * Method that orchestrates collection activities, and needs to be called\n     * after creating the instance.\n     *<p>\n     * Since 2.6 has become a no-op and actual collection is done more lazily\n     * at point where properties are actually needed.\n     * \n     * @deprecated Since 2.6; no need to call\n     */",
+   "name": "collect"
+  },
+  {
+   "javadoc": "/**\n     * Internal method that will collect actual property information.\n     *\n     * @since 2.6\n     */",
+   "name": "collectAll"
+  },
+  {
+   "javadoc": "/**\n     * Method for collecting basic information on all fields found\n     */",
+   "name": "_addFields"
+  },
+  {
+   "javadoc": "/**\n     * Method for collecting basic information on constructor(s) found\n     */",
+   "name": "_addCreators"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.4\n     */",
+   "name": "_addCreatorParam"
+  },
+  {
+   "javadoc": "/**\n     * Method for collecting basic information on all fields found\n     */",
+   "name": "_addMethods"
+  },
+  {
+   "javadoc": "",
+   "name": "_addGetterMethod"
+  },
+  {
+   "javadoc": "",
+   "name": "_addSetterMethod"
+  },
+  {
+   "javadoc": "",
+   "name": "_addInjectables"
+  },
+  {
+   "javadoc": "",
+   "name": "_doAddInjectable"
+  },
+  {
+   "javadoc": "/**\n     * Method called to get rid of candidate properties that are marked\n     * as ignored.\n     */",
+   "name": "_removeUnwantedProperties"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_renameProperties"
+  },
+  {
+   "javadoc": "",
+   "name": "_renameUsing"
+  },
+  {
+   "javadoc": "",
+   "name": "_renameWithWrappers"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */\n    \n    /* First, order by [JACKSON-90] (explicit ordering and/or alphabetic)\n     * and then for [JACKSON-170] (implicitly order creator properties before others)\n     */",
+   "name": "_sortProperties"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "reportProblem"
+  },
+  {
+   "javadoc": "",
+   "name": "_property"
+  },
+  {
+   "javadoc": "",
+   "name": "_property"
+  },
+  {
+   "javadoc": "",
+   "name": "_updateCreatorProperty"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class POJOPropertiesCollector",
+  "constructors": [
+   "protected POJOPropertiesCollector(MapperConfig<?> config, boolean forSerialization, JavaType type, AnnotatedClass classDef, String mutatorPrefix);"
+  ],
+  "focal_signature": "protected void _removeUnwantedAccessor(Map<String, POJOPropertyBuilder> props)",
+  "methods": [
+   "public MapperConfig<?> getConfig();",
+   "public JavaType getType();",
+   "public AnnotatedClass getClassDef();",
+   "public AnnotationIntrospector getAnnotationIntrospector();",
+   "public List<BeanPropertyDefinition> getProperties();",
+   "public Map<Object, AnnotatedMember> getInjectables();",
+   "public AnnotatedMethod getJsonValueMethod();",
+   "public AnnotatedMember getAnyGetter();",
+   "public AnnotatedMember getAnySetterField();",
+   "public AnnotatedMethod getAnySetterMethod();",
+   "public Set<String> getIgnoredPropertyNames();",
+   "public ObjectIdInfo getObjectIdInfo();",
+   "public Class<?> findPOJOBuilderClass();",
+   "protected Map<String, POJOPropertyBuilder> getPropertyMap();",
+   "public POJOPropertiesCollector collect();",
+   "protected void collectAll();",
+   "protected void _addFields(Map<String, POJOPropertyBuilder> props);",
+   "protected void _addCreators(Map<String, POJOPropertyBuilder> props);",
+   "protected void _addCreatorParam(Map<String, POJOPropertyBuilder> props, AnnotatedParameter param);",
+   "protected void _addMethods(Map<String, POJOPropertyBuilder> props);",
+   "protected void _addGetterMethod(Map<String, POJOPropertyBuilder> props, AnnotatedMethod m, AnnotationIntrospector ai);",
+   "protected void _addSetterMethod(Map<String, POJOPropertyBuilder> props, AnnotatedMethod m, AnnotationIntrospector ai);",
+   "protected void _addInjectables(Map<String, POJOPropertyBuilder> props);",
+   "protected void _doAddInjectable(Object id, AnnotatedMember m);",
+   "protected void _removeUnwantedProperties(Map<String, POJOPropertyBuilder> props);",
+   "protected void _renameProperties(Map<String, POJOPropertyBuilder> props);",
+   "protected void _renameUsing(Map<String, POJOPropertyBuilder> propMap, PropertyNamingStrategy naming);",
+   "protected void _renameWithWrappers(Map<String, POJOPropertyBuilder> props);",
+   "protected void _sortProperties(Map<String, POJOPropertyBuilder> props);",
+   "protected void reportProblem(String msg);",
+   "protected POJOPropertyBuilder _property(Map<String, POJOPropertyBuilder> props, PropertyName name);",
+   "protected POJOPropertyBuilder _property(Map<String, POJOPropertyBuilder> props, String implName);",
+   "protected void _updateCreatorProperty(POJOPropertyBuilder prop, List<POJOPropertyBuilder> creatorProperties);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

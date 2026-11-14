@@ -1,0 +1,178 @@
+{
+ "bug_name": "Compress_22",
+ "call_sites": [
+  {
+   "line": 59,
+   "lines": [
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/Lister.java",
+   "snippet": "        System.out.println(\"Created \"+ais.toString());\n        ArchiveEntry ae;\n        while((ae=ais.getNextEntry()) != null){\n            System.out.println(ae.getName());\n        }\n        ais.close();\n        fis.close();\n    }\n\n    private static void usage() {\n        System.out.println(\"Parameters: archive-name [archive-type]\");"
+  },
+  {
+   "line": 60,
+   "lines": [
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/Lister.java",
+   "snippet": "        ArchiveEntry ae;\n        while((ae=ais.getNextEntry()) != null){\n            System.out.println(ae.getName());\n        }\n        ais.close();\n        fis.close();\n    }\n\n    private static void usage() {\n        System.out.println(\"Parameters: archive-name [archive-type]\");\n    }"
+  },
+  {
+   "line": 233,
+   "lines": [
+    228,
+    229,
+    230,
+    231,
+    232,
+    233,
+    234,
+    235,
+    236,
+    237,
+    238
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream.java",
+   "snippet": "     */\n    @Override\n    public void close() throws IOException {\n        if (!closed) {\n            closed = true;\n            input.close();\n        }\n        currentEntry = null;\n    }\n\n    /*"
+  },
+  {
+   "line": 212,
+   "lines": [
+    207,
+    208,
+    209,
+    210,
+    211,
+    212,
+    213,
+    214,
+    215,
+    216,
+    217
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveOutputStream.java",
+   "snippet": "    @Override\n    public void close() throws IOException {\n        if(!finished) {\n            finish();\n        }\n        out.close();\n        prevEntry = null;\n    }\n\n    @Override\n    public ArchiveEntry createArchiveEntry(File inputFile, String entryName)"
+  },
+  {
+   "line": 88,
+   "lines": [
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93
+   ],
+   "path": "src/main/java/org/apache/commons/compress/archivers/arj/ArjArchiveInputStream.java",
+   "snippet": "        this(inputStream, \"CP437\");\n    }\n    \n    @Override\n    public void close() throws IOException {\n        in.close();\n    }\n\n    private int read8(final DataInputStream dataIn) throws IOException {\n        int value = dataIn.readUnsignedByte();\n        count(1);"
+  }
+ ],
+ "class_simple": "BZip2CompressorInputStream",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * An input stream that decompresses from the BZip2 format to be read as any other stream.\n * \n * @NotThreadSafe\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private int last",
+  "private int origPtr",
+  "private int blockSize100k",
+  "private boolean blockRandomised",
+  "private int bsBuff",
+  "private int bsLive",
+  "private final CRC crc",
+  "private int nInUse",
+  "private InputStream in",
+  "private final boolean decompressConcatenated",
+  "private int currentChar",
+  "private static final int EOF",
+  "private static final int START_BLOCK_STATE",
+  "private static final int RAND_PART_A_STATE",
+  "private static final int RAND_PART_B_STATE",
+  "private static final int RAND_PART_C_STATE",
+  "private static final int NO_RAND_PART_A_STATE",
+  "private static final int NO_RAND_PART_B_STATE",
+  "private static final int NO_RAND_PART_C_STATE",
+  "private int currentState",
+  "private int storedBlockCRC, storedCombinedCRC",
+  "private int computedBlockCRC, computedCombinedCRC",
+  "private int su_count",
+  "private int su_ch2",
+  "private int su_chPrev",
+  "private int su_i2",
+  "private int su_j2",
+  "private int su_rNToGo",
+  "private int su_rTPos",
+  "private int su_tPos",
+  "private char su_z",
+  "private BZip2CompressorInputStream.Data data"
+ ],
+ "focal_class": "org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream",
+ "focal_id": "Compress_22::org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream::close()",
+ "focal_method_name": "close",
+ "generations": 3,
+ "impl_B": "@Override\n    public void close() throws IOException {\n        InputStream inShadow = this.in;\n        if (inShadow != null) {\n            try {\n                if (inShadow != System.in) {\n                    inShadow.close();\n                }\n            } finally {\n                this.data = null;\n                this.in = null;\n            }\n        }\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.io.InputStream",
+  "org.apache.commons.compress.compressors.CompressorInputStream"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.compress.compressors.bzip2",
+ "project": "Compress",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "read"
+  },
+  {
+   "javadoc": "",
+   "name": "read"
+  },
+  {
+   "javadoc": "/**\n     * Checks if the signature matches what is expected for a bzip2 file.\n     * \n     * @param signature\n     *            the bytes to check\n     * @param length\n     *            the number of bytes to check\n     * @return true, if this stream is a bzip2 compressed stream, false otherwise\n     * \n     * @since 1.1\n     */",
+   "name": "matches"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class BZip2CompressorInputStream extends CompressorInputStream implements BZip2Constants",
+  "constructors": [
+   "public BZip2CompressorInputStream(final InputStream in) throws IOException;",
+   "public BZip2CompressorInputStream(final InputStream in, final boolean decompressConcatenated) throws IOException;"
+  ],
+  "focal_signature": "public void close() throws IOException",
+  "methods": [
+   "public int read() throws IOException;",
+   "public int read(final byte[] dest, final int offs, final int len) throws IOException;",
+   "public static boolean matches(byte[] signature, int length);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

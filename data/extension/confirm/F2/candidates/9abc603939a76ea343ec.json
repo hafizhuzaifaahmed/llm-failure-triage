@@ -1,0 +1,14 @@
+{
+  "assembled": true,
+  "call_key": "b785b7a0f76149a0e6db2886893cb6bd79901ae1712235443cd51945e026b151",
+  "candidate_id": "9abc603939a76ea343ec",
+  "class_name": "TokenStream_isJSIdentifier_TriageGen0Test",
+  "dataset": "D1C_F2",
+  "focal_id": "Closure_131::com.google.javascript.rhino.TokenStream::isJSIdentifier(String)",
+  "generation": 0,
+  "model_returned": "gemma4:26b",
+  "n_tests": 6,
+  "package": "com.google.javascript.rhino",
+  "source": "package com.google.javascript.rhino;\n\nimport java.io.*;\nimport java.math.*;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertFalse;\nimport static org.junit.Assert.assertTrue;\n\npublic class TokenStream_isJSIdentifier_TriageGen0Test {\n\n    @Test\n    public void testEmptyString() {\n        assertFalse(TokenStream.isJSIdentifier(\"\"));\n    }\n\n    @Test\n    public void testInvalidStartCharacter() {\n        // Starts with a digit, which is not a valid identifier start\n        assertFalse(TokenStream.isJSIdentifier(\"1abc\"));\n        // Starts with a symbol\n        assertFalse(TokenStream.isJSIdentifier(\"$#abc\")); // Note: depends on Character.isJavaIdentifierStart\n        // Actually, based on Character.isJavaIdentifierStart:\n        assertFalse(TokenStream.isJSIdentifier(\"!abc\"));\n    }\n\n    @Test\n    public void testValidSingleCharacter() {\n        assertTrue(TokenStream.isJSIdentifier(\"a\"));\n        assertTrue(TokenStream.isJSIdentifier(\"_\"));\n    }\n\n    @Test\n    public void testValidMultiCharacter() {\n        assertTrue(TokenStream.isJSIdentifier(\"abc\"));\n        assertTrue(TokenStream.isJSIdentifier(\"var123\"));\n        assertTrue(TokenStream.isJSIdentifier(\"_underscore\"));\n        assertTrue(TokenStream.isJSIdentifier(\"a_b_c\"));\n    }\n\n    @Test\n    public void testInvalidPartCharacter() {\n        // Valid start, but contains an invalid part (a space)\n        assertFalse(TokenStream.isJSIdentifier(\"abc def\"));\n        // Valid start, but contains an invalid part (a hyphen)\n        assertFalse(TokenStream.isJSIdentifier(\"abc-def\"));\n        // Valid start, but contains an invalid part (a dot)\n        assertFalse(TokenStream.isJSIdentifier(\"abc.def\"));\n    }\n\n    @Test\n    public void testUnicodeIdentifiers() {\n        // Testing valid Unicode identifier start/parts if supported by Character class\n        assertTrue(TokenStream.isJSIdentifier(\"π\"));\n        assertFalse(TokenStream.isJSIdentifier(\"π!\"));\n    }\n}\n",
+  "tranche": "F2"
+}

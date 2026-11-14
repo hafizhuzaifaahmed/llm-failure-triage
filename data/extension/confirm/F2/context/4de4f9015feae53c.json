@@ -1,0 +1,233 @@
+{
+ "bug_name": "Closure_162",
+ "call_sites": [
+  {
+   "line": 214,
+   "lines": [
+    209,
+    210,
+    211,
+    212,
+    213,
+    214,
+    215,
+    216,
+    217,
+    218,
+    219
+   ],
+   "path": "src/com/google/javascript/jscomp/CollapseProperties.java",
+   "snippet": "          new ReferenceCollectingCallback(compiler,\n              ReferenceCollectingCallback.DO_NOTHING_BEHAVIOR,\n              Predicates.<Var>equalTo(aliasVar));\n      (new NodeTraversal(compiler, collector)).traverseAtScope(scope);\n\n      ReferenceCollection aliasRefs = collector.getReferences(aliasVar);\n      if (aliasRefs.isWellDefined()\n          && aliasRefs.firstReferenceIsAssigningDeclaration()\n          && aliasRefs.isAssignedOnceInLifetime()) {\n        // The alias is well-formed, so do the inlining now.\n        int size = aliasRefs.references.size();"
+  },
+  {
+   "line": 712,
+   "lines": [
+    707,
+    708,
+    709,
+    710,
+    711,
+    712,
+    713,
+    714,
+    715,
+    716,
+    717
+   ],
+   "path": "src/com/google/javascript/jscomp/InlineFunctions.java",
+   "snippet": "   */\n  private boolean inliningLowersCost(FunctionState fs) {\n    return injector.inliningLowersCost(\n        fs.getModule(),\n        fs.getFn().getFunctionNode(),\n        fs.getReferences(),\n        fs.getNamesToAlias(),\n        fs.canRemove(),\n        fs.getReferencesThis());\n  }\n"
+  },
+  {
+   "line": 809,
+   "lines": [
+    804,
+    805,
+    806,
+    807,
+    808,
+    809,
+    810,
+    811,
+    812,
+    813,
+    814
+   ],
+   "path": "src/com/google/javascript/jscomp/InlineFunctions.java",
+   "snippet": "    ExpressionDecomposer decomposer = new ExpressionDecomposer(\n        compiler, compiler.getUniqueNameIdSupplier(), fnNames);\n\n    for (FunctionState fs : fns.values()) {\n      if (fs.canInline()) {\n        for (Reference ref : fs.getReferences()) {\n          if (ref.requiresDecomposition) {\n            decomposer.maybeDecomposeExpression(ref.callNode);\n          }\n        }\n      }"
+  },
+  {
+   "line": 845,
+   "lines": [
+    840,
+    841,
+    842,
+    843,
+    844,
+    845,
+    846,
+    847,
+    848,
+    849,
+    850
+   ],
+   "path": "src/com/google/javascript/jscomp/InlineFunctions.java",
+   "snippet": "  /**\n   * Sanity check to verify, that expression rewriting didn't\n   * make a call inaccessible.\n   */\n  void verifyAllReferencesInlined(FunctionState fs) {\n    for (Reference ref : fs.getReferences()) {\n      if (!ref.inlined) {\n        throw new IllegalStateException(\"Call site missed.\\n call: \"\n            + ref.callNode.toStringTree() + \"\\n parent:  \"\n            + ref.callNode.getParent().toStringTree());\n      }"
+  },
+  {
+   "line": 91,
+   "lines": [
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96
+   ],
+   "path": "src/com/google/javascript/jscomp/InlineObjectLiterals.java",
+   "snippet": "\n        if (isVarInlineForbidden(v)) {\n            continue;\n        }\n\n        ReferenceCollection referenceInfo = referenceMap.getReferences(v);\n\n        if (isInlinableObject(referenceInfo.references)) {\n            // Blacklist the object itself, as well as any other values\n            // that it refers to, since they will have been moved around.\n            staleVars.add(v);"
+  }
+ ],
+ "class_simple": "Scope",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Scope contains information about a variable scope in javascript.\n * Scopes can be nested, a scope points back to its parent scope.\n * A Scope contains information about variables defined in that scope.\n * <p>\n * A Scope is also used as a lattice element for flow-sensitive type inference.\n * As a lattice element, a Scope is viewed as a map from names to types. A name\n * not in the map is considered to have the bottom type. The join of two maps m1\n * and m2 is the map of the union of names with {@link JSType#getLeastSupertype}\n * to meet the m1 type and m2 type.\n *\n * @see NodeTraversal\n * @see DataFlowAnalysis\n *\n */\npublic",
+  "method_javadoc": "/**\n   * Return an iterable over all of the variables declared in this scope.\n   */"
+ },
+ "fields": [
+  "private final Map<String, Var> vars",
+  "private final Scope parent",
+  "private final int depth",
+  "private final Node rootNode",
+  "private final ObjectType thisType",
+  "private final boolean isBottom",
+  "private Var arguments",
+  "private static final Predicate<Var> DECLARATIVELY_UNBOUND_VARS_WITHOUT_TYPES"
+ ],
+ "focal_class": "com.google.javascript.jscomp.Scope",
+ "focal_id": "Closure_162::com.google.javascript.jscomp.Scope::getReferences(Var)",
+ "focal_method_name": "getReferences",
+ "generations": 3,
+ "impl_B": "@Override\n  public Iterable<Var> getReferences(Var var) {\n    return ImmutableList.of(var);\n  }",
+ "imports": [
+  "static com.google.javascript.rhino.jstype.JSTypeNative.GLOBAL_THIS",
+  "com.google.common.base.Preconditions",
+  "com.google.common.base.Predicate",
+  "com.google.common.collect.ImmutableList",
+  "com.google.common.collect.Iterators",
+  "com.google.javascript.rhino.ErrorReporter",
+  "com.google.javascript.rhino.JSDocInfo",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.Token",
+  "com.google.javascript.rhino.jstype.JSType",
+  "com.google.javascript.rhino.jstype.ObjectType",
+  "com.google.javascript.rhino.jstype.StaticReference",
+  "com.google.javascript.rhino.jstype.StaticScope",
+  "com.google.javascript.rhino.jstype.StaticSlot",
+  "com.google.javascript.rhino.jstype.StaticSourceFile",
+  "com.google.javascript.rhino.jstype.StaticSymbolTable",
+  "java.util.Collections",
+  "java.util.Iterator",
+  "java.util.LinkedHashMap",
+  "java.util.Map"
+ ],
+ "javadoc_edited_by_fix": true,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "/**\n   * Gets the container node of the scope. This is typically the FUNCTION\n   * node or the global BLOCK/SCRIPT node.\n   */",
+   "name": "getRootNode"
+  },
+  {
+   "javadoc": "",
+   "name": "getParent"
+  },
+  {
+   "javadoc": "",
+   "name": "getParentScope"
+  },
+  {
+   "javadoc": "/**\n   * Gets the type of {@code this} in the current scope.\n   */",
+   "name": "getTypeOfThis"
+  },
+  {
+   "javadoc": "",
+   "name": "getSlot"
+  },
+  {
+   "javadoc": "",
+   "name": "getOwnSlot"
+  },
+  {
+   "javadoc": "/**\n   * Returns the variable, may be null\n   */",
+   "name": "getVar"
+  },
+  {
+   "javadoc": "/**\n   * Get a unique VAR object to represents \"arguments\" within this scope\n   */",
+   "name": "getArgumentsVar"
+  },
+  {
+   "javadoc": "/**\n   * Returns true if a variable is declared.\n   */",
+   "name": "isDeclared"
+  },
+  {
+   "javadoc": "/**\n   * Return an iterator over all of the variables declared in this scope.\n   */",
+   "name": "getVars"
+  },
+  {
+   "javadoc": "",
+   "name": "getScope"
+  },
+  {
+   "javadoc": "",
+   "name": "getAllSymbols"
+  },
+  {
+   "javadoc": "/**\n   * Returns number of variables in this scope\n   */",
+   "name": "getVarCount"
+  },
+  {
+   "javadoc": "/**\n   * Returns whether this is the global scope.\n   */",
+   "name": "isGlobal"
+  },
+  {
+   "javadoc": "/**\n   * Returns whether this is a local scope (i.e. not the global scope).\n   */",
+   "name": "isLocal"
+  },
+  {
+   "javadoc": "/**\n   * Gets all variables declared with \"var\" but without declared types attached.\n   */",
+   "name": "getDeclarativelyUnboundVarsWithoutTypes"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class Scope implements StaticScope<JSType>, StaticSymbolTable<Scope.Var, Scope.Var>",
+  "constructors": [],
+  "focal_signature": "public Iterable<Var> getReferences(Var var)",
+  "methods": [
+   "public Node getRootNode();",
+   "public Scope getParent();",
+   "public StaticScope<JSType> getParentScope();",
+   "public ObjectType getTypeOfThis();",
+   "public StaticSlot<JSType> getSlot(String name);",
+   "public StaticSlot<JSType> getOwnSlot(String name);",
+   "public Var getVar(String name);",
+   "public Var getArgumentsVar();",
+   "public boolean isDeclared(String name, boolean recurse);",
+   "public Iterator<Var> getVars();",
+   "public StaticScope<JSType> getScope(Var var);",
+   "public Iterable<Var> getAllSymbols();",
+   "public int getVarCount();",
+   "public boolean isGlobal();",
+   "public boolean isLocal();",
+   "public Iterator<Var> getDeclarativelyUnboundVarsWithoutTypes();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

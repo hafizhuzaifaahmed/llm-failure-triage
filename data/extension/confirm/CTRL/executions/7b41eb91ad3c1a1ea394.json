@@ -1,0 +1,95 @@
+{
+ "candidate_id": "7b41eb91ad3c1a1ea394",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testCreateMock_Basic"
+  ],
+  "nc_both": [
+   "testCreateMock_NotSerializableNoExtraInterfaces",
+   "testCreateMock_SerializableWithOnlyExtraInterfaces",
+   "testCreateMock_ValidationFails",
+   "testCreateMock_WithExtraInterfacesAndSerializable",
+   "testCreateMock_WithSpiedInstance"
+  ],
+  "nc_one_version": [],
+  "passes": 1
+ },
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "Mockito_27::org.mockito.internal.util.MockUtil::createMock(Class<T>,MockSettingsImpl)",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testCreateMock_Basic",
+   "runs_b": [
+    {
+     "duration_s": 0.167,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.141,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.141,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.129,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.148,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.142,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.mockito.internal.util;\n\nimport java.io.*;\nimport java.io.Serializable;\nimport java.math.*;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Before;\nimport org.junit.Test;\nimport org.mockito.Mock;\nimport org.mockito.MockitoAnnotations;\nimport org.mockito.cglib.proxy.Callback;\nimport org.mockito.cglib.proxy.Factory;\nimport org.mockito.exceptions.misusing.NotAMockException;\nimport org.mockito.internal.InvocationNotifierHandler;\nimport org.mockito.internal.MockHandler;\nimport org.mockito.internal.MockHandlerInterface;\nimport org.mockito.internal.creation.MethodInterceptorFilter;\nimport org.mockito.internal.creation.MockSettingsImpl;\nimport org.mockito.internal.creation.jmock.ClassImposterizer;\nimport org.mockito.internal.util.reflection.LenientCopyTool;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\nimport static org.junit.Assert.assertNotNull;\nimport static org.mockito.Mockito.doReturn;\nimport static org.mockito.Mockito.mock;\nimport static org.mockito.Mockito.spy;\nimport static org.mockito.Mockito.verify;\nimport static org.mockito.Mockito.when;\n\npublic class MockUtil_createMock_TriageGen0Test {\n\n    private MockUtil mockUtil;\n\n    @Mock\n    private MockCreationValidator creationValidator;\n\n    @Mock\n    private ClassImposterizer classImposterizer;\n\n    @Before\n    public void setUp() {\n        MockitoAnnotations.initMocks(this);\n        // Note: Since ClassImposterizer.INSTANCE is a singleton accessed via static call, \n        // in a real environment we would use PowerMock or similar to mock it.\n        // For this unit test, we assume the environment allows the execution of the logic.\n        mockUtil = new MockUtil(creationValidator);\n    }\n\n    public interface ExtraInterface {}\n    public interface AnotherInterface {}\n\n    public static class TestClass implements Serializable {\n        public void doSomething() {}\n    }\n\n    public static class NonSerializableClass {\n        public void doSomething() {}\n    }\n\n    @Test\n    public void testCreateMock_Basic() {\n        MockSettingsImpl settings = new MockSettingsImpl();\n        \n        TestClass mockInstance = mockUtil.createMock(TestClass.class, settings);\n        \n        assertNotNull(mockInstance);\n        verify(creationValidator).validateType(TestClass.class);\n        verify(creationValidator).validateExtraInterfaces(TestClass.class, null);\n        verify(creationValidator).validateMockedType(TestClass.class, null);\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    // Helper to handle generic type in verify\n    private <T> Class<T> anyClass() {\n        return (Class<T>) TestClass.class;\n    }\n}\n"
+  }
+ ],
+ "source_sha256": "04ae59deb47e4831ec659102e1c8daf101e1a18b9a35e26a1420ecd2f62b24e3",
+ "utc": "2026-11-13T07:01:19Z"
+}

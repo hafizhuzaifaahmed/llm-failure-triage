@@ -1,0 +1,149 @@
+{
+ "bug_name": "Closure_30",
+ "call_sites": [
+  {
+   "line": 137,
+   "lines": [
+    132,
+    133,
+    134,
+    135,
+    136,
+    137,
+    138,
+    139,
+    140,
+    141,
+    142
+   ],
+   "path": "src/com/google/javascript/jscomp/CombinedCompilerPass.java",
+   "snippet": "      }\n    }\n\n    void enterScopeIfActive(NodeTraversal t) {\n      if (isActive() && scopedCallback != null) {\n        scopedCallback.enterScope(t);\n      }\n    }\n\n    void exitScopeIfActive(NodeTraversal t) {\n      if (isActive() && scopedCallback != null) {"
+  },
+  {
+   "line": 117,
+   "lines": [
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122
+   ],
+   "path": "src/com/google/javascript/jscomp/NodeTraversal.java",
+   "snippet": "\n    /**\n     * Called immediately after entering a new scope. The new scope can\n     * be accessed through t.getScope()\n     */\n    void enterScope(NodeTraversal t);\n\n    /**\n     * Called immediately before exiting a scope. The ending scope can\n     * be accessed through t.getScope()\n     */"
+  },
+  {
+   "line": 567,
+   "lines": [
+    562,
+    563,
+    564,
+    565,
+    566,
+    567,
+    568,
+    569,
+    570,
+    571,
+    572
+   ],
+   "path": "src/com/google/javascript/jscomp/NodeTraversal.java",
+   "snippet": "  private void pushScope(Node node) {\n    Preconditions.checkState(curNode != null);\n    scopeRoots.push(node);\n    cfgs.push(null);\n    if (scopeCallback != null) {\n      scopeCallback.enterScope(this);\n    }\n  }\n\n  /** Creates a new scope (e.g. when entering a function). */\n  private void pushScope(Scope s) {"
+  },
+  {
+   "line": 577,
+   "lines": [
+    572,
+    573,
+    574,
+    575,
+    576,
+    577,
+    578,
+    579,
+    580,
+    581,
+    582
+   ],
+   "path": "src/com/google/javascript/jscomp/NodeTraversal.java",
+   "snippet": "  private void pushScope(Scope s) {\n    Preconditions.checkState(curNode != null);\n    scopes.push(s);\n    cfgs.push(null);\n    if (scopeCallback != null) {\n      scopeCallback.enterScope(this);\n    }\n  }\n\n  /** Pops back to the previous scope (e.g. when leaving a function). */\n  private void popScope() {"
+  }
+ ],
+ "class_simple": "FlowSensitiveInlineVariables",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Inline variables when possible. Using the information from\n * {@link MaybeReachingVariableUse} and {@link MustBeReachingVariableDef},\n * this pass attempts to inline a variable by placing the value at the\n * definition where the variable is used. The basic requirements for inlining\n * are the following:\n *\n * <ul>\n * <li> There is exactly one reaching definition at the use of that variable\n * </li>\n * <li> There is exactly one use for that definition of the variable\n * </li>\n * </ul>\n *\n * <p>Other requirements can be found in {@link Candidate#canInline}. Currently\n * this pass does not operate on the global scope due to compilation time.\n *\n */",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private final AbstractCompiler compiler",
+  "private ControlFlowGraph<Node> cfg",
+  "private List<Candidate> candidates",
+  "private MustBeReachingVariableDef reachingDef",
+  "private MaybeReachingVariableUse reachingUses",
+  "private static final Predicate<Node> SIDE_EFFECT_PREDICATE"
+ ],
+ "focal_class": "com.google.javascript.jscomp.FlowSensitiveInlineVariables",
+ "focal_id": "Closure_30::com.google.javascript.jscomp.FlowSensitiveInlineVariables::enterScope(NodeTraversal)",
+ "focal_method_name": "enterScope",
+ "generations": 3,
+ "impl_B": "@Override\n  public void enterScope(NodeTraversal t) {\n\n    if (t.inGlobalScope()) {\n      return; // Don't even brother. All global variables are likely escaped.\n    }\n\n    if (LiveVariablesAnalysis.MAX_VARIABLES_TO_ANALYZE <\n        t.getScope().getVarCount()) {\n      return;\n    }\n\n    // Compute the forward reaching definition.\n    ControlFlowAnalysis cfa = new ControlFlowAnalysis(compiler, false, true);\n    // Process the body of the function.\n    Preconditions.checkState(t.getScopeRoot().isFunction());\n    cfa.process(null, t.getScopeRoot().getLastChild());\n    cfg = cfa.getCfg();\n    reachingDef = new MustBeReachingVariableDef(cfg, t.getScope(), compiler);\n    reachingDef.analyze();\n    candidates = Lists.newLinkedList();\n\n    // Using the forward reaching definition search to find all the inline\n    // candiates\n    new NodeTraversal(compiler, new GatherCandiates()).traverse(\n        t.getScopeRoot().getLastChild());\n\n    // Compute the backward reaching use. The CFG can be reused.\n    reachingUses = new MaybeReachingVariableUse(cfg, t.getScope(), compiler);\n    reachingUses.analyze();\n    for (Candidate c : candidates) {\n      if (c.canInline()) {\n        c.inlineVariable();\n      }\n    }\n  }",
+ "imports": [
+  "com.google.common.base.Preconditions",
+  "com.google.common.base.Predicate",
+  "com.google.common.base.Predicates",
+  "com.google.common.collect.Lists",
+  "com.google.javascript.jscomp.ControlFlowGraph.AbstractCfgNodeTraversalCallback",
+  "com.google.javascript.jscomp.ControlFlowGraph.Branch",
+  "com.google.javascript.jscomp.DataFlowAnalysis.FlowState",
+  "com.google.javascript.jscomp.MustBeReachingVariableDef.MustDef",
+  "com.google.javascript.jscomp.NodeTraversal.AbstractPostOrderCallback",
+  "com.google.javascript.jscomp.NodeTraversal.AbstractShallowCallback",
+  "com.google.javascript.jscomp.NodeTraversal.ScopedCallback",
+  "com.google.javascript.jscomp.graph.DiGraph.DiGraphEdge",
+  "com.google.javascript.jscomp.graph.DiGraph.DiGraphNode",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.Token",
+  "java.util.Collection",
+  "java.util.List"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "exitScope"
+  },
+  {
+   "javadoc": "",
+   "name": "process"
+  },
+  {
+   "javadoc": "",
+   "name": "visit"
+  }
+ ],
+ "sig": {
+  "class_declaration": "class FlowSensitiveInlineVariables extends AbstractPostOrderCallback implements CompilerPass, ScopedCallback",
+  "constructors": [
+   "public FlowSensitiveInlineVariables(AbstractCompiler compiler);"
+  ],
+  "focal_signature": "public void enterScope(NodeTraversal t)",
+  "methods": [
+   "public void exitScope(NodeTraversal t);",
+   "public void process(Node externs, Node root);",
+   "public void visit(NodeTraversal t, Node n, Node parent);"
+  ],
+  "type_signatures": [
+   "public class NodeTraversal { public NodeTraversal(AbstractCompiler compiler, Callback cb); public NodeTraversal(AbstractCompiler compiler, Callback cb, ScopeCreator scopeCreator); public void traverse(Node root); public void traverseRoots(Node ... roots); public void traverseRoots(List<Node> roots); protected void traverseInnerNode(Node node, Node parent, Scope refinedScope); public Compiler getCompiler(); public int getLineNumber(); public String getSourceName(); public CompilerInput getInput(); public JSModule getModule(); public Node getCurrentNode(); public static void traverse( AbstractCompiler compiler, Node root, Callback cb); public static void traverseRoots( AbstractCompiler compiler, List<Node> roots, Callback cb); public static void traverseRoots( AbstractCompiler compiler, Callback cb, Node ... roots); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

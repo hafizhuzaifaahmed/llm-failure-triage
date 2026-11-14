@@ -1,0 +1,190 @@
+{
+ "bug_name": "JacksonDatabind_51",
+ "call_sites": [
+  {
+   "line": 92,
+   "lines": [
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/jsontype/impl/AsArrayTypeDeserializer.java",
+   "snippet": "    {\n        // 02-Aug-2013, tatu: May need to use native type ids\n        if (p.canReadTypeId()) {\n            Object typeId = p.getTypeId();\n            if (typeId != null) {\n                return _deserializeWithNativeTypeId(p, ctxt, typeId);\n            }\n        }\n        boolean hadStartArray = p.isExpectedStartArrayToken();\n        String typeId = _locateTypeId(p, ctxt);\n        JsonDeserializer<Object> deser = _findDeserializer(ctxt, typeId);"
+  },
+  {
+   "line": 72,
+   "lines": [
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/jsontype/impl/AsPropertyTypeDeserializer.java",
+   "snippet": "    {\n        // 02-Aug-2013, tatu: May need to use native type ids\n        if (p.canReadTypeId()) {\n            Object typeId = p.getTypeId();\n            if (typeId != null) {\n                return _deserializeWithNativeTypeId(p, ctxt, typeId);\n            }\n        }\n        \n        // but first, sanity check to ensure we have START_OBJECT or FIELD_NAME\n        JsonToken t = p.getCurrentToken();"
+  },
+  {
+   "line": 88,
+   "lines": [
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/jsontype/impl/AsWrapperTypeDeserializer.java",
+   "snippet": "    {\n        // 02-Aug-2013, tatu: May need to use native type ids\n        if (p.canReadTypeId()) {\n            Object typeId = p.getTypeId();\n            if (typeId != null) {\n                return _deserializeWithNativeTypeId(p, ctxt, typeId);\n            }\n        }\n        // first, sanity checks\n        JsonToken t = p.getCurrentToken();\n        if (t == JsonToken.START_OBJECT) {"
+  },
+  {
+   "line": 228,
+   "lines": [
+    223,
+    224,
+    225,
+    226,
+    227,
+    228,
+    229,
+    230,
+    231,
+    232,
+    233
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/jsontype/impl/TypeDeserializerBase.java",
+   "snippet": "     * \n     * @since 2.3\n     */\n    @Deprecated\n    protected Object _deserializeWithNativeTypeId(JsonParser jp, DeserializationContext ctxt) throws IOException {\n        return _deserializeWithNativeTypeId(jp, ctxt, jp.getTypeId());\n    }\n\n    /**\n     * Helper method called when {@link JsonParser} indicates that it can use\n     * so-called native type ids, and such type id has been found."
+  }
+ ],
+ "class_simple": "TypeDeserializerBase",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Base class for all standard Jackson {@link TypeDeserializer}s.\n */\npublic abstract",
+  "method_javadoc": "/**\n     * Helper method called when {@link JsonParser} indicates that it can use\n     * so-called native type ids, and such type id has been found.\n     * \n     * @since 2.4\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "protected final TypeIdResolver _idResolver",
+  "protected final JavaType _baseType",
+  "protected final BeanProperty _property",
+  "protected final JavaType _defaultImpl",
+  "protected final String _typePropertyName",
+  "protected final boolean _typeIdVisible",
+  "protected final Map<String,JsonDeserializer<Object>> _deserializers",
+  "protected JsonDeserializer<Object> _defaultImplDeserializer"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.jsontype.impl.TypeDeserializerBase",
+ "focal_id": "JacksonDatabind_51::com.fasterxml.jackson.databind.jsontype.impl.TypeDeserializerBase::_deserializeWithNativeTypeId(JsonParser,DeserializationContext,Object)",
+ "focal_method_name": "_deserializeWithNativeTypeId",
+ "generations": 3,
+ "impl_B": "protected Object _deserializeWithNativeTypeId(JsonParser jp, DeserializationContext ctxt, Object typeId)\n        throws IOException\n    {\n        JsonDeserializer<Object> deser;\n        if (typeId == null) {\n            /* 04-May-2014, tatu: Should error be obligatory, or should there be another method\n             *   for \"try to deserialize with native tpye id\"?\n             */\n            deser = _findDefaultImplDeserializer(ctxt);\n            if (deser == null) {\n                ctxt.reportMappingException(\"No (native) type id found when one was expected for polymorphic type handling\");\n                return null;\n            }\n        } else {\n            String typeIdStr = (typeId instanceof String) ? (String) typeId : String.valueOf(typeId);\n            deser = _findDeserializer(ctxt, typeIdStr);\n        }\n        return deser.deserialize(jp, ctxt);\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.util.Map",
+  "java.util.concurrent.ConcurrentHashMap",
+  "com.fasterxml.jackson.annotation.JsonTypeInfo",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.databind.BeanProperty",
+  "com.fasterxml.jackson.databind.DeserializationContext",
+  "com.fasterxml.jackson.databind.DeserializationFeature",
+  "com.fasterxml.jackson.databind.JavaType",
+  "com.fasterxml.jackson.databind.JsonDeserializer",
+  "com.fasterxml.jackson.databind.deser.std.NullifyingDeserializer",
+  "com.fasterxml.jackson.databind.jsontype.TypeDeserializer",
+  "com.fasterxml.jackson.databind.jsontype.TypeIdResolver",
+  "com.fasterxml.jackson.databind.util.ClassUtil"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.jsontype.impl",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "forProperty"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getTypeInclusion"
+  },
+  {
+   "javadoc": "",
+   "name": "baseTypeName"
+  },
+  {
+   "javadoc": "",
+   "name": "getPropertyName"
+  },
+  {
+   "javadoc": "",
+   "name": "getTypeIdResolver"
+  },
+  {
+   "javadoc": "",
+   "name": "getDefaultImpl"
+  },
+  {
+   "javadoc": "",
+   "name": "toString"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_findDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "_findDefaultImplDeserializer"
+  },
+  {
+   "javadoc": "/**\n     * Helper method called when {@link JsonParser} indicates that it can use\n     * so-called native type ids. Assumption from there is that only native\n     * type ids are to be used.\n     * \n     * @since 2.3\n     */",
+   "name": "_deserializeWithNativeTypeId"
+  },
+  {
+   "javadoc": "/**\n     * Helper method called when given type id can not be resolved into \n     * concrete deserializer either directly (using given {@link  TypeIdResolver}),\n     * or using default type.\n     * Default implementation simply throws a {@link com.fasterxml.jackson.databind.JsonMappingException} to\n     * indicate the problem; sub-classes may choose\n     *\n     * @return If it is possible to resolve type id into a {@link JsonDeserializer}\n     *   should return that deserializer; otherwise throw an exception to indicate\n     *   the problem.\n     *\n     * @since 2.8\n     */",
+   "name": "_handleUnknownTypeId"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public abstract class TypeDeserializerBase extends TypeDeserializer implements java.io.Serializable",
+  "constructors": [
+   "protected TypeDeserializerBase(JavaType baseType, TypeIdResolver idRes, String typePropertyName, boolean typeIdVisible, JavaType defaultImpl);",
+   "protected TypeDeserializerBase(TypeDeserializerBase src, BeanProperty property);"
+  ],
+  "focal_signature": "protected Object _deserializeWithNativeTypeId(JsonParser jp, DeserializationContext ctxt, Object typeId) throws IOException",
+  "methods": [
+   "public abstract TypeDeserializer forProperty(BeanProperty prop);",
+   "public abstract JsonTypeInfo.As getTypeInclusion();",
+   "public String baseTypeName();",
+   "public final String getPropertyName();",
+   "public TypeIdResolver getTypeIdResolver();",
+   "public Class<?> getDefaultImpl();",
+   "public String toString();",
+   "protected final JsonDeserializer<Object> _findDeserializer(DeserializationContext ctxt, String typeId) throws IOException;",
+   "protected final JsonDeserializer<Object> _findDefaultImplDeserializer(DeserializationContext ctxt) throws IOException;",
+   "protected Object _deserializeWithNativeTypeId(JsonParser jp, DeserializationContext ctxt) throws IOException;",
+   "protected JavaType _handleUnknownTypeId(DeserializationContext ctxt, String typeId, TypeIdResolver idResolver, JavaType baseType) throws IOException;"
+  ],
+  "type_signatures": [
+   "public abstract class DeserializationContext extends DatabindContext implements java.io.Serializable { protected DeserializationContext(DeserializerFactory df); protected DeserializationContext(DeserializerFactory df, DeserializerCache cache); protected DeserializationContext(DeserializationContext src, DeserializerFactory factory); protected DeserializationContext(DeserializationContext src, DeserializationConfig config, JsonParser p, InjectableValues injectableValues); protected DeserializationContext(DeserializationContext src); public DeserializationConfig getConfig(); public final Class<?> getActiveView(); public final boolean canOverrideAccessModifiers(); public final boolean isEnabled(MapperFeature feature); public final JsonFormat.Value getDefaultPropertyFormat(Class<?> baseType); public final AnnotationIntrospector getAnnotationIntrospector(); public final TypeFactory getTypeFactory(); public Locale getLocale(); public TimeZone getTimeZone(); public Object getAttribute(Object key); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

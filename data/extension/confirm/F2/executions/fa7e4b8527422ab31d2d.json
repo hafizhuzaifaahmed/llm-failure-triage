@@ -1,0 +1,92 @@
+{
+ "candidate_id": "fa7e4b8527422ab31d2d",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "test_deserializeFromEmptyString_WithUriKind"
+  ],
+  "nc_both": [
+   "test_deserializeFromEmptyString_OtherBranch",
+   "test_deserializeFromEmptyString_UriBranch"
+  ],
+  "nc_one_version": [],
+  "passes": 1
+ },
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "JacksonDatabind_42::com.fasterxml.jackson.databind.deser.std.FromStringDeserializer$Std::_deserializeFromEmptyString()",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "test_deserializeFromEmptyString_WithUriKind",
+   "runs_b": [
+    {
+     "duration_s": 0.121,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.128,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.142,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.132,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.12,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.117,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.databind.deser.std;\n\nimport com.fasterxml.jackson.core.*;\nimport com.fasterxml.jackson.databind.DeserializationContext;\nimport com.fasterxml.jackson.databind.DeserializationFeature;\nimport com.fasterxml.jackson.databind.JavaType;\nimport com.fasterxml.jackson.databind.JsonMappingException;\nimport com.fasterxml.jackson.databind.deser.std.FromStringDeserializer.Std;\nimport com.fasterxml.jackson.databind.exc.InvalidFormatException;\nimport com.fasterxml.jackson.databind.util.ClassUtil;\nimport java.io.*;\nimport java.io.IOException;\nimport java.math.*;\nimport java.net.InetAddress;\nimport java.net.InetSocketAddress;\nimport java.net.URI;\nimport java.net.URL;\nimport java.nio.charset.Charset;\nimport java.util.*;\nimport java.util.Currency;\nimport java.util.Locale;\nimport java.util.TimeZone;\nimport java.util.regex.Pattern;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertEquals;\nimport static org.junit.Assert.assertNotNull;\n\n/**\n * Unit tests for Std._deserializeFromEmptyString()\n */\npublic class Std__deserializeFromEmptyString_TriageGen2Test {\n\n    // Constants to match internal Jackson logic for testing\n    private static final int STD_URI = 1; // Assuming 1 based on typical Jackson internal mapping for URI\n    private static final int STD_OTHER = 0;\n\n    /**\n     * Test subclass to expose the protected method and control the _kind field.\n     * Since _kind is likely private/protected in the parent, we use a subclass to inject value.\n     */\n    private static class TestStd extends Std {\n        private final int kind;\n\n        public TestStd(Class<?> valueType, int kind) {\n            super(valueType, kind);\n            this.kind = kind;\n        }\n\n        // We need to override or simulate the behavior of _kind if it's not accessible.\n        // Since we cannot change the source, we assume the constructor sets it.\n        // In a real scenario, we'd use Reflection if the field is private.\n        \n        @Override\n        protected Object _deserializeFromEmptyString() throws IOException {\n            // Calling the actual method under test\n            return super._deserializeFromEmptyString();\n        }\n\n        // Mocking the super call behavior via a spy or reflection if necessary.\n        // However, since we are testing the logic: \n        // if (_kind == STD_URI) return URI.create(\"\");\n    }\n\n    /**\n     * To test a protected method in a class where we can't easily mock the internal field '_kind',\n     * we use Reflection to set the private field '_kind'.\n     */\n    private static class ReflectiveStd extends Std {\n        public ReflectiveStd(Class<?> valueType, int kind) {\n            super(valueType, kind);\n        }\n    }\n\n    @Test\n    public void test_deserializeFromEmptyString_WithUriKind() throws Exception {\n        // We need to force _kind to be STD_URI. \n        // Since we don't have the exact value of STD_URI constant from the source code here, \n        // we assume the existence of the logic. \n        // In Jackson, STD_URI is usually a specific integer.\n        \n        // For the sake of this test, we use reflection to set the field '_kind'\n        // Note: In actual Jackson source, _kind is a field in FromStringDeserializer.\n        \n        Class<?> clazz = Std.class;\n        // We create an instance. Since Std is protected, we use a dummy class.\n        Std instance = new Std(URI.class, 1) { // Assuming 1 is STD_URI for this test context\n            // This is a hack to bypass protected access if needed, \n            // but here we just call the method.\n        };\n\n        // Since we cannot easily instantiate Std due to protected constructor in some environments,\n        // we use a concrete implementation.\n        \n        // Let's assume STD_URI is the value that triggers the URI branch.\n        // We will use reflection to set the private field '_kind' to the value that represents STD_URI.\n        // In Jackson's FromStringDeserializer, the field is likely 'kind'.\n    }\n\n    // Because the target class is protected and we need to manipulate internal state,\n    // the professional way is to use a test-subclass and Reflection.\n\n    \n\n    \n}\n"
+  }
+ ],
+ "source_sha256": "01348c02e60888a0f186edd885bb387c65d28e80039e4bc83f84166c067e7ee2",
+ "utc": "2026-11-13T06:27:28Z"
+}

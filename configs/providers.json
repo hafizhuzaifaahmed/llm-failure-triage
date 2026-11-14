@@ -1,0 +1,41 @@
+{
+  "_source": "OpenRouter /api/v1/models/<id>/endpoints, fetched 2026-10-30. USD per 1M tokens. OpenRouter bills inference at the provider's listed price (no markup) and charges 5.5% when credits are purchased (Standard plan). Re-check on the run date; the call log stores the provider-reported cost of every call.",
+  "credit_purchase_fee": 0.055,
+  "models": {
+    "deepseek/deepseek-chat-v3-0324": {
+      "role": "M1",
+      "pinned_provider": "GMICloud",
+      "routing": {"order": ["gmicloud/fp8"], "only": ["gmicloud"], "allow_fallbacks": false, "require_parameters": true},
+      "endpoints": {
+        "GMICloud":    {"tag": "gmicloud/fp8",    "input_per_m": 0.29, "output_per_m": 1.14},
+        "SiliconFlow": {"tag": "siliconflow/fp8", "input_per_m": 0.25, "output_per_m": 1.00}
+      }
+    },
+    "qwen/qwen3-235b-a22b-2507": {
+      "role": "M2",
+      "pinned_provider": "DeepInfra",
+      "routing": {"order": ["deepinfra/fp8"], "only": ["deepinfra"], "allow_fallbacks": false, "require_parameters": true},
+      "endpoints": {
+        "DeepInfra": {"tag": "deepinfra/fp8", "input_per_m": 0.09,  "output_per_m": 0.55},
+        "GMICloud":  {"tag": "gmicloud/fp8",  "input_per_m": 0.087, "output_per_m": 0.35},
+        "Parasail":  {"tag": "parasail/fp8",  "input_per_m": 0.14,  "output_per_m": 0.80},
+        "Venice":    {"tag": "venice/fp8",    "input_per_m": 0.15,  "output_per_m": 0.75}
+      }
+    },
+    "openai/gpt-4.1": {
+      "role": "G",
+      "pinned_provider": "OpenAI",
+      "routing": {"order": ["openai"], "only": ["openai"], "allow_fallbacks": false, "require_parameters": true},
+      "endpoints": {
+        "OpenAI":            {"tag": "openai",              "input_per_m": 2.00, "output_per_m": 8.00},
+        "Azure":             {"tag": "azure",               "input_per_m": 2.00, "output_per_m": 8.00},
+        "Azure-swedencentral": {"tag": "azure/swedencentral", "input_per_m": 2.20, "output_per_m": 8.80}
+      }
+    }
+  },
+  "_pinning_rationale": {
+    "M1": "Two fp8 endpoints exist. GMICloud is pinned: same weights, and its rate is the higher of the two, so estimates made with the pinned rate are not optimistic. Fallbacks are disabled, so a provider outage halts the run instead of silently switching hosts.",
+    "M2": "DeepInfra: the endpoint with a recorded 100% recent uptime at the standard rate (GMICloud showed no uptime figure).",
+    "G": "OpenAI first-party: Azure announced GPT-4.1 (2025-04-14) deprecation on 2026-11-04; OpenAI's API removal is 2027-01-14, after the study window."
+  }
+}

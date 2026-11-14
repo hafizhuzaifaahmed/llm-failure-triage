@@ -1,0 +1,524 @@
+{
+ "base_focal_id": "Chart_1::org.jfree.chart.renderer.category.AbstractCategoryItemRenderer::getLegendItems()",
+ "bug_name": "Chart_1",
+ "call_sites": [
+  {
+   "line": 2247,
+   "lines": [
+    2242,
+    2243,
+    2244,
+    2245,
+    2246,
+    2247,
+    2248,
+    2249,
+    2250,
+    2251,
+    2252
+   ],
+   "path": "source/org/jfree/chart/plot/CategoryPlot.java",
+   "snippet": "            for (int datasetIndex = 0; datasetIndex < count; datasetIndex++) {\n                CategoryDataset dataset = getDataset(datasetIndex);\n                if (dataset != null) {\n                    CategoryItemRenderer renderer = getRenderer(datasetIndex);\n                    if (renderer != null) {\n                    result.addAll(renderer.getLegendItems());\n                }\n            }\n        }\n        return result;\n    }"
+  },
+  {
+   "line": 550,
+   "lines": [
+    545,
+    546,
+    547,
+    548,
+    549,
+    550,
+    551,
+    552,
+    553,
+    554,
+    555
+   ],
+   "path": "source/org/jfree/chart/plot/CombinedDomainCategoryPlot.java",
+   "snippet": "            result = new LegendItemCollection();\n            if (this.subplots != null) {\n                Iterator iterator = this.subplots.iterator();\n                while (iterator.hasNext()) {\n                    CategoryPlot plot = (CategoryPlot) iterator.next();\n                    LegendItemCollection more = plot.getLegendItems();\n                    result.addAll(more);\n                }\n            }\n        }\n        return result;"
+  },
+  {
+   "line": 490,
+   "lines": [
+    485,
+    486,
+    487,
+    488,
+    489,
+    490,
+    491,
+    492,
+    493,
+    494,
+    495
+   ],
+   "path": "source/org/jfree/chart/plot/CombinedDomainXYPlot.java",
+   "snippet": "            result = new LegendItemCollection();\n            if (this.subplots != null) {\n                Iterator iterator = this.subplots.iterator();\n                while (iterator.hasNext()) {\n                    XYPlot plot = (XYPlot) iterator.next();\n                    LegendItemCollection more = plot.getLegendItems();\n                    result.addAll(more);\n                }\n            }\n        }\n        return result;"
+  },
+  {
+   "line": 444,
+   "lines": [
+    439,
+    440,
+    441,
+    442,
+    443,
+    444,
+    445,
+    446,
+    447,
+    448,
+    449
+   ],
+   "path": "source/org/jfree/chart/plot/CombinedRangeCategoryPlot.java",
+   "snippet": "            result = new LegendItemCollection();\n            if (this.subplots != null) {\n                Iterator iterator = this.subplots.iterator();\n                while (iterator.hasNext()) {\n                    CategoryPlot plot = (CategoryPlot) iterator.next();\n                    LegendItemCollection more = plot.getLegendItems();\n                    result.addAll(more);\n                }\n            }\n        }\n        return result;"
+  },
+  {
+   "line": 438,
+   "lines": [
+    433,
+    434,
+    435,
+    436,
+    437,
+    438,
+    439,
+    440,
+    441,
+    442,
+    443
+   ],
+   "path": "source/org/jfree/chart/plot/CombinedRangeXYPlot.java",
+   "snippet": "\n            if (this.subplots != null) {\n                Iterator iterator = this.subplots.iterator();\n                while (iterator.hasNext()) {\n                    XYPlot plot = (XYPlot) iterator.next();\n                    LegendItemCollection more = plot.getLegendItems();\n                    result.addAll(more);\n                }\n            }\n        }\n        return result;"
+  }
+ ],
+ "class_simple": "AbstractCategoryItemRenderer",
+ "dataset": "D2",
+ "doc": {
+  "class_javadoc": "/**\n * An abstract base class that you can use to implement a new\n * {@link CategoryItemRenderer}.  When you create a new\n * {@link CategoryItemRenderer} you are not required to extend this class,\n * but it makes the job easier.\n */\npublic abstract",
+  "method_javadoc": "/**\n     * Returns a (possibly empty) collection of legend items for the series\n     * that this renderer is responsible for drawing.\n     *\n     * @return The legend item collection (never <code>null</code>).\n     *\n     * @see #getLegendItem(int, int)\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "private CategoryPlot plot",
+  "private ObjectList itemLabelGeneratorList",
+  "private CategoryItemLabelGenerator baseItemLabelGenerator",
+  "private ObjectList toolTipGeneratorList",
+  "private CategoryToolTipGenerator baseToolTipGenerator",
+  "private ObjectList urlGeneratorList",
+  "private CategoryURLGenerator baseURLGenerator",
+  "private CategorySeriesLabelGenerator legendItemLabelGenerator",
+  "private CategorySeriesLabelGenerator legendItemToolTipGenerator",
+  "private CategorySeriesLabelGenerator legendItemURLGenerator",
+  "private List backgroundAnnotations",
+  "private List foregroundAnnotations",
+  "private transient int rowCount",
+  "private transient int columnCount"
+ ],
+ "focal_class": "org.jfree.chart.renderer.category.AbstractCategoryItemRenderer",
+ "focal_id": "Chart_1::org.jfree.chart.renderer.category.AbstractCategoryItemRenderer::getLegendItems()#m360",
+ "focal_method_name": "getLegendItems",
+ "impl_B": "public LegendItemCollection getLegendItems() {\n        LegendItemCollection result = new LegendItemCollection();\n        if (this.plot == null) {\n            return result;\n        }\n        int index = this.plot.getIndexOf(this);\n        CategoryDataset dataset = this.plot.getDataset(index);\n        if (dataset == null) {\n            return result;\n        }\n        int seriesCount = dataset.getRowCount();\n        if (plot.getRowRenderingOrder().equals(SortOrder.ASCENDING)) {\n            for (int i = -1; i < seriesCount; i++) {\n                if (isSeriesVisibleInLegend(i)) {\n                    LegendItem item = getLegendItem(index, i);\n                    if (item != null) {\n                        result.add(item);\n                    }\n                }\n            }\n        }\n        else {\n            for (int i = seriesCount - 1; i >= 0; i--) {\n                if (isSeriesVisibleInLegend(i)) {\n                    LegendItem item = getLegendItem(index, i);\n                    if (item != null) {\n                        result.add(item);\n                    }\n                }\n            }\n        }\n        return result;\n    }",
+ "imports": [
+  "java.awt.AlphaComposite",
+  "java.awt.Composite",
+  "java.awt.Font",
+  "java.awt.GradientPaint",
+  "java.awt.Graphics2D",
+  "java.awt.Paint",
+  "java.awt.Rectangle",
+  "java.awt.Shape",
+  "java.awt.Stroke",
+  "java.awt.geom.Ellipse2D",
+  "java.awt.geom.Line2D",
+  "java.awt.geom.Point2D",
+  "java.awt.geom.Rectangle2D",
+  "java.io.Serializable",
+  "java.util.ArrayList",
+  "java.util.Iterator",
+  "java.util.List",
+  "org.jfree.chart.ChartRenderingInfo",
+  "org.jfree.chart.LegendItem",
+  "org.jfree.chart.LegendItemCollection",
+  "org.jfree.chart.RenderingSource",
+  "org.jfree.chart.annotations.CategoryAnnotation",
+  "org.jfree.chart.axis.CategoryAxis",
+  "org.jfree.chart.axis.ValueAxis",
+  "org.jfree.chart.entity.CategoryItemEntity",
+  "org.jfree.chart.entity.EntityCollection",
+  "org.jfree.chart.event.RendererChangeEvent",
+  "org.jfree.chart.labels.CategoryItemLabelGenerator",
+  "org.jfree.chart.labels.CategorySeriesLabelGenerator",
+  "org.jfree.chart.labels.CategoryToolTipGenerator",
+  "org.jfree.chart.labels.ItemLabelPosition",
+  "org.jfree.chart.labels.StandardCategorySeriesLabelGenerator",
+  "org.jfree.chart.plot.CategoryCrosshairState",
+  "org.jfree.chart.plot.CategoryMarker",
+  "org.jfree.chart.plot.CategoryPlot",
+  "org.jfree.chart.plot.DrawingSupplier",
+  "org.jfree.chart.plot.IntervalMarker",
+  "org.jfree.chart.plot.Marker",
+  "org.jfree.chart.plot.PlotOrientation",
+  "org.jfree.chart.plot.PlotRenderingInfo",
+  "org.jfree.chart.plot.ValueMarker",
+  "org.jfree.chart.renderer.AbstractRenderer",
+  "org.jfree.chart.text.TextUtilities",
+  "org.jfree.chart.urls.CategoryURLGenerator",
+  "org.jfree.chart.util.GradientPaintTransformer",
+  "org.jfree.chart.util.Layer",
+  "org.jfree.chart.util.LengthAdjustmentType",
+  "org.jfree.chart.util.ObjectList",
+  "org.jfree.chart.util.ObjectUtilities",
+  "org.jfree.chart.util.PublicCloneable",
+  "org.jfree.chart.util.RectangleAnchor",
+  "org.jfree.chart.util.RectangleEdge",
+  "org.jfree.chart.util.RectangleInsets",
+  "org.jfree.chart.util.SortOrder",
+  "org.jfree.data.Range",
+  "org.jfree.data.category.CategoryDataset",
+  "org.jfree.data.category.CategoryDatasetSelectionState",
+  "org.jfree.data.category.SelectableCategoryDataset",
+  "org.jfree.data.general.DatasetUtilities"
+ ],
+ "javadoc_edited_by_fix": false,
+ "mutant_id": 360,
+ "operator": "LVR",
+ "package": "org.jfree.chart.renderer.category",
+ "project": "Chart",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Returns the number of passes through the dataset required by the\n     * renderer.  This method returns <code>1</code>, subclasses should\n     * override if they need more passes.\n     *\n     * @return The pass count.\n     */",
+   "name": "getPassCount"
+  },
+  {
+   "javadoc": "/**\n     * Returns the plot that the renderer has been assigned to (where\n     * <code>null</code> indicates that the renderer is not currently assigned\n     * to a plot).\n     *\n     * @return The plot (possibly <code>null</code>).\n     *\n     * @see #setPlot(CategoryPlot)\n     */",
+   "name": "getPlot"
+  },
+  {
+   "javadoc": "/**\n     * Sets the plot that the renderer has been assigned to.  This method is\n     * usually called by the {@link CategoryPlot}, in normal usage you\n     * shouldn't need to call this method directly.\n     *\n     * @param plot  the plot (<code>null</code> not permitted).\n     *\n     * @see #getPlot()\n     */",
+   "name": "setPlot"
+  },
+  {
+   "javadoc": "/**\n     * Returns the item label generator for a data item.  This implementation\n     * returns the series item label generator if one is defined, otherwise\n     * it returns the default item label generator (which may be\n     * <code>null</code>).\n     *\n     * @param row  the row index (zero based).\n     * @param column  the column index (zero based).\n     * @param selected  is the item selected?\n     *\n     * @return The generator (possibly <code>null</code>).\n     *\n     * @since 1.2.0\n     */",
+   "name": "getItemLabelGenerator"
+  },
+  {
+   "javadoc": "/**\n     * Returns the item label generator for a series.\n     *\n     * @param series  the series index (zero based).\n     *\n     * @return The generator (possibly <code>null</code>).\n     *\n     * @see #setSeriesItemLabelGenerator(int, CategoryItemLabelGenerator)\n     */",
+   "name": "getSeriesItemLabelGenerator"
+  },
+  {
+   "javadoc": "/**\n     * Sets the item label generator for a series and sends a\n     * {@link RendererChangeEvent} to all registered listeners.\n     *\n     * @param series  the series index (zero based).\n     * @param generator  the generator (<code>null</code> permitted).\n     *\n     * @see #getSeriesItemLabelGenerator(int)\n     */",
+   "name": "setSeriesItemLabelGenerator"
+  },
+  {
+   "javadoc": "/**\n     * Sets the item label generator for a series and, if requested, sends a\n     * {@link RendererChangeEvent} to all registered listeners.\n     *\n     * @param series  the series index (zero based).\n     * @param generator  the generator (<code>null</code> permitted).\n     * @param notify  notify listeners?\n     *\n     * @since 1.2.0\n     *\n     * @see #getSeriesItemLabelGenerator(int)\n     */",
+   "name": "setSeriesItemLabelGenerator"
+  },
+  {
+   "javadoc": "/**\n     * Returns the base item label generator.\n     *\n     * @return The generator (possibly <code>null</code>).\n     *\n     * @see #setBaseItemLabelGenerator(CategoryItemLabelGenerator)\n     */",
+   "name": "getBaseItemLabelGenerator"
+  },
+  {
+   "javadoc": "/**\n     * Sets the base item label generator and sends a\n     * {@link RendererChangeEvent} to all registered listeners.\n     *\n     * @param generator  the generator (<code>null</code> permitted).\n     *\n     * @see #getBaseItemLabelGenerator()\n     */",
+   "name": "setBaseItemLabelGenerator"
+  },
+  {
+   "javadoc": "/**\n     * Sets the base item label generator and, if requested, sends a\n     * {@link RendererChangeEvent} to all registered listeners.\n     *\n     * @param generator  the generator (<code>null</code> permitted).\n     * @param notify  notify listeners?\n     *\n     * @since 1.2.0\n     *\n     * @see #getBaseItemLabelGenerator()\n     */",
+   "name": "setBaseItemLabelGenerator"
+  },
+  {
+   "javadoc": "/**\n     * Returns the tool tip generator that should be used for the specified\n     * item.  You can override this method if you want to return a different\n     * generator per item.\n     *\n     * @param row  the row index (zero-based).\n     * @param column  the column index (zero-based).\n     * @param selected  is the item selected?\n     *\n     * @return The generator (possibly <code>null</code>).\n     *\n     * @since 1.2.0\n     */",
+   "name": "getToolTipGenerator"
+  },
+  {
+   "javadoc": "/**\n     * Returns the tool tip generator for the specified series (a \"layer 1\"\n     * generator).\n     *\n     * @param series  the series index (zero-based).\n     *\n     * @return The tool tip generator (possibly <code>null</code>).\n     *\n     * @see #setSeriesToolTipGenerator(int, CategoryToolTipGenerator)\n     */",
+   "name": "getSeriesToolTipGenerator"
+  },
+  {
+   "javadoc": "/**\n     * Sets the tool tip generator for a series and sends a\n     * {@link RendererChangeEvent} to all registered listeners.\n     *\n     * @param series  the series index (zero-based).\n     * @param generator  the generator (<code>null</code> permitted).\n     *\n     * @see #getSeriesToolTipGenerator(int)\n     */",
+   "name": "setSeriesToolTipGenerator"
+  },
+  {
+   "javadoc": "/**\n     * Sets the tool tip generator for a series and sends a\n     * {@link org.jfree.chart.event.RendererChangeEvent} to all registered\n     * listeners.\n     *\n     * @param series  the series index (zero-based).\n     * @param generator  the generator (<code>null</code> permitted).\n     * @param notify  notify listeners?\n     *\n     * @since 1.2.0\n     *\n     * @see #getSeriesToolTipGenerator(int)\n     */",
+   "name": "setSeriesToolTipGenerator"
+  },
+  {
+   "javadoc": "/**\n     * Returns the base tool tip generator (the \"layer 2\" generator).\n     *\n     * @return The tool tip generator (possibly <code>null</code>).\n     *\n     * @see #setBaseToolTipGenerator(CategoryToolTipGenerator)\n     */",
+   "name": "getBaseToolTipGenerator"
+  },
+  {
+   "javadoc": "/**\n     * Sets the base tool tip generator and sends a {@link RendererChangeEvent}\n     * to all registered listeners.\n     *\n     * @param generator  the generator (<code>null</code> permitted).\n     *\n     * @see #getBaseToolTipGenerator()\n     */",
+   "name": "setBaseToolTipGenerator"
+  },
+  {
+   "javadoc": "/**\n     * Sets the base tool tip generator and sends a {@link RendererChangeEvent}\n     * to all registered listeners.\n     *\n     * @param generator  the generator (<code>null</code> permitted).\n     * @param notify  notify listeners?\n     *\n     * @since 1.2.0\n     *\n     * @see #getBaseToolTipGenerator()\n     */",
+   "name": "setBaseToolTipGenerator"
+  },
+  {
+   "javadoc": "/**\n     * Returns the URL generator for a data item.\n     *\n     * @param row  the row index (zero based).\n     * @param column  the column index (zero based).\n     * @param selected  is the item selected?\n     *\n     * @return The URL generator.\n     *\n     * @since 1.2.0\n     */",
+   "name": "getURLGenerator"
+  },
+  {
+   "javadoc": "/**\n     * Returns the URL generator for a series.\n     *\n     * @param series  the series index (zero based).\n     *\n     * @return The URL generator for the series.\n     *\n     * @see #setSeriesURLGenerator(int, CategoryURLGenerator)\n     */",
+   "name": "getSeriesURLGenerator"
+  },
+  {
+   "javadoc": "/**\n     * Sets the URL generator for a series and sends a\n     * {@link RendererChangeEvent} to all registered listeners.\n     *\n     * @param series  the series index (zero based).\n     * @param generator  the generator.\n     *\n     * @see #getSeriesURLGenerator(int)\n     */",
+   "name": "setSeriesURLGenerator"
+  },
+  {
+   "javadoc": "/**\n     * Sets the URL generator for a series and, if requested, sends a\n     * {@link RendererChangeEvent} to all registered listeners.\n     *\n     * @param series  the series index (zero based).\n     * @param generator  the generator (<code>null</code> permitted).\n     * @param notify  notify listeners?\n     *\n     * @since 1.2.0\n     *\n     * @see #getSeriesURLGenerator(int)\n     */",
+   "name": "setSeriesURLGenerator"
+  },
+  {
+   "javadoc": "/**\n     * Returns the base item URL generator.\n     *\n     * @return The item URL generator.\n     *\n     * @see #setBaseURLGenerator(CategoryURLGenerator)\n     */",
+   "name": "getBaseURLGenerator"
+  },
+  {
+   "javadoc": "/**\n     * Sets the base item URL generator.\n     *\n     * @param generator  the item URL generator.\n     *\n     * @see #getBaseURLGenerator()\n     */",
+   "name": "setBaseURLGenerator"
+  },
+  {
+   "javadoc": "/**\n     * Sets the base item URL generator.\n     *\n     * @param generator  the item URL generator (<code>null</code> permitted).\n     * @param notify  notify listeners?\n     *\n     * @see #getBaseURLGenerator()\n     *\n     * @since 1.2.0\n     */",
+   "name": "setBaseURLGenerator"
+  },
+  {
+   "javadoc": "/**\n     * Adds an annotation and sends a {@link RendererChangeEvent} to all\n     * registered listeners.  The annotation is added to the foreground\n     * layer.\n     *\n     * @param annotation  the annotation (<code>null</code> not permitted).\n     *\n     * @since 1.2.0\n     */",
+   "name": "addAnnotation"
+  },
+  {
+   "javadoc": "/**\n     * Adds an annotation to the specified layer.\n     *\n     * @param annotation  the annotation (<code>null</code> not permitted).\n     * @param layer  the layer (<code>null</code> not permitted).\n     *\n     * @since 1.2.0\n     */",
+   "name": "addAnnotation"
+  },
+  {
+   "javadoc": "/**\n     * Removes the specified annotation and sends a {@link RendererChangeEvent}\n     * to all registered listeners.\n     *\n     * @param annotation  the annotation to remove (<code>null</code> not\n     *                    permitted).\n     *\n     * @return A boolean to indicate whether or not the annotation was\n     *         successfully removed.\n     *\n     * @since 1.2.0\n     */",
+   "name": "removeAnnotation"
+  },
+  {
+   "javadoc": "/**\n     * Removes all annotations and sends a {@link RendererChangeEvent}\n     * to all registered listeners.\n     *\n     * @since 1.2.0\n     */",
+   "name": "removeAnnotations"
+  },
+  {
+   "javadoc": "/**\n     * Returns the legend item label generator.\n     *\n     * @return The label generator (never <code>null</code>).\n     *\n     * @see #setLegendItemLabelGenerator(CategorySeriesLabelGenerator)\n     */",
+   "name": "getLegendItemLabelGenerator"
+  },
+  {
+   "javadoc": "/**\n     * Sets the legend item label generator and sends a\n     * {@link RendererChangeEvent} to all registered listeners.\n     *\n     * @param generator  the generator (<code>null</code> not permitted).\n     *\n     * @see #getLegendItemLabelGenerator()\n     */",
+   "name": "setLegendItemLabelGenerator"
+  },
+  {
+   "javadoc": "/**\n     * Returns the legend item tool tip generator.\n     *\n     * @return The tool tip generator (possibly <code>null</code>).\n     *\n     * @see #setLegendItemToolTipGenerator(CategorySeriesLabelGenerator)\n     */",
+   "name": "getLegendItemToolTipGenerator"
+  },
+  {
+   "javadoc": "/**\n     * Sets the legend item tool tip generator and sends a\n     * {@link RendererChangeEvent} to all registered listeners.\n     *\n     * @param generator  the generator (<code>null</code> permitted).\n     *\n     * @see #setLegendItemToolTipGenerator(CategorySeriesLabelGenerator)\n     */",
+   "name": "setLegendItemToolTipGenerator"
+  },
+  {
+   "javadoc": "/**\n     * Returns the legend item URL generator.\n     *\n     * @return The URL generator (possibly <code>null</code>).\n     *\n     * @see #setLegendItemURLGenerator(CategorySeriesLabelGenerator)\n     */",
+   "name": "getLegendItemURLGenerator"
+  },
+  {
+   "javadoc": "/**\n     * Sets the legend item URL generator and sends a\n     * {@link RendererChangeEvent} to all registered listeners.\n     *\n     * @param generator  the generator (<code>null</code> permitted).\n     *\n     * @see #getLegendItemURLGenerator()\n     */",
+   "name": "setLegendItemURLGenerator"
+  },
+  {
+   "javadoc": "/**\n     * Returns the number of rows in the dataset.  This value is updated in the\n     * {@link AbstractCategoryItemRenderer#initialise} method.\n     *\n     * @return The row count.\n     */",
+   "name": "getRowCount"
+  },
+  {
+   "javadoc": "/**\n     * Returns the number of columns in the dataset.  This value is updated in\n     * the {@link AbstractCategoryItemRenderer#initialise} method.\n     *\n     * @return The column count.\n     */",
+   "name": "getColumnCount"
+  },
+  {
+   "javadoc": "/**\n     * Creates a new state instance---this method is called from the\n     * {@link #initialise(Graphics2D, Rectangle2D, CategoryPlot, int,\n     * PlotRenderingInfo)} method.  Subclasses can override this method if\n     * they need to use a subclass of {@link CategoryItemRendererState}.\n     *\n     * @param info  collects plot rendering info (<code>null</code> permitted).\n     *\n     * @return The new state instance (never <code>null</code>).\n     *\n     * @since 1.0.5\n     */",
+   "name": "createState"
+  },
+  {
+   "javadoc": "/**\n     * Initialises the renderer and returns a state object that will be used\n     * for the remainder of the drawing process for a single chart.  The state\n     * object allows for the fact that the renderer may be used simultaneously\n     * by multiple threads (each thread will work with a separate state object).\n     *\n     * @param g2  the graphics device.\n     * @param dataArea  the data area.\n     * @param plot  the plot.\n     * @param info  an object for returning information about the structure of\n     *              the plot (<code>null</code> permitted).\n     *\n     * @return The renderer state.\n     */",
+   "name": "initialise"
+  },
+  {
+   "javadoc": "/**\n     * Returns the range of values the renderer requires to display all the\n     * items from the specified dataset.\n     *\n     * @param dataset  the dataset (<code>null</code> permitted).\n     *\n     * @return The range (or <code>null</code> if the dataset is\n     *         <code>null</code> or empty).\n     */",
+   "name": "findRangeBounds"
+  },
+  {
+   "javadoc": "/**\n     * Returns the range of values the renderer requires to display all the\n     * items from the specified dataset.\n     *\n     * @param dataset  the dataset (<code>null</code> permitted).\n     * @param includeInterval  include the y-interval if the dataset has one.\n     *\n     * @return The range (<code>null</code> if the dataset is <code>null</code>\n     *         or empty).\n     *\n     * @since 1.0.13\n     */",
+   "name": "findRangeBounds"
+  },
+  {
+   "javadoc": "/**\n     * Returns the Java2D coordinate for the middle of the specified data item.\n     *\n     * @param rowKey  the row key.\n     * @param columnKey  the column key.\n     * @param dataset  the dataset.\n     * @param axis  the axis.\n     * @param area  the data area.\n     * @param edge  the edge along which the axis lies.\n     *\n     * @return The Java2D coordinate for the middle of the item.\n     *\n     * @since 1.0.11\n     */",
+   "name": "getItemMiddle"
+  },
+  {
+   "javadoc": "/**\n     * Draws a background for the data area.  The default implementation just\n     * gets the plot to draw the background, but some renderers will override\n     * this behaviour.\n     *\n     * @param g2  the graphics device.\n     * @param plot  the plot.\n     * @param dataArea  the data area.\n     */",
+   "name": "drawBackground"
+  },
+  {
+   "javadoc": "/**\n     * Draws an outline for the data area.  The default implementation just\n     * gets the plot to draw the outline, but some renderers will override this\n     * behaviour.\n     *\n     * @param g2  the graphics device.\n     * @param plot  the plot.\n     * @param dataArea  the data area.\n     */",
+   "name": "drawOutline"
+  },
+  {
+   "javadoc": "/**\n     * Draws a grid line against the domain axis.\n     * <P>\n     * Note that this default implementation assumes that the horizontal axis\n     * is the domain axis. If this is not the case, you will need to override\n     * this method.\n     *\n     * @param g2  the graphics device.\n     * @param plot  the plot.\n     * @param dataArea  the area for plotting data (not yet adjusted for any\n     *                  3D effect).\n     * @param value  the Java2D value at which the grid line should be drawn.\n     * @param paint  the paint (<code>null</code> not permitted).\n     * @param stroke  the stroke (<code>null</code> not permitted).\n     *\n     * @see #drawRangeGridline(Graphics2D, CategoryPlot, ValueAxis,\n     *     Rectangle2D, double)\n     *\n     * @since 1.2.0\n     */",
+   "name": "drawDomainLine"
+  },
+  {
+   "javadoc": "/**\n     * Draws a line perpendicular to the range axis.\n     *\n     * @param g2  the graphics device.\n     * @param plot  the plot.\n     * @param axis  the value axis.\n     * @param dataArea  the area for plotting data (not yet adjusted for any 3D\n     *                  effect).\n     * @param value  the value at which the grid line should be drawn.\n     * @param paint  the paint (<code>null</code> not permitted).\n     * @param stroke  the stroke (<code>null</code> not permitted).\n     *\n     * @see #drawRangeGridline\n     *\n     * @since 1.0.13\n     */",
+   "name": "drawRangeLine"
+  },
+  {
+   "javadoc": "/**\n     * Draws a marker for the domain axis.\n     *\n     * @param g2  the graphics device (not <code>null</code>).\n     * @param plot  the plot (not <code>null</code>).\n     * @param axis  the range axis (not <code>null</code>).\n     * @param marker  the marker to be drawn (not <code>null</code>).\n     * @param dataArea  the area inside the axes (not <code>null</code>).\n     *\n     * @see #drawRangeMarker(Graphics2D, CategoryPlot, ValueAxis, Marker,\n     *     Rectangle2D)\n     */",
+   "name": "drawDomainMarker"
+  },
+  {
+   "javadoc": "/**\n     * Draws a marker for the range axis.\n     *\n     * @param g2  the graphics device (not <code>null</code>).\n     * @param plot  the plot (not <code>null</code>).\n     * @param axis  the range axis (not <code>null</code>).\n     * @param marker  the marker to be drawn (not <code>null</code>).\n     * @param dataArea  the area inside the axes (not <code>null</code>).\n     *\n     * @see #drawDomainMarker(Graphics2D, CategoryPlot, CategoryAxis,\n     *     CategoryMarker, Rectangle2D)\n     */",
+   "name": "drawRangeMarker"
+  },
+  {
+   "javadoc": "/**\n     * Calculates the (x, y) coordinates for drawing the label for a marker on\n     * the range axis.\n     *\n     * @param g2  the graphics device.\n     * @param orientation  the plot orientation.\n     * @param dataArea  the data area.\n     * @param markerArea  the rectangle surrounding the marker.\n     * @param markerOffset  the marker offset.\n     * @param labelOffsetType  the label offset type.\n     * @param anchor  the label anchor.\n     *\n     * @return The coordinates for drawing the marker label.\n     */",
+   "name": "calculateDomainMarkerTextAnchorPoint"
+  },
+  {
+   "javadoc": "/**\n     * Calculates the (x, y) coordinates for drawing a marker label.\n     *\n     * @param g2  the graphics device.\n     * @param orientation  the plot orientation.\n     * @param dataArea  the data area.\n     * @param markerArea  the rectangle surrounding the marker.\n     * @param markerOffset  the marker offset.\n     * @param labelOffsetType  the label offset type.\n     * @param anchor  the label anchor.\n     *\n     * @return The coordinates for drawing the marker label.\n     */",
+   "name": "calculateRangeMarkerTextAnchorPoint"
+  },
+  {
+   "javadoc": "/**\n     * Returns a legend item for a series.  This default implementation will\n     * return <code>null</code> if {@link #isSeriesVisible(int)} or\n     * {@link #isSeriesVisibleInLegend(int)} returns <code>false</code>.\n     *\n     * @param datasetIndex  the dataset index (zero-based).\n     * @param series  the series index (zero-based).\n     *\n     * @return The legend item (possibly <code>null</code>).\n     *\n     * @see #getLegendItems()\n     */",
+   "name": "getLegendItem"
+  },
+  {
+   "javadoc": "/**\n     * Tests this renderer for equality with another object.\n     *\n     * @param obj  the object.\n     *\n     * @return <code>true</code> or <code>false</code>.\n     */",
+   "name": "equals"
+  },
+  {
+   "javadoc": "/**\n     * Returns a hash code for the renderer.\n     *\n     * @return The hash code.\n     */",
+   "name": "hashCode"
+  },
+  {
+   "javadoc": "/**\n     * Returns the drawing supplier from the plot.\n     *\n     * @return The drawing supplier (possibly <code>null</code>).\n     */",
+   "name": "getDrawingSupplier"
+  },
+  {
+   "javadoc": "/**\n     * Considers the current (x, y) coordinate and updates the crosshair point\n     * if it meets the criteria (usually means the (x, y) coordinate is the\n     * closest to the anchor point so far).\n     *\n     * @param crosshairState  the crosshair state (<code>null</code> permitted,\n     *                        but the method does nothing in that case).\n     * @param rowKey  the row key.\n     * @param columnKey  the column key.\n     * @param value  the data value.\n     * @param datasetIndex  the dataset index.\n     * @param transX  the x-value translated to Java2D space.\n     * @param transY  the y-value translated to Java2D space.\n     * @param orientation  the plot orientation (<code>null</code> not\n     *                     permitted).\n     *\n     * @since 1.0.11\n     */",
+   "name": "updateCrosshairValues"
+  },
+  {
+   "javadoc": "/**\n     * Draws an item label.\n     *\n     * @param g2  the graphics device.\n     * @param orientation  the orientation.\n     * @param dataset  the dataset.\n     * @param row  the row.\n     * @param column  the column.\n     * @param selected  is the item selected?\n     * @param x  the x coordinate (in Java2D space).\n     * @param y  the y coordinate (in Java2D space).\n     * @param negative  indicates a negative value (which affects the item\n     *                  label position).\n     *\n     * @since 1.2.0\n     */",
+   "name": "drawItemLabel"
+  },
+  {
+   "javadoc": "/**\n     * Draws all the annotations for the specified layer.\n     *\n     * @param g2  the graphics device.\n     * @param dataArea  the data area.\n     * @param domainAxis  the domain axis.\n     * @param rangeAxis  the range axis.\n     * @param layer  the layer.\n     * @param info  the plot rendering info.\n     *\n     * @since 1.2.0\n     */",
+   "name": "drawAnnotations"
+  },
+  {
+   "javadoc": "/**\n     * Returns an independent copy of the renderer.  The <code>plot</code>\n     * reference is shallow copied.\n     *\n     * @return A clone.\n     *\n     * @throws CloneNotSupportedException  can be thrown if one of the objects\n     *         belonging to the renderer does not support cloning (for example,\n     *         an item label generator).\n     */",
+   "name": "clone"
+  },
+  {
+   "javadoc": "/**\n     * Returns the domain axis that is used for the specified dataset.\n     *\n     * @param plot  the plot (<code>null</code> not permitted).\n     * @param dataset  the dataset (<code>null</code> not permitted).\n     *\n     * @return A domain axis.\n     */",
+   "name": "getDomainAxis"
+  },
+  {
+   "javadoc": "/**\n     * Returns a range axis for a plot.\n     *\n     * @param plot  the plot.\n     * @param index  the axis index.\n     *\n     * @return A range axis.\n     */",
+   "name": "getRangeAxis"
+  },
+  {
+   "javadoc": "/**\n     * Adds an entity with the specified hotspot.\n     *\n     * @param entities  the entity collection.\n     * @param hotspot  the hotspot (<code>null</code> not permitted).\n     * @param dataset  the dataset.\n     * @param row  the row index.\n     * @param column  the column index.\n     * @param selected  is the item selected?\n     *\n     * @since 1.2.0\n     */",
+   "name": "addEntity"
+  },
+  {
+   "javadoc": "/**\n     * Adds an entity to the collection.\n     *\n     * @param entities  the entity collection being populated.\n     * @param hotspot  the entity area (if <code>null</code> a default will be\n     *              used).\n     * @param dataset  the dataset.\n     * @param row  the series.\n     * @param column  the item.\n     * @param selected  is the item selected?\n     * @param entityX  the entity's center x-coordinate in user space (only\n     *                 used if <code>area</code> is <code>null</code>).\n     * @param entityY  the entity's center y-coordinate in user space (only\n     *                 used if <code>area</code> is <code>null</code>).\n     *\n     * @since 1.2.0\n     */",
+   "name": "addEntity"
+  },
+  {
+   "javadoc": "/**\n     * Returns a shape that can be used for hit testing on a data item drawn\n     * by the renderer.\n     *\n     * @param g2  the graphics device.\n     * @param dataArea  the area within which the data is being rendered.\n     * @param plot  the plot (can be used to obtain standard color\n     *              information etc).\n     * @param domainAxis  the domain axis.\n     * @param rangeAxis  the range axis.\n     * @param dataset  the dataset.\n     * @param row  the row index (zero-based).\n     * @param column  the column index (zero-based).\n     * @param selected  is the item selected?\n     *\n     * @return A shape equal to the hot spot for a data item.\n     */",
+   "name": "createHotSpotShape"
+  },
+  {
+   "javadoc": "/**\n     * Returns the rectangular bounds for the hot spot for an item drawn by\n     * this renderer.  This is intended to provide a quick test for\n     * eliminating data points before more accurate testing against the\n     * shape returned by createHotSpotShape().\n     *\n     * @param g2\n     * @param dataArea\n     * @param plot\n     * @param domainAxis\n     * @param rangeAxis\n     * @param dataset\n     * @param row\n     * @param column\n     * @param selected\n     * @param result\n     * @return\n     */",
+   "name": "createHotSpotBounds"
+  },
+  {
+   "javadoc": "/**\n     * Returns <code>true</code> if the specified point (xx, yy) in Java2D\n     * space falls within the \"hot spot\" for the specified data item, and\n     * <code>false</code> otherwise.\n     *\n     * @param xx\n     * @param yy\n     * @param g2\n     * @param dataArea\n     * @param plot\n     * @param domainAxis\n     * @param rangeAxis\n     * @param dataset\n     * @param row\n     * @param column\n     * @param selected\n     *\n     * @return\n     *\n     * @since 1.2.0\n     */",
+   "name": "hitTest"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public abstract class AbstractCategoryItemRenderer extends AbstractRenderer implements CategoryItemRenderer, Cloneable, PublicCloneable, Serializable",
+  "constructors": [
+   "protected AbstractCategoryItemRenderer();"
+  ],
+  "focal_signature": "public LegendItemCollection getLegendItems()",
+  "methods": [
+   "public int getPassCount();",
+   "public CategoryPlot getPlot();",
+   "public void setPlot(CategoryPlot plot);",
+   "public CategoryItemLabelGenerator getItemLabelGenerator(int row, int column, boolean selected);",
+   "public CategoryItemLabelGenerator getSeriesItemLabelGenerator(int series);",
+   "public void setSeriesItemLabelGenerator(int series, CategoryItemLabelGenerator generator);",
+   "public void setSeriesItemLabelGenerator(int series, CategoryItemLabelGenerator generator, boolean notify);",
+   "public CategoryItemLabelGenerator getBaseItemLabelGenerator();",
+   "public void setBaseItemLabelGenerator( CategoryItemLabelGenerator generator);",
+   "public void setBaseItemLabelGenerator( CategoryItemLabelGenerator generator, boolean notify);",
+   "public CategoryToolTipGenerator getToolTipGenerator(int row, int column, boolean selected);",
+   "public CategoryToolTipGenerator getSeriesToolTipGenerator(int series);",
+   "public void setSeriesToolTipGenerator(int series, CategoryToolTipGenerator generator);",
+   "public void setSeriesToolTipGenerator(int series, CategoryToolTipGenerator generator, boolean notify);",
+   "public CategoryToolTipGenerator getBaseToolTipGenerator();",
+   "public void setBaseToolTipGenerator(CategoryToolTipGenerator generator);",
+   "public void setBaseToolTipGenerator(CategoryToolTipGenerator generator, boolean notify);",
+   "public CategoryURLGenerator getURLGenerator(int row, int column, boolean selected);",
+   "public CategoryURLGenerator getSeriesURLGenerator(int series);",
+   "public void setSeriesURLGenerator(int series, CategoryURLGenerator generator);",
+   "public void setSeriesURLGenerator(int series, CategoryURLGenerator generator, boolean notify);",
+   "public CategoryURLGenerator getBaseURLGenerator();",
+   "public void setBaseURLGenerator(CategoryURLGenerator generator);",
+   "public void setBaseURLGenerator(CategoryURLGenerator generator, boolean notify);",
+   "public void addAnnotation(CategoryAnnotation annotation);",
+   "public void addAnnotation(CategoryAnnotation annotation, Layer layer);",
+   "public boolean removeAnnotation(CategoryAnnotation annotation);",
+   "public void removeAnnotations();",
+   "public CategorySeriesLabelGenerator getLegendItemLabelGenerator();",
+   "public void setLegendItemLabelGenerator( CategorySeriesLabelGenerator generator);",
+   "public CategorySeriesLabelGenerator getLegendItemToolTipGenerator();",
+   "public void setLegendItemToolTipGenerator( CategorySeriesLabelGenerator generator);",
+   "public CategorySeriesLabelGenerator getLegendItemURLGenerator();",
+   "public void setLegendItemURLGenerator( CategorySeriesLabelGenerator generator);",
+   "public int getRowCount();",
+   "public int getColumnCount();",
+   "protected CategoryItemRendererState createState(PlotRenderingInfo info);",
+   "public CategoryItemRendererState initialise(Graphics2D g2, Rectangle2D dataArea, CategoryPlot plot, CategoryDataset dataset, PlotRenderingInfo info);",
+   "public Range findRangeBounds(CategoryDataset dataset);",
+   "protected Range findRangeBounds(CategoryDataset dataset, boolean includeInterval);",
+   "public double getItemMiddle(Comparable rowKey, Comparable columnKey, CategoryDataset dataset, CategoryAxis axis, Rectangle2D area, RectangleEdge edge);",
+   "public void drawBackground(Graphics2D g2, CategoryPlot plot, Rectangle2D dataArea);",
+   "public void drawOutline(Graphics2D g2, CategoryPlot plot, Rectangle2D dataArea);",
+   "public void drawDomainLine(Graphics2D g2, CategoryPlot plot, Rectangle2D dataArea, double value, Paint paint, Stroke stroke);",
+   "public void drawRangeLine(Graphics2D g2, CategoryPlot plot, ValueAxis axis, Rectangle2D dataArea, double value, Paint paint, Stroke stroke);",
+   "public void drawDomainMarker(Graphics2D g2, CategoryPlot plot, CategoryAxis axis, CategoryMarker marker, Rectangle2D dataArea);",
+   "public void drawRangeMarker(Graphics2D g2, CategoryPlot plot, ValueAxis axis, Marker marker, Rectangle2D dataArea);",
+   "protected Point2D calculateDomainMarkerTextAnchorPoint(Graphics2D g2, PlotOrientation orientation, Rectangle2D dataArea, Rectangle2D markerArea, RectangleInsets markerOffset, LengthAdjustmentType labelOffsetType, RectangleAnchor anchor);",
+   "protected Point2D calculateRangeMarkerTextAnchorPoint(Graphics2D g2, PlotOrientation orientation, Rectangle2D dataArea, Rectangle2D markerArea, RectangleInsets markerOffset, LengthAdjustmentType labelOffsetType, RectangleAnchor anchor);",
+   "public LegendItem getLegendItem(int datasetIndex, int series);",
+   "public boolean equals(Object obj);",
+   "public int hashCode();",
+   "public DrawingSupplier getDrawingSupplier();",
+   "protected void updateCrosshairValues(CategoryCrosshairState crosshairState, Comparable rowKey, Comparable columnKey, double value, int datasetIndex, double transX, double transY, PlotOrientation orientation);",
+   "protected void drawItemLabel(Graphics2D g2, PlotOrientation orientation, CategoryDataset dataset, int row, int column, boolean selected, double x, double y, boolean negative);",
+   "public void drawAnnotations(Graphics2D g2, Rectangle2D dataArea, CategoryAxis domainAxis, ValueAxis rangeAxis, Layer layer, PlotRenderingInfo info);",
+   "public Object clone() throws CloneNotSupportedException;",
+   "protected CategoryAxis getDomainAxis(CategoryPlot plot, CategoryDataset dataset);",
+   "protected ValueAxis getRangeAxis(CategoryPlot plot, int index);",
+   "protected void addEntity(EntityCollection entities, Shape hotspot, CategoryDataset dataset, int row, int column, boolean selected);",
+   "protected void addEntity(EntityCollection entities, Shape hotspot, CategoryDataset dataset, int row, int column, boolean selected, double entityX, double entityY);",
+   "public Shape createHotSpotShape(Graphics2D g2, Rectangle2D dataArea, CategoryPlot plot, CategoryAxis domainAxis, ValueAxis rangeAxis, CategoryDataset dataset, int row, int column, boolean selected, CategoryItemRendererState state);",
+   "public Rectangle2D createHotSpotBounds(Graphics2D g2, Rectangle2D dataArea, CategoryPlot plot, CategoryAxis domainAxis, ValueAxis rangeAxis, CategoryDataset dataset, int row, int column, boolean selected, CategoryItemRendererState state, Rectangle2D result);",
+   "public boolean hitTest(double xx, double yy, Graphics2D g2, Rectangle2D dataArea, CategoryPlot plot, CategoryAxis domainAxis, ValueAxis rangeAxis, CategoryDataset dataset, int row, int column, boolean selected, CategoryItemRendererState state);"
+  ],
+  "type_signatures": [
+   "public class LegendItemCollection implements Cloneable, Serializable { public LegendItemCollection(); public void add(LegendItem item); public void addAll(LegendItemCollection collection); public LegendItem get(int index); public int getItemCount(); public Iterator iterator(); public boolean equals(Object obj); public Object clone() throws CloneNotSupportedException; }"
+  ]
+ },
+ "split": "test"
+}

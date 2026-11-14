@@ -1,0 +1,485 @@
+{
+ "bug_name": "Closure_165",
+ "call_sites": [
+  {
+   "line": 471,
+   "lines": [
+    466,
+    467,
+    468,
+    469,
+    470,
+    471,
+    472,
+    473,
+    474,
+    475,
+    476
+   ],
+   "path": "src/com/google/javascript/jscomp/AliasExternals.java",
+   "snippet": "      this.whitelist = whitelist;\n    }\n\n    @Override\n    public void visit(NodeTraversal t, Node n, Node parent) {\n      switch (n.getType()) {\n        case Token.GETPROP:\n        case Token.GETELEM:\n          Node dest = n.getFirstChild().getNext();\n          if (dest.isString() &&\n              (whitelist.isEmpty() || whitelist.contains(dest.getString()))) {"
+  },
+  {
+   "line": 625,
+   "lines": [
+    620,
+    621,
+    622,
+    623,
+    624,
+    625,
+    626,
+    627,
+    628,
+    629,
+    630
+   ],
+   "path": "src/com/google/javascript/jscomp/AliasExternals.java",
+   "snippet": "      }\n    }\n\n    @Override\n    public void visit(NodeTraversal t, Node n, Node parent) {\n      switch (n.getType()) {\n        case Token.FUNCTION:\n          getGlobalName(t, n.getFirstChild(), n);\n          break;\n        case Token.VAR:\n          for (Node varChild = n.getFirstChild();"
+  },
+  {
+   "line": 44,
+   "lines": [
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49
+   ],
+   "path": "src/com/google/javascript/jscomp/AliasKeywords.java",
+   "snippet": "class AliasKeywords implements CompilerPass {\n  /** Callback that finds the nodes that we will alias. */\n  private class FindAliasableNodes extends AbstractPostOrderCallback {\n    @Override\n    public void visit(NodeTraversal t, Node n, Node parent) {\n      final int type = n.getType();\n      if (isAliasableType(type)) {\n        visitAliasableNode(n, parent);\n      } else if (type == Token.NAME) {\n        visitNameNode(n);\n      }"
+  },
+  {
+   "line": 57,
+   "lines": [
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62
+   ],
+   "path": "src/com/google/javascript/jscomp/AliasKeywords.java",
+   "snippet": "    /**\n     * Find the AliasSpecification associated with the node, and tell\n     * that AliasSpecification about the new node.\n     */\n    private void visitAliasableNode(Node n, Node parent) {\n      AliasSpecification aliasableNodes = aliasTypes.get(n.getType());\n      aliasableNodes.visit(n, parent);\n    }\n\n    /**\n     * Sanity check that our aliases are not already defined by"
+  },
+  {
+   "line": 68,
+   "lines": [
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73
+   ],
+   "path": "src/com/google/javascript/jscomp/AliasKeywords.java",
+   "snippet": "     * someone else.\n     */\n    private void visitNameNode(Node n) {\n      if (isAliasDefinition(n)) {\n        throw new IllegalStateException(\n            \"Existing alias definition for \" + Token.name(n.getType()));\n      }\n    }\n  }\n\n  /**"
+  }
+ ],
+ "class_simple": "JSTypeRegistry",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * The type registry is used to resolve named types.\n *\n * <p>This class is not thread-safe.\n *\n */\npublic",
+  "method_javadoc": "/**\n   * Looks up a type by name. To allow for forward references to types, an\n   * unrecognized string has to be bound to a NamedType object that will be\n   * resolved later.\n   *\n   * @param scope A scope for doing type name resolution.\n   * @param jsTypeName The name string.\n   * @param sourceName The name of the source file where this reference appears.\n   * @param lineno The line number of the reference.\n   * @return a NamedType if the string argument is not one of the known types,\n   *     otherwise the corresponding JSType object.\n   */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "private static final int PROPERTY_CHECKING_UNION_SIZE",
+  "private final transient ErrorReporter reporter",
+  "private final JSType[] nativeTypes",
+  "private final Map<String, JSType> namesToTypes",
+  "private final Set<String> namespaces",
+  "private final Set<String> nonNullableTypeNames",
+  "private final Set<String> forwardDeclaredTypes",
+  "private final Map<String, UnionTypeBuilder> typesIndexedByProperty",
+  "private final Map<String, Map<String, ObjectType>> eachRefTypeIndexedByProperty",
+  "private final Map<String, JSType> greatestSubtypeByProperty",
+  "private final Multimap<String, FunctionType> interfaceToImplementors",
+  "private final Multimap<StaticScope<JSType>, NamedType> unresolvedNamedTypes",
+  "private final Multimap<StaticScope<JSType>, NamedType> resolvedNamedTypes",
+  "private boolean lastGeneration",
+  "private String templateTypeName",
+  "private TemplateType templateType",
+  "private final boolean tolerateUndefinedValues",
+  "private ResolveMode resolveMode"
+ ],
+ "focal_class": "com.google.javascript.rhino.jstype.JSTypeRegistry",
+ "focal_id": "Closure_165::com.google.javascript.rhino.jstype.JSTypeRegistry::getType(StaticScope<JSType>,String,String,int,int)",
+ "focal_method_name": "getType",
+ "generations": 3,
+ "impl_B": "public JSType getType(StaticScope<JSType> scope, String jsTypeName,\n      String sourceName, int lineno, int charno) {\n    JSType type = getType(jsTypeName);\n    if (type == null) {\n      // TODO(user): Each instance should support named type creation using\n      // interning.\n      NamedType namedType =\n          new NamedType(this, jsTypeName, sourceName, lineno, charno);\n      unresolvedNamedTypes.put(scope, namedType);\n      type = namedType;\n    }\n    return type;\n  }",
+ "imports": [
+  "static com.google.javascript.rhino.jstype.JSTypeNative.ALL_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.ARRAY_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.NO_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.UNKNOWN_TYPE",
+  "static com.google.javascript.rhino.jstype.JSTypeNative.VOID_TYPE",
+  "com.google.common.annotations.VisibleForTesting",
+  "com.google.common.base.Preconditions",
+  "com.google.common.collect.ArrayListMultimap",
+  "com.google.common.collect.ImmutableList",
+  "com.google.common.collect.LinkedHashMultimap",
+  "com.google.common.collect.Lists",
+  "com.google.common.collect.Maps",
+  "com.google.common.collect.Multimap",
+  "com.google.javascript.rhino.ErrorReporter",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.ScriptRuntime",
+  "com.google.javascript.rhino.Token",
+  "com.google.javascript.rhino.jstype.RecordTypeBuilder.RecordProperty",
+  "java.io.Serializable",
+  "java.util.Collection",
+  "java.util.HashMap",
+  "java.util.HashSet",
+  "java.util.List",
+  "java.util.Map",
+  "java.util.Set"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.rhino.jstype",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "/**\n   * Set the current resolving mode of the type registry.\n   * @see ResolveMode\n   */",
+   "name": "setResolveMode"
+  },
+  {
+   "javadoc": "",
+   "name": "getErrorReporter"
+  },
+  {
+   "javadoc": "",
+   "name": "shouldTolerateUndefinedValues"
+  },
+  {
+   "javadoc": "/**\n   * Reset to run the TypeCheck pass.\n   */",
+   "name": "resetForTypeCheck"
+  },
+  {
+   "javadoc": "/**\n   * Tells the type system that {@code owner} may have a property named\n   * {@code propertyName}. This allows the registry to keep track of what\n   * types a property is defined upon.\n   *\n   * This is NOT the same as saying that {@code owner} must have a property\n   * named type. ObjectType#hasProperty attempts to minimize false positives\n   * (\"if we're not sure, then don't type check this property\"). The type\n   * registry, on the other hand, should attempt to minimize false negatives\n   * (\"if this property is assigned anywhere in the program, it must\n   * show up in the type registry\").\n   */",
+   "name": "registerPropertyOnType"
+  },
+  {
+   "javadoc": "/**\n   * Removes the index's reference to a property on the given type (if it is\n   * currently registered). If the property is not registered on the type yet,\n   * this method will not change internal state.\n   *\n   * @param propertyName the name of the property to unregister\n   * @param type the type to unregister the property on.\n   */",
+   "name": "unregisterPropertyOnType"
+  },
+  {
+   "javadoc": "/**\n   * Gets the greatest subtype of the {@code type} that has a property\n   * {@code propertyName} defined on it.\n   */",
+   "name": "getGreatestSubtypeWithProperty"
+  },
+  {
+   "javadoc": "/**\n   * Returns whether the given property can possibly be set on the given type.\n   */",
+   "name": "canPropertyBeDefined"
+  },
+  {
+   "javadoc": "/**\n   * Returns each type that has a property {@code propertyName} defined on it.\n   *\n   * Like most types in our type system, the collection of types returned\n   * will be collapsed. This means that if a type is defined on\n   * {@code Object} and on {@code Array}, it would be reasonable for this\n   * method to return either {@code [Object, Array]} or just {@code [Object]}.\n   */",
+   "name": "getTypesWithProperty"
+  },
+  {
+   "javadoc": "/**\n   * Returns each reference type that has a property {@code propertyName}\n   * defined on it.\n   *\n   * Unlike most types in our type system, the collection of types returned\n   * will not be collapsed. This means that if a type is defined on\n   * {@code Object} and on {@code Array}, this method must return\n   * {@code [Object, Array]}. It would not be correct to collapse them to\n   * {@code [Object]}.\n   */",
+   "name": "getEachReferenceTypeWithProperty"
+  },
+  {
+   "javadoc": "/**\n   * Increments the current generation. Clients must call this in order to\n   * move to the next generation of type resolution, allowing types to attempt\n   * resolution again.\n   */",
+   "name": "incrementGeneration"
+  },
+  {
+   "javadoc": "/**\n   * Sets whether this is the last generation. In the last generation,\n   * {@link NamedType} warns about unresolved types.\n   */",
+   "name": "setLastGeneration"
+  },
+  {
+   "javadoc": "/**\n   * Returns a collection of types that directly implement {@code\n   * interfaceInstance}.  Subtypes of implementing types are not guaranteed to\n   * be returned.  {@code interfaceInstance} must be an ObjectType for the\n   * instance of the interface.\n   */",
+   "name": "getDirectImplementors"
+  },
+  {
+   "javadoc": "/**\n   * Records declared global type names. This makes resolution faster\n   * and more robust in the common case.\n   *\n   * @param name The name of the type to be recorded.\n   * @param t The actual type being associated with the name.\n   * @return True if this name is not already defined, false otherwise.\n   */",
+   "name": "declareType"
+  },
+  {
+   "javadoc": "/**\n   * Overrides a declared global type name. Throws an exception if this\n   * type name hasn't been declared yet.\n   */",
+   "name": "overwriteDeclaredType"
+  },
+  {
+   "javadoc": "/**\n   * Records a forward-declared type name. We will not emit errors if this\n   * type name never resolves to anything.\n   */",
+   "name": "forwardDeclareType"
+  },
+  {
+   "javadoc": "/**\n   * Whether this is a forward-declared type name.\n   */",
+   "name": "isForwardDeclaredType"
+  },
+  {
+   "javadoc": "/** Determines whether the given JS package exists. */",
+   "name": "hasNamespace"
+  },
+  {
+   "javadoc": "/**\n   * Looks up a type by name.\n   *\n   * @param jsTypeName The name string.\n   * @return the corresponding JSType object or {@code null} it cannot be found\n   */",
+   "name": "getType"
+  },
+  {
+   "javadoc": "",
+   "name": "getNativeType"
+  },
+  {
+   "javadoc": "",
+   "name": "getNativeObjectType"
+  },
+  {
+   "javadoc": "",
+   "name": "getNativeFunctionType"
+  },
+  {
+   "javadoc": "/**\n   * Flushes out the current resolved and unresovled Named Types from\n   * the type registry.  This is intended to be used ONLY before a\n   * compile is run.\n   */",
+   "name": "clearNamedTypes"
+  },
+  {
+   "javadoc": "/**\n   * Resolve all the unresolved types in the given scope.\n   */",
+   "name": "resolveTypesInScope"
+  },
+  {
+   "javadoc": "/**\n   * Creates a type representing optional values of the given type.\n   * @return the union of the type and the void type\n   */",
+   "name": "createOptionalType"
+  },
+  {
+   "javadoc": "/**\n   * Creates a type representing nullable values of the given type.\n   * @return the union of the type and the Null type\n   */",
+   "name": "createDefaultObjectUnion"
+  },
+  {
+   "javadoc": "/**\n   * Creates a type representing nullable values of the given type.\n   * @return the union of the type and the Null type\n   */",
+   "name": "createNullableType"
+  },
+  {
+   "javadoc": "/**\n   * Creates a nullabel and undefine-able value of the given type.\n   * @return The union of the type and null and undefined.\n   */",
+   "name": "createOptionalNullableType"
+  },
+  {
+   "javadoc": "/**\n   * Creates a union type whose variants are the arguments.\n   */",
+   "name": "createUnionType"
+  },
+  {
+   "javadoc": "/**\n   * Creates a union type whose variants are the builtin types specified\n   * by the arguments.\n   */",
+   "name": "createUnionType"
+  },
+  {
+   "javadoc": "/**\n   * Creates an enum type.\n   */",
+   "name": "createEnumType"
+  },
+  {
+   "javadoc": "/**\n   * Creates a function type.\n   *\n   * @param returnType the function's return type\n   * @param parameterTypes the parameters' types\n   */",
+   "name": "createFunctionType"
+  },
+  {
+   "javadoc": "/**\n   * Creates a function type. The last parameter type of the function is\n   * considered a variable length argument.\n   *\n   * @param returnType the function's return type\n   * @param parameterTypes the parameters' types\n   */",
+   "name": "createFunctionTypeWithVarArgs"
+  },
+  {
+   "javadoc": "/**\n   * Creates a function type.\n   *\n   * @param returnType the function's return type\n   * @param parameterTypes the parameters' types\n   */",
+   "name": "createFunctionType"
+  },
+  {
+   "javadoc": "/**\n   * Creates a function type. The last parameter type of the function is\n   * considered a variable length argument.\n   *\n   * @param returnType the function's return type\n   * @param parameterTypes the parameters' types\n   */",
+   "name": "createFunctionTypeWithVarArgs"
+  },
+  {
+   "javadoc": "/**\n   * Creates a function type which can act as a constructor.\n   *\n   * @param returnType the function's return type\n   * @param parameterTypes the parameters' types\n   */",
+   "name": "createConstructorType"
+  },
+  {
+   "javadoc": "/**\n   * Creates a function type which can act as a constructor. The last\n   * parameter type of the constructor is considered a variable length argument.\n   *\n   * @param returnType the function's return type\n   * @param parameterTypes the parameters' types\n   */",
+   "name": "createConstructorTypeWithVarArgs"
+  },
+  {
+   "javadoc": "/**\n   * Creates a function type in which {@code this} refers to an object instance.\n   *\n   * @param instanceType the type of {@code this}\n   * @param returnType the function's return type\n   * @param parameterTypes the parameters' types\n   */",
+   "name": "createFunctionType"
+  },
+  {
+   "javadoc": "/**\n   * Creates a function type in which {@code this} refers to an object instance.\n   * The last parameter type of the function is considered a variable length\n   * argument.\n   *\n   * @param instanceType the type of {@code this}\n   * @param returnType the function's return type\n   * @param parameterTypes the parameters' types\n   */",
+   "name": "createFunctionTypeWithVarArgs"
+  },
+  {
+   "javadoc": "/**\n   * Creates a tree hierarchy representing a typed argument list.\n   *\n   * @param parameterTypes the parameter types.\n   * @return a tree hierarchy representing a typed argument list.\n   */",
+   "name": "createParameters"
+  },
+  {
+   "javadoc": "/**\n   * Creates a tree hierarchy representing a typed argument list. The last\n   * parameter type is considered a variable length argument.\n   *\n   * @param parameterTypes the parameter types. The last element of this array\n   *     is considered a variable length argument.\n   * @return a tree hierarchy representing a typed argument list.\n   */",
+   "name": "createParametersWithVarArgs"
+  },
+  {
+   "javadoc": "/**\n   * Creates a tree hierarchy representing a typed argument list.\n   *\n   * @param parameterTypes the parameter types.\n   * @return a tree hierarchy representing a typed argument list.\n   */",
+   "name": "createParameters"
+  },
+  {
+   "javadoc": "/**\n   * Creates a tree hierarchy representing a typed argument list. The last\n   * parameter type is considered a variable length argument.\n   *\n   * @param parameterTypes the parameter types. The last element of this array\n   *     is considered a variable length argument.\n   * @return a tree hierarchy representing a typed argument list.\n   */",
+   "name": "createParametersWithVarArgs"
+  },
+  {
+   "javadoc": "/**\n   * Creates a tree hierarchy representing a typed parameter list in which\n   * every parameter is optional.\n   */",
+   "name": "createOptionalParameters"
+  },
+  {
+   "javadoc": "/**\n   * Creates a function type.\n   * @param returnType the function's return type\n   * @param lastVarArgs whether the last parameter type should be considered as\n   * an extensible var_args parameter\n   * @param parameterTypes the parameters' types\n   */",
+   "name": "createFunctionType"
+  },
+  {
+   "javadoc": "/**\n   * Creates a new function type based on an existing function type but\n   * with a new return type.\n   * @param existingFunctionType the existing function type.\n   * @param returnType the new return type.\n   */",
+   "name": "createFunctionTypeWithNewReturnType"
+  },
+  {
+   "javadoc": "/**\n   * Creates a new function type based on an existing function type but\n   * with a new {@code this} type.\n   * @param existingFunctionType the existing function type.\n   * @param thisType the new this type.\n   */",
+   "name": "createFunctionTypeWithNewThisType"
+  },
+  {
+   "javadoc": "/**\n   * @param parameters the function's parameters or {@code null}\n   *        to indicate that the parameter types are unknown.\n   * @param returnType the function's return type or {@code null} to indicate\n   *        that the return type is unknown.\n   */",
+   "name": "createFunctionType"
+  },
+  {
+   "javadoc": "/**\n   * Creates a function type which can act as a constructor.\n   * @param returnType the function's return type\n   * @param lastVarArgs whether the last parameter type should be considered as\n   * an extensible var_args parameter\n   * @param parameterTypes the parameters' types\n   */",
+   "name": "createConstructorType"
+  },
+  {
+   "javadoc": "/**\n   * Create an object type.\n   */",
+   "name": "createObjectType"
+  },
+  {
+   "javadoc": "/**\n   * Creates a record type.\n   */",
+   "name": "createRecordType"
+  },
+  {
+   "javadoc": "/**\n   * Create an object type.\n   */",
+   "name": "createObjectType"
+  },
+  {
+   "javadoc": "/**\n   * Create an anonymous object type.\n   */",
+   "name": "createAnonymousObjectType"
+  },
+  {
+   "javadoc": "/**\n   * Set the implicit prototype if it's possible to do so.\n   * @return True if we were able to set the implicit prototype successfully,\n   *     false if it was not possible to do so for some reason. There are\n   *     a few different reasons why this could fail: for example, numbers\n   *     can't be implicit prototypes, and we don't want to change the implicit\n   *     prototype if other classes have already subclassed this one.\n   */",
+   "name": "resetImplicitPrototype"
+  },
+  {
+   "javadoc": "/**\n   * Creates a constructor function type.\n   * @param name the function's name or {@code null} to indicate that the\n   *     function is anonymous.\n   * @param source the node defining this function. Its type\n   *     ({@link Node#getType()}) must be {@link Token#FUNCTION}.\n   * @param parameters the function's parameters or {@code null}\n   *     to indicate that the parameter types are unknown.\n   * @param returnType the function's return type or {@code null} to indicate\n   *     that the return type is unknown.\n   */",
+   "name": "createConstructorType"
+  },
+  {
+   "javadoc": "/**\n   * Creates an interface function type.\n   * @param name the function's name\n   * @param source the node defining this function. Its type\n   *     ({@link Node#getType()}) must be {@link Token#FUNCTION}.\n   */",
+   "name": "createInterfaceType"
+  },
+  {
+   "javadoc": "/**\n   * Creates a parameterized type.\n   */",
+   "name": "createParameterizedType"
+  },
+  {
+   "javadoc": "/**\n   * Creates a named type.\n   */",
+   "name": "createNamedType"
+  },
+  {
+   "javadoc": "/**\n   * Identifies the name of a typedef or enum before we actually declare it.\n   */",
+   "name": "identifyNonNullableName"
+  },
+  {
+   "javadoc": "/**\n   * Creates a JSType from the nodes representing a type.\n   * @param n The node with type info.\n   * @param sourceName The source file name.\n   * @param scope A scope for doing type name lookups.\n   */",
+   "name": "createFromTypeNodes"
+  },
+  {
+   "javadoc": "/**\n   * Sets the template type name.\n   */",
+   "name": "setTemplateTypeName"
+  },
+  {
+   "javadoc": "/**\n   * Clears the template type name.\n   */",
+   "name": "clearTemplateTypeName"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class JSTypeRegistry implements Serializable",
+  "constructors": [
+   "public JSTypeRegistry(ErrorReporter reporter);",
+   "public JSTypeRegistry( ErrorReporter reporter, boolean tolerateUndefinedValues);"
+  ],
+  "focal_signature": "public JSType getType(StaticScope<JSType> scope, String jsTypeName, String sourceName, int lineno, int charno)",
+  "methods": [
+   "public void setResolveMode(ResolveMode mode);",
+   "public ErrorReporter getErrorReporter();",
+   "public boolean shouldTolerateUndefinedValues();",
+   "public void resetForTypeCheck();",
+   "public void registerPropertyOnType(String propertyName, JSType type);",
+   "public void unregisterPropertyOnType(String propertyName, JSType type);",
+   "public JSType getGreatestSubtypeWithProperty( JSType type, String propertyName);",
+   "public boolean canPropertyBeDefined(JSType type, String propertyName);",
+   "public Iterable<JSType> getTypesWithProperty(String propertyName);",
+   "public Iterable<ObjectType> getEachReferenceTypeWithProperty( String propertyName);",
+   "public void incrementGeneration();",
+   "public void setLastGeneration(boolean lastGeneration);",
+   "public Collection<FunctionType> getDirectImplementors( ObjectType interfaceInstance);",
+   "public boolean declareType(String name, JSType t);",
+   "public void overwriteDeclaredType(String name, JSType t);",
+   "public void forwardDeclareType(String name);",
+   "public boolean isForwardDeclaredType(String name);",
+   "public boolean hasNamespace(String name);",
+   "public JSType getType(String jsTypeName);",
+   "public JSType getNativeType(JSTypeNative typeId);",
+   "public ObjectType getNativeObjectType(JSTypeNative typeId);",
+   "public FunctionType getNativeFunctionType(JSTypeNative typeId);",
+   "public void clearNamedTypes();",
+   "public void resolveTypesInScope(StaticScope<JSType> scope);",
+   "public JSType createOptionalType(JSType type);",
+   "public JSType createDefaultObjectUnion(JSType type);",
+   "public JSType createNullableType(JSType type);",
+   "public JSType createOptionalNullableType(JSType type);",
+   "public JSType createUnionType(JSType... variants);",
+   "public JSType createUnionType(JSTypeNative... variants);",
+   "public EnumType createEnumType( String name, Node source, JSType elementsType);",
+   "public FunctionType createFunctionType( JSType returnType, JSType... parameterTypes);",
+   "public FunctionType createFunctionTypeWithVarArgs( JSType returnType, List<JSType> parameterTypes);",
+   "public FunctionType createFunctionType( JSType returnType, List<JSType> parameterTypes);",
+   "public FunctionType createFunctionTypeWithVarArgs( JSType returnType, JSType... parameterTypes);",
+   "public FunctionType createConstructorType( JSType returnType, JSType... parameterTypes);",
+   "public FunctionType createConstructorTypeWithVarArgs( JSType returnType, JSType... parameterTypes);",
+   "public JSType createFunctionType(ObjectType instanceType, JSType returnType, List<JSType> parameterTypes);",
+   "public JSType createFunctionTypeWithVarArgs(ObjectType instanceType, JSType returnType, List<JSType> parameterTypes);",
+   "public Node createParameters(List<JSType> parameterTypes);",
+   "public Node createParametersWithVarArgs(List<JSType> parameterTypes);",
+   "public Node createParameters(JSType... parameterTypes);",
+   "public Node createParametersWithVarArgs(JSType... parameterTypes);",
+   "public Node createOptionalParameters(JSType... parameterTypes);",
+   "public FunctionType createFunctionType(JSType returnType, boolean lastVarArgs, JSType... parameterTypes);",
+   "public FunctionType createFunctionTypeWithNewReturnType( FunctionType existingFunctionType, JSType returnType);",
+   "public FunctionType createFunctionTypeWithNewThisType( FunctionType existingFunctionType, ObjectType thisType);",
+   "public FunctionType createFunctionType( JSType returnType, Node parameters);",
+   "public FunctionType createConstructorType(JSType returnType, boolean lastVarArgs, JSType... parameterTypes);",
+   "public ObjectType createObjectType(ObjectType implicitPrototype);",
+   "public RecordType createRecordType(Map<String, RecordProperty> properties);",
+   "public ObjectType createObjectType(String name, Node n, ObjectType implicitPrototype);",
+   "public ObjectType createAnonymousObjectType();",
+   "public boolean resetImplicitPrototype( JSType type, ObjectType newImplicitProto);",
+   "public FunctionType createConstructorType(String name, Node source, Node parameters, JSType returnType);",
+   "public FunctionType createInterfaceType(String name, Node source);",
+   "public ParameterizedType createParameterizedType( ObjectType objectType, JSType parameterType);",
+   "public JSType createNamedType(String reference, String sourceName, int lineno, int charno);",
+   "public void identifyNonNullableName(String name);",
+   "public JSType createFromTypeNodes(Node n, String sourceName, StaticScope<JSType> scope);",
+   "public void setTemplateTypeName(String name);",
+   "public void clearTemplateTypeName();"
+  ],
+  "type_signatures": [
+   "public interface StaticScope<T> {  }",
+   "public abstract class JSType implements Serializable { public JSDocInfo getJSDocInfo(); public String getDisplayName(); public boolean hasDisplayName(); public boolean isNoType(); public boolean isNoResolvedType(); public boolean isNoObjectType(); public final boolean isEmptyType(); public boolean isNumberObjectType(); public boolean isNumberValueType(); public boolean isFunctionPrototypeType(); public boolean isStringObjectType(); public boolean isStringValueType(); public final boolean isString(); public final boolean isNumber(); public boolean isArrayType(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

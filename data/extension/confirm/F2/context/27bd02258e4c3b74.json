@@ -1,0 +1,556 @@
+{
+ "bug_name": "JacksonDatabind_103",
+ "call_sites": [
+  {
+   "line": 1073,
+   "lines": [
+    1068,
+    1069,
+    1070,
+    1071,
+    1072,
+    1073,
+    1074,
+    1075,
+    1076,
+    1077,
+    1078
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java",
+   "snippet": "            }\n            h = h.next();\n        }\n        // 18-May-2016, tatu: Only wrap if not already a valid type to throw\n        ClassUtil.throwIfIOE(t);\n        throw instantiationException(instClass, t);\n    }\n\n    /**\n     * Method that deserializers should call if the first token of the value to\n     * deserialize is of unexpected type (that is, type of token that deserializer"
+  },
+  {
+   "line": 471,
+   "lines": [
+    466,
+    467,
+    468,
+    469,
+    470,
+    471,
+    472,
+    473,
+    474,
+    475,
+    476
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/std/StdValueInstantiator.java",
+   "snippet": "        for (Throwable curr = t; curr != null; curr = curr.getCause()) {\n            if (curr instanceof JsonMappingException) {\n                return (JsonMappingException) curr;\n            }\n        }\n        return ctxt.instantiationException(getValueClass(), t);\n    }\n\n    /**\n     * @since 2.7\n     */"
+  },
+  {
+   "line": 484,
+   "lines": [
+    479,
+    480,
+    481,
+    482,
+    483,
+    484,
+    485,
+    486,
+    487,
+    488,
+    489
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/std/StdValueInstantiator.java",
+   "snippet": "    {\n        // 05-Nov-2015, tatu: Only avoid wrapping if already a JsonMappingException\n        if (t instanceof JsonMappingException) {\n            return (JsonMappingException) t;\n        }\n        return ctxt.instantiationException(getValueClass(), t);\n    }\n\n    /**\n     * @since 2.7\n     */"
+  }
+ ],
+ "class_simple": "DeserializationContext",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Context for the process of deserialization a single root-level value.\n * Used to allow passing in configuration settings and reusable temporary\n * objects (scrap arrays, containers).\n *<p>\n * Instance life-cycle is such that a partially configured \"blueprint\" object\n * is registered with {@link ObjectMapper} (and {@link ObjectReader},\n * and when actual instance is needed for deserialization,\n * a fully configured instance will be created using a method in extended internal\n *  API of sub-class\n * ({@link com.fasterxml.jackson.databind.deser.DefaultDeserializationContext#createInstance}).\n * Each instance is guaranteed to only be used from single-threaded context;\n * instances may be reused if (and only if) no configuration has changed.\n *<p>\n * Defined as abstract class so that implementations must define methods\n * for reconfiguring blueprints and creating instances.\n */\npublic abstract",
+  "method_javadoc": "/**\n     * Helper method for constructing instantiation exception for specified type,\n     * to indicate problem with physically constructing instance of\n     * specified class (missing constructor, exception from constructor)\n     *<p>\n     * Note that most of the time this method should NOT be called directly; instead,\n     * {@link #handleInstantiationProblem} should be called which will call this method\n     * if necessary.\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "protected final DeserializerCache _cache",
+  "protected final DeserializerFactory _factory",
+  "protected final DeserializationConfig _config",
+  "protected final int _featureFlags",
+  "protected final Class<?> _view",
+  "protected transient JsonParser _parser",
+  "protected final InjectableValues _injectableValues",
+  "protected transient ArrayBuilders _arrayBuilders",
+  "protected transient ObjectBuffer _objectBuffer",
+  "protected transient DateFormat _dateFormat",
+  "protected transient ContextAttributes _attributes",
+  "protected LinkedNode<JavaType> _currentType"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.DeserializationContext",
+ "focal_id": "JacksonDatabind_103::com.fasterxml.jackson.databind.DeserializationContext::instantiationException(Class<?>,Throwable)",
+ "focal_method_name": "instantiationException",
+ "generations": 3,
+ "impl_B": "public JsonMappingException instantiationException(Class<?> instClass, Throwable cause) {\n        // Most likely problem with Creator definition, right?\n        final JavaType type = constructType(instClass);\n        String excMsg;\n        if (cause == null) {\n            excMsg = \"N/A\";\n        } else if ((excMsg = cause.getMessage()) == null) {\n            excMsg = ClassUtil.nameOf(cause.getClass());\n        }\n        String msg = String.format(\"Cannot construct instance of %s, problem: %s\",\n                ClassUtil.nameOf(instClass), excMsg);\n        InvalidDefinitionException e = InvalidDefinitionException.from(_parser, msg, type);\n        e.initCause(cause);\n        return e;\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.text.DateFormat",
+  "java.text.ParseException",
+  "java.util.*",
+  "java.util.concurrent.atomic.AtomicReference",
+  "com.fasterxml.jackson.annotation.JsonFormat",
+  "com.fasterxml.jackson.annotation.ObjectIdGenerator",
+  "com.fasterxml.jackson.annotation.ObjectIdResolver",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.databind.cfg.ContextAttributes",
+  "com.fasterxml.jackson.databind.deser.*",
+  "com.fasterxml.jackson.databind.deser.impl.ObjectIdReader",
+  "com.fasterxml.jackson.databind.deser.impl.ReadableObjectId",
+  "com.fasterxml.jackson.databind.deser.impl.TypeWrappedDeserializer",
+  "com.fasterxml.jackson.databind.exc.MismatchedInputException",
+  "com.fasterxml.jackson.databind.exc.InvalidDefinitionException",
+  "com.fasterxml.jackson.databind.exc.InvalidFormatException",
+  "com.fasterxml.jackson.databind.exc.InvalidTypeIdException",
+  "com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException",
+  "com.fasterxml.jackson.databind.introspect.Annotated",
+  "com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition",
+  "com.fasterxml.jackson.databind.jsontype.TypeDeserializer",
+  "com.fasterxml.jackson.databind.jsontype.TypeIdResolver",
+  "com.fasterxml.jackson.databind.node.JsonNodeFactory",
+  "com.fasterxml.jackson.databind.type.TypeFactory",
+  "com.fasterxml.jackson.databind.util.*"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getConfig"
+  },
+  {
+   "javadoc": "",
+   "name": "getActiveView"
+  },
+  {
+   "javadoc": "",
+   "name": "canOverrideAccessModifiers"
+  },
+  {
+   "javadoc": "",
+   "name": "isEnabled"
+  },
+  {
+   "javadoc": "",
+   "name": "getDefaultPropertyFormat"
+  },
+  {
+   "javadoc": "",
+   "name": "getAnnotationIntrospector"
+  },
+  {
+   "javadoc": "",
+   "name": "getTypeFactory"
+  },
+  {
+   "javadoc": "/**\n     * Method for accessing default Locale to use: convenience method for\n     *<pre>\n     *   getConfig().getLocale();\n     *</pre>\n     */",
+   "name": "getLocale"
+  },
+  {
+   "javadoc": "/**\n     * Method for accessing default TimeZone to use: convenience method for\n     *<pre>\n     *   getConfig().getTimeZone();\n     *</pre>\n     */",
+   "name": "getTimeZone"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getAttribute"
+  },
+  {
+   "javadoc": "",
+   "name": "setAttribute"
+  },
+  {
+   "javadoc": "/**\n     * Accessor to {@link JavaType} of currently contextualized\n     * {@link ContextualDeserializer}, if any.\n     * This is sometimes useful for generic {@link JsonDeserializer}s that\n     * do not get passed (or do not retain) type information when being\n     * constructed: happens for example for deserializers constructed\n     * from annotations.\n     * \n     * @since 2.5\n     *\n     * @return Type of {@link ContextualDeserializer} being contextualized,\n     *   if process is on-going; null if not.\n     */",
+   "name": "getContextualType"
+  },
+  {
+   "javadoc": "/**\n     * Method for getting current {@link DeserializerFactory}.\n     */",
+   "name": "getFactory"
+  },
+  {
+   "javadoc": "/**\n     * Convenience method for checking whether specified on/off\n     * feature is enabled\n     */",
+   "name": "isEnabled"
+  },
+  {
+   "javadoc": "/**\n     * Bulk access method for getting the bit mask of all {@link DeserializationFeature}s\n     * that are enabled.\n     *\n     * @since 2.6\n     */",
+   "name": "getDeserializationFeatures"
+  },
+  {
+   "javadoc": "/**\n     * Bulk access method for checking that all features specified by\n     * mask are enabled.\n     * \n     * @since 2.3\n     */",
+   "name": "hasDeserializationFeatures"
+  },
+  {
+   "javadoc": "/**\n     * Bulk access method for checking that at least one of features specified by\n     * mask is enabled.\n     * \n     * @since 2.6\n     */",
+   "name": "hasSomeOfFeatures"
+  },
+  {
+   "javadoc": "/**\n     * Method for accessing the currently active parser.\n     * May be different from the outermost parser\n     * when content is buffered.\n     *<p>\n     * Use of this method is discouraged: if code has direct access\n     * to the active parser, that should be used instead.\n     */",
+   "name": "getParser"
+  },
+  {
+   "javadoc": "",
+   "name": "findInjectableValue"
+  },
+  {
+   "javadoc": "/**\n     * Convenience method for accessing the default Base64 encoding\n     * used for decoding base64 encoded binary content.\n     * Same as calling:\n     *<pre>\n     *  getConfig().getBase64Variant();\n     *</pre>\n     */",
+   "name": "getBase64Variant"
+  },
+  {
+   "javadoc": "/**\n     * Convenience method, functionally equivalent to:\n     *<pre>\n     *  getConfig().getNodeFactory();\n     * </pre>\n     */",
+   "name": "getNodeFactory"
+  },
+  {
+   "javadoc": "/**\n     * Method for checking whether we could find a deserializer\n     * for given type.\n     *\n     * @param type\n     * @since 2.3\n     */",
+   "name": "hasValueDeserializerFor"
+  },
+  {
+   "javadoc": "/**\n     * Variant that will try to locate deserializer for current type, but without\n     * performing any contextualization (unlike {@link #findContextualValueDeserializer})\n     * or checking for need to create a {@link TypeDeserializer} (unlike\n     * {@link #findRootValueDeserializer(JavaType)}.\n     * This method is usually called from within {@link ResolvableDeserializer#resolve},\n     * and expectation is that caller then calls either\n     * {@link #handlePrimaryContextualization(JsonDeserializer, BeanProperty, JavaType)} or\n     * {@link #handleSecondaryContextualization(JsonDeserializer, BeanProperty, JavaType)} at a\n     * later point, as necessary.\n     *\n     * @since 2.5\n     */",
+   "name": "findNonContextualValueDeserializer"
+  },
+  {
+   "javadoc": "/**\n     * Convenience method, functionally same as:\n     *<pre>\n     *  getDeserializerProvider().findKeyDeserializer(getConfig(), prop.getType(), prop);\n     *</pre>\n     */",
+   "name": "findKeyDeserializer"
+  },
+  {
+   "javadoc": "/**\n     * Method called to find and return entry corresponding to given\n     * Object Id: will add an entry if necessary, and never returns null\n     */",
+   "name": "findObjectId"
+  },
+  {
+   "javadoc": "/**\n     * Method called to ensure that every object id encounter during processing\n     * are resolved.\n     * \n     * @throws UnresolvedForwardReference\n     */",
+   "name": "checkUnresolvedObjectId"
+  },
+  {
+   "javadoc": "/**\n     * Convenience method, functionally equivalent to:\n     *<pre>\n     *  getConfig().constructType(cls);\n     * </pre>\n     */",
+   "name": "constructType"
+  },
+  {
+   "javadoc": "/**\n     * Helper method that is to be used when resolving basic class name into\n     * Class instance, the reason being that it may be necessary to work around\n     * various ClassLoader limitations, as well as to handle primitive type\n     * signatures.\n     *\n     * @since 2.6\n     */",
+   "name": "findClass"
+  },
+  {
+   "javadoc": "/**\n     * Method that can be used to get access to a reusable ObjectBuffer,\n     * useful for efficiently constructing Object arrays and Lists.\n     * Note that leased buffers should be returned once deserializer\n     * is done, to allow for reuse during same round of deserialization.\n     */",
+   "name": "leaseObjectBuffer"
+  },
+  {
+   "javadoc": "/**\n     * Method to call to return object buffer previously leased with\n     * {@link #leaseObjectBuffer}.\n     * \n     * @param buf Returned object buffer\n     */",
+   "name": "returnObjectBuffer"
+  },
+  {
+   "javadoc": "/**\n     * Method for accessing object useful for building arrays of\n     * primitive types (such as int[]).\n     */",
+   "name": "getArrayBuilders"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "deserializerInstance"
+  },
+  {
+   "javadoc": "",
+   "name": "keyDeserializerInstance"
+  },
+  {
+   "javadoc": "/**\n     * Method called for primary property deserializers (ones\n     * directly created to deserialize values of a POJO property),\n     * to handle details of resolving\n     * {@link ContextualDeserializer} with given property context.\n     * \n     * @param prop Property for which the given primary deserializer is used; never null.\n     * \n     * @since 2.5\n     */",
+   "name": "handlePrimaryContextualization"
+  },
+  {
+   "javadoc": "/**\n     * Method called for secondary property deserializers (ones\n     * NOT directly created to deal with an annotatable POJO property,\n     * but instead created as a component -- such as value deserializers\n     * for structured types, or deserializers for root values)\n     * to handle details of resolving\n     * {@link ContextualDeserializer} with given property context.\n     * Given that these deserializers are not directly related to given property\n     * (or, in case of root value property, to any property), annotations\n     * accessible may or may not be relevant.\n     * \n     * @param prop Property for which deserializer is used, if any; null\n     *    when deserializing root values\n     * \n     * @since 2.5\n     */",
+   "name": "handleSecondaryContextualization"
+  },
+  {
+   "javadoc": "/**\n     * Convenience method for parsing a Date from given String, using\n     * currently configured date format (accessed using\n     * {@link DeserializationConfig#getDateFormat()}).\n     *<p>\n     * Implementation will handle thread-safety issues related to\n     * date formats such that first time this method is called,\n     * date format is cloned, and cloned instance will be retained\n     * for use during this deserialization round.\n     */",
+   "name": "parseDate"
+  },
+  {
+   "javadoc": "/**\n     * Convenience method for constructing Calendar instance set\n     * to specified time, to be modified and used by caller.\n     */",
+   "name": "constructCalendar"
+  },
+  {
+   "javadoc": "/**\n     * Convenience method that may be used by composite or container deserializers,\n     * for reading one-off values contained (for sequences, it is more efficient\n     * to actually fetch deserializer once for the whole collection).\n     *<p>\n     * NOTE: when deserializing values of properties contained in composite types,\n     * rather use {@link #readPropertyValue(JsonParser, BeanProperty, Class)};\n     * this method does not allow use of contextual annotations.\n     * \n     * @since 2.4\n     */",
+   "name": "readValue"
+  },
+  {
+   "javadoc": "/**\n     * Convenience method that may be used by composite or container deserializers,\n     * for reading one-off values for the composite type, taking into account\n     * annotations that the property (passed to this method -- usually property that\n     * has custom serializer that called this method) has.\n     * \n     * @since 2.4\n     */",
+   "name": "readPropertyValue"
+  },
+  {
+   "javadoc": "/**\n     * Method that deserializers should call if they encounter an unrecognized\n     * property (and once that is not explicitly designed as ignorable), to\n     * inform possibly configured {@link DeserializationProblemHandler}s and\n     * let it handle the problem.\n     * \n     * @return True if there was a configured problem handler that was able to handle the\n     *   problem\n     */",
+   "name": "handleUnknownProperty"
+  },
+  {
+   "javadoc": "/**\n     * Method that deserializers should call if they encounter a String value\n     * that cannot be converted to expected key of a {@link java.util.Map}\n     * valued property.\n     * Default implementation will try to call {@link DeserializationProblemHandler#handleWeirdNumberValue}\n     * on configured handlers, if any, to allow for recovery; if recovery does not\n     * succeed, will throw {@link InvalidFormatException} with given message.\n     *\n     * @param keyClass Expected type for key\n     * @param keyValue String value from which to deserialize key\n     * @param msg Error message template caller wants to use if exception is to be thrown\n     * @param msgArgs Optional arguments to use for message, if any\n     *\n     * @return Key value to use\n     *\n     * @throws IOException To indicate unrecoverable problem, usually based on <code>msg</code>\n     * \n     * @since 2.8\n     */",
+   "name": "handleWeirdKey"
+  },
+  {
+   "javadoc": "/**\n     * Method that deserializers should call if they encounter a String value\n     * that cannot be converted to target property type, in cases where some\n     * String values could be acceptable (either with different settings,\n     * or different value).\n     * Default implementation will try to call {@link DeserializationProblemHandler#handleWeirdStringValue}\n     * on configured handlers, if any, to allow for recovery; if recovery does not\n     * succeed, will throw {@link InvalidFormatException} with given message.\n     *\n     * @param targetClass Type of property into which incoming number should be converted\n     * @param value String value from which to deserialize property value\n     * @param msg Error message template caller wants to use if exception is to be thrown\n     * @param msgArgs Optional arguments to use for message, if any\n     *\n     * @return Property value to use\n     *\n     * @throws IOException To indicate unrecoverable problem, usually based on <code>msg</code>\n     * \n     * @since 2.8\n     */",
+   "name": "handleWeirdStringValue"
+  },
+  {
+   "javadoc": "/**\n     * Method that deserializers should call if they encounter a numeric value\n     * that cannot be converted to target property type, in cases where some\n     * numeric values could be acceptable (either with different settings,\n     * or different numeric value).\n     * Default implementation will try to call {@link DeserializationProblemHandler#handleWeirdNumberValue}\n     * on configured handlers, if any, to allow for recovery; if recovery does not\n     * succeed, will throw {@link InvalidFormatException} with given message.\n     *\n     * @param targetClass Type of property into which incoming number should be converted\n     * @param value Number value from which to deserialize property value\n     * @param msg Error message template caller wants to use if exception is to be thrown\n     * @param msgArgs Optional arguments to use for message, if any\n     *\n     * @return Property value to use\n     *\n     * @throws IOException To indicate unrecoverable problem, usually based on <code>msg</code>\n     * \n     * @since 2.8\n     */",
+   "name": "handleWeirdNumberValue"
+  },
+  {
+   "javadoc": "",
+   "name": "handleWeirdNativeValue"
+  },
+  {
+   "javadoc": "/**\n     * Method that deserializers should call if they fail to instantiate value\n     * due to an exception that was thrown by constructor (or other mechanism used\n     * to create instances).\n     * Default implementation will try to call {@link DeserializationProblemHandler#handleInstantiationProblem}\n     * on configured handlers, if any, to allow for recovery; if recovery does not\n     * succeed, will throw exception constructed with {@link #instantiationException}.\n     *\n     * @param instClass Type that was to be instantiated\n     * @param argument (optional) Argument that was passed to constructor or equivalent\n     *    instantiator; often a {@link java.lang.String}.\n     * @param t Exception that caused failure\n     *\n     * @return Object that should be constructed, if any; has to be of type <code>instClass</code>\n     *\n     * @since 2.8\n     */",
+   "name": "handleInstantiationProblem"
+  },
+  {
+   "javadoc": "/**\n     * Method that deserializers should call if the first token of the value to\n     * deserialize is of unexpected type (that is, type of token that deserializer\n     * cannot handle). This could occur, for example, if a Number deserializer\n     * encounter {@link JsonToken#START_ARRAY} instead of\n     * {@link JsonToken#VALUE_NUMBER_INT} or {@link JsonToken#VALUE_NUMBER_FLOAT}.\n     * \n     * @param instClass Type that was to be instantiated\n     * @param p Parser that points to the JSON value to decode\n     *\n     * @return Object that should be constructed, if any; has to be of type <code>instClass</code>\n     *\n     * @since 2.8\n     */",
+   "name": "handleUnexpectedToken"
+  },
+  {
+   "javadoc": "/**\n     * Method that deserializers should call if the first token of the value to\n     * deserialize is of unexpected type (that is, type of token that deserializer\n     * cannot handle). This could occur, for example, if a Number deserializer\n     * encounter {@link JsonToken#START_ARRAY} instead of\n     * {@link JsonToken#VALUE_NUMBER_INT} or {@link JsonToken#VALUE_NUMBER_FLOAT}.\n     * \n     * @param instClass Type that was to be instantiated\n     * @param t Token encountered that does match expected\n     * @param p Parser that points to the JSON value to decode\n     *\n     * @return Object that should be constructed, if any; has to be of type <code>instClass</code>\n     *\n     * @since 2.8\n     */",
+   "name": "handleUnexpectedToken"
+  },
+  {
+   "javadoc": "/**\n     * Method that deserializers should call if they encounter a type id\n     * (for polymorphic deserialization) that cannot be resolved to an\n     * actual type; usually since there is no mapping defined.\n     * Default implementation will try to call {@link DeserializationProblemHandler#handleUnknownTypeId}\n     * on configured handlers, if any, to allow for recovery; if recovery does not\n     * succeed, will throw exception constructed with {@link #invalidTypeIdException}.\n     *\n     * @param baseType Base type from which resolution starts\n     * @param id Type id that could not be converted\n     * @param extraDesc Additional problem description to add to default exception message,\n     *    if resolution fails.\n     *\n     * @return {@link JavaType} that id resolves to\n     *\n     * @throws IOException To indicate unrecoverable problem, if resolution cannot\n     *    be made to work\n     *\n     * @since 2.8\n     */",
+   "name": "handleUnknownTypeId"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.9\n     */",
+   "name": "handleMissingTypeId"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.9.2\n     */",
+   "name": "_isCompatible"
+  },
+  {
+   "javadoc": "/**\n     * Method for deserializers to call \n     * when the token encountered was of type different than what <b>should</b>\n     * be seen at that position, usually within a sequence of expected tokens.\n     * Note that this method will throw a {@link JsonMappingException} and no\n     * recovery is attempted (via {@link DeserializationProblemHandler}, as\n     * problem is considered to be difficult to recover from, in general.\n     * \n     * @since 2.9\n     */",
+   "name": "reportWrongTokenException"
+  },
+  {
+   "javadoc": "/**\n     * Method for deserializers to call \n     * when the token encountered was of type different than what <b>should</b>\n     * be seen at that position, usually within a sequence of expected tokens.\n     * Note that this method will throw a {@link JsonMappingException} and no\n     * recovery is attempted (via {@link DeserializationProblemHandler}, as\n     * problem is considered to be difficult to recover from, in general.\n     * \n     * @since 2.9\n     */",
+   "name": "reportWrongTokenException"
+  },
+  {
+   "javadoc": "/**\n     * Method for deserializers to call \n     * when the token encountered was of type different than what <b>should</b>\n     * be seen at that position, usually within a sequence of expected tokens.\n     * Note that this method will throw a {@link JsonMappingException} and no\n     * recovery is attempted (via {@link DeserializationProblemHandler}, as\n     * problem is considered to be difficult to recover from, in general.\n     * \n     * @since 2.9\n     */",
+   "name": "reportWrongTokenException"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.8\n     */",
+   "name": "reportUnresolvedObjectId"
+  },
+  {
+   "javadoc": "/**\n     * Helper method used to indicate a problem with input in cases where more\n     * specific <code>reportXxx()</code> method was not available.\n     *\n     * @since 2.9\n     */",
+   "name": "reportInputMismatch"
+  },
+  {
+   "javadoc": "/**\n     * Helper method used to indicate a problem with input in cases where more\n     * specific <code>reportXxx()</code> method was not available.\n     *\n     * @since 2.9\n     */",
+   "name": "reportInputMismatch"
+  },
+  {
+   "javadoc": "/**\n     * Helper method used to indicate a problem with input in cases where more\n     * specific <code>reportXxx()</code> method was not available.\n     *\n     * @since 2.9\n     */",
+   "name": "reportInputMismatch"
+  },
+  {
+   "javadoc": "/**\n     * Helper method used to indicate a problem with input in cases where more\n     * specific <code>reportXxx()</code> method was not available.\n     *\n     * @since 2.9\n     */",
+   "name": "reportInputMismatch"
+  },
+  {
+   "javadoc": "",
+   "name": "reportTrailingTokens"
+  },
+  {
+   "javadoc": "",
+   "name": "reportWrongTokenException"
+  },
+  {
+   "javadoc": "/**\n     * Helper method for reporting a problem with unhandled unknown property.\n     * \n     * @param instanceOrClass Either value being populated (if one has been\n     *   instantiated), or Class that indicates type that would be (or\n     *   have been) instantiated\n     * @param deser Deserializer that had the problem, if called by deserializer\n     *   (or on behalf of one)\n     *\n     * @deprecated Since 2.8 call {@link #handleUnknownProperty} instead\n     */",
+   "name": "reportUnknownProperty"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.8\n     *\n     * @deprecated Since 2.9: not clear this ever occurs\n     */",
+   "name": "reportMissingContent"
+  },
+  {
+   "javadoc": "/**\n     * Helper method called to indicate problem in POJO (serialization) definitions or settings\n     * regarding specific Java type, unrelated to actual JSON content to map.\n     * Default behavior is to construct and throw a {@link JsonMappingException}.\n     *\n     * @since 2.9\n     */",
+   "name": "reportBadTypeDefinition"
+  },
+  {
+   "javadoc": "/**\n     * Helper method called to indicate problem in POJO (serialization) definitions or settings\n     * regarding specific property (of a type), unrelated to actual JSON content to map.\n     * Default behavior is to construct and throw a {@link JsonMappingException}.\n     *\n     * @since 2.9\n     */",
+   "name": "reportBadPropertyDefinition"
+  },
+  {
+   "javadoc": "",
+   "name": "reportBadDefinition"
+  },
+  {
+   "javadoc": "/**\n     * Method that deserializer may call if it is called to do an update (\"merge\")\n     * but deserializer operates on a non-mergeable type. Although this should\n     * usually be caught earlier, sometimes it may only be caught during operation\n     * and if so this is the method to call.\n     * Note that if {@link MapperFeature#IGNORE_MERGE_FOR_UNMERGEABLE} is enabled,\n     * this method will simply return null; otherwise {@link InvalidDefinitionException}\n     * will be thrown.\n     *\n     * @since 2.9\n     */",
+   "name": "reportBadMerge"
+  },
+  {
+   "javadoc": "/**\n     * Helper method for constructing {@link JsonMappingException} to indicate\n     * that the token encountered was of type different than what <b>should</b>\n     * be seen at that position, usually within a sequence of expected tokens.\n     * Note that most of the time this method should NOT be directly called;\n     * instead, {@link #reportWrongTokenException} should be called and will\n     * call this method as necessary.\n     *\n     * @since 2.9\n     */",
+   "name": "wrongTokenException"
+  },
+  {
+   "javadoc": "",
+   "name": "wrongTokenException"
+  },
+  {
+   "javadoc": "",
+   "name": "wrongTokenException"
+  },
+  {
+   "javadoc": "/**\n     * Helper method for constructing exception to indicate that given JSON\n     * Object field name was not in format to be able to deserialize specified\n     * key type.\n     * Note that most of the time this method should NOT be called; instead,\n     * {@link #handleWeirdKey} should be called which will call this method\n     * if necessary.\n     */",
+   "name": "weirdKeyException"
+  },
+  {
+   "javadoc": "/**\n     * Helper method for constructing exception to indicate that input JSON\n     * String was not suitable for deserializing into given target type.\n     * Note that most of the time this method should NOT be called; instead,\n     * {@link #handleWeirdStringValue} should be called which will call this method\n     * if necessary.\n     * \n     * @param value String value from input being deserialized\n     * @param instClass Type that String should be deserialized into\n     * @param msg Message that describes specific problem\n     * \n     * @since 2.1\n     */",
+   "name": "weirdStringException"
+  },
+  {
+   "javadoc": "/**\n     * Helper method for constructing exception to indicate that input JSON\n     * Number was not suitable for deserializing into given target type.\n     * Note that most of the time this method should NOT be called; instead,\n     * {@link #handleWeirdNumberValue} should be called which will call this method\n     * if necessary.\n     */",
+   "name": "weirdNumberException"
+  },
+  {
+   "javadoc": "/**\n     * Helper method for constructing exception to indicate that input JSON\n     * token of type \"native value\" (see {@link JsonToken#VALUE_EMBEDDED_OBJECT})\n     * is of incompatible type (and there is no delegating creator or such to use)\n     * and can not be used to construct value of specified type (usually POJO).\n     * Note that most of the time this method should NOT be called; instead,\n     * {@link #handleWeirdNativeValue} should be called which will call this method\n     *\n     * @since 2.9\n     */",
+   "name": "weirdNativeValueException"
+  },
+  {
+   "javadoc": "/**\n     * Helper method for constructing instantiation exception for specified type,\n     * to indicate that instantiation failed due to missing instantiator\n     * (creator; constructor or factory method).\n     *<p>\n     * Note that most of the time this method should NOT be called; instead,\n     * {@link #handleMissingInstantiator} should be called which will call this method\n     * if necessary.\n     */",
+   "name": "instantiationException"
+  },
+  {
+   "javadoc": "",
+   "name": "invalidTypeIdException"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.9\n     */",
+   "name": "missingTypeIdException"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.5\n     *\n     * @deprecated Since 2.8 use {@link #handleUnknownTypeId} instead\n     */",
+   "name": "unknownTypeException"
+  },
+  {
+   "javadoc": "/**\n     * Helper method for constructing exception to indicate that end-of-input was\n     * reached while still expecting more tokens to deserialize value of specified type.\n     *\n     * @deprecated Since 2.8; currently no way to catch EOF at databind level\n     */",
+   "name": "endOfInputException"
+  },
+  {
+   "javadoc": "/**\n     * Fallback method that may be called if no other <code>reportXxx</code>\n     * is applicable -- but only in that case.\n     *\n     * @since 2.8\n     * \n     * @deprecated Since 2.9: use a more specific method, or {@link #reportBadDefinition(JavaType, String)},\n     *    or {@link #reportInputMismatch} instead\n     */",
+   "name": "reportMappingException"
+  },
+  {
+   "javadoc": "/**\n     * Helper method for constructing generic mapping exception with specified\n     * message and current location information.\n     * Note that application code should almost always call\n     * one of <code>handleXxx</code> methods, or {@link #reportMappingException(String, Object...)}\n     * instead.\n     * \n     * @since 2.6\n     * \n     * @deprecated Since 2.9 use more specific error reporting methods instead\n     */",
+   "name": "mappingException"
+  },
+  {
+   "javadoc": "/**\n     * Helper method for constructing generic mapping exception with specified\n     * message and current location information\n     * Note that application code should almost always call\n     * one of <code>handleXxx</code> methods, or {@link #reportMappingException(String, Object...)}\n     * instead.\n     * \n     * @since 2.6\n     *\n     * @deprecated Since 2.9 use more specific error reporting methods instead\n     */",
+   "name": "mappingException"
+  },
+  {
+   "javadoc": "/**\n     * Helper method for constructing generic mapping exception for specified type\n     * \n     * @deprecated Since 2.8 use {@link #handleUnexpectedToken(Class, JsonParser)} instead\n     */",
+   "name": "mappingException"
+  },
+  {
+   "javadoc": "/**\n     * @deprecated Since 2.8 use {@link #handleUnexpectedToken(Class, JsonParser)} instead\n     */",
+   "name": "mappingException"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getDateFormat"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public abstract class DeserializationContext extends DatabindContext implements java.io.Serializable",
+  "constructors": [
+   "protected DeserializationContext(DeserializerFactory df);",
+   "protected DeserializationContext(DeserializerFactory df, DeserializerCache cache);",
+   "protected DeserializationContext(DeserializationContext src, DeserializerFactory factory);",
+   "protected DeserializationContext(DeserializationContext src, DeserializationConfig config, JsonParser p, InjectableValues injectableValues);",
+   "protected DeserializationContext(DeserializationContext src);"
+  ],
+  "focal_signature": "public JsonMappingException instantiationException(Class<?> instClass, Throwable cause)",
+  "methods": [
+   "public DeserializationConfig getConfig();",
+   "public final Class<?> getActiveView();",
+   "public final boolean canOverrideAccessModifiers();",
+   "public final boolean isEnabled(MapperFeature feature);",
+   "public final JsonFormat.Value getDefaultPropertyFormat(Class<?> baseType);",
+   "public final AnnotationIntrospector getAnnotationIntrospector();",
+   "public final TypeFactory getTypeFactory();",
+   "public Locale getLocale();",
+   "public TimeZone getTimeZone();",
+   "public Object getAttribute(Object key);",
+   "public DeserializationContext setAttribute(Object key, Object value);",
+   "public JavaType getContextualType();",
+   "public DeserializerFactory getFactory();",
+   "public final boolean isEnabled(DeserializationFeature feat);",
+   "public final int getDeserializationFeatures();",
+   "public final boolean hasDeserializationFeatures(int featureMask);",
+   "public final boolean hasSomeOfFeatures(int featureMask);",
+   "public final JsonParser getParser();",
+   "public final Object findInjectableValue(Object valueId, BeanProperty forProperty, Object beanInstance) throws JsonMappingException;",
+   "public final Base64Variant getBase64Variant();",
+   "public final JsonNodeFactory getNodeFactory();",
+   "public boolean hasValueDeserializerFor(JavaType type, AtomicReference<Throwable> cause);",
+   "public final JsonDeserializer<Object> findNonContextualValueDeserializer(JavaType type) throws JsonMappingException;",
+   "public final KeyDeserializer findKeyDeserializer(JavaType keyType, BeanProperty prop) throws JsonMappingException;",
+   "public abstract ReadableObjectId findObjectId(Object id, ObjectIdGenerator<?> generator, ObjectIdResolver resolver);",
+   "public abstract void checkUnresolvedObjectId() throws UnresolvedForwardReference;",
+   "public final JavaType constructType(Class<?> cls);",
+   "public Class<?> findClass(String className) throws ClassNotFoundException;",
+   "public final ObjectBuffer leaseObjectBuffer();",
+   "public final void returnObjectBuffer(ObjectBuffer buf);",
+   "public final ArrayBuilders getArrayBuilders();",
+   "public abstract JsonDeserializer<Object> deserializerInstance(Annotated annotated, Object deserDef) throws JsonMappingException;",
+   "public abstract KeyDeserializer keyDeserializerInstance(Annotated annotated, Object deserDef) throws JsonMappingException;",
+   "public JsonDeserializer<?> handlePrimaryContextualization(JsonDeserializer<?> deser, BeanProperty prop, JavaType type) throws JsonMappingException;",
+   "public JsonDeserializer<?> handleSecondaryContextualization(JsonDeserializer<?> deser, BeanProperty prop, JavaType type) throws JsonMappingException;",
+   "public Date parseDate(String dateStr) throws IllegalArgumentException;",
+   "public Calendar constructCalendar(Date d);",
+   "public <T> T readValue(JsonParser p, Class<T> type) throws IOException;",
+   "public <T> T readPropertyValue(JsonParser p, BeanProperty prop, Class<T> type) throws IOException;",
+   "public boolean handleUnknownProperty(JsonParser p, JsonDeserializer<?> deser, Object instanceOrClass, String propName) throws IOException;",
+   "public Object handleWeirdKey(Class<?> keyClass, String keyValue, String msg, Object... msgArgs) throws IOException;",
+   "public Object handleWeirdStringValue(Class<?> targetClass, String value, String msg, Object... msgArgs) throws IOException;",
+   "public Object handleWeirdNumberValue(Class<?> targetClass, Number value, String msg, Object... msgArgs) throws IOException;",
+   "public Object handleWeirdNativeValue(JavaType targetType, Object badValue, JsonParser p) throws IOException;",
+   "public Object handleInstantiationProblem(Class<?> instClass, Object argument, Throwable t) throws IOException;",
+   "public Object handleUnexpectedToken(Class<?> instClass, JsonParser p) throws IOException;",
+   "public Object handleUnexpectedToken(Class<?> instClass, JsonToken t, JsonParser p, String msg, Object... msgArgs) throws IOException;",
+   "public JavaType handleUnknownTypeId(JavaType baseType, String id, TypeIdResolver idResolver, String extraDesc) throws IOException;",
+   "public JavaType handleMissingTypeId(JavaType baseType, TypeIdResolver idResolver, String extraDesc) throws IOException;",
+   "protected boolean _isCompatible(Class<?> target, Object value);",
+   "public void reportWrongTokenException(JsonDeserializer<?> deser, JsonToken expToken, String msg, Object... msgArgs) throws JsonMappingException;",
+   "public void reportWrongTokenException(JavaType targetType, JsonToken expToken, String msg, Object... msgArgs) throws JsonMappingException;",
+   "public void reportWrongTokenException(Class<?> targetType, JsonToken expToken, String msg, Object... msgArgs) throws JsonMappingException;",
+   "public <T> T reportUnresolvedObjectId(ObjectIdReader oidReader, Object bean) throws JsonMappingException;",
+   "public <T> T reportInputMismatch(BeanProperty prop, String msg, Object... msgArgs) throws JsonMappingException;",
+   "public <T> T reportInputMismatch(JsonDeserializer<?> src, String msg, Object... msgArgs) throws JsonMappingException;",
+   "public <T> T reportInputMismatch(Class<?> targetType, String msg, Object... msgArgs) throws JsonMappingException;",
+   "public <T> T reportInputMismatch(JavaType targetType, String msg, Object... msgArgs) throws JsonMappingException;",
+   "public <T> T reportTrailingTokens(Class<?> targetType, JsonParser p, JsonToken trailingToken) throws JsonMappingException;",
+   "// since 2.9 public void reportWrongTokenException(JsonParser p, JsonToken expToken, String msg, Object... msgArgs) throws JsonMappingException;",
+   "public void reportUnknownProperty(Object instanceOrClass, String fieldName, JsonDeserializer<?> deser) throws JsonMappingException;",
+   "// since 2.9 public void reportMissingContent(String msg, Object... msgArgs) throws JsonMappingException;",
+   "public <T> T reportBadTypeDefinition(BeanDescription bean, String msg, Object... msgArgs) throws JsonMappingException;",
+   "public <T> T reportBadPropertyDefinition(BeanDescription bean, BeanPropertyDefinition prop, String msg, Object... msgArgs) throws JsonMappingException;",
+   "public <T> T reportBadDefinition(JavaType type, String msg) throws JsonMappingException;",
+   "public <T> T reportBadMerge(JsonDeserializer<?> deser) throws JsonMappingException;",
+   "public JsonMappingException wrongTokenException(JsonParser p, JavaType targetType, JsonToken expToken, String extra);",
+   "public JsonMappingException wrongTokenException(JsonParser p, Class<?> targetType, JsonToken expToken, String extra);",
+   "// since 2.9 public JsonMappingException wrongTokenException(JsonParser p, JsonToken expToken, String msg);",
+   "public JsonMappingException weirdKeyException(Class<?> keyClass, String keyValue, String msg);",
+   "public JsonMappingException weirdStringException(String value, Class<?> instClass, String msg);",
+   "public JsonMappingException weirdNumberException(Number value, Class<?> instClass, String msg);",
+   "public JsonMappingException weirdNativeValueException(Object value, Class<?> instClass);",
+   "public JsonMappingException instantiationException(Class<?> instClass, String msg0);",
+   "public JsonMappingException invalidTypeIdException(JavaType baseType, String typeId, String extraDesc);",
+   "public JsonMappingException missingTypeIdException(JavaType baseType, String extraDesc);",
+   "public JsonMappingException unknownTypeException(JavaType type, String id, String extraDesc);",
+   "public JsonMappingException endOfInputException(Class<?> instClass);",
+   "// since 2.9 public void reportMappingException(String msg, Object... msgArgs) throws JsonMappingException;",
+   "public JsonMappingException mappingException(String message);",
+   "public JsonMappingException mappingException(String msg, Object... msgArgs);",
+   "public JsonMappingException mappingException(Class<?> targetClass);",
+   "public JsonMappingException mappingException(Class<?> targetClass, JsonToken token);",
+   "protected DateFormat getDateFormat();"
+  ],
+  "type_signatures": [
+   "public class JsonMappingException extends JsonProcessingException { // since 2.7 public JsonMappingException(String msg); // since 2.7 public JsonMappingException(String msg, Throwable rootCause); // since 2.7 public JsonMappingException(String msg, JsonLocation loc); // since 2.7 public JsonMappingException(String msg, JsonLocation loc, Throwable rootCause); public JsonMappingException(Closeable processor, String msg); public JsonMappingException(Closeable processor, String msg, Throwable problem); public JsonMappingException(Closeable processor, String msg, JsonLocation loc); public static JsonMappingException from(JsonParser p, String msg); public static JsonMappingException from(JsonParser p, String msg, Throwable problem); public static JsonMappingException from(JsonGenerator g, String msg); public static JsonMappingException from(JsonGenerator g, String msg, Throwable problem); public static JsonMappingException from(DeserializationContext ctxt, String msg); public static JsonMappingException from(DeserializationContext ctxt, String msg, Throwable t); public static JsonMappingException from(SerializerProvider ctxt, String msg); public static JsonMappingException from(SerializerProvider ctxt, String msg, Throwable problem); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

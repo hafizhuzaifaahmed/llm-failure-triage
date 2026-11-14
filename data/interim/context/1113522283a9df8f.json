@@ -1,0 +1,292 @@
+{
+  "bug_name": "JacksonDatabind_100",
+  "call_sites": [
+    {
+      "line": 18,
+      "lines": [
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "path": "src/main/java/com/fasterxml/jackson/databind/deser/std/ByteBufferDeserializer.java",
+      "snippet": "    \n    protected ByteBufferDeserializer() { super(ByteBuffer.class); }\n\n    @Override\n    public ByteBuffer deserialize(JsonParser parser, DeserializationContext cx) throws IOException {\n        byte[] b = parser.getBinaryValue();\n        return ByteBuffer.wrap(b);\n    }\n\n    @Override\n    public ByteBuffer deserialize(JsonParser jp, DeserializationContext ctxt, ByteBuffer intoValue) throws IOException {"
+    },
+    {
+      "line": 297,
+      "lines": [
+        292,
+        293,
+        294,
+        295,
+        296,
+        297,
+        298,
+        299,
+        300,
+        301,
+        302
+      ],
+      "path": "src/main/java/com/fasterxml/jackson/databind/deser/std/ObjectArrayDeserializer.java",
+      "snippet": "    \n    protected Byte[] deserializeFromBase64(JsonParser p, DeserializationContext ctxt)\n        throws IOException\n    {\n        // First same as what PrimitiveArrayDeserializers.ByteDeser does:\n        byte[] b = p.getBinaryValue(ctxt.getBase64Variant());\n        // But then need to convert to wrappers\n        Byte[] result = new Byte[b.length];\n        for (int i = 0, len = b.length; i < len; ++i) {\n            result[i] = Byte.valueOf(b[i]);\n        }"
+    },
+    {
+      "line": 476,
+      "lines": [
+        471,
+        472,
+        473,
+        474,
+        475,
+        476,
+        477,
+        478,
+        479,
+        480,
+        481
+      ],
+      "path": "src/main/java/com/fasterxml/jackson/databind/deser/std/PrimitiveArrayDeserializers.java",
+      "snippet": "            JsonToken t = p.getCurrentToken();\n            \n            // Most likely case: base64 encoded String?\n            if (t == JsonToken.VALUE_STRING) {\n                try {\n                    return p.getBinaryValue(ctxt.getBase64Variant());\n                } catch (JsonParseException e) {\n                    // 25-Nov-2016, tatu: related to [databind#1425], try to convert\n                    //   to a more usable one, as it's not really a JSON-level parse\n                    //   exception, but rather binding from JSON String into base64 decoded\n                    //   binary data"
+    },
+    {
+      "line": 81,
+      "lines": [
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86
+      ],
+      "path": "src/main/java/com/fasterxml/jackson/databind/node/TextNode.java",
+      "snippet": "        return builder.toByteArray();\n    }\n\n    @Override\n    public byte[] binaryValue() throws IOException {\n        return getBinaryValue(Base64Variants.getDefaultVariant());\n    }\n\n    /* \n    /**********************************************************\n    /* General type coercions"
+    },
+    {
+      "line": 383,
+      "lines": [
+        378,
+        379,
+        380,
+        381,
+        382,
+        383,
+        384,
+        385,
+        386,
+        387,
+        388
+      ],
+      "path": "src/main/java/com/fasterxml/jackson/databind/node/TreeTraversingParser.java",
+      "snippet": "\n    @Override\n    public int readBinaryValue(Base64Variant b64variant, OutputStream out)\n            throws IOException, JsonParseException\n    {\n        byte[] data = getBinaryValue(b64variant);\n        if (data != null) {\n            out.write(data, 0, data.length);\n            return data.length;\n        }\n        return 0;"
+    }
+  ],
+  "class_simple": "TreeTraversingParser",
+  "doc": {
+    "class_javadoc": "/**\n * Facade over {@link JsonNode} that implements {@link JsonParser} to allow\n * accessing contents of JSON tree in alternate form (stream of tokens).\n * Useful when a streaming source is expected by code, such as data binding\n * functionality.\n */\npublic",
+    "method_javadoc": "/**********************************************************\n     */"
+  },
+  "fields": [
+    "protected ObjectCodec _objectCodec",
+    "protected NodeCursor _nodeCursor",
+    "protected JsonToken _nextToken",
+    "protected boolean _startContainer",
+    "protected boolean _closed"
+  ],
+  "focal_class": "com.fasterxml.jackson.databind.node.TreeTraversingParser",
+  "focal_id": "JacksonDatabind_100::com.fasterxml.jackson.databind.node.TreeTraversingParser::getBinaryValue(Base64Variant)",
+  "focal_method_name": "getBinaryValue",
+  "impl_B": "@Override\n    public byte[] getBinaryValue(Base64Variant b64variant)\n        throws IOException, JsonParseException\n    {\n        // Multiple possibilities...\n        JsonNode n = currentNode();\n        if (n != null) {\n            // [databind#2096]: although `binaryValue()` works for real binary node\n            // and embedded \"POJO\" node, coercion from TextNode may require variant, so:\n            byte[] data = n.binaryValue();\n            if (data != null) {\n                return data;\n            }\n            if (n.isPojo()) {\n                Object ob = ((POJONode) n).getPojo();\n                if (ob instanceof byte[]) {\n                    return (byte[]) ob;\n                }\n            }\n        }\n        // otherwise return null to mark we have no binary content\n        return null;\n    }",
+  "imports": [
+    "java.io.IOException",
+    "java.io.OutputStream",
+    "java.math.BigDecimal",
+    "java.math.BigInteger",
+    "com.fasterxml.jackson.core.*",
+    "com.fasterxml.jackson.core.base.ParserMinimalBase",
+    "com.fasterxml.jackson.databind.JsonNode"
+  ],
+  "javadoc_edited_by_fix": false,
+  "package": "com.fasterxml.jackson.databind.node",
+  "project": "JacksonDatabind",
+  "siblings": [
+    {
+      "javadoc": "",
+      "name": "setCodec"
+    },
+    {
+      "javadoc": "",
+      "name": "getCodec"
+    },
+    {
+      "javadoc": "",
+      "name": "version"
+    },
+    {
+      "javadoc": "/**********************************************************\n     */",
+      "name": "close"
+    },
+    {
+      "javadoc": "/**********************************************************\n     */",
+      "name": "nextToken"
+    },
+    {
+      "javadoc": "",
+      "name": "skipChildren"
+    },
+    {
+      "javadoc": "",
+      "name": "isClosed"
+    },
+    {
+      "javadoc": "/**********************************************************\n     */",
+      "name": "getCurrentName"
+    },
+    {
+      "javadoc": "",
+      "name": "overrideCurrentName"
+    },
+    {
+      "javadoc": "",
+      "name": "getParsingContext"
+    },
+    {
+      "javadoc": "",
+      "name": "getTokenLocation"
+    },
+    {
+      "javadoc": "",
+      "name": "getCurrentLocation"
+    },
+    {
+      "javadoc": "/**********************************************************\n     */",
+      "name": "getText"
+    },
+    {
+      "javadoc": "",
+      "name": "getTextCharacters"
+    },
+    {
+      "javadoc": "",
+      "name": "getTextLength"
+    },
+    {
+      "javadoc": "",
+      "name": "getTextOffset"
+    },
+    {
+      "javadoc": "",
+      "name": "hasTextCharacters"
+    },
+    {
+      "javadoc": "",
+      "name": "getNumberType"
+    },
+    {
+      "javadoc": "",
+      "name": "getBigIntegerValue"
+    },
+    {
+      "javadoc": "",
+      "name": "getDecimalValue"
+    },
+    {
+      "javadoc": "",
+      "name": "getDoubleValue"
+    },
+    {
+      "javadoc": "",
+      "name": "getFloatValue"
+    },
+    {
+      "javadoc": "",
+      "name": "getLongValue"
+    },
+    {
+      "javadoc": "",
+      "name": "getIntValue"
+    },
+    {
+      "javadoc": "",
+      "name": "getNumberValue"
+    },
+    {
+      "javadoc": "",
+      "name": "getEmbeddedObject"
+    },
+    {
+      "javadoc": "",
+      "name": "isNaN"
+    },
+    {
+      "javadoc": "",
+      "name": "readBinaryValue"
+    },
+    {
+      "javadoc": "/**********************************************************\n     */",
+      "name": "currentNode"
+    },
+    {
+      "javadoc": "",
+      "name": "currentNumericNode"
+    },
+    {
+      "javadoc": "",
+      "name": "_handleEOF"
+    }
+  ],
+  "sig": {
+    "class_declaration": "public class TreeTraversingParser extends ParserMinimalBase",
+    "constructors": [
+      "public TreeTraversingParser(JsonNode n);",
+      "public TreeTraversingParser(JsonNode n, ObjectCodec codec);"
+    ],
+    "focal_signature": "public byte[] getBinaryValue(Base64Variant b64variant) throws IOException, JsonParseException",
+    "methods": [
+      "public void setCodec(ObjectCodec c);",
+      "public ObjectCodec getCodec();",
+      "public Version version();",
+      "public void close() throws IOException;",
+      "public JsonToken nextToken() throws IOException, JsonParseException;",
+      "public JsonParser skipChildren() throws IOException, JsonParseException;",
+      "public boolean isClosed();",
+      "public String getCurrentName();",
+      "public void overrideCurrentName(String name);",
+      "public JsonStreamContext getParsingContext();",
+      "public JsonLocation getTokenLocation();",
+      "public JsonLocation getCurrentLocation();",
+      "public String getText();",
+      "public char[] getTextCharacters() throws IOException, JsonParseException;",
+      "public int getTextLength() throws IOException, JsonParseException;",
+      "public int getTextOffset() throws IOException, JsonParseException;",
+      "public boolean hasTextCharacters();",
+      "public NumberType getNumberType() throws IOException, JsonParseException;",
+      "public BigInteger getBigIntegerValue() throws IOException, JsonParseException;",
+      "public BigDecimal getDecimalValue() throws IOException, JsonParseException;",
+      "public double getDoubleValue() throws IOException, JsonParseException;",
+      "public float getFloatValue() throws IOException, JsonParseException;",
+      "public long getLongValue() throws IOException, JsonParseException;",
+      "public int getIntValue() throws IOException, JsonParseException;",
+      "public Number getNumberValue() throws IOException, JsonParseException;",
+      "public Object getEmbeddedObject();",
+      "public boolean isNaN();",
+      "public int readBinaryValue(Base64Variant b64variant, OutputStream out) throws IOException, JsonParseException;",
+      "protected JsonNode currentNode();",
+      "protected JsonNode currentNumericNode() throws JsonParseException;",
+      "protected void _handleEOF() throws JsonParseException;"
+    ],
+    "type_signatures": []
+  },
+  "split": "test"
+}

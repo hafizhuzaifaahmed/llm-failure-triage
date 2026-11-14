@@ -1,0 +1,200 @@
+{
+ "base_focal_id": "JacksonDatabind_18::com.fasterxml.jackson.databind.MappingIterator::hasNextValue()",
+ "bug_name": "JacksonDatabind_18",
+ "call_sites": [
+  {
+   "line": 180,
+   "lines": [
+    175,
+    176,
+    177,
+    178,
+    179,
+    180,
+    181,
+    182,
+    183,
+    184,
+    185
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/MappingIterator.java",
+   "snippet": "\n    @Override\n    public boolean hasNext()\n    {\n        try {\n            return hasNextValue();\n        } catch (JsonMappingException e) {\n            return (Boolean) _handleMappingException(e);\n        } catch (IOException e) {\n            return (Boolean) _handleIOException(e);\n        }"
+  },
+  {
+   "line": 265,
+   "lines": [
+    260,
+    261,
+    262,
+    263,
+    264,
+    265,
+    266,
+    267,
+    268,
+    269,
+    270
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/MappingIterator.java",
+   "snippet": "        switch (_state) {\n        case STATE_CLOSED:\n            return _throwNoSuchElement();\n        case STATE_NEED_RESYNC: // fall-through, will do re-sync\n        case STATE_MAY_HAVE_VALUE:\n            if (!hasNextValue()) {\n                return _throwNoSuchElement();\n            }\n            break;\n        case STATE_HAS_VALUE:\n            break;"
+  },
+  {
+   "line": 316,
+   "lines": [
+    311,
+    312,
+    313,
+    314,
+    315,
+    316,
+    317,
+    318,
+    319,
+    320,
+    321
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/MappingIterator.java",
+   "snippet": "     * \n     * @since 2.2\n     */\n    public <L extends List<? super T>> L readAll(L resultList) throws IOException\n    {\n        while (hasNextValue()) {\n            resultList.add(nextValue());\n        }\n        return resultList;\n    }\n"
+  },
+  {
+   "line": 330,
+   "lines": [
+    325,
+    326,
+    327,
+    328,
+    329,
+    330,
+    331,
+    332,
+    333,
+    334,
+    335
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/MappingIterator.java",
+   "snippet": "     * \n     * @since 2.5\n     */\n    public <C extends Collection<? super T>> C readAll(C results) throws IOException\n    {\n        while (hasNextValue()) {\n            results.add(nextValue());\n        }\n        return results;\n    }\n    "
+  }
+ ],
+ "class_simple": "MappingIterator",
+ "dataset": "D2",
+ "doc": {
+  "class_javadoc": "/**\n * Iterator exposed by {@link ObjectMapper} when binding sequence of\n * objects. Extension is done to allow more convenient exposing of\n * {@link IOException} (which basic {@link Iterator} does not expose)\n */\npublic",
+  "method_javadoc": "/**\n     * Equivalent of {@link #next} but one that may throw checked\n     * exceptions from Jackson due to invalid input.\n     */"
+ },
+ "fields": [
+  "protected final static MappingIterator<?> EMPTY_ITERATOR",
+  "protected final static int STATE_CLOSED",
+  "protected final static int STATE_NEED_RESYNC",
+  "protected final static int STATE_MAY_HAVE_VALUE",
+  "protected final static int STATE_HAS_VALUE",
+  "protected final JavaType _type",
+  "protected final DeserializationContext _context",
+  "protected final JsonDeserializer<T> _deserializer",
+  "protected final JsonParser _parser",
+  "protected final JsonStreamContext _seqContext",
+  "protected final T _updatedValue",
+  "protected final boolean _closeParser",
+  "protected int _state"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.MappingIterator",
+ "focal_id": "JacksonDatabind_18::com.fasterxml.jackson.databind.MappingIterator::hasNextValue()#m32",
+ "focal_method_name": "hasNextValue",
+ "impl_B": "public boolean hasNextValue() throws IOException\n    {\n        switch (_state) {\n        case STATE_CLOSED:\n            return false;\n        case STATE_NEED_RESYNC:\n            _resync();\n            // fall-through\n        case STATE_MAY_HAVE_VALUE:\n            JsonToken t = _parser.getCurrentToken();\n            if (t == null) { // un-initialized or cleared; find next\n                t = _parser.nextToken();\n                // If EOF, no more, or if we hit END_ARRAY (although we don't clear the token).\n                if (true) {\n                    _state = STATE_CLOSED;\n                    if (_closeParser && (_parser != null)) {\n                        _parser.close();\n                    }\n                    return false;\n                }\n            }\n            _state = STATE_HAS_VALUE;\n            return true;\n        case STATE_HAS_VALUE:\n            // fall through\n        }\n        return true;\n    }",
+ "imports": [
+  "java.io.Closeable",
+  "java.io.IOException",
+  "java.util.*",
+  "com.fasterxml.jackson.core.*"
+ ],
+ "javadoc_edited_by_fix": false,
+ "mutant_id": 32,
+ "operator": "COR",
+ "package": "com.fasterxml.jackson.databind",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "hasNext"
+  },
+  {
+   "javadoc": "",
+   "name": "next"
+  },
+  {
+   "javadoc": "",
+   "name": "remove"
+  },
+  {
+   "javadoc": "",
+   "name": "close"
+  },
+  {
+   "javadoc": "",
+   "name": "nextValue"
+  },
+  {
+   "javadoc": "/**\n     * Convenience method for reading all entries accessible via\n     * this iterator; resulting container will be a {@link java.util.ArrayList}.\n     * \n     * @return List of entries read\n     * \n     * @since 2.2\n     */",
+   "name": "readAll"
+  },
+  {
+   "javadoc": "/**\n     * Convenience method for reading all entries accessible via\n     * this iterator\n     * \n     * @return List of entries read (same as passed-in argument)\n     * \n     * @since 2.2\n     */",
+   "name": "readAll"
+  },
+  {
+   "javadoc": "/**\n     * Convenience method for reading all entries accessible via\n     * this iterator\n     * \n     * @since 2.5\n     */",
+   "name": "readAll"
+  },
+  {
+   "javadoc": "/**\n     * Accessor for getting underlying parser this iterator uses.\n     * \n     * @since 2.2\n     */",
+   "name": "getParser"
+  },
+  {
+   "javadoc": "/**\n     * Accessor for accessing {@link FormatSchema} that the underlying parser\n     * (as per {@link #getParser}) is using, if any; only parser of schema-aware\n     * formats use schemas.\n     * \n     * @since 2.2\n     */",
+   "name": "getParserSchema"
+  },
+  {
+   "javadoc": "/**\n     * Convenience method, functionally equivalent to:\n     *<code>\n     *   iterator.getParser().getCurrentLocation()\n     *</code>\n     * \n     * @return Location of the input stream of the underlying parser\n     * \n     * @since 2.2.1\n     */",
+   "name": "getCurrentLocation"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_resync"
+  },
+  {
+   "javadoc": "",
+   "name": "_throwNoSuchElement"
+  },
+  {
+   "javadoc": "",
+   "name": "_handleMappingException"
+  },
+  {
+   "javadoc": "",
+   "name": "_handleIOException"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class MappingIterator<T> implements Iterator<T>, Closeable",
+  "constructors": [],
+  "focal_signature": "public boolean hasNextValue() throws IOException",
+  "methods": [
+   "public boolean hasNext();",
+   "public T next();",
+   "public void remove();",
+   "public void close() throws IOException;",
+   "public T nextValue() throws IOException;",
+   "public List<T> readAll() throws IOException;",
+   "public <L extends List<? super T>> L readAll(L resultList) throws IOException;",
+   "public <C extends Collection<? super T>> C readAll(C results) throws IOException;",
+   "public JsonParser getParser();",
+   "public FormatSchema getParserSchema();",
+   "public JsonLocation getCurrentLocation();",
+   "protected void _resync() throws IOException;",
+   "protected <R> R _throwNoSuchElement();",
+   "protected <R> R _handleMappingException(JsonMappingException e);",
+   "protected <R> R _handleIOException(IOException e);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test"
+}

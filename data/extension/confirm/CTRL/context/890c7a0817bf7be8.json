@@ -1,0 +1,149 @@
+{
+ "bug_name": "JxPath_11",
+ "call_sites": [
+  {
+   "line": 120,
+   "lines": [
+    115,
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122,
+    123,
+    124,
+    125
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/NamespaceResolver.java",
+   "snippet": "        if (reverseMap == null) {\n            reverseMap = new HashMap();\n            NodeIterator ni = pointer.namespaceIterator();\n            if (ni != null) {\n                for (int position = 1; ni.setPosition(position); position++) {\n                    NodePointer nsPointer = ni.getNodePointer();\n                    String uri = nsPointer.getNamespaceURI();                    \n                    String prefix = nsPointer.getName().getName();\n                    if (!\"\".equals(prefix)) {\n                        reverseMap.put(uri, prefix);\n                    }"
+  },
+  {
+   "line": 88,
+   "lines": [
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/axes/AttributeContext.java",
+   "snippet": "            return false;\n        }\n        if (!iterator.setPosition(iterator.getPosition() + 1)) {\n            return false;\n        }\n        currentNodePointer = iterator.getNodePointer();\n        return true;\n    }\n}"
+  },
+  {
+   "line": 56,
+   "lines": [
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/axes/ChildContext.java",
+   "snippet": "        if (position == 0) {\n            if (!setPosition(1)) {\n                return null;\n            }\n        }\n        return iterator == null ? null : iterator.getNodePointer();\n    }\n\n    /**\n     * This method is called on the last context on the path when only\n     * one value is needed.  Note that this will return the whole property,"
+  },
+  {
+   "line": 74,
+   "lines": [
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/axes/ChildContext.java",
+   "snippet": "                prepare();\n                if (iterator == null) {\n                    return null;\n                }\n                // See if there is a property there, singular or collection\n                NodePointer pointer = iterator.getNodePointer();\n                if (pointer != null) {\n                    return pointer;\n                }\n            }\n            return null;"
+  },
+  {
+   "line": 111,
+   "lines": [
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116
+   ],
+   "path": "src/java/org/apache/commons/jxpath/ri/axes/DescendantContext.java",
+   "snippet": "        }\n\n        while (!stack.isEmpty()) {\n            NodeIterator it = (NodeIterator) stack.peek();\n            if (it.setPosition(it.getPosition() + 1)) {\n                currentNodePointer = it.getNodePointer();\n                if (!isRecursive()) {\n                    if (!currentNodePointer.isLeaf()) {\n                        stack.push(\n                            currentNodePointer.childIterator(\n                                ELEMENT_NODE_TEST,"
+  }
+ ],
+ "class_simple": "JDOMAttributeIterator",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * An iterator of attributes of a DOM Node.\n *\n * @author Dmitri Plotnikov\n * @version $Revision$ $Date$\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private NodePointer parent",
+  "private List attributes",
+  "private int position"
+ ],
+ "focal_class": "org.apache.commons.jxpath.ri.model.jdom.JDOMAttributeIterator",
+ "focal_id": "JxPath_11::org.apache.commons.jxpath.ri.model.jdom.JDOMAttributeIterator::getNodePointer()",
+ "focal_method_name": "getNodePointer",
+ "generations": 3,
+ "impl_B": "public NodePointer getNodePointer() {\n        if (position == 0) {\n            if (!setPosition(1)) {\n                return null;\n            }\n            position = 0;\n        }\n        int index = position - 1;\n        if (index < 0) {\n            index = 0;\n        }\n        return new JDOMAttributePointer(\n            parent,\n            (Attribute) attributes.get(index));\n    }",
+ "imports": [
+  "java.util.ArrayList",
+  "java.util.Collections",
+  "java.util.List",
+  "org.apache.commons.jxpath.ri.QName",
+  "org.apache.commons.jxpath.ri.model.NodeIterator",
+  "org.apache.commons.jxpath.ri.model.NodePointer",
+  "org.jdom.Attribute",
+  "org.jdom.Element",
+  "org.jdom.Namespace"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.jxpath.ri.model.jdom",
+ "project": "JxPath",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "getPosition"
+  },
+  {
+   "javadoc": "",
+   "name": "setPosition"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class JDOMAttributeIterator implements NodeIterator",
+  "constructors": [
+   "public JDOMAttributeIterator(NodePointer parent, QName name);"
+  ],
+  "focal_signature": "public NodePointer getNodePointer()",
+  "methods": [
+   "public int getPosition();",
+   "public boolean setPosition(int position);"
+  ],
+  "type_signatures": [
+   "public abstract class NodePointer implements Pointer { public static NodePointer newNodePointer( QName name, Object bean, Locale locale); public static NodePointer newChildNodePointer( NodePointer parent, QName name, Object bean); protected NodePointer(NodePointer parent); protected NodePointer(NodePointer parent, Locale locale); public NamespaceResolver getNamespaceResolver(); public void setNamespaceResolver(NamespaceResolver namespaceResolver); public NodePointer getParent(); public NodePointer getImmediateParentPointer(); public void setAttribute(boolean attribute); public boolean isAttribute(); public boolean isRoot(); public abstract boolean isLeaf(); public boolean isNode(); public boolean isContainer(); public int getIndex(); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

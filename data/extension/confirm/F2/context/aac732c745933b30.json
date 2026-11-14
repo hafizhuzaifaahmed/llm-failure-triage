@@ -1,0 +1,437 @@
+{
+ "bug_name": "Closure_140",
+ "call_sites": [
+  {
+   "line": 429,
+   "lines": [
+    424,
+    425,
+    426,
+    427,
+    428,
+    429,
+    430,
+    431,
+    432,
+    433,
+    434
+   ],
+   "path": "src/com/google/javascript/jscomp/Compiler.java",
+   "snippet": "\n    // The compile method should only be called once.\n    Preconditions.checkState(jsRoot == null);\n\n    try {\n      init(externs, inputs, options);\n      if (hasErrors()) {\n        return getResult();\n      }\n      return compile();\n    } finally {"
+  },
+  {
+   "line": 451,
+   "lines": [
+    446,
+    447,
+    448,
+    449,
+    450,
+    451,
+    452,
+    453,
+    454,
+    455,
+    456
+   ],
+   "path": "src/com/google/javascript/jscomp/Compiler.java",
+   "snippet": "                        CompilerOptions options) {\n    // The compile method should only be called once.\n    Preconditions.checkState(jsRoot == null);\n\n    try {\n      init(externs, modules, options);\n      if (hasErrors()) {\n        return getResult();\n      }\n      return compile();\n    } finally {"
+  },
+  {
+   "line": 487,
+   "lines": [
+    482,
+    483,
+    484,
+    485,
+    486,
+    487,
+    488,
+    489,
+    490,
+    491,
+    492
+   ],
+   "path": "src/com/google/javascript/jscomp/Tracer.java",
+   "snippet": "      // Grab a new thread trace if we find a previous non-empty ThreadTrace.\n      events = getThreadTrace();\n    }\n\n    // Mark the thread trace as initialized.\n    events.init();\n  }\n\n  static void initCurrentThreadTrace(int default_silence_threshold) {\n    initCurrentThreadTrace();\n    setDefaultSilenceThreshold(default_silence_threshold);"
+  },
+  {
+   "line": 752,
+   "lines": [
+    747,
+    748,
+    749,
+    750,
+    751,
+    752,
+    753,
+    754,
+    755,
+    756,
+    757
+   ],
+   "path": "src/com/google/javascript/jscomp/Tracer.java",
+   "snippet": "     * Whether pretty printing is enabled for the trace.\n     */\n    boolean prettyPrint = false;\n\n    /** Initialize the trace.  */\n    void init() {\n      isInitialized = true;\n    }\n\n    /** Is initialized? */\n    boolean isInitialized() {"
+  },
+  {
+   "line": 71,
+   "lines": [
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76
+   ],
+   "path": "src/com/google/javascript/rhino/ObjToIntMap.java",
+   "snippet": "\n        Iterator(ObjToIntMap master) {\n            this.master = master;\n        }\n\n        final void init(Object[] keys, int[] values, int keyCount) {\n            this.keys = keys;\n            this.values = values;\n            this.cursor = -1;\n            this.remaining = keyCount;\n        }"
+  }
+ ],
+ "class_simple": "Compiler",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Compiler (and the other classes in this package) does the following:\n * <ul>\n * <li>parses JS code\n * <li>checks for undefined variables\n * <li>performs optimizations such as constant folding and constants inlining\n * <li>renames variables (to short names)\n * <li>outputs compact javascript code\n * </ul>\n *\n * External variables are declared in 'externs' files. For instance, the file\n * may include definitions for global javascript/browser objects such as\n * window, document.\n *\n*\n*\n */\npublic",
+  "method_javadoc": "/**\n   * Initializes the instance state needed for a compile job.\n   */"
+ },
+ "fields": [
+  "CompilerOptions options",
+  "private PassConfig passes",
+  "private CompilerInput[] externs",
+  "private JSModule[] modules",
+  "private JSModuleGraph moduleGraph",
+  "private CompilerInput[] inputs",
+  "private ErrorManager errorManager",
+  "private SymbolTable symbolTable",
+  "Node externsRoot",
+  "Node jsRoot",
+  "Node externAndJsRoot",
+  "private Map<String, CompilerInput> inputsByName",
+  "private SourceMap sourceMap",
+  "private String externExports",
+  "private int uniqueNameId",
+  "private boolean normalized",
+  "private boolean useThreads",
+  "private FunctionInformationMap functionInformationMap",
+  "private final StringBuilder debugLog",
+  "CodingConvention defaultCodingConvention",
+  "private JSTypeRegistry typeRegistry",
+  "private Config parserConfig",
+  "private ReverseAbstractInterpreter abstractInterpreter",
+  "private final TypeValidator typeValidator",
+  "public PerformanceTracker tracker",
+  "private final com.google.javascript.rhino.ErrorReporter oldErrorReporter",
+  "private final ErrorReporter defaultErrorReporter",
+  "public static final DiagnosticType OPTIMIZE_LOOP_ERROR",
+  "public static final DiagnosticType MOTION_ITERATIONS_ERROR",
+  "private static final long COMPILER_STACK_SIZE",
+  "private static final Logger logger",
+  "private final PrintStream outStream",
+  "static final DiagnosticType MODULE_DEPENDENCY_ERROR",
+  "private static final DiagnosticType EMPTY_MODULE_LIST_ERROR",
+  "private static final DiagnosticType EMPTY_ROOT_MODULE_ERROR",
+  "static final DiagnosticType DUPLICATE_INPUT_IN_MODULES",
+  "static final DiagnosticType DUPLICATE_INPUT",
+  "static final DiagnosticType DUPLICATE_EXTERN_INPUT",
+  "private final PassFactory sanityCheck",
+  "private Tracer currentTracer"
+ ],
+ "focal_class": "com.google.javascript.jscomp.Compiler",
+ "focal_id": "Closure_140::com.google.javascript.jscomp.Compiler::init(JSSourceFile[],JSModule[],CompilerOptions)",
+ "focal_method_name": "init",
+ "generations": 3,
+ "impl_B": "public void init(JSSourceFile[] externs, JSModule[] modules,\n      CompilerOptions options) {\n    initOptions(options);\n\n    checkFirstModule(modules);\n\n    this.externs = makeCompilerInput(externs, true);\n    this.modules = modules;\n    // Generate the module graph, and report any errors in the module\n    // specification as errors.\n    try {\n      this.moduleGraph = new JSModuleGraph(modules);\n    } catch (JSModuleGraph.ModuleDependenceException e) {\n      // problems with the module format.  Report as an error.  The\n      // message gives all details.\n      report(JSError.make(MODULE_DEPENDENCY_ERROR,\n          e.getModule().getName(), e.getDependentModule().getName()));\n      return;\n    }\n    this.inputs = getAllInputsFromModules();\n    initBasedOnOptions();\n\n    initInputsByNameMap();\n  }",
+ "imports": [
+  "com.google.common.annotations.VisibleForTesting",
+  "com.google.common.base.Preconditions",
+  "com.google.common.base.Supplier",
+  "com.google.common.collect.Lists",
+  "com.google.common.collect.Maps",
+  "com.google.javascript.jscomp.CompilerOptions.DevMode",
+  "com.google.javascript.jscomp.CompilerOptions.TracerMode",
+  "com.google.javascript.jscomp.mozilla.rhino.ErrorReporter",
+  "com.google.javascript.jscomp.parsing.Config",
+  "com.google.javascript.jscomp.parsing.ParserRunner",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.Token",
+  "com.google.javascript.rhino.jstype.JSTypeRegistry",
+  "java.io.IOException",
+  "java.io.PrintStream",
+  "java.io.Serializable",
+  "java.util.ArrayList",
+  "java.util.HashMap",
+  "java.util.List",
+  "java.util.Map",
+  "java.util.Set",
+  "java.util.concurrent.Callable",
+  "java.util.logging.Level",
+  "java.util.logging.Logger"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "/**\n   * Sets the error manager.\n   *\n   * @param errorManager the error manager, it cannot be {@code null}\n   */",
+   "name": "setErrorManager"
+  },
+  {
+   "javadoc": "/**\n   * Initialize the compiler options. Only necessary if you're not doing\n   * a normal compile() job.\n   */",
+   "name": "initOptions"
+  },
+  {
+   "javadoc": "/**\n   * Initializes the instance state needed for a compile job.\n   */",
+   "name": "init"
+  },
+  {
+   "javadoc": "/**\n   * Rebuilds the internal list of inputs by iterating over all modules.\n   * This is necessary if inputs have been added to or removed from a module\n   * after the {@link #init(JSSourceFile[], JSModule[], CompilerOptions)} call.\n   */",
+   "name": "rebuildInputsFromModules"
+  },
+  {
+   "javadoc": "",
+   "name": "compile"
+  },
+  {
+   "javadoc": "",
+   "name": "compile"
+  },
+  {
+   "javadoc": "",
+   "name": "compile"
+  },
+  {
+   "javadoc": "/**\n   * Compiles a list of inputs.\n   */",
+   "name": "compile"
+  },
+  {
+   "javadoc": "/**\n   * Compiles a list of modules.\n   */",
+   "name": "compile"
+  },
+  {
+   "javadoc": "/**\n   * Disable threads. This is for clients that run on AppEngine and\n   * don't have threads.\n   */",
+   "name": "disableThreads"
+  },
+  {
+   "javadoc": "",
+   "name": "parse"
+  },
+  {
+   "javadoc": "/**\n   * @param passes The PassConfig to use with this Compiler.\n   * @throws NullPointerException if passes is null\n   * @throws IllegalStateException if this.passes has already been assigned\n   */",
+   "name": "setPassConfig"
+  },
+  {
+   "javadoc": "",
+   "name": "check"
+  },
+  {
+   "javadoc": "/**\n   * Returns the result of the compilation.\n   */",
+   "name": "getResult"
+  },
+  {
+   "javadoc": "/**\n   * Returns an array constructed from errors + temporary warnings.\n   */",
+   "name": "getMessages"
+  },
+  {
+   "javadoc": "/**\n   * Returns the array of errors (never null).\n   */",
+   "name": "getErrors"
+  },
+  {
+   "javadoc": "/**\n   * Returns the array of warnings (never null).\n   */",
+   "name": "getWarnings"
+  },
+  {
+   "javadoc": "/**\n   * Returns the root node of the AST, which includes both externs and source.\n   */",
+   "name": "getRoot"
+  },
+  {
+   "javadoc": "",
+   "name": "getInput"
+  },
+  {
+   "javadoc": "",
+   "name": "newExternInput"
+  },
+  {
+   "javadoc": "",
+   "name": "getTypeRegistry"
+  },
+  {
+   "javadoc": "",
+   "name": "getTopScope"
+  },
+  {
+   "javadoc": "",
+   "name": "getReverseAbstractInterpreter"
+  },
+  {
+   "javadoc": "",
+   "name": "parse"
+  },
+  {
+   "javadoc": "/**\n   * Converts the main parse tree back to js code.\n   */",
+   "name": "toSource"
+  },
+  {
+   "javadoc": "/**\n   * Converts the parse tree for each input back to js code.\n   */",
+   "name": "toSourceArray"
+  },
+  {
+   "javadoc": "/**\n   * Converts the parse tree for a module back to js code.\n   */",
+   "name": "toSource"
+  },
+  {
+   "javadoc": "/**\n   * Converts the parse tree for each input in a module back to js code.\n   */",
+   "name": "toSourceArray"
+  },
+  {
+   "javadoc": "/**\n   * Writes out js code from a root node. If printing input delimiters, this\n   * method will attach a comment to the start of the text indicating which\n   * input the output derived from. If there were any preserve annotations\n   * within the root's source, they will also be printed in a block comment\n   * at the beginning of the output.\n   */",
+   "name": "toSource"
+  },
+  {
+   "javadoc": "",
+   "name": "optimize"
+  },
+  {
+   "javadoc": "/**\n   * Reprocesses the current defines over the AST.  This is used by GwtCompiler\n   * to generate N outputs for different targets from the same (checked) AST.\n   * For each target, we apply the target-specific defines by calling\n   * {@code processDefines} and then {@code optimize} to optimize the AST\n   * specifically for that target.\n   */",
+   "name": "processDefines"
+  },
+  {
+   "javadoc": "",
+   "name": "normalize"
+  },
+  {
+   "javadoc": "/**\n   * All passes should call reportCodeChange() when they alter\n   * the JS tree structure. This is verified by CompilerTestCase.\n   * This allows us to optimize to a fixed point.\n   */",
+   "name": "reportCodeChange"
+  },
+  {
+   "javadoc": "",
+   "name": "getCodingConvention"
+  },
+  {
+   "javadoc": "",
+   "name": "isIdeMode"
+  },
+  {
+   "javadoc": "",
+   "name": "isTypeCheckingEnabled"
+  },
+  {
+   "javadoc": "",
+   "name": "report"
+  },
+  {
+   "javadoc": "/**\n   * Gets the number of errors.\n   */",
+   "name": "getErrorCount"
+  },
+  {
+   "javadoc": "/**\n   * Gets the number of warnings.\n   */",
+   "name": "getWarningCount"
+  },
+  {
+   "javadoc": "/**\n   * Consults the {@link ErrorManager} to see if we've encountered errors\n   * that should halt compilation. <p>\n   *\n   * If {@link CompilerOptions#ideMode} is {@code true}, this function\n   * always returns {@code false} without consulting the error manager. The\n   * error manager will continue to be told about new errors and warnings, but\n   * the compiler will complete compilation of all inputs.<p>\n   */",
+   "name": "hasErrors"
+  },
+  {
+   "javadoc": "",
+   "name": "getSourceLine"
+  },
+  {
+   "javadoc": "",
+   "name": "getSourceRegion"
+  },
+  {
+   "javadoc": "",
+   "name": "getSourceMap"
+  },
+  {
+   "javadoc": "/**\n   * Sets the logging level for the com.google.javascript.jscomp package.\n   */",
+   "name": "setLoggingLevel"
+  },
+  {
+   "javadoc": "/** Gets the DOT graph of the AST generated at the end of compilation. */",
+   "name": "getAstDotGraph"
+  },
+  {
+   "javadoc": "",
+   "name": "getErrorManager"
+  },
+  {
+   "javadoc": "/**\n   * Returns the current internal state, excluding the input files and modules.\n   */",
+   "name": "getState"
+  },
+  {
+   "javadoc": "/**\n   * Sets the internal state to the capture given.  Note that this assumes that\n   * the input files are already set up.\n   */",
+   "name": "setState"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class Compiler extends AbstractCompiler",
+  "constructors": [
+   "public Compiler();",
+   "public Compiler(PrintStream stream);",
+   "public Compiler(ErrorManager errorManager);"
+  ],
+  "focal_signature": "public void init(JSSourceFile[] externs, JSModule[] modules, CompilerOptions options)",
+  "methods": [
+   "public void setErrorManager(ErrorManager errorManager);",
+   "public void initOptions(CompilerOptions options);",
+   "public void init(JSSourceFile[] externs, JSSourceFile[] inputs, CompilerOptions options);",
+   "public void rebuildInputsFromModules();",
+   "public Result compile( JSSourceFile extern, JSSourceFile input, CompilerOptions options);",
+   "public Result compile( JSSourceFile extern, JSSourceFile[] input, CompilerOptions options);",
+   "public Result compile( JSSourceFile extern, JSModule[] modules, CompilerOptions options);",
+   "public Result compile(JSSourceFile[] externs, JSSourceFile[] inputs, CompilerOptions options);",
+   "public Result compile(JSSourceFile[] externs, JSModule[] modules, CompilerOptions options);",
+   "public void disableThreads();",
+   "public void parse();",
+   "public void setPassConfig(PassConfig passes);",
+   "public void check();",
+   "public Result getResult();",
+   "public JSError[] getMessages();",
+   "public JSError[] getErrors();",
+   "public JSError[] getWarnings();",
+   "public Node getRoot();",
+   "public CompilerInput getInput(String name);",
+   "public CompilerInput newExternInput(String name);",
+   "public JSTypeRegistry getTypeRegistry();",
+   "public Scope getTopScope();",
+   "public ReverseAbstractInterpreter getReverseAbstractInterpreter();",
+   "public Node parse(JSSourceFile file);",
+   "public String toSource();",
+   "public String[] toSourceArray();",
+   "public String toSource(final JSModule module);",
+   "public String[] toSourceArray(final JSModule module);",
+   "public void toSource(final CodeBuilder cb, final int inputSeqNum, final Node root);",
+   "public void optimize();",
+   "public void processDefines();",
+   "public void normalize();",
+   "public void reportCodeChange();",
+   "public CodingConvention getCodingConvention();",
+   "public boolean isIdeMode();",
+   "public boolean isTypeCheckingEnabled();",
+   "public void report(JSError error);",
+   "public int getErrorCount();",
+   "public int getWarningCount();",
+   "public boolean hasErrors();",
+   "public String getSourceLine(String sourceName, int lineNumber);",
+   "public Region getSourceRegion(String sourceName, int lineNumber);",
+   "public SourceMap getSourceMap();",
+   "public static void setLoggingLevel(Level level);",
+   "public String getAstDotGraph() throws IOException;",
+   "public ErrorManager getErrorManager();",
+   "public IntermediateState getState();",
+   "public void setState(IntermediateState state);"
+  ],
+  "type_signatures": [
+   "public class JSSourceFile extends SourceFile { public static JSSourceFile fromFile(String fileName, Charset charSet); public static JSSourceFile fromFile(String fileName); public static JSSourceFile fromFile(File file, Charset charSet); public static JSSourceFile fromFile(File file); public static JSSourceFile fromCode(String fileName, String code); public static JSSourceFile fromInputStream(String fileName, InputStream s) throws IOException; public static JSSourceFile fromGenerator(String fileName, Generator generator); public String getCode() throws IOException; public void clearCachedSource(); }",
+   "public class JSModule { public JSModule(String name); public String getName(); public void add(JSSourceFile file); public void addFirst(JSSourceFile file); public void add(CompilerInput input); public void addFirst(CompilerInput input); public void addAfter(CompilerInput input, CompilerInput other); public void addDependency(JSModule dep); public void removeAll(); public List<JSModule> getDependencies(); public Set<JSModule> getAllDependencies(); public Set<JSModule> getThisAndAllDependencies(); public List<CompilerInput> getInputs(); public CompilerInput getByName(String name); public boolean removeByName(String name); }",
+   "public class CompilerOptions implements Serializable, Cloneable { public CompilerOptions(); public Map<String, Node> getDefineReplacements(); public void setDefineToBooleanLiteral(String defineName, boolean value); public void setDefineToStringLiteral(String defineName, String value); public void setDefineToNumberLiteral(String defineName, int value); public void setDefineToDoubleLiteral(String defineName, double value); public void skipAllCompilerPasses(); public void setWarningLevel(DiagnosticGroup type, CheckLevel level); public void addWarningsGuard(WarningsGuard guard); public void setRenamingPolicy(VariableRenamingPolicy newVariablePolicy, PropertyRenamingPolicy newPropertyPolicy); public void setCollapsePropertiesOnExternTypes(boolean collapse); public void setProcessObjectPropertyString(boolean process); public void setIdGenerators(Set<String> idGenerators); public void setRewriteNewDateGoogNow(boolean rewrite); public void setRemoveAbstractMethods(boolean remove); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

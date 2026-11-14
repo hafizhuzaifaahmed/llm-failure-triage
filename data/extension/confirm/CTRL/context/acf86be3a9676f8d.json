@@ -1,0 +1,189 @@
+{
+ "bug_name": "Closure_107",
+ "call_sites": [
+  {
+   "line": 879,
+   "lines": [
+    874,
+    875,
+    876,
+    877,
+    878,
+    879,
+    880,
+    881,
+    882,
+    883,
+    884
+   ],
+   "path": "src/com/google/javascript/jscomp/CommandLineRunner.java",
+   "snippet": "      IOException {\n    List<SourceFile> externs = super.createExterns();\n    if (flags.useOnlyCustomExterns || isInTestMode()) {\n      return externs;\n    } else {\n      List<SourceFile> defaultExterns = getDefaultExterns();\n      defaultExterns.addAll(externs);\n      return defaultExterns;\n    }\n  }\n"
+  },
+  {
+   "line": 470,
+   "lines": [
+    465,
+    466,
+    467,
+    468,
+    469,
+    470,
+    471,
+    472,
+    473,
+    474,
+    475
+   ],
+   "path": "src/com/google/javascript/jscomp/ant/CompileTask.java",
+   "snippet": "  }\n\n  private List<SourceFile> findExternFiles() {\n    List<SourceFile> files = Lists.newLinkedList();\n    if (!this.customExternsOnly) {\n      files.addAll(getDefaultExterns());\n    }\n\n    for (FileList list : this.externFileLists) {\n      files.addAll(findJavaScriptFiles(list));\n    }"
+  },
+  {
+   "line": 532,
+   "lines": [
+    527,
+    528,
+    529,
+    530,
+    531,
+    532,
+    533,
+    534,
+    535,
+    536,
+    537
+   ],
+   "path": "src/com/google/javascript/jscomp/ant/CompileTask.java",
+   "snippet": "   *\n   * Adapted from {@link CommandLineRunner}.\n   */\n  private List<SourceFile> getDefaultExterns() {\n    try {\n      return CommandLineRunner.getDefaultExterns();\n    } catch (IOException e) {\n      throw new BuildException(e);\n    }\n  }\n"
+  },
+  {
+   "line": 70,
+   "lines": [
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75
+   ],
+   "path": "src/com/google/javascript/jscomp/fuzzing/Driver.java",
+   "snippet": "          + \"Default: INFO\")\n  private LoggingLevel level = LoggingLevel.INFO;\n\n  public Result compile(String code) throws IOException {\n    Compiler compiler = new Compiler();\n    return compiler.compile(CommandLineRunner.getDefaultExterns(),\n        Arrays.asList(SourceFile.fromCode(\"[fuzzedCode]\", code)), getOptions());\n  }\n\n  public Result compile(Node script) throws IOException {\n    CompilerInput input = new CompilerInput(new SyntheticAst(script));"
+  },
+  {
+   "line": 82,
+   "lines": [
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87
+   ],
+   "path": "src/com/google/javascript/jscomp/fuzzing/Driver.java",
+   "snippet": "    jsModule.add(input);\n\n    Compiler compiler = new Compiler();\n    compiler.setTimeout(30);\n    return compiler.compileModules(\n        CommandLineRunner.getDefaultExterns(),\n        Arrays.asList(jsModule), getOptions());\n  }\n\n  private CompilerOptions getOptions() {\n    CompilerOptions options = new CompilerOptions();"
+  }
+ ],
+ "class_simple": "CommandLineRunner",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * CommandLineRunner translates flags into Java API calls on the Compiler.\n *\n * This class may be extended and used to create other Java classes\n * that behave the same as running the Compiler from the command line. If you\n * want to run the compiler in-process in Java, you should look at this class\n * for hints on what API calls to make, but you should not use this class\n * directly.\n *\n * Example:\n * <pre>\n * class MyCommandLineRunner extends CommandLineRunner {\n *   MyCommandLineRunner(String[] args) {\n *     super(args);\n *   }\n *\n *   {@code @Override} protected CompilerOptions createOptions() {\n *     CompilerOptions options = super.createOptions();\n *     addMyCrazyCompilerPassThatOutputsAnExtraFile(options);\n *     return options;\n *   }\n *\n *   public static void main(String[] args) {\n *     MyCommandLineRunner runner = new MyCommandLineRunner(args);\n *     if (runner.shouldRunCompiler()) {\n *       runner.run();\n *     } else {\n *       System.exit(-1);\n *     }\n *   }\n * }\n * </pre>\n *\n * This class is totally not thread-safe.\n *\n * @author bolinfest@google.com (Michael Bolin)\n */\npublic",
+  "method_javadoc": "/**\n   * @return a mutable list\n   * @throws IOException\n   */"
+ },
+ "fields": [
+  "private final Flags flags",
+  "private boolean isConfigValid",
+  "private static final List<String> DEFAULT_EXTERNS_NAMES"
+ ],
+ "focal_class": "com.google.javascript.jscomp.CommandLineRunner",
+ "focal_id": "Closure_107::com.google.javascript.jscomp.CommandLineRunner::getDefaultExterns()",
+ "focal_method_name": "getDefaultExterns",
+ "generations": 3,
+ "impl_B": "public static List<SourceFile> getDefaultExterns() throws IOException {\n    InputStream input = CommandLineRunner.class.getResourceAsStream(\n        \"/externs.zip\");\n    if (input == null) {\n      // In some environments, the externs.zip is relative to this class.\n      input = CommandLineRunner.class.getResourceAsStream(\"externs.zip\");\n    }\n    Preconditions.checkNotNull(input);\n\n    ZipInputStream zip = new ZipInputStream(input);\n    Map<String, SourceFile> externsMap = Maps.newHashMap();\n    for (ZipEntry entry = null; (entry = zip.getNextEntry()) != null; ) {\n      BufferedInputStream entryStream = new BufferedInputStream(\n          ByteStreams.limit(zip, entry.getSize()));\n      externsMap.put(entry.getName(),\n          SourceFile.fromInputStream(\n              // Give the files an odd prefix, so that they do not conflict\n              // with the user's files.\n              \"externs.zip//\" + entry.getName(),\n              entryStream));\n    }\n\n    Preconditions.checkState(\n        externsMap.keySet().equals(Sets.newHashSet(DEFAULT_EXTERNS_NAMES)),\n        \"Externs zip must match our hard-coded list of externs.\");\n\n    // Order matters, so the resources must be added to the result list\n    // in the expected order.\n    List<SourceFile> externs = Lists.newArrayList();\n    for (String key : DEFAULT_EXTERNS_NAMES) {\n      externs.add(externsMap.get(key));\n    }\n\n    return externs;\n  }",
+ "imports": [
+  "com.google.common.base.Preconditions",
+  "com.google.common.collect.ImmutableList",
+  "com.google.common.collect.Lists",
+  "com.google.common.collect.Maps",
+  "com.google.common.collect.Sets",
+  "com.google.common.io.ByteStreams",
+  "com.google.common.io.Files",
+  "org.kohsuke.args4j.Argument",
+  "org.kohsuke.args4j.CmdLineException",
+  "org.kohsuke.args4j.CmdLineParser",
+  "org.kohsuke.args4j.Option",
+  "org.kohsuke.args4j.OptionDef",
+  "org.kohsuke.args4j.spi.FieldSetter",
+  "org.kohsuke.args4j.spi.OptionHandler",
+  "org.kohsuke.args4j.spi.Parameters",
+  "org.kohsuke.args4j.spi.Setter",
+  "org.kohsuke.args4j.spi.StringOptionHandler",
+  "java.io.BufferedInputStream",
+  "java.io.File",
+  "java.io.FileInputStream",
+  "java.io.IOException",
+  "java.io.InputStream",
+  "java.io.PrintStream",
+  "java.lang.reflect.AnnotatedElement",
+  "java.nio.charset.Charset",
+  "java.util.List",
+  "java.util.Map",
+  "java.util.Set",
+  "java.util.logging.Level",
+  "java.util.regex.Matcher",
+  "java.util.regex.Pattern",
+  "java.util.zip.ZipEntry",
+  "java.util.zip.ZipInputStream"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "createOptions"
+  },
+  {
+   "javadoc": "",
+   "name": "createCompiler"
+  },
+  {
+   "javadoc": "",
+   "name": "createExterns"
+  },
+  {
+   "javadoc": "/**\n   * @return Whether the configuration is valid.\n   */",
+   "name": "shouldRunCompiler"
+  },
+  {
+   "javadoc": "/**\n   * Runs the Compiler. Exits cleanly in the event of an error.\n   */",
+   "name": "main"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class CommandLineRunner extends AbstractCommandLineRunner<Compiler, CompilerOptions>",
+  "constructors": [
+   "protected CommandLineRunner(String[] args);",
+   "protected CommandLineRunner(String[] args, PrintStream out, PrintStream err);"
+  ],
+  "focal_signature": "public static List<SourceFile> getDefaultExterns() throws IOException",
+  "methods": [
+   "protected CompilerOptions createOptions();",
+   "protected Compiler createCompiler();",
+   "protected List<SourceFile> createExterns() throws FlagUsageException, IOException;",
+   "public boolean shouldRunCompiler();",
+   "public static void main(String[] args);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

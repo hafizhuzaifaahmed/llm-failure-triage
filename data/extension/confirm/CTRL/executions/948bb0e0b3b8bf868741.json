@@ -1,0 +1,384 @@
+{
+ "candidate_id": "948bb0e0b3b8bf868741",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testFindEnumValues_WithAnnotations",
+   "testFindEnumValues_WithEmptyAnnotationValue",
+   "testFindEnumValues_NoAnnotationsAtAll",
+   "testFindEnumValues_MixedExistingNames",
+   "testFindEnumValues_EmptyInput",
+   "testFindEnumValues_NonEnumClass"
+  ],
+  "nc_both": [],
+  "nc_one_version": [],
+  "passes": 0
+ },
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "JacksonDatabind_81::com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector::findEnumValues(Class<?>,Enum<?>[],String[])",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testFindEnumValues_WithAnnotations",
+   "runs_b": [
+    {
+     "duration_s": 0.141,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.113,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.118,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.119,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.129,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.111,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.databind.introspect;\n\nimport com.fasterxml.jackson.annotation.*;\nimport com.fasterxml.jackson.annotation.JsonProperty;\nimport com.fasterxml.jackson.core.Version;\nimport com.fasterxml.jackson.databind.*;\nimport com.fasterxml.jackson.databind.annotation.*;\nimport com.fasterxml.jackson.databind.cfg.HandlerInstantiator;\nimport com.fasterxml.jackson.databind.cfg.MapperConfig;\nimport com.fasterxml.jackson.databind.ext.Java7Support;\nimport com.fasterxml.jackson.databind.jsontype.NamedType;\nimport com.fasterxml.jackson.databind.jsontype.TypeIdResolver;\nimport com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder;\nimport com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder;\nimport com.fasterxml.jackson.databind.ser.BeanPropertyWriter;\nimport com.fasterxml.jackson.databind.ser.VirtualBeanPropertyWriter;\nimport com.fasterxml.jackson.databind.ser.impl.AttributePropertyWriter;\nimport com.fasterxml.jackson.databind.ser.std.RawSerializer;\nimport com.fasterxml.jackson.databind.type.MapLikeType;\nimport com.fasterxml.jackson.databind.type.TypeFactory;\nimport com.fasterxml.jackson.databind.util.*;\nimport java.io.*;\nimport java.lang.annotation.Annotation;\nimport java.lang.reflect.Field;\nimport java.math.*;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertArrayEquals;\nimport static org.junit.Assert.assertEquals;\n\n/**\n * Unit tests for JacksonAnnotationIntrospector#findEnumValues\n */\npublic class JacksonAnnotationIntrospector_findEnumValues_TriageGen2Test {\n\n    private JacksonAnnotationIntrospector introspector;\n\n    @Before\n    public void setUp() {\n        introspector = new JacksonAnnotationIntrospector();\n    }\n\n    // Test Enums for various scenarios\n    \n    enum TestEnumWithAnnotation {\n        @JsonProperty(\"val_one\")\n        VAL_ONE,\n        @JsonProperty(\"val_two\")\n        VAL_TWO,\n        VAL_THREE // No annotation\n    }\n\n    enum TestEnumWithEmptyAnnotation {\n        @JsonProperty(\"\")\n        EMPTY,\n        @JsonProperty(\"valid\")\n        VALID\n    }\n\n    enum TestEnumNoAnnotation {\n        A, B, C\n    }\n\n    @Test\n    public void testFindEnumValues_WithAnnotations() {\n        Class<?> enumType = TestEnumWithAnnotation.class;\n        TestEnumWithAnnotation[] enumValues = {\n            TestEnumWithAnnotation.VAL_ONE, \n            TestEnumWithAnnotation.VAL_TWO, \n            TestEnumWithAnnotation.VAL_THREE\n        };\n        String[] names = new String[enumValues.length];\n\n        String[] result = introspector.findEnumValues(enumType, enumValues, names);\n\n        // VAL_ONE should be \"val_one\"\n        // VAL_TWO should be \"val_two\"\n        // VAL_THREE should remain null (as per logic: if explValue != null, names[i] = explValue)\n        assertEquals(\"val_one\", result[0]);\n        assertEquals(\"val_two\", result[1]);\n        assertEquals(null, result[2]);\n    }\n\n    \n\n    \n\n    \n\n    \n    \n    /**\n     * This dummy class is used to ensure we don't trigger errors if a non-enum \n     * class is passed, although the method expects an enumType.\n     */\n    static class NotAnEnum {\n        @JsonProperty(\"field\")\n        public String field;\n    }\n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testFindEnumValues_WithEmptyAnnotationValue",
+   "runs_b": [
+    {
+     "duration_s": 0.137,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.161,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.135,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.125,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.109,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.119,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.databind.introspect;\n\nimport com.fasterxml.jackson.annotation.*;\nimport com.fasterxml.jackson.annotation.JsonProperty;\nimport com.fasterxml.jackson.core.Version;\nimport com.fasterxml.jackson.databind.*;\nimport com.fasterxml.jackson.databind.annotation.*;\nimport com.fasterxml.jackson.databind.cfg.HandlerInstantiator;\nimport com.fasterxml.jackson.databind.cfg.MapperConfig;\nimport com.fasterxml.jackson.databind.ext.Java7Support;\nimport com.fasterxml.jackson.databind.jsontype.NamedType;\nimport com.fasterxml.jackson.databind.jsontype.TypeIdResolver;\nimport com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder;\nimport com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder;\nimport com.fasterxml.jackson.databind.ser.BeanPropertyWriter;\nimport com.fasterxml.jackson.databind.ser.VirtualBeanPropertyWriter;\nimport com.fasterxml.jackson.databind.ser.impl.AttributePropertyWriter;\nimport com.fasterxml.jackson.databind.ser.std.RawSerializer;\nimport com.fasterxml.jackson.databind.type.MapLikeType;\nimport com.fasterxml.jackson.databind.type.TypeFactory;\nimport com.fasterxml.jackson.databind.util.*;\nimport java.io.*;\nimport java.lang.annotation.Annotation;\nimport java.lang.reflect.Field;\nimport java.math.*;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertArrayEquals;\nimport static org.junit.Assert.assertEquals;\n\n/**\n * Unit tests for JacksonAnnotationIntrospector#findEnumValues\n */\npublic class JacksonAnnotationIntrospector_findEnumValues_TriageGen2Test {\n\n    private JacksonAnnotationIntrospector introspector;\n\n    @Before\n    public void setUp() {\n        introspector = new JacksonAnnotationIntrospector();\n    }\n\n    // Test Enums for various scenarios\n    \n    enum TestEnumWithAnnotation {\n        @JsonProperty(\"val_one\")\n        VAL_ONE,\n        @JsonProperty(\"val_two\")\n        VAL_TWO,\n        VAL_THREE // No annotation\n    }\n\n    enum TestEnumWithEmptyAnnotation {\n        @JsonProperty(\"\")\n        EMPTY,\n        @JsonProperty(\"valid\")\n        VALID\n    }\n\n    enum TestEnumNoAnnotation {\n        A, B, C\n    }\n\n    \n\n    @Test\n    public void testFindEnumValues_WithEmptyAnnotationValue() {\n        Class<?> enumType = TestEnumWithEmptyAnnotation.class;\n        TestEnumWithEmptyAnnotation[] enumValues = {\n            TestEnumWithEmptyAnnotation.EMPTY, \n            TestEnumWithEmptyAnnotation.VALID\n        };\n        String[] names = new String[enumValues.length];\n\n        String[] result = introspector.findEnumValues(enumType, enumValues, names);\n\n        // EMPTY has @JsonProperty(\"\"), logic says: if (n.isEmpty()) continue;\n        // VALID has @JsonProperty(\"valid\")\n        assertEquals(null, result[0]);\n        assertEquals(\"valid\", result[1]);\n    }\n\n    \n\n    \n\n    \n    \n    /**\n     * This dummy class is used to ensure we don't trigger errors if a non-enum \n     * class is passed, although the method expects an enumType.\n     */\n    static class NotAnEnum {\n        @JsonProperty(\"field\")\n        public String field;\n    }\n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testFindEnumValues_NoAnnotationsAtAll",
+   "runs_b": [
+    {
+     "duration_s": 0.106,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.108,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.12,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.113,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.113,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.115,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.databind.introspect;\n\nimport com.fasterxml.jackson.annotation.*;\nimport com.fasterxml.jackson.annotation.JsonProperty;\nimport com.fasterxml.jackson.core.Version;\nimport com.fasterxml.jackson.databind.*;\nimport com.fasterxml.jackson.databind.annotation.*;\nimport com.fasterxml.jackson.databind.cfg.HandlerInstantiator;\nimport com.fasterxml.jackson.databind.cfg.MapperConfig;\nimport com.fasterxml.jackson.databind.ext.Java7Support;\nimport com.fasterxml.jackson.databind.jsontype.NamedType;\nimport com.fasterxml.jackson.databind.jsontype.TypeIdResolver;\nimport com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder;\nimport com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder;\nimport com.fasterxml.jackson.databind.ser.BeanPropertyWriter;\nimport com.fasterxml.jackson.databind.ser.VirtualBeanPropertyWriter;\nimport com.fasterxml.jackson.databind.ser.impl.AttributePropertyWriter;\nimport com.fasterxml.jackson.databind.ser.std.RawSerializer;\nimport com.fasterxml.jackson.databind.type.MapLikeType;\nimport com.fasterxml.jackson.databind.type.TypeFactory;\nimport com.fasterxml.jackson.databind.util.*;\nimport java.io.*;\nimport java.lang.annotation.Annotation;\nimport java.lang.reflect.Field;\nimport java.math.*;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertArrayEquals;\nimport static org.junit.Assert.assertEquals;\n\n/**\n * Unit tests for JacksonAnnotationIntrospector#findEnumValues\n */\npublic class JacksonAnnotationIntrospector_findEnumValues_TriageGen2Test {\n\n    private JacksonAnnotationIntrospector introspector;\n\n    @Before\n    public void setUp() {\n        introspector = new JacksonAnnotationIntrospector();\n    }\n\n    // Test Enums for various scenarios\n    \n    enum TestEnumWithAnnotation {\n        @JsonProperty(\"val_one\")\n        VAL_ONE,\n        @JsonProperty(\"val_two\")\n        VAL_TWO,\n        VAL_THREE // No annotation\n    }\n\n    enum TestEnumWithEmptyAnnotation {\n        @JsonProperty(\"\")\n        EMPTY,\n        @JsonProperty(\"valid\")\n        VALID\n    }\n\n    enum TestEnumNoAnnotation {\n        A, B, C\n    }\n\n    \n\n    \n\n    @Test\n    public void testFindEnumValues_NoAnnotationsAtAll() {\n        Class<?> enumType = TestEnumNoAnnotation.class;\n        TestEnumNoAnnotation[] enumValues = {\n            TestEnumNoAnnotation.A, \n            TestEnumNoAnnotation.B\n        };\n        String[] names = new String[enumValues.length];\n\n        String[] result = introspector.findEnumValues(enumType, enumValues, names);\n\n        // expl will be null, loop over names won't execute\n        assertEquals(null, result[0]);\n        assertEquals(null, result[1]);\n    }\n\n    \n\n    \n    \n    /**\n     * This dummy class is used to ensure we don't trigger errors if a non-enum \n     * class is passed, although the method expects an enumType.\n     */\n    static class NotAnEnum {\n        @JsonProperty(\"field\")\n        public String field;\n    }\n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testFindEnumValues_MixedExistingNames",
+   "runs_b": [
+    {
+     "duration_s": 0.104,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.107,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.119,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.14,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.159,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.121,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.databind.introspect;\n\nimport com.fasterxml.jackson.annotation.*;\nimport com.fasterxml.jackson.annotation.JsonProperty;\nimport com.fasterxml.jackson.core.Version;\nimport com.fasterxml.jackson.databind.*;\nimport com.fasterxml.jackson.databind.annotation.*;\nimport com.fasterxml.jackson.databind.cfg.HandlerInstantiator;\nimport com.fasterxml.jackson.databind.cfg.MapperConfig;\nimport com.fasterxml.jackson.databind.ext.Java7Support;\nimport com.fasterxml.jackson.databind.jsontype.NamedType;\nimport com.fasterxml.jackson.databind.jsontype.TypeIdResolver;\nimport com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder;\nimport com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder;\nimport com.fasterxml.jackson.databind.ser.BeanPropertyWriter;\nimport com.fasterxml.jackson.databind.ser.VirtualBeanPropertyWriter;\nimport com.fasterxml.jackson.databind.ser.impl.AttributePropertyWriter;\nimport com.fasterxml.jackson.databind.ser.std.RawSerializer;\nimport com.fasterxml.jackson.databind.type.MapLikeType;\nimport com.fasterxml.jackson.databind.type.TypeFactory;\nimport com.fasterxml.jackson.databind.util.*;\nimport java.io.*;\nimport java.lang.annotation.Annotation;\nimport java.lang.reflect.Field;\nimport java.math.*;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertArrayEquals;\nimport static org.junit.Assert.assertEquals;\n\n/**\n * Unit tests for JacksonAnnotationIntrospector#findEnumValues\n */\npublic class JacksonAnnotationIntrospector_findEnumValues_TriageGen2Test {\n\n    private JacksonAnnotationIntrospector introspector;\n\n    @Before\n    public void setUp() {\n        introspector = new JacksonAnnotationIntrospector();\n    }\n\n    // Test Enums for various scenarios\n    \n    enum TestEnumWithAnnotation {\n        @JsonProperty(\"val_one\")\n        VAL_ONE,\n        @JsonProperty(\"val_two\")\n        VAL_TWO,\n        VAL_THREE // No annotation\n    }\n\n    enum TestEnumWithEmptyAnnotation {\n        @JsonProperty(\"\")\n        EMPTY,\n        @JsonProperty(\"valid\")\n        VALID\n    }\n\n    enum TestEnumNoAnnotation {\n        A, B, C\n    }\n\n    \n\n    \n\n    \n\n    @Test\n    public void testFindEnumValues_MixedExistingNames() {\n        Class<?> enumType = TestEnumWithAnnotation.class;\n        TestEnumWithAnnotation[] enumValues = {TestEnumWithAnnotation.VAL_ONE};\n        \n        // Test that it modifies the existing array provided\n        String[] names = {\"original\"};\n        String[] result = introspector.findEnumValues(enumType, enumValues, names);\n\n        assertEquals(\"val_one\", result[0]);\n        assertEquals(\"val_one\", names[0]); // Should be same object\n    }\n\n    \n    \n    /**\n     * This dummy class is used to ensure we don't trigger errors if a non-enum \n     * class is passed, although the method expects an enumType.\n     */\n    static class NotAnEnum {\n        @JsonProperty(\"field\")\n        public String field;\n    }\n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testFindEnumValues_EmptyInput",
+   "runs_b": [
+    {
+     "duration_s": 0.134,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.132,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.133,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.129,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.122,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.12,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.databind.introspect;\n\nimport com.fasterxml.jackson.annotation.*;\nimport com.fasterxml.jackson.annotation.JsonProperty;\nimport com.fasterxml.jackson.core.Version;\nimport com.fasterxml.jackson.databind.*;\nimport com.fasterxml.jackson.databind.annotation.*;\nimport com.fasterxml.jackson.databind.cfg.HandlerInstantiator;\nimport com.fasterxml.jackson.databind.cfg.MapperConfig;\nimport com.fasterxml.jackson.databind.ext.Java7Support;\nimport com.fasterxml.jackson.databind.jsontype.NamedType;\nimport com.fasterxml.jackson.databind.jsontype.TypeIdResolver;\nimport com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder;\nimport com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder;\nimport com.fasterxml.jackson.databind.ser.BeanPropertyWriter;\nimport com.fasterxml.jackson.databind.ser.VirtualBeanPropertyWriter;\nimport com.fasterxml.jackson.databind.ser.impl.AttributePropertyWriter;\nimport com.fasterxml.jackson.databind.ser.std.RawSerializer;\nimport com.fasterxml.jackson.databind.type.MapLikeType;\nimport com.fasterxml.jackson.databind.type.TypeFactory;\nimport com.fasterxml.jackson.databind.util.*;\nimport java.io.*;\nimport java.lang.annotation.Annotation;\nimport java.lang.reflect.Field;\nimport java.math.*;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertArrayEquals;\nimport static org.junit.Assert.assertEquals;\n\n/**\n * Unit tests for JacksonAnnotationIntrospector#findEnumValues\n */\npublic class JacksonAnnotationIntrospector_findEnumValues_TriageGen2Test {\n\n    private JacksonAnnotationIntrospector introspector;\n\n    @Before\n    public void setUp() {\n        introspector = new JacksonAnnotationIntrospector();\n    }\n\n    // Test Enums for various scenarios\n    \n    enum TestEnumWithAnnotation {\n        @JsonProperty(\"val_one\")\n        VAL_ONE,\n        @JsonProperty(\"val_two\")\n        VAL_TWO,\n        VAL_THREE // No annotation\n    }\n\n    enum TestEnumWithEmptyAnnotation {\n        @JsonProperty(\"\")\n        EMPTY,\n        @JsonProperty(\"valid\")\n        VALID\n    }\n\n    enum TestEnumNoAnnotation {\n        A, B, C\n    }\n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testFindEnumValues_EmptyInput() {\n        Class<?> enumType = TestEnumWithAnnotation.class;\n        TestEnumWithAnnotation[] enumValues = {};\n        String[] names = {};\n\n        String[] result = introspector.findEnumValues(enumType, enumValues, names);\n        assertEquals(0, result.length);\n    }\n    \n    /**\n     * This dummy class is used to ensure we don't trigger errors if a non-enum \n     * class is passed, although the method expects an enumType.\n     */\n    static class NotAnEnum {\n        @JsonProperty(\"field\")\n        public String field;\n    }\n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testFindEnumValues_NonEnumClass",
+   "runs_b": [
+    {
+     "duration_s": 0.102,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.113,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.107,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.118,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.103,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.101,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package com.fasterxml.jackson.databind.introspect;\n\nimport com.fasterxml.jackson.annotation.*;\nimport com.fasterxml.jackson.annotation.JsonProperty;\nimport com.fasterxml.jackson.core.Version;\nimport com.fasterxml.jackson.databind.*;\nimport com.fasterxml.jackson.databind.annotation.*;\nimport com.fasterxml.jackson.databind.cfg.HandlerInstantiator;\nimport com.fasterxml.jackson.databind.cfg.MapperConfig;\nimport com.fasterxml.jackson.databind.ext.Java7Support;\nimport com.fasterxml.jackson.databind.jsontype.NamedType;\nimport com.fasterxml.jackson.databind.jsontype.TypeIdResolver;\nimport com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder;\nimport com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder;\nimport com.fasterxml.jackson.databind.ser.BeanPropertyWriter;\nimport com.fasterxml.jackson.databind.ser.VirtualBeanPropertyWriter;\nimport com.fasterxml.jackson.databind.ser.impl.AttributePropertyWriter;\nimport com.fasterxml.jackson.databind.ser.std.RawSerializer;\nimport com.fasterxml.jackson.databind.type.MapLikeType;\nimport com.fasterxml.jackson.databind.type.TypeFactory;\nimport com.fasterxml.jackson.databind.util.*;\nimport java.io.*;\nimport java.lang.annotation.Annotation;\nimport java.lang.reflect.Field;\nimport java.math.*;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Before;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\nimport static org.junit.Assert.assertArrayEquals;\nimport static org.junit.Assert.assertEquals;\n\n/**\n * Unit tests for JacksonAnnotationIntrospector#findEnumValues\n */\npublic class JacksonAnnotationIntrospector_findEnumValues_TriageGen2Test {\n\n    private JacksonAnnotationIntrospector introspector;\n\n    @Before\n    public void setUp() {\n        introspector = new JacksonAnnotationIntrospector();\n    }\n\n    // Test Enums for various scenarios\n    \n    enum TestEnumWithAnnotation {\n        @JsonProperty(\"val_one\")\n        VAL_ONE,\n        @JsonProperty(\"val_two\")\n        VAL_TWO,\n        VAL_THREE // No annotation\n    }\n\n    enum TestEnumWithEmptyAnnotation {\n        @JsonProperty(\"\")\n        EMPTY,\n        @JsonProperty(\"valid\")\n        VALID\n    }\n\n    enum TestEnumNoAnnotation {\n        A, B, C\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n    \n    /**\n     * This dummy class is used to ensure we don't trigger errors if a non-enum \n     * class is passed, although the method expects an enumType.\n     */\n    static class NotAnEnum {\n        @JsonProperty(\"field\")\n        public String field;\n    }\n\n    @Test\n    public void testFindEnumValues_NonEnumClass() {\n        Class<?> enumType = NotAnEnum.class;\n        // Since findEnumValues iterates over fields and checks isEnumConstant()\n        // A non-enum class will result in expl being null.\n        Object[] enumValues = new Object[0];\n        String[] names = new String[0];\n\n        String[] result = introspector.findEnumValues(enumType, (Enum<?>[]) new Enum[0], names);\n        assertEquals(0, result.length);\n    }\n}\n"
+  }
+ ],
+ "source_sha256": "3e4986e5df0687d4370a89d51ae60ab59225a7093920aace521391fb7d157a44",
+ "utc": "2026-11-13T06:55:38Z"
+}

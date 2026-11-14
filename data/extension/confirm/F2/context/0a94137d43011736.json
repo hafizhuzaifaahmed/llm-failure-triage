@@ -1,0 +1,104 @@
+{
+ "bug_name": "Math_32",
+ "call_sites": [
+  {
+   "line": 381,
+   "lines": [
+    376,
+    377,
+    378,
+    379,
+    380,
+    381,
+    382,
+    383,
+    384,
+    385,
+    386
+   ],
+   "path": "src/main/java/org/apache/commons/math3/geometry/partitioning/AbstractRegion.java",
+   "snippet": "    }\n\n    /** {@inheritDoc} */\n    public double getSize() {\n        if (barycenter == null) {\n            computeGeometricalProperties();\n        }\n        return size;\n    }\n\n    /** Set the size of the instance."
+  },
+  {
+   "line": 396,
+   "lines": [
+    391,
+    392,
+    393,
+    394,
+    395,
+    396,
+    397,
+    398,
+    399,
+    400,
+    401
+   ],
+   "path": "src/main/java/org/apache/commons/math3/geometry/partitioning/AbstractRegion.java",
+   "snippet": "    }\n\n    /** {@inheritDoc} */\n    public Vector<S> getBarycenter() {\n        if (barycenter == null) {\n            computeGeometricalProperties();\n        }\n        return barycenter;\n    }\n\n    /** Set the barycenter of the instance."
+  }
+ ],
+ "class_simple": "PolygonsSet",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/** This class represents a 2D region: a set of polygons.\n * @version $Id$\n * @since 3.0\n */\npublic",
+  "method_javadoc": "/** {@inheritDoc} */"
+ },
+ "fields": [
+  "private Vector2D[][] vertices"
+ ],
+ "focal_class": "org.apache.commons.math3.geometry.euclidean.twod.PolygonsSet",
+ "focal_id": "Math_32::org.apache.commons.math3.geometry.euclidean.twod.PolygonsSet::computeGeometricalProperties()",
+ "focal_method_name": "computeGeometricalProperties",
+ "generations": 3,
+ "impl_B": "@Override\n    protected void computeGeometricalProperties() {\n\n        final Vector2D[][] v = getVertices();\n\n        if (v.length == 0) {\n            final BSPTree<Euclidean2D> tree = getTree(false);\n            if ((Boolean) tree.getAttribute()) {\n                // the instance covers the whole space\n                setSize(Double.POSITIVE_INFINITY);\n                setBarycenter(Vector2D.NaN);\n            } else {\n                setSize(0);\n                setBarycenter(new Vector2D(0, 0));\n            }\n        } else if (v[0][0] == null) {\n            // there is at least one open-loop: the polygon is infinite\n            setSize(Double.POSITIVE_INFINITY);\n            setBarycenter(Vector2D.NaN);\n        } else {\n            // all loops are closed, we compute some integrals around the shape\n\n            double sum  = 0;\n            double sumX = 0;\n            double sumY = 0;\n\n            for (Vector2D[] loop : v) {\n                double x1 = loop[loop.length - 1].getX();\n                double y1 = loop[loop.length - 1].getY();\n                for (final Vector2D point : loop) {\n                    final double x0 = x1;\n                    final double y0 = y1;\n                    x1 = point.getX();\n                    y1 = point.getY();\n                    final double factor = x0 * y1 - y0 * x1;\n                    sum  += factor;\n                    sumX += factor * (x0 + x1);\n                    sumY += factor * (y0 + y1);\n                }\n            }\n\n            if (sum < 0) {\n                // the polygon as a finite outside surrounded by an infinite inside\n                setSize(Double.POSITIVE_INFINITY);\n                setBarycenter(Vector2D.NaN);\n            } else {\n                setSize(sum / 2);\n                setBarycenter(new Vector2D(sumX / (3 * sum), sumY / (3 * sum)));\n            }\n\n        }\n\n    }",
+ "imports": [
+  "java.util.ArrayList",
+  "java.util.Collection",
+  "java.util.List",
+  "org.apache.commons.math3.exception.MathInternalError",
+  "org.apache.commons.math3.geometry.euclidean.oned.Euclidean1D",
+  "org.apache.commons.math3.geometry.euclidean.oned.Interval",
+  "org.apache.commons.math3.geometry.euclidean.oned.IntervalsSet",
+  "org.apache.commons.math3.geometry.euclidean.oned.Vector1D",
+  "org.apache.commons.math3.geometry.partitioning.AbstractSubHyperplane",
+  "org.apache.commons.math3.geometry.partitioning.BSPTree",
+  "org.apache.commons.math3.geometry.partitioning.BSPTreeVisitor",
+  "org.apache.commons.math3.geometry.partitioning.BoundaryAttribute",
+  "org.apache.commons.math3.geometry.partitioning.SubHyperplane",
+  "org.apache.commons.math3.geometry.partitioning.AbstractRegion",
+  "org.apache.commons.math3.geometry.partitioning.utilities.AVLTree",
+  "org.apache.commons.math3.geometry.partitioning.utilities.OrderedTuple",
+  "org.apache.commons.math3.util.FastMath"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math3.geometry.euclidean.twod",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "buildNew"
+  },
+  {
+   "javadoc": "/** Get the vertices of the polygon.\n     * <p>The polygon boundary can be represented as an array of loops,\n     * each loop being itself an array of vertices.</p>\n     * <p>In order to identify open loops which start and end by\n     * infinite edges, the open loops arrays start with a null point. In\n     * this case, the first non null point and the last point of the\n     * array do not represent real vertices, they are dummy points\n     * intended only to get the direction of the first and last edge. An\n     * open loop consisting of a single infinite line will therefore be\n     * represented by a three elements array with one null point\n     * followed by two dummy points. The open loops are always the first\n     * ones in the loops array.</p>\n     * <p>If the polygon has no boundary at all, a zero length loop\n     * array will be returned.</p>\n     * <p>All line segments in the various loops have the inside of the\n     * region on their left side and the outside on their right side\n     * when moving in the underlying line direction. This means that\n     * closed loops surrounding finite areas obey the direct\n     * trigonometric orientation.</p>\n     * @return vertices of the polygon, organized as oriented boundary\n     * loops with the open loops first (the returned value is guaranteed\n     * to be non-null)\n     */",
+   "name": "getVertices"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class PolygonsSet extends AbstractRegion<Euclidean2D, Euclidean1D>",
+  "constructors": [
+   "public PolygonsSet();",
+   "public PolygonsSet(final BSPTree<Euclidean2D> tree);",
+   "public PolygonsSet(final Collection<SubHyperplane<Euclidean2D>> boundary);",
+   "public PolygonsSet(final double xMin, final double xMax, final double yMin, final double yMax);"
+  ],
+  "focal_signature": "protected void computeGeometricalProperties()",
+  "methods": [
+   "public PolygonsSet buildNew(final BSPTree<Euclidean2D> tree);",
+   "public Vector2D[][] getVertices();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

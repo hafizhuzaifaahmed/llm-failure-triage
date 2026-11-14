@@ -1,0 +1,192 @@
+{
+ "bug_name": "Math_78",
+ "call_sites": [
+  {
+   "line": 93,
+   "lines": [
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98
+   ],
+   "path": "src/main/java/org/apache/commons/math/analysis/interpolation/MicrosphereInterpolatingFunction.java",
+   "snippet": "        }\n\n        /**\n         * Reset \"illumination\" and \"sampleIndex\".\n         */\n        void reset() {\n            brightestIllumination = 0;\n            brightestSample = null;\n        }\n\n        /**"
+  },
+  {
+   "line": 193,
+   "lines": [
+    188,
+    189,
+    190,
+    191,
+    192,
+    193,
+    194,
+    195,
+    196,
+    197,
+    198
+   ],
+   "path": "src/main/java/org/apache/commons/math/analysis/interpolation/MicrosphereInterpolatingFunction.java",
+   "snippet": "\n        final RealVector p = new ArrayRealVector(point);\n\n        // Reset.\n        for (MicrosphereSurfaceElement md : microsphere) {\n            md.reset();\n        }\n\n        // Compute contribution of each sample points to the microsphere elements illumination\n        for (Map.Entry<RealVector, Double> sd : samples.entrySet()) {\n"
+  },
+  {
+   "line": 112,
+   "lines": [
+    107,
+    108,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117
+   ],
+   "path": "src/main/java/org/apache/commons/math/ode/ContinuousOutputModel.java",
+   "snippet": "  /** Simple constructor.\n   * Build an empty continuous output model.\n   */\n  public ContinuousOutputModel() {\n    steps = new ArrayList<StepInterpolator>();\n    reset();\n  }\n\n  /** Append another model at the end of the instance.\n   * @param model model to add at the end of the instance\n   * @exception DerivativeException if some step interpolators from"
+  },
+  {
+   "line": 237,
+   "lines": [
+    232,
+    233,
+    234,
+    235,
+    236,
+    237,
+    238,
+    239,
+    240,
+    241,
+    242
+   ],
+   "path": "src/main/java/org/apache/commons/math/ode/events/CombinedEventsManager.java",
+   "snippet": "    public boolean reset(final double t, final double[] y)\n        throws IntegratorException {\n        try {\n            boolean resetDerivatives = false;\n            for (EventState state : states) {\n                if (state.reset(t, y)) {\n                    resetDerivatives = true;\n                }\n            }\n            return resetDerivatives;\n        } catch (EventException se) {"
+  },
+  {
+   "line": 211,
+   "lines": [
+    206,
+    207,
+    208,
+    209,
+    210,
+    211,
+    212,
+    213,
+    214,
+    215,
+    216
+   ],
+   "path": "src/main/java/org/apache/commons/math/ode/nonstiff/AdamsBashforthIntegrator.java",
+   "snippet": "        final NordsieckStepInterpolator interpolatorTmp = new NordsieckStepInterpolator();\n        interpolatorTmp.reinitialize(yTmp, forward);\n\n        // set up integration control objects\n        for (StepHandler handler : stepHandlers) {\n            handler.reset();\n        }\n        CombinedEventsManager manager = addEndTimeChecker(t0, t, eventsHandlersManager);\n\n        // compute the initial Nordsieck vector using the configured starter integrator\n        start(t0, y, t);"
+  }
+ ],
+ "class_simple": "EventState",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/** This class handles the state for one {@link EventHandler\n * event handler} during integration steps.\n *\n * <p>Each time the integrator proposes a step, the event handler\n * switching function should be checked. This class handles the state\n * of one handler during one integration step, with references to the\n * state at the end of the preceding step. This information is used to\n * decide if the handler should trigger an event or not during the\n * proposed step (and hence the step should be reduced to ensure the\n * event occurs at a bound rather than inside the step).</p>\n *\n * @version $Revision$ $Date$\n * @since 1.2\n */\npublic",
+  "method_javadoc": "/** Let the event handler reset the state if it wants.\n     * @param t value of the independent <i>time</i> variable at the\n     * beginning of the next step\n     * @param y array were to put the desired state vector at the beginning\n     * of the next step\n     * @return true if the integrator should reset the derivatives too\n     * @exception EventException if the state cannot be reseted by the event\n     * handler\n     */"
+ },
+ "fields": [
+  "private final EventHandler handler",
+  "private final double maxCheckInterval",
+  "private final double convergence",
+  "private final int maxIterationCount",
+  "private double t0",
+  "private double g0",
+  "private boolean g0Positive",
+  "private boolean pendingEvent",
+  "private double pendingEventTime",
+  "private double previousEventTime",
+  "private boolean forward",
+  "private boolean increasing",
+  "private int nextAction"
+ ],
+ "focal_class": "org.apache.commons.math.ode.events.EventState",
+ "focal_id": "Math_78::org.apache.commons.math.ode.events.EventState::reset(double,double[])",
+ "focal_method_name": "reset",
+ "generations": 3,
+ "impl_B": "public boolean reset(final double t, final double[] y)\n        throws EventException {\n\n        if (! pendingEvent) {\n            return false;\n        }\n\n        if (nextAction == EventHandler.RESET_STATE) {\n            handler.resetState(t, y);\n        }\n        pendingEvent      = false;\n        pendingEventTime  = Double.NaN;\n\n        return (nextAction == EventHandler.RESET_STATE) ||\n               (nextAction == EventHandler.RESET_DERIVATIVES);\n\n    }",
+ "imports": [
+  "org.apache.commons.math.ConvergenceException",
+  "org.apache.commons.math.FunctionEvaluationException",
+  "org.apache.commons.math.MathRuntimeException",
+  "org.apache.commons.math.analysis.UnivariateRealFunction",
+  "org.apache.commons.math.analysis.solvers.BrentSolver",
+  "org.apache.commons.math.ode.DerivativeException",
+  "org.apache.commons.math.ode.sampling.StepInterpolator"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math.ode.events",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/** Get the underlying event handler.\n     * @return underlying event handler\n     */",
+   "name": "getEventHandler"
+  },
+  {
+   "javadoc": "/** Get the maximal time interval between events handler checks.\n     * @return maximal time interval between events handler checks\n     */",
+   "name": "getMaxCheckInterval"
+  },
+  {
+   "javadoc": "/** Get the convergence threshold for event localization.\n     * @return convergence threshold for event localization\n     */",
+   "name": "getConvergence"
+  },
+  {
+   "javadoc": "/** Get the upper limit in the iteration count for event localization.\n     * @return upper limit in the iteration count for event localization\n     */",
+   "name": "getMaxIterationCount"
+  },
+  {
+   "javadoc": "/** Reinitialize the beginning of the step.\n     * @param tStart value of the independent <i>time</i> variable at the\n     * beginning of the step\n     * @param yStart array containing the current value of the state vector\n     * at the beginning of the step\n     * @exception EventException if the event handler\n     * value cannot be evaluated at the beginning of the step\n     */",
+   "name": "reinitializeBegin"
+  },
+  {
+   "javadoc": "/** Evaluate the impact of the proposed step on the event handler.\n     * @param interpolator step interpolator for the proposed step\n     * @return true if the event handler triggers an event before\n     * the end of the proposed step (this implies the step should be\n     * rejected)\n     * @exception DerivativeException if the interpolator fails to\n     * compute the switching function somewhere within the step\n     * @exception EventException if the switching function\n     * cannot be evaluated\n     * @exception ConvergenceException if an event cannot be located\n     */",
+   "name": "evaluateStep"
+  },
+  {
+   "javadoc": "/** Get the occurrence time of the event triggered in the current\n     * step.\n     * @return occurrence time of the event triggered in the current\n     * step.\n     */",
+   "name": "getEventTime"
+  },
+  {
+   "javadoc": "/** Acknowledge the fact the step has been accepted by the integrator.\n     * @param t value of the independent <i>time</i> variable at the\n     * end of the step\n     * @param y array containing the current value of the state vector\n     * at the end of the step\n     * @exception EventException if the value of the event\n     * handler cannot be evaluated\n     */",
+   "name": "stepAccepted"
+  },
+  {
+   "javadoc": "/** Check if the integration should be stopped at the end of the\n     * current step.\n     * @return true if the integration should be stopped\n     */",
+   "name": "stop"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class EventState",
+  "constructors": [
+   "public EventState(final EventHandler handler, final double maxCheckInterval, final double convergence, final int maxIterationCount);"
+  ],
+  "focal_signature": "public boolean reset(final double t, final double[] y) throws EventException",
+  "methods": [
+   "public EventHandler getEventHandler();",
+   "public double getMaxCheckInterval();",
+   "public double getConvergence();",
+   "public int getMaxIterationCount();",
+   "public void reinitializeBegin(final double tStart, final double[] yStart) throws EventException;",
+   "public boolean evaluateStep(final StepInterpolator interpolator) throws DerivativeException, EventException, ConvergenceException;",
+   "public double getEventTime();",
+   "public void stepAccepted(final double t, final double[] y) throws EventException;",
+   "public boolean stop();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

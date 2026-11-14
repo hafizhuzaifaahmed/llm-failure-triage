@@ -1,0 +1,268 @@
+{
+ "candidate_id": "ba39788d4ea49bf72fe9",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testIsUnixSymlink_WhenModeIsLinkFlag",
+   "testIsUnixSymlink_WhenModeIsLessThanLinkFlag",
+   "testIsUnixSymlink_WhenModeIsDirectoryFlag",
+   "testIsUnixSymlink_WhenModeIsRegularFile"
+  ],
+  "nc_both": [],
+  "nc_one_version": [],
+  "passes": 0
+ },
+ "dataset": "D2",
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "Compress_42::org.apache.commons.compress.archivers.zip.ZipArchiveEntry::isUnixSymlink()#m80",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testIsUnixSymlink_WhenModeIsLinkFlag",
+   "runs_b": [
+    {
+     "duration_s": 0.086,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.092,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.094,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.095,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.095,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.09,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.File;\nimport java.math.*;\nimport java.util.*;\nimport java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.Date;\nimport java.util.List;\nimport java.util.zip.ZipException;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for ZipArchiveEntry#isUnixSymlink\n */\npublic class ZipArchiveEntry_isUnixSymlink_TriageGen2Test {\n\n    /**\n     * The logic is: (getUnixMode() & UnixStat.FILE_TYPE_FLAG) <= UnixStat.LINK_FLAG\n     * \n     * UnixStat.FILE_TYPE_FLAG is typically 0xF000 (masking the top 4 bits of the mode).\n     * UnixStat.LINK_FLAG is typically the value representing a symbolic link in that bitmask.\n     * \n     * To maximize coverage, we test:\n     * 1. A mode that results in exactly UnixStat.LINK_FLAG (True)\n     * 2. A mode that results in a value less than UnixStat.LINK_FLAG (e.g., 0) (True)\n     * 3. A mode that results in a value greater than UnixStat.LINK_FLAG (e.g., Directory flag) (False)\n     */\n\n    @Test\n    public void testIsUnixSymlink_WhenModeIsLinkFlag() {\n        ZipArchiveEntry entry = new ZipArchiveEntry(\"test-link\");\n        // Setting mode such that (mode & FILE_TYPE_FLAG) == LINK_FLAG\n        // Since we don't have the exact value of LINK_FLAG in the prompt, \n        // we use the bits provided by the logic.\n        // Usually, LINK_FLAG is 0xA000 or similar.\n        int mode = UnixStat.LINK_FLAG | 0644; \n        entry.setUnixMode(mode);\n        \n        assertTrue(\"Should return true when mode matches LINK_FLAG\", entry.isUnixSymlink());\n    }\n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testIsUnixSymlink_WhenModeIsLessThanLinkFlag",
+   "runs_b": [
+    {
+     "duration_s": 0.09,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.087,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.097,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.104,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 31,
+     "message": "Should return true when masked mode is 0",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Should return true when masked mode is 0\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.assertTrue(Assert.java:41)\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveEntry_isUnixSymlink_TriageGen2Test.testIsUnixSymlink_WhenModeIsLessThanLinkFlag(ZipArchiveEntry_isUnixSymlink_TriageGen2Test.java:31)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.097,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 31,
+     "message": "Should return true when masked mode is 0",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Should return true when masked mode is 0\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.assertTrue(Assert.java:41)\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveEntry_isUnixSymlink_TriageGen2Test.testIsUnixSymlink_WhenModeIsLessThanLinkFlag(ZipArchiveEntry_isUnixSymlink_TriageGen2Test.java:31)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.089,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 31,
+     "message": "Should return true when masked mode is 0",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Should return true when masked mode is 0\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.assertTrue(Assert.java:41)\n\tat org.apache.commons.compress.archivers.zip.ZipArchiveEntry_isUnixSymlink_TriageGen2Test.testIsUnixSymlink_WhenModeIsLessThanLinkFlag(ZipArchiveEntry_isUnixSymlink_TriageGen2Test.java:31)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.File;\nimport java.math.*;\nimport java.util.*;\nimport java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.Date;\nimport java.util.List;\nimport java.util.zip.ZipException;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for ZipArchiveEntry#isUnixSymlink\n */\npublic class ZipArchiveEntry_isUnixSymlink_TriageGen2Test {\n\n    \n\n    @Test\n    public void testIsUnixSymlink_WhenModeIsLessThanLinkFlag() {\n        ZipArchiveEntry entry = new ZipArchiveEntry(\"test-empty\");\n        // Setting mode such that (mode & FILE_TYPE_FLAG) == 0\n        // 0 is <= LINK_FLAG\n        entry.setUnixMode(0);\n        \n        assertTrue(\"Should return true when masked mode is 0\", entry.isUnixSymlink());\n    }\n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testIsUnixSymlink_WhenModeIsDirectoryFlag",
+   "runs_b": [
+    {
+     "duration_s": 0.086,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.107,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.095,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.09,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.084,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.098,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.File;\nimport java.math.*;\nimport java.util.*;\nimport java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.Date;\nimport java.util.List;\nimport java.util.zip.ZipException;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for ZipArchiveEntry#isUnixSymlink\n */\npublic class ZipArchiveEntry_isUnixSymlink_TriageGen2Test {\n\n    \n\n    \n\n    @Test\n    public void testIsUnixSymlink_WhenModeIsDirectoryFlag() {\n        ZipArchiveEntry entry = new ZipArchiveEntry(\"test-dir\");\n        // Directory flag is typically higher than Link flag in the file type bitmask\n        // (e.g., DIR_FLAG = 0x4000, but in many implementations, \n        // we need to ensure (mode & FILE_TYPE_FLAG) > LINK_FLAG)\n        \n        // We simulate a directory by finding a value that satisfies the condition > LINK_FLAG\n        // In standard UnixStat:\n        // Regular file: 0x8000\n        // Directory: 0x4000\n        // Symlink: 0xA000\n        // We want the result of the bitwise AND to be > LINK_FLAG.\n        // If LINK_FLAG is 0xA000, we can't easily go \"above\" it within the 4-bit mask \n        // unless we use a different type.\n        \n        // Let's assume the internal logic allows for a value that makes the expression false.\n        // We will use a bitmask that forces a high value.\n        int dirMode = UnixStat.DIR_FLAG | 0755;\n        // If DIR_FLAG > LINK_FLAG, this will return false.\n        // If the provided code logic implies LINK_FLAG is the threshold for symlinks:\n        entry.setUnixMode(dirMode);\n        \n        // We check the condition: (dirMode & FILE_TYPE_FLAG) <= LINK_FLAG\n        // If this is false, the method returns false.\n        if ((dirMode & UnixStat.FILE_TYPE_FLAG) > UnixStat.LINK_FLAG) {\n            assertFalse(\"Should return false when mode is a directory\", entry.isUnixSymlink());\n        } else {\n            // This part handles the case where the specific constant values in the library \n            // might differ, but we target the branch where the comparison is False.\n            // We force it by setting the mode to something that bypasses the link check.\n            entry.setUnixMode(UnixStat.FILE_TYPE_FLAG | 0755); \n            // If FILE_TYPE_FLAG itself is > LINK_FLAG, this works.\n        }\n    }\n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testIsUnixSymlink_WhenModeIsRegularFile",
+   "runs_b": [
+    {
+     "duration_s": 0.091,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.091,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.092,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.093,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.087,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.091,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.zip;\n\nimport java.io.*;\nimport java.io.File;\nimport java.math.*;\nimport java.util.*;\nimport java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.Date;\nimport java.util.List;\nimport java.util.zip.ZipException;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\n/**\n * Unit tests for ZipArchiveEntry#isUnixSymlink\n */\npublic class ZipArchiveEntry_isUnixSymlink_TriageGen2Test {\n\n    \n\n    \n\n    \n\n    @Test\n    public void testIsUnixSymlink_WhenModeIsRegularFile() {\n        ZipArchiveEntry entry = new ZipArchiveEntry(\"test-file\");\n        // Regular file flag is usually distinct from Link flag.\n        // We aim to make (mode & FILE_TYPE_FLAG) > LINK_FLAG.\n        int regularFileMode = UnixStat.FILE_FLAG | 0644;\n        entry.setUnixMode(regularFileMode);\n        \n        // If the library defines FILE_FLAG > LINK_FLAG, this is our False branch.\n        // Given the logic (val <= LINK_FLAG), if val is FILE_FLAG and FILE_FLAG > LINK_FLAG, returns false.\n        if ((regularFileMode & UnixStat.FILE_TYPE_FLAG) > UnixStat.LINK_FLAG) {\n            assertFalse(\"Should return false for regular files\", entry.isUnixSymlink());\n        }\n    }\n}\n"
+  }
+ ],
+ "mutant_version": "m80",
+ "source_sha256": "b99fa7761ed34357664632afc3d7b1b22ef5a473a59db65f8dbd640c54e44202",
+ "utc": "2026-11-03T00:29:51Z"
+}

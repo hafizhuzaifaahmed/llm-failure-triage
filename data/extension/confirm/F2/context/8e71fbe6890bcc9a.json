@@ -1,0 +1,152 @@
+{
+ "bug_name": "Closure_21",
+ "call_sites": [
+  {
+   "line": 677,
+   "lines": [
+    672,
+    673,
+    674,
+    675,
+    676,
+    677,
+    678,
+    679,
+    680,
+    681,
+    682
+   ],
+   "path": "src/com/google/debugging/sourcemap/SourceMapConsumerV3.java",
+   "snippet": "      return name;\n    }\n  }\n\n  public static interface EntryVisitor {\n    void visit(String sourceName,\n               String symbolName,\n               FilePosition sourceStartPosition,\n               FilePosition startPosition,\n               FilePosition endPosition);\n  }"
+  },
+  {
+   "line": 701,
+   "lines": [
+    696,
+    697,
+    698,
+    699,
+    700,
+    701,
+    702,
+    703,
+    704,
+    705,
+    706
+   ],
+   "path": "src/com/google/debugging/sourcemap/SourceMapConsumerV3.java",
+   "snippet": "        for (int j = 0; j < entryCount; j++) {\n          Entry entry = line.get(j);\n          if (pending) {\n            FilePosition endPosition = new FilePosition(\n                i, entry.getGeneratedColumn());\n            visitor.visit(\n                sourceName,\n                symbolName,\n                sourceStartPosition,\n                startPosition,\n                endPosition);"
+  },
+  {
+   "line": 506,
+   "lines": [
+    501,
+    502,
+    503,
+    504,
+    505,
+    506,
+    507,
+    508,
+    509,
+    510,
+    511
+   ],
+   "path": "src/com/google/debugging/sourcemap/SourceMapGeneratorV1.java",
+   "snippet": "     * @param col The starting column for this code segment.\n     * @param endLine The ending line\n     * @param endCol The ending column\n     * @throws IOException\n     */\n    void visit(Mapping m, int line, int col, int endLine, int endCol)\n        throws IOException;\n  }\n\n  /**\n   * Walk the mappings and visit each segment of the mappings, unmapped"
+  },
+  {
+   "line": 595,
+   "lines": [
+    590,
+    591,
+    592,
+    593,
+    594,
+    595,
+    596,
+    597,
+    598,
+    599,
+    600
+   ],
+   "path": "src/com/google/debugging/sourcemap/SourceMapGeneratorV1.java",
+   "snippet": "      int nextLine = getAdjustedLine(m.endPosition);\n      int nextCol = getAdjustedCol(m.endPosition);\n      // If this anything remaining in this mapping beyond the\n      // current line and column position, write it out now.\n      if (line < nextLine || (line == nextLine && col < nextCol)) {\n        visit(v, m, nextLine, nextCol);\n      }\n    }\n\n    /**\n     * Write any needed entries to complete the provided mapping."
+  },
+  {
+   "line": 609,
+   "lines": [
+    604,
+    605,
+    606,
+    607,
+    608,
+    609,
+    610,
+    611,
+    612,
+    613,
+    614
+   ],
+   "path": "src/com/google/debugging/sourcemap/SourceMapGeneratorV1.java",
+   "snippet": "      int nextLine = getAdjustedLine(m.startPosition);\n      int nextCol = getAdjustedCol(m.startPosition);\n      // If the previous value is null, no mapping exists.\n      Preconditions.checkState(line < nextLine || col <= nextCol);\n      if (line < nextLine || (line == nextLine && col < nextCol)) {\n        visit(v, parent, nextLine, nextCol);\n      }\n    }\n\n    /**\n     * Write any entries needed between the current position the next position"
+  }
+ ],
+ "class_simple": "CheckSideEffects",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Checks for non side effecting statements such as\n * <pre>\n * var s = \"this string is \"\n *         \"continued on the next line but you forgot the +\";\n * x == foo();  // should that be '='?\n * foo();;  // probably just a stray-semicolon. Doesn't hurt to check though\n * </p>\n * and generates warnings.\n *\n */\nfinal",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "static final DiagnosticType USELESS_CODE_ERROR",
+  "static final String PROTECTOR_FN",
+  "private final CheckLevel level",
+  "private final List<Node> problemNodes",
+  "private final AbstractCompiler compiler",
+  "private final boolean protectSideEffectFreeCode"
+ ],
+ "focal_class": "com.google.javascript.jscomp.CheckSideEffects",
+ "focal_id": "Closure_21::com.google.javascript.jscomp.CheckSideEffects::visit(NodeTraversal,Node,Node)",
+ "focal_method_name": "visit",
+ "generations": 3,
+ "impl_B": "@Override\n  public void visit(NodeTraversal t, Node n, Node parent) {\n    // VOID nodes appear when there are extra semicolons at the BLOCK level.\n    // I've been unable to think of any cases where this indicates a bug,\n    // and apparently some people like keeping these semicolons around,\n    // so we'll allow it.\n    if (n.isEmpty() ||\n        n.isComma()) {\n      return;\n    }\n\n    if (parent == null) {\n      return;\n    }\n\n    // Do not try to remove a block or an expr result. We already handle\n    // these cases when we visit the child, and the peephole passes will\n    // fix up the tree in more clever ways when these are removed.\n    if (n.isExprResult()) {\n      return;\n    }\n\n    // This no-op statement was there so that JSDoc information could\n    // be attached to the name. This check should not complain about it.\n    if (n.isQualifiedName() && n.getJSDocInfo() != null) {\n      return;\n    }\n\n    boolean isResultUsed = NodeUtil.isExpressionResultUsed(n);\n    boolean isSimpleOp = NodeUtil.isSimpleOperatorType(n.getType());\n    if (parent.getType() == Token.COMMA) {\n      if (isResultUsed) {\n        return;\n      }\n      if (n == parent.getLastChild()) {\n        for (Node an : parent.getAncestors()) {\n          int ancestorType = an.getType();\n          if (ancestorType == Token.COMMA) continue;\n          if (ancestorType != Token.EXPR_RESULT && ancestorType != Token.BLOCK) return;\n          else break;\n        }\n      }\n    } else if (parent.getType() != Token.EXPR_RESULT && parent.getType() != Token.BLOCK) {\n      if (! (parent.getType() == Token.FOR && parent.getChildCount() == 4 && (n == parent.getFirstChild() || n == parent.getFirstChild().getNext().getNext()))) {\n        return;\n      }\n    }\n    if (\n        (isSimpleOp || !NodeUtil.mayHaveSideEffects(n, t.getCompiler()))) {\n      String msg = \"This code lacks side-effects. Is there a bug?\";\n      if (n.isString()) {\n        msg = \"Is there a missing '+' on the previous line?\";\n      } else if (isSimpleOp) {\n        msg = \"The result of the '\" + Token.name(n.getType()).toLowerCase() +\n            \"' operator is not being used.\";\n      }\n\n      t.getCompiler().report(\n          t.makeError(n, level, USELESS_CODE_ERROR, msg));\n      // TODO(johnlenz): determine if it is necessary to\n      // try to protect side-effect free statements as well.\n      if (!NodeUtil.isStatement(n)) {\n        problemNodes.add(n);\n      }\n    }\n  }",
+ "imports": [
+  "com.google.common.collect.Lists",
+  "com.google.javascript.jscomp.CheckLevel",
+  "com.google.javascript.jscomp.NodeTraversal.AbstractPostOrderCallback",
+  "com.google.javascript.rhino.IR",
+  "com.google.javascript.rhino.JSDocInfoBuilder",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.Token",
+  "java.util.List"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "process"
+  },
+  {
+   "javadoc": "",
+   "name": "hotSwapScript"
+  }
+ ],
+ "sig": {
+  "class_declaration": "final class CheckSideEffects extends AbstractPostOrderCallback implements HotSwapCompilerPass",
+  "constructors": [],
+  "focal_signature": "public void visit(NodeTraversal t, Node n, Node parent)",
+  "methods": [
+   "public void process(Node externs, Node root);",
+   "public void hotSwapScript(Node scriptRoot, Node originalRoot);"
+  ],
+  "type_signatures": [
+   "public class NodeTraversal { public NodeTraversal(AbstractCompiler compiler, Callback cb); public NodeTraversal(AbstractCompiler compiler, Callback cb, ScopeCreator scopeCreator); public void traverse(Node root); public void traverseRoots(Node ... roots); public void traverseRoots(List<Node> roots); protected void traverseInnerNode(Node node, Node parent, Scope refinedScope); public Compiler getCompiler(); public int getLineNumber(); public String getSourceName(); public CompilerInput getInput(); public JSModule getModule(); public Node getCurrentNode(); public static void traverse( AbstractCompiler compiler, Node root, Callback cb); public static void traverseRoots( AbstractCompiler compiler, List<Node> roots, Callback cb); public static void traverseRoots( AbstractCompiler compiler, Callback cb, Node ... roots); }",
+   "public class Node implements Cloneable, Serializable { public Node(int nodeType); public Node(int nodeType, Node child); public Node(int nodeType, Node left, Node right); public Node(int nodeType, Node left, Node mid, Node right); public Node(int nodeType, Node left, Node mid, Node mid2, Node right); public Node(int nodeType, int lineno, int charno); public Node(int nodeType, Node child, int lineno, int charno); public Node(int nodeType, Node left, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node mid2, Node right, int lineno, int charno); public Node(int nodeType, Node[] children, int lineno, int charno); public Node(int nodeType, Node[] children); public static Node newNumber(double number); public static Node newNumber(double number, int lineno, int charno); public static Node newString(String str); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

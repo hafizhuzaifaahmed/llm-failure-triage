@@ -1,0 +1,211 @@
+{
+ "bug_name": "Closure_56",
+ "call_sites": [
+  {
+   "line": 333,
+   "lines": [
+    328,
+    329,
+    330,
+    331,
+    332,
+    333,
+    334,
+    335,
+    336,
+    337,
+    338
+   ],
+   "path": "src/com/google/javascript/jscomp/CompilerInput.java",
+   "snippet": "    }\n    ast.getSourceFile().setIsExtern(isExtern);\n  }\n\n  public int getLineOffset(int lineno) {\n    return ast.getSourceFile().getLineOffset(lineno);\n  }\n\n  /** @return The number of lines in this input. */\n  public int getNumLines() {\n    return ast.getSourceFile().getNumLines();"
+  },
+  {
+   "line": 1293,
+   "lines": [
+    1288,
+    1289,
+    1290,
+    1291,
+    1292,
+    1293,
+    1294,
+    1295,
+    1296,
+    1297,
+    1298
+   ],
+   "path": "src/com/google/javascript/rhino/Node.java",
+   "snippet": "  }\n\n  public int getSourceOffset() {\n    StaticSourceFile file = getStaticSourceFile();\n    int lineOffset = file == null ?\n        Integer.MIN_VALUE : file.getLineOffset(getLineno());\n    return lineOffset + getCharno();\n  }\n\n  public int getSourcePosition() {\n    return sourcePosition;"
+  },
+  {
+   "line": 70,
+   "lines": [
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72
+   ],
+   "path": "src/com/google/javascript/rhino/jstype/StaticSourceFile.java",
+   "snippet": "   * @param lineNumber the line of the input to get the absolute offset of.\n   * @return the absolute offset of the start of the provided line.\n   * @throws IllegalArgumentException if lineno is less than 1 or greater than\n   *         the number of lines in the source.\n   */\n  int getLineOffset(int lineNumber);\n}\n"
+  }
+ ],
+ "class_simple": "SourceFile",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * An abstract representation of a source file that provides access to\n * language-neutral features. The source file can be loaded from various\n * locations, such as from disk or from a preloaded string.\n *\n * @author nicksantos@google.com (Nick Santos)\n */\npublic",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "private static final int SOURCE_EXCERPT_REGION_LENGTH",
+  "private final String fileName",
+  "private boolean isExternFile",
+  "private String originalPath",
+  "private int[] lineOffsets",
+  "private int lastOffset",
+  "private int lastLine",
+  "private String code"
+ ],
+ "focal_class": "com.google.javascript.jscomp.SourceFile",
+ "focal_id": "Closure_56::com.google.javascript.jscomp.SourceFile::getLineOffset(int)",
+ "focal_method_name": "getLineOffset",
+ "generations": 3,
+ "impl_B": "@Override\n  public int getLineOffset(int lineno) {\n    if (lineOffsets == null) {\n      findLineOffsets();\n    }\n    if (lineno < 1 || lineno > lineOffsets.length) {\n      throw new IllegalArgumentException(\n          \"Expected line number between 1 and \" + lineOffsets.length +\n          \"\\nActual: \" + lineno);\n    }\n    return lineOffsets[lineno - 1];\n  }",
+ "imports": [
+  "com.google.common.annotations.VisibleForTesting",
+  "com.google.common.base.Charsets",
+  "com.google.common.io.CharStreams",
+  "com.google.common.io.Files",
+  "com.google.javascript.rhino.jstype.StaticSourceFile",
+  "java.io.File",
+  "java.io.FileReader",
+  "java.io.IOException",
+  "java.io.InputStream",
+  "java.io.InputStreamReader",
+  "java.io.Reader",
+  "java.io.Serializable",
+  "java.io.StringReader",
+  "java.nio.charset.Charset"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "/**\n   * Gets all the code in this source file.\n   * @throws IOException\n   */",
+   "name": "getCode"
+  },
+  {
+   "javadoc": "/**\n   * Gets a reader for the code in this source file.\n   */",
+   "name": "getCodeReader"
+  },
+  {
+   "javadoc": "",
+   "name": "getOriginalPath"
+  },
+  {
+   "javadoc": "",
+   "name": "setOriginalPath"
+  },
+  {
+   "javadoc": "",
+   "name": "clearCachedSource"
+  },
+  {
+   "javadoc": "/** Returns a unique name for the source file. */",
+   "name": "getName"
+  },
+  {
+   "javadoc": "/** Returns whether this is an extern. */",
+   "name": "isExtern"
+  },
+  {
+   "javadoc": "/**\n   * Gets the source line for the indicated line number.\n   *\n   * @param lineNumber the line number, 1 being the first line of the file.\n   * @return The line indicated. Does not include the newline at the end\n   *     of the file. Returns {@code null} if it does not exist,\n   *     or if there was an IO exception.\n   */",
+   "name": "getLine"
+  },
+  {
+   "javadoc": "/**\n   * Get a region around the indicated line number. The exact definition of a\n   * region is implementation specific, but it must contain the line indicated\n   * by the line number. A region must not start or end by a carriage return.\n   *\n   * @param lineNumber the line number, 1 being the first line of the file.\n   * @return The line indicated. Returns {@code null} if it does not exist,\n   *     or if there was an IO exception.\n   */",
+   "name": "getRegion"
+  },
+  {
+   "javadoc": "",
+   "name": "toString"
+  },
+  {
+   "javadoc": "",
+   "name": "fromFile"
+  },
+  {
+   "javadoc": "",
+   "name": "fromFile"
+  },
+  {
+   "javadoc": "",
+   "name": "fromFile"
+  },
+  {
+   "javadoc": "",
+   "name": "fromFile"
+  },
+  {
+   "javadoc": "",
+   "name": "fromCode"
+  },
+  {
+   "javadoc": "",
+   "name": "fromCode"
+  },
+  {
+   "javadoc": "",
+   "name": "fromInputStream"
+  },
+  {
+   "javadoc": "",
+   "name": "fromInputStream"
+  },
+  {
+   "javadoc": "",
+   "name": "fromReader"
+  },
+  {
+   "javadoc": "",
+   "name": "fromGenerator"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class SourceFile implements StaticSourceFile, Serializable",
+  "constructors": [
+   "public SourceFile(String fileName);"
+  ],
+  "focal_signature": "public int getLineOffset(int lineno)",
+  "methods": [
+   "public String getCode() throws IOException;",
+   "public Reader getCodeReader() throws IOException;",
+   "public String getOriginalPath();",
+   "public void setOriginalPath(String originalPath);",
+   "public void clearCachedSource();",
+   "public String getName();",
+   "public boolean isExtern();",
+   "public String getLine(int lineNumber);",
+   "public Region getRegion(int lineNumber);",
+   "public String toString();",
+   "public static SourceFile fromFile(String fileName, Charset c);",
+   "public static SourceFile fromFile(String fileName);",
+   "public static SourceFile fromFile(File file, Charset c);",
+   "public static SourceFile fromFile(File file);",
+   "public static SourceFile fromCode(String fileName, String code);",
+   "public static SourceFile fromCode(String fileName, String originalPath, String code);",
+   "public static SourceFile fromInputStream(String fileName, InputStream s) throws IOException;",
+   "public static SourceFile fromInputStream(String fileName, String originalPath, InputStream s) throws IOException;",
+   "public static SourceFile fromReader(String fileName, Reader r) throws IOException;",
+   "public static SourceFile fromGenerator(String fileName, Generator generator);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

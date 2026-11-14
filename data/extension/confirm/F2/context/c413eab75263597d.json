@@ -1,0 +1,145 @@
+{
+ "bug_name": "JacksonDatabind_12",
+ "call_sites": [
+  {
+   "line": 276,
+   "lines": [
+    271,
+    272,
+    273,
+    274,
+    275,
+    276,
+    277,
+    278,
+    279,
+    280,
+    281
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/DeserializerCache.java",
+   "snippet": "        /* cache resulting deserializer? always true for \"plain\" BeanDeserializer\n         * (but can be re-defined for sub-classes by using @JsonCachable!)\n         */\n        // 08-Jun-2010, tatu: Related to [JACKSON-296], need to avoid caching MapSerializers... so:\n        boolean isResolvable = (deser instanceof ResolvableDeserializer);\n        boolean addToCache = deser.isCachable();\n\n        /* we will temporarily hold on to all created deserializers (to\n         * handle cyclic references, and possibly reuse non-cached\n         * deserializers (list, map))\n         */"
+  }
+ ],
+ "class_simple": "MapDeserializer",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Basic serializer that can take JSON \"Object\" structure and\n * construct a {@link java.util.Map} instance, with typed contents.\n *<p>\n * Note: for untyped content (one indicated by passing Object.class\n * as the type), {@link UntypedObjectDeserializer} is used instead.\n * It can also construct {@link java.util.Map}s, but not with specific\n * POJO types, only other containers and primitives/wrappers.\n */\n@JacksonStdImpl\npublic",
+  "method_javadoc": "/**\n     * Turns out that these are expensive enough to create so that caching\n     * does make sense.\n     *<p>\n     * IMPORTANT: but, note, that instances CAN NOT BE CACHED if there is\n     * a value type deserializer; this caused an issue with 2.4.4 of\n     * JAXB Annotations (failing a test).\n     * It is also possible that some other settings could make deserializers\n     * un-cacheable; but on the other hand, caching can make a big positive\n     * difference with performance... so it's a hard choice.\n     * \n     * @since 2.4.4\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "protected final JavaType _mapType",
+  "protected final KeyDeserializer _keyDeserializer",
+  "protected boolean _standardStringKey",
+  "protected final JsonDeserializer<Object> _valueDeserializer",
+  "protected final TypeDeserializer _valueTypeDeserializer",
+  "protected final ValueInstantiator _valueInstantiator",
+  "protected final boolean _hasDefaultCreator",
+  "protected JsonDeserializer<Object> _delegateDeserializer",
+  "protected PropertyBasedCreator _propertyBasedCreator",
+  "protected HashSet<String> _ignorableProperties"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.deser.std.MapDeserializer",
+ "focal_id": "JacksonDatabind_12::com.fasterxml.jackson.databind.deser.std.MapDeserializer::isCachable()",
+ "focal_method_name": "isCachable",
+ "generations": 3,
+ "impl_B": "@Override\n    public boolean isCachable() {\n        /* As per [databind#735], existence of value or key deserializer (only passed\n         * if annotated to use non-standard one) should also prevent caching.\n         */\n        return (_valueTypeDeserializer == null)\n                && (_ignorableProperties == null);\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.lang.reflect.InvocationTargetException",
+  "java.util.*",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.annotation.JacksonStdImpl",
+  "com.fasterxml.jackson.databind.deser.*",
+  "com.fasterxml.jackson.databind.deser.impl.PropertyBasedCreator",
+  "com.fasterxml.jackson.databind.deser.impl.PropertyValueBuffer",
+  "com.fasterxml.jackson.databind.deser.impl.ReadableObjectId.Referring",
+  "com.fasterxml.jackson.databind.jsontype.TypeDeserializer",
+  "com.fasterxml.jackson.databind.util.ArrayBuilders"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.deser.std",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Helper method used to check whether we can just use the default key\n     * deserialization, where JSON String becomes Java String.\n     */",
+   "name": "_isStdKeyDeser"
+  },
+  {
+   "javadoc": "",
+   "name": "setIgnorableProperties"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "resolve"
+  },
+  {
+   "javadoc": "/**\n     * Method called to finalize setup of this deserializer,\n     * when it is known for which property deserializer is needed for.\n     */",
+   "name": "createContextual"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getContentType"
+  },
+  {
+   "javadoc": "",
+   "name": "getContentDeserializer"
+  },
+  {
+   "javadoc": "",
+   "name": "deserialize"
+  },
+  {
+   "javadoc": "",
+   "name": "deserializeWithType"
+  },
+  {
+   "javadoc": "",
+   "name": "getValueType"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "_readAndBind"
+  },
+  {
+   "javadoc": "/**\n     * Optimized method used when keys can be deserialized as plain old\n     * {@link java.lang.String}s, and there is no custom deserialized\n     * specified.\n     */",
+   "name": "_readAndBindStringMap"
+  },
+  {
+   "javadoc": "",
+   "name": "wrapAndThrow"
+  },
+  {
+   "javadoc": "",
+   "name": "wrapAndThrow"
+  }
+ ],
+ "sig": {
+  "class_declaration": "@JacksonStdImpl public class MapDeserializer extends ContainerDeserializerBase<Map<Object,Object>> implements ContextualDeserializer, ResolvableDeserializer",
+  "constructors": [
+   "public MapDeserializer(JavaType mapType, ValueInstantiator valueInstantiator, KeyDeserializer keyDeser, JsonDeserializer<Object> valueDeser, TypeDeserializer valueTypeDeser);",
+   "protected MapDeserializer(MapDeserializer src);",
+   "protected MapDeserializer(MapDeserializer src, KeyDeserializer keyDeser, JsonDeserializer<Object> valueDeser, TypeDeserializer valueTypeDeser, HashSet<String> ignorable);"
+  ],
+  "focal_signature": "public boolean isCachable()",
+  "methods": [
+   "protected final boolean _isStdKeyDeser(JavaType mapType, KeyDeserializer keyDeser);",
+   "public void setIgnorableProperties(String[] ignorable);",
+   "public void resolve(DeserializationContext ctxt) throws JsonMappingException;",
+   "public JsonDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property) throws JsonMappingException;",
+   "public JavaType getContentType();",
+   "public JsonDeserializer<Object> getContentDeserializer();",
+   "public Map<Object,Object> deserialize(JsonParser jp, DeserializationContext ctxt, Map<Object,Object> result) throws IOException, JsonProcessingException;",
+   "public Object deserializeWithType(JsonParser jp, DeserializationContext ctxt, TypeDeserializer typeDeserializer) throws IOException, JsonProcessingException;",
+   "public JavaType getValueType();",
+   "protected final void _readAndBind(JsonParser jp, DeserializationContext ctxt, Map<Object,Object> result) throws IOException, JsonProcessingException;",
+   "protected final void _readAndBindStringMap(JsonParser jp, DeserializationContext ctxt, Map<Object,Object> result) throws IOException, JsonProcessingException;",
+   "// since 2.5 protected void wrapAndThrow(Throwable t, Object ref) throws IOException;",
+   "protected void wrapAndThrow(Throwable t, Object ref, String key) throws IOException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

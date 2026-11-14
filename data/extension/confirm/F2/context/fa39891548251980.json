@@ -1,0 +1,119 @@
+{
+ "bug_name": "Closure_148",
+ "call_sites": [
+  {
+   "line": 609,
+   "lines": [
+    604,
+    605,
+    606,
+    607,
+    608,
+    609,
+    610,
+    611,
+    612,
+    613,
+    614
+   ],
+   "path": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java",
+   "snippet": "\n          writeOutput(writer, compiler, compiler.toSource(m), moduleWrappers.get(\n              m.getName()), \"%s\");\n\n          if (options.sourceMapOutputPath != null) {\n            compiler.getSourceMap().appendTo(mapOut, m.getName());\n          }\n\n          writer.close();\n\n          if (shouldGenerateMapPerModule(options) && mapOut != null) {"
+  },
+  {
+   "line": 786,
+   "lines": [
+    781,
+    782,
+    783,
+    784,
+    785,
+    786,
+    787,
+    788,
+    789,
+    790,
+    791
+   ],
+   "path": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java",
+   "snippet": "      return;\n    }\n\n    String outName = expandSourceMapPath(options, null);\n    Writer out = toWriter(outName);\n    compiler.getSourceMap().appendTo(out, outName);\n    out.close();\n  }\n\n  /**\n   * Returns the path at which to output map file(s) based on the path at which"
+  },
+  {
+   "line": 93,
+   "lines": [
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98
+   ],
+   "patch_lines_removed": true,
+   "path": "src/com/google/javascript/jscomp/SourceMap.java",
+   "snippet": "     */\n    /**\n     * Appends the mapping to the given buffer.\n     */\n      // The source file rarely changes, so cache the escaped string.\n"
+  },
+  {
+   "line": 327,
+   "lines": [
+    322,
+    323,
+    324,
+    325,
+    326,
+    327,
+    328,
+    329,
+    330,
+    331,
+    332
+   ],
+   "patch_lines_removed": true,
+   "path": "src/com/google/javascript/jscomp/SourceMap.java",
+   "snippet": "\n\n    for (Mapping mapping : mappings) {\n      mapping.appendTo(out);\n      out.append(\"\\n\");\n    }\n  }\n\n  /**"
+  }
+ ],
+ "class_simple": "SourceMap",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Collects information mapping the generated (compiled) source back to\n * its original source for debugging purposes.\n *\n * @see CodeConsumer\n * @see CodeGenerator\n * @see CodePrinter\n *\n*\n * @author johnlenz@google.com (John Lenz)\n */\npublic",
+  "method_javadoc": "/**\n   * Appends the source map in LavaBug format to the given buffer.\n   *\n   * @param out The stream to which the map will be appended.\n   * @param name The name of the generated source file that this source map\n   *   represents.\n   */"
+ },
+ "fields": [
+  "private List<Mapping> mappings",
+  "private Position offsetPosition",
+  "private Position prefixPosition",
+  "private String lastSourceFile",
+  "private String lastSourceFileEscaped"
+ ],
+ "focal_class": "com.google.javascript.jscomp.SourceMap",
+ "focal_id": "Closure_148::com.google.javascript.jscomp.SourceMap::appendTo(Appendable,String)",
+ "focal_method_name": "appendTo",
+ "generations": 3,
+ "impl_B": "public void appendTo(Appendable out, String name) throws IOException {\n    // Write the mappings out to the file. The format of the generated\n    // source map is three sections, each deliminated by a magic comment.\n    //\n    // The first section contains an array for each line of the generated\n    // code, where each element in the array is the ID of the mapping which\n    // best represents the index-th character found on that line of the\n    // generated source code.\n    //\n    // The second section contains an array per generated line. Unused.\n    //\n    // The third and final section contains an array per line, each of which\n    // represents a mapping with a unique ID. The mappings are added in order.\n    // The array itself contains a tuple representing\n    // ['source file', line, col (, 'original name')]\n    //\n    // Example for 2 lines of generated code (with line numbers added for\n    // readability):\n    //\n    // 1)  /** Begin line maps. **/{ \"count\": 2 }\n    // 2)  [0,0,0,0,0,0,1,1,1,1,2]\n    // 3)  [2,2,2,2,2,2,3,4,4,4,4,4]\n    // 4)  /** Begin file information. **/\n    // 5)  []\n    // 6)  []\n    // 7)  /** Begin mapping definitions. **/\n    // 8)  [\"a.js\", 1, 34]\n    // 9)  [\"a.js\", 5, 2]\n    // 10) [\"b.js\", 1, 3, \"event\"]\n    // 11) [\"c.js\", 1, 4]\n    // 12) [\"d.js\", 3, 78, \"foo\"]\n\n    int maxLine = findLastLine();\n\n    // Add the line character maps.\n    out.append(\"/** Begin line maps. **/{ \\\"file\\\" : \");\n    out.append(escapeString(name));\n    out.append(\", \\\"count\\\": \");\n    out.append(String.valueOf(maxLine + 1));\n    out.append(\" }\\n\");\n    (new LineMapper(out)).appendLineMappings();\n\n    // Add the source file maps.\n    out.append(\"/** Begin file information. **/\\n\");\n\n    // This section is unused but we need one entry per line to\n    // prevent changing the format.\n    for (int i = 0; i <= maxLine; ++i) {\n      out.append(\"[]\\n\");\n    }\n\n    // Add the mappings themselves.\n    out.append(\"/** Begin mapping definitions. **/\\n\");\n\n    for (Mapping mapping : mappings) {\n      mapping.appendTo(out);\n      out.append(\"\\n\");\n    }\n  }",
+ "imports": [
+  "com.google.common.base.Preconditions",
+  "com.google.common.collect.Lists",
+  "com.google.javascript.rhino.Node",
+  "java.io.IOException",
+  "java.util.ArrayDeque",
+  "java.util.Deque",
+  "java.util.List"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [],
+ "sig": {
+  "class_declaration": "public class SourceMap",
+  "constructors": [],
+  "focal_signature": "public void appendTo(Appendable out, String name) throws IOException",
+  "methods": [],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

@@ -1,0 +1,327 @@
+{
+ "candidate_id": "4196b154a000c59f86b1",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testGetNextTarEntry_EOF",
+   "testGetNextTarEntry_NormalFlow",
+   "testGetNextTarEntry_GNU_LongName",
+   "testGetNextTarEntry_GNUSparse",
+   "testGetNextTarEntry_SkipFailure"
+  ],
+  "nc_both": [
+   "testGetNextTarEntry_PaxHeader"
+  ],
+  "nc_one_version": [],
+  "passes": 1
+ },
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "Compress_12::org.apache.commons.compress.archivers.tar.TarArchiveInputStream::getNextTarEntry()",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testGetNextTarEntry_EOF",
+   "runs_b": [
+    {
+     "duration_s": 0.077,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.072,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.072,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.081,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.098,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.071,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.InputStreamReader;\nimport java.io.Reader;\nimport java.math.*;\nimport java.nio.ByteBuffer;\nimport java.nio.charset.StandardCharsets;\nimport java.util.*;\nimport java.util.HashMap;\nimport java.util.Map.Entry;\nimport java.util.Map;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.archivers.tar.TarArchiveEntry;\nimport org.apache.commons.compress.archivers.tar.TarArchiveInputStream;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class TarArchiveInputStream_getNextTarEntry_TriageGen1Test {\n\n    /**\n     * Helper to create a minimal valid Tar Header (512 bytes)\n     * For simplicity in testing logic, we mock the stream content.\n     */\n    private byte[] createMockTarHeader(String name, long size) {\n        byte[] header = new byte[512];\n        byte[] nameBytes = name.getBytes(StandardCharsets.UTF_8);\n        System.arraycopy(nameBytes, 0, header, 0, Math.min(nameBytes.length, 100));\n        \n        // Size is at offset 124 in Tar header (little endian/specific format)\n        // But since we are testing the logic of the stream, we rely on the \n        // TarArchiveEntry constructor which parses the headerBuf.\n        // To make TarArchiveEntry work, we need a validly formatted header.\n        // In a real scenario, we'd use TarArchiveOutputStream to generate valid bytes.\n        return header;\n    }\n\n    @Test\n    public void testGetNextTarEntry_EOF() throws IOException {\n        // Empty stream simulates immediate EOF\n        InputStream is = new ByteArrayInputStream(new byte[0]);\n        TarArchiveInputStream tais = new TarArchiveInputStream(is);\n        \n        // The first call to getRecord() inside getNextTarEntry will trigger hasHitEOF\n        TarArchiveEntry entry = tais.getNextTarEntry();\n        Assert.assertNull(entry);\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testGetNextTarEntry_NormalFlow",
+   "runs_b": [
+    {
+     "duration_s": 0.078,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.076,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.071,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.085,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.086,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.084,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.InputStreamReader;\nimport java.io.Reader;\nimport java.math.*;\nimport java.nio.ByteBuffer;\nimport java.nio.charset.StandardCharsets;\nimport java.util.*;\nimport java.util.HashMap;\nimport java.util.Map.Entry;\nimport java.util.Map;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.archivers.tar.TarArchiveEntry;\nimport org.apache.commons.compress.archivers.tar.TarArchiveInputStream;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class TarArchiveInputStream_getNextTarEntry_TriageGen1Test {\n\n    /**\n     * Helper to create a minimal valid Tar Header (512 bytes)\n     * For simplicity in testing logic, we mock the stream content.\n     */\n    private byte[] createMockTarHeader(String name, long size) {\n        byte[] header = new byte[512];\n        byte[] nameBytes = name.getBytes(StandardCharsets.UTF_8);\n        System.arraycopy(nameBytes, 0, header, 0, Math.min(nameBytes.length, 100));\n        \n        // Size is at offset 124 in Tar header (little endian/specific format)\n        // But since we are testing the logic of the stream, we rely on the \n        // TarArchiveEntry constructor which parses the headerBuf.\n        // To make TarArchiveEntry work, we need a validly formatted header.\n        // In a real scenario, we'd use TarArchiveOutputStream to generate valid bytes.\n        return header;\n    }\n\n    \n\n    @Test\n    public void testGetNextTarEntry_NormalFlow() throws IOException {\n        // We use a real TarArchiveOutputStream to generate valid bytes to ensure \n        // headerBuf and TarArchiveEntry logic is exercised correctly.\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        org.apache.commons.compress.archivers.tar.TarArchiveOutputStream taos = \n            new org.apache.commons.compress.archivers.tar.TarArchiveOutputStream(baos);\n        \n        TarArchiveEntry entry1 = new TarArchiveEntry(\"file1.txt\");\n        entry1.setSize(5);\n        taos.putArchiveEntry(entry1);\n        taos.write(\"hello\".getBytes());\n        taos.closeArchiveEntry();\n\n        TarArchiveEntry entry2 = new TarArchiveEntry(\"file2.txt\");\n        entry2.setSize(3);\n        taos.putArchiveEntry(entry2);\n        taos.write(\"abc\".getBytes());\n        taos.closeArchiveEntry();\n        \n        taos.close();\n\n        TarArchiveInputStream tais = new TarArchiveInputStream(new ByteArrayInputStream(baos.toByteArray()));\n        \n        // First entry\n        TarArchiveEntry result1 = tais.getNextTarEntry();\n        Assert.assertNotNull(result1);\n        Assert.assertEquals(\"file1.txt\", result1.getName());\n        \n        // Second entry (exercises the \"if (currEntry != null)\" skip logic)\n        TarArchiveEntry result2 = tais.getNextTarEntry();\n        Assert.assertNotNull(result2);\n        Assert.assertEquals(\"file2.txt\", result2.getName());\n\n        // Third call (EOF)\n        TarArchiveEntry result3 = tais.getNextTarEntry();\n        Assert.assertNull(result3);\n    }\n\n    \n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testGetNextTarEntry_GNU_LongName",
+   "runs_b": [
+    {
+     "duration_s": 0.069,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.074,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.079,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.075,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.073,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.073,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.InputStreamReader;\nimport java.io.Reader;\nimport java.math.*;\nimport java.nio.ByteBuffer;\nimport java.nio.charset.StandardCharsets;\nimport java.util.*;\nimport java.util.HashMap;\nimport java.util.Map.Entry;\nimport java.util.Map;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.archivers.tar.TarArchiveEntry;\nimport org.apache.commons.compress.archivers.tar.TarArchiveInputStream;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class TarArchiveInputStream_getNextTarEntry_TriageGen1Test {\n\n    /**\n     * Helper to create a minimal valid Tar Header (512 bytes)\n     * For simplicity in testing logic, we mock the stream content.\n     */\n    private byte[] createMockTarHeader(String name, long size) {\n        byte[] header = new byte[512];\n        byte[] nameBytes = name.getBytes(StandardCharsets.UTF_8);\n        System.arraycopy(nameBytes, 0, header, 0, Math.min(nameBytes.length, 100));\n        \n        // Size is at offset 124 in Tar header (little endian/specific format)\n        // But since we are testing the logic of the stream, we rely on the \n        // TarArchiveEntry constructor which parses the headerBuf.\n        // To make TarArchiveEntry work, we need a validly formatted header.\n        // In a real scenario, we'd use TarArchiveOutputStream to generate valid bytes.\n        return header;\n    }\n\n    \n\n    \n\n    @Test\n    public void testGetNextTarEntry_GNU_LongName() throws IOException {\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        org.apache.commons.compress.archivers.tar.TarArchiveOutputStream taos = \n            new org.apache.commons.compress.archivers.tar.TarArchiveOutputStream(baos);\n        \n        // Create a long filename\n        String longName = \"this_is_a_very_long_filename_that_should_trigger_gnu_long_name_logic.txt\";\n        TarArchiveEntry entry = new TarArchiveEntry(longName);\n        entry.setSize(4);\n        taos.putArchiveEntry(entry);\n        taos.write(\"test\".getBytes());\n        taos.closeArchiveEntry();\n        taos.close();\n\n        TarArchiveInputStream tais = new TarArchiveInputStream(new ByteArrayInputStream(baos.toByteArray()));\n        TarArchiveEntry result = tais.getNextTarEntry();\n        \n        Assert.assertNotNull(result);\n        Assert.assertEquals(longName, result.getName());\n    }\n\n    \n\n    \n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testGetNextTarEntry_GNUSparse",
+   "runs_b": [
+    {
+     "duration_s": 0.073,
+     "exception": "java.io.IOException",
+     "failing_test_line": 66,
+     "message": "entry 'sparse.txt' closed at '0' before the '100' bytes specified in the header were written",
+     "outcome": "exception",
+     "trace": "java.io.IOException: entry 'sparse.txt' closed at '0' before the '100' bytes specified in the header were written\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream.closeArchiveEntry(TarArchiveOutputStream.java:298)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveInputStream_getNextTarEntry_TriageGen1Test.testGetNextTarEntry_GNUSparse(TarArchiveInputStream_getNextTarEntry_TriageGen1Test.java:66)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:45)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:42)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:263)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:68)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:47)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:300)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.092,
+     "exception": "java.io.IOException",
+     "failing_test_line": 66,
+     "message": "entry 'sparse.txt' closed at '0' before the '100' bytes specified in the header were written",
+     "outcome": "exception",
+     "trace": "java.io.IOException: entry 'sparse.txt' closed at '0' before the '100' bytes specified in the header were written\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream.closeArchiveEntry(TarArchiveOutputStream.java:298)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveInputStream_getNextTarEntry_TriageGen1Test.testGetNextTarEntry_GNUSparse(TarArchiveInputStream_getNextTarEntry_TriageGen1Test.java:66)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:45)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:42)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:263)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:68)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:47)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:300)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.089,
+     "exception": "java.io.IOException",
+     "failing_test_line": 66,
+     "message": "entry 'sparse.txt' closed at '0' before the '100' bytes specified in the header were written",
+     "outcome": "exception",
+     "trace": "java.io.IOException: entry 'sparse.txt' closed at '0' before the '100' bytes specified in the header were written\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream.closeArchiveEntry(TarArchiveOutputStream.java:298)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveInputStream_getNextTarEntry_TriageGen1Test.testGetNextTarEntry_GNUSparse(TarArchiveInputStream_getNextTarEntry_TriageGen1Test.java:66)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:45)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:42)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:263)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:68)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:47)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:300)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.088,
+     "exception": "java.io.IOException",
+     "failing_test_line": 66,
+     "message": "entry 'sparse.txt' closed at '0' before the '100' bytes specified in the header were written",
+     "outcome": "exception",
+     "trace": "java.io.IOException: entry 'sparse.txt' closed at '0' before the '100' bytes specified in the header were written\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream.closeArchiveEntry(TarArchiveOutputStream.java:298)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveInputStream_getNextTarEntry_TriageGen1Test.testGetNextTarEntry_GNUSparse(TarArchiveInputStream_getNextTarEntry_TriageGen1Test.java:66)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:45)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:42)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:263)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:68)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:47)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:300)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.083,
+     "exception": "java.io.IOException",
+     "failing_test_line": 66,
+     "message": "entry 'sparse.txt' closed at '0' before the '100' bytes specified in the header were written",
+     "outcome": "exception",
+     "trace": "java.io.IOException: entry 'sparse.txt' closed at '0' before the '100' bytes specified in the header were written\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream.closeArchiveEntry(TarArchiveOutputStream.java:298)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveInputStream_getNextTarEntry_TriageGen1Test.testGetNextTarEntry_GNUSparse(TarArchiveInputStream_getNextTarEntry_TriageGen1Test.java:66)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:45)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:42)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:263)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:68)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:47)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:300)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.085,
+     "exception": "java.io.IOException",
+     "failing_test_line": 66,
+     "message": "entry 'sparse.txt' closed at '0' before the '100' bytes specified in the header were written",
+     "outcome": "exception",
+     "trace": "java.io.IOException: entry 'sparse.txt' closed at '0' before the '100' bytes specified in the header were written\n\tat org.apache.commons.compress.archivers.tar.TarArchiveOutputStream.closeArchiveEntry(TarArchiveOutputStream.java:298)\n\tat org.apache.commons.compress.archivers.tar.TarArchiveInputStream_getNextTarEntry_TriageGen1Test.testGetNextTarEntry_GNUSparse(TarArchiveInputStream_getNextTarEntry_TriageGen1Test.java:66)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:45)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:42)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:263)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:68)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:47)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:300)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.InputStreamReader;\nimport java.io.Reader;\nimport java.math.*;\nimport java.nio.ByteBuffer;\nimport java.nio.charset.StandardCharsets;\nimport java.util.*;\nimport java.util.HashMap;\nimport java.util.Map.Entry;\nimport java.util.Map;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.archivers.tar.TarArchiveEntry;\nimport org.apache.commons.compress.archivers.tar.TarArchiveInputStream;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class TarArchiveInputStream_getNextTarEntry_TriageGen1Test {\n\n    /**\n     * Helper to create a minimal valid Tar Header (512 bytes)\n     * For simplicity in testing logic, we mock the stream content.\n     */\n    private byte[] createMockTarHeader(String name, long size) {\n        byte[] header = new byte[512];\n        byte[] nameBytes = name.getBytes(StandardCharsets.UTF_8);\n        System.arraycopy(nameBytes, 0, header, 0, Math.min(nameBytes.length, 100));\n        \n        // Size is at offset 124 in Tar header (little endian/specific format)\n        // But since we are testing the logic of the stream, we rely on the \n        // TarArchiveEntry constructor which parses the headerBuf.\n        // To make TarArchiveEntry work, we need a validly formatted header.\n        // In a real scenario, we'd use TarArchiveOutputStream to generate valid bytes.\n        return header;\n    }\n\n    \n\n    \n\n    \n\n    \n\n    @Test\n    public void testGetNextTarEntry_GNUSparse() throws IOException {\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        org.apache.commons.compress.archivers.tar.TarArchiveOutputStream taos = \n            new org.apache.commons.compress.archivers.tar.TarArchiveOutputStream(baos);\n        \n        TarArchiveEntry entry = new TarArchiveEntry(\"sparse.txt\");\n        // In Commons Compress, sparse files are handled via specific flags/logic\n        // We simulate a sparse entry if the library allows or by using the internal mechanisms\n        // For the sake of coverage, we use a file that triggers the sparse detection logic\n        entry.setSize(100);\n        taos.putArchiveEntry(entry);\n        // Writing nothing/minimal to simulate sparse-like behavior if supported by the stream\n        taos.closeArchiveEntry();\n        taos.close();\n\n        TarArchiveInputStream tais = new TarArchiveInputStream(new ByteArrayInputStream(baos.toByteArray()));\n        TarArchiveEntry result = tais.getNextTarEntry();\n        \n        Assert.assertNotNull(result);\n    }\n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testGetNextTarEntry_SkipFailure",
+   "runs_b": [
+    {
+     "duration_s": 0.077,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": null,
+     "message": "Expected exception: java.lang.RuntimeException",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Expected exception: java.lang.RuntimeException\n\tat org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:35)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:263)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:68)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:47)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:300)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.078,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": null,
+     "message": "Expected exception: java.lang.RuntimeException",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Expected exception: java.lang.RuntimeException\n\tat org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:35)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:263)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:68)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:47)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:300)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.077,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": null,
+     "message": "Expected exception: java.lang.RuntimeException",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Expected exception: java.lang.RuntimeException\n\tat org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:35)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:263)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:68)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:47)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:300)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.082,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": null,
+     "message": "Expected exception: java.lang.RuntimeException",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Expected exception: java.lang.RuntimeException\n\tat org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:35)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:263)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:68)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:47)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:300)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.075,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": null,
+     "message": "Expected exception: java.lang.RuntimeException",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Expected exception: java.lang.RuntimeException\n\tat org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:35)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:263)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:68)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:47)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:300)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.088,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": null,
+     "message": "Expected exception: java.lang.RuntimeException",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError: Expected exception: java.lang.RuntimeException\n\tat org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:35)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:263)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:68)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:47)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:300)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:157)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:136)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package org.apache.commons.compress.archivers.tar;\n\nimport java.io.*;\nimport java.io.ByteArrayInputStream;\nimport java.io.IOException;\nimport java.io.InputStream;\nimport java.io.InputStreamReader;\nimport java.io.Reader;\nimport java.math.*;\nimport java.nio.ByteBuffer;\nimport java.nio.charset.StandardCharsets;\nimport java.util.*;\nimport java.util.HashMap;\nimport java.util.Map.Entry;\nimport java.util.Map;\nimport org.apache.commons.compress.archivers.ArchiveEntry;\nimport org.apache.commons.compress.archivers.ArchiveInputStream;\nimport org.apache.commons.compress.archivers.tar.TarArchiveEntry;\nimport org.apache.commons.compress.archivers.tar.TarArchiveInputStream;\nimport org.apache.commons.compress.utils.ArchiveUtils;\nimport org.junit.*;\nimport org.junit.Assert;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class TarArchiveInputStream_getNextTarEntry_TriageGen1Test {\n\n    /**\n     * Helper to create a minimal valid Tar Header (512 bytes)\n     * For simplicity in testing logic, we mock the stream content.\n     */\n    private byte[] createMockTarHeader(String name, long size) {\n        byte[] header = new byte[512];\n        byte[] nameBytes = name.getBytes(StandardCharsets.UTF_8);\n        System.arraycopy(nameBytes, 0, header, 0, Math.min(nameBytes.length, 100));\n        \n        // Size is at offset 124 in Tar header (little endian/specific format)\n        // But since we are testing the logic of the stream, we rely on the \n        // TarArchiveEntry constructor which parses the headerBuf.\n        // To make TarArchiveEntry work, we need a validly formatted header.\n        // In a real scenario, we'd use TarArchiveOutputStream to generate valid bytes.\n        return header;\n    }\n\n    \n\n    \n\n    \n\n    \n\n    \n\n    @Test(expected = RuntimeException.class)\n    public void testGetNextTarEntry_SkipFailure() throws IOException {\n        // Create a stream that returns 0 on skip to trigger the RuntimeException\n        InputStream failingSkipStream = new InputStream() {\n            @Override\n            public int read() { return -1; }\n            @Override\n            public long skip(long n) { return 0; } // Force failure\n        };\n        \n        // We need a valid header first so currEntry is not null on the second call\n        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n        org.apache.commons.compress.archivers.tar.TarArchiveOutputStream taos = \n            new org.apache.commons.compress.archivers.tar.TarArchiveOutputStream(baos);\n        TarArchiveEntry e1 = new TarArchiveEntry(\"e1\");\n        e1.setSize(10);\n        taos.putArchiveEntry(e1);\n        taos.write(new byte[10]);\n        taos.closeArchiveEntry();\n        taos.close();\n\n        // Wrap the valid bytes with the failing stream? \n        // Actually, we can just provide a stream that fails during the skip phase.\n        // To do this, we need the first entry to succeed, then the second to attempt a skip.\n        \n        // We'll use a custom InputStream that succeeds once then fails on skip\n        InputStream customIs = new InputStream() {\n            private int count = 0;\n            private byte[] data = baos.toByteArray();\n            \n            @Override\n            public int read() {\n                if (count < data.length) return data[count++] & 0xff;\n                return -1;\n            }\n\n            @Override\n            public long skip(long n) {\n                if (count > 512) return 0; // Fail after first header is read\n                return n;\n            }\n        };\n\n        TarArchiveInputStream tais = new TarArchiveInputStream(customIs);\n        tais.getNextTarEntry(); // Succeeds first entry\n        tais.getNextTarEntry(); // Should trigger skip failure\n    }\n}\n"
+  }
+ ],
+ "source_sha256": "24472adc15010ac8605c6a91f1e99c2beecb2ffda48553a3cb21ec237bd82230",
+ "utc": "2026-11-13T06:18:00Z"
+}

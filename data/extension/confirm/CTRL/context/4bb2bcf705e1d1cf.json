@@ -1,0 +1,144 @@
+{
+ "bug_name": "Closure_119",
+ "call_sites": [
+  {
+   "line": 130,
+   "lines": [
+    125,
+    126,
+    127,
+    128,
+    129,
+    130,
+    131,
+    132,
+    133,
+    134,
+    135
+   ],
+   "path": "src/com/google/javascript/jscomp/CombinedCompilerPass.java",
+   "snippet": "        waiting = null;\n      }\n    }\n\n    void shouldTraverseIfActive(NodeTraversal t, Node n, Node parent) {\n      if (isActive() && !callback.shouldTraverse(t, n, parent)) {\n        waiting = n;\n      }\n    }\n\n    void enterScopeIfActive(NodeTraversal t) {"
+  },
+  {
+   "line": 99,
+   "lines": [
+    94,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104
+   ],
+   "path": "src/com/google/javascript/jscomp/NodeTraversal.java",
+   "snippet": "     * {@link #visit(NodeTraversal, Node, Node)} in postorder.</p>\n     * <p>Implementations can have side effects (e.g. modifying the parse\n     * tree).</p>\n     * @return whether the children of this node should be visited\n     */\n    boolean shouldTraverse(NodeTraversal nodeTraversal, Node n, Node parent);\n\n    /**\n     * <p>Visits a node in postorder (after its children have been visited).\n     * A node is visited only if all its parents should be traversed\n     * ({@link #shouldTraverse(NodeTraversal, Node, Node)}).</p>"
+  },
+  {
+   "line": 523,
+   "lines": [
+    518,
+    519,
+    520,
+    521,
+    522,
+    523,
+    524,
+    525,
+    526,
+    527,
+    528
+   ],
+   "path": "src/com/google/javascript/jscomp/NodeTraversal.java",
+   "snippet": "      inputId = n.getInputId();\n      sourceName = getSourceName(n);\n    }\n\n    curNode = n;\n    if (!callback.shouldTraverse(this, n, parent)) {\n      return;\n    }\n\n    if (type == Token.FUNCTION) {\n      traverseFunction(n, parent);"
+  },
+  {
+   "line": 400,
+   "lines": [
+    395,
+    396,
+    397,
+    398,
+    399,
+    400,
+    401,
+    402,
+    403,
+    404,
+    405
+   ],
+   "path": "src/com/google/javascript/jscomp/SpecializeModule.java",
+   "snippet": "    public void match(Node ast1, Node ast2) {\n      // Just blunder ahead and assume that the two nodes actually match\n\n      reportMatch(ast1, ast2);\n\n      if (shouldTraverse(ast1, ast2)) {\n        Node childOf1 = ast1.getFirstChild();\n        Node childOf2 = ast2.getFirstChild();\n\n        while (childOf1 != null) {\n          match(childOf1, childOf2);"
+  }
+ ],
+ "class_simple": "BuildGlobalNamespace",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Builds a global namespace of all the objects and their properties in\n * the global scope. Also builds an index of all the references to those names.\n *\n */\nclass GlobalNamespace\n    implements StaticScope<JSType>,\n    StaticSymbolTable<GlobalNamespace.Name, GlobalNamespace.Ref> {\n\n  private AbstractCompiler compiler;\n  private final Node root;\n  private final Node externsRoot;\n  private boolean inExterns;\n  private Scope externsScope;\n  private boolean generated = false;\n\n  /**\n   * Each reference has an index in post-order.\n   * Notice that some nodes are represented by 2 Ref objects, so\n   * this index is not necessarily unique.\n   */\n  private int currentPreOrderIndex = 0;\n\n  /** Global namespace tree */\n  private List<Name> globalNames = new ArrayList<Name>();\n\n  /** Maps names (e.g. \"a.b.c\") to nodes in the global namespace tree */\n  private Map<String, Name> nameMap = new HashMap<String, Name>();\n\n  /**\n   * Creates an instance that may emit warnings when building the namespace.\n   *\n   * @param compiler The AbstractCompiler, for reporting code changes\n   * @param root The root of the rest of the code to build a namespace for.\n   */\n  GlobalNamespace(AbstractCompiler compiler, Node root) {\n    this(compiler, null, root);\n  }\n\n  /**\n   * Creates an instance that may emit warnings when building the namespace.\n   *\n   * @param compiler The AbstractCompiler, for reporting code changes\n   * @param externsRoot The root of the externs to build a namespace for. If\n   *     this is null, externs and properties defined on extern types will not\n   *     be included in the global namespace.  If non-null, it allows\n   *     user-defined function on extern types to be included in the global\n   *     namespace.  E.g. String.foo.\n   * @param root The root of the rest of the code to build a namespace for.\n   */\n  GlobalNamespace(AbstractCompiler compiler, Node externsRoot, Node root) {\n    this.compiler = compiler;\n    this.externsRoot = externsRoot;\n    this.root = root;\n  }\n\n  boolean hasExternsRoot() {\n    return externsRoot != null;\n  }\n\n  @Override\n  public Node getRootNode() {\n    return root.getParent();\n  }\n\n  @Override\n  public StaticScope<JSType> getParentScope() {\n    return null;\n  }\n\n  @Override\n  public Name getSlot(String name) {\n    return getOwnSlot(name);\n  }\n\n  @Override\n  public Name getOwnSlot(String name) {\n    ensureGenerated();\n    return nameMap.get(name);\n  }\n\n  @Override\n  public JSType getTypeOfThis() {\n    return compiler.getTypeRegistry().getNativeObjectType(GLOBAL_THIS);\n  }\n\n  @Override\n  public Iterable<Ref> getReferences(Name slot) {\n    ensureGenerated();\n    return Collections.unmodifiableList(slot.getRefs());\n  }\n\n  @Override\n  public StaticScope<JSType> getScope(Name slot) {\n    return this;\n  }\n\n  @Override\n  public Iterable<Name> getAllSymbols() {\n    ensureGenerated();\n    return Collections.unmodifiableCollection(getNameIndex().values());\n  }\n\n  private void ensureGenerated() {\n    if (!generated) {\n      process();\n    }\n  }\n\n  /**\n   * Gets a list of the roots of the forest of the global names, where the\n   * roots are the top-level names.\n   */\n  List<Name> getNameForest() {\n    ensureGenerated();\n    return globalNames;\n  }\n\n  /**\n   * Gets an index of all the global names, indexed by full qualified name\n   * (as in \"a\", \"a.b.c\", etc.).\n   */\n  Map<String, Name> getNameIndex() {\n    ensureGenerated();\n    return nameMap;\n  }\n\n  /**\n   * A simple data class that contains the information necessary to inspect\n   * a node for changes to the global namespace.\n   */\n  static class AstChange {\n    final JSModule module;\n    final Scope scope;\n    final Node node;\n\n    AstChange(JSModule module, Scope scope, Node node) {\n      this.module = module;\n      this.scope = scope;\n      this.node = node;\n    }\n  }\n\n  /**\n   * If the client adds new nodes to the AST, scan these new nodes\n   * to see if they've added any references to the global namespace.\n   * @param newNodes New nodes to check.\n   */\n  void scanNewNodes(List<AstChange> newNodes) {\n    BuildGlobalNamespace builder = new BuildGlobalNamespace();\n\n    for (AstChange info : newNodes) {\n      if (!info.node.isQualifiedName() && !NodeUtil.isObjectLitKey(info.node)) {\n        continue;\n      }\n      scanFromNode(builder, info.module, info.scope, info.node);\n    }\n  }\n\n  private void scanFromNode(\n    BuildGlobalNamespace builder, JSModule module, Scope scope, Node n) {\n    // Check affected parent nodes first.\n    if (n.isName() || n.isGetProp()) {\n      scanFromNode(builder, module, scope, n.getParent());\n    }\n    builder.collect(module, scope, n);\n  }\n\n  /**\n   * Builds the namespace lazily.\n   */\n  private void process() {\n    if (externsRoot != null) {\n      inExterns = true;\n      NodeTraversal.traverse(compiler, externsRoot, new BuildGlobalNamespace());\n    }\n    inExterns = false;\n\n    NodeTraversal.traverse(compiler, root, new BuildGlobalNamespace());\n    generated = true;\n  }\n\n  /**\n   * Determines whether a name reference in a particular scope is a global name\n   * reference.\n   *\n   * @param name A variable or property name (e.g. \"a\" or \"a.b.c.d\")\n   * @param s The scope in which the name is referenced\n   * @return Whether the name reference is a global name reference\n   */\n  private boolean isGlobalNameReference(String name, Scope s) {\n    String topVarName = getTopVarName(name);\n    return isGlobalVarReference(topVarName, s);\n  }\n\n  /**\n   * Gets the top variable name from a possibly namespaced name.\n   *\n   * @param name A variable or qualified property name (e.g. \"a\" or \"a.b.c.d\")\n   * @return The top variable name (e.g. \"a\")\n   */\n  private String getTopVarName(String name) {\n    int firstDotIndex = name.indexOf('.');\n    return firstDotIndex == -1 ? name : name.substring(0, firstDotIndex);\n  }\n\n  /**\n   * Determines whether a variable name reference in a particular scope is a\n   * global variable reference.\n   *\n   * @param name A variable name (e.g. \"a\")\n   * @param s The scope in which the name is referenced\n   * @return Whether the name reference is a global variable reference\n   */\n  private boolean isGlobalVarReference(String name, Scope s) {\n    Scope.Var v = s.getVar(name);\n    if (v == null && externsScope != null) {\n      v = externsScope.getVar(name);\n    }\n    return v != null && !v.isLocal();\n  }\n\n  /**\n   * Gets whether a scope is the global scope.\n   *\n   * @param s A scope\n   * @return Whether the scope is the global scope\n   */\n  private boolean isGlobalScope(Scope s) {\n    return s.getParent() == null;\n  }\n\n  // -------------------------------------------------------------------------\n\n  /**\n   * Builds a tree representation of the global namespace. Omits prototypes.\n   */\n  private",
+  "method_javadoc": "/** Collect the references in pre-order. */"
+ },
+ "fields": [],
+ "focal_class": "com.google.javascript.jscomp.GlobalNamespace.BuildGlobalNamespace",
+ "focal_id": "Closure_119::com.google.javascript.jscomp.GlobalNamespace$BuildGlobalNamespace::shouldTraverse(NodeTraversal,Node,Node)",
+ "focal_method_name": "shouldTraverse",
+ "generations": 3,
+ "impl_B": "@Override\n    public boolean shouldTraverse(NodeTraversal t, Node n, Node parent) {\n      // If we are traversing the externs, then we save a pointer to the scope\n      // generated by them, so that we can do lookups in it later.\n      if (externsRoot != null && n == externsRoot) {\n        externsScope = t.getScope();\n      }\n\n      collect(t.getModule(), t.getScope(), n);\n\n      return true;\n    }",
+ "imports": [
+  "static com.google.javascript.rhino.jstype.JSTypeNative.GLOBAL_THIS",
+  "com.google.common.base.Preconditions",
+  "com.google.common.base.Predicate",
+  "com.google.common.collect.ImmutableList",
+  "com.google.common.collect.ImmutableSet",
+  "com.google.common.collect.Lists",
+  "com.google.common.collect.Sets",
+  "com.google.javascript.jscomp.CodingConvention.SubclassRelationship",
+  "com.google.javascript.rhino.JSDocInfo",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.Token",
+  "com.google.javascript.rhino.TokenStream",
+  "com.google.javascript.rhino.jstype.JSType",
+  "com.google.javascript.rhino.jstype.StaticReference",
+  "com.google.javascript.rhino.jstype.StaticScope",
+  "com.google.javascript.rhino.jstype.StaticSlot",
+  "com.google.javascript.rhino.jstype.StaticSourceFile",
+  "com.google.javascript.rhino.jstype.StaticSymbolTable",
+  "java.io.PrintStream",
+  "java.util.ArrayList",
+  "java.util.Collections",
+  "java.util.HashMap",
+  "java.util.List",
+  "java.util.Map",
+  "java.util.Set"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "visit"
+  },
+  {
+   "javadoc": "",
+   "name": "collect"
+  }
+ ],
+ "sig": {
+  "class_declaration": "private class BuildGlobalNamespace implements NodeTraversal.Callback",
+  "constructors": [],
+  "focal_signature": "public boolean shouldTraverse(NodeTraversal t, Node n, Node parent)",
+  "methods": [
+   "public void visit(NodeTraversal t, Node n, Node parent);",
+   "public void collect(JSModule module, Scope scope, Node n);"
+  ],
+  "type_signatures": [
+   "public class NodeTraversal { public NodeTraversal(AbstractCompiler compiler, Callback cb); public NodeTraversal(AbstractCompiler compiler, Callback cb, ScopeCreator scopeCreator); public void traverse(Node root); public void traverseRoots(Node ... roots); public void traverseRoots(List<Node> roots); protected void traverseInnerNode(Node node, Node parent, Scope refinedScope); public AbstractCompiler getCompiler(); public int getLineNumber(); public String getSourceName(); public CompilerInput getInput(); public JSModule getModule(); public Node getCurrentNode(); public static void traverseChangedFunctions( AbstractCompiler compiler, FunctionCallback callback); public static void traverse( AbstractCompiler compiler, Node root, Callback cb); public static void traverseRoots( AbstractCompiler compiler, List<Node> roots, Callback cb); }",
+   "public class Node implements Cloneable, Serializable { public Node(int nodeType); public Node(int nodeType, Node child); public Node(int nodeType, Node left, Node right); public Node(int nodeType, Node left, Node mid, Node right); public Node(int nodeType, Node left, Node mid, Node mid2, Node right); public Node(int nodeType, int lineno, int charno); public Node(int nodeType, Node child, int lineno, int charno); public Node(int nodeType, Node left, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node mid2, Node right, int lineno, int charno); public Node(int nodeType, Node[] children, int lineno, int charno); public Node(int nodeType, Node[] children); public static Node newNumber(double number); public static Node newNumber(double number, int lineno, int charno); public static Node newString(String str); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

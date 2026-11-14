@@ -1,0 +1,152 @@
+{
+ "bug_name": "Closure_149",
+ "call_sites": [
+  {
+   "line": 507,
+   "lines": [
+    502,
+    503,
+    504,
+    505,
+    506,
+    507,
+    508,
+    509,
+    510,
+    511,
+    512
+   ],
+   "path": "src/com/google/javascript/jscomp/AbstractCommandLineRunner.java",
+   "snippet": "   * @return system exit status\n   */\n  protected int doRun() throws FlagUsageException, IOException {\n    Compiler.setLoggingLevel(Level.parse(config.loggingLevel));\n\n    List<JSSourceFile> externsList = createExterns();\n    JSSourceFile[] externs = new JSSourceFile[externsList.size()];\n    externsList.toArray(externs);\n\n    compiler = createCompiler();\n    B options = createOptions();"
+  },
+  {
+   "line": 483,
+   "lines": [
+    478,
+    479,
+    480,
+    481,
+    482,
+    483,
+    484,
+    485,
+    486,
+    487,
+    488
+   ],
+   "path": "src/com/google/javascript/jscomp/CommandLineRunner.java",
+   "snippet": "  }\n\n  @Override\n  protected List<JSSourceFile> createExterns() throws FlagUsageException,\n      IOException {\n    List<JSSourceFile> externs = super.createExterns();\n    if (!flags.use_only_custom_externs) {\n      List<JSSourceFile> defaultExterns = getDefaultExterns();\n      defaultExterns.addAll(externs);\n      return defaultExterns;\n    } else {"
+  }
+ ],
+ "class_simple": "AbstractCommandLineRunner",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Implementations of AbstractCommandLineRunner translate flags into Java\n * API calls on the Compiler. AbstractCompiler contains common flags and logic\n * to make that happen.\n *\n * This class may be extended and used to create other Java classes\n * that behave the same as running the Compiler from the command line. Example:\n *\n * <pre>\n * class MyCommandLineRunner extends\n *     AbstractCommandLineRunner<MyCompiler, MyOptions> {\n *   MyCommandLineRunner(String[] args) {\n *     super(args);\n *   }\n *\n *   &#064;Override\n *   protected MyOptions createOptions() {\n *     MyOptions options = new MyOptions();\n *     CompilerFlagTranslator.setOptionsFromFlags(options);\n *     addMyCrazyCompilerPassThatOutputsAnExtraFile(options);\n *     return options;\n *   }\n *\n *   &#064;Override\n *   protected MyCompiler createCompiler() {\n *     return new MyCompiler();\n *   }\n *\n *   public static void main(String[] args) {\n *     (new MyCommandLineRunner(args)).run();\n *   }\n * }\n * </pre>\n *\n * @author bolinfest@google.com (Michael Bolin)\n */\nabstract",
+  "method_javadoc": "/**\n   * Query the flag for the output charset.\n   *\n   * Let the outputCharset be the same as the input charset... except if\n   * we're reading in UTF-8 by default.  By tradition, we've always\n   * output ASCII to avoid various hiccups with different browsers,\n   * proxies and firewalls.\n   *\n   * @return Name of the charset to use when writing outputs. Guaranteed to\n   *    be a supported charset.\n   * @throws FlagUsageException if flag is not a valid Charset name.\n   */"
+ },
+ "fields": [
+  "private final CommandLineConfig config",
+  "private Appendable out",
+  "private final PrintStream err",
+  "private A compiler",
+  "private static Charset inputCharset",
+  "private static final int NUM_RUNS_TO_DETERMINE_OPTIMAL_ORDER",
+  "private final RunTimeStats runTimeStats"
+ ],
+ "focal_class": "com.google.javascript.jscomp.AbstractCommandLineRunner",
+ "focal_id": "Closure_149::com.google.javascript.jscomp.AbstractCommandLineRunner::createExterns()",
+ "focal_method_name": "createExterns",
+ "generations": 3,
+ "impl_B": "protected List<JSSourceFile> createExterns() throws FlagUsageException,\n      IOException {\n    return createExternInputs(config.externs);\n  }",
+ "imports": [
+  "com.google.common.annotations.VisibleForTesting",
+  "com.google.common.base.Charsets",
+  "com.google.common.base.Joiner",
+  "com.google.common.base.Preconditions",
+  "com.google.common.collect.ImmutableList",
+  "com.google.common.collect.Lists",
+  "com.google.common.collect.Maps",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.TokenStream",
+  "com.google.protobuf.CodedOutputStream",
+  "java.io.BufferedWriter",
+  "java.io.File",
+  "java.io.FileOutputStream",
+  "java.io.FileWriter",
+  "java.io.IOException",
+  "java.io.OutputStreamWriter",
+  "java.io.PrintStream",
+  "java.io.Writer",
+  "java.nio.charset.Charset",
+  "java.util.ArrayList",
+  "java.util.Collections",
+  "java.util.List",
+  "java.util.Map",
+  "java.util.logging.Level"
+ ],
+ "javadoc_edited_by_fix": true,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [
+  {
+   "javadoc": "/**\n   * Get the command line config, so that it can be initialized.\n   */",
+   "name": "getCommandLineConfig"
+  },
+  {
+   "javadoc": "/**\n   * Returns the instance of the Compiler to use when {@link #run()} is\n   * called.\n   */",
+   "name": "createCompiler"
+  },
+  {
+   "javadoc": "/**\n   * Returns the instance of the Options to use when {@link #run()} is called.\n   * createCompiler() is called before createOptions(), so getCompiler()\n   * will not return null when createOptions() is called.\n   */",
+   "name": "createOptions"
+  },
+  {
+   "javadoc": "",
+   "name": "getDiagnosticGroups"
+  },
+  {
+   "javadoc": "/** No longer does anything. */",
+   "name": "initOptionsFromFlags"
+  },
+  {
+   "javadoc": "/**\n   * Sets options based on the configurations set flags API.\n   * Called during the run() run() method.\n   * If you want to ignore the flags API, or intepret flags your own way,\n   * then you should override this method.\n   */",
+   "name": "setRunOptions"
+  },
+  {
+   "javadoc": "",
+   "name": "getCompiler"
+  },
+  {
+   "javadoc": "/**\n   * Runs the Compiler and calls exit() with the exit status of the\n   * compiler. By default, exit() is just System.exit().\n   */",
+   "name": "run"
+  },
+  {
+   "javadoc": "/**\n   * Returns the PrintStream for writing errors associated with this\n   * AbstractCommandLineRunner.\n   */",
+   "name": "getErrorPrintStream"
+  },
+  {
+   "javadoc": "/**\n   * Parses command-line arguments and runs the compiler.\n   *\n   * @return system exit status\n   */",
+   "name": "doRun"
+  }
+ ],
+ "sig": {
+  "class_declaration": "abstract class AbstractCommandLineRunner<A extends Compiler, B extends CompilerOptions>",
+  "constructors": [],
+  "focal_signature": "protected List<JSSourceFile> createExterns() throws FlagUsageException, IOException",
+  "methods": [
+   "protected CommandLineConfig getCommandLineConfig();",
+   "protected abstract A createCompiler();",
+   "protected abstract B createOptions();",
+   "protected DiagnosticGroups getDiagnosticGroups();",
+   "protected void initOptionsFromFlags(CompilerOptions options);",
+   "final protected void setRunOptions(CompilerOptions options) throws FlagUsageException, IOException;",
+   "final protected A getCompiler();",
+   "final public void run();",
+   "protected PrintStream getErrorPrintStream();",
+   "protected int doRun() throws FlagUsageException, IOException;"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "F2"
+}

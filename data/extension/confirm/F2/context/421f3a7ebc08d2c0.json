@@ -1,0 +1,205 @@
+{
+ "bug_name": "JacksonDatabind_97",
+ "call_sites": [
+  {
+   "line": 903,
+   "lines": [
+    898,
+    899,
+    900,
+    901,
+    902,
+    903,
+    904,
+    905,
+    906,
+    907,
+    908
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectWriter.java",
+   "snippet": "        if (_config.isEnabled(SerializationFeature.CLOSE_CLOSEABLE)\n                && (value instanceof Closeable)) {\n\n            Closeable toClose = (Closeable) value;\n            try {\n                _prefetch.serialize(gen, value, _serializerProvider());\n                if (_config.isEnabled(SerializationFeature.FLUSH_AFTER_WRITE_VALUE)) {\n                    gen.flush();\n                }\n            } catch (Exception e) {\n                ClassUtil.closeOnFailAndThrowAsIOE(null, toClose, e);"
+  },
+  {
+   "line": 913,
+   "lines": [
+    908,
+    909,
+    910,
+    911,
+    912,
+    913,
+    914,
+    915,
+    916,
+    917,
+    918
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectWriter.java",
+   "snippet": "                ClassUtil.closeOnFailAndThrowAsIOE(null, toClose, e);\n                return;\n            }\n            toClose.close();\n        } else {\n            _prefetch.serialize(gen, value, _serializerProvider());\n            if (_config.isEnabled(SerializationFeature.FLUSH_AFTER_WRITE_VALUE)) {\n                gen.flush();\n            }\n        }\n    }"
+  },
+  {
+   "line": 1120,
+   "lines": [
+    1115,
+    1116,
+    1117,
+    1118,
+    1119,
+    1120,
+    1121,
+    1122,
+    1123,
+    1124,
+    1125
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectWriter.java",
+   "snippet": "        if (_config.isEnabled(SerializationFeature.CLOSE_CLOSEABLE) && (value instanceof Closeable)) {\n            _writeCloseable(gen, value);\n            return;\n        }\n        try {\n            _prefetch.serialize(gen, value, _serializerProvider());\n        } catch (Exception e) {\n            ClassUtil.closeOnFailAndThrowAsIOE(gen, e);\n            return;\n        }\n        gen.close();"
+  },
+  {
+   "line": 1137,
+   "lines": [
+    1132,
+    1133,
+    1134,
+    1135,
+    1136,
+    1137,
+    1138,
+    1139,
+    1140,
+    1141,
+    1142
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/ObjectWriter.java",
+   "snippet": "    private final void _writeCloseable(JsonGenerator gen, Object value)\n        throws IOException\n    {\n        Closeable toClose = (Closeable) value;\n        try {\n            _prefetch.serialize(gen, value, _serializerProvider());\n            Closeable tmpToClose = toClose;\n            toClose = null;\n            tmpToClose.close();\n        } catch (Exception e) {\n            ClassUtil.closeOnFailAndThrowAsIOE(gen, toClose, e);"
+  },
+  {
+   "line": 1029,
+   "lines": [
+    1024,
+    1025,
+    1026,
+    1027,
+    1028,
+    1029,
+    1030,
+    1031,
+    1032,
+    1033,
+    1034
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/SerializerProvider.java",
+   "snippet": "    {\n        if (value == null) {\n            if (_stdNullValueSerializer) { // minor perf optimization\n                gen.writeNull();\n            } else {\n                _nullValueSerializer.serialize(null, gen, this);\n            }\n        } else {\n            Class<?> cls = value.getClass();\n            findTypedValueSerializer(cls, true, null).serialize(value, gen, this);\n        }"
+  }
+ ],
+ "class_simple": "POJONode",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * Value node that contains a wrapped POJO, to be serialized as\n * a JSON constructed through data mapping (usually done by\n * calling {@link com.fasterxml.jackson.databind.ObjectMapper}).\n */\npublic",
+  "method_javadoc": "/**********************************************************\n     */"
+ },
+ "fields": [
+  "protected final Object _value"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.node.POJONode",
+ "focal_id": "JacksonDatabind_97::com.fasterxml.jackson.databind.node.POJONode::serialize(JsonGenerator,SerializerProvider)",
+ "focal_method_name": "serialize",
+ "generations": 3,
+ "impl_B": "@Override\n    public final void serialize(JsonGenerator gen, SerializerProvider ctxt) throws IOException\n    {\n        if (_value == null) {\n            ctxt.defaultSerializeNull(gen);\n        } else if (_value instanceof JsonSerializable) {\n            ((JsonSerializable) _value).serialize(gen, ctxt);\n        } else {\n            // 25-May-2018, tatu: [databind#1991] do not call via generator but through context;\n            //    this to preserve contextual information\n            gen.writeObject(_value);\n        }\n    }",
+ "imports": [
+  "java.io.IOException",
+  "com.fasterxml.jackson.core.*",
+  "com.fasterxml.jackson.databind.JsonSerializable",
+  "com.fasterxml.jackson.databind.SerializerProvider",
+  "com.fasterxml.jackson.databind.util.RawValue"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.node",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "getNodeType"
+  },
+  {
+   "javadoc": "",
+   "name": "asToken"
+  },
+  {
+   "javadoc": "/**\n     * As it is possible that some implementations embed byte[] as POJONode\n     * (despite optimal being {@link BinaryNode}), let's add support for exposing\n     * binary data here too.\n     */",
+   "name": "binaryValue"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "asText"
+  },
+  {
+   "javadoc": "",
+   "name": "asText"
+  },
+  {
+   "javadoc": "",
+   "name": "asBoolean"
+  },
+  {
+   "javadoc": "",
+   "name": "asInt"
+  },
+  {
+   "javadoc": "",
+   "name": "asLong"
+  },
+  {
+   "javadoc": "",
+   "name": "asDouble"
+  },
+  {
+   "javadoc": "/**\n     * Method that can be used to access the POJO this node wraps.\n     */",
+   "name": "getPojo"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "equals"
+  },
+  {
+   "javadoc": "/**\n     * @since 2.3\n     */",
+   "name": "_pojoEquals"
+  },
+  {
+   "javadoc": "",
+   "name": "hashCode"
+  },
+  {
+   "javadoc": "",
+   "name": "toString"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class POJONode extends ValueNode",
+  "constructors": [
+   "public POJONode(Object v);"
+  ],
+  "focal_signature": "public final void serialize(JsonGenerator gen, SerializerProvider ctxt) throws IOException",
+  "methods": [
+   "public JsonNodeType getNodeType();",
+   "public JsonToken asToken();",
+   "public byte[] binaryValue() throws IOException;",
+   "public String asText();",
+   "public String asText(String defaultValue);",
+   "public boolean asBoolean(boolean defaultValue);",
+   "public int asInt(int defaultValue);",
+   "public long asLong(long defaultValue);",
+   "public double asDouble(double defaultValue);",
+   "public Object getPojo();",
+   "public boolean equals(Object o);",
+   "protected boolean _pojoEquals(POJONode other);",
+   "public int hashCode();",
+   "public String toString();"
+  ],
+  "type_signatures": [
+   "public abstract class SerializerProvider extends DatabindContext { public SerializerProvider(); protected SerializerProvider(SerializerProvider src, SerializationConfig config, SerializerFactory f); protected SerializerProvider(SerializerProvider src); public void setDefaultKeySerializer(JsonSerializer<Object> ks); public void setNullValueSerializer(JsonSerializer<Object> nvs); public void setNullKeySerializer(JsonSerializer<Object> nks); public final SerializationConfig getConfig(); public final AnnotationIntrospector getAnnotationIntrospector(); public final TypeFactory getTypeFactory(); public final Class<?> getActiveView(); public final Class<?> getSerializationView(); public final boolean canOverrideAccessModifiers(); public final boolean isEnabled(MapperFeature feature); public final JsonFormat.Value getDefaultPropertyFormat(Class<?> baseType); public final JsonInclude.Value getDefaultPropertyInclusion(Class<?> baseType); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

@@ -1,0 +1,163 @@
+{
+ "base_focal_id": "JacksonDatabind_80::com.fasterxml.jackson.databind.jsontype.impl.StdSubtypeResolver::collectAndResolveSubtypesByTypeId(MapperConfig<?>,AnnotatedMember,JavaType)",
+ "bug_name": "JacksonDatabind_80",
+ "call_sites": [
+  {
+   "line": 769,
+   "lines": [
+    764,
+    765,
+    766,
+    767,
+    768,
+    769,
+    770,
+    771,
+    772,
+    773,
+    774
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/DeserializationConfig.java",
+   "snippet": "            b = getDefaultTyper(baseType);\n            if (b == null) {\n                return null;\n            }\n        } else {\n            subtypes = getSubtypeResolver().collectAndResolveSubtypesByTypeId(this, ac);\n        }\n        /* 04-May-2014, tatu: When called from DeserializerFactory, additional code like\n         *   this is invoked. But here we do not actually have access to mappings, so not\n         *   quite sure what to do, if anything. May need to revisit if the underlying\n         *   problem re-surfaces..."
+  },
+  {
+   "line": 1384,
+   "lines": [
+    1379,
+    1380,
+    1381,
+    1382,
+    1383,
+    1384,
+    1385,
+    1386,
+    1387,
+    1388,
+    1389
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java",
+   "snippet": "            b = config.getDefaultTyper(baseType);\n            if (b == null) {\n                return null;\n            }\n        } else {\n            subtypes = config.getSubtypeResolver().collectAndResolveSubtypesByTypeId(config, ac);\n        }\n        // May need to figure out default implementation, if none found yet\n        // (note: check for abstract type is not 100% mandatory, more of an optimization)\n        if ((b.getDefaultImpl() == null) && baseType.isAbstract()) {\n            JavaType defaultType = mapAbstractType(config, baseType);"
+  },
+  {
+   "line": 1531,
+   "lines": [
+    1526,
+    1527,
+    1528,
+    1529,
+    1530,
+    1531,
+    1532,
+    1533,
+    1534,
+    1535,
+    1536
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java",
+   "snippet": "        // Defaulting: if no annotations on member, check value class\n        if (b == null) {\n            return findTypeDeserializer(config, baseType);\n        }\n        // but if annotations found, may need to resolve subtypes:\n        Collection<NamedType> subtypes = config.getSubtypeResolver().collectAndResolveSubtypesByTypeId(\n                config, annotated, baseType);\n        return b.buildTypeDeserializer(config, baseType, subtypes);\n    }\n    \n    /**"
+  },
+  {
+   "line": 1559,
+   "lines": [
+    1554,
+    1555,
+    1556,
+    1557,
+    1558,
+    1559,
+    1560,
+    1561,
+    1562,
+    1563,
+    1564
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java",
+   "snippet": "        // Defaulting: if no annotations on member, check class\n        if (b == null) {\n            return findTypeDeserializer(config, contentType);\n        }\n        // but if annotations found, may need to resolve subtypes:\n        Collection<NamedType> subtypes = config.getSubtypeResolver().collectAndResolveSubtypesByTypeId(\n                config, propertyEntity, contentType);\n        return b.buildTypeDeserializer(config, contentType, subtypes);\n    }\n\n    /**"
+  }
+ ],
+ "class_simple": "StdSubtypeResolver",
+ "dataset": "D2",
+ "doc": {
+  "class_javadoc": "/**\n * Standard {@link SubtypeResolver} implementation.\n */\npublic",
+  "method_javadoc": "/**********************************************************\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "protected LinkedHashSet<NamedType> _registeredSubtypes"
+ ],
+ "focal_class": "com.fasterxml.jackson.databind.jsontype.impl.StdSubtypeResolver",
+ "focal_id": "JacksonDatabind_80::com.fasterxml.jackson.databind.jsontype.impl.StdSubtypeResolver::collectAndResolveSubtypesByTypeId(MapperConfig<?>,AnnotatedMember,JavaType)#m25",
+ "focal_method_name": "collectAndResolveSubtypesByTypeId",
+ "impl_B": "@Override\n    public Collection<NamedType> collectAndResolveSubtypesByTypeId(MapperConfig<?> config, \n            AnnotatedMember property, JavaType baseType)\n    {\n        final AnnotationIntrospector ai = config.getAnnotationIntrospector();\n        Class<?> rawBase = baseType.getRawClass();\n\n        // Need to keep track of classes that have been handled already \n        Set<Class<?>> typesHandled = new HashSet<Class<?>>();\n        Map<String,NamedType> byName = new LinkedHashMap<String,NamedType>();\n\n        // start with lowest-precedence, which is from type hierarchy\n        NamedType rootType = new NamedType(rawBase, null);\n        AnnotatedClass ac = AnnotatedClassResolver.resolveWithoutSuperTypes(config,\n                rawBase);\n        ;\n        \n        // then with definitions from property\n        if (property != null) {\n            Collection<NamedType> st = ai.findSubtypes(property);\n            if (st != null) {\n                for (NamedType nt : st) {\n                    ac = AnnotatedClassResolver.resolveWithoutSuperTypes(config, nt.getType());\n                    _collectAndResolveByTypeId(ac, nt, config, typesHandled, byName);\n                }            \n            }\n        }\n        // and finally explicit type registrations (highest precedence)\n        if (_registeredSubtypes != null) {\n            for (NamedType subtype : _registeredSubtypes) {\n                // is it a subtype of root type?\n                if (rawBase.isAssignableFrom(subtype.getType())) { // yes\n                    AnnotatedClass curr = AnnotatedClassResolver.resolveWithoutSuperTypes(config,\n                            subtype.getType());\n                    _collectAndResolveByTypeId(curr, subtype, config, typesHandled, byName);\n                }\n            }\n        }\n        return _combineNamedAndUnnamed(rawBase, typesHandled, byName);\n    }",
+ "imports": [
+  "java.lang.reflect.Modifier",
+  "java.util.*",
+  "com.fasterxml.jackson.databind.AnnotationIntrospector",
+  "com.fasterxml.jackson.databind.JavaType",
+  "com.fasterxml.jackson.databind.cfg.MapperConfig",
+  "com.fasterxml.jackson.databind.introspect.*",
+  "com.fasterxml.jackson.databind.jsontype.NamedType",
+  "com.fasterxml.jackson.databind.jsontype.SubtypeResolver"
+ ],
+ "javadoc_edited_by_fix": false,
+ "mutant_id": 25,
+ "operator": "STD",
+ "package": "com.fasterxml.jackson.databind.jsontype.impl",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "registerSubtypes"
+  },
+  {
+   "javadoc": "",
+   "name": "registerSubtypes"
+  },
+  {
+   "javadoc": "/**********************************************************\n     */",
+   "name": "collectAndResolveSubtypesByClass"
+  },
+  {
+   "javadoc": "",
+   "name": "collectAndResolveSubtypesByClass"
+  },
+  {
+   "javadoc": "",
+   "name": "collectAndResolveSubtypesByTypeId"
+  },
+  {
+   "javadoc": "/**\n     * Method called to find subtypes for a specific type (class), using\n     * type (class) as the unique key (in case of conflicts).\n     */",
+   "name": "_collectAndResolve"
+  },
+  {
+   "javadoc": "/**\n     * Method called to find subtypes for a specific type (class), using\n     * type id as the unique key (in case of conflicts).\n     */",
+   "name": "_collectAndResolveByTypeId"
+  },
+  {
+   "javadoc": "/**\n     * Helper method used for merging explicitly named types and handled classes\n     * without explicit names.\n     */",
+   "name": "_combineNamedAndUnnamed"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class StdSubtypeResolver extends SubtypeResolver implements java.io.Serializable",
+  "constructors": [
+   "public StdSubtypeResolver();"
+  ],
+  "focal_signature": "public Collection<NamedType> collectAndResolveSubtypesByTypeId(MapperConfig<?> config, AnnotatedMember property, JavaType baseType)",
+  "methods": [
+   "public void registerSubtypes(NamedType... types);",
+   "public void registerSubtypes(Class<?>... classes);",
+   "public Collection<NamedType> collectAndResolveSubtypesByClass(MapperConfig<?> config, AnnotatedMember property, JavaType baseType);",
+   "public Collection<NamedType> collectAndResolveSubtypesByClass(MapperConfig<?> config, AnnotatedClass type);",
+   "public Collection<NamedType> collectAndResolveSubtypesByTypeId(MapperConfig<?> config, AnnotatedClass baseType);",
+   "protected void _collectAndResolve(AnnotatedClass annotatedType, NamedType namedType, MapperConfig<?> config, AnnotationIntrospector ai, HashMap<NamedType, NamedType> collectedSubtypes);",
+   "protected void _collectAndResolveByTypeId(AnnotatedClass annotatedType, NamedType namedType, MapperConfig<?> config, Set<Class<?>> typesHandled, Map<String,NamedType> byName);",
+   "protected Collection<NamedType> _combineNamedAndUnnamed(Class<?> rawBase, Set<Class<?>> typesHandled, Map<String,NamedType> byName);"
+  ],
+  "type_signatures": [
+   "public abstract class MapperConfig<T extends MapperConfig<T>> implements ClassIntrospector.MixInResolver, java.io.Serializable { protected MapperConfig(BaseSettings base, int mapperFeatures); protected MapperConfig(MapperConfig<T> src, int mapperFeatures); protected MapperConfig(MapperConfig<T> src, BaseSettings base); protected MapperConfig(MapperConfig<T> src); public static <F extends Enum<F> & ConfigFeature> int collectFeatureDefaults(Class<F> enumClass); public abstract T with(MapperFeature... features); public abstract T without(MapperFeature... features); public abstract T with(MapperFeature feature, boolean state); public final boolean isEnabled(MapperFeature f); public final boolean hasMapperFeatures(int featureMask); public final boolean isAnnotationProcessingEnabled(); public final boolean canOverrideAccessModifiers(); public final boolean shouldSortPropertiesAlphabetically(); public abstract boolean useRootWrapping(); public SerializableString compileString(String src); }",
+   "public abstract class JavaType extends ResolvedType implements java.io.Serializable, java.lang.reflect.Type { protected JavaType(Class<?> raw, int additionalHash, Object valueHandler, Object typeHandler, boolean asStatic); protected JavaType(JavaType base); public abstract JavaType withTypeHandler(Object h); public abstract JavaType withContentTypeHandler(Object h); public abstract JavaType withValueHandler(Object h); public abstract JavaType withContentValueHandler(Object h); public JavaType withHandlersFrom(JavaType src); public abstract JavaType withContentType(JavaType contentType); public abstract JavaType withStaticTyping(); public abstract JavaType refine(Class<?> rawType, TypeBindings bindings, JavaType superClass, JavaType[] superInterfaces); public JavaType forcedNarrowBy(Class<?> subclass); // since 2.7 protected abstract JavaType _narrow(Class<?> subclass); public final Class<?> getRawClass(); public final boolean hasRawClass(Class<?> clz); public boolean hasContentType(); }"
+  ]
+ },
+ "split": "test"
+}

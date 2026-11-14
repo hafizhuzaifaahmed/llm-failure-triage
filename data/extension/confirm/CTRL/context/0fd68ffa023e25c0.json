@@ -1,0 +1,170 @@
+{
+ "bug_name": "Math_61",
+ "call_sites": [
+  {
+   "line": 102,
+   "lines": [
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107
+   ],
+   "path": "src/main/java/org/apache/commons/math/distribution/AbstractContinuousDistribution.java",
+   "snippet": "        UnivariateRealFunction rootFindingFunction =\n            new UnivariateRealFunction() {\n            public double value(double x) throws FunctionEvaluationException {\n                double ret = Double.NaN;\n                try {\n                    ret = cumulativeProbability(x) - p;\n                } catch (MathException ex) {\n                    throw new FunctionEvaluationException(ex, x, ex.getLocalizablePattern(), ex.getArguments());\n                }\n                if (Double.isNaN(ret)) {\n                    throw new FunctionEvaluationException(x,"
+  },
+  {
+   "line": 67,
+   "lines": [
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70
+   ],
+   "path": "src/main/java/org/apache/commons/math/distribution/AbstractDistribution.java",
+   "snippet": "        if (x0 > x1) {\n            throw MathRuntimeException.createIllegalArgumentException(\n                  LocalizedFormats.LOWER_ENDPOINT_ABOVE_UPPER_ENDPOINT,\n                  x0, x1);\n        }\n        return cumulativeProbability(x1) - cumulativeProbability(x0);\n    }\n}\n"
+  },
+  {
+   "line": 67,
+   "lines": [
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70
+   ],
+   "path": "src/main/java/org/apache/commons/math/distribution/AbstractDistribution.java",
+   "snippet": "        if (x0 > x1) {\n            throw MathRuntimeException.createIllegalArgumentException(\n                  LocalizedFormats.LOWER_ENDPOINT_ABOVE_UPPER_ENDPOINT,\n                  x0, x1);\n        }\n        return cumulativeProbability(x1) - cumulativeProbability(x0);\n    }\n}\n"
+  },
+  {
+   "line": 71,
+   "lines": [
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76
+   ],
+   "path": "src/main/java/org/apache/commons/math/distribution/AbstractIntegerDistribution.java",
+   "snippet": "     * distribution takes a value less than or equal to <code>x</code>\n     * @throws MathException if the cumulative probability can not be\n     * computed due to convergence or other numerical errors.\n     */\n    public double cumulativeProbability(double x) throws MathException {\n        return cumulativeProbability((int) FastMath.floor(x));\n    }\n\n    /**\n     * For a random variable X whose values are distributed according\n     * to this distribution, this method returns P(x0 &le; X &le; x1)."
+  },
+  {
+   "line": 95,
+   "lines": [
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100
+   ],
+   "path": "src/main/java/org/apache/commons/math/distribution/AbstractIntegerDistribution.java",
+   "snippet": "        if (x0 > x1) {\n            throw MathRuntimeException.createIllegalArgumentException(\n                  LocalizedFormats.LOWER_ENDPOINT_ABOVE_UPPER_ENDPOINT, x0, x1);\n        }\n        if (FastMath.floor(x0) < x0) {\n            return cumulativeProbability(((int) FastMath.floor(x0)) + 1,\n               (int) FastMath.floor(x1)); // don't want to count mass below x0\n        } else { // x0 is mathematical integer, so use as is\n            return cumulativeProbability((int) FastMath.floor(x0),\n                (int) FastMath.floor(x1));\n        }"
+  }
+ ],
+ "class_simple": "PoissonDistributionImpl",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Implementation for the {@link PoissonDistribution}.\n *\n * @version $Revision$ $Date$\n */\npublic",
+  "method_javadoc": "/**\n     * The probability distribution function P(X <= x) for a Poisson\n     * distribution.\n     *\n     * @param x the value at which the PDF is evaluated.\n     * @return Poisson distribution function evaluated at x\n     * @throws MathException if the cumulative probability can not be computed\n     *             due to convergence or other numerical errors.\n     */"
+ },
+ "fields": [
+  "public static final int DEFAULT_MAX_ITERATIONS",
+  "public static final double DEFAULT_EPSILON",
+  "private static final long serialVersionUID",
+  "private NormalDistribution normal",
+  "private double mean",
+  "private int maxIterations",
+  "private double epsilon"
+ ],
+ "focal_class": "org.apache.commons.math.distribution.PoissonDistributionImpl",
+ "focal_id": "Math_61::org.apache.commons.math.distribution.PoissonDistributionImpl::cumulativeProbability(int)",
+ "focal_method_name": "cumulativeProbability",
+ "generations": 3,
+ "impl_B": "@Override\n    public double cumulativeProbability(int x) throws MathException {\n        if (x < 0) {\n            return 0;\n        }\n        if (x == Integer.MAX_VALUE) {\n            return 1;\n        }\n        return Gamma.regularizedGammaQ((double) x + 1, mean, epsilon, maxIterations);\n    }",
+ "imports": [
+  "java.io.Serializable",
+  "org.apache.commons.math.MathException",
+  "org.apache.commons.math.MathRuntimeException",
+  "org.apache.commons.math.exception.util.LocalizedFormats",
+  "org.apache.commons.math.special.Gamma",
+  "org.apache.commons.math.util.MathUtils",
+  "org.apache.commons.math.util.FastMath"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math.distribution",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Get the Poisson mean for the distribution.\n     *\n     * @return the Poisson mean for the distribution.\n     */",
+   "name": "getMean"
+  },
+  {
+   "javadoc": "/**\n     * The probability mass function P(X = x) for a Poisson distribution.\n     *\n     * @param x the value at which the probability density function is\n     *            evaluated.\n     * @return the value of the probability mass function at x\n     */",
+   "name": "probability"
+  },
+  {
+   "javadoc": "/**\n     * Calculates the Poisson distribution function using a normal\n     * approximation. The <code>N(mean, sqrt(mean))</code> distribution is used\n     * to approximate the Poisson distribution.\n     * <p>\n     * The computation uses \"half-correction\" -- evaluating the normal\n     * distribution function at <code>x + 0.5</code>\n     * </p>\n     *\n     * @param x the upper bound, inclusive\n     * @return the distribution function value calculated using a normal\n     *         approximation\n     * @throws MathException if an error occurs computing the normal\n     *             approximation\n     */",
+   "name": "normalApproximateProbability"
+  },
+  {
+   "javadoc": "/**\n     * Generates a random value sampled from this distribution.\n     *\n     * <p><strong>Algorithm Description</strong>:\n     * <ul><li> For small means, uses simulation of a Poisson process\n     * using Uniform deviates, as described\n     * <a href=\"http://irmi.epfl.ch/cmos/Pmmi/interactive/rng7.htm\"> here.</a>\n     * The Poisson process (and hence value returned) is bounded by 1000 * mean.</li><\n     *\n     * <li> For large means, uses the rejection algorithm described in <br/>\n     * Devroye, Luc. (1981).<i>The Computer Generation of Poisson Random Variables</i>\n     * <strong>Computing</strong> vol. 26 pp. 197-207.</li></ul></p>\n     *\n     * @return random value\n     * @since 2.2\n     * @throws MathException if an error occurs generating the random value\n     */",
+   "name": "sample"
+  },
+  {
+   "javadoc": "/**\n     * Access the domain value lower bound, based on <code>p</code>, used to\n     * bracket a CDF root. This method is used by\n     * {@link #inverseCumulativeProbability(double)} to find critical values.\n     *\n     * @param p the desired probability for the critical value\n     * @return domain lower bound\n     */",
+   "name": "getDomainLowerBound"
+  },
+  {
+   "javadoc": "/**\n     * Access the domain value upper bound, based on <code>p</code>, used to\n     * bracket a CDF root. This method is used by\n     * {@link #inverseCumulativeProbability(double)} to find critical values.\n     *\n     * @param p the desired probability for the critical value\n     * @return domain upper bound\n     */",
+   "name": "getDomainUpperBound"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class PoissonDistributionImpl extends AbstractIntegerDistribution implements PoissonDistribution, Serializable",
+  "constructors": [
+   "public PoissonDistributionImpl(double p);",
+   "public PoissonDistributionImpl(double p, double epsilon, int maxIterations);",
+   "public PoissonDistributionImpl(double p, double epsilon);",
+   "public PoissonDistributionImpl(double p, int maxIterations);"
+  ],
+  "focal_signature": "public double cumulativeProbability(int x) throws MathException",
+  "methods": [
+   "public double getMean();",
+   "public double probability(int x);",
+   "public double normalApproximateProbability(int x) throws MathException;",
+   "public int sample() throws MathException;",
+   "protected int getDomainLowerBound(double p);",
+   "protected int getDomainUpperBound(double p);"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

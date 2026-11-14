@@ -1,0 +1,320 @@
+{
+ "base_focal_id": "Chart_21::org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset::add(BoxAndWhiskerItem,Comparable,Comparable)",
+ "bug_name": "Chart_21",
+ "call_sites": [
+  {
+   "line": 2254,
+   "lines": [
+    2249,
+    2250,
+    2251,
+    2252,
+    2253,
+    2254,
+    2255,
+    2256,
+    2257,
+    2258,
+    2259
+   ],
+   "path": "source/org/jfree/chart/ChartPanel.java",
+   "snippet": "     */\n    public void addChartMouseListener(ChartMouseListener listener) {\n        if (listener == null) {\n            throw new IllegalArgumentException(\"Null 'listener' argument.\");\n        }\n        this.chartMouseListeners.add(ChartMouseListener.class, listener);\n    }\n\n    /**\n     * Removes a listener from the list of objects listening for chart mouse \n     * events."
+  },
+  {
+   "line": 2308,
+   "lines": [
+    2303,
+    2304,
+    2305,
+    2306,
+    2307,
+    2308,
+    2309,
+    2310,
+    2311,
+    2312,
+    2313
+   ],
+   "path": "source/org/jfree/chart/ChartPanel.java",
+   "snippet": "        if (properties) {\n            JMenuItem propertiesItem = new JMenuItem(\n                    localizationResources.getString(\"Properties...\"));\n            propertiesItem.setActionCommand(PROPERTIES_COMMAND);\n            propertiesItem.addActionListener(this);\n            result.add(propertiesItem);\n            separator = true;\n        }\n\n        if (save) {\n            if (separator) {"
+  },
+  {
+   "line": 2321,
+   "lines": [
+    2316,
+    2317,
+    2318,
+    2319,
+    2320,
+    2321,
+    2322,
+    2323,
+    2324,
+    2325,
+    2326
+   ],
+   "path": "source/org/jfree/chart/ChartPanel.java",
+   "snippet": "            }\n            JMenuItem saveItem = new JMenuItem(\n                    localizationResources.getString(\"Save_as...\"));\n            saveItem.setActionCommand(SAVE_COMMAND);\n            saveItem.addActionListener(this);\n            result.add(saveItem);\n            separator = true;\n        }\n\n        if (print) {\n            if (separator) {"
+  },
+  {
+   "line": 2334,
+   "lines": [
+    2329,
+    2330,
+    2331,
+    2332,
+    2333,
+    2334,
+    2335,
+    2336,
+    2337,
+    2338,
+    2339
+   ],
+   "path": "source/org/jfree/chart/ChartPanel.java",
+   "snippet": "            }\n            JMenuItem printItem = new JMenuItem(\n                    localizationResources.getString(\"Print...\"));\n            printItem.setActionCommand(PRINT_COMMAND);\n            printItem.addActionListener(this);\n            result.add(printItem);\n            separator = true;\n        }\n\n        if (zoom) {\n            if (separator) {"
+  },
+  {
+   "line": 2351,
+   "lines": [
+    2346,
+    2347,
+    2348,
+    2349,
+    2350,
+    2351,
+    2352,
+    2353,
+    2354,
+    2355,
+    2356
+   ],
+   "path": "source/org/jfree/chart/ChartPanel.java",
+   "snippet": "\n            this.zoomInBothMenuItem = new JMenuItem(\n                    localizationResources.getString(\"All_Axes\"));\n            this.zoomInBothMenuItem.setActionCommand(ZOOM_IN_BOTH_COMMAND);\n            this.zoomInBothMenuItem.addActionListener(this);\n            zoomInMenu.add(this.zoomInBothMenuItem);\n\n            zoomInMenu.addSeparator();\n\n            this.zoomInDomainMenuItem = new JMenuItem(\n                    localizationResources.getString(\"Domain_Axis\"));"
+  }
+ ],
+ "class_simple": "DefaultBoxAndWhiskerCategoryDataset",
+ "dataset": "D2",
+ "doc": {
+  "class_javadoc": "/**\n * A convenience class that provides a default implementation of the\n * {@link BoxAndWhiskerCategoryDataset} interface.\n */\npublic",
+  "method_javadoc": "/**\n     * Adds a list of values relating to one Box and Whisker entity to the \n     * table.  The various median values are calculated.\n     *\n     * @param item  a box and whisker item (<code>null</code> not permitted).\n     * @param rowKey  the row key (<code>null</code> not permitted).\n     * @param columnKey  the column key (<code>null</code> not permitted).\n     * \n     * @see #add(List, Comparable, Comparable)\n     */"
+ },
+ "fields": [
+  "protected KeyedObjects2D data",
+  "private double minimumRangeValue",
+  "private int minimumRangeValueRow",
+  "private int minimumRangeValueColumn",
+  "private double maximumRangeValue",
+  "private int maximumRangeValueRow",
+  "private int maximumRangeValueColumn",
+  "private Range rangeBounds"
+ ],
+ "focal_class": "org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset",
+ "focal_id": "Chart_21::org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset::add(BoxAndWhiskerItem,Comparable,Comparable)#m50",
+ "focal_method_name": "add",
+ "impl_B": "public void add(BoxAndWhiskerItem item, Comparable rowKey, \n            Comparable columnKey) {\n\n        this.data.addObject(item, rowKey, columnKey);\n        \n        // update cached min and max values\n        int r = this.data.getRowIndex(rowKey);\n        int c = this.data.getColumnIndex(columnKey);\n        if ((this.maximumRangeValueRow == r && this.maximumRangeValueColumn \n                == c) || (this.minimumRangeValueRow == r \n                && this.minimumRangeValueColumn == c))  {\n            updateBounds();\n        }\n        else {\n        \n            double minval = Double.NaN;\n            if (item.getMinOutlier() != null) {\n                minval = item.getMinOutlier().doubleValue();\n            }\n            double maxval = Double.NaN;\n            if (true) {\n                maxval = item.getMaxOutlier().doubleValue();\n            }\n        \n            if (Double.isNaN(this.maximumRangeValue)) {\n                this.maximumRangeValue = maxval;\n                this.maximumRangeValueRow = r;\n                this.maximumRangeValueColumn = c;\n            }\n            else if (maxval > this.maximumRangeValue) {\n                this.maximumRangeValue = maxval;\n                this.maximumRangeValueRow = r;\n                this.maximumRangeValueColumn = c;\n            }\n        \n            if (Double.isNaN(this.minimumRangeValue)) {\n                this.minimumRangeValue = minval;\n                this.minimumRangeValueRow = r;\n                this.minimumRangeValueColumn = c;\n            }\n            else if (minval < this.minimumRangeValue) {\n                this.minimumRangeValue = minval;\n                this.minimumRangeValueRow = r;\n                this.minimumRangeValueColumn = c;\n            }\n        }\n        \n        this.rangeBounds = new Range(this.minimumRangeValue,\n              this.maximumRangeValue);\n        fireDatasetChanged();\n\n    }",
+ "imports": [
+  "java.util.List",
+  "org.jfree.chart.util.ObjectUtilities",
+  "org.jfree.chart.util.PublicCloneable",
+  "org.jfree.data.KeyedObjects2D",
+  "org.jfree.data.Range",
+  "org.jfree.data.RangeInfo",
+  "org.jfree.data.general.AbstractDataset"
+ ],
+ "javadoc_edited_by_fix": false,
+ "mutant_id": 50,
+ "operator": "ROR",
+ "package": "org.jfree.data.statistics",
+ "project": "Chart",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Adds a list of values relating to one box-and-whisker entity to the \n     * table.  The various median values are calculated.\n     *\n     * @param list  a collection of values from which the various medians will \n     *              be calculated.\n     * @param rowKey  the row key (<code>null</code> not permitted).\n     * @param columnKey  the column key (<code>null</code> not permitted).\n     * \n     * @see #add(BoxAndWhiskerItem, Comparable, Comparable)\n     */",
+   "name": "add"
+  },
+  {
+   "javadoc": "/**\n     * Return an item from within the dataset.\n     * \n     * @param row  the row index.\n     * @param column  the column index.\n     * \n     * @return The item.\n     */",
+   "name": "getItem"
+  },
+  {
+   "javadoc": "/**\n     * Returns the value for an item.\n     *\n     * @param row  the row index.\n     * @param column  the column index.\n     *\n     * @return The value.\n     * \n     * @see #getMedianValue(int, int)\n     * @see #getValue(Comparable, Comparable)\n     */",
+   "name": "getValue"
+  },
+  {
+   "javadoc": "/**\n     * Returns the value for an item.\n     *\n     * @param rowKey  the row key.\n     * @param columnKey  the columnKey.\n     *\n     * @return The value.\n     * \n     * @see #getMedianValue(Comparable, Comparable)\n     * @see #getValue(int, int)\n     */",
+   "name": "getValue"
+  },
+  {
+   "javadoc": "/**\n     * Returns the mean value for an item.\n     * \n     * @param row  the row index (zero-based).\n     * @param column  the column index (zero-based).\n     * \n     * @return The mean value.\n     * \n     * @see #getItem(int, int)\n     */",
+   "name": "getMeanValue"
+  },
+  {
+   "javadoc": "/**\n     * Returns the mean value for an item.\n     * \n     * @param rowKey  the row key.\n     * @param columnKey  the column key.\n     * \n     * @return The mean value.\n     * \n     * @see #getItem(int, int)\n     */",
+   "name": "getMeanValue"
+  },
+  {
+   "javadoc": "/**\n     * Returns the median value for an item.\n     *\n     * @param row  the row index (zero-based).\n     * @param column  the column index (zero-based).\n     *\n     * @return The median value.\n     * \n     * @see #getItem(int, int)\n     */",
+   "name": "getMedianValue"
+  },
+  {
+   "javadoc": "/**\n     * Returns the median value for an item.\n     *\n     * @param rowKey  the row key.\n     * @param columnKey  the columnKey.\n     *\n     * @return The median value.\n     * \n     * @see #getItem(int, int)\n     */",
+   "name": "getMedianValue"
+  },
+  {
+   "javadoc": "/**\n     * Returns the first quartile value.\n     * \n     * @param row  the row index (zero-based).\n     * @param column  the column index (zero-based).\n     * \n     * @return The first quartile value.\n     * \n     * @see #getItem(int, int)\n     */",
+   "name": "getQ1Value"
+  },
+  {
+   "javadoc": "/**\n     * Returns the first quartile value.\n     * \n     * @param rowKey  the row key.\n     * @param columnKey  the column key.\n     * \n     * @return The first quartile value.\n     * \n     * @see #getItem(int, int)\n     */",
+   "name": "getQ1Value"
+  },
+  {
+   "javadoc": "/**\n     * Returns the third quartile value.\n     * \n     * @param row  the row index (zero-based).\n     * @param column  the column index (zero-based).\n     * \n     * @return The third quartile value.\n     * \n     * @see #getItem(int, int)\n     */",
+   "name": "getQ3Value"
+  },
+  {
+   "javadoc": "/**\n     * Returns the third quartile value.\n     * \n     * @param rowKey  the row key.\n     * @param columnKey  the column key.\n     * \n     * @return The third quartile value.\n     * \n     * @see #getItem(int, int)\n     */",
+   "name": "getQ3Value"
+  },
+  {
+   "javadoc": "/**\n     * Returns the column index for a given key.\n     *\n     * @param key  the column key.\n     *\n     * @return The column index.\n     * \n     * @see #getColumnKey(int)\n     */",
+   "name": "getColumnIndex"
+  },
+  {
+   "javadoc": "/**\n     * Returns a column key.\n     *\n     * @param column  the column index (zero-based).\n     *\n     * @return The column key.\n     * \n     * @see #getColumnIndex(Comparable)\n     */",
+   "name": "getColumnKey"
+  },
+  {
+   "javadoc": "/**\n     * Returns the column keys.\n     *\n     * @return The keys.\n     * \n     * @see #getRowKeys()\n     */",
+   "name": "getColumnKeys"
+  },
+  {
+   "javadoc": "/**\n     * Returns the row index for a given key.\n     *\n     * @param key  the row key.\n     *\n     * @return The row index.\n     * \n     * @see #getRowKey(int)\n     */",
+   "name": "getRowIndex"
+  },
+  {
+   "javadoc": "/**\n     * Returns a row key.\n     *\n     * @param row  the row index (zero-based).\n     *\n     * @return The row key.\n     * \n     * @see #getRowIndex(Comparable)\n     */",
+   "name": "getRowKey"
+  },
+  {
+   "javadoc": "/**\n     * Returns the row keys.\n     *\n     * @return The keys.\n     * \n     * @see #getColumnKeys()\n     */",
+   "name": "getRowKeys"
+  },
+  {
+   "javadoc": "/**\n     * Returns the number of rows in the table.\n     *\n     * @return The row count.\n     * \n     * @see #getColumnCount()\n     */",
+   "name": "getRowCount"
+  },
+  {
+   "javadoc": "/**\n     * Returns the number of columns in the table.\n     *\n     * @return The column count.\n     * \n     * @see #getRowCount()\n     */",
+   "name": "getColumnCount"
+  },
+  {
+   "javadoc": "/**\n     * Returns the minimum y-value in the dataset.\n     *\n     * @param includeInterval  a flag that determines whether or not the\n     *                         y-interval is taken into account.\n     * \n     * @return The minimum value.\n     * \n     * @see #getRangeUpperBound(boolean)\n     */",
+   "name": "getRangeLowerBound"
+  },
+  {
+   "javadoc": "/**\n     * Returns the maximum y-value in the dataset.\n     *\n     * @param includeInterval  a flag that determines whether or not the\n     *                         y-interval is taken into account.\n     * \n     * @return The maximum value.\n     * \n     * @see #getRangeLowerBound(boolean)\n     */",
+   "name": "getRangeUpperBound"
+  },
+  {
+   "javadoc": "/**\n     * Returns the range of the values in this dataset's range.\n     *\n     * @param includeInterval  a flag that determines whether or not the\n     *                         y-interval is taken into account.\n     * \n     * @return The range.\n     */",
+   "name": "getRangeBounds"
+  },
+  {
+   "javadoc": "/**\n     * Returns the minimum regular (non outlier) value for an item.\n     * \n     * @param row  the row index (zero-based).\n     * @param column  the column index (zero-based).\n     * \n     * @return The minimum regular value.\n     * \n     * @see #getItem(int, int)\n     */",
+   "name": "getMinRegularValue"
+  },
+  {
+   "javadoc": "/**\n     * Returns the minimum regular (non outlier) value for an item.\n     * \n     * @param rowKey  the row key.\n     * @param columnKey  the column key.\n     * \n     * @return The minimum regular value.\n     * \n     * @see #getItem(int, int)\n     */",
+   "name": "getMinRegularValue"
+  },
+  {
+   "javadoc": "/**\n     * Returns the maximum regular (non outlier) value for an item.\n     * \n     * @param row  the row index (zero-based).\n     * @param column  the column index (zero-based).\n     * \n     * @return The maximum regular value.\n     * \n     * @see #getItem(int, int)\n     */",
+   "name": "getMaxRegularValue"
+  },
+  {
+   "javadoc": "/**\n     * Returns the maximum regular (non outlier) value for an item.\n     * \n     * @param rowKey  the row key.\n     * @param columnKey  the column key.\n     * \n     * @return The maximum regular value.\n     * \n     * @see #getItem(int, int)\n     */",
+   "name": "getMaxRegularValue"
+  },
+  {
+   "javadoc": "/**\n     * Returns the minimum outlier (non farout) value for an item.\n     * \n     * @param row  the row index (zero-based).\n     * @param column  the column index (zero-based).\n     * \n     * @return The minimum outlier.\n     * \n     * @see #getItem(int, int)\n     */",
+   "name": "getMinOutlier"
+  },
+  {
+   "javadoc": "/**\n     * Returns the minimum outlier (non farout) value for an item.\n     * \n     * @param rowKey  the row key.\n     * @param columnKey  the column key.\n     * \n     * @return The minimum outlier.\n     * \n     * @see #getItem(int, int)\n     */",
+   "name": "getMinOutlier"
+  },
+  {
+   "javadoc": "/**\n     * Returns the maximum outlier (non farout) value for an item.\n     * \n     * @param row  the row index (zero-based).\n     * @param column  the column index (zero-based).\n     * \n     * @return The maximum outlier.\n     * \n     * @see #getItem(int, int)\n     */",
+   "name": "getMaxOutlier"
+  },
+  {
+   "javadoc": "/**\n     * Returns the maximum outlier (non farout) value for an item.\n     * \n     * @param rowKey  the row key.\n     * @param columnKey  the column key.\n     * \n     * @return The maximum outlier.\n     * \n     * @see #getItem(int, int)\n     */",
+   "name": "getMaxOutlier"
+  },
+  {
+   "javadoc": "/**\n     * Returns a list of outlier values for an item.\n     * \n     * @param row  the row index (zero-based).\n     * @param column  the column index (zero-based).\n     * \n     * @return A list of outlier values.\n     * \n     * @see #getItem(int, int)\n     */",
+   "name": "getOutliers"
+  },
+  {
+   "javadoc": "/**\n     * Returns a list of outlier values for an item.\n     * \n     * @param rowKey  the row key.\n     * @param columnKey  the column key.\n     * \n     * @return A list of outlier values.\n     * \n     * @see #getItem(int, int)\n     */",
+   "name": "getOutliers"
+  },
+  {
+   "javadoc": "/**\n     * Tests this dataset for equality with an arbitrary object.\n     * \n     * @param obj  the object to test against (<code>null</code> permitted).\n     * \n     * @return A boolean.\n     */",
+   "name": "equals"
+  },
+  {
+   "javadoc": "/**\n     * Returns a clone of this dataset.\n     * \n     * @return A clone.\n     * \n     * @throws CloneNotSupportedException if cloning is not possible.\n     */",
+   "name": "clone"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset implements BoxAndWhiskerCategoryDataset, RangeInfo, PublicCloneable",
+  "constructors": [
+   "public DefaultBoxAndWhiskerCategoryDataset();"
+  ],
+  "focal_signature": "public void add(BoxAndWhiskerItem item, Comparable rowKey, Comparable columnKey)",
+  "methods": [
+   "public void add(List list, Comparable rowKey, Comparable columnKey);",
+   "public BoxAndWhiskerItem getItem(int row, int column);",
+   "public Number getValue(int row, int column);",
+   "public Number getValue(Comparable rowKey, Comparable columnKey);",
+   "public Number getMeanValue(int row, int column);",
+   "public Number getMeanValue(Comparable rowKey, Comparable columnKey);",
+   "public Number getMedianValue(int row, int column);",
+   "public Number getMedianValue(Comparable rowKey, Comparable columnKey);",
+   "public Number getQ1Value(int row, int column);",
+   "public Number getQ1Value(Comparable rowKey, Comparable columnKey);",
+   "public Number getQ3Value(int row, int column);",
+   "public Number getQ3Value(Comparable rowKey, Comparable columnKey);",
+   "public int getColumnIndex(Comparable key);",
+   "public Comparable getColumnKey(int column);",
+   "public List getColumnKeys();",
+   "public int getRowIndex(Comparable key);",
+   "public Comparable getRowKey(int row);",
+   "public List getRowKeys();",
+   "public int getRowCount();",
+   "public int getColumnCount();",
+   "public double getRangeLowerBound(boolean includeInterval);",
+   "public double getRangeUpperBound(boolean includeInterval);",
+   "public Range getRangeBounds(boolean includeInterval);",
+   "public Number getMinRegularValue(int row, int column);",
+   "public Number getMinRegularValue(Comparable rowKey, Comparable columnKey);",
+   "public Number getMaxRegularValue(int row, int column);",
+   "public Number getMaxRegularValue(Comparable rowKey, Comparable columnKey);",
+   "public Number getMinOutlier(int row, int column);",
+   "public Number getMinOutlier(Comparable rowKey, Comparable columnKey);",
+   "public Number getMaxOutlier(int row, int column);",
+   "public Number getMaxOutlier(Comparable rowKey, Comparable columnKey);",
+   "public List getOutliers(int row, int column);",
+   "public List getOutliers(Comparable rowKey, Comparable columnKey);",
+   "public boolean equals(Object obj);",
+   "public Object clone() throws CloneNotSupportedException;"
+  ],
+  "type_signatures": [
+   "public class BoxAndWhiskerItem implements Serializable { public BoxAndWhiskerItem(Number mean, Number median, Number q1, Number q3, Number minRegularValue, Number maxRegularValue, Number minOutlier, Number maxOutlier, List outliers); public BoxAndWhiskerItem(double mean, double median, double q1, double q3, double minRegularValue, double maxRegularValue, double minOutlier, double maxOutlier, List outliers); public Number getMean(); public Number getMedian(); public Number getQ1(); public Number getQ3(); public Number getMinRegularValue(); public Number getMaxRegularValue(); public Number getMinOutlier(); public Number getMaxOutlier(); public List getOutliers(); public String toString(); public boolean equals(Object obj); }"
+  ]
+ },
+ "split": "test"
+}

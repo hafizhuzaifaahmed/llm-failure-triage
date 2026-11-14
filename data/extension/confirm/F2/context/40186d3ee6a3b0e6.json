@@ -1,0 +1,134 @@
+{
+ "bug_name": "Closure_136",
+ "call_sites": [
+  {
+   "line": 58,
+   "lines": [
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63
+   ],
+   "path": "src/com/google/javascript/jscomp/AliasKeywords.java",
+   "snippet": "     * Find the AliasSpecification associated with the node, and tell\n     * that AliasSpecification about the new node.\n     */\n    private void visitAliasableNode(Node n, Node parent) {\n      AliasSpecification aliasableNodes = aliasTypes.get(n.getType());\n      aliasableNodes.visit(n, parent);\n    }\n\n    /**\n     * Sanity check that our aliases are not already defined by\n     * someone else."
+  },
+  {
+   "line": 182,
+   "lines": [
+    177,
+    178,
+    179,
+    180,
+    181,
+    182,
+    183,
+    184,
+    185,
+    186,
+    187
+   ],
+   "path": "src/com/google/javascript/jscomp/ChainableReverseAbstractInterpreter.java",
+   "snippet": "   * @see #getRestrictedWithoutUndefined(JSType)\n   */\n  private final Visitor<JSType> restrictUndefinedVisitor =\n    new Visitor<JSType>() {\n      public JSType caseEnumElementType(EnumElementType enumElementType) {\n        JSType type = enumElementType.getPrimitiveType().visit(this);\n        if (type != null && enumElementType.getPrimitiveType().equals(type)) {\n          return enumElementType;\n        } else {\n          return type;\n        }"
+  },
+  {
+   "line": 247,
+   "lines": [
+    242,
+    243,
+    244,
+    245,
+    246,
+    247,
+    248,
+    249,
+    250,
+    251,
+    252
+   ],
+   "path": "src/com/google/javascript/jscomp/ChainableReverseAbstractInterpreter.java",
+   "snippet": "   * @see #getRestrictedWithoutNull(JSType)\n   */\n  private final Visitor<JSType> restrictNullVisitor =\n    new Visitor<JSType>() {\n      public JSType caseEnumElementType(EnumElementType enumElementType) {\n        JSType type = enumElementType.getPrimitiveType().visit(this);\n        if (type != null && enumElementType.getPrimitiveType().equals(type)) {\n          return enumElementType;\n        } else {\n          return type;\n        }"
+  },
+  {
+   "line": 333,
+   "lines": [
+    328,
+    329,
+    330,
+    331,
+    332,
+    333,
+    334,
+    335,
+    336,
+    337,
+    338
+   ],
+   "path": "src/com/google/javascript/jscomp/ChainableReverseAbstractInterpreter.java",
+   "snippet": "    }\n\n    public JSType caseUnionType(UnionType type) {\n      JSType restricted = null;\n      for (JSType alternate : type.getAlternates()) {\n        JSType restrictedAlternate = alternate.visit(this);\n        if (restrictedAlternate != null) {\n          if (restricted == null) {\n            restricted = restrictedAlternate;\n          } else {\n            restricted = restrictedAlternate.getLeastSupertype(restricted);"
+  },
+  {
+   "line": 359,
+   "lines": [
+    354,
+    355,
+    356,
+    357,
+    358,
+    359,
+    360,
+    361,
+    362,
+    363,
+    364
+   ],
+   "path": "src/com/google/javascript/jscomp/ChainableReverseAbstractInterpreter.java",
+   "snippet": "      // }\n      // There is no type that represents {MyEnum - string}. What we really\n      // need is a notion of \"enum subtyping\", so that we could dynamically\n      // create a subtype of MyEnum restricted by string. In any case,\n      // this should catch the common case.\n      JSType type = enumElementType.getPrimitiveType().visit(this);\n      if (type != null && enumElementType.getPrimitiveType().equals(type)) {\n        return enumElementType;\n      } else {\n        return type;\n      }"
+  }
+ ],
+ "class_simple": "ProcessVars",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * RenameVars renames all the variables names into short names, to reduce\n * code size and also to obfuscate the code.\n *\n*\n*\n */\nfinal class RenameVars implements CompilerPass {\n  private final AbstractCompiler compiler;\n\n  /** List of global NAME nodes */\n  private final ArrayList<Node> globalNameNodes = new ArrayList<Node>();\n\n  /** List of local NAME nodes */\n  private final ArrayList<Node> localNameNodes = new ArrayList<Node>();\n\n  /** List of local names that corresponds to the localNameNodes */\n  private final ArrayList<String> localTempNames = new ArrayList<String>();\n\n  /** Set of extern variable names */\n  private final Set<String> externNames = new HashSet<String>();\n\n  /** Set of reserved variable names */\n  private final Set<String> reservedNames;\n\n  /** The renaming map */\n  private final Map<String, String> renameMap = new HashMap<String, String>();\n\n  /** The previously used rename map. */\n  private final VariableMap prevUsedRenameMap;\n\n  /** The global name prefix */\n  private final String prefix;\n\n  /** Counter for each assignment */\n  private int assignmentCount = 0;\n\n  /** Logs all name assignments */\n  private StringBuilder assignmentLog;\n\n  class Assignment {\n    final CompilerInput input;\n    final String oldName;\n    final int orderOfOccurrence;\n    String newName;\n    int count;                          // Number of times this is referenced\n\n    Assignment(String name, CompilerInput input) {\n      this.input = input;\n      this.oldName = name;\n      this.newName = null;\n      this.count = 0;\n\n      // Represents the order at which a symbol appears in the source.\n      this.orderOfOccurrence = assignmentCount++;\n    }\n\n    /**\n     * Assigns the new name.\n     */\n    void setNewName(String newName) {\n      Preconditions.checkState(this.newName == null);\n      this.newName = newName;\n    }\n  }\n\n  /** Maps an old name to a new name assignment */\n  private final SortedMap<String, Assignment> assignments =\n      new TreeMap<String, Assignment>();\n\n  /** Whether renaming should apply to local variables only. */\n  private final boolean localRenamingOnly;\n\n  /**\n   * Whether anonymous function names should be preserved. Typically, for\n   * debugging purposes.\n   * @see NameAnonymousFunctions\n   */\n  private boolean preserveAnonymousFunctionNames;\n\n  /** Generate pseudo names for variables for debugging purposes */\n  private boolean generatePseudoNames;\n\n  /** Characters that shouldn't be used in variable names. */\n  private final char[] reservedCharacters;\n\n  /** A prefix to distinguish temporary local names from global names */\n  private static final String LOCAL_VAR_PREFIX = \"L \";\n\n  RenameVars(AbstractCompiler compiler,\n      String prefix,\n      boolean localRenamingOnly,\n      boolean preserveAnonymousFunctionNames,\n      boolean generatePseudoNames,\n      VariableMap prevUsedRenameMap,\n      @Nullable char[] reservedCharacters,\n      @Nullable Set<String> reservedNames) {\n    this.compiler = compiler;\n    this.prefix = prefix == null ? \"\" : prefix;\n    this.localRenamingOnly = localRenamingOnly;\n    this.preserveAnonymousFunctionNames = preserveAnonymousFunctionNames;\n    this.generatePseudoNames = generatePseudoNames;\n    this.prevUsedRenameMap = prevUsedRenameMap;\n    this.reservedCharacters = reservedCharacters;\n    if (reservedNames == null) {\n      this.reservedNames = Sets.newHashSet();\n    } else {\n      this.reservedNames = Sets.newHashSet(reservedNames);\n    }\n  }\n\n  /**\n   * Iterate through the nodes, collect all the NAME nodes that need to be\n   * renamed, and count how many times each variable name is referenced.\n   *\n   * There are 2 passes:\n   * - externs: keep track of the global vars in the externNames_ map.\n   * - source: keep track of all name references in globalNameNodes_, and\n   *   localNameNodes_.\n   *\n   * To get shorter local variable renaming, we rename local variables to a\n   * temporary name \"LOCAL_VAR_PREFIX + index\" where index is the index of the\n   * variable declared in the local scope stack.\n   * e.g.\n   * Foo(fa, fb) {\n   *   var c = function(d, e) { return fa; }\n   * }\n   * The indexes are: fa:0, fb:1, c:2, d:3, e:4\n   *\n   * In that way, local variable names are reused in each global function.\n   * e.g. the final code might look like\n   * function x(a,b) { ... }\n   * function y(a,b,c) { ... }\n   */",
+  "method_javadoc": ""
+ },
+ "fields": [
+  "private final boolean isExternsPass_"
+ ],
+ "focal_class": "com.google.javascript.jscomp.RenameVars.ProcessVars",
+ "focal_id": "Closure_136::com.google.javascript.jscomp.RenameVars$ProcessVars::visit(NodeTraversal,Node,Node)",
+ "focal_method_name": "visit",
+ "generations": 3,
+ "impl_B": "@Override\n    public void visit(NodeTraversal t, Node n, Node parent) {\n      if (n.getType() != Token.NAME) {\n        return;\n      }\n\n      String name = n.getString();\n\n      // Ignore anonymous functions\n      if (name.length() == 0) {\n        return;\n      }\n\n      // Is this local or Global?\n      Scope.Var var = t.getScope().getVar(name);\n      boolean local = (var != null) && var.isLocal();\n\n      // Are we renaming global variables?\n      if (!local && localRenamingOnly) {\n        reservedNames.add(name);\n        return;\n      }\n\n      // Are we renaming anonymous function names?\n      if (preserveAnonymousFunctionNames\n          && var != null\n          && NodeUtil.isAnonymousFunction(var.getParentNode())) {\n        reservedNames.add(name);\n        return;\n      }\n\n      // Check if we can rename this.\n      if (!okToRenameVar(name, local)) {\n          // Blindly de-uniquify for the Prototype library for issue 103.\n        return;\n      }\n\n      if (isExternsPass_) {\n        // Keep track of extern globals.\n        if (!local) {\n          externNames.add(name);\n        }\n        return;\n      }\n\n      if (local) {\n        // Local var: assign a new name\n        String tempName = LOCAL_VAR_PREFIX + var.getLocalVarIndex();\n        incCount(tempName, null);\n        localNameNodes.add(n);\n        localTempNames.add(tempName);\n      } else if (var != null) {  // Not an extern\n        // If it's global, increment global count\n        incCount(name, var.input);\n        globalNameNodes.add(n);\n      }\n    }",
+ "imports": [
+  "javax.annotation.Nullable",
+  "com.google.common.base.Preconditions",
+  "com.google.common.collect.Sets",
+  "com.google.javascript.jscomp.NodeTraversal.AbstractPostOrderCallback",
+  "com.google.javascript.rhino.Node",
+  "com.google.javascript.rhino.Token",
+  "java.util.*"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.google.javascript.jscomp",
+ "project": "Closure",
+ "siblings": [],
+ "sig": {
+  "class_declaration": "class ProcessVars extends AbstractPostOrderCallback",
+  "constructors": [],
+  "focal_signature": "public void visit(NodeTraversal t, Node n, Node parent)",
+  "methods": [],
+  "type_signatures": [
+   "public class NodeTraversal { public NodeTraversal(AbstractCompiler compiler, Callback cb); public NodeTraversal(AbstractCompiler compiler, Callback cb, ScopeCreator scopeCreator); public void traverse(Node root); public void traverseRoots(Node ... roots); public void traverseRoots(List<Node> roots); protected void traverseInnerNode(Node node, Node parent, Scope refinedScope); public Compiler getCompiler(); public int getLineNumber(); public String getSourceName(); public CompilerInput getInput(); public JSModule getModule(); public Node getCurrentNode(); public static void traverse( AbstractCompiler compiler, Node root, Callback cb); public static void traverseRoots( AbstractCompiler compiler, List<Node> roots, Callback cb); public Scope getScope(); }",
+   "public class Node implements Cloneable, Serializable { public Node(int nodeType); public Node(int nodeType, Node child); public Node(int nodeType, Node left, Node right); public Node(int nodeType, Node left, Node mid, Node right); public Node(int nodeType, Node left, Node mid, Node mid2, Node right); public Node(int nodeType, int lineno, int charno); public Node(int nodeType, Node child, int lineno, int charno); public Node(int nodeType, Node left, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node right, int lineno, int charno); public Node(int nodeType, Node left, Node mid, Node mid2, Node right, int lineno, int charno); public Node(int nodeType, Node[] children, int lineno, int charno); public Node(int nodeType, Node[] children); public static Node newNumber(double number); public static Node newNumber(double number, int lineno, int charno); public static Node newString(String str); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

@@ -1,0 +1,150 @@
+{
+ "candidate_id": "1868a6a179c2ab966f88",
+ "compilation": {
+  "class_error": null,
+  "compiled": [
+   "testGetHeaderMap_WithHeaders",
+   "testGetHeaderMap_NoHeaders"
+  ],
+  "nc_both": [],
+  "nc_one_version": [],
+  "passes": 0
+ },
+ "dataset": "D2",
+ "env": {
+  "jvm_flags": [
+   "-Duser.language=en",
+   "-Duser.country=US",
+   "-Duser.timezone=America/Los_Angeles",
+   "-Dfile.encoding=UTF-8",
+   "-Xmx1g",
+   "-XX:+UseSerialGC",
+   "-XX:TieredStopAtLevel=1"
+  ],
+  "runs_per_version": 3,
+  "timeout_s": 30,
+  "tz": "America/Los_Angeles"
+ },
+ "focal_id": "Csv_4::org.apache.commons.csv.CSVParser::getHeaderMap()#m19",
+ "methods": [
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testGetHeaderMap_WithHeaders",
+   "runs_b": [
+    {
+     "duration_s": 0.072,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.083,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.091,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.072,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.072,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    },
+    {
+     "duration_s": 0.079,
+     "exception": "",
+     "failing_test_line": null,
+     "message": "",
+     "outcome": "pass",
+     "trace": ""
+    }
+   ],
+   "source_class": "package org.apache.commons.csv;\n\nimport java.io.*;\nimport java.io.Closeable;\nimport java.io.File;\nimport java.io.FileReader;\nimport java.io.IOException;\nimport java.io.InputStreamReader;\nimport java.io.Reader;\nimport java.io.StringReader;\nimport java.math.*;\nimport java.net.URL;\nimport java.nio.charset.Charset;\nimport java.util.*;\nimport java.util.ArrayList;\nimport java.util.Iterator;\nimport java.util.LinkedHashMap;\nimport java.util.List;\nimport java.util.Map;\nimport java.util.NoSuchElementException;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class CSVParser_getHeaderMap_TriageGen0Test {\n\n    @Test\n    public void testGetHeaderMap_WithHeaders() throws IOException {\n        // CSV content with a header row\n        String csvContent = \"id,name,age\\n1,John,30\\n2,Jane,25\";\n        StringReader reader = new StringReader(csvContent);\n        \n        // Using CSVFormat.DEFAULT which includes headers\n        CSVFormat format = CSVFormat.DEFAULT.withHeader();\n        \n        try (CSVParser parser = CSVParser.parse(csvContent, format)) {\n            Map<String, Integer> headerMap = parser.getHeaderMap();\n            \n            assertNotNull(\"Header map should not be null when headers are present\", headerMap);\n            assertEquals(\"Header map size should be 3\", 3, headerMap.size());\n            \n            // Check if indices match the columns\n            assertEquals(Integer.valueOf(0), headerMap.get(\"id\"));\n            assertEquals(Integer.valueOf(1), headerMap.get(\"name\"));\n            assertEquals(Integer.valueOf(2), headerMap.get(\"age\"));\n            \n            // Verify it returns a copy (defensive copy check)\n            headerMap.put(\"newKey\", 99);\n            assertFalse(\"Modifying the returned map should not affect the parser\", \n                    parser.getHeaderMap().containsKey(\"newKey\"));\n        }\n    }\n\n    \n}\n"
+  },
+  {
+   "compile_b": true,
+   "compile_f": true,
+   "method": "testGetHeaderMap_NoHeaders",
+   "runs_b": [
+    {
+     "duration_s": 0.083,
+     "exception": "java.lang.NullPointerException",
+     "failing_test_line": 39,
+     "message": "null",
+     "outcome": "exception",
+     "trace": "java.lang.NullPointerException\n\tat java.base/java.util.HashMap.putMapEntries(HashMap.java:497)\n\tat java.base/java.util.LinkedHashMap.<init>(LinkedHashMap.java:384)\n\tat org.apache.commons.csv.CSVParser.getHeaderMap(CSVParser.java:288)\n\tat org.apache.commons.csv.CSVParser_getHeaderMap_TriageGen0Test.testGetHeaderMap_NoHeaders(CSVParser_getHeaderMap_TriageGen0Test.java:39)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:160)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:138)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.075,
+     "exception": "java.lang.NullPointerException",
+     "failing_test_line": 39,
+     "message": "null",
+     "outcome": "exception",
+     "trace": "java.lang.NullPointerException\n\tat java.base/java.util.HashMap.putMapEntries(HashMap.java:497)\n\tat java.base/java.util.LinkedHashMap.<init>(LinkedHashMap.java:384)\n\tat org.apache.commons.csv.CSVParser.getHeaderMap(CSVParser.java:288)\n\tat org.apache.commons.csv.CSVParser_getHeaderMap_TriageGen0Test.testGetHeaderMap_NoHeaders(CSVParser_getHeaderMap_TriageGen0Test.java:39)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:160)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:138)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.085,
+     "exception": "java.lang.NullPointerException",
+     "failing_test_line": 39,
+     "message": "null",
+     "outcome": "exception",
+     "trace": "java.lang.NullPointerException\n\tat java.base/java.util.HashMap.putMapEntries(HashMap.java:497)\n\tat java.base/java.util.LinkedHashMap.<init>(LinkedHashMap.java:384)\n\tat org.apache.commons.csv.CSVParser.getHeaderMap(CSVParser.java:288)\n\tat org.apache.commons.csv.CSVParser_getHeaderMap_TriageGen0Test.testGetHeaderMap_NoHeaders(CSVParser_getHeaderMap_TriageGen0Test.java:39)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:160)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:138)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "runs_f": [
+    {
+     "duration_s": 0.087,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 42,
+     "message": "null",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError\n\tat org.junit.Assert.fail(Assert.java:86)\n\tat org.junit.Assert.assertTrue(Assert.java:41)\n\tat org.junit.Assert.assertNotNull(Assert.java:621)\n\tat org.junit.Assert.assertNotNull(Assert.java:631)\n\tat org.apache.commons.csv.CSVParser_getHeaderMap_TriageGen0Test.testGetHeaderMap_NoHeaders(CSVParser_getHeaderMap_TriageGen0Test.java:42)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:160)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:138)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.079,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 42,
+     "message": "null",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError\n\tat org.junit.Assert.fail(Assert.java:86)\n\tat org.junit.Assert.assertTrue(Assert.java:41)\n\tat org.junit.Assert.assertNotNull(Assert.java:621)\n\tat org.junit.Assert.assertNotNull(Assert.java:631)\n\tat org.apache.commons.csv.CSVParser_getHeaderMap_TriageGen0Test.testGetHeaderMap_NoHeaders(CSVParser_getHeaderMap_TriageGen0Test.java:42)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:160)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:138)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    },
+    {
+     "duration_s": 0.078,
+     "exception": "java.lang.AssertionError",
+     "failing_test_line": 42,
+     "message": "null",
+     "outcome": "assertion_failure",
+     "trace": "java.lang.AssertionError\n\tat org.junit.Assert.fail(Assert.java:86)\n\tat org.junit.Assert.assertTrue(Assert.java:41)\n\tat org.junit.Assert.assertNotNull(Assert.java:621)\n\tat org.junit.Assert.assertNotNull(Assert.java:631)\n\tat org.apache.commons.csv.CSVParser_getHeaderMap_TriageGen0Test.testGetHeaderMap_NoHeaders(CSVParser_getHeaderMap_TriageGen0Test.java:42)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:160)\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:138)\n\tat triage.runner.SingleTestRunner.main(SingleTestRunner.java:40)\n"
+    }
+   ],
+   "source_class": "package org.apache.commons.csv;\n\nimport java.io.*;\nimport java.io.Closeable;\nimport java.io.File;\nimport java.io.FileReader;\nimport java.io.IOException;\nimport java.io.InputStreamReader;\nimport java.io.Reader;\nimport java.io.StringReader;\nimport java.math.*;\nimport java.net.URL;\nimport java.nio.charset.Charset;\nimport java.util.*;\nimport java.util.ArrayList;\nimport java.util.Iterator;\nimport java.util.LinkedHashMap;\nimport java.util.List;\nimport java.util.Map;\nimport java.util.NoSuchElementException;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class CSVParser_getHeaderMap_TriageGen0Test {\n\n    \n\n    @Test\n    public void testGetHeaderMap_NoHeaders() throws IOException {\n        // CSV content without a header row\n        String csvContent = \"1,John,30\\n2,Jane,25\";\n        StringReader reader = new StringReader(csvContent);\n        \n        // Using CSVFormat.DEFAULT without header configuration\n        CSVFormat format = CSVFormat.DEFAULT;\n        \n        try (CSVParser parser = CSVParser.parse(csvContent, format)) {\n            Map<String, Integer> headerMap = parser.getHeaderMap();\n            \n            // Based on implementation, if headerMap is empty, it returns an empty LinkedHashMap\n            assertNotNull(headerMap);\n            assertTrue(\"Header map should be empty when no headers are defined\", headerMap.isEmpty());\n        }\n    }\n}\n"
+  }
+ ],
+ "mutant_version": "m19",
+ "source_sha256": "6084fcb764045e2954b4b8a34158f15b5e0f47040fc19912690414b69edb9327",
+ "utc": "2026-11-03T00:30:31Z"
+}

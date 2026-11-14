@@ -1,0 +1,115 @@
+{
+ "bug_name": "JacksonDatabind_88",
+ "call_sites": [
+  {
+   "line": 32,
+   "lines": [
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/jsontype/impl/ClassNameIdResolver.java",
+   "snippet": "        // not used with class name - based resolvers\n    }\n    \n    @Override\n    public String idFromValue(Object value) {\n        return _idFrom(value, value.getClass(), _typeFactory);\n    }\n\n    @Override\n    public String idFromValueAndType(Object value, Class<?> type) {\n        return _idFrom(value, type, _typeFactory);"
+  },
+  {
+   "line": 37,
+   "lines": [
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42
+   ],
+   "path": "src/main/java/com/fasterxml/jackson/databind/jsontype/impl/ClassNameIdResolver.java",
+   "snippet": "        return _idFrom(value, value.getClass(), _typeFactory);\n    }\n\n    @Override\n    public String idFromValueAndType(Object value, Class<?> type) {\n        return _idFrom(value, type, _typeFactory);\n    }\n\n    @Override\n    public JavaType typeFromId(DatabindContext context, String id) throws IOException {\n        return _typeFromId(id, context);"
+  }
+ ],
+ "class_simple": "ClassNameIdResolver",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * {@link com.fasterxml.jackson.databind.jsontype.TypeIdResolver} implementation\n * that converts between fully-qualified\n * Java class names and (JSON) Strings.\n */\npublic",
+  "method_javadoc": "/**********************************************************\n     */"
+ },
+ "fields": [],
+ "focal_class": "com.fasterxml.jackson.databind.jsontype.impl.ClassNameIdResolver",
+ "focal_id": "JacksonDatabind_88::com.fasterxml.jackson.databind.jsontype.impl.ClassNameIdResolver::_idFrom(Object,Class<?>,TypeFactory)",
+ "focal_method_name": "_idFrom",
+ "generations": 3,
+ "impl_B": "protected final String _idFrom(Object value, Class<?> cls, TypeFactory typeFactory)\n    {\n        // Need to ensure that \"enum subtypes\" work too\n        if (Enum.class.isAssignableFrom(cls)) {\n            if (!cls.isEnum()) { // means that it's sub-class of base enum, so:\n                cls = cls.getSuperclass();\n            }\n        }\n        String str = cls.getName();\n        if (str.startsWith(\"java.util\")) {\n            // 25-Jan-2009, tatu: There are some internal classes that we can not access as is.\n            //     We need better mechanism; for now this has to do...\n\n            // Enum sets and maps are problematic since we MUST know type of\n            // contained enums, to be able to deserialize.\n            // In addition, EnumSet is not a concrete type either\n            if (value instanceof EnumSet<?>) { // Regular- and JumboEnumSet...\n                Class<?> enumClass = ClassUtil.findEnumType((EnumSet<?>) value);\n                // not optimal: but EnumSet is not a customizable type so this is sort of ok\n               str = typeFactory.constructCollectionType(EnumSet.class, enumClass).toCanonical();\n            } else if (value instanceof EnumMap<?,?>) {\n                Class<?> enumClass = ClassUtil.findEnumType((EnumMap<?,?>) value);\n                Class<?> valueClass = Object.class;\n                // not optimal: but EnumMap is not a customizable type so this is sort of ok\n                str = typeFactory.constructMapType(EnumMap.class, enumClass, valueClass).toCanonical();\n            } else {\n                String end = str.substring(9);\n                if ((end.startsWith(\".Arrays$\") || end.startsWith(\".Collections$\"))\n                       && str.indexOf(\"List\") >= 0) {\n                    /* 17-Feb-2010, tatus: Another such case: result of\n                     *    Arrays.asList() is named like so in Sun JDK...\n                     *   Let's just plain old ArrayList in its place\n                     * NOTE: chances are there are plenty of similar cases\n                     * for other wrappers... (immutable, singleton, synced etc)\n                     */\n                    str = \"java.util.ArrayList\";\n                }\n            }\n        } else if (str.indexOf('$') >= 0) {\n            /* Other special handling may be needed for inner classes, [JACKSON-584].\n             * The best way to handle would be to find 'hidden' constructor; pass parent\n             * value etc (which is actually done for non-anonymous static classes!),\n             * but that is just not possible due to various things. So, we will instead\n             * try to generalize type into something we will be more likely to be able\n             * construct.\n             */\n            Class<?> outer = ClassUtil.getOuterClass(cls);\n            if (outer != null) {\n                /* one more check: let's actually not worry if the declared\n                 * static type is non-static as well; if so, deserializer does\n                 * have a chance at figuring it all out.\n                 */\n                Class<?> staticType = _baseType.getRawClass();\n                if (ClassUtil.getOuterClass(staticType) == null) {\n                    // Is this always correct? Seems like it should be...\n                    cls = _baseType.getRawClass();\n                    str = cls.getName();\n                }\n            }\n        }\n        return str;\n    }",
+ "imports": [
+  "java.io.IOException",
+  "java.util.*",
+  "com.fasterxml.jackson.annotation.JsonTypeInfo",
+  "com.fasterxml.jackson.databind.*",
+  "com.fasterxml.jackson.databind.type.TypeFactory",
+  "com.fasterxml.jackson.databind.util.ClassUtil"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "com.fasterxml.jackson.databind.jsontype.impl",
+ "project": "JacksonDatabind",
+ "siblings": [
+  {
+   "javadoc": "",
+   "name": "getMechanism"
+  },
+  {
+   "javadoc": "",
+   "name": "registerSubtype"
+  },
+  {
+   "javadoc": "",
+   "name": "idFromValue"
+  },
+  {
+   "javadoc": "",
+   "name": "idFromValueAndType"
+  },
+  {
+   "javadoc": "",
+   "name": "typeFromId"
+  },
+  {
+   "javadoc": "",
+   "name": "_typeFromId"
+  },
+  {
+   "javadoc": "",
+   "name": "getDescForKnownTypeIds"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class ClassNameIdResolver extends TypeIdResolverBase",
+  "constructors": [
+   "public ClassNameIdResolver(JavaType baseType, TypeFactory typeFactory);"
+  ],
+  "focal_signature": "protected final String _idFrom(Object value, Class<?> cls, TypeFactory typeFactory)",
+  "methods": [
+   "public JsonTypeInfo.Id getMechanism();",
+   "public void registerSubtype(Class<?> type, String name);",
+   "public String idFromValue(Object value);",
+   "public String idFromValueAndType(Object value, Class<?> type);",
+   "public JavaType typeFromId(DatabindContext context, String id) throws IOException;",
+   "protected JavaType _typeFromId(String id, DatabindContext ctxt) throws IOException;",
+   "public String getDescForKnownTypeIds();"
+  ],
+  "type_signatures": [
+   ") public final class TypeFactory implements java.io.Serializable { protected TypeFactory(LRUMap<Object,JavaType> typeCache); protected TypeFactory(LRUMap<Object,JavaType> typeCache, TypeParser p, TypeModifier[] mods, ClassLoader classLoader); public TypeFactory withModifier(TypeModifier mod); public TypeFactory withClassLoader(ClassLoader classLoader); public TypeFactory withCache(LRUMap<Object,JavaType> cache); public static TypeFactory defaultInstance(); public void clearCache(); public ClassLoader getClassLoader(); public static JavaType unknownType(); public static Class<?> rawClass(Type t); public Class<?> findClass(String className) throws ClassNotFoundException; protected Class<?> classForName(String name, boolean initialize, ClassLoader loader) throws ClassNotFoundException; protected Class<?> classForName(String name) throws ClassNotFoundException; protected Class<?> _findPrimitive(String className); public JavaType constructSpecializedType(JavaType baseType, Class<?> subclass); }"
+  ]
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

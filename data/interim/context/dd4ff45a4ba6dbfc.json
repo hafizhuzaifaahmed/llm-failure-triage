@@ -1,0 +1,73 @@
+{
+  "bug_name": "Jsoup_58",
+  "call_sites": [
+    {
+      "line": 250,
+      "lines": [
+        245,
+        246,
+        247,
+        248,
+        249,
+        250,
+        251,
+        252,
+        253,
+        254
+      ],
+      "patch_lines_removed": true,
+      "path": "src/main/java/org/jsoup/Jsoup.java",
+      "snippet": "     @param whitelist whitelist to test against\n     @return true if no tags or attributes were removed; false otherwise\n     @see #clean(String, org.jsoup.safety.Whitelist) \n     */\n    public static boolean isValid(String bodyHtml, Whitelist whitelist) {\n    \n}\n"
+    }
+  ],
+  "class_simple": "Cleaner",
+  "doc": {
+    "class_javadoc": "/**\n The whitelist based HTML cleaner. Use to ensure that end-user provided HTML contains only the elements and attributes\n that you are expecting; no junk, and no cross-site scripting attacks!\n <p>\n The HTML cleaner parses the input as HTML and then runs it through a white-list, so the output HTML can only contain\n HTML that is allowed by the whitelist.\n </p>\n <p>\n It is assumed that the input HTML is a body fragment; the clean methods only pull from the source's body, and the\n canned white-lists only allow body contained tags.\n </p>\n <p>\n Rather than interacting directly with a Cleaner object, generally see the {@code clean} methods in {@link org.jsoup.Jsoup}.\n </p>\n */\npublic",
+    "method_javadoc": "/**\n     Determines if the input document <b>body</b>is valid, against the whitelist. It is considered valid if all the tags and attributes\n     in the input HTML are allowed by the whitelist, and that there is no content in the <code>head</code>.\n     <p>\n     This method can be used as a validator for user input. An invalid document will still be cleaned successfully\n     using the {@link #clean(Document)} document. If using as a validator, it is recommended to still clean the document\n     to ensure enforced attributes are set correctly, and that the output is tidied.\n     </p>\n     @param dirtyDocument document to test\n     @return true if no tags or attributes need to be removed; false if they do\n     */"
+  },
+  "fields": [
+    "private Whitelist whitelist"
+  ],
+  "focal_class": "org.jsoup.safety.Cleaner",
+  "focal_id": "Jsoup_58::org.jsoup.safety.Cleaner::isValid(Document)",
+  "focal_method_name": "isValid",
+  "impl_B": "public boolean isValid(Document dirtyDocument) {\n        Validate.notNull(dirtyDocument);\n\n        Document clean = Document.createShell(dirtyDocument.baseUri());\n        int numDiscarded = copySafeNodes(dirtyDocument.body(), clean.body());\n        return numDiscarded == 0;\n    }",
+  "imports": [
+    "org.jsoup.helper.Validate",
+    "org.jsoup.nodes.Attribute",
+    "org.jsoup.nodes.Attributes",
+    "org.jsoup.nodes.DataNode",
+    "org.jsoup.nodes.Document",
+    "org.jsoup.nodes.Element",
+    "org.jsoup.nodes.Node",
+    "org.jsoup.nodes.TextNode",
+    "org.jsoup.parser.ParseErrorList",
+    "org.jsoup.parser.Parser",
+    "org.jsoup.parser.Tag",
+    "org.jsoup.select.NodeTraversor",
+    "org.jsoup.select.NodeVisitor"
+  ],
+  "javadoc_edited_by_fix": false,
+  "package": "org.jsoup.safety",
+  "project": "Jsoup",
+  "siblings": [
+    {
+      "javadoc": "/**\n     Creates a new, clean document, from the original dirty document, containing only elements allowed by the whitelist.\n     The original document is not modified. Only elements from the dirt document's <code>body</code> are used.\n     @param dirtyDocument Untrusted base document to clean.\n     @return cleaned document.\n     */",
+      "name": "clean"
+    }
+  ],
+  "sig": {
+    "class_declaration": "public class Cleaner",
+    "constructors": [
+      "public Cleaner(Whitelist whitelist);"
+    ],
+    "focal_signature": "public boolean isValid(Document dirtyDocument)",
+    "methods": [
+      "public Document clean(Document dirtyDocument);"
+    ],
+    "type_signatures": [
+      "public class Document extends Element { public Document(String baseUri); public static Document createShell(String baseUri); public String location(); public Element head(); public Element body(); public String title(); public void title(String title); public Element createElement(String tagName); public Document normalise(); public String outerHtml(); public Element text(String text); public String nodeName(); public void charset(Charset charset); public Charset charset(); public void updateMetaCharsetElement(boolean update); }"
+    ]
+  },
+  "split": "dev"
+}

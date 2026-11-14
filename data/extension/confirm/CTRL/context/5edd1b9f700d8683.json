@@ -1,0 +1,163 @@
+{
+ "bug_name": "Math_11",
+ "call_sites": [
+  {
+   "line": 122,
+   "lines": [
+    117,
+    118,
+    119,
+    120,
+    121,
+    122,
+    123,
+    124,
+    125,
+    126,
+    127
+   ],
+   "path": "src/main/java/org/apache/commons/math3/analysis/interpolation/MicrosphereInterpolatingFunction.java",
+   "snippet": "\n        /**\n         * Get the sample illuminating the element the most.\n         * @return the sample.\n         */\n        Map.Entry<RealVector, Double> sample() {\n            return brightestSample;\n        }\n    }\n\n    /**"
+  },
+  {
+   "line": 230,
+   "lines": [
+    225,
+    226,
+    227,
+    228,
+    229,
+    230,
+    231,
+    232,
+    233,
+    234,
+    235
+   ],
+   "path": "src/main/java/org/apache/commons/math3/analysis/interpolation/MicrosphereInterpolatingFunction.java",
+   "snippet": "        // Interpolation calculation.\n        double value = 0;\n        double totalWeight = 0;\n        for (MicrosphereSurfaceElement md : microsphere) {\n            final double iV = md.illumination();\n            final Map.Entry<RealVector, Double> sd = md.sample();\n            if (sd != null) {\n                value += iV * sd.getValue();\n                totalWeight += iV;\n            }\n        }"
+  },
+  {
+   "line": 208,
+   "lines": [
+    203,
+    204,
+    205,
+    206,
+    207,
+    208,
+    209,
+    210,
+    211,
+    212,
+    213
+   ],
+   "path": "src/main/java/org/apache/commons/math3/distribution/AbstractIntegerDistribution.java",
+   "snippet": "            throw new NotStrictlyPositiveException(\n                    LocalizedFormats.NUMBER_OF_SAMPLES, sampleSize);\n        }\n        int[] out = new int[sampleSize];\n        for (int i = 0; i < sampleSize; i++) {\n            out[i] = sample();\n        }\n        return out;\n    }\n\n    /**"
+  },
+  {
+   "line": 67,
+   "lines": [
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72
+   ],
+   "path": "src/main/java/org/apache/commons/math3/distribution/AbstractMultivariateRealDistribution.java",
+   "snippet": "            throw new NotStrictlyPositiveException(LocalizedFormats.NUMBER_OF_SAMPLES,\n                                                   sampleSize);\n        }\n        final double[][] out = new double[sampleSize][dimension];\n        for (int i = 0; i < sampleSize; i++) {\n            out[i] = sample();\n        }\n        return out;\n    }\n}\n"
+  },
+  {
+   "line": 275,
+   "lines": [
+    270,
+    271,
+    272,
+    273,
+    274,
+    275,
+    276,
+    277,
+    278,
+    279,
+    280
+   ],
+   "path": "src/main/java/org/apache/commons/math3/distribution/AbstractRealDistribution.java",
+   "snippet": "            throw new NotStrictlyPositiveException(LocalizedFormats.NUMBER_OF_SAMPLES,\n                    sampleSize);\n        }\n        double[] out = new double[sampleSize];\n        for (int i = 0; i < sampleSize; i++) {\n            out[i] = sample();\n        }\n        return out;\n    }\n\n    /**"
+  }
+ ],
+ "class_simple": "MultivariateNormalDistribution",
+ "dataset": "D1C_CTRL",
+ "doc": {
+  "class_javadoc": "/**\n * Implementation of the multivariate normal (Gaussian) distribution.\n *\n * @see <a href=\"http://en.wikipedia.org/wiki/Multivariate_normal_distribution\">\n * Multivariate normal distribution (Wikipedia)</a>\n * @see <a href=\"http://mathworld.wolfram.com/MultivariateNormalDistribution.html\">\n * Multivariate normal distribution (MathWorld)</a>\n *\n * @version $Id$\n * @since 3.1\n */\npublic",
+  "method_javadoc": "/** {@inheritDoc} */"
+ },
+ "fields": [
+  "private final double[] means",
+  "private final RealMatrix covarianceMatrix",
+  "private final RealMatrix covarianceMatrixInverse",
+  "private final double covarianceMatrixDeterminant",
+  "private final RealMatrix samplingMatrix"
+ ],
+ "focal_class": "org.apache.commons.math3.distribution.MultivariateNormalDistribution",
+ "focal_id": "Math_11::org.apache.commons.math3.distribution.MultivariateNormalDistribution::sample()",
+ "focal_method_name": "sample",
+ "generations": 3,
+ "impl_B": "public double[] sample() {\n        final int dim = getDimension();\n        final double[] normalVals = new double[dim];\n\n        for (int i = 0; i < dim; i++) {\n            normalVals[i] = random.nextGaussian();\n        }\n\n        final double[] vals = samplingMatrix.operate(normalVals);\n\n        for (int i = 0; i < dim; i++) {\n            vals[i] += means[i];\n        }\n\n        return vals;\n    }",
+ "imports": [
+  "org.apache.commons.math3.exception.DimensionMismatchException",
+  "org.apache.commons.math3.linear.Array2DRowRealMatrix",
+  "org.apache.commons.math3.linear.EigenDecomposition",
+  "org.apache.commons.math3.linear.NonPositiveDefiniteMatrixException",
+  "org.apache.commons.math3.linear.RealMatrix",
+  "org.apache.commons.math3.linear.SingularMatrixException",
+  "org.apache.commons.math3.random.RandomGenerator",
+  "org.apache.commons.math3.random.Well19937c",
+  "org.apache.commons.math3.util.FastMath",
+  "org.apache.commons.math3.util.MathArrays"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.apache.commons.math3.distribution",
+ "project": "Math",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Gets the mean vector.\n     *\n     * @return the mean vector.\n     */",
+   "name": "getMeans"
+  },
+  {
+   "javadoc": "/**\n     * Gets the covariance matrix.\n     *\n     * @return the covariance matrix.\n     */",
+   "name": "getCovariances"
+  },
+  {
+   "javadoc": "/** {@inheritDoc} */",
+   "name": "density"
+  },
+  {
+   "javadoc": "/**\n     * Gets the square root of each element on the diagonal of the covariance\n     * matrix.\n     *\n     * @return the standard deviations.\n     */",
+   "name": "getStandardDeviations"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class MultivariateNormalDistribution extends AbstractMultivariateRealDistribution",
+  "constructors": [
+   "public MultivariateNormalDistribution(final double[] means, final double[][] covariances) throws SingularMatrixException, DimensionMismatchException, NonPositiveDefiniteMatrixException;",
+   "public MultivariateNormalDistribution(RandomGenerator rng, final double[] means, final double[][] covariances) throws SingularMatrixException, DimensionMismatchException, NonPositiveDefiniteMatrixException;"
+  ],
+  "focal_signature": "public double[] sample()",
+  "methods": [
+   "public double[] getMeans();",
+   "public RealMatrix getCovariances();",
+   "public double density(final double[] vals) throws DimensionMismatchException;",
+   "public double[] getStandardDeviations();"
+  ],
+  "type_signatures": []
+ },
+ "split": "test",
+ "tranche": "CTRL"
+}

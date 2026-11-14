@@ -1,0 +1,184 @@
+{
+ "bug_name": "Chart_13",
+ "call_sites": [
+  {
+   "line": 152,
+   "lines": [
+    147,
+    148,
+    149,
+    150,
+    151,
+    152,
+    153,
+    154,
+    155,
+    156,
+    157
+   ],
+   "path": "source/org/jfree/chart/block/BorderArrangement.java",
+   "snippet": "        else if (w == LengthConstraintType.FIXED) {\n            if (h == LengthConstraintType.NONE) {\n                contentSize = arrangeFN(container, g2, constraint.getWidth());\n            }\n            else if (h == LengthConstraintType.FIXED) {\n                contentSize = arrangeFF(container, g2, constraint);\n            }\n            else if (h == LengthConstraintType.RANGE) {\n                contentSize = arrangeFR(container, g2, constraint);\n            }\n        }"
+  },
+  {
+   "line": 177,
+   "lines": [
+    172,
+    173,
+    174,
+    175,
+    176,
+    177,
+    178,
+    179,
+    180,
+    181,
+    182
+   ],
+   "path": "source/org/jfree/chart/block/CenterArrangement.java",
+   "snippet": "            return s;   \n        }\n        else {\n            RectangleConstraint c = constraint.toFixedHeight(\n                    constraint.getHeightRange().constrain(s.getHeight()));\n            return arrangeFF(container, g2, c);\n        }\n    }\n\n    /**\n     * Arranges the blocks in the container with the overall height and width"
+  },
+  {
+   "line": 244,
+   "lines": [
+    239,
+    240,
+    241,
+    242,
+    243,
+    244,
+    245,
+    246,
+    247,
+    248,
+    249
+   ],
+   "path": "source/org/jfree/chart/block/CenterArrangement.java",
+   "snippet": "            return s;   \n        }\n        else {\n            RectangleConstraint c = constraint.toFixedWidth(\n                    constraint.getWidthRange().constrain(s.getWidth()));\n            return arrangeFF(container, g2, c);\n        }\n    }\n\n    /**\n     * Arranges the block with a range constraint on the width, and no "
+  },
+  {
+   "line": 144,
+   "lines": [
+    139,
+    140,
+    141,
+    142,
+    143,
+    144,
+    145,
+    146,
+    147,
+    148,
+    149
+   ],
+   "path": "source/org/jfree/chart/block/ColumnArrangement.java",
+   "snippet": "        else if (w == LengthConstraintType.FIXED) {\n            if (h == LengthConstraintType.NONE) {\n                throw new RuntimeException(\"Not implemented.\");  \n            }\n            else if (h == LengthConstraintType.FIXED) {\n                return arrangeFF(container, g2, constraint); \n            }\n            else if (h == LengthConstraintType.RANGE) {\n                throw new RuntimeException(\"Not implemented.\");  \n            }\n        }"
+  },
+  {
+   "line": 288,
+   "lines": [
+    283,
+    284,
+    285,
+    286,
+    287,
+    288,
+    289,
+    290,
+    291,
+    292,
+    293
+   ],
+   "path": "source/org/jfree/chart/block/ColumnArrangement.java",
+   "snippet": "        }\n        else {\n            RectangleConstraint c = constraint.toFixedWidth(\n                constraint.getWidthRange().constrain(s.getWidth())\n            );\n            return arrangeFF(container, g2, c);\n        }\n    }\n\n    /**\n     * Arranges the blocks without any constraints.  This puts all blocks"
+  }
+ ],
+ "class_simple": "BorderArrangement",
+ "dataset": "D1C_F2",
+ "doc": {
+  "class_javadoc": "/**\n * An arrangement manager that lays out blocks in a similar way to\n * Swing's BorderLayout class.\n */\npublic",
+  "method_javadoc": "/**\n     * Arranges the items within a container.\n     *\n     * @param container  the container.\n     * @param constraint  the constraint.\n     * @param g2  the graphics device.\n     *\n     * @return The container size after the arrangement.\n     */"
+ },
+ "fields": [
+  "private static final long serialVersionUID",
+  "private Block centerBlock",
+  "private Block topBlock",
+  "private Block bottomBlock",
+  "private Block leftBlock",
+  "private Block rightBlock"
+ ],
+ "focal_class": "org.jfree.chart.block.BorderArrangement",
+ "focal_id": "Chart_13::org.jfree.chart.block.BorderArrangement::arrangeFF(BlockContainer,Graphics2D,RectangleConstraint)",
+ "focal_method_name": "arrangeFF",
+ "generations": 3,
+ "impl_B": "protected Size2D arrangeFF(BlockContainer container, Graphics2D g2,\n                               RectangleConstraint constraint) {\n        double[] w = new double[5];\n        double[] h = new double[5];\n        w[0] = constraint.getWidth();\n        if (this.topBlock != null) {\n            RectangleConstraint c1 = new RectangleConstraint(w[0], null,\n                    LengthConstraintType.FIXED, 0.0,\n                    new Range(0.0, constraint.getHeight()),\n                    LengthConstraintType.RANGE);\n            Size2D size = this.topBlock.arrange(g2, c1);\n            h[0] = size.height;\n        }\n        w[1] = w[0];\n        if (this.bottomBlock != null) {\n            RectangleConstraint c2 = new RectangleConstraint(w[0], null,\n                    LengthConstraintType.FIXED, 0.0, new Range(0.0,\n                    constraint.getHeight() - h[0]), LengthConstraintType.RANGE);\n            Size2D size = this.bottomBlock.arrange(g2, c2);\n            h[1] = size.height;\n        }\n        h[2] = constraint.getHeight() - h[1] - h[0];\n        if (this.leftBlock != null) {\n            RectangleConstraint c3 = new RectangleConstraint(0.0,\n                    new Range(0.0, constraint.getWidth()),\n                    LengthConstraintType.RANGE, h[2], null,\n                    LengthConstraintType.FIXED);\n            Size2D size = this.leftBlock.arrange(g2, c3);\n            w[2] = size.width;\n        }\n        h[3] = h[2];\n        if (this.rightBlock != null) {\n            RectangleConstraint c4 = new RectangleConstraint(0.0,\n                    new Range(0.0, constraint.getWidth() - w[2]),\n                    LengthConstraintType.RANGE, h[2], null,\n                    LengthConstraintType.FIXED);\n            Size2D size = this.rightBlock.arrange(g2, c4);\n            w[3] = size.width;\n        }\n        h[4] = h[2];\n        w[4] = constraint.getWidth() - w[3] - w[2];\n        RectangleConstraint c5 = new RectangleConstraint(w[4], h[4]);\n        if (this.centerBlock != null) {\n            this.centerBlock.arrange(g2, c5);\n        }\n\n        if (this.topBlock != null) {\n            this.topBlock.setBounds(new Rectangle2D.Double(0.0, 0.0, w[0],\n                    h[0]));\n        }\n        if (this.bottomBlock != null) {\n            this.bottomBlock.setBounds(new Rectangle2D.Double(0.0, h[0] + h[2],\n                    w[1], h[1]));\n        }\n        if (this.leftBlock != null) {\n            this.leftBlock.setBounds(new Rectangle2D.Double(0.0, h[0], w[2],\n                    h[2]));\n        }\n        if (this.rightBlock != null) {\n            this.rightBlock.setBounds(new Rectangle2D.Double(w[2] + w[4], h[0],\n                    w[3], h[3]));\n        }\n        if (this.centerBlock != null) {\n            this.centerBlock.setBounds(new Rectangle2D.Double(w[2], h[0], w[4],\n                    h[4]));\n        }\n        return new Size2D(constraint.getWidth(), constraint.getHeight());\n    }",
+ "imports": [
+  "java.awt.Graphics2D",
+  "java.awt.geom.Rectangle2D",
+  "java.io.Serializable",
+  "org.jfree.chart.util.ObjectUtilities",
+  "org.jfree.chart.util.RectangleEdge",
+  "org.jfree.chart.util.Size2D",
+  "org.jfree.data.Range"
+ ],
+ "javadoc_edited_by_fix": false,
+ "package": "org.jfree.chart.block",
+ "project": "Chart",
+ "siblings": [
+  {
+   "javadoc": "/**\n     * Adds a block to the arrangement manager at the specified edge.\n     *\n     * @param block  the block (<code>null</code> permitted).\n     * @param key  the edge (an instance of {@link RectangleEdge}) or\n     *             <code>null</code> for the center block.\n     */",
+   "name": "add"
+  },
+  {
+   "javadoc": "/**\n     * Arranges the items in the specified container, subject to the given\n     * constraint.\n     *\n     * @param container  the container.\n     * @param g2  the graphics device.\n     * @param constraint  the constraint.\n     *\n     * @return The block size.\n     */",
+   "name": "arrange"
+  },
+  {
+   "javadoc": "/**\n     * Performs an arrangement without constraints.\n     *\n     * @param container  the container.\n     * @param g2  the graphics device.\n     *\n     * @return The container size after the arrangement.\n     */",
+   "name": "arrangeNN"
+  },
+  {
+   "javadoc": "/**\n     * Performs an arrangement with a fixed width and a range for the height.\n     *\n     * @param container  the container.\n     * @param g2  the graphics device.\n     * @param constraint  the constraint.\n     *\n     * @return The container size after the arrangement.\n     */",
+   "name": "arrangeFR"
+  },
+  {
+   "javadoc": "/**\n     * Arranges the container width a fixed width and no constraint on the\n     * height.\n     *\n     * @param container  the container.\n     * @param g2  the graphics device.\n     * @param width  the fixed width.\n     *\n     * @return The container size after arranging the contents.\n     */",
+   "name": "arrangeFN"
+  },
+  {
+   "javadoc": "/**\n     * Performs an arrangement with range constraints on both the vertical\n     * and horizontal sides.\n     *\n     * @param container  the container.\n     * @param widthRange  the allowable range for the container width.\n     * @param heightRange  the allowable range for the container height.\n     * @param g2  the graphics device.\n     *\n     * @return The container size.\n     */",
+   "name": "arrangeRR"
+  },
+  {
+   "javadoc": "/**\n     * Clears the layout.\n     */",
+   "name": "clear"
+  },
+  {
+   "javadoc": "/**\n     * Tests this arrangement for equality with an arbitrary object.\n     *\n     * @param obj  the object (<code>null</code> permitted).\n     *\n     * @return A boolean.\n     */",
+   "name": "equals"
+  }
+ ],
+ "sig": {
+  "class_declaration": "public class BorderArrangement implements Arrangement, Serializable",
+  "constructors": [
+   "public BorderArrangement();"
+  ],
+  "focal_signature": "protected Size2D arrangeFF(BlockContainer container, Graphics2D g2, RectangleConstraint constraint)",
+  "methods": [
+   "public void add(Block block, Object key);",
+   "public Size2D arrange(BlockContainer container, Graphics2D g2, RectangleConstraint constraint);",
+   "protected Size2D arrangeNN(BlockContainer container, Graphics2D g2);",
+   "protected Size2D arrangeFR(BlockContainer container, Graphics2D g2, RectangleConstraint constraint);",
+   "protected Size2D arrangeFN(BlockContainer container, Graphics2D g2, double width);",
+   "protected Size2D arrangeRR(BlockContainer container, Range widthRange, Range heightRange, Graphics2D g2);",
+   "public void clear();",
+   "public boolean equals(Object obj);"
+  ],
+  "type_signatures": [
+   "public class BlockContainer extends AbstractBlock implements Block, Cloneable, PublicCloneable, Serializable { public BlockContainer(); public BlockContainer(Arrangement arrangement); public Arrangement getArrangement(); public void setArrangement(Arrangement arrangement); public boolean isEmpty(); public List getBlocks(); public void add(Block block); public void add(Block block, Object key); public void clear(); public Size2D arrange(Graphics2D g2, RectangleConstraint constraint); public void draw(Graphics2D g2, Rectangle2D area); public Object draw(Graphics2D g2, Rectangle2D area, Object params); public boolean equals(Object obj); public Object clone() throws CloneNotSupportedException; }",
+   "public class RectangleConstraint { public RectangleConstraint(double w, double h); public RectangleConstraint(Range w, Range h); public RectangleConstraint(Range w, double h); public RectangleConstraint(double w, Range h); public RectangleConstraint(double w, Range widthRange, LengthConstraintType widthConstraintType, double h, Range heightRange, LengthConstraintType heightConstraintType); public double getWidth(); public Range getWidthRange(); public LengthConstraintType getWidthConstraintType(); public double getHeight(); public Range getHeightRange(); public LengthConstraintType getHeightConstraintType(); public RectangleConstraint toUnconstrainedWidth(); public RectangleConstraint toUnconstrainedHeight(); public RectangleConstraint toFixedWidth(double width); public RectangleConstraint toFixedHeight(double height); }",
+   "public class Size2D implements Cloneable, PublicCloneable, Serializable { public Size2D(); public Size2D(double width, double height); public double getWidth(); public void setWidth(double width); public double getHeight(); public void setHeight(double height); public String toString(); public boolean equals(Object obj); public Object clone() throws CloneNotSupportedException; }"
+  ]
+ },
+ "split": "test",
+ "tranche": "F2"
+}

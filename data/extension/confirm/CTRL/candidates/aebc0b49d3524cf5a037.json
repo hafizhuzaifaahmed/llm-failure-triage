@@ -1,0 +1,14 @@
+{
+  "assembled": true,
+  "call_key": "732d2e238e1ff862c79dbab7d57cd2c907f0076880b5e00add8778f1cef352f9",
+  "candidate_id": "aebc0b49d3524cf5a037",
+  "class_name": "Timer_isCounting_TriageGen2Test",
+  "dataset": "D1C_CTRL",
+  "focal_id": "Mockito_2::org.mockito.internal.util.Timer::isCounting()",
+  "generation": 2,
+  "model_returned": "gemma4:26b",
+  "n_tests": 4,
+  "package": "org.mockito.internal.util",
+  "source": "package org.mockito.internal.util;\n\nimport java.io.*;\nimport java.math.*;\nimport java.util.*;\nimport org.junit.*;\nimport org.junit.Test;\nimport static org.junit.Assert.*;\n\npublic class Timer_isCounting_TriageGen2Test {\n\n    @Test\n    public void testIsCounting_ReturnsTrue_WhenWithinDuration() throws InterruptedException {\n        // Arrange\n        long duration = 500L;\n        Timer timer = new Timer(duration);\n        timer.start();\n\n        // Act\n        boolean result = timer.isCounting();\n\n        // Assert\n        assertTrue(\"isCounting should return true when called immediately after start\", result);\n    }\n\n    @Test\n    public void testIsCounting_ReturnsFalse_WhenDurationExceeded() throws InterruptedException {\n        // Arrange\n        long duration = 10L;\n        Timer timer = new Timer(duration);\n        timer.start();\n\n        // Act\n        // Sleep longer than the duration to ensure elapsed time > durationMillis\n        Thread.sleep(duration + 50L);\n        boolean result = timer.isCounting();\n\n        // Assert\n        assertFalse(\"isCounting should return false when duration has elapsed\", result);\n    }\n\n    @Test(expected = AssertionError.class)\n    public void testIsCounting_ThrowsAssertionError_WhenNotStarted() {\n        // Arrange\n        long duration = 500L;\n        Timer timer = new Timer(duration);\n\n        // Act\n        // Calling isCounting without calling start() should trigger the assert startTime != -1\n        timer.isCounting();\n    }\n\n    @Test\n    public void testIsCounting_ReturnsTrue_AtExactBoundary() throws InterruptedException {\n        // This test attempts to hit the edge case of the <= condition\n        // Note: Due to system clock granularity, hitting exact equality is difficult,\n        // but we test the logic flow.\n        long duration = 1000L;\n        Timer timer = new Timer(duration);\n        timer.start();\n        \n        // Immediately after start, elapsed time is effectively 0 or very small\n        assertTrue(timer.isCounting());\n    }\n}\n",
+  "tranche": "CTRL"
+}
